@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mini FlyWire</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: black; }
+  </style>
+</head>
+<body>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.158/build/three.min.js"></script>
+
+<script>
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+camera.position.z = 3;
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+const group = new THREE.Group();
+
+// ⭐⭐⭐ ADD STARS HERE ⭐⭐⭐
+const starGeometry = new THREE.BufferGeometry();
+const starCount = 1000;
+
+const starPositions = [];
+
+for (let i = 0; i < starCount; i++) {
+  const x = (Math.random() - 0.5) * 50;
+  const y = (Math.random() - 0.5) * 50;
+  const z = (Math.random() - 0.5) * 50;
+
+  starPositions.push(x, y, z);
+}
+
+starGeometry.setAttribute(
+  'position',
+  new THREE.Float32BufferAttribute(starPositions, 3)
+);
+
+const starMaterial = new THREE.PointsMaterial({
+  color: 0xffffff,
+  size: 0.05
+});
+
+const stars = new THREE.Points(starGeometry, starMaterial);
+
+scene.add(stars);
+scene.add(group);
+
+// ---------------- CLUSTERS ----------------
+function createCluster(x, y, z, color) {
+  const geometry = new THREE.SphereGeometry(0.5, 32, 32);
+
+  const material = new THREE.PointsMaterial({
+    color: color,
+    size: 0.05
+  });
+
+  const points = new THREE.Points(geometry, material);
+  points.userData.isCluster = true;
+  points.position.set(x, y, z);
+
+  group.add(points);
+}
+
+createCluster(0, 0, 0, 0xff00ff);
+createCluster(1.5, 0, 0, 0x00ffff);
+createCluster(-1.5, 0, 0, 0xffff00);
+createCluster(0, 1.5, 0, 0xff8800);
+createCluster(0, -1.5, 0, 0x00ff00);
+
+// ---------------- LINES ----------------
+const lines = [];
+const activeLines = [];
+const lineSignals = [];
+const explosions = [];
+// create wave storage
+const waveQueue = [];
+
+function connectPoints(p1, p2, color) {
+  const material = new THREE.LineBasicMaterial({ color: color });
+
+  const geometry = new THREE.BufferGeometry().setFromPoints([p1, p2]);
+  const line = new THREE.Line(geometry, material);
+
+  line.userData = {
+    start: p1,
+    end: p2,
+    activated: false
+  };
+  lines.push(line);
+
+  group.add(line);
+}
+
+const positions = [
+  new THREE.Vector3(0, 0, 0),
+  new THREE.Vector3(1.5, 0, 0),
+  new THREE.Vector3(-1.5, 0, 0),
+  new THREE.Vector3(0, 1.5, 0),
+  new THREE.Vector3(0, -1.5, 0)
+];
+
+connectPoints(positions[0], positions[1], 0xffffff);
+connectPoints(positions[0], positions[2], 0xffffff);
+connectPoints(positions[0], positions[3], 0xffffff);
+connectPoints(positions[0], positions[4], 0xffffff);
+
+// ---------------- SMALL NEURONS ----------------
+const neuronPositions = [];
+
+for (let i = 0; i < 200; i++) {
+  const x = (Math.random() - 0.5) * 6;
+  const y = (Math.random() - 0.5) * 6;
+  const z = (Math.random() - 0.5) * 6;
+
+  const pos = new THREE.Vector3(x, y, z);
+  neuronPositions.push(pos);
+
+  const geometry = new THREE.SphereGeometry(0.05, 8, 8);
+  const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+
+  const neuron = new THREE.Mesh(geometry, material);
+  neuron.userData.isNeuron = true;
+  neuron.position.copy(pos);
+
+  group.add(neuron);
+}
+
+// random connections
+for (let i = 0; i < 150; i++) {
+  const a = neuronPositions[Math.floor(Math.random() * neuronPositions.length)];
+  const b = neuronPositions[Math.floor(Math.random() * neuronPositions.length)];
+  connectPoints(a, b, 0x4444ff);
+}
+
+// ---------------- RED SIGNALS ----------------
+const signals = [];
+
+for (let i = 0; i < 20; i++) {
+  const start = neuronPositions[Math.floor(Math.random() * neuronPositions.length)];
+  const end = neuronPositions[Math.floor(Math.random() * neuronPositions.length)];
+
+  const signal = new THREE.Mesh(
+    new THREE.SphereGeometry(0.08, 8, 8),
+    new THREE.MeshBasicMaterial({ color: 0xff0000 })
+  );
+
+  signal.userData = { start, end, progress: 0 };
+  group.add(signal);
+  signals.push(signal);
+}
+
+// ---------------- CONTROLS ----------------
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+let selectedNeuron = null;
+let hoveredNeuron = null;
+let pulseTime = 0;
+let cameraTarget = new THREE.Vector3();
+
+let isZooming = false;
+let isRotating = true;
+let isDragging = false;
+let previousMousePosition = { x: 0, y: 0 };
+// Memory system with strength
+const memoryLines = new Map();
+// thought trail memory
+const thoughtTrail = [];
+const MAX_TRAIL = 5;
+
+// 🌈 COLOR HELPER (ADD THIS)
+function getWaveColor(t) {
+  // t = progress (0 → 1)
+
+  if (t < 0.5) {
+    return new THREE.Color(1, 1 - t * 2, 0); // yellow → orange
+  } else {
+    return new THREE.Color(1, (1 - t) * 2, 0); // orange → red
+  }
+}
+
+// ---------------- ANIMATION ----------------
+function animate() {
+  requestAnimationFrame(animate);
+
+  if (isRotating && !isDragging) {
+    group.rotation.x += 0.01;
+    group.rotation.y += 0.01;
+  }
+
+  // red signals
+  signals.forEach(signal => {
+    
+    signal.userData.progress += 0.01;
+    if (signal.userData.progress > 1) signal.userData.progress = 0;
+
+    const { start, end, progress } = signal.userData;
+    signal.position.lerpVectors(start, end, progress);
+  });
+
+  // yellow signals
+  lineSignals.forEach(signal => {
+    signal.userData.progress += 0.03 + Math.random() * 0.02;
+    if (signal.userData.progress > 1) signal.userData.progress = 0;
+
+    const line = signal.userData.line;
+    const arr = line.geometry.attributes.position.array;
+
+    const p1 = new THREE.Vector3(arr[0], arr[1], arr[2]);
+    const p2 = new THREE.Vector3(arr[3], arr[4], arr[5]);
+
+    signal.position.lerpVectors(p1, p2, signal.userData.progress);
+  });
+
+  // zoom
+  if (isZooming) {
+    camera.position.lerp(
+      new THREE.Vector3(cameraTarget.x, cameraTarget.y, cameraTarget.z + 2),
+      0.1
+    );
+    camera.lookAt(cameraTarget);
+  }
+  // 🔥 PULSE EFFECT
+  if (selectedNeuron) {
+    pulseTime += 0.05;
+
+    const scale = 3 + Math.sin(pulseTime) * 0.5;
+    selectedNeuron.scale.set(scale, scale, scale);
+  }
+  // 💥 EXPLOSION ANIMATION
+  explosions.forEach((p, index) => {
+
+    p.position.add(p.userData.velocity);
+
+    p.userData.life -= 0.02;
+
+    p.scale.setScalar(p.userData.life);
+
+    if (p.userData.life <= 0) {
+      group.remove(p);
+      explosions.splice(index, 1);
+    }
+  });
+  // move stars slowly
+  stars.rotation.y += 0.0005;
+
+  // ⚡ WAVE PROPAGATION
+  for (let i = waveQueue.length - 1; i >= 0; i--) {
+
+  const wave = waveQueue[i];
+
+  wave.progress += 0.02;
+
+  const line = wave.line;
+  const arr = line.geometry.attributes.position.array;
+
+  const p1 = new THREE.Vector3(arr[0], arr[1], arr[2]);
+  const p2 = new THREE.Vector3(arr[3], arr[4], arr[5]);
+
+  const temp = new THREE.Vector3().lerpVectors(p1, p2, wave.progress);
+
+  const color = getWaveColor(wave.progress);
+
+  const particle = new THREE.Mesh(
+    new THREE.SphereGeometry(0.08, 8, 8),
+    new THREE.MeshBasicMaterial({
+      color: color,
+      transparent: true,
+      opacity: 0.9
+    })
+  );
+
+  particle.position.copy(temp);
+  group.add(particle);
+
+  setTimeout(() => {
+    group.remove(particle);
+  }, 200);
+
+  if (wave.progress >= 1) {
+
+    lines.forEach(nextLine => {
+
+      if (!nextLine.userData.activated) {
+
+        if (
+          nextLine.userData.start.distanceTo(p2) < 0.1 ||
+          nextLine.userData.end.distanceTo(p2) < 0.1
+        ) {
+          // check memory strength
+          const strength = memoryLines.get(nextLine) || 0;
+          // only allow strong paths
+          if (strength > 1) {
+            nextLine.userData.activated = true;
+
+            waveQueue.push({
+              line: nextLine,
+              progress: 0
+            });
+          }
+        }
+      }
+    });
+
+    waveQueue.splice(i, 1); // ✅ SAFE removal
+  }
+}
+  
+  // keep memory lines glowing
+  memoryLines.forEach((strength, line) => {
+    line.material.color.set(0xffff00);
+  });
+  // 🧠 APPLY MEMORY STRENGTH VISUAL
+  memoryLines.forEach((strength, line) => {
+
+    // clamp strength
+    const s = Math.min(strength, 10);
+
+    // color intensity
+    const intensity = s / 10;
+
+    line.material.color.setRGB(1, 1 - intensity, 0);
+    line.material.opacity = 0.5 + intensity * 0.5;
+    line.material.transparent = true;
+
+    // thickness illusion (scale slightly)
+    line.scale.set(1 + intensity * 0.5, 1 + intensity * 0.5, 1);
+
+  });
+  // 🧠 slight forgetting over time
+  memoryLines.forEach((strength, line) => {
+    const newStrength = strength * 0.995; // slow decay
+
+    if (newStrength < 0.1) {
+      memoryLines.delete(line);
+    } else {
+      memoryLines.set(line, newStrength);
+    }
+  });
+  // 🧠 DRAW THOUGHT TRAIL
+  for (let i = 0; i < thoughtTrail.length - 1; i++) {
+
+    const p1 = thoughtTrail[i];
+    const p2 = thoughtTrail[i + 1];
+
+    const geometry = new THREE.BufferGeometry().setFromPoints([p1, p2]);
+
+    const material = new THREE.LineBasicMaterial({
+      color: 0xff00ff, // purple brain trail
+      transparent: true,
+      opacity: 0.6
+    });
+
+    const trailLine = new THREE.Line(geometry, material);
+
+    group.add(trailLine);
+
+    // remove after short time (fade effect)
+    setTimeout(() => {
+      group.remove(trailLine);
+    }, 500);
+  }
+  renderer.render(scene, camera);
+}
+
+animate();
+
+// ---------------- CLICK ----------------
+window.addEventListener('click', (event) => {
+
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(group.children);
+
+  if (intersects.length === 0) return;
+  
+  // reset wave state
+  lines.forEach(line => {
+    line.userData.activated = false;
+  });
+
+  const selected = intersects[0].object;
+  // save thought
+  thoughtTrail.push(selected.position.clone());
+  // keep only last few
+  if (thoughtTrail.length > MAX_TRAIL) {
+    thoughtTrail.shift();
+  }
+
+  // reset old
+  if (selectedNeuron) {
+    selectedNeuron.scale.set(1,1,1);
+  }
+
+  // highlight new
+  selected.scale.set(3,3,3);
+  selected.material.color.set(0xffff00);
+  selectedNeuron = selected;
+
+  // camera
+  isRotating = false;
+  cameraTarget.copy(selected.position);
+  isZooming = true;
+
+
+  // start wave on click
+  waveQueue.length = 0;
+  activeLines.length = 0;
+
+  lines.forEach(line => {
+    const { start } = line.userData;
+
+    if (start.distanceTo(selected.position) < 2) {
+
+      // add to memory
+      // increases memory strength
+      const oldStrength = memoryLines.get(line) || 0;
+      memoryLines.set(line, oldStrength + 2);
+      line.material.color.set(0xffff00);
+      activeLines.push(line);
+      // 👉 ADD THIS LINE (VERY IMPORTANT)
+      line.userData.activated = true;
+      waveQueue.push({
+        line: line,
+        progress: 0
+      });
+    }
+  });
+
+
+
+  // remove old signals
+  lineSignals.forEach(s => group.remove(s));
+  lineSignals.length = 0;
+
+  // create new yellow signals
+  activeLines.forEach(line => {
+
+    const signal = new THREE.Mesh(
+      new THREE.SphereGeometry(0.12, 8, 8),
+      new THREE.MeshBasicMaterial({
+        color: 0xffff00,
+        transparent: true,
+        opacity: 0.9
+       })
+    );
+
+    signal.userData = {
+      line: line,
+      progress: Math.random()
+    };
+
+    group.add(signal);
+    lineSignals.push(signal);
+  });
+  // 💥 CREATE EXPLOSION
+  for (let i = 0; i < 30; i++) {
+
+    const particle = new THREE.Mesh(
+      new THREE.SphereGeometry(0.05, 6, 6),
+      new THREE.MeshBasicMaterial({ color: 0xffff00 })
+    );
+
+    particle.position.copy(selected.position);
+
+    particle.userData = {
+      velocity: new THREE.Vector3(
+        (Math.random() - 0.5) * 0.2,
+        (Math.random() - 0.5) * 0.2,
+        (Math.random() - 0.5) * 0.2
+      ),
+      life: 1
+    };
+
+    group.add(particle);
+    explosions.push(particle);
+  }
+
+});
+
+// 🖱️ MOUSE DOWN
+window.addEventListener('mousedown', (event) => {
+  isDragging = true;
+  previousMousePosition.x = event.clientX;
+  previousMousePosition.y = event.clientY;
+});
+
+// 🖱️ MOUSE UP
+window.addEventListener('mouseup', () => {
+  isDragging = false;
+});
+
+// 🖱️ MOUSE MOVE
+window.addEventListener('mousemove', (event) => {
+
+  if (!isDragging) return;
+
+  const deltaX = event.clientX - previousMousePosition.x;
+  const deltaY = event.clientY - previousMousePosition.y;
+
+  group.rotation.y += deltaX * 0.005;
+  group.rotation.x += deltaY * 0.005;
+
+  previousMousePosition.x = event.clientX;
+  previousMousePosition.y = event.clientY;
+});
+
+// 🔍 MOUSE WHEEL ZOOM (ADD THIS)
+window.addEventListener('wheel', (event) => {
+
+  camera.position.z += event.deltaY * 0.002;
+  // limit zoom
+  camera.position.z = Math.max(1, Math.min(10, camera.position.z));
+
+});
+
+// 🟡 HOVER EFFECT (ADD THIS)
+window.addEventListener('mousemove', (event) => {
+
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera);
+
+  const intersects = raycaster.intersectObjects(group.children);
+
+  // 🧼 reset previous hover
+  if (hoveredNeuron && hoveredNeuron !== selectedNeuron) {
+    hoveredNeuron.material.color.set(0xffffff);
+    hoveredNeuron.scale.set(1, 1, 1);
+    hoveredNeuron = null;
+  }
+
+  if (intersects.length > 0) {
+
+    const obj = intersects[0].object;
+
+    // only hover small neurons (not clusters)
+    if (obj.userData.isNeuron && obj !== selectedNeuron) {
+
+      obj.material.color.set(0xffff00);
+      obj.scale.set(2, 2, 2);
+
+      hoveredNeuron = obj;
+    }
+  }
+
+});
+</script>
+
+</body>
+</html>
