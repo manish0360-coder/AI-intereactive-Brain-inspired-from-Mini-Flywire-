@@ -80,6 +80,7 @@ const lineSignals = [];
 const explosions = [];
 // create wave storage
 const waveQueue = [];
+let isWaveActive = false;
 
 function connectPoints(p1, p2, color) {
   const material = new THREE.LineBasicMaterial({ color: color });
@@ -126,6 +127,7 @@ for (let i = 0; i < 200; i++) {
 
   const neuron = new THREE.Mesh(geometry, material);
   neuron.userData.isNeuron = true;
+  neuron.userData.id = i;
   neuron.position.copy(pos);
 
   group.add(neuron);
@@ -172,6 +174,14 @@ let previousMousePosition = { x: 0, y: 0 };
 const memoryLines = new Map();
 // thought trail memory
 const thoughtTrail = [];
+// prediction memory (A -> B)
+const transitions = new Map();
+
+function findNeuronById(id) {
+  return group.children.find(obj =>
+    obj.userData.id === Number(id));
+}
+
 const MAX_TRAIL = 5;
 
 // 🌈 COLOR HELPER (ADD THIS)
@@ -206,7 +216,12 @@ function animate() {
 
   // yellow signals
   lineSignals.forEach(signal => {
-    signal.userData.progress += 0.03 + Math.random() * 0.02;
+    const speed = isRotating ? 0.025 : 0.04;       // fast when clicked
+    signal.userData.progress += speed;
+
+    signal.material.opacity = isRotating ? 0.7 : 1;
+    signal.scale.setScalar(isRotating ? 0.5 : 0.8);
+
     if (signal.userData.progress > 1) signal.userData.progress = 0;
 
     const line = signal.userData.line;
@@ -233,20 +248,7 @@ function animate() {
     const scale = 3 + Math.sin(pulseTime) * 0.5;
     selectedNeuron.scale.set(scale, scale, scale);
   }
-  // 💥 EXPLOSION ANIMATION
-  explosions.forEach((p, index) => {
 
-    p.position.add(p.userData.velocity);
-
-    p.userData.life -= 0.02;
-
-    p.scale.setScalar(p.userData.life);
-
-    if (p.userData.life <= 0) {
-      group.remove(p);
-      explosions.splice(index, 1);
-    }
-  });
   // move stars slowly
   stars.rotation.y += 0.0005;
 
@@ -307,8 +309,12 @@ function animate() {
         }
       }
     });
-
+    
+    // remove finished wave
     waveQueue.splice(i, 1); // ✅ SAFE removal
+    if (waveQueue.length === 0) {
+      isWaveActive = false;
+    }
   }
 }
   
@@ -346,8 +352,10 @@ function animate() {
   // 🧠 DRAW THOUGHT TRAIL
   for (let i = 0; i < thoughtTrail.length - 1; i++) {
 
-    const p1 = thoughtTrail[i];
-    const p2 = thoughtTrail[i + 1];
+    const p1 = thoughtTrail[i].position;
+    const p2 = thoughtTrail[i + 1].position;
+    
+    if (!p1 || !p2) continue;
 
     const geometry = new THREE.BufferGeometry().setFromPoints([p1, p2]);
 
@@ -366,6 +374,57 @@ function animate() {
       group.remove(trailLine);
     }, 500);
   }
+  // 🧠 PREDICTION SYSTEM
+  if (thoughtTrail.length > 0) {
+
+    const last = thoughtTrail[thoughtTrail.length - 1];
+    const key = last.userData.id;
+
+    const nextMap = transitions.get(key);
+
+    if (nextMap) {
+
+      let best = null;
+      let max = 0;
+
+      nextMap.forEach((value, k) => {
+        if (value > max) {
+          max = value;
+          best = k;
+        }
+      });
+      console.log("Transitions:", transitions);
+      if (best) {
+        console.log("Prediction target:", best);
+
+        const predictedNeuron = findNeuronById(best);
+        if (!predictedNeuron || !predictedNeuron.position) return;
+
+        const predicted = predictedNeuron.position;
+
+        // 🔮 create ghost indicator
+        const ghost = new THREE.Mesh(
+          new THREE.SphereGeometry(0.25, 16, 16),
+          new THREE.MeshBasicMaterial({
+            color: 0x00ffff,
+            transparent: true,
+            opacity: 0.9
+          })
+        );
+        // make it pulse to look alive
+        const t = Date.now() * 0.005;
+        const s = 1 + Math.sin(t) * 0.3;
+        ghost.scale.set(s, s, s);
+
+        ghost.position.copy(predicted);
+        group.add(ghost);
+
+        setTimeout(() => {
+          group.remove(ghost);
+        }, 800);
+      }
+    }
+  }
   renderer.render(scene, camera);
 }
 
@@ -378,18 +437,74 @@ window.addEventListener('click', (event) => {
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
   raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(group.children);
+  // only detect neurons
+  let selected = null;
 
-  if (intersects.length === 0) return;
+    // 1. try exact hit first
+    const intersects = raycaster.intersectObjects(group.children);
+
+  for (let i = 0; i < intersects.length; i++) {
+    const obj = intersects[i].object;
+
+    if (obj.userData.isNeuron) {
+      selected = obj;
+      console.log("🎯 Exact neuron click");
+      break;
+    }
+  }
+
+  // 2. fallback to nearest
+  if (!selected) {
+
+    let minDist = Infinity;
+
+    group.children.forEach(obj => {
+      if (!obj.userData.isNeuron) return;
+
+      const dist = obj.position.distanceTo(raycaster.ray.origin);
+
+      if (dist < minDist) {
+        minDist = dist;
+        selected = obj;
+      }
+    });
+
+    console.log("🤖 Nearest neuron selected");
+  }
+
+  if (intersects.length === 0) {
+    console.log('No neuron clicked');
+    return;
+  }
+  console.log("Neuron clicked");
   
   // reset wave state
   lines.forEach(line => {
     line.userData.activated = false;
   });
 
-  const selected = intersects[0].object;
+  if (!selected.userData.isNeuron) return;
   // save thought
-  thoughtTrail.push(selected.position.clone());
+  thoughtTrail.push(selected);
+  
+  // 🧠 learn transition
+  if (thoughtTrail.length > 1) {
+
+    const prev = thoughtTrail[thoughtTrail.length - 2];
+    const curr = thoughtTrail[thoughtTrail.length - 1];
+
+    if (!prev || !curr || prev.userData.id === undefined || curr.userData.id === undefined) return;
+    
+    const key = prev.userData.id;     // use id
+
+    const map = transitions.get(key) || new Map();
+
+    const currKey = curr.userData.id;
+
+    map.set(currKey, (map.get(currKey) || 0) + 1);
+
+    transitions.set(key, map);
+  }
   // keep only last few
   if (thoughtTrail.length > MAX_TRAIL) {
     thoughtTrail.shift();
@@ -412,7 +527,9 @@ window.addEventListener('click', (event) => {
 
 
   // start wave on click
+  if (isWaveActive) return;
   waveQueue.length = 0;
+  isWaveActive = true;
   activeLines.length = 0;
 
   lines.forEach(line => {
@@ -443,7 +560,7 @@ window.addEventListener('click', (event) => {
 
   // create new yellow signals
   activeLines.forEach(line => {
-
+    if (lineSignals.length > 15) return;
     const signal = new THREE.Mesh(
       new THREE.SphereGeometry(0.12, 8, 8),
       new THREE.MeshBasicMaterial({
@@ -461,28 +578,7 @@ window.addEventListener('click', (event) => {
     group.add(signal);
     lineSignals.push(signal);
   });
-  // 💥 CREATE EXPLOSION
-  for (let i = 0; i < 30; i++) {
 
-    const particle = new THREE.Mesh(
-      new THREE.SphereGeometry(0.05, 6, 6),
-      new THREE.MeshBasicMaterial({ color: 0xffff00 })
-    );
-
-    particle.position.copy(selected.position);
-
-    particle.userData = {
-      velocity: new THREE.Vector3(
-        (Math.random() - 0.5) * 0.2,
-        (Math.random() - 0.5) * 0.2,
-        (Math.random() - 0.5) * 0.2
-      ),
-      life: 1
-    };
-
-    group.add(particle);
-    explosions.push(particle);
-  }
 
 });
 
