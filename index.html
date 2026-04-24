@@ -198,11 +198,12 @@ function getWaveColor(t) {
 // ---------------- ANIMATION ----------------
 function animate() {
   requestAnimationFrame(animate);
-
-  if (isRotating && !isDragging) {
-    group.rotation.x += 0.01;
-    group.rotation.y += 0.01;
-  }
+  
+  // disable auto rotation while testing
+  //if (isRotating && !isDragging) {
+    //group.rotation.x += 0.01;
+    //group.rotation.y += 0.01;
+  //}
 
   // red signals
   signals.forEach(signal => {
@@ -318,25 +319,28 @@ function animate() {
   }
 }
   
-  // keep memory lines glowing
-  memoryLines.forEach((strength, line) => {
-    line.material.color.set(0xffff00);
-  });
   // 🧠 APPLY MEMORY STRENGTH VISUAL
   memoryLines.forEach((strength, line) => {
 
     // clamp strength
     const s = Math.min(strength, 10);
-
     // color intensity
     const intensity = s / 10;
 
+    // Attention filter
+    if (intensity < 0.3) {
+      // weak fade out
+      line.material.opacity = 0.05;
+      line.material.color.set(0x222222);
+      return;
+    }
+    // strong -> highlight
     line.material.color.setRGB(1, 1 - intensity, 0);
-    line.material.opacity = 0.5 + intensity * 0.5;
+    line.material.opacity = 0.6 + intensity * 0.4;
     line.material.transparent = true;
 
     // thickness illusion (scale slightly)
-    line.scale.set(1 + intensity * 0.5, 1 + intensity * 0.5, 1);
+    line.scale.set(1 + intensity * 1.2, 1 + intensity * 1.2, 1);
 
   });
   // 🧠 slight forgetting over time
@@ -381,47 +385,66 @@ function animate() {
     const key = last.userData.id;
 
     const nextMap = transitions.get(key);
-
     if (nextMap) {
+      // get all possibilities ( Multi prediction)
+      let currentKey = key;
+      // how many future steps you want
+      const STEPS = 3;
 
-      let best = null;
-      let max = 0;
+      for (let step = 0; step < STEPS; step++) {
+        const map = transitions.get(currentKey);
+        if (!map) break;
+        // find strongest next
+        let bestKey = null;
+        let max = 0;
 
-      nextMap.forEach((value, k) => {
-        if (value > max) {
-          max = value;
-          best = k;
+        const choices = [];
+
+        map.forEach((value, k) => {
+          choices.push({ key: k, weight: value });
+        });
+
+        // 🧠 EXPLORATION FACTOR
+        const explorationRate = 0.2; // 20% curiosity
+
+        if (Math.random() < explorationRate) {
+          // 🤖 explore random path
+          const randomChoice = choices[Math.floor(Math.random() * choices.length)];
+          bestKey = randomChoice.key;
+        } else {
+          // 🧠 choose strongest path (normal behavior)
+          choices.forEach(choice => {
+            if (choice.weight > max) {
+              max = choice.weight;
+              bestKey = choice.key;
+            }
+          });
         }
-      });
-      console.log("Transitions:", transitions);
-      if (best) {
-        console.log("Prediction target:", best);
 
-        const predictedNeuron = findNeuronById(best);
-        if (!predictedNeuron || !predictedNeuron.position) return;
+        if (!bestKey) break;
+        const neuron = findNeuronById(bestKey);
+        if (!neuron) break;
+        // color changes with step
+        const colors = [0x00ffff, 0x00ff88, 0xffff00];
 
-        const predicted = predictedNeuron.position;
-
-        // 🔮 create ghost indicator
         const ghost = new THREE.Mesh(
-          new THREE.SphereGeometry(0.25, 16, 16),
+          new THREE.SphereGeometry(0.2 - step * 0.03, 12, 12),
           new THREE.MeshBasicMaterial({
-            color: 0x00ffff,
+            color: colors[step] || 0xffffff,
             transparent: true,
-            opacity: 0.9
+            opacity: 0.8 - step * 0.2
           })
         );
-        // make it pulse to look alive
-        const t = Date.now() * 0.005;
-        const s = 1 + Math.sin(t) * 0.3;
-        ghost.scale.set(s, s, s);
+        ghost.position.copy(neuron.position);
 
-        ghost.position.copy(predicted);
         group.add(ghost);
 
         setTimeout(() => {
           group.remove(ghost);
         }, 800);
+
+        // move forward in prediction chain
+        currentKey = bestKey;
       }
     }
   }
@@ -520,10 +543,10 @@ window.addEventListener('click', (event) => {
   selected.material.color.set(0xffff00);
   selectedNeuron = selected;
 
-  // camera
-  isRotating = false;
-  cameraTarget.copy(selected.position);
-  isZooming = true;
+    // camera
+  // isRotating = false;
+  // cameraTarget.copy(selected.position);
+  // isZooming = true;
 
 
   // start wave on click
