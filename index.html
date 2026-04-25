@@ -32,7 +32,7 @@ fetch('neurons.json')
       const pos = new THREE.Vector3(n.x, n.y, n.z);
       neuronPositions.push(pos);
 
-      const geometry = new THREE.SphereGeometry(0.06, 8, 8);
+      const geometry = new THREE.SphereGeometry(0.08, 12, 12);
       const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
 
       const neuron = new THREE.Mesh(geometry, material);
@@ -45,6 +45,28 @@ fetch('neurons.json')
     });
 
     console.log("✅ Real neurons loaded");
+    // 🧠 LOAD CONNECTIONS FROM FILE
+    fetch('connections.json')
+      .then(res => res.json())
+      .then(data => {
+
+        data.forEach(c => {
+
+          const n1 = findNeuronById(c.from);
+          const n2 = findNeuronById(c.to);
+
+          if (!n1 || !n2) return;
+
+          connectPoints(n1.position, n2.position, 0x4444ff);
+
+        });
+
+        console.log("✅ Connections loaded");
+
+      })
+      .catch(err => {
+        console.error("❌ Connection error:", err);
+      });
   });
 
 // ⭐⭐⭐ ADD STARS ⭐⭐⭐
@@ -92,11 +114,11 @@ function createCluster(x, y, z, color) {
   group.add(points);
 }
 
-createCluster(0, 0, 0, 0xff00ff);
-createCluster(1.5, 0, 0, 0x00ffff);
-createCluster(-1.5, 0, 0, 0xffff00);
-createCluster(0, 1.5, 0, 0xff8800);
-createCluster(0, -1.5, 0, 0x00ff00);
+//createCluster(0, 0, 0, 0xff00ff);
+//createCluster(1.5, 0, 0, 0x00ffff);
+//createCluster(-1.5, 0, 0, 0xffff00);
+//createCluster(0, 1.5, 0, 0xff8800);
+//createCluster(0, -1.5, 0, 0x00ff00);
 
 // ---------------- LINES ----------------
 const lines = [];
@@ -144,26 +166,7 @@ connectPoints(positions[0], positions[4], 0xffffff);
   //connectPoints(a, b, 0x4444ff);
 //}
 
-// 🧠 LOAD CONNECTIONS FROM FILE
-fetch('connections.json')
-  .then(res => res.json())
-  .then(data => {
 
-    data.forEach(c => {
-
-      const n1 = findNeuronById(c.from);
-      const n2 = findNeuronById(c.to);
-
-      if (!n1 || !n2) return;
-
-      connectPoints(n1.position, n2.position, 0x4444ff);
-
-    });
-
-    console.log("✅ Connections loaded");
-
-  })
-  .catch(err => console.error("❌ Connection error:", err));
 
 // ---------------- RED SIGNALS ----------------
 //const signals = [];
@@ -220,6 +223,89 @@ function getWaveColor(t) {
   }
 }
 
+function runPrediction(startKey) {
+
+  let currentKey = startKey;
+  const STEPS = 3;
+
+  for (let step = 0; step < STEPS; step++) {
+
+    const memoryMap = transitions.get(currentKey) || new Map();
+    const structureMap = new Map();
+
+    const startNeuron = findNeuronById(currentKey);
+    if (!startNeuron) return;
+
+    for (let i = 0; i < Math.min(lines.length, 50); i++) {
+      const line = lines[i];
+
+      if (line.userData.start.distanceTo(startNeuron.position) < 0.001) {
+
+        const next = group.children.find(n =>
+          n.userData.isNeuron &&
+          n.position.distanceTo(line.userData.end) < 0.001
+        );
+
+        if (next) structureMap.set(next.userData.id, 1);
+      }
+
+      if (line.userData.end.distanceTo(startNeuron.position) < 0.001) {
+
+        const next = group.children.find(n =>
+          n.userData.isNeuron &&
+          n.position.distanceTo(line.userData.start) < 0.001
+        );
+
+        if (next) structureMap.set(next.userData.id, 1);
+      }
+
+    };
+
+    const choices = [];
+
+    memoryMap.forEach((value, k) => {
+      choices.push({ key: k, weight: value * 10 });
+    });
+
+    structureMap.forEach((value, k) => {
+      if (!choices.find(c => c.key === k)) {
+        choices.push({ key: k, weight: value });
+      }
+    });
+
+    if (choices.length === 0) return;
+
+    let total = 0;
+    choices.forEach(c => total += c.weight);
+
+    let r = Math.random() * total;
+    let running = 0;
+    let bestKey = null;
+
+    for (let i = 0; i < choices.length; i++) {
+      running += choices[i].weight;
+      if (r <= running) {
+        bestKey = choices[i].key;
+        break;
+      }
+    }
+
+    const neuron = findNeuronById(bestKey);
+    console.log("predicted ->", bestKey);
+    if (!neuron) return;
+
+    // 🔥 VISUAL (safe, no loop spam)
+    neuron.material.color.set(0xff0000);
+    neuron.scale.set(1.5, 1.5, 1.5);
+
+    setTimeout(() => {
+      if (neuron) neuron.material.color.set(0xffffff);
+      neuron.scale.set(0.5, 0.5, 0.5);
+    }, 400);
+
+    currentKey = bestKey;
+  }
+}
 // ---------------- ANIMATION ----------------
 function animate() {
   requestAnimationFrame(animate);
@@ -260,13 +346,18 @@ function animate() {
   });
 
   // zoom
-  if (isZooming) {
-    camera.position.lerp(
-      new THREE.Vector3(cameraTarget.x, cameraTarget.y, cameraTarget.z + 2),
-      0.1
-    );
-    camera.lookAt(cameraTarget);
-  }
+  if (isZooming && cameraTarget) {
+  camera.position.lerp(
+    new THREE.Vector3(
+      cameraTarget.x,
+      cameraTarget.y,
+      cameraTarget.z + 1.5
+    ),
+    0.08
+  );
+
+  camera.lookAt(cameraTarget);
+}
   // 🔥 PULSE EFFECT
   if (selectedNeuron) {
     pulseTime += 0.05;
@@ -295,6 +386,7 @@ function animate() {
 
   const color = getWaveColor(wave.progress);
 
+  if (group.children.length > 2000) continue;
   const particle = new THREE.Mesh(
     new THREE.SphereGeometry(0.08, 8, 8),
     new THREE.MeshBasicMaterial({
@@ -389,9 +481,9 @@ function animate() {
     const geometry = new THREE.BufferGeometry().setFromPoints([p1, p2]);
 
     const material = new THREE.LineBasicMaterial({
-      color: 0xff00ff, // purple brain trail
+      color: 0x4444ff,
       transparent: true,
-      opacity: 0.6
+      opacity: 0.4
     });
 
     const trailLine = new THREE.Line(geometry, material);
@@ -404,7 +496,7 @@ function animate() {
     }, 500);
   }
   // 🧠 PREDICTION SYSTEM
-  if (thoughtTrail.length > 0) {
+  /*if (thoughtTrail.length > 0) {
 
     const last = thoughtTrail[thoughtTrail.length - 1];
     const key = last.userData.id;
@@ -423,21 +515,29 @@ function animate() {
         // 2. structure-based transitions (connections)
         const structureMap = new Map();
 
-       lines.forEach(line => {
+        const startNeuron = findNeuronById(currentKey);
+        if (!startNeuron) break;
 
-         const currentNeuron = findNeuronById(currentKey);
-         if (!currentNeuron) return;
+        lines.forEach(line => {
 
-         if (line.userData.start.distanceTo(currentNeuron.position) < 0.01) {
+          let nextPos = null;
 
-           const nextNeuron = group.children.find(n =>
-             n.userData.isNeuron &&
-             n.position.distanceTo(line.userData.end) < 0.01
-           );
+          if (line.userData.start.distanceTo(startNeuron.position) < 0.05) {
+            nextPos = line.userData.end;
+          }
+          else if (line.userData.end.distanceTo(startNeuron.position) < 0.05) {
+            nextPos = line.userData.start;
+          }
 
-            if (nextNeuron) {
-             structureMap.set(nextNeuron.userData.id, 1);
-            }
+          if (!nextPos) return;
+
+          const next = group.children.find(n =>
+            n.userData.isNeuron &&
+            n.position.distanceTo(nextPos) < 0.05
+          );
+
+          if (next) {
+            structureMap.set(next.userData.id, 1);
           }
 
         });
@@ -465,7 +565,7 @@ function animate() {
         let confidence = 0;
 
         // 🧠 EXPLORATION (curiosity)
-        const explorationRate = 0.05;
+        const explorationRate = 0.01;
 
         if (Math.random() < explorationRate) {
 
@@ -504,13 +604,28 @@ function animate() {
           continue;
         }
         const neuron = findNeuronById(bestKey);
+
+        // Auto focus camera on predicted neuron
+        if (neuron) {
+          cameraTarget.copy(neuron.position);
+          isZooming = true;
+        }
+
         console.log("Predicted neuron:", neuron);
         if (neuron) {
-           neuron.material.color.set(0x00ffff);
+           const glowColor = new THREE.Color().setHSL(
+            0.6 - confidence * 0.6,
+            1,
+            0.5
+          );
 
-           setTimeout(() => {
+          neuron.material.color.copy(glowColor);
+          neuron.scale.set(1.2 + confidence, 1.2 + confidence, 1.2 + confidence);
+
+          setTimeout(() => {
             neuron.material.color.set(0xffffff);
-           }, 800);
+            neuron.scale.set(1,1,1);
+          }, 800);
         }
         
 
@@ -585,7 +700,7 @@ function animate() {
         currentKey = bestKey;
       }
     }
-  }
+  } */
   renderer.render(scene, camera);
 }
 
@@ -647,6 +762,7 @@ window.addEventListener('click', (event) => {
   if (!selected.userData.isNeuron) return;
   // save thought
   thoughtTrail.push(selected);
+  runPrediction(selected.userData.id);
   
   // 🧠 learn transition
   if (thoughtTrail.length > 1) {
