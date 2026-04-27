@@ -57,64 +57,10 @@ scene.add(group);
 const neuronPositions = [];   // stores positions
 const neuronMap = new Map(); // stores neurons by id
 
-// 🧠 EMBEDDING SYSTEM (AI brain vector)
-function createEmbedding() {
-  return [
-    Math.random(),
-    Math.random(),
-    Math.random()
-  ];
-}
-
-// 🧠 DOT PRODUCT (how similar 2 neurons are)
-function dot(a, b) {
-  if (!a || !b) return 0;
-
-  let sum = 0;
-
-  for (let i = 0; i < a.length; i++) {
-    sum += a[i] * b[i];
-  }
-
-  return sum;
-}
-
-// 🧠 TRAIN EMBEDDINGS (learning step)
-function trainEmbedding(a, b, lr = 0.05) {
-
-  const embA = a.userData.embedding;
-  const embB = b.userData.embedding;
-
-  for (let i = 0; i < embA.length; i++) {
-
-    const diff = embB[i] - embA[i];
-
-    embA[i] += diff * lr;
-    embB[i] -= diff * lr;
-  }
-}
-
 const lines = [];            // stores connections
 
 
 // ================== LOAD NEURONS ==================
-function createEmbedding() {
-  return [
-    Math.random(),
-    Math.random(),
-    Math.random()
-  ];
-}
-
-function similarity(a, b) {
-  let dot = 0;
-
-  for (let i = 0; i < a.length; i++) {
-    dot += a[i] * b[i];
-  }
-
-  return dot; // bigger = more similar
-}
 
 fetch('neurons.json')
   .then(res => res.json())
@@ -140,8 +86,7 @@ fetch('neurons.json')
       neuron.userData = {
         isNeuron: true,
         id: n.id,
-        neighbors: [],   // important for graph brain
-        embedding: createEmbedding()
+        neighbors: []   // important for graph brain
       };
 
       // Save in map
@@ -245,22 +190,6 @@ function connectPoints(p1, p2, color, id1, id2) {
 
 const transitions = new Map();  // memory
 
-function learn(from, to) {
-
-  let map = transitions.get(from);
-
-  if (!map) {
-    map = new Map();
-    transitions.set(from, map);
-  }
-
-  map.set(to, (map.get(to) || 0) + 1);
-
-  console.log("Learned:", from, "→", to);
-}
-
-const rewards = new Map();
-
 function runPrediction(startKey) {
 
   let currentKey = startKey;
@@ -268,31 +197,12 @@ function runPrediction(startKey) {
   const STEPS = 2;
 
   for (let step = 0; step < STEPS; step++) {
-    // Define starNeuron
-    const startNeuron = findNeuronById(currentKey);
 
     const memoryMap = transitions.get(currentKey) || new Map();
 
     const structureMap = new Map();
-    startNeuron.userData.neighbors.forEach(id => {
-      structureMap.set(id, 1);
-    });
 
-    const embeddingMap = new Map();
-
-    neuronMap.forEach((neuron, id) => {
-
-      if (id === currentKey) return;
-
-      const sim = similarity(
-        startNeuron.userData.embedding,
-        neuron.userData.embedding
-      );
-
-      embeddingMap.set(id, sim * 2); // weight
-    });
-
-    
+    const startNeuron = findNeuronById(currentKey);
 
     if (!startNeuron) return;
 
@@ -305,45 +215,16 @@ function runPrediction(startKey) {
 
     // Memory weight
     memoryMap.forEach((value, k) => {
-
-      const targetNeuron = findNeuronById(k);
-
-      if (!targetNeuron) return;
-
-      const score =
-        similarity(startNeuron.userData.embedding, targetNeuron.userData.embedding);
-
-      const memoryBoost = Math.log(value + 1);
-
-      //Reward from learning
-      const reward = rewards.get(currentKey + "-" + k) || 0;
-
-      const finalWeight = score + memoryBoost;
+      const attentionBoost = Math.log(value + 1) * 5;
 
       choices.push({
         key: k,
-        weight: finalWeight
+        weight: attentionBoost
       });
     });
 
     // Structure weight
     structureMap.forEach((value, k) => {
-
-      const targetNeuron = findNeuronById(k);
-      if (!targetNeuron) return;
-
-      const score =
-        similarity(startNeuron.userData.embedding, targetNeuron.userData.embedding);
-
-      if (!choices.find(c => c.key === k)) {
-        choices.push({
-          key: k,
-          weight: score
-        });
-      }
-    });
-
-    embeddingMap.forEach((value, k) => {
       if (!choices.find(c => c.key === k)) {
         choices.push({
           key: k,
@@ -460,8 +341,7 @@ animate();
 
 
 // ================== CLICK ==================
-// memory
-const thoughtTrail = [];
+
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
@@ -483,81 +363,10 @@ window.addEventListener('click', (event) => {
 
   console.log("Neuron clicked:", obj.userData.id);
 
-  // ================== LEARNING (VERY IMPORTANT) ==================
-
-  if (window.lastNeuron !== undefined) {
-
-    const prev = window.lastNeuron;
-    const curr = obj.userData.id;
-
-    // get memory map of previous neuron
-    const map = transitions.get(prev) || new Map();
-
-    // increase strength
-    map.set(curr, (map.get(curr) || 0) + 1);
-
-    // save back
-    transitions.set(prev, map);
-
-    console.log("🧠 Learned:", prev, "→", curr);
-  }
-
-  // store current as last
-  window.lastNeuron = obj.userData.id;
-
   // Run prediction
-  console.log("Prediction running")
-
-  const clickedId = obj.userData.id;
-
-  runPrediction(clickedId);
-
-  // learning
-  if (window.lastClicked !== undefined) {
-    learn(window.lastClicked, clickedId);
-  }
-
-  window.lastClicked = clickedId;
-
-  // ====================== LEARNING ======================
-  if (thoughtTrail.length > 1) {
-
-    const prev = thoughtTrail[thoughtTrail.length - 2];
-    const curr = thoughtTrail[thoughtTrail.length - 1];
-
-    // ✅ TRAIN HERE
-    trainEmbedding(prev, curr);
-
-    const map = transitions.get(key) || new Map();
-
-    const currKey = curr.userData.id;
-
-    map.set(currKey, (map.get(currKey) || 0) + 1);
-
-    // 🧠 REWARD LEARNING
-    const rewardkey = prev.userData.id + "-" + curr.userData.id;
-
-    // increase reward (good path)
-    rewards.set(rewardkey, (rewards.get(rewardkey) || 0) + 1);
-
-    // decay rewards ( forget weak paths slowly)
-    rewards.forEach((value, k) => {
-      rewards.set(k, value * 0.995);
-    });
-
-    transitions.set(key, map);
-  }
+  console.log("Prediction running");
+  runPrediction(obj.userData.id);
 });
-
-// ====================== ANIMATION ======================
-//function animate() {
-  //requestAnimationFrame(animate);
-  //renderer.render(scene, camera);
-//}
-
-//animate();
-
-
 
 </script>
 
