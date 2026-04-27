@@ -80,31 +80,50 @@ function dot(a, b) {
 }
 
 // 🧠 TRAIN EMBEDDINGS (learning step)
-function trainEmbedding(a, b, lr = 0.05) {
+function trainEmbedding(id1, id2) {
 
-  const embA = a.userData.embedding;
-  const embB = b.userData.embedding;
+  const n1 = findNeuronById(id1);
+  const n2 = findNeuronById(id2);
 
-  for (let i = 0; i < embA.length; i++) {
+  if (!n1 || !n2) return;
 
-    const diff = embB[i] - embA[i];
+  const emb1 = n1.userData.embedding;
+  const emb2 = n2.userData.embedding;
 
-    embA[i] += diff * lr;
-    embB[i] -= diff * lr;
+  const lr = 0.05;
+
+  // ===== MAKE THEM SIMILAR =====
+  for (let i = 0; i < emb1.length; i++) {
+
+    const diff = emb2[i] - emb1[i];
+
+    emb1[i] += diff * lr;
+    emb2[i] -= diff * lr;
   }
+
+  normalize(emb1);
+  normalize(emb2);
+
+  // ===== PUSH OTHERS AWAY =====
+  neuronMap.forEach((other, id) => {
+
+    if (id === id1 || id === id2) return;
+
+    const embOther = other.userData.embedding;
+
+    for (let i = 0; i < emb1.length; i++) {
+
+      const diff = embOther[i] - emb1[i];
+
+      embOther[i] += diff * 0.01;
+    }
+
+  });
+
+  console.log("🔥 Embedding trained:", id1, "<->", id2);
 }
 
 const lines = [];            // stores connections
-
-
-// ================== LOAD NEURONS ==================
-function createEmbedding() {
-  return [
-    Math.random(),
-    Math.random(),
-    Math.random()
-  ];
-}
 
 function similarity(a, b) {
   let dot = 0;
@@ -114,6 +133,25 @@ function similarity(a, b) {
   }
 
   return dot; // bigger = more similar
+}
+
+function normalize(vec) {
+
+  let mag = 0;
+
+  for (let i = 0; i < vec.length; i++) {
+    mag += vec[i] * vec[i];
+  }
+
+  mag = Math.sqrt(mag);
+
+  if (mag === 0) return vec;
+
+  for (let i = 0; i < vec.length; i++) {
+    vec[i] /= mag;
+  }
+
+  return vec;
 }
 
 fetch('neurons.json')
@@ -245,19 +283,7 @@ function connectPoints(p1, p2, color, id1, id2) {
 
 const transitions = new Map();  // memory
 
-function learn(from, to) {
 
-  let map = transitions.get(from);
-
-  if (!map) {
-    map = new Map();
-    transitions.set(from, map);
-  }
-
-  map.set(to, (map.get(to) || 0) + 1);
-
-  console.log("Learned:", from, "→", to);
-}
 
 const rewards = new Map();
 
@@ -269,7 +295,9 @@ function runPrediction(startKey) {
 
   for (let step = 0; step < STEPS; step++) {
     // Define starNeuron
+    
     const startNeuron = findNeuronById(currentKey);
+    if (!startNeuron) return;
 
     const memoryMap = transitions.get(currentKey) || new Map();
 
@@ -318,7 +346,9 @@ function runPrediction(startKey) {
       //Reward from learning
       const reward = rewards.get(currentKey + "-" + k) || 0;
 
-      const finalWeight = score + memoryBoost;
+      const attention = startNeuron.userData.neighbors.includes(k) ? 2 : 1;
+
+      const finalWeight = (score + memoryBoost + reward * 2) * attention;
 
       choices.push({
         key: k,
@@ -461,9 +491,10 @@ animate();
 
 // ================== CLICK ==================
 // memory
-const thoughtTrail = [];
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
+
+let lastClicked = null;
 
 window.addEventListener('click', (event) => {
 
@@ -490,11 +521,21 @@ window.addEventListener('click', (event) => {
     const prev = window.lastNeuron;
     const curr = obj.userData.id;
 
+    // Learning system
+    trainEmbedding(prev, curr);
+
     // get memory map of previous neuron
     const map = transitions.get(prev) || new Map();
 
     // increase strength
     map.set(curr, (map.get(curr) || 0) + 1);
+
+    // ❌ weaken wrong paths
+    map.forEach((value, key) => {
+      if (key !== curr) {
+        map.set(key, value * 0.9);
+      }
+    });
 
     // save back
     transitions.set(prev, map);
@@ -513,40 +554,13 @@ window.addEventListener('click', (event) => {
   runPrediction(clickedId);
 
   // learning
-  if (window.lastClicked !== undefined) {
-    learn(window.lastClicked, clickedId);
-  }
+  //if (window.lastClicked !== undefined) {
+    //learn(window.lastClicked, clickedId);
+  //}
 
   window.lastClicked = clickedId;
 
-  // ====================== LEARNING ======================
-  if (thoughtTrail.length > 1) {
-
-    const prev = thoughtTrail[thoughtTrail.length - 2];
-    const curr = thoughtTrail[thoughtTrail.length - 1];
-
-    // ✅ TRAIN HERE
-    trainEmbedding(prev, curr);
-
-    const map = transitions.get(key) || new Map();
-
-    const currKey = curr.userData.id;
-
-    map.set(currKey, (map.get(currKey) || 0) + 1);
-
-    // 🧠 REWARD LEARNING
-    const rewardkey = prev.userData.id + "-" + curr.userData.id;
-
-    // increase reward (good path)
-    rewards.set(rewardkey, (rewards.get(rewardkey) || 0) + 1);
-
-    // decay rewards ( forget weak paths slowly)
-    rewards.forEach((value, k) => {
-      rewards.set(k, value * 0.995);
-    });
-
-    transitions.set(key, map);
-  }
+  
 });
 
 // ====================== ANIMATION ======================
