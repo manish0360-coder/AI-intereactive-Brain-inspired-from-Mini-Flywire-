@@ -125,6 +125,9 @@ function trainEmbedding(id1, id2) {
 
 const lines = [];            // stores connections
 
+
+
+
 function similarity(a, b) {
   let dot = 0;
 
@@ -161,13 +164,19 @@ fetch('neurons.json')
     data.forEach(n => {
 
       // Create position vector
-      const pos = new THREE.Vector3(n.x, n.y, n.z);
+      const SCALE = 4.5; // or 10 if you want bigger
+
+      const pos = new THREE.Vector3(
+        n.x * SCALE,
+        n.y * SCALE,
+        n.z * SCALE
+      );
 
       neuronPositions.push(pos);
 
       // Create small sphere (neuron)
       const neuron = new THREE.Mesh(
-        new THREE.SphereGeometry(0.08, 12, 12),
+        new THREE.SphereGeometry(0.10, 13, 13),
         new THREE.MeshBasicMaterial({ color: 0xffffff })
       );
 
@@ -178,6 +187,8 @@ fetch('neurons.json')
       neuron.userData = {
         isNeuron: true,
         id: n.id,
+        label: n.label,
+        type: n.type,
         neighbors: [],   // important for graph brain
         embedding: createEmbedding()
       };
@@ -190,6 +201,21 @@ fetch('neurons.json')
     });
 
     console.log("✅ Neurons loaded");
+
+    // 🧠 INITIAL MEANING TRAINING
+    neuronMap.forEach((n1) => {
+      const label1 = n1.userData.label;
+
+      const related = conceptRelations[label1] || [];
+
+      neuronMap.forEach((n2) => {
+        const label2 = n2.userData.label;
+
+        if (related.includes(label2)) {
+          trainEmbedding(n1.userData.id, n2.userData.id);
+        }
+      });
+    });
 
     // Now load connections
     return fetch('connections.json');
@@ -282,10 +308,22 @@ function connectPoints(p1, p2, color, id1, id2) {
 // ================== PREDICTION SYSTEM ==================
 
 const transitions = new Map();  // memory
-
-
-
 const rewards = new Map();
+const signals = new Map();  // Signal strength
+const thoughtTrail = [];
+// sequence memory (pattern -> next)
+const chainMemory = new Map();
+const attentionMap = new Map();   // create attention memmory ( focus strength)
+// stores last time each path was used
+const timeMemory = new Map();
+
+// 🧠 MEANING RELATIONS (STEP-1 ADD HERE)
+const conceptRelations = {
+  cat: ["animal"],
+  dog: ["animal"],
+  animal: ["cat", "dog"],
+  food: []
+};
 
 function runPrediction(startKey) {
 
@@ -295,11 +333,14 @@ function runPrediction(startKey) {
 
   for (let step = 0; step < STEPS; step++) {
     // Define starNeuron
-    
     const startNeuron = findNeuronById(currentKey);
     if (!startNeuron) return;
 
     const memoryMap = transitions.get(currentKey) || new Map();
+    // get last 2 clicks pattern
+    const recentPattern = thoughtTrail.slice(-2).join("-");
+    // get learned next predictions
+    const chainMap = chainMemory.get(recentPattern) || new Map();
 
     const structureMap = new Map();
     startNeuron.userData.neighbors.forEach(id => {
@@ -344,18 +385,66 @@ function runPrediction(startKey) {
       const memoryBoost = Math.log(value + 1);
 
       //Reward from learning
-      const reward = rewards.get(currentKey + "-" + k) || 0;
+
 
       const attention = startNeuron.userData.neighbors.includes(k) ? 2 : 1;
 
-      const finalWeight = (score + memoryBoost + reward * 2) * attention;
+      const signalKey = currentKey + "-" + k;
+      const signal = signals.get(signalKey) || 0;
 
-      choices.push({
-        key: k,
-        weight: finalWeight
-      });
+      // 🧠 TIME DECAY
+
+      const timeKey = currentKey + "-" + k;
+
+      // last used time
+      const lastUsed = timeMemory.get(timeKey) || 0;  
+
+      // how long ago (ms)
+      const age = Date.now() - lastUsed;
+
+      // decay formula (new = high, old = low)
+      const timeScore = Math.exp(-age / 5000);
+
+      const label1 = startNeuron.userData.label;
+      const label2 = targetNeuron.userData.label;
+
+      let meaningBoost = 0;
+
+      if (conceptRelations[label1]?.includes(label2)) {
+      meaningBoost = 2; // 🔥 strong relation
+      }
+
+      const focus = attentionMap.get(k) || 0;
+
+      const chainBoost = chainMap.get(k) || 0;
+      // get reward value for this path
+      const reward = rewards.get(currentKey + '-' + k) || 0;
+      const finalWeight =
+        (
+          score +            // similarity
+          memoryBoost +      // frequency
+          reward * 2 +       // good path
+          signal * 3 +       // signal strength    
+          focus * 2 +        // attention
+          chainBoost * 4 +   // sequence memory
+          timeScore * 3      // 🧠 recent importance
+        ) * attention;
+
+        choices.push({
+          key: k,
+          weight: finalWeight
+        });
     });
 
+    // pick best choice (highest weight)
+    const best = choices.sort((a,b) => b.weight - a.weight)[0];
+    // reward system (strengthen correct path)
+    if (best) {
+      const rewardKey = currentKey + "-" + best.key;
+      rewards.set(rewardKey, (rewards.get(rewardKey) || 0) + 1);
+    } 
+
+ 
     // Structure weight
     structureMap.forEach((value, k) => {
 
@@ -491,6 +580,7 @@ animate();
 
 // ================== CLICK ==================
 // memory
+
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
@@ -512,16 +602,48 @@ window.addEventListener('click', (event) => {
 
   if (!obj) return;
 
-  console.log("Neuron clicked:", obj.userData.id);
+  console.log("Neuron clicked:", obj.userData.label);
+
+  // reset colors
+  neuronMap.forEach(n => {
+    n.material.color.set(0xffffff);
+  });
+
+  // highlight clicked
+  obj.material.color.set(0xff0000);
+
+  // highlight neighbors
+  obj.userData.neighbors.forEach(id => {
+    const n = findNeuronById(id);
+    if (n) n.material.color.set(0x00ff00);
+  });
 
   // ================== LEARNING (VERY IMPORTANT) ==================
 
   if (window.lastNeuron !== undefined) {
+    
+    // 🧠 CHAIN LEARNING (NEW)
+    if (thoughtTrail.length >= 2) {
+
+      const prev = thoughtTrail[thoughtTrail.length - 2];
+      const curr = thoughtTrail[thoughtTrail.length - 1];
+
+      // strengthen connection
+      const map = transitions.get(prev) || new Map();
+      map.set(curr, (map.get(curr) || 0) + 2); // stronger than normal
+      transitions.set(prev, map);
+
+      // reward chain
+      const key = prev + "-" + curr;
+      rewards.set(key, (rewards.get(key) || 0) + 2);
+
+      console.log("🧠 Chain learned:", prev, "→", curr);
+    }
+    
 
     const prev = window.lastNeuron;
     const curr = obj.userData.id;
 
-    // Learning system
     trainEmbedding(prev, curr);
 
     // get memory map of previous neuron
@@ -529,6 +651,15 @@ window.addEventListener('click', (event) => {
 
     // increase strength
     map.set(curr, (map.get(curr) || 0) + 1);
+
+    // 🔥 SIGNAL LEARNING
+    const signalKey = prev + "-" + curr;
+    signals.set(signalKey, (signals.get(signalKey) || 0) + 1);
+
+    // 🧠 SIGNAL DECAY (forget slowly)
+    signals.forEach((value, key) => {
+      signals.set(key, value * 0.99);
+    });
 
     // ❌ weaken wrong paths
     map.forEach((value, key) => {
@@ -546,10 +677,49 @@ window.addEventListener('click', (event) => {
   // store current as last
   window.lastNeuron = obj.userData.id;
 
+  // 🔥 increase attention for this neuron
+  const id = obj.userData.id;
+  attentionMap.set(id, (attentionMap.get(id) || 0) + 1);
+
+  // decay others (forget old focus)
+  attentionMap.forEach((value, key) => {
+    if (key !== id) {
+      attentionMap.set(key, value * 0.95);
+    }
+  });
+
   // Run prediction
   console.log("Prediction running")
 
   const clickedId = obj.userData.id;
+  // save click in memory
+  thoughtTrail.push(clickedId);
+
+  // keep only last 3 clicks
+  if (thoughtTrail.length > 3) {
+    thoughtTrail.shift();
+  }
+
+  // keep only last 5 steps
+  if (thoughtTrail.length > 5) {
+    thoughtTrail.shift();
+  }
+
+  // learn pattern like "1-2 → 3"
+  if (thoughtTrail.length >= 2) {
+
+    const pattern = thoughtTrail.slice(0, -1).join("-"); // "1-2"
+    const next = thoughtTrail[thoughtTrail.length - 1];  // "3"
+
+    let map = chainMemory.get(pattern);
+
+    if (!map) {
+      map = new Map();
+      chainMemory.set(pattern, map);
+    }
+
+    map.set(next, (map.get(next) || 0) + 1);
+  }
 
   runPrediction(clickedId);
 
@@ -558,8 +728,16 @@ window.addEventListener('click', (event) => {
     //learn(window.lastClicked, clickedId);
   //}
 
-  window.lastClicked = clickedId;
+  // 🧠 store time for previous → current
+  if (window.lastClicked !== undefined) {
 
+    const timeKey = window.lastClicked + "-" + clickedId;
+
+    timeMemory.set(timeKey, Date.now());
+  }
+
+  // update last clicked AFTER storing
+  window.lastClicked = clickedId;
   
 });
 
