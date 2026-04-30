@@ -319,6 +319,8 @@ const chainMemory = new Map();
 const attentionMap = new Map();   // create attention memmory ( focus strength)
 // stores last time each path was used
 const timeMemory = new Map();
+// Target goal (brain wants to reach this)
+let goalNeuronId = null;
 
 // 🧠 MEANING RELATIONS (STEP-1 ADD HERE)
 const conceptRelations = {
@@ -327,6 +329,66 @@ const conceptRelations = {
   animal: ["cat", "dog"],
   food: []
 };
+
+// 🧠 LOOK-AHEAD FUNCTION (----*****------   future thinking  ------******-------...............----------->>>>>>>>>>>>>>)
+function lookAheadScore(startId, goalId, depth = 2) {
+  // startId = where we are now
+  // goalId = where we want to go
+  // depth = how many steps we look ahead
+
+  if (!goalId) return 0; 
+  // if no goal → no future thinking
+
+  const visited = new Set(); 
+  // we remember where we already went (to avoid looping)
+
+  function dfs(currentId, d) {
+    // dfs = explore paths step by step
+    // currentId = current node
+    // d = how many steps left
+
+    if (d === 0) return 0;
+    // no steps left → stop
+
+    const neuron = findNeuronById(currentId);
+    const goalNeuron = findNeuronById(goalId);
+
+    if (!neuron || !goalNeuron) return 0;
+    // if something missing → stop
+
+    // 🎯 how close current node is to goal
+    let best = similarity(
+      neuron.userData.embedding,
+      goalNeuron.userData.embedding
+    );
+
+    visited.add(currentId);
+    // mark this node as visited
+
+    neuron.userData.neighbors.forEach(nextId => {
+      // check all next possible nodes
+
+      if (visited.has(nextId)) return;
+      // don't go back to same place
+
+      const future = dfs(nextId, d - 1);
+      // go one step deeper (future thinking)
+
+      // combine current + future
+      best = Math.max(best, future * 0.8);
+      // if future path is better → take it
+    });
+
+    visited.delete(currentId);
+    // remove from visited (so other paths can use it)
+
+    return best;
+    // return best future score
+  }
+
+  return dfs(startId, depth);
+  // start exploring from current node
+}
 
 function runPrediction(startKey) {
 
@@ -411,11 +473,29 @@ function runPrediction(startKey) {
       const label1 = startNeuron.userData.label;
       const label2 = targetNeuron.userData.label;
 
-      // Goal BOOST (how close to goal)
+      // GOAL BOOST (move toward target)
       let goalBoost = 0;
-      if (currentGoal && label2 === currentGoal) {
-        goalBoost = 15;                              // direct hit
+      if (goalNeuronId !== null) {
+        const goalNeuron = findNeuronById(goalNeuronId);
+        
+        if (goalNeuron) {
+          const goalSim = similarity(
+            targetNeuron.userData.embedding,
+            goalNeuron.userData.embedding
+        );
+
+        goalBoost = goalSim * 8;                            // strong push towards goal
+          if (k === goalNeuronId) {
+            goalBoost += 20;                                  // Exact goal wins
+          }
+        }
       }
+
+      // Goal BOOST (how close to goal)
+      //let goalBoost = 0;
+      //if (currentGoal && label2 === currentGoal) {
+        //goalBoost = 15;                              // direct hit
+      //}
 
       let meaningBoost = 0;
 
@@ -426,6 +506,10 @@ function runPrediction(startKey) {
       const focus = attentionMap.get(k) || 0;
    
       const chainBoost = chainMap.get(k) || 0;
+
+      // Future thinking (look ahead 2 steps)
+      const futureScore = lookAheadScore(k, goalNeuronId, 2);
+
       // get reward value for this path
       const reward = rewards.get(currentKey + '-' + k) || 0;
       // curiosity (less visited = more interesting)
@@ -436,15 +520,16 @@ function runPrediction(startKey) {
 
       const finalWeight =
         (
-          score +            // similarity
-          memoryBoost +      // frequency
-          reward * 2 +       // good path
-          signal * 3 +       // signal strength    
-          focus * 2 +        // attention
-          chainBoost * 4 +   // sequence memory
-          timeScore * 3 +     // 🧠 recent importance
-          goalBoost * 5 +     // new intelligence
-          curiosityBoost * 2  // curiosity add
+          score +               // similarity
+          memoryBoost +         // frequency
+          reward * 2 +          // good path
+          signal * 3 +          // signal strength    
+          focus * 2 +           // attention
+          chainBoost * 4 +      // sequence memory
+          timeScore * 3 +       // 🧠 recent importance
+          goalBoost +           // new intelligence
+          futureScore * 5 +     // future thinking ----->>>>>
+          curiosityBoost * 2    // curiosity add
         ) * attention;
 
         choices.push({
@@ -504,11 +589,25 @@ function runPrediction(startKey) {
       c.prob = c.exp / expSum;
     });
 
+    // confidence = how strong top choices is 
+    const topProb = choices[0]?.prob || 0;
+    const confidence = topProb; // 0 -> unsure, 1 -> very sure
+
     // Sort highest first
     choices.sort((a, b) => b.prob - a.prob);
 
     // Take top 3
-    const topChoices = choices.slice(0, 3);
+    // 🧠 if confident → take 1 path
+    // 🧠 if unsure → explore more
+    let topChoices;
+
+    if (confidence > 0.7) {
+      topChoices = choices.slice(0, 1); // focused
+    } else if (confidence > 0.4) {
+      topChoices = choices.slice(0, 2); // medium
+    } else {
+      topChoices = choices.slice(0, 3); // explore
+    }
 
     // ===== DRAW MULTI PATH =====
     topChoices.forEach(choice => {
@@ -531,7 +630,7 @@ function runPrediction(startKey) {
           0.4 + choice.prob * 0.4
         ),
         transparent: true,
-        opacity: 0.2 + choice.prob
+        opacity: 0.2 + choice.prob * confidence   // confident = brighter path, confused = faint paths
       });
 
       const line = new THREE.Line(geometry, material);
@@ -712,7 +811,13 @@ window.addEventListener('click', (event) => {
   console.log("Prediction running")
 
   const clickedId = obj.userData.id;
-  currentGoal = obj.userData.label;     // set goal as clicked label
+  // set goal (right-click idea simulated)
+  if (event.shiftKey) {                     // normal click -> run prediction, SHIFT + click -> set goal
+    goalNeuronId = clickedId;
+    console.log(" Goal set:", goalNeuronId);
+    return;  
+  }
+  currentGoal = obj.userData.label;         // set goal as clicked label
 
   // save click in memory
   thoughtTrail.push(clickedId);
