@@ -311,6 +311,9 @@ const transitions = new Map();  // memory
 const rewards = new Map();
 const signals = new Map();  // Signal strength
 const thoughtTrail = [];
+const curiosityMap = new Map();  // how much we explored each path
+
+let currentGoal = null;  // what brain wants right now
 // sequence memory (pattern -> next)
 const chainMemory = new Map();
 const attentionMap = new Map();   // create attention memmory ( focus strength)
@@ -408,6 +411,12 @@ function runPrediction(startKey) {
       const label1 = startNeuron.userData.label;
       const label2 = targetNeuron.userData.label;
 
+      // Goal BOOST (how close to goal)
+      let goalBoost = 0;
+      if (currentGoal && label2 === currentGoal) {
+        goalBoost = 15;                              // direct hit
+      }
+
       let meaningBoost = 0;
 
       if (conceptRelations[label1]?.includes(label2)) {
@@ -415,10 +424,16 @@ function runPrediction(startKey) {
       }
 
       const focus = attentionMap.get(k) || 0;
-
+   
       const chainBoost = chainMap.get(k) || 0;
       // get reward value for this path
       const reward = rewards.get(currentKey + '-' + k) || 0;
+      // curiosity (less visited = more interesting)
+      const curKey = currentKey + "-" + k;
+      const visits = curiosityMap.get(curKey) || 0;
+      // fewer visits = higher curiosity
+      const curiosityBoost = 1 / (visits + 1);
+
       const finalWeight =
         (
           score +            // similarity
@@ -427,7 +442,9 @@ function runPrediction(startKey) {
           signal * 3 +       // signal strength    
           focus * 2 +        // attention
           chainBoost * 4 +   // sequence memory
-          timeScore * 3      // 🧠 recent importance
+          timeScore * 3 +     // 🧠 recent importance
+          goalBoost * 5 +     // new intelligence
+          curiosityBoost * 2  // curiosity add
         ) * attention;
 
         choices.push({
@@ -627,6 +644,9 @@ window.addEventListener('click', (event) => {
 
       const prev = thoughtTrail[thoughtTrail.length - 2];
       const curr = thoughtTrail[thoughtTrail.length - 1];
+      // curiosity learning (track explored paths)\
+      const curKey = prev + "-" + curr;
+      curiosityMap.set(curKey, (curiosityMap.get(curKey) || 0) + 1);
 
       // strengthen connection
       const map = transitions.get(prev) || new Map();
@@ -692,6 +712,8 @@ window.addEventListener('click', (event) => {
   console.log("Prediction running")
 
   const clickedId = obj.userData.id;
+  currentGoal = obj.userData.label;     // set goal as clicked label
+
   // save click in memory
   thoughtTrail.push(clickedId);
 
