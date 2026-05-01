@@ -164,7 +164,7 @@ fetch('neurons.json')
     data.forEach(n => {
 
       // Create position vector
-      const SCALE = 4.5; // or 10 if you want bigger
+      const SCALE = 1.0; // or 10 if you want bigger
 
       const pos = new THREE.Vector3(
         n.x * SCALE,
@@ -309,6 +309,7 @@ function connectPoints(p1, p2, color, id1, id2) {
 
 const transitions = new Map();  // memory
 const rewards = new Map();
+const penalties = new Map();    // Bad path memory
 const signals = new Map();  // Signal strength
 const thoughtTrail = [];
 const curiosityMap = new Map();  // how much we explored each path
@@ -324,10 +325,22 @@ let goalNeuronId = null;
 
 // 🧠 MEANING RELATIONS (STEP-1 ADD HERE)
 const conceptRelations = {
-  cat: ["animal"],
-  dog: ["animal"],
-  animal: ["cat", "dog"],
-  food: []
+  dog: ["food","bone","home","human"],
+  cat: ["milk","food","home"],
+  lion: ["meat","hunt","forest"],
+  tiger: ["meat","hunt","forest"],
+
+  food: ["eat"],
+  meat: ["eat"],
+  milk: ["drink"],
+
+  hunt: ["meat"],
+  eat: [],
+  drink: [],
+
+  forest: ["hunt","lion","tiger"],
+  home: ["dog","cat","human"],
+  human: ["home","dog"]
 };
 
 // 🧠 LOOK-AHEAD FUNCTION (----*****------   future thinking  ------******-------...............----------->>>>>>>>>>>>>>)
@@ -390,6 +403,46 @@ function lookAheadScore(startId, goalId, depth = 2) {
   // start exploring from current node
 }
 
+// 🧠 REACHABILITY CHECK (true reasoning)
+// This function checks: "Can this node reach the goal in few steps?"
+function canReachGoal(startId, goalId, maxDepth = 4) {
+
+  // If no goal → allow everything
+  if (!goalId) return true;
+
+  const visited = new Set(); // remember visited nodes
+
+  // DFS = explore neighbors step by step
+  function dfs(currentId, depth) {
+
+    // stop if depth finished
+    if (depth === 0) return false;
+
+    // 🎯 reached goal → success
+    if (currentId === goalId) return true;
+
+    visited.add(currentId);
+
+    const neuron = findNeuronById(currentId);
+    if (!neuron) return false;
+
+    // check all neighbors
+    for (let nextId of neuron.userData.neighbors) {
+
+      // skip already visited (avoid loop)
+      if (visited.has(nextId)) continue;
+
+      // if ANY path reaches goal → true
+      if (dfs(nextId, depth - 1)) return true;
+    }
+
+    return false; // no path found
+  }
+
+  return dfs(startId, maxDepth);
+}
+
+
 function runPrediction(startKey) {
 
   let currentKey = startKey;
@@ -440,9 +493,29 @@ function runPrediction(startKey) {
     // Memory weight
     memoryMap.forEach((value, k) => {
 
-      const targetNeuron = findNeuronById(k);
+      // Block paths that cannot reach goal
+      if (goalNeuronId !== null && !canReachGoal(k, goalNeuronId)) {
+        return;                         // skip this option completely
+      }
+      
+      // skip Bad Paths
+      // If this node cannot reach goal -> ignore it completely
+      if (goalNeuronId && !canReachGoal(k, goalNeuronId)) {
+        return;
+      }
 
+      const targetNeuron = findNeuronById(k);
       if (!targetNeuron) return;
+
+      const label1 = startNeuron.userData.label;
+      const label2 = targetNeuron.userData.label;
+
+      // logic filter
+      if (conceptRelations[label1]) {
+        if (!conceptRelations[label1].includes(label2)) {
+          return;
+        }
+      }
 
       const score =
         similarity(startNeuron.userData.embedding, targetNeuron.userData.embedding);
@@ -470,26 +543,32 @@ function runPrediction(startKey) {
       // decay formula (new = high, old = low)
       const timeScore = Math.exp(-age / 5000);
 
-      const label1 = startNeuron.userData.label;
-      const label2 = targetNeuron.userData.label;
 
-      // GOAL BOOST (move toward target)
+      // 🧠 gentle goal guidance (not forcing)
       let goalBoost = 0;
+
       if (goalNeuronId !== null) {
+
         const goalNeuron = findNeuronById(goalNeuronId);
-        
-        if (goalNeuron) {
+
+        if (goalNeuron && targetNeuron) {
+
           const goalSim = similarity(
             targetNeuron.userData.embedding,
             goalNeuron.userData.embedding
-        );
+          );
 
-        goalBoost = goalSim * 8;                            // strong push towards goal
+          // small push toward goal (not overpowering)
+          goalBoost = Math.max(0, goalSim) * 2;
+
+          // slight bonus if exact goal
           if (k === goalNeuronId) {
-            goalBoost += 20;                                  // Exact goal wins
+            goalBoost += 3;
           }
         }
       }
+    
+  
 
       // Goal BOOST (how close to goal)
       //let goalBoost = 0;
@@ -505,13 +584,16 @@ function runPrediction(startKey) {
 
       const focus = attentionMap.get(k) || 0;
    
-      const chainBoost = chainMap.get(k) || 0;
+      const chainBoost = (chainMap.get(k) || 0) * 0.7;     // penalty for wrong chains
 
-      // Future thinking (look ahead 2 steps)
-      const futureScore = lookAheadScore(k, goalNeuronId, 2);
 
       // get reward value for this path
       const reward = rewards.get(currentKey + '-' + k) || 0;
+      // future thinking score ( look ahead 2 steps )
+      // if this node can reach goal -> give extra importance 
+      const futureScore = lookAheadScore(k, goalNeuronId, 2);
+      // punishment bad paths
+      const penalty = penalties.get(currentKey + '_' + k) || 0;
       // curiosity (less visited = more interesting)
       const curKey = currentKey + "-" + k;
       const visits = curiosityMap.get(curKey) || 0;
@@ -520,16 +602,16 @@ function runPrediction(startKey) {
 
       const finalWeight =
         (
-          score +               // similarity
-          memoryBoost +         // frequency
-          reward * 2 +          // good path
-          signal * 3 +          // signal strength    
-          focus * 2 +           // attention
-          chainBoost * 4 +      // sequence memory
-          timeScore * 3 +       // 🧠 recent importance
-          goalBoost +           // new intelligence
-          futureScore * 5 +     // future thinking ----->>>>>
-          curiosityBoost * 2    // curiosity add
+          score +                               // similarity
+          memoryBoost +                         // frequency
+          reward * 2 - penalty * 3  +           // reward good, punish bad
+          signal * 3 +                          // signal strength    
+          focus * 2 +                           // attention
+          chainBoost * 4 +                      // sequence memory
+          timeScore * 3 +                       // 🧠 recent importance
+          goalBoost  +                           // new intelligence ( very important )
+          futureScore * 8 +                     // future thinking ----- =5 -> matters a lot >>>>>
+          curiosityBoost * 2                    // curiosity add
         ) * attention;
 
         choices.push({
@@ -540,18 +622,50 @@ function runPrediction(startKey) {
 
     // pick best choice (highest weight)
     const best = choices.sort((a,b) => b.weight - a.weight)[0];
+
+    let chosenKey = null;
+    if (best) {
+      chosenKey = best.key;       // remember what brain picked
+    }
     // reward system (strengthen correct path)
     if (best) {
       const rewardKey = currentKey + "-" + best.key;
       rewards.set(rewardKey, (rewards.get(rewardKey) || 0) + 1);
-    } 
+    }
+    // punish other wrong choices
+    choices.forEach(c => {
+      if (c.key !== chosenKey) {
+        const badKey = currentKey + "_" + c.key;
+        penalties.set(badKey, (penalties.get(badKey) || 0) + 0.5);
+      }
+    }); 
 
  
     // Structure weight
     structureMap.forEach((value, k) => {
 
+      // Block paths that cannot reach goal
+      if (goalNeuronId !== null && !canReachGoal(k, goalNeuronId)) {
+        return;                         // skip this option completely
+      }
+
+      // skip nodes that can't reach goal
+      if (goalNeuronId && !canReachGoal(k, goalNeuronId)) {
+        return;
+      }
+
       const targetNeuron = findNeuronById(k);
       if (!targetNeuron) return;
+
+      const label1 = startNeuron.userData.label;
+      const label2 = targetNeuron.userData.label;
+
+      // logic filter
+      if (conceptRelations[label1]) {
+        if (!conceptRelations[label1].includes(label2)) {
+          return;
+        }
+      }
 
       const score =
         similarity(startNeuron.userData.embedding, targetNeuron.userData.embedding);
@@ -565,6 +679,30 @@ function runPrediction(startKey) {
     });
 
     embeddingMap.forEach((value, k) => {
+
+      // Block paths that cannot reach goal
+      if (goalNeuronId !== null && !canReachGoal(k, goalNeuronId)) {
+        return;                         // skip this option completely
+      }
+
+      // skip nodes that can't reach goal
+      if (goalNeuronId && !canReachGoal(k, goalNeuronId)) {
+        return;
+      }
+
+      const targetNeuron = findNeuronById(k);
+      if (!targetNeuron) return;
+
+      const label1 = startNeuron.userData.label;
+      const label2 = targetNeuron.userData.label;
+
+      // logic filter
+      if (conceptRelations[label1]) {
+        if (!conceptRelations[label1].includes(label2)) {
+          return;
+        }
+      }
+
       if (!choices.find(c => c.key === k)) {
         choices.push({
           key: k,
