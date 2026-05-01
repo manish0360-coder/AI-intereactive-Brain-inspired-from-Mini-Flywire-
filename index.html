@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -78,6 +79,8 @@ function dot(a, b) {
 
   return sum;
 }
+//________________________________________________________________________________________
+//________________________________________________________________________________________
 
 // 🧠 TRAIN EMBEDDINGS (learning step)
 function trainEmbedding(id1, id2) {
@@ -156,6 +159,9 @@ function normalize(vec) {
 
   return vec;
 }
+
+//___________________________________________________________________________________________
+//__________________________________________________________________________________________
 
 fetch('neurons.json')
   .then(res => res.json())
@@ -255,6 +261,9 @@ for (let i = 0; i < 1000; i++) {
   );
 }
 
+//___________________________________________________________________________________________
+//____________________________________________________
+
 // Attach positions to geometry
 starGeometry.setAttribute(
   'position',
@@ -342,6 +351,9 @@ const conceptRelations = {
   home: ["dog","cat","human"],
   human: ["home","dog"]
 };
+
+//________________________________________________________________________________________
+//_______________________________________________________________
 
 // 🧠 LOOK-AHEAD FUNCTION (----*****------   future thinking  ------******-------...............----------->>>>>>>>>>>>>>)
 function lookAheadScore(startId, goalId, depth = 2) {
@@ -442,6 +454,8 @@ function canReachGoal(startId, goalId, maxDepth = 4) {
   return dfs(startId, maxDepth);
 }
 
+//___________________________________________________________________________________________
+//________________________________________________________________________
 
 function runPrediction(startKey) {
 
@@ -619,28 +633,33 @@ function runPrediction(startKey) {
           weight: finalWeight
         });
     });
+// ___
+  //  __________________________________________________________________________________________
 
-    // pick best choice (highest weight)
-    const best = choices.sort((a,b) => b.weight - a.weight)[0];
+// pick single best choice (highest weight)
+    //const best = choices.sort((a,b) => b.weight - a.weight)[0];
 
-    let chosenKey = null;
-    if (best) {
-      chosenKey = best.key;       // remember what brain picked
-    }
+    //let chosenKey = null;
+    //if (best) {
+      //chosenKey = best.key;       // remember what brain picked
+    //}
     // reward system (strengthen correct path)
-    if (best) {
-      const rewardKey = currentKey + "-" + best.key;
-      rewards.set(rewardKey, (rewards.get(rewardKey) || 0) + 1);
-    }
+    //if (best) {
+      //const rewardKey = currentKey + "-" + best.key;
+      //rewards.set(rewardKey, (rewards.get(rewardKey) || 0) + 1);
+    //}
     // punish other wrong choices
-    choices.forEach(c => {
-      if (c.key !== chosenKey) {
-        const badKey = currentKey + "_" + c.key;
-        penalties.set(badKey, (penalties.get(badKey) || 0) + 0.5);
-      }
-    }); 
+    //choices.forEach(c => {
+      //if (c.key !== chosenKey) {
+        //const badKey = currentKey + "_" + c.key;
+        //penalties.set(badKey, (penalties.get(badKey) || 0) + 0.5);
+      //}
+    //}); 
 
- 
+    // Multi prediction (top 3)
+    const sorted = choices.sort((a, b) => b.weight - a.weight);
+    
+
     // Structure weight
     structureMap.forEach((value, k) => {
 
@@ -811,7 +830,10 @@ function runPrediction(startKey) {
       }, 30);
     });
 
-    // Move forward
+// ___________________________________________________________________________________________
+//________________________________________________________________________________
+
+// Move forward
     currentKey = topChoices[0].key;
   }
 }
@@ -830,6 +852,30 @@ function animate() {
 }
 
 animate();
+
+// ================== 🤖 AI AGENT SYSTEM ==================
+
+// This variable controls if AI is ON or OFF
+let agentActive = false;
+
+// This function makes AI think again and again
+function agentLoop() {
+
+  // ❌ If agent is OFF → stop immediately
+  if (!agentActive) return;
+
+  // 🧠 Take last neuron from memory (current thought)
+  const current = thoughtTrail[thoughtTrail.length - 1];
+
+  // ❌ If nothing in memory → stop
+  if (!current) return;
+
+  // 🔮 Run your brain prediction from current node
+  runPrediction(current);
+
+  // 🔁 Repeat again after 1 second (continuous thinking)
+  setTimeout(agentLoop, 1000);
+}
 
 
 // ================== CLICK ==================
@@ -1004,6 +1050,25 @@ window.addEventListener('click', (event) => {
   // update last clicked AFTER storing
   window.lastClicked = clickedId;
   
+});
+
+// ================== 🎮 KEY CONTROL ==================
+
+// Press "A" key to start/stop AI
+window.addEventListener('keydown', (e) => {
+
+  // If key is 'a'
+  if (e.key === 'a') {
+
+    // Toggle(switch) (ON → OFF, OFF → ON)
+    agentActive = !agentActive;
+
+    // Show status in console
+    console.log("🤖 Agent:", agentActive ? "STARTED" : "STOPPED");
+
+    // If turned ON → start thinking
+    if (agentActive) agentLoop();
+  }
 });
 
 // ====================== ANIMATION ======================

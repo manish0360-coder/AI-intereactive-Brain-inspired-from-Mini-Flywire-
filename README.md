@@ -1,4 +1,6 @@
                   MINI FLYWIRE
+👉 “Real-Time Self-Evolving AI Agent with Neural Graph Memory”
+
 
 An Interactive Emergent Neural System with Memory, Attention, and Future Reasoning
 
@@ -337,3 +339,137 @@ It shows that:
 
 Intelligence is not a single algorithm
 It is a combination of small interacting behaviors
+
+
+_______________👉 “Real-Time Self-Evolving AI Agent with Neural Graph Memory”_______________________________
+
+🚀 PHASE 1 — Make it an AGENT (core brain)
+
+Right now:
+
+system only reacts when you click
+
+We upgrade to:
+
+system can THINK + ACT by itself
+
+WHAT WE ARE ADDING (simple)
+
+Right now your system =
+👉 “only thinks when I click”
+
+We are adding:
+👉 “it can think by itself”
+
+let agentActive = false;
+
+👉 AI is sleeping 😴
+
+⸻
+
+function agentLoop()
+
+👉 This is like:
+
+“Brain thinking loop”
+
+⸻
+
+if (!agentActive) return;
+
+👉 If AI is OFF → don’t think
+
+⸻
+
+const current = thoughtTrail[...]
+
+👉 Take last thing you clicked
+= “current thought”
+
+⸻
+
+runPrediction(current);
+
+👉 Use your brain to decide next step
+
+⸻
+
+setTimeout(agentLoop, 1000);
+
+👉 After 1 second → think again
+👉 again → again → again
+
+💥 This creates continuous thinking
+
+window.addEventListener('keydown'...)
+
+👉 Listen when you press keyboard
+
+⸻
+
+if (e.key === 'a')
+
+👉 Only react if you press A key
+
+⸻
+
+agentActive = !agentActive
+
+👉 Switch:
+	•	OFF → ON
+	•	ON → OFF
+
+⸻
+
+if (agentActive) agentLoop();
+
+👉 If AI turned ON → start thinking loop
+
+⸻
+
+🎯 WHAT WILL HAPPEN NOW
+
+Before:
+
+👉 You click → brain works once
+
+⸻
+
+After:
+
+👉 Click once
+👉 Press A key
+
+💥 Then:
+	•	Brain keeps thinking
+	•	Paths keep forming
+	•	AI moves automatically
+
+⸻
+
+⚠️ IMPORTANT (don’t skip)
+
+Before pressing A key, you MUST:
+
+👉 Click at least ONE neuron
+
+Why?
+
+Because: 
+    thoughtTrail is empty ❌
+    AI has no starting point
+
+✅ TEST CHECKLIST
+
+Do this exactly:
+	1.	Open your app
+	2.	Click any neuron
+	3.	Press A key
+
+⸻
+
+Expected result:
+
+👉 Lines keep appearing
+👉 Dots keep moving
+👉 Brain is alive
