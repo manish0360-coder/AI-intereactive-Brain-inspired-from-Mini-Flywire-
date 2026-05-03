@@ -26,6 +26,27 @@
 // Create 3D world
 const scene = new THREE.Scene();
 
+// ================== 🧠 REASONING UI ==================
+
+// create a small text box on screen
+const reasoningBox = document.createElement("div");
+
+// position it bottom-left
+reasoningBox.style.position = "absolute";
+reasoningBox.style.bottom = "10px";
+reasoningBox.style.left = "10px";
+
+// style (so it looks nice)
+reasoningBox.style.color = "white";
+reasoningBox.style.fontFamily = "monospace";
+reasoningBox.style.fontSize = "14px";
+reasoningBox.style.background = "rgba(0,0,0,0.5)";
+reasoningBox.style.padding = "10px";
+reasoningBox.style.borderRadius = "5px";
+
+// add it to screen
+document.body.appendChild(reasoningBox);
+
 // Create camera (how we see the world)
 const camera = new THREE.PerspectiveCamera(
   75,                                     // field of view
@@ -162,6 +183,27 @@ function normalize(vec) {
 
 //___________________________________________________________________________________________
 //__________________________________________________________________________________________
+
+// 🧠 MEANING RELATIONS (STEP-1 ADD HERE)
+const conceptRelations = {
+  dog: ["food","bone","home","human"],
+  cat: ["milk","food","home"],
+  lion: ["meat","hunt","forest"],
+  tiger: ["meat","hunt","forest"],
+
+  food: ["eat"],
+  meat: ["eat"],
+  milk: ["drink"],
+
+  hunt: ["meat"],
+  eat: [],
+  drink: [],
+
+  forest: ["hunt","lion","tiger"],
+  home: ["dog","cat","human"],
+  human: ["home","dog"]
+};
+
 
 fetch('neurons.json')
   .then(res => res.json())
@@ -323,6 +365,104 @@ const signals = new Map();  // Signal strength
 const thoughtTrail = [];
 const curiosityMap = new Map();  // how much we explored each path
 
+// ================== 🧠 DECISION MEMORY ==================
+
+// this will store last decision (what AI chose and other options)
+let lastDecision = null;   // empty at start
+
+
+// ================== 🧠 SAVE / LOAD BRAIN ==================
+
+// Save everything (memory → storage)
+function saveBrain() {
+
+  // 🧠 convert nested Maps properly
+  function mapToObj(map) {
+    const obj = {};
+    map.forEach((v, k) => {
+      obj[k] = v instanceof Map ? mapToObj(v) : v;
+    });
+    return obj;
+  }
+
+  const data = {
+    transitions: mapToObj(transitions),
+    rewards: mapToObj(rewards),
+    penalties: mapToObj(penalties),
+    signals: mapToObj(signals),
+    curiosity: mapToObj(curiosityMap),
+    chainMemory: mapToObj(chainMemory)
+  };
+
+  localStorage.setItem("brain", JSON.stringify(data));
+
+  console.log("🧠 Brain saved safely");
+}
+
+
+// Load everything back (storage → memory)
+function loadBrain() {
+
+  const raw = localStorage.getItem("brain");
+
+  if (!raw) {
+    console.log("🧠 No saved brain");
+    return;
+  }
+
+  const data = JSON.parse(raw);
+
+  // 🧠 convert object back to Map
+  function objToMap(obj) {
+    const map = new Map();
+
+    for (let key in obj) {
+
+      if (typeof obj[key] === "object" && obj[key] !== null) {
+        map.set(Number(key), objToMap(obj[key]));
+      } else {
+        map.set(Number(key), obj[key]);
+      }
+    }
+
+    return map;
+  }
+
+  // restore safely
+  transitions.clear();
+  Object.entries(data.transitions || {}).forEach(([k, v]) => {
+    transitions.set(Number(k), objToMap(v));
+  });
+
+  rewards.clear();
+  Object.entries(data.rewards || {}).forEach(([k, v]) => {
+    rewards.set(k, v);
+  });
+
+  penalties.clear();
+  Object.entries(data.penalties || {}).forEach(([k, v]) => {
+    penalties.set(k, v);
+  });
+
+  signals.clear();
+  Object.entries(data.signals || {}).forEach(([k, v]) => {
+    signals.set(k, v);
+  });
+
+  curiosityMap.clear();
+  Object.entries(data.curiosity || {}).forEach(([k, v]) => {
+    curiosityMap.set(k, v);
+  });
+
+  chainMemory.clear();
+  Object.entries(data.chainMemory || {}).forEach(([k, v]) => {
+    chainMemory.set(k, objToMap(v));
+  });
+
+  console.log("🧠 Brain loaded safely");
+}
+
+
 let currentGoal = null;  // what brain wants right now
 // sequence memory (pattern -> next)
 const chainMemory = new Map();
@@ -332,25 +472,8 @@ const timeMemory = new Map();
 // Target goal (brain wants to reach this)
 let goalNeuronId = null;
 
-// 🧠 MEANING RELATIONS (STEP-1 ADD HERE)
-const conceptRelations = {
-  dog: ["food","bone","home","human"],
-  cat: ["milk","food","home"],
-  lion: ["meat","hunt","forest"],
-  tiger: ["meat","hunt","forest"],
-
-  food: ["eat"],
-  meat: ["eat"],
-  milk: ["drink"],
-
-  hunt: ["meat"],
-  eat: [],
-  drink: [],
-
-  forest: ["hunt","lion","tiger"],
-  home: ["dog","cat","human"],
-  human: ["home","dog"]
-};
+loadBrain(); // restores saved memory when page starts
+setInterval(saveBrain, 5000);   // save brain every 5 seconds automatically
 
 //________________________________________________________________________________________
 //_______________________________________________________________
@@ -470,7 +593,7 @@ function runPrediction(startKey) {
 
     const memoryMap = transitions.get(currentKey) || new Map();
     // get last 2 clicks pattern
-    const recentPattern = thoughtTrail.slice(-2).join("-");
+    const recentPattern = thoughtTrail.slice(-2).join("->");
     // get learned next predictions
     const chainMap = chainMemory.get(recentPattern) || new Map();
 
@@ -507,6 +630,11 @@ function runPrediction(startKey) {
     // Memory weight
     memoryMap.forEach((value, k) => {
 
+      // Block very bad paths
+      if (penalties.get(currentKey + "->" + k) > 10) {
+        return;
+      }
+
       // Block paths that cannot reach goal
       if (goalNeuronId !== null && !canReachGoal(k, goalNeuronId)) {
         return;                         // skip this option completely
@@ -541,12 +669,12 @@ function runPrediction(startKey) {
 
       const attention = startNeuron.userData.neighbors.includes(k) ? 2 : 1;
 
-      const signalKey = currentKey + "-" + k;
+      const signalKey = currentKey + "->" + k;
       const signal = signals.get(signalKey) || 0;
 
       // 🧠 TIME DECAY
 
-      const timeKey = currentKey + "-" + k;
+      const timeKey = currentKey + "->" + k;
 
       // last used time
       const lastUsed = timeMemory.get(timeKey) || 0;  
@@ -602,23 +730,23 @@ function runPrediction(startKey) {
 
 
       // get reward value for this path
-      const reward = rewards.get(currentKey + '-' + k) || 0;
+      const reward = rewards.get(currentKey + '->' + k) || 0;
       // future thinking score ( look ahead 2 steps )
       // if this node can reach goal -> give extra importance 
       const futureScore = lookAheadScore(k, goalNeuronId, 2);
       // punishment bad paths
-      const penalty = penalties.get(currentKey + '_' + k) || 0;
+      const penalty = penalties.get(currentKey + '->' + k) || 0;
       // curiosity (less visited = more interesting)
-      const curKey = currentKey + "-" + k;
+      const curKey = currentKey + "->" + k;
       const visits = curiosityMap.get(curKey) || 0;
       // fewer visits = higher curiosity
-      const curiosityBoost = 1 / (visits + 1);
+      const curiosityBoost = 3 / (visits + 1);
 
       const finalWeight =
         (
           score +                               // similarity
           memoryBoost +                         // frequency
-          reward * 2 - penalty * 3  +           // reward good, punish bad
+          reward * 2 - penalty * 6  +           // reward good, punish bad
           signal * 3 +                          // signal strength    
           focus * 2 +                           // attention
           chainBoost * 4 +                      // sequence memory
@@ -657,7 +785,28 @@ function runPrediction(startKey) {
     //}); 
 
     // Multi prediction (top 3)
+
+    // 🎲 STEP 4 — RANDOM EXPLORATION (PUT EXACTLY HERE)
+    if (Math.random() < 0.1 && choices.length > 0) {
+      const randomChoice = choices[Math.floor(Math.random() * choices.length)];
+      currentKey = randomChoice.key;
+      return; // stop normal decision → explore instead
+    }
+
+
     const sorted = choices.sort((a, b) => b.weight - a.weight);
+
+    // ================== 🧠 SAVE DECISION ==================
+
+    // best option (highest score)
+    const bestChoice = sorted[0];  
+
+    // save decision info for later explanation
+    lastDecision = {
+      current: currentKey,         // where agent is now
+      best: bestChoice,            // chosen path
+      all: sorted.slice(0, 3)      // top 3 options (for comparison)
+    };
     
 
     // Structure weight
@@ -843,39 +992,381 @@ function runPrediction(startKey) {
 
 function animate() {
 
-  requestAnimationFrame(animate);
-
+  requestAnimationFrame(animate);    // keeps loop running
   // slow star rotation
-  stars.rotation.y += 0.0005;
-
-  renderer.render(scene, camera);
+  stars.rotation.y += 0.0005;        // star movement (optional)
+  renderer.render(scene, camera);    
 }
 
-animate();
+animate();                           // start loop
 
 // ================== 🤖 AI AGENT SYSTEM ==================
+// ***********************************************************************
 
-// This variable controls if AI is ON or OFF
-let agentActive = false;
+// ================== 🤖 AGENT STATE ==================
 
-// This function makes AI think again and again
-function agentLoop() {
+// is AI currently running automatically?
+let agentRunning = false;
 
-  // ❌ If agent is OFF → stop immediately
-  if (!agentActive) return;
+// speed of thinking (ms)
+let agentSpeed = 1500; // 1.5 seconds
 
-  // 🧠 Take last neuron from memory (current thought)
-  const current = thoughtTrail[thoughtTrail.length - 1];
+// where agent is currently thinking
+let agentCurrent = null;
 
-  // ❌ If nothing in memory → stop
-  if (!current) return;
+// remember last position of agent (used for learning)
+let agentLast = null;         // this stores where i was before
 
-  // 🔮 Run your brain prediction from current node
-  runPrediction(current);
+// ================== 🤖 AGENT THINK LOOP ==================
 
-  // 🔁 Repeat again after 1 second (continuous thinking)
-  setTimeout(agentLoop, 1000);
+function runAgent() {
+
+  // 🟢 STEP 5 — DECAY PENALTY (PUT HERE AT TOP)
+  penalties.forEach((value, key) => {
+    penalties.set(key, value * 0.98); // slowly forget bad paths
+  });
+
+  // if turned OFF → stop immediately
+  if (!agentRunning) return;
+
+  // 🧠 if no current position → pick random neuron
+  if (!agentCurrent) {
+
+    const allIds = Array.from(neuronMap.keys()); // get all neuron IDs
+
+    // pick random start point
+    agentCurrent = allIds[Math.floor(Math.random() * allIds.length)];
+
+    console.log("🤖 Start from:", agentCurrent);
+  }
+
+  // 🧠 OPTIONAL: sometimes set a random goal (makes it smart)
+  if (Math.random() < 0.1) {
+
+    const allIds = Array.from(neuronMap.keys());
+
+    goalNeuronId = allIds[Math.floor(Math.random() * allIds.length)];
+
+    console.log("🎯 New goal:", goalNeuronId);
+  }
+
+  // 🧠 THINK → run your prediction system
+  // 🧠 RUN BRAIN (decide where to go)
+  runPrediction(agentCurrent);                  // 👉 your AI thinks and draws paths
+
+  // ================== 🧠 FULL DECISION REASONING ==================
+
+  // ✅ FULL SAFE CHECK (very important)
+  if (
+      lastDecision &&                 // decision exists
+      lastDecision.current != null && // current exists
+      lastDecision.best &&            // best exists
+      lastDecision.best.key != null &&// best.key exists
+      lastDecision.all &&             // all choices exist
+      Array.isArray(lastDecision.all) // make sure it's an array
+  ) {   // only run if decision exists
+
+    // get neurons safely
+    const currentNeuron = findNeuronById(lastDecision.current);
+    const bestNeuron = findNeuronById(lastDecision.best.key);
+
+    if (
+      !currentNeuron || !currentNeuron.userData ||
+      !bestNeuron || !bestNeuron.userData
+    ) {
+        console.log("Missing neuron, skip reasoning");
+        return;
+    }
+
+    let text = "";   // text that will be shown
+
+    // ================== ✅ WHY CHOSEN ==================
+
+    text += "✅ Chose: " +
+      currentNeuron.userData.label + " → " +
+      bestNeuron.userData.label +
+      " (score: " + lastDecision.best.weight.toFixed(2) + ")\n";
+
+    text += "\n❌ Not chosen:\n";
+
+    // ================== ❌ WHY NOT OTHERS ==================
+
+    lastDecision.all.forEach(choice => {
+      if (!choice || choice.key == null) return;
+
+      // skip best (already shown)
+      if (choice.key === lastDecision.best.key) return;
+
+      const neuron = findNeuronById(choice.key);
+
+      //skip if neuron not found
+      if (!neuron || !neuron.userData) return;
+
+      let reason = "";
+
+      // simple rules to explain decision
+      if (choice.weight < lastDecision.best.weight * 0.5) {
+        reason = "low score";   // much weaker
+      } 
+      else if (penalties.get(lastDecision.current + "->" + choice.key)) {
+        reason = "penalty high";  // punished before
+      } 
+      else {
+        reason = "less optimal";  // okay but not best
+      }
+
+      text += "- " +
+        currentNeuron.userData.label + " → " +
+        neuron.userData.label +
+        " (" + reason + ")\n";
+    });
+
+    // ================== 🖥 SHOW ON SCREEN ==================
+
+    reasoningBox.innerText = text;   // update UI box
+
+    // also print in console
+    console.log(text);
+  }
+
+  // ================== 🧠 REASONING VOICE ==================
+
+  // get current neuron (where agent is now)
+  const currentNeuron = findNeuronById(agentCurrent);
+
+  // get last predicted step (from thoughtTrail)
+  let nextStep = thoughtTrail[thoughtTrail.length - 1];
+
+  // get next neuron object
+  const nextNeuron = findNeuronById(nextStep);
+
+  // if both exist → explain reasoning
+  if (!currentNeuron || !nextNeuron) return;
+
+    // 🧠 ================== DEEP REASONING ==================
+
+    // 🛑 safety (don't crash)
+    if (!currentNeuron || !nextNeuron) return;
+
+    // 🧠 1. SIMILARITY (how related ideas are)
+    const sim = similarity(
+        currentNeuron.userData.embedding,
+        nextNeuron.userData.embedding
+    );
+
+    // 🧠 2. REWARD (good past memory)
+    const key = currentNeuron.id + "->" + nextStep;
+    const reward = rewards.get(key) || 0;
+
+    // 🧠 3. PENALTY (bad past memory)
+    const penalty = penalties.get(key) || 0;
+
+    // 🧠 4. CURIOSITY (new/unexplored path)
+    const curiosity = curiosityMap.get(key) || 0;
+
+    // 🧠 5. FINAL SCORE (real decision brain)
+    const score =
+        sim * 2 +        // similarity weight
+        reward * 1.5 -   // reward helps
+        penalty * 2 +    // penalty hurts
+        curiosity * 0.5; // curiosity bonus
+
+    // 🎯 goal understanding
+    let goalInfo = "";
+    if (goalNeuronId !== null) {
+        if (nextStep === goalNeuronId) {
+            goalInfo = "🎯 directly reaching goal!";
+        } else {
+            goalInfo = "➡️ moving toward goal";
+        }
+    }
+
+    // 🖥️ PRINT FULL THINKING (console)
+    console.log(
+        "🧠 Thinking:",
+        currentNeuron.userData.label,
+        "->",
+        nextNeuron.userData.label,
+        "\n similarity:", sim.toFixed(2),
+        "\n reward:", reward.toFixed(2),
+        "\n penalty:", penalty.toFixed(2),
+        "\n curiosity:", curiosity.toFixed(2),
+        "\n 👉 final score:", score.toFixed(2),
+        "\n", goalInfo
+    );
+
+    // 📺 SHOW ON SCREEN (visual brain)
+    reasoningBox.innerText =
+        "🧠 Thinking:\n" +
+        currentNeuron.userData.label +
+        " → " +
+        nextNeuron.userData.label +
+
+        "\n\n similarity: " + sim.toFixed(2) +
+        "\n reward: " + reward.toFixed(2) +
+        "\n penalty: " + penalty.toFixed(2) +
+        "\n curiosity: " + curiosity.toFixed(2) +
+
+        "\n\n FINAL SCORE: " + score.toFixed(2) +
+        "\n\n" + goalInfo;
+  
+
+  // ================== 🧠 SHOW ON SCREEN ==================
+
+  // update reasoning text on screen
+  reasoningBox.innerText =
+    "Thinking: " +
+    currentNeuron.userData.label +
+    " → " +
+    nextNeuron.userData.label +
+    "\nSimilarity: " + sim.toFixed(2) +
+    "\n" + goalInfo;
+  
+
+  // 🧠 try to get next step from memory (last prediction)
+  let next = null;
+
+  // if we have any history
+  if (thoughtTrail.length > 0) {
+    next = thoughtTrail[thoughtTrail.length - 1]; 
+    // 👉 last visited neuron = next step
+  }
+  
+
+  // ================== 🧠 SELF LEARNING ==================
+
+  // if we have previous and current step
+  if (agentLast !== null && next !== null) {
+
+    const prev = agentLast; // 👉 where we were before
+    const current = next;      // 👉 where we moved now
+
+    // 🧪 curiosity = "I explored this path"
+    const key = prev + "->" + current;
+
+    // increase curiosity every time we use this path
+    curiosityMap.set(
+        key,
+        (curiosityMap.get(key) || 0) + 0.1
+    );
+
+    // ===============================
+    // 🏆 2. REWARD (goal reached)
+    // ===============================
+    if (current === goalNeuronId) {
+
+        rewards.set(
+            key,
+            (rewards.get(key) || 0) + 1
+        );
+    }
+
+    // ===============================
+    // ⚠️ 3. PENALTY (wrong path), this path was not good
+    // ===============================
+    else {
+
+        penalties.set(
+            key,
+            (penalties.get(key) || 0) + 0.3
+        );
+    }
+
+    
+
+
+    // ================== 🧠 MEMORY LEARNING ==================
+
+    const map = transitions.get(prev) || new Map();
+    // 👉 get memory of previous neuron
+
+    map.set(current, (map.get(current) || 0) + 1);
+    // 👉 increase strength of this path
+
+    transitions.set(prev, map);
+    // 👉 save back to memory
+
+    // ================== 🎯 REWARD SYSTEM ==================
+
+    if (goalNeuronId && current === goalNeuronId) {
+      // 👉 if we reached goal
+
+      const key = prev + "->" + current;
+
+      rewards.set(key, (rewards.get(key) || 0) + 3);
+      // 👉 give big reward
+
+      console.log("🎉 Goal reached → reward!");
+    }
+
+    // ================== ❌ PENALTY SYSTEM ==================
+
+    if (Math.random() < 0.2) {
+      // 👉 sometimes punish random paths
+
+      const badKey = prev + "->" + current;
+
+      penalties.set(badKey, (penalties.get(badKey) || 0) + 0.3);
+    }
+
+    // ================== ⚡ SIGNAL SYSTEM ==================
+
+    const signalKey = prev + "->" + current;
+
+    signals.set(signalKey, (signals.get(signalKey) || 0) + 1);       // 👉 stronger signal = more important path
+    
+
+    // ================== ⏱ TIME MEMORY ==================
+
+    const timeKey = prev + "->" + current;
+
+    timeMemory.set(timeKey, Date.now());
+    // 👉 remember when this path was used
+
+    console.log("🧠 Self learned:", prev, "→", current);
+  }
+
+  // ================== UPDATE MEMORY ==================
+
+  agentLast = agentCurrent;                       // 👉 store current as "previous" for next step
+  
+
+  // ================== MOVE FORWARD ==================
+
+  if (next !== null) {
+    agentCurrent = next; 
+    // 👉 agent moves to next neuron
+  }
+
+  // ================== LOOP AGAIN ==================
+
+  setTimeout(runAgent, agentSpeed);              // 👉 repeat thinking again after delay
+  
+
+  // 🧠 move forward (like brain thinking next step)
+  agentCurrent = goalNeuronId || agentCurrent;
+
+  // 🔁 repeat again after delay
+  setTimeout(runAgent, agentSpeed);
 }
+
+// ================== 🤖 CONTROL ==================
+
+// press SPACE → start / stop AI
+window.addEventListener("keydown", (e) => {
+  // if SPACE key is pressed
+  if (e.code === "Space") {
+    // toggle ON/OFF
+    agentRunning = !agentRunning;
+
+    if (agentRunning) {
+      console.log("🚀 Agent STARTED");
+      runAgent(); // start loop
+    } else {
+      console.log("⛔ Agent STOPPED");
+    }
+  }
+});
 
 
 // ================== CLICK ==================
@@ -926,37 +1417,37 @@ window.addEventListener('click', (event) => {
     if (thoughtTrail.length >= 2) {
 
       const prev = thoughtTrail[thoughtTrail.length - 2];
-      const curr = thoughtTrail[thoughtTrail.length - 1];
+      const current = thoughtTrail[thoughtTrail.length - 1];
       // curiosity learning (track explored paths)\
-      const curKey = prev + "-" + curr;
+      const curKey = prev + "->" + current;
       curiosityMap.set(curKey, (curiosityMap.get(curKey) || 0) + 1);
 
       // strengthen connection
       const map = transitions.get(prev) || new Map();
-      map.set(curr, (map.get(curr) || 0) + 2); // stronger than normal
+      map.set(current, (map.get(current) || 0) + 2); // stronger than normal
       transitions.set(prev, map);
 
       // reward chain
-      const key = prev + "-" + curr;
+      const key = prev + "->" + current;
       rewards.set(key, (rewards.get(key) || 0) + 2);
 
-      console.log("🧠 Chain learned:", prev, "→", curr);
+      console.log("🧠 Chain learned:", prev, "→", current);
     }
     
 
     const prev = window.lastNeuron;
-    const curr = obj.userData.id;
+    const current = obj.userData.id;
 
-    trainEmbedding(prev, curr);
+    trainEmbedding(prev, current);
 
     // get memory map of previous neuron
     const map = transitions.get(prev) || new Map();
 
     // increase strength
-    map.set(curr, (map.get(curr) || 0) + 1);
+    map.set(current, (map.get(current) || 0) + 1);
 
     // 🔥 SIGNAL LEARNING
-    const signalKey = prev + "-" + curr;
+    const signalKey = prev + "->" + current;
     signals.set(signalKey, (signals.get(signalKey) || 0) + 1);
 
     // 🧠 SIGNAL DECAY (forget slowly)
@@ -966,7 +1457,7 @@ window.addEventListener('click', (event) => {
 
     // ❌ weaken wrong paths
     map.forEach((value, key) => {
-      if (key !== curr) {
+      if (key !== current) {
         map.set(key, value * 0.9);
       }
     });
@@ -974,7 +1465,7 @@ window.addEventListener('click', (event) => {
     // save back
     transitions.set(prev, map);
 
-    console.log("🧠 Learned:", prev, "→", curr);
+    console.log("🧠 Learned:", prev, "→", current);
   }
 
   // store current as last
@@ -1019,7 +1510,7 @@ window.addEventListener('click', (event) => {
   // learn pattern like "1-2 → 3"
   if (thoughtTrail.length >= 2) {
 
-    const pattern = thoughtTrail.slice(0, -1).join("-"); // "1-2"
+    const pattern = thoughtTrail.slice(0, -1).join("->"); // "1-2"
     const next = thoughtTrail[thoughtTrail.length - 1];  // "3"
 
     let map = chainMemory.get(pattern);
@@ -1042,7 +1533,7 @@ window.addEventListener('click', (event) => {
   // 🧠 store time for previous → current
   if (window.lastClicked !== undefined) {
 
-    const timeKey = window.lastClicked + "-" + clickedId;
+    const timeKey = window.lastClicked + "->" + clickedId;
 
     timeMemory.set(timeKey, Date.now());
   }
