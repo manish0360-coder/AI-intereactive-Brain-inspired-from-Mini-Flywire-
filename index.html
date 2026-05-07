@@ -393,6 +393,7 @@ const signals = new Map();  // Signal strength
 const thoughtTrail = [];
 const curiosityMap = new Map();  // how much we explored each path
 const Q = new Map();             // Q-Learning table (key = "state->action values")
+const episodeRewards = new Map(); // store successful episodes (lion->hunt->meat->eat)
 
 // ================== 🧠 DECISION MEMORY ==================
 
@@ -495,6 +496,15 @@ console.log("🧠 Brain loaded safely");
 let currentGoal = null;  // what brain wants right now
 // sequence memory (pattern -> next)
 const chainMemory = new Map();
+
+// ===============================
+// FULL EPISODE MEMORY
+// Stores complete experiences
+// Example:
+// ["lion","hunt","meat","eat"]
+// ===============================
+const episodes = [];
+
 const attentionMap = new Map();   // create attention memmory ( focus strength)
 // stores last time each path was used
 const timeMemory = new Map();
@@ -552,7 +562,7 @@ function lookAheadScore(startId, goalId, depth = 2) {
     // go one step deeper (future thinking)
     
     // combine current + future
-    best = Math.max(best, future * 0.8);
+    best = Math.max(best, future * 2);
     // if future path is better → take it
   });
   
@@ -606,8 +616,89 @@ function canReachGoal(startId, goalId, maxDepth = 4) {
   return dfs(startId, maxDepth);
 }
 
-//___________________________________________________________________________________________
-//________________________________________________________________________
+
+// ========================================
+// 🧠 REAL FUTURE THINKING
+// Brain imagines future chains
+// Example:
+// lion -> hunt -> meat -> eat
+// ========================================
+
+function futureScore(startId, depth = 4) {
+
+    // stop if depth finished
+    if (depth <= 0) {
+        return 0; // no future left
+    }
+
+    // get neuron
+    const neuron = findNeuronById(startId);
+
+    // safety check
+    if (!neuron) {
+        return 0;
+    }
+
+    // best future found
+    let best = 0;
+
+    // check every neighbor
+    neuron.userData.neighbors.forEach(nextId => {
+
+        // =========================
+        // reward memory
+        // =========================
+        const rewardKey =
+            startId + "->" + nextId;
+
+        // learned reward
+        const reward =
+            rewards.get(rewardKey) || 0;
+
+        // punishment memory
+        const penalty =
+            penalties.get(rewardKey) || 0;
+
+        // learned Q value
+        const q =
+            getQ(startId, nextId);
+
+        // curiosity
+        const visits =
+            curiosityMap.get(rewardKey) || 0;
+
+        const curiosity =
+            1 / (visits + 1);
+
+        // =========================
+        // recursive future thinking
+        // =========================
+
+        // imagine future deeper
+        const future =
+            futureScore(nextId, depth - 1);
+
+        // =========================
+        // final chain score
+        // =========================
+
+        const total =
+            reward * 1.5 +        // reward importance
+            q * 2.5 -             // learned intelligence
+            penalty * 1.5 +       // avoid danger
+            curiosity * 0.3 +   // exploration
+            future * 2;       // future imagination
+
+        // keep best path
+        if (total > best) {
+            best = total;
+        }
+
+    });
+
+    // return best future chain
+    return best;
+}
 
 function runPrediction(startKey) {
   
@@ -626,6 +717,47 @@ function runPrediction(startKey) {
     // get learned next predictions
     const chainMap = chainMemory.get(recentPattern) || new Map();
     
+    // ======================================
+    // EPISODE FUTURE MEMORY
+    // Checks if current neuron appeared
+    // inside successful past episodes
+    // ======================================
+
+    const episodeMap = new Map();
+
+    episodes.forEach(ep => {
+
+        // Find current neuron position
+        const index = ep.indexOf(
+            neuronMap.get(currentKey)?.userData.label
+        );
+
+        // If neuron exists in episode
+        if (index !== -1) {
+
+            // Look at future steps
+            for (let i = index + 1; i < ep.length; i++) {
+
+                const futureWord = ep[i];
+
+                // Find neuron by label
+                neuronMap.forEach((n, id) => {
+
+                    if (n.userData.label === futureWord) {
+
+                        // Higher reward for later chain memory
+                        const score = ep.length - i;
+
+                        episodeMap.set(
+                            id,
+                            (episodeMap.get(id) || 0) + score
+                        );
+                    }
+                });
+            }
+        }
+    });
+
     const structureMap = new Map();
     startNeuron.userData.neighbors.forEach(id => {
       structureMap.set(id, 1);
@@ -747,6 +879,15 @@ function runPrediction(startKey) {
       if (k === currentKey) {
         return;
       }
+
+      // 🚫 stop repetitive loops
+      if (
+          thoughtTrail.length >= 2 &&
+          thoughtTrail[thoughtTrail.length - 1] === k &&
+          thoughtTrail[thoughtTrail.length - 2] === currentKey
+      ) {
+          return;
+      }
       
       // block very bad paths
       if (penalties.get(currentKey + "->" + k) > 10) {
@@ -776,16 +917,25 @@ function runPrediction(startKey) {
   
   // get reward value for this path
   const reward = rewards.get(currentKey + '->' + k) || 0;
-  // future thinking score ( look ahead 2 steps )
-  // if this node can reach goal -> give extra importance
-  const futureScore = lookAheadScore(k, goalNeuronId, 2);
   // punishment bad paths
   const penalty = penalties.get(currentKey + '->' + k) || 0;
   // curiosity (less visited = more interesting)
   const curKey = currentKey + "->" + k;
   const visits = curiosityMap.get(curKey) || 0;
-  // fewer visits = higher curiosity
-  const curiosityBoost = 3 / (visits + 1);
+  // ================== 🧠 REAL BRAIN LOGIC ==================
+
+  // low visits = curious
+  // high visits = less curious
+  const curiosityBoost =
+  1 / Math.sqrt(visits + 1); // curiosity naturally fades
+
+  // repeated path becomes trusted habit
+  const habitBoost =
+  Math.log(visits + 1) * 1.5; // confidence increases slowly
+
+  // too repetitive = boring
+  const boredomPenalty =
+  visits * 0.03; // brain gets bored of same thing
   
   // 🧠 get learned Q value (real intelligence)
   const qValue = getQ(currentKey, k);
@@ -796,13 +946,18 @@ function runPrediction(startKey) {
   // example:
   // lion -> hunt -> meat -> eat
   const chainReward =
-  (chainMap.get(k) || 0) * 1.5;
+  (chainMap.get(k) || 0) * 3.5;
   
   // future planning bonus
   // brain asks:
   // "can this path help reach goal later?"
+  // 🧠 imagine future chain
+  const imaginedFuture =
+  futureScore(k, 4);
+
+  // future planning bonus
   const futureBonus =
-  futureScore * 1.2;
+  imaginedFuture * 1.5;
   
   // slight penalty for dangerous paths
   const dangerPenalty =
@@ -815,16 +970,22 @@ function runPrediction(startKey) {
   qValue * 4 +
   
   // reward memory
-  reward * 2 +
+  reward * 1.0 +
+
+  // trained habit confidence
+  habitBoost * 2 +
   
   // curiosity / exploration
-  curiosityBoost +
+  curiosityBoost * 0.5 +
   
   // learned sequence memory
-  chainReward +
+  chainReward * 1.5 +
   
   // future planning
-  futureBonus -
+  futureBonus * 2.5 - 
+
+  // repetitive boredom
+  boredomPenalty -
   
   // punishment for bad paths
   dangerPenalty;
@@ -1343,14 +1504,38 @@ const penalty = penalties.get(key) || 0;
 
 // 🧠 4. CURIOSITY (new/unexplored path)
 const visits = curiosityMap.get(key) || 0;
-const curiosity= 1 / (visits + 1);
+// curiosity fades naturally
+const curiosity =
+1 / Math.sqrt(visits + 1);
 
-// 🧠 5. FINAL SCORE (real decision brain)
+// repeated paths become confident habits
+const habit =
+Math.log(visits + 1);
+
+// ==========================================
+// 🧠 FULL EPISODE MEMORY BONUS
+// example:
+// lion->hunt->meat->eat
+// brain rewards full successful strategy
+// ==========================================
+
+// convert recent memory into one full path
+const pathKey = recentMemory.join("->");
+
+// get long-term episode strength
+const episodeMemoryBonus =
+    (episodeRewards.get(pathKey) || 0) * 0.3;
+// stronger remembered episodes
+// get bigger thinking score
+
+// ================== 🧠 REAL REASONING SCORE ==================
 const score =
-sim * 1.5 +        // similarity weight
-reward * 2 -   // reward helps
-penalty * 2 +    // penalty hurts
-curiosity * 0.15; // curiosity bonus
+sim * 1.2 +           // meaning similarity
+reward * 2 +        // reward memory
+habit * 2.5 +           // learned confidence
+curiosity * 1.5 +     // exploration
+episodeMemoryBonus - 
+penalty * 1.5;        // avoid danger
 
 // 🛡️ LIMIT FINAL SCORE (VERY IMPORTANT FOR STABILITY)
 
@@ -1363,7 +1548,6 @@ const MIN_SCORE = -50;
 // apply safe bounds
 const safeScore = Math.max(MIN_SCORE, Math.min(score, MAX_SCORE));
 
-
 // 🎯 goal understanding
 let goalInfo = "";
 if (goalNeuronId !== null) {
@@ -1373,6 +1557,10 @@ if (goalNeuronId !== null) {
   goalInfo = "➡️ moving toward goal";
 }
 }
+
+const episodeScore = recentMemory.length;    // Episode thinking score
+
+
 
 // 🖥️ PRINT FULL THINKING (console)
 console.log(
@@ -1385,6 +1573,7 @@ nextNeuron.userData.label,
 "\n penalty:", penalty.toFixed(2),
 "\n curiosity:", curiosity.toFixed(2),
 "\n 👉 final score:", safeScore.toFixed(2),
+"\n episode score:", episodeScore,              // SHOW EPISODE PLANNING POWER
 "\n", goalInfo
 );
 
@@ -1517,6 +1706,35 @@ newCuriosity                                        // store controlled value
 // 🏆 2. REWARD (goal reached)
 // ===============================
 if (current === goalNeuronId) {
+
+  // =====================================
+  // SAVE FULL SUCCESSFUL EPISODE
+  // Example:
+  // lion -> hunt -> meat -> eat
+  // =====================================
+
+  // Convert neuron IDs into words
+  const episodeWords = thoughtTrail.map(id => {
+      const n = neuronMap.get(id);
+      return n ? n.userData.label : id;
+  });
+
+  // Save only if episode is long enough
+  if (episodeWords.length >= 3) {
+
+      // Store full episode
+      episodes.push([...episodeWords]);
+
+      // keep only latest 200 episodes
+      if (episodes.length > 200) {
+        episodes.shift();
+      }
+
+      console.log(
+          "🧠 Episode stored:",
+          episodeWords.join(" -> ")
+      );
+  }
   
   rewards.set(
   key,
@@ -1567,24 +1785,60 @@ transitions.set(prev, map);
 // ================== 🎯 REWARD SYSTEM ==================
 
 if (goalNeuronId && current === goalNeuronId) {
-  // 👉 if we reached goal
-  
-  const key = prev + "->" + current;
-  
-  rewards.set(key, (rewards.get(key) || 0) + 3);
-  // 👉 give big reward
-  
-  console.log("🎉 Goal reached → reward!");
+
+    // 👉 if we reached goal
+
+    const key = prev + "->" + current; // current successful step
+
+    rewards.set(
+        key,
+        (rewards.get(key) || 0) + 3
+    ); // give normal reward
+
+    console.log("🎉 Goal-reached → reward!"); // show success
+
+
+
+    // ==========================================
+    // 🧠 LONG-TERM EPISODIC MEMORY REINFORCEMENT
+    // reward COMPLETE successful chain
+    // example:
+    // lion -> hunt -> meat -> eat
+    // ==========================================
+
+    recentMemory.forEach((step, i) => {
+
+        const old = episodeRewards.get(step) || 0; // old memory strength
+
+        episodeRewards.set(                       // strengthen full successful chain
+
+            step,
+
+            old + ((i + 1) * 2)
+
+            // later steps get stronger reward
+            // lion->hunt = +2
+            // hunt->meat = +4
+            // meat->eat = +6
+
+        );
+
+    });
+
+
+
+    console.log("🧠 Full episode reinforced");
+
 }
 
 // ================== ❌ PENALTY SYSTEM ==================
 
-if (Math.random() < 0.2) {
+if (safeScore < 0){                              // only punish very bad path
   // 👉 sometimes punish random paths
   
   const badKey = prev + "->" + current;
   
-  penalties.set(badKey, (penalties.get(badKey) || 0) + 0.3);
+  penalties.set(badKey, (penalties.get(badKey) || 0) + 0.1);
 }
 
 // ================== ⚡ SIGNAL SYSTEM ==================
