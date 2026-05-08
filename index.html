@@ -1,26 +1,24 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>Mini FlyWire</title>
-
-<style>
-/* Remove default margin + make full screen */
+ <head>
+  <title>
+   Mini FlyWire
+  </title>
+  <style>
+   /* Remove default margin + make full screen */
 body {
   margin: 0;
   overflow: hidden;
   background: black;
 }
-</style>
-</head>
-
-<body>
-
-<!-- Load Three.js (3D engine) -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.158/build/three.min.js"></script>
-
-<script>
-
-// ================== SCENE SETUP ==================
+  </style>
+ </head>
+ <body>
+  <!-- Load Three.js (3D engine) -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.158/build/three.min.js">
+  </script>
+  <script>
+   // ================== SCENE SETUP ==================
 
 // Create 3D world
 const scene = new THREE.Scene();
@@ -625,86 +623,240 @@ function canReachGoal(startId, goalId, maxDepth = 4) {
 // ========================================
 
 function futureScore(startId, depth = 4) {
+  // remember visited nodes
+  const visited = new Set();  
 
-    // stop if depth finished
-    if (depth <= 0) {
-        return 0; // no future left
+  // stop if depth finished
+  if (depth <= 0) {
+     return 0; // no future left
+  }
+
+  // get neuron
+  const neuron = findNeuronById(startId);
+
+  // safety check
+  if (!neuron) {
+    return 0;
+  }
+
+  // best future found
+  let best = 0;
+
+  neuron.userData.neighbors.forEach(nextId => {
+
+    // 🚫 stop infinite loops
+    if (visited.has(nextId)) {
+        return;
     }
 
-    // get neuron
-    const neuron = findNeuronById(startId);
+    // mark visited
+    visited.add(nextId);
 
-    // safety check
-    if (!neuron) {
-        return 0;
+    // =========================
+    // reward memory
+    // =========================
+
+    const rewardKey =
+        startId + "->" + nextId;
+
+    const reward =
+        rewards.get(rewardKey) || 0;
+
+    const penalty =
+        penalties.get(rewardKey) || 0;
+
+    const q =
+        getQ(startId, nextId);
+
+    const visits =
+        curiosityMap.get(rewardKey) || 0;
+
+    const curiosity =
+        1 / (visits + 1);
+
+    // future imagination
+    const future =
+        futureScore(nextId, depth - 1);
+
+    // 🧠 VERY IMPORTANT
+    // reduce future domination
+    const total =
+
+        reward * 1.0 +
+
+        q * 1.2 -
+
+        penalty * 1.0 +
+
+        curiosity * 0.4 +
+
+        future * 0.8;
+
+    // keep best
+    if (total > best) {
+        best = total;
     }
 
-    // best future found
-    let best = 0;
+    // remove visited after branch ends
+    visited.delete(nextId);
 
-    // check every neighbor
-    neuron.userData.neighbors.forEach(nextId => {
-
-        // =========================
-        // reward memory
-        // =========================
-        const rewardKey =
-            startId + "->" + nextId;
-
-        // learned reward
-        const reward =
-            rewards.get(rewardKey) || 0;
-
-        // punishment memory
-        const penalty =
-            penalties.get(rewardKey) || 0;
-
-        // learned Q value
-        const q =
-            getQ(startId, nextId);
-
-        // curiosity
-        const visits =
-            curiosityMap.get(rewardKey) || 0;
-
-        const curiosity =
-            1 / (visits + 1);
-
-        // =========================
-        // recursive future thinking
-        // =========================
-
-        // imagine future deeper
-        const future =
-            futureScore(nextId, depth - 1);
-
-        // =========================
-        // final chain score
-        // =========================
-
-        const total =
-            reward * 1.5 +        // reward importance
-            q * 2.5 -             // learned intelligence
-            penalty * 1.5 +       // avoid danger
-            curiosity * 0.3 +   // exploration
-            future * 2;       // future imagination
-
-        // keep best path
-        if (total > best) {
-            best = total;
-        }
-
-    });
+  });
 
     // return best future chain
     return best;
 }
 
+// ===============================
+// 🧠 EPISODIC REPLAY SYSTEM
+// brain replays old successful memories
+// like dreaming during sleep
+// ===============================
+
+function replayEpisodes() {
+
+    // no memories yet
+    if (episodes.length === 0) return;
+    // pick random successful episode
+    const ep =
+        episodes[
+            Math.floor(Math.random() * episodes.length)
+        ];
+    // too short -> ignore
+    if (ep.length < 2) return;
+
+    // ===================================== 
+    // 🚫 skip boring tiny loops
+    // =====================================
+    const uniqueSteps =
+    new Set(ep);
+
+    // skip repeated junk
+    if (uniqueSteps.size <= 2) {
+
+    console.log(
+        "🚫 boring replay skipped"
+    );
+    return;
+    }
+
+    console.log(
+        "🧠 Replaying episode:",
+        ep.join(" -> ")
+    );
+
+    // replay every step
+    for (let i = 0; i < ep.length - 1; i++) {
+
+        // current word
+        const fromLabel = ep[i];
+
+        // next word
+        const toLabel = ep[i + 1];
+
+        let fromId = null;
+        let toId = null;
+
+        // find neuron IDs
+        neuronMap.forEach((n, id) => {
+
+            if (n.userData.label === fromLabel) {
+                fromId = id;
+            }
+
+            if (n.userData.label === toLabel) {
+                toId = id;
+            }
+
+        });
+
+        // safety
+        if (fromId == null || toId == null) continue;
+
+        // =========================
+        // strengthen transition memory
+        // =========================
+
+        const map =
+            transitions.get(fromId) || new Map();
+
+        map.set(
+            toId,
+            (map.get(toId) || 0) + 0.5
+        );
+
+        transitions.set(fromId, map);
+
+        // =========================
+        // strengthen reward memory
+        // =========================
+
+        const key =
+            fromId + "->" + toId;
+
+        rewards.set(
+            key,
+            (rewards.get(key) || 0) + 0.2
+        );
+
+        // =========================
+        // strengthen Q-learning
+        // =========================
+
+        const oldQ =
+            getQ(fromId, toId);
+
+        setQ(
+            fromId,
+            toId,
+            oldQ + 0.05
+        );
+
+        // =========================
+        // train embeddings again
+        // =========================
+
+        trainEmbedding(fromId, toId);
+
+    }
+
+}
+
 function runPrediction(startKey) {
   
   let currentKey = startKey;
+
+  // ======================================
+  // 🧠 safe memory size
+  // if recentMemory exists use it
+  // otherwise use thoughtTrail
+  // ======================================
+
+  const memorySize =
+
+  typeof recentMemory !== "undefined"
+
+  ? recentMemory.length
+
+  : thoughtTrail.length;
+
+  // ======================================
+  // 🧠 stores all imagined future branches
+  // ======================================
+
+  const thoughtTree = [];
   
-  const STEPS = 6;
+  // ======================================
+  // 🧠 dynamic thinking depth
+  // bigger memory = deeper imagination
+  // ======================================
+
+  const STEPS = Math.min(
+
+      2 + (memorySize * 2),
+
+      12
+
+  );
   
   for (let step = 0; step < STEPS; step++) {
     // Define starNeuron
@@ -813,15 +965,36 @@ function runPrediction(startKey) {
     const label1 = startNeuron.userData.label;
     const label2 = targetNeuron.userData.label;
     
-    // logic filter
-    if (conceptRelations[label1]) {
-      if (!conceptRelations[label1].includes(label2)) {
-        return;
-      }
-    }
+    
     
     const score =
     similarity(startNeuron.userData.embedding, targetNeuron.userData.embedding);
+
+    // ======================================
+    // 🧠 SOFT SEMANTIC BIAS
+    // related ideas get bonus
+    // unrelated ideas still allowed
+    // ======================================
+
+    let meaningBoost = 0;
+
+    // if concept exists
+    if (conceptRelations[label1]) {
+
+        // if concept is related
+        if (conceptRelations[label1].includes(label2)) {
+
+          // add semantic bonus
+          meaningBoost = 3;
+
+          console.log(
+            "🧠 semantic bonus:",
+            label1,
+            "->",
+            label2
+          );
+        }
+    }
     
     const memoryBoost = Math.log(value + 1);
     
@@ -904,11 +1077,6 @@ function runPrediction(startKey) {
     //goalBoost = 15;                              // direct hit
     //}
   
-  let meaningBoost = 0;
-  
-  if (conceptRelations[label1]?.includes(label2)) {
-    meaningBoost = 2; // 🔥 strong relation
-  }
   
   const focus = attentionMap.get(k) || 0;
   
@@ -935,7 +1103,7 @@ function runPrediction(startKey) {
 
   // too repetitive = boring
   const boredomPenalty =
-  visits * 0.03; // brain gets bored of same thing
+  visits * 0.25; // brain gets bored of same thing
   
   // 🧠 get learned Q value (real intelligence)
   const qValue = getQ(currentKey, k);
@@ -967,28 +1135,30 @@ function runPrediction(startKey) {
   const finalWeight =
   
   // learned behavior (MOST IMPORTANT)
-  qValue * 4 +
+  qValue * 1.5 +
   
   // reward memory
-  reward * 1.0 +
+  reward * 1.2 +
 
   // trained habit confidence
-  habitBoost * 2 +
+  habitBoost * 0.6 +
   
   // curiosity / exploration
-  curiosityBoost * 0.5 +
+  curiosityBoost * 1.5 +
   
   // learned sequence memory
-  chainReward * 1.5 +
+  chainReward * 4 +
+
+  meaningBoost * 2 +
   
   // future planning
-  futureBonus * 2.5 - 
+  futureBonus * 1.2 - 
 
   // repetitive boredom
-  boredomPenalty -
+  boredomPenalty * 2-
   
   // punishment for bad paths
-  dangerPenalty;
+  dangerPenalty * 2;
   
   
   choices.push({
@@ -1161,13 +1331,33 @@ topChoices = choices.slice(0, 2); // medium
 topChoices = choices.slice(0, 3); // explore
 }
 
-// ===== DRAW MULTI PATH =====
 topChoices.forEach(choice => {
-  
-  const neuron = findNeuronById(choice.key);
-  const prevNeuron = findNeuronById(currentKey);
-  
-  if (!neuron || !prevNeuron) return;
+
+  // find next neuron safely
+  const neuron =
+  findNeuronById(choice.key);
+
+  // find current neuron safely
+  const prevNeuron =
+  findNeuronById(currentKey);
+
+  // 🛑 safety system
+  // stop crashes immediately
+  if (
+      !neuron ||
+      !prevNeuron ||
+      !neuron.position ||
+      !prevNeuron.position
+  ) {
+
+      console.log(
+          "❌ Missing neuron in prediction",
+          choice.key,
+          currentKey
+      );
+
+      return;
+  }
   
   // Draw line
   const geometry = new THREE.BufferGeometry().setFromPoints([
@@ -1251,8 +1441,87 @@ window.lastReasoning = {
   to: nextKey
 };
 
+// ======================================
+// 🧠 save imagined path into tree
+// ======================================
+
+thoughtTree.push({
+
+    from: currentKey,
+
+    to: nextKey,
+
+    step: step
+
+});
+
+
 currentKey = nextKey;
 }
+
+// ======================================
+// 🧠 DRAW THOUGHT TREE
+// visual future imagination
+// ======================================
+
+thoughtTree.forEach(branch => {
+
+    // get neurons
+    const fromNeuron =
+    findNeuronById(branch.from);
+
+    const toNeuron =
+    findNeuronById(branch.to);
+
+    // safety check
+    if (!fromNeuron || !toNeuron) return;
+
+    // create glowing line
+    const geometry =
+    new THREE.BufferGeometry().setFromPoints([
+
+        fromNeuron.position,
+
+        toNeuron.position
+
+    ]);
+
+    // deeper thoughts = different color
+    const material =
+    new THREE.LineBasicMaterial({
+
+        color: new THREE.Color().setHSL(
+
+            0.6 - (branch.step * 0.05),
+
+            1,
+
+            0.5
+
+        ),
+
+        transparent: true,
+
+        opacity: 0.3
+
+    });
+
+    // create visual line
+    const line =
+    new THREE.Line(geometry, material);
+
+    // add to scene
+    group.add(line);
+
+    // remove later
+    setTimeout(() => {
+
+        group.remove(line);
+
+    }, 3000);
+
+});
+
 return currentKey;
 }
 
@@ -1278,7 +1547,7 @@ animate();                           // start loop
 let agentRunning = false;
 
 // speed of thinking (ms)
-let agentSpeed = 50; // little fast
+let agentSpeed = 500; // little fast
 
 // where agent is currently thinking
 let agentCurrent = null;
@@ -1369,20 +1638,14 @@ function runAgent() {
   }
 
   // sometimes replay old successful paths
+  // ===============================
+  // 🧠 DREAM REPLAY MODE
+  // brain trains from old memories
+  // ===============================
+
   else {
-
-    const rewardKeys = Array.from(rewards.keys());
-
-    if (rewardKeys.length > 0) {
-
-      // choose remembered successful path
-      const randomReward =
-        rewardKeys[Math.floor(Math.random() * rewardKeys.length)];
-
-      const start = Number(randomReward.split("->")[0]);
-
-      runPrediction(start);
-    }
+      // replay full successful episodes
+      replayEpisodes();
   }
   
   // ================== 🧠 FULL DECISION REASONING ==================
@@ -1497,7 +1760,56 @@ function runAgent() {
 
 // 🧠 2. REWARD (good past memory)
 const key = currentNeuron.userData.id + "->" + nextStep;
-const reward = rewards.get(key) || 0;
+
+// ======================================
+// 🚫 STOP SELF-LOOP THINKING
+// prevents:
+// eat -> eat
+// drink -> drink
+// food -> food
+// ======================================
+
+// current neuron id
+const currentId =
+currentNeuron.userData.id;
+
+// if brain tries to stay
+// on same neuron
+if (currentId === nextStep) {
+
+    console.log(
+        "🚫 self-loop blocked:",
+        currentId
+    );
+
+    return;
+}
+
+let reward = rewards.get(key) || 0;
+
+// ======================================
+// 🧠 BOREDOM SYSTEM
+// repeated same path becomes boring
+// ======================================
+
+const repeatKey =
+agentLast + "->" + nextStep;
+
+// how many times used
+const repeatCount =
+curiosityMap.get(repeatKey) || 0;
+
+// too repetitive = punish it
+if (repeatCount > 5) {
+
+    reward -= repeatCount * 0.5;
+
+    console.log(
+      " boring path reduces:",
+      repeatKey
+    );
+
+}
 
 // 🧠 3. PENALTY (bad past memory)
 const penalty = penalties.get(key) || 0;
@@ -1522,20 +1834,78 @@ Math.log(visits + 1);
 // convert recent memory into one full path
 const pathKey = recentMemory.join("->");
 
-// get long-term episode strength
+// =======================================
+// 🧠 LONG CHAIN INTELLIGENCE BONUS
+// longer meaningful episodes
+// become much stronger
+// =======================================
+
+// old learned memory
+const oldEpisodeStrength =
+episodeRewards.get(pathKey) || 0;
+
+// chain length
+const chainLength =
+recentMemory.length;
+
+// ======================================
+// 🧠 INTELLIGENT EPISODIC BONUS
+//
+// short path:
+// food -> eat
+//
+// gets small bonus
+//
+// long smart path:
+// lion -> hunt -> meat -> eat
+//
+// gets HUGE bonus
+// ======================================
+
+// square the chain length
+// longer stories become exponentially stronger
+const lengthBonus =
+
+Math.pow(chainLength, 3);
+
+// final episodic memory bonus
 const episodeMemoryBonus =
-    (episodeRewards.get(pathKey) || 0) * 0.3;
+
+oldEpisodeStrength *
+
+lengthBonus *
+
+0.5;
 // stronger remembered episodes
 // get bigger thinking score
 
 // ================== 🧠 REAL REASONING SCORE ==================
+// ===============================
+// 🧠 ADVANCED COGNITIVE SCORE
+// ===============================
+
 const score =
-sim * 1.2 +           // meaning similarity
-reward * 2 +        // reward memory
-habit * 2.5 +           // learned confidence
-curiosity * 1.5 +     // exploration
-episodeMemoryBonus - 
-penalty * 1.5;        // avoid danger
+
+    // semantic meaning
+    sim * 1.5 +
+
+    // learned reward
+    reward * 3 +
+
+    // trusted habit
+    habit * 2 +
+
+    // exploration
+    curiosity * 1.2 +
+
+    // episodic memory
+    episodeMemoryBonus * 4 +
+
+    // reward long thinking chains
+    recentMemory.length * 3 -
+
+    // avoid danger
+    penalty * 2;
 
 // 🛡️ LIMIT FINAL SCORE (VERY IMPORTANT FOR STABILITY)
 
@@ -1558,7 +1928,22 @@ if (goalNeuronId !== null) {
 }
 }
 
-const episodeScore = recentMemory.length;    // Episode thinking score
+// ===============================
+// 🧠 REAL EPISODE INTELLIGENCE
+// measures quality of thinking
+// ===============================
+
+const episodeScore =
+
+    reward * 10 +
+
+    sim * 5 +
+
+    episodeMemoryBonus * 20 +
+
+    habit * 5 -
+
+    penalty * 10;
 
 
 
@@ -1868,6 +2253,114 @@ agentLast = agentCurrent;                       // 👉 store current as "previo
 if (next !== null) {
   agentCurrent = next;
   // 👉 agent moves to next neuron
+
+  // ======================================
+  // 🧠 VISUAL TRAINING FLOW
+  // show brain movement during learning
+  // ======================================
+
+  // get neurons
+  const fromNeuron =
+  findNeuronById(agentLast);
+
+  const toNeuron =
+  findNeuronById(next);
+
+  // safety check
+  if (fromNeuron && toNeuron) {
+
+      // create line
+      const geometry =
+      new THREE.BufferGeometry().setFromPoints([
+
+          fromNeuron.position,
+
+          toNeuron.position
+
+      ]);
+
+      // glowing learning color
+      const material =
+      new THREE.LineBasicMaterial({
+
+          color: 0x00ffff,
+
+          transparent: true,
+
+          opacity: 0.8
+
+      });
+
+      // create visual path
+      const line =
+      new THREE.Line(geometry, material);
+
+      group.add(line);
+
+      // remove later
+      setTimeout(() => {
+
+          group.remove(line);
+
+      }, 1500);
+
+      // ======================================
+      // moving thought dot
+      // ======================================
+
+      const dot =
+      new THREE.Mesh(
+
+          new THREE.SphereGeometry(0.05, 8, 8),
+
+          new THREE.MeshBasicMaterial({
+
+              color: 0xffff00
+
+          })
+
+      );
+
+      dot.userData = {
+
+          start: fromNeuron.position.clone(),
+
+          end: toNeuron.position.clone(),
+
+          progress: 0
+
+      };
+
+      group.add(dot);
+
+      // animate flow
+      const interval = setInterval(() => {
+
+          dot.userData.progress += 0.03;
+
+          // reached destination
+          if (dot.userData.progress >= 1) {
+
+              group.remove(dot);
+
+              clearInterval(interval);
+
+              return;
+          }
+
+          // move dot
+          dot.position.lerpVectors(
+
+              dot.userData.start,
+
+              dot.userData.end,
+
+              dot.userData.progress
+
+          );
+
+      }, 30);
+  }
   
   // add visited neuron to recent memory
   recentMemory.push(agentCurrent);
@@ -2124,10 +2617,6 @@ window.addEventListener('keydown', (e) => {
   //}
 
 //animate();
-
-
-
-</script>
-
-</body>
+  </script>
+ </body>
 </html>
