@@ -1,258 +1,93 @@
 // ======================================
 // 🧠 BEHAVIOR DYNAMICS SYSTEM
-// controls personality-like behavior
 // ======================================
 
-
-
-// ======================================
-// INTERNAL BRAIN STATES
-// ======================================
-
-// curiosity level
-// high = explores more
-export let curiosityState = 1;
-
-
-
-// confidence level
-// high = trusts learned habits
+export let curiosityState  = 1;
 export let confidenceState = 1;
-
-
-
-// stress level
-// high = avoids risky paths
-export let stressState = 0;
-
-
-
-// fatigue level
-// high = shorter thinking
-export let fatigueState = 0;
-
-
-
-// focus level
-// high = goal-directed behavior
-export let focusState = 1;
-
-
-
-// exploration mode
-// true = experimental behavior
+export let stressState     = 0;
+export let fatigueState    = 0;
+export let focusState      = 1;
 export let explorationMode = true;
 
-
-
 // ======================================
-// UPDATE BRAIN STATE
+// INJECT STRESS FROM OUTSIDE
+// (used by "Poke" button and bad paths)
 // ======================================
+export function injectStress(amount) {
+    stressState = clamp(stressState + amount, 0, 5);
+}
 
-export function updateBehavior({
+export function updateBehavior({ reward, penalty, success, repeated }) {
 
-    reward,
-    penalty,
-    success,
-    repeated
-
-}) {
-
-    // ======================================
-    // SUCCESS INCREASES CONFIDENCE
-    // ======================================
-
+    // ── confidence ──────────────────────────────
     if (success) {
-
-        confidenceState += 0.05;
-
-        stressState -= 0.03;
-
+        confidenceState += 0.08;
     }
-
-
-
-    // ======================================
-    // FAILURES INCREASE STRESS
-    // ======================================
-
     if (penalty > 0) {
-
-        stressState += penalty * 0.02;
-
-        confidenceState -= penalty * 0.01;
-
+        confidenceState -= penalty * 0.02;
     }
 
+    // ── STRESS ──────────────────────────────────
+    // Stress builds from:
+    //   1. explicit penalties (bad paths)
+    //   2. low confidence (brain feels lost)
+    //   3. repeated bad paths (being stuck)
+    //   4. a small baseline every step (life is hard)
 
+    const lostness = 1 / (1 + confidenceState); // 0=confident, 1=totally lost
+    stressState += lostness * 0.08;             // uncertainty → stress
+    stressState += penalty  * 0.15;             // bad path → stress
+    stressState += 0.02;                        // baseline stress every step
 
-    // ======================================
-    // 🧠 REPETITION INTELLIGENCE
-    // ======================================
+    if (repeated && penalty > 0) {
+        stressState += 0.3;                     // stuck in a loop → panic
+        fatigueState += 0.25;
+    }
 
-    // repeated successful path
-    // = learned skill / mastery
+    // success calms the brain down
+    if (success) {
+        stressState -= 0.12;
+    }
+
+    // ── fatigue ─────────────────────────────────
+    fatigueState += 0.04;
+    fatigueState -= reward * 0.05;
+
     if (repeated && success) {
-
-        // brain becomes more confident
         confidenceState += 0.005;
-
-        // repeated thinking consumes energy
-        fatigueState += 0.03;
-
-        // focused behavior becomes stronger
-        focusState += 0.02;
-
+        fatigueState    += 0.15;
+        focusState      += 0.02;
     }
 
-
-
-    // repeated bad path
-    // = trapped loop
-    else if (repeated && penalty > 0) {
-
-        // stress from being stuck
-        stressState += 0.04;
-
-        // endless loops are mentally exhausting
-        fatigueState += 0.08;
-
-
-    }
-
-
-
-    // discovering something new
-    else {
-
-        // exploration reward
+    // ── curiosity ───────────────────────────────
+    if (!repeated) {
         curiosityState += 0.003;
-
-        // new experiences reduce boredom
-        stressState -= 0.01;
-
     }
-
-
-
-    // ======================================
-    // REWARD RESTORES SOME ENERGY
-    // but not too much
-    // ======================================
-
-    // rewards slightly reduce fatigue
-    fatigueState -= reward * 0.002;
-
-
-
-    // ======================================
-    // FOCUS MODE
-    // ======================================
-
-    focusState =
-
-        confidenceState - stressState;
-
-
-    // ======================================
-    // REAL CURIOSITY SYSTEM
-    // curiosity reacts to uncertainty
-    // ======================================
-
-    // low confidence brain
-    // means brain does not understand world well
-    const uncertainty =
-
-    1 / (1 + confidenceState);
-
-
-
-    // uncertain world increases curiosity
-    if (uncertainty > 0.4) {
-
+    // uncertain brain is more curious
+    if (lostness > 0.4) {
         curiosityState += 0.03;
-
-    }
-
-
-
-    // understood world lowers curiosity slowly
-    else {
-
+    } else {
         curiosityState -= 0.002;
-
     }
 
+    // ── focus = confidence minus stress ─────────
+    focusState = confidenceState - stressState;
 
-    // ======================================
-    // EXPLORATION MODE
-    // ======================================
+    // ── exploration mode ────────────────────────
+    explorationMode = curiosityState > confidenceState * 0.8;
 
-    explorationMode =
-
-        curiosityState > confidenceState * 0.8
-
-
-    // ======================================
-    // 🧠 EMOTIONAL DECAY
-    // emotions slowly return to neutral
-    // ======================================
-
-    // curiosity slowly cools down
-    curiosityState *= 0.999;
-
-    // confidence slowly fades
+    // ── decay (slow return to baseline) ─────────
+    curiosityState  *= 0.999;
     confidenceState *= 0.998;
+    stressState     *= 0.990;   // stress fades faster so it oscillates visibly
+    fatigueState    *= 0.992;
 
-    // stress slowly recovers
-    stressState *= 0.995;
-
-    // fatigue slowly recovers
-    fatigueState *= 0.9998;
-    
-    // ======================================
-    // SAFE CLAMPING
-    // keeps values stable
-    // ======================================
-
-    curiosityState =
-    clamp(curiosityState, 0, 5);
-
-    // brain is never fully uncurious
-    if (curiosityState < 0.15) {
-
-        curiosityState = 0.15;
-
-    }
-
-    confidenceState =
-    clamp(confidenceState, 0, 5);
-
-    stressState =
-    clamp(stressState, 0, 5);
-
-    fatigueState =
-    clamp(fatigueState, 0, 5);
-
-    focusState =
-    clamp(focusState, -5, 5);
-
+    // ── clamp ───────────────────────────────────
+    curiosityState  = clamp(curiosityState,  0.15, 5);
+    confidenceState = clamp(confidenceState, 0,    5);
+    stressState     = clamp(stressState,     0,    5);
+    fatigueState    = clamp(fatigueState,    0,    5);
+    focusState      = clamp(focusState,     -5,    5);
 }
 
-
-
-// ======================================
-// SAFE LIMIT FUNCTION
-// ======================================
-
-function clamp(value, min, max) {
-
-    return Math.max(
-
-        min,
-
-        Math.min(max, value)
-
-    );
-
-}
+function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }

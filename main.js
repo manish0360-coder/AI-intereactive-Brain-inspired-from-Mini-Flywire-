@@ -12,6 +12,20 @@ import {
 
 } from "./render/embeddings.js";
 
+// ======================================
+// IMPORT LABEL SYSTEM
+// ======================================
+
+import {
+
+    initLabelContainer,
+    createNeuronLabel,
+    updateLabelPositions,
+    highlightLabel,
+    resetAllLabels
+
+} from "./render/labels.js";
+
 
 // ======================================
 // IMPORT Q LEARNING
@@ -75,7 +89,8 @@ import {
 import {
 
     animate,
-    setStars
+    setStars,
+    setOnFrame
 
 } from "./render/render.js";
 
@@ -189,7 +204,8 @@ import {
 import {
 
     createHUD,
-    updateHUD
+    updateHUD,
+    setHudCallbacks
 
 } from "./render/hud.js";
 
@@ -214,7 +230,7 @@ import {
     fatigueState,
     focusState,
     explorationMode,
-
+    injectStress,
     updateBehavior
 
 } from "./render/behavior.js";
@@ -254,6 +270,44 @@ setEmbeddingNeuronMap(neuronMap);
 // give neuron database to connection system
 setConnectionNeuronMap(neuronMap);
 
+// ======================================
+// 🎨 NEURON CATEGORY COLORS
+// Each type of concept gets its own color
+// ======================================
+const NEURON_COLORS = {
+    // 🐾 Animals — warm orange
+    dog:    0xff8844,
+    cat:    0xff8844,
+    lion:   0xff5500,
+    tiger:  0xff5500,
+
+    // 🍖 Food — green
+    food:   0x44ff88,
+    meat:   0x44ff88,
+    milk:   0x88ffaa,
+    bone:   0xaaffcc,
+
+    // ⚡ Actions — bright yellow
+    eat:    0xffff00,
+    hunt:   0xffdd00,
+    drink:  0xffee44,
+
+    // 🌍 Places — blue/purple
+    forest: 0x4488ff,
+    home:   0x8844ff,
+    human:  0xcc44ff,
+};
+
+// ======================================
+// 🏷️ CATEGORY LABELS (shown in legend)
+// ======================================
+const NEURON_CATEGORY = {
+    dog: "🐾 Animal", cat: "🐾 Animal", lion: "🐾 Animal", tiger: "🐾 Animal",
+    food: "🍖 Food",  meat: "🍖 Food",  milk: "🍖 Food",   bone: "🍖 Food",
+    eat: "⚡ Action", hunt: "⚡ Action", drink: "⚡ Action",
+    forest: "🌍 Place", home: "🌍 Place", human: "🌍 Place",
+};
+
 
 
 
@@ -275,9 +329,10 @@ fetch('neurons.json')
   neuronPositions.push(pos);
   
   // Create small sphere (neuron)
+  const neuronColor = NEURON_COLORS[n.label] || 0xffffff;
   const neuron = new THREE.Mesh(
-  new THREE.SphereGeometry(0.10, 13, 13),
-  new THREE.MeshBasicMaterial({ color: 0xffffff })
+  new THREE.SphereGeometry(0.13, 16, 16),
+  new THREE.MeshBasicMaterial({ color: neuronColor })
 );
 
 // Set position
@@ -290,7 +345,8 @@ neuron.userData = {
   label: n.label,
   type: n.type,
   neighbors: [],   // important for graph brain
-  embedding: createEmbedding()
+  embedding: createEmbedding(),
+  baseColor: NEURON_COLORS[n.label] || 0xffffff,
 };
 
 // Save in map
@@ -298,6 +354,9 @@ neuronMap.set(n.id, neuron);
 
 // Add to scene
 group.add(neuron);
+
+// Create floating name label
+createNeuronLabel(neuron);
 });
 
 console.log("✅ Neurons loaded");
@@ -898,6 +957,18 @@ function runPrediction(startKey) {
 
 // Multi prediction (top 3)
 
+// ======================================
+// 🧠 ALWAYS update behavior each step
+// (so fatigue/stress build even when
+//  transitions map is empty at start)
+// ======================================
+updateBehavior({
+    reward: 0,
+    penalty: 0,
+    success: false,
+    repeated: false
+});
+
 // 🎲 STEP 4 — RANDOM EXPLORATION (PUT EXACTLY HERE)
 if (Math.random() < 0.1 && choices.length > 0) {
   const randomChoice = choices[Math.floor(Math.random() * choices.length)];
@@ -1090,8 +1161,9 @@ topChoices.forEach(choice => {
   setTimeout(() => group.remove(line), 1000);
   
   // ===== DOT FLOW =====
+  // This dot = a "thought" travelling from one word to another
   const dot = new THREE.Mesh(
-  new THREE.SphereGeometry(0.05, 8, 8),
+  new THREE.SphereGeometry(0.07, 8, 8),
   new THREE.MeshBasicMaterial({ color: 0x00ffff })
 );
 
@@ -1103,13 +1175,52 @@ dot.userData = {
 
 group.add(dot);
 
+// ---- floating label on the dot ----
+const dotLabel = document.createElement("div");
+dotLabel.style.position = "fixed";
+dotLabel.style.color = "#00ffff";
+dotLabel.style.fontFamily = "monospace";
+dotLabel.style.fontSize = "12px";
+dotLabel.style.fontWeight = "bold";
+dotLabel.style.background = "rgba(0,0,0,0.7)";
+dotLabel.style.padding = "1px 5px";
+dotLabel.style.borderRadius = "4px";
+dotLabel.style.pointerEvents = "none";
+dotLabel.style.zIndex = "200";
+dotLabel.style.transform = "translate(-50%, -200%)";
+dotLabel.style.whiteSpace = "nowrap";
+dotLabel.innerText = "💭 " + prevNeuron.userData.label + "→" + neuron.userData.label;
+document.body.appendChild(dotLabel);
+
+// update story box
+const dotReward = rewards.get(prevNeuron.userData.id + "->" + neuron.userData.id) || 0;
+const dotVisits = curiosityMap.get(prevNeuron.userData.id + "->" + neuron.userData.id) || 0;
+let reason = "";
+if (dotReward > 1)          reason = "✅ Been here before — it was good!";
+else if (dotVisits < 2)     reason = "🔍 Never tried this — let's explore!";
+else if (choice.prob > 0.6) reason = "💪 Brain is very sure about this one.";
+else                        reason = "🤔 Seems like the best next step.";
+updateStory(prevNeuron.userData.label, neuron.userData.label, reason);
+
 const interval = setInterval(() => {
   
   dot.userData.progress += 0.05;
   
   if (dot.userData.progress >= 1) {
     group.remove(dot);
+    dotLabel.remove();
     clearInterval(interval);
+
+    // ── pulse the destination neuron ──
+    const destNeuron = findNeuronById(choice.key);
+    if (destNeuron) {
+        destNeuron.scale.set(2.2, 2.2, 2.2);
+        destNeuron.material.color.set(0xffffff);
+        setTimeout(() => {
+            destNeuron.scale.set(1, 1, 1);
+            destNeuron.material.color.setHex(destNeuron.userData.baseColor);
+        }, 300);
+    }
     return;
   }
   
@@ -1118,6 +1229,14 @@ const interval = setInterval(() => {
   dot.userData.end,
   dot.userData.progress
 );
+
+  // sync dot label to screen position
+  const pos = dot.position.clone();
+  pos.project(camera);
+  const sx = (pos.x * 0.5 + 0.5) * window.innerWidth;
+  const sy = (-pos.y * 0.5 + 0.5) * window.innerHeight;
+  dotLabel.style.left = sx + "px";
+  dotLabel.style.top  = sy + "px";
 
 }, 30);
 });
@@ -1236,12 +1355,214 @@ return currentKey;
 
 animate();                           // start loop
 
+// ======================================
+// 🏷️ INIT LABEL SYSTEM
+// ======================================
+initLabelContainer();
+
+// sync label positions every frame + stress tint
+setOnFrame(() => {
+    updateLabelPositions(neuronMap);
+    applyStressTint();
+});
+
+// ======================================
+// 🎨 SHARED PANEL FADE HELPERS
+// defined first so everything can use them
+// ======================================
+function panelFadeOut(el) {
+    el.style.transition = "opacity 1.4s ease";
+    el.style.opacity    = "0.08";
+    el.style.pointerEvents = "none";
+}
+function panelFadeIn(el) {
+    el.style.transition = "opacity 0.25s ease";
+    el.style.opacity    = "1";
+    el.style.pointerEvents = "auto";
+}
+function autoFade(el, delayMs) {
+    let t = setTimeout(() => panelFadeOut(el), delayMs);
+    el.addEventListener("mouseenter", () => { clearTimeout(t); panelFadeIn(el); });
+    el.addEventListener("mouseleave", () => { t = setTimeout(() => panelFadeOut(el), 2000); });
+    // return a function to reset the timer from outside
+    return () => { clearTimeout(t); panelFadeIn(el); t = setTimeout(() => panelFadeOut(el), delayMs); };
+}
+
+// ======================================
+// 🗺️ LEGEND PANEL
+// ======================================
+const legendEl = document.createElement("div");
+legendEl.style.cssText = `
+    position:fixed; bottom:10px; right:10px;
+    background:rgba(0,0,0,0.82);
+    color:#fff;
+    font-family:monospace;
+    font-size:12px;
+    padding:10px 14px;
+    border-radius:10px;
+    border:1px solid #4488ff;
+    z-index:9999;
+    line-height:1.9;
+    transition:opacity 0.3s ease;
+`;
+legendEl.innerHTML = `
+    <b>🗺️ Colours</b><hr style="border-color:#4488ff;margin:3px 0">
+    <span style="color:#ff8844">●</span> Animal &nbsp;
+    <span style="color:#44ff88">●</span> Food<br>
+    <span style="color:#ffff00">●</span> Action &nbsp;
+    <span style="color:#4488ff">●</span> Place<br>
+    <span style="color:#00ffff">● cyan dot</span> = thought signal<br>
+    <span style="color:#ffff00">● yellow dot</span> = learning step<br>
+    <hr style="border-color:#333;margin:3px 0">
+    <b>Space</b> = auto-brain on/off<br>
+    <b>Click</b> = teach the brain<br>
+    <b>Shift+Click</b> = set a goal
+`;
+document.body.appendChild(legendEl);
+autoFade(legendEl, 6000);
+
 
 // ======================================
 // 🧠 START LIVE BRAIN HUD
 // ======================================
 
 createHUD();
+
+// ── wire up HUD interactive controls ──────────────────
+setHudCallbacks({
+    onSpeedChange: (ms) => {
+        agentSpeed = ms;
+        // restart loop at new speed if running
+        if (agentRunning) {
+            clearTimeout(loopId);
+            runAgentLoop();
+        }
+    },
+    onPoke: (type) => {
+        if (type === "stress") {
+            injectStress(1.5);
+            // flash all neurons red briefly
+            neuronMap.forEach(n => n.material.color.set(0xff2200));
+            setTimeout(() => {
+                neuronMap.forEach(n => n.material.color.setHex(n.userData.baseColor));
+            }, 400);
+        } else if (type === "calm") {
+            injectStress(-2);
+            // flash all neurons blue briefly
+            neuronMap.forEach(n => n.material.color.set(0x0088ff));
+            setTimeout(() => {
+                neuronMap.forEach(n => n.material.color.setHex(n.userData.baseColor));
+            }, 400);
+        }
+    }
+});
+
+// ── background stress tinting ─────────────────────────
+// runs every frame via setOnFrame hook (added below)
+function applyStressTint() {
+    const s = Math.min(stressState / 5, 1);   // 0 → 1
+    const r = Math.round(s * 40);              // 0 → 40 red
+    renderer.setClearColor(new THREE.Color(`rgb(${r},0,${Math.round((1-s)*8)})`), 1);
+}
+
+// ── neuron tooltip on mouse-move ──────────────────────
+
+// emoji map (defined here so tooltip + storyBox can both use it)
+const EMOJI = {
+    dog:"🐕", cat:"🐈", lion:"🦁", tiger:"🐯",
+    food:"🍖", meat:"🥩", milk:"🥛", bone:"🦴",
+    eat:"😋", hunt:"🏹", drink:"💧",
+    forest:"🌲", home:"🏠", human:"👤"
+};
+const CATNAME = {
+    dog:"Animal", cat:"Animal", lion:"Animal", tiger:"Animal",
+    food:"Food",  meat:"Food",  milk:"Food",   bone:"Food",
+    eat:"Action", hunt:"Action", drink:"Action",
+    forest:"Place", home:"Place", human:"Place"
+};
+
+const tooltip = document.createElement("div");
+tooltip.style.cssText = `
+    position:fixed; pointer-events:none; z-index:10000;
+    background:rgba(0,0,0,0.9); color:#fff;
+    font-family:monospace; font-size:12px;
+    padding:6px 10px; border-radius:8px;
+    border:1px solid #4488ff;
+    display:none; white-space:nowrap;
+    transition:opacity 0.15s;
+`;
+document.body.appendChild(tooltip);
+
+const _ttRaycaster = new THREE.Raycaster();
+const _ttMouse     = new THREE.Vector2();
+
+window.addEventListener("mousemove", (e) => {
+    _ttMouse.x = (e.clientX / window.innerWidth)  *  2 - 1;
+    _ttMouse.y = -(e.clientY / window.innerHeight) *  2 + 1;
+    _ttRaycaster.setFromCamera(_ttMouse, camera);
+    const hits = _ttRaycaster.intersectObjects(group.children);
+    const hit  = hits.find(h => h.object.userData.isNeuron);
+    if (hit) {
+        const n   = hit.object;
+        const lbl = n.userData.label;
+        const vis = curiosityMap.get ? (curiosityMap.get(n.userData.id + "->*") || 0) : 0;
+        const nbCount = n.userData.neighbors.length;
+        tooltip.style.display = "block";
+        tooltip.style.left    = (e.clientX + 14) + "px";
+        tooltip.style.top     = (e.clientY - 10) + "px";
+        tooltip.innerHTML = `
+            <b>${EMOJI[lbl] || "🔵"} ${lbl}</b>
+            <span style="color:#aaa"> — ${CATNAME[lbl] || "?"}</span><br>
+            <span style="color:#aaa;font-size:11px">
+            ${nbCount} connection${nbCount !== 1 ? "s" : ""}<br>
+            Click to teach · Shift+Click to set as goal
+            </span>
+        `;
+    } else {
+        tooltip.style.display = "none";
+    }
+});
+
+// ======================================
+// 💬 STORY BOX
+// ======================================
+const storyBox = document.createElement("div");
+storyBox.style.cssText = `
+    position:fixed; bottom:10px; left:10px;
+    width:270px;
+    background:rgba(0,0,0,0.85);
+    color:#fff;
+    font-family:monospace;
+    font-size:14px;
+    padding:12px 14px;
+    border-radius:12px;
+    border:2px solid #44ff88;
+    box-shadow:0 0 14px #22aa44;
+    z-index:9999;
+    line-height:1.7;
+    transition:opacity 0.3s ease;
+`;
+storyBox.innerHTML = `<b>💬 What's happening?</b><hr style="border-color:#44ff88;margin:5px 0"><i style="color:#aaa">Click a word to start!</i>`;
+document.body.appendChild(storyBox);
+const resetStoryFade = autoFade(storyBox, 4000);
+
+// ======================================
+// helper: update story box
+// ======================================
+function updateStory(fromLabel, toLabel, reason) {
+    const e1 = EMOJI[fromLabel] || "🔵";
+    const e2 = EMOJI[toLabel]   || "🔵";
+    storyBox.innerHTML = `
+        <b>💬 Brain thought:</b>
+        <hr style="border-color:#44ff88;margin:5px 0">
+        ${e1} <b>${fromLabel}</b>
+        <span style="color:#00ffff"> ──●──▶ </span>
+        ${e2} <b>${toLabel}</b>
+        <br><br>
+        <span style="color:#aaffaa;font-size:13px">${reason}</span>
+    `;
+    resetStoryFade();
+}
 
 
 // ================== 🤖 AI AGENT SYSTEM ==================
@@ -2071,13 +2392,13 @@ if (next !== null) {
       }, 1500);
 
       // ======================================
-      // moving thought dot
+      // moving thought dot (yellow = learning)
       // ======================================
 
       const dot =
       new THREE.Mesh(
 
-          new THREE.SphereGeometry(0.05, 8, 8),
+          new THREE.SphereGeometry(0.07, 8, 8),
 
           new THREE.MeshBasicMaterial({
 
@@ -2099,6 +2420,23 @@ if (next !== null) {
 
       group.add(dot);
 
+      // floating label on the yellow dot
+      const yellowLabel = document.createElement("div");
+      yellowLabel.style.position = "fixed";
+      yellowLabel.style.color = "#ffff00";
+      yellowLabel.style.fontFamily = "monospace";
+      yellowLabel.style.fontSize = "12px";
+      yellowLabel.style.fontWeight = "bold";
+      yellowLabel.style.background = "rgba(0,0,0,0.7)";
+      yellowLabel.style.padding = "1px 5px";
+      yellowLabel.style.borderRadius = "4px";
+      yellowLabel.style.pointerEvents = "none";
+      yellowLabel.style.zIndex = "200";
+      yellowLabel.style.transform = "translate(-50%, -200%)";
+      yellowLabel.style.whiteSpace = "nowrap";
+      yellowLabel.innerText = "📚 " + fromNeuron.userData.label + "→" + toNeuron.userData.label;
+      document.body.appendChild(yellowLabel);
+
       // animate flow
       const interval = setInterval(() => {
 
@@ -2108,7 +2446,7 @@ if (next !== null) {
           if (dot.userData.progress >= 1) {
 
               group.remove(dot);
-
+              yellowLabel.remove();
               clearInterval(interval);
 
               return;
@@ -2124,6 +2462,14 @@ if (next !== null) {
               dot.userData.progress
 
           );
+
+          // sync label
+          const pos = dot.position.clone();
+          pos.project(camera);
+          const sx = (pos.x * 0.5 + 0.5) * window.innerWidth;
+          const sy = (-pos.y * 0.5 + 0.5) * window.innerHeight;
+          yellowLabel.style.left = sx + "px";
+          yellowLabel.style.top  = sy + "px";
 
       }, 30);
   }
@@ -2209,19 +2555,40 @@ window.addEventListener('click', (event) => {
   
   console.log("Neuron clicked:", obj.userData.label);
   
-  // reset colors
+  // reset all neurons to base color + size
   neuronMap.forEach(n => {
-    n.material.color.set(0xffffff);
+    n.material.color.setHex(n.userData.baseColor);
+    n.scale.set(1, 1, 1);
   });
+  resetAllLabels(neuronMap);
   
-  // highlight clicked
-  obj.material.color.set(0xff0000);
+  // highlight clicked — white + bigger
+  obj.material.color.set(0xffffff);
+  obj.scale.set(2, 2, 2);
+  highlightLabel(obj.userData.id, "#ffff00");
   
-  // highlight neighbors
+  // highlight neighbors — green + slightly bigger
   obj.userData.neighbors.forEach(id => {
     const n = findNeuronById(id);
-    if (n) n.material.color.set(0x00ff00);
+    if (n) {
+      n.material.color.set(0x00ff88);
+      n.scale.set(1.5, 1.5, 1.5);
+      highlightLabel(id, "#00ff88");
+    }
   });
+
+  // shrink back after 600ms
+  setTimeout(() => {
+    obj.scale.set(1, 1, 1);
+    obj.userData.neighbors.forEach(id => {
+        const n = findNeuronById(id);
+        if (n) n.scale.set(1, 1, 1);
+    });
+  }, 600);
+
+  // update story box on click
+  updateStory(obj.userData.label, obj.userData.label,
+    "👆 You taught the brain about <b>" + obj.userData.label + "</b>! Watch the dots fly.");
   
   // ================== LEARNING (VERY IMPORTANT) ==================
   
@@ -2312,9 +2679,19 @@ window.addEventListener('click', (event) => {
   
   const clickedId = obj.userData.id;
   // set goal (right-click idea simulated)
-  if (event.shiftKey) {                     // normal click -> run prediction, SHIFT + click -> set goal
+  if (event.shiftKey) {                     // SHIFT + click → set goal
     goalNeuronId = clickedId;
-    console.log(" Goal set:", goalNeuronId);
+    console.log("Goal set:", goalNeuronId);
+
+    // ── mark goal neuron with a gold ring ──
+    neuronMap.forEach(n => {
+        n.material.color.setHex(n.userData.baseColor);
+        n.scale.set(1, 1, 1);
+    });
+    obj.material.color.set(0xffdd00);
+    obj.scale.set(2.5, 2.5, 2.5);
+    updateStory(obj.userData.label, obj.userData.label,
+        "🎯 Goal set! Brain will now try to reach <b>" + obj.userData.label + "</b>.");
     return;
   }
   currentGoal = obj.userData.label;         // set goal as clicked label

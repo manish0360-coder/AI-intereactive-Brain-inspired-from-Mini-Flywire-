@@ -19,7 +19,8 @@ import {
 // this variable will later receive stars
 let stars = null;
 
-
+// label update callback (set from main.js)
+let onFrameCallback = null;
 
 // ======================================
 // ALLOW MAIN.JS TO GIVE STARS
@@ -32,7 +33,13 @@ export function setStars(starGroup) {
 
 }
 
-
+// ======================================
+// ALLOW MAIN.JS TO REGISTER A PER-FRAME HOOK
+// Used to sync HTML labels to 3D positions
+// ======================================
+export function setOnFrame(fn) {
+    onFrameCallback = fn;
+}
 
 // ======================================
 // MAIN RENDER LOOP
@@ -52,7 +59,10 @@ export function animate() {
 
     }
 
-
+    // run per-frame hook (label sync, etc.)
+    if (onFrameCallback) {
+        onFrameCallback();
+    }
 
     // draw scene
     renderer.render(
