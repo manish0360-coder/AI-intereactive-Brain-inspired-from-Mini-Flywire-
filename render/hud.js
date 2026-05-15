@@ -22,21 +22,24 @@ export function createHUD() {
     hudElement.style.top = "10px";
     hudElement.style.right = "10px";
 
-    hudElement.style.width = "260px";
+    hudElement.style.width = "420px";
 
     hudElement.style.background =
     "rgba(0,0,0,0.8)";
 
-    hudElement.style.color = "#00ffcc";
+    hudElement.style.color = "#36cdaf";
 
     hudElement.style.fontFamily = "monospace";
 
-    hudElement.style.fontSize = "13px";
+    hudElement.style.fontSize = "17px";
 
-    hudElement.style.padding = "12px";
+    hudElement.style.padding = "18px";
 
     hudElement.style.border =
-    "1px solid #00ffcc";
+    "1px solid #0e01ff";
+
+    hudElement.style.boxShadow =
+    "0 0 20px #260bf2";
 
     hudElement.style.zIndex = "9999";
 
@@ -79,13 +82,38 @@ export function updateHUD({
     <b>🧠 LIVE BRAIN HUD</b>
     <hr>
 
-    🎯 Thought:
+    <div style="
+    font-size:22px;
+    color:#ffffff;
+    margin-bottom:12px;
+    ">
+
+    🧠 Thinking:
     ${currentThought}
+
+    </div>
 
     <hr>
 
     🧠 Curiosity:
     ${curiosityState.toFixed(2)}
+
+    <div style="
+    width:100%;
+    height:8px;
+    background:#111;
+    border:1px solid #00ffcc;
+    margin-top:4px;
+    margin-bottom:8px;
+    ">
+
+    <div style="
+    width:${curiosityState * 20}%;
+    height:100%;
+    background:#00ffcc;
+    "></div>
+
+    </div>
 
     💪 Confidence:
     ${confidenceState.toFixed(2)}

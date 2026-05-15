@@ -87,29 +87,61 @@ export function updateBehavior({
 
 
     // ======================================
-    // REPETITION CAUSES FATIGUE
+    // 🧠 REPETITION INTELLIGENCE
     // ======================================
 
-    if (repeated) {
+    // repeated successful path
+    // = learned skill / mastery
+    if (repeated && success) {
 
+        // brain becomes more confident
+        confidenceState += 0.005;
+
+        // repeated thinking consumes energy
         fatigueState += 0.03;
 
-        curiosityState -= 0.02;
+        // focused behavior becomes stronger
+        focusState += 0.02;
 
     }
+
+
+
+    // repeated bad path
+    // = trapped loop
+    else if (repeated && penalty > 0) {
+
+        // stress from being stuck
+        stressState += 0.04;
+
+        // endless loops are mentally exhausting
+        fatigueState += 0.08;
+
+
+    }
+
+
+
+    // discovering something new
     else {
 
-        curiosityState += 0.01;
+        // exploration reward
+        curiosityState += 0.003;
+
+        // new experiences reduce boredom
+        stressState -= 0.01;
 
     }
 
 
 
     // ======================================
-    // REWARD RESTORES ENERGY
+    // REWARD RESTORES SOME ENERGY
+    // but not too much
     // ======================================
 
-    fatigueState -= reward * 0.01;
+    // rewards slightly reduce fatigue
+    fatigueState -= reward * 0.002;
 
 
 
@@ -122,6 +154,35 @@ export function updateBehavior({
         confidenceState - stressState;
 
 
+    // ======================================
+    // REAL CURIOSITY SYSTEM
+    // curiosity reacts to uncertainty
+    // ======================================
+
+    // low confidence brain
+    // means brain does not understand world well
+    const uncertainty =
+
+    1 / (1 + confidenceState);
+
+
+
+    // uncertain world increases curiosity
+    if (uncertainty > 0.4) {
+
+        curiosityState += 0.03;
+
+    }
+
+
+
+    // understood world lowers curiosity slowly
+    else {
+
+        curiosityState -= 0.002;
+
+    }
+
 
     // ======================================
     // EXPLORATION MODE
@@ -129,10 +190,26 @@ export function updateBehavior({
 
     explorationMode =
 
-        curiosityState > confidenceState;
+        curiosityState > confidenceState * 0.8
 
 
+    // ======================================
+    // 🧠 EMOTIONAL DECAY
+    // emotions slowly return to neutral
+    // ======================================
 
+    // curiosity slowly cools down
+    curiosityState *= 0.999;
+
+    // confidence slowly fades
+    confidenceState *= 0.998;
+
+    // stress slowly recovers
+    stressState *= 0.995;
+
+    // fatigue slowly recovers
+    fatigueState *= 0.9998;
+    
     // ======================================
     // SAFE CLAMPING
     // keeps values stable
@@ -140,6 +217,13 @@ export function updateBehavior({
 
     curiosityState =
     clamp(curiosityState, 0, 5);
+
+    // brain is never fully uncurious
+    if (curiosityState < 0.15) {
+
+        curiosityState = 0.15;
+
+    }
 
     confidenceState =
     clamp(confidenceState, 0, 5);

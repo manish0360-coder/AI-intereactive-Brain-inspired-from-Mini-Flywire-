@@ -220,6 +220,17 @@ import {
 } from "./render/behavior.js";
 
 
+// ======================================
+// 🔮 IMPORT FUTURE IMAGINATION VALUE
+// ======================================
+
+import {
+
+    liveFutureBonus
+
+} from "./render/scoring.js";
+
+
 // create background stars
 const stars = createStars();
 
@@ -759,7 +770,7 @@ function runPrediction(startKey) {
 
   calculateDecisionScore({
 
-      transitionBoost,
+      transitionBoost, 
 
       qValue,
 
@@ -778,6 +789,18 @@ function runPrediction(startKey) {
       boredomPenalty,
 
       dangerPenalty,
+
+      // destroy self-loops like:
+      // lion -> lion
+      // eat -> eat
+
+      selfLoopPenalty:
+
+          k === currentKey
+
+              ? 1000
+
+              : 0,
 
       // ======================================
       // 🧠 BEHAVIOR DYNAMICS
@@ -811,7 +834,7 @@ function runPrediction(startKey) {
 
       // intelligence
       qValue,
-      futureBonus,
+      futureBonus: liveFutureBonus,
       finalWeight,
 
       // current thinking
@@ -1263,7 +1286,19 @@ function runAgent() {
   
   // 🟢 STEP 5 — DECAY PENALTY (PUT HERE AT TOP)
   penalties.forEach((value, key) => {
-    penalties.set(key, value * 0.98); // slowly forget bad paths
+    const decayed = value * 0.98;
+
+
+    // remove tiny dead penalties
+    if (decayed < 0.05) {
+
+        penalties.delete(key);
+
+    } else {
+
+        penalties.set(key, decayed);
+
+    }
   });
   
   // 🧠 slowly forget rewards
@@ -1844,10 +1879,26 @@ if (current === goalNeuronId) {
 // ===============================
 else {
   
+  // 🧠 safe penalty growth
+
+  const oldPenalty =
+
+      penalties.get(key) || 0;
+
+
+  // never allow infinite punishment
+  const newPenalty =
+
+      Math.min(oldPenalty + 0.3, 5);
+
+
   penalties.set(
-  key,
-  (penalties.get(key) || 0) + 0.3
-);
+
+      key,
+
+      newPenalty
+
+  );
 }
 
 
@@ -1920,7 +1971,25 @@ if (safeScore < 0){                              // only punish very bad path
   
   const badKey = prev + "->" + current;
   
-  penalties.set(badKey, (penalties.get(badKey) || 0) + 0.1);
+  // 🧠 controlled bad-path punishment
+
+  const oldBadPenalty =
+
+      penalties.get(badKey) || 0;
+
+
+  const newBadPenalty =
+
+      Math.min(oldBadPenalty + 0.1, 5);
+
+
+  penalties.set(
+
+      badKey,
+
+      newBadPenalty
+
+  );
 }
 
 // ================== ⚡ SIGNAL SYSTEM ==================

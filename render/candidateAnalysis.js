@@ -79,6 +79,32 @@ export function analyzeCandidate({
     }
 
 
+    // ======================================
+    // 🚫 BLOCK SELF LOOPS
+    // examples:
+    // lion -> lion
+    // eat -> eat
+    // ======================================
+
+    if (
+
+        currentKey === candidateKey
+
+    ) {
+
+        console.log(
+
+            "🚫 self loop rejected:",
+
+            currentKey
+
+        );
+
+        return null;
+
+    }
+
+
 
 
     // cannot reach goal

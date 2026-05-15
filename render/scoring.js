@@ -6,6 +6,14 @@
 // ======================================
 
 
+// ======================================
+// 🔮 FUTURE IMAGINATION MEMORY
+// ======================================
+
+// how much brain predicts future reward
+export let liveFutureBonus = 0;
+
+
 
 // ======================================
 // FINAL DECISION SCORE
@@ -34,7 +42,7 @@ export function calculateDecisionScore({
     meaningBoost,
 
     // future planning
-    futureBonus,
+    futureBonus = 0,
 
     // boredom suppression
     boredomPenalty,
@@ -54,9 +62,18 @@ export function calculateDecisionScore({
     focusState,
 
     // danger punishment
-    dangerPenalty
+    dangerPenalty,
+
+    // destroy self-loops
+    selfLoopPenalty
 
 }) {
+
+
+    // store future imagination value
+    // for HUD rendering
+    liveFutureBonus = futureBonus;
+
 
     // ======================================
     // FINAL BRAIN INTELLIGENCE SCORE
@@ -111,7 +128,10 @@ export function calculateDecisionScore({
         focusState * 1.5 -
 
         // dangerous bad paths
-        dangerPenalty * 2;
+        dangerPenalty * 2 -
+
+        // destroy endless self loops
+        selfLoopPenalty;
 
 
 
