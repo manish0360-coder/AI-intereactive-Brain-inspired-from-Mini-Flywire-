@@ -230,7 +230,6 @@ import {
     fatigueState,
     focusState,
     explorationMode,
-    injectStress,
     updateBehavior
 
 } from "./render/behavior.js";
@@ -1196,10 +1195,10 @@ document.body.appendChild(dotLabel);
 const dotReward = rewards.get(prevNeuron.userData.id + "->" + neuron.userData.id) || 0;
 const dotVisits = curiosityMap.get(prevNeuron.userData.id + "->" + neuron.userData.id) || 0;
 let reason = "";
-if (dotReward > 1)          reason = "✅ Been here before — it was good!";
-else if (dotVisits < 2)     reason = "🔍 Never tried this — let's explore!";
-else if (choice.prob > 0.6) reason = "💪 Brain is very sure about this one.";
-else                        reason = "🤔 Seems like the best next step.";
+if (dotReward > 1)          reason = "good rewards";
+else if (dotVisits < 2)     reason = "explore";
+else if (choice.prob > 0.6) reason = "sure";
+else                        reason = "best step";
 updateStory(prevNeuron.userData.label, neuron.userData.label, reason);
 
 const interval = setInterval(() => {
@@ -1389,70 +1388,18 @@ function autoFade(el, delayMs) {
 }
 
 // ======================================
-// 🗺️ LEGEND PANEL
-// ======================================
-const legendEl = document.createElement("div");
-legendEl.style.cssText = `
-    position:fixed; bottom:10px; right:10px;
-    background:rgba(0,0,0,0.82);
-    color:#fff;
-    font-family:monospace;
-    font-size:12px;
-    padding:10px 14px;
-    border-radius:10px;
-    border:1px solid #4488ff;
-    z-index:9999;
-    line-height:1.9;
-    transition:opacity 0.3s ease;
-`;
-legendEl.innerHTML = `
-    <b>🗺️ Colours</b><hr style="border-color:#4488ff;margin:3px 0">
-    <span style="color:#ff8844">●</span> Animal &nbsp;
-    <span style="color:#44ff88">●</span> Food<br>
-    <span style="color:#ffff00">●</span> Action &nbsp;
-    <span style="color:#4488ff">●</span> Place<br>
-    <span style="color:#00ffff">● cyan dot</span> = thought signal<br>
-    <span style="color:#ffff00">● yellow dot</span> = learning step<br>
-    <hr style="border-color:#333;margin:3px 0">
-    <b>Space</b> = auto-brain on/off<br>
-    <b>Click</b> = teach the brain<br>
-    <b>Shift+Click</b> = set a goal
-`;
-document.body.appendChild(legendEl);
-autoFade(legendEl, 6000);
-
-
-// ======================================
 // 🧠 START LIVE BRAIN HUD
 // ======================================
 
 createHUD();
 
-// ── wire up HUD interactive controls ──────────────────
+// ── wire up HUD speed control ─────────────────────────
 setHudCallbacks({
     onSpeedChange: (ms) => {
         agentSpeed = ms;
-        // restart loop at new speed if running
         if (agentRunning) {
             clearTimeout(loopId);
             runAgentLoop();
-        }
-    },
-    onPoke: (type) => {
-        if (type === "stress") {
-            injectStress(1.5);
-            // flash all neurons red briefly
-            neuronMap.forEach(n => n.material.color.set(0xff2200));
-            setTimeout(() => {
-                neuronMap.forEach(n => n.material.color.setHex(n.userData.baseColor));
-            }, 400);
-        } else if (type === "calm") {
-            injectStress(-2);
-            // flash all neurons blue briefly
-            neuronMap.forEach(n => n.material.color.set(0x0088ff));
-            setTimeout(() => {
-                neuronMap.forEach(n => n.material.color.setHex(n.userData.baseColor));
-            }, 400);
         }
     }
 });
@@ -1524,42 +1471,72 @@ window.addEventListener("mousemove", (e) => {
 });
 
 // ======================================
-// 💬 STORY BOX
+// 💬 STORY BOX — bottom left
+// Shows what the brain just did, in plain words
 // ======================================
 const storyBox = document.createElement("div");
 storyBox.style.cssText = `
     position:fixed; bottom:10px; left:10px;
-    width:270px;
-    background:rgba(0,0,0,0.85);
+    width:260px;
+    background:rgba(0,0,0,0.92);
     color:#fff;
-    font-family:monospace;
-    font-size:14px;
-    padding:12px 14px;
-    border-radius:12px;
+    font-family:sans-serif;
+    padding:14px 16px;
+    border-radius:16px;
     border:2px solid #44ff88;
-    box-shadow:0 0 14px #22aa44;
+    box-shadow:0 0 18px #1a6633;
     z-index:9999;
-    line-height:1.7;
     transition:opacity 0.3s ease;
 `;
-storyBox.innerHTML = `<b>💬 What's happening?</b><hr style="border-color:#44ff88;margin:5px 0"><i style="color:#aaa">Click a word to start!</i>`;
+storyBox.innerHTML = `
+    <div style="font-size:22px;margin-bottom:6px">💬</div>
+    <div style="font-size:15px;color:#aaa;font-style:italic">
+        Click any word to wake the brain!
+    </div>
+`;
 document.body.appendChild(storyBox);
-const resetStoryFade = autoFade(storyBox, 4000);
+const resetStoryFade = autoFade(storyBox, 6000);
 
 // ======================================
 // helper: update story box
+// One big friendly sentence — child level
 // ======================================
 function updateStory(fromLabel, toLabel, reason) {
     const e1 = EMOJI[fromLabel] || "🔵";
     const e2 = EMOJI[toLabel]   || "🔵";
+
+    // pick a friendly sentence based on reason type
+    let sentence = "";
+    if (fromLabel === toLabel) {
+        // click or goal event — reason already has the full message
+        sentence = reason;
+    } else if (reason.includes("good rewards") || reason.includes("Been here")) {
+        sentence = `The brain remembered that going from
+            <b>${e1} ${fromLabel}</b> to <b>${e2} ${toLabel}</b>
+            was a <span style="color:#ffff88">good idea before</span>, so it did it again! 🎉`;
+    } else if (reason.includes("explore") || reason.includes("Never tried")) {
+        sentence = `The brain has <span style="color:#00ffff">never tried</span>
+            going from <b>${e1} ${fromLabel}</b> to <b>${e2} ${toLabel}</b> before,
+            so it decided to give it a go! 🔍`;
+    } else if (reason.includes("sure") || reason.includes("confident")) {
+        sentence = `The brain is <span style="color:#44ff88">very sure</span>
+            that <b>${e1} ${fromLabel}</b> leads to <b>${e2} ${toLabel}</b>.
+            It has learned this well! 💪`;
+    } else {
+        sentence = `The brain thought: <b>${e1} ${fromLabel}</b>
+            <span style="color:#00ffff">→</span>
+            <b>${e2} ${toLabel}</b>.
+            It seemed like the <span style="color:#ffff88">best next step</span>. 🤔`;
+    }
+
     storyBox.innerHTML = `
-        <b>💬 Brain thought:</b>
-        <hr style="border-color:#44ff88;margin:5px 0">
-        ${e1} <b>${fromLabel}</b>
-        <span style="color:#00ffff"> ──●──▶ </span>
-        ${e2} <b>${toLabel}</b>
-        <br><br>
-        <span style="color:#aaffaa;font-size:13px">${reason}</span>
+        <div style="font-size:13px;font-weight:bold;color:#44ff88;margin-bottom:8px;
+                    letter-spacing:0.3px">
+            💬 What just happened?
+        </div>
+        <div style="font-size:14px;line-height:1.7;color:#eee">
+            ${sentence}
+        </div>
     `;
     resetStoryFade();
 }
@@ -2588,7 +2565,7 @@ window.addEventListener('click', (event) => {
 
   // update story box on click
   updateStory(obj.userData.label, obj.userData.label,
-    "👆 You taught the brain about <b>" + obj.userData.label + "</b>! Watch the dots fly.");
+    `You tapped <b>${EMOJI[obj.userData.label] || "🔵"} ${obj.userData.label}</b>! The brain is now thinking about it. Watch the dots fly! 🚀`);
   
   // ================== LEARNING (VERY IMPORTANT) ==================
   
@@ -2691,7 +2668,7 @@ window.addEventListener('click', (event) => {
     obj.material.color.set(0xffdd00);
     obj.scale.set(2.5, 2.5, 2.5);
     updateStory(obj.userData.label, obj.userData.label,
-        "🎯 Goal set! Brain will now try to reach <b>" + obj.userData.label + "</b>.");
+        `🎯 Goal set to <b>${EMOJI[obj.userData.label] || "🔵"} ${obj.userData.label}</b>! The brain will now try its best to reach it!`);
     return;
   }
   currentGoal = obj.userData.label;         // set goal as clicked label
