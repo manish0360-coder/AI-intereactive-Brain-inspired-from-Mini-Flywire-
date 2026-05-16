@@ -214,6 +214,7 @@ import {
     fatigueState,
     focusState,
     explorationMode,
+    regulateBiology,
 
     updateBehavior
 
@@ -515,6 +516,11 @@ function runPrediction(startKey) {
   
   let currentKey = startKey;
 
+  // permanent semantic safe home mode
+  const homeNode = "home"; // change to true to always return home
+
+
+
   // ======================================
   // 🧠 safe memory size
   // if recentMemory exists use it
@@ -780,6 +786,17 @@ function runPrediction(startKey) {
 
       curiosityBoost,
 
+      // survival attraction
+      homeBias:
+
+          fatigueState > 70 &&
+
+          label2.toLowerCase().includes("home")
+
+              ? 25
+
+              : 0,
+
       chainReward,
 
       meaningBoost,
@@ -830,6 +847,7 @@ function runPrediction(startKey) {
       confidenceState,
       stressState,
       fatigueState,
+      fatigueValue: fatigueState.toFixed(2), // for easier HUD display
       focusState,
 
       // intelligence
@@ -867,7 +885,11 @@ function runPrediction(startKey) {
       success: reward > penalty,
 
       // repeated path detection
-      repeated: visits > 5
+      repeated: visits > 5,
+
+      pathLength: choices.length,
+
+      // isHome: currentNode === homeNode
 
   });
 
@@ -905,8 +927,18 @@ if (Math.random() < 0.1 && choices.length > 0) {
   return; // stop normal decision → explore instead
 }
 
-// 🎲 exploration → sometimes try random path
-const epsilon = 0.2;   // 20% randomness
+
+// tired brains explore less
+const epsilon =
+
+Math.max(
+
+    0.02,
+
+    0.2 - (fatigueState.value * 0.002)
+
+);
+
 
 if (Math.random() < epsilon && choices.length > 0) {
   
@@ -1165,6 +1197,149 @@ thoughtTree.push({
 
 currentKey = nextKey;
 }
+
+
+
+// --------------------------------------
+// difficult work nodes cost more energy
+// --------------------------------------
+
+const currentNeuron =
+findNeuronById(currentKey);
+
+if (currentNeuron) {
+
+    const label =
+    currentNeuron.userData.label.toLowerCase();
+
+    // heavy mental/physical effort
+    if (
+        label.includes("work") ||
+        label.includes("hunt") ||
+        label.includes("fight")
+    ) {
+
+    }
+    
+}
+
+
+// --------------------------------------
+// RECENT repetition causes mental fatigue
+// hate being stuck in loops
+// --------------------------------------
+
+const recentWindow =
+thoughtTrail.slice(-10);
+
+
+// count recent repetitions
+const repeatCount =
+recentWindow.filter(k => k === currentKey).length;
+
+
+// ======================================
+// detect trapped back-forth loops
+// example:
+// eat -> meat -> eat -> meat
+// ======================================
+
+let loopDepth = 0;
+
+if (thoughtTrail.length >= 4) {
+
+    const a =
+    thoughtTrail[thoughtTrail.length - 1];
+
+    const b =
+    thoughtTrail[thoughtTrail.length - 2];
+
+    const c =
+    thoughtTrail[thoughtTrail.length - 3];
+
+    const d =
+    thoughtTrail[thoughtTrail.length - 4];
+
+    // A -> B -> A -> B
+    if (a === c && b === d) {
+
+        loopDepth = 4;
+
+    }
+}
+
+
+
+
+// --------------------------------------
+// HOME RECOVERY
+// safety + familiarity reduces stress
+// --------------------------------------
+
+if (currentNeuron) {
+
+    const label =
+    currentNeuron.userData.label.toLowerCase();
+
+    // home restores energy
+    if (
+        label.includes("home") ||
+        label.includes("bed") ||
+        label.includes("rest")
+    ){
+
+    } 
+
+}
+
+
+// ======================================
+// 🧠 UPDATE BIOLOGICAL BODY
+// ======================================
+
+regulateBiology({
+
+    // movement/thinking effort
+    activity: 1,
+
+    // complex thinking load
+    mentalLoad: STEPS,
+
+    // repetitive loops
+    repetition: repeatCount,
+
+    // loop depth
+    loopDepth,
+
+    // dangerous situations
+    danger: stressState,
+
+    // safe resting places
+    isHome:
+
+        currentNeuron && (
+
+            currentNeuron.userData.label
+            .toLowerCase()
+            .includes("home")
+
+            ||
+
+            currentNeuron.userData.label
+            .toLowerCase()
+            .includes("rest")
+
+            ||
+
+            currentNeuron.userData.label
+            .toLowerCase()
+            .includes("bed")
+
+        )
+
+});
+
+
 
 // ======================================
 // 🧠 DRAW THOUGHT TREE

@@ -33,6 +33,270 @@ export let fatigueState = 0;
 
 
 
+// ======================================
+// 🧠 REAL BIOLOGICAL BODY SYSTEM
+// ======================================
+
+// short-term usable energy
+export let energyState = 100;
+
+// long-term burnout
+export let exhaustionState = 0;
+
+// emergency rest instinct
+export let restingState = false;
+
+
+// ======================================
+// 🧠 LOOP SUFFERING SYSTEM
+// trapped repetitive cognition
+// ======================================
+
+// how trapped the brain feels
+export let loopStressState = 0;
+
+
+// ======================================
+// 🧠 CENTRAL BIOLOGICAL REGULATION
+// ======================================
+
+export function regulateBiology({
+
+    activity = 0,
+
+    mentalLoad = 0,
+
+    repetition = 0,
+
+    loopDepth = 0,
+
+    danger = 0,
+
+    isHome = false
+
+}) {
+
+    // ======================================
+    // ACTIVE MODE
+    // ======================================
+
+    if (!isHome) {
+
+        // physical / mental activity drains energy
+        energyState -= activity * 0.4;
+
+        energyState -= mentalLoad * 0.25;
+
+        // repetitive loops cause burnout
+        exhaustionState += repetition * 0.05;
+
+        // ======================================
+        // trapped loop psychology
+        // ======================================
+
+        if (loopDepth > 2) {
+
+            // trapped feeling grows exponentially
+            loopStressState +=
+
+                Math.pow(loopDepth - 2, 1.3) * 0.12;
+
+            // mental suffering
+            stressState +=
+            loopStressState * 0.015;
+
+            // repetitive thinking is exhausting
+            exhaustionState +=
+            loopStressState * 0.03;
+
+            // confidence drops
+            confidenceState *= 0.998;
+
+            // curiosity collapses
+            curiosityState *= 0.997;
+        }
+
+        // dangerous situations are stressful
+        exhaustionState += danger * 0.08;
+
+    }
+
+    // ======================================
+    // HOME / REST MODE
+    // ======================================
+
+    else {
+
+        // safe places restore energy
+        energyState += 1.2;
+
+        // burnout heals slowly
+        exhaustionState *= 0.995;
+
+        // stress calms slowly
+        stressState *= 0.992;
+
+    }
+
+    // ======================================
+    // TRUE BIOLOGICAL FATIGUE
+    // body + emotional exhaustion together
+    // ======================================
+
+    fatigueState =
+
+        // physical tiredness
+        (100 - energyState) * 0.55 +
+
+        // long-term burnout
+        exhaustionState * 1.4 +
+
+        // emotional exhaustion
+        stressState * 4 +
+
+        // trapped loop suffering
+        loopStressState * 2;
+
+
+    // ======================================
+    // TIRED BRAIN DYNAMICS
+    // exhausted brains become unstable
+    // ======================================
+
+    if (fatigueState > 35) {
+
+        // curiosity weakens
+        curiosityState *= 0.998;
+
+        // thinking quality drops
+        focusState *= 0.996;
+
+        // tired people become emotionally sensitive
+        stressState += 0.003;
+
+    }
+
+
+    // moderate exhaustion
+    if (fatigueState > 55) {
+
+        confidenceState *= 0.997;
+
+        stressState += 0.006;
+
+    }
+
+
+    // severe exhaustion
+    if (fatigueState > 75) {
+
+        confidenceState *= 0.994;
+
+        focusState *= 0.992;
+
+        curiosityState *= 0.996;
+
+        stressState += 0.015;
+
+    }
+
+    // ======================================
+    // EXTREME EXHAUSTION
+    // ======================================
+
+    if (fatigueState > 75) {
+
+        confidenceState *= 0.996;
+
+        focusState *= 0.994;
+
+        stressState += 0.01;
+
+    }
+
+    // ======================================
+    // SURVIVAL REST INSTINCT
+    // ======================================
+
+    if (
+
+        energyState < 25 ||
+
+        fatigueState > 80
+
+    ) {
+
+        restingState = true;
+
+    }
+
+
+    // ======================================
+    // loop suffering slowly heals
+    // ======================================
+
+    loopStressState *= 0.992;
+
+
+    // enough recovery
+    if (
+
+        energyState > 70 &&
+
+        fatigueState < 40
+
+    ) {
+
+        restingState = false;
+
+    }
+
+
+    // ======================================
+    // BIOLOGICAL FEEDBACK LOOPS
+    // body and emotions affect each other
+    // ======================================
+
+    // stressed brains burn energy faster
+    if (stressState > 30) {
+
+        energyState -= 0.08;
+
+    }
+
+    // trapped brains become exhausted
+    if (loopStressState > 20) {
+
+        exhaustionState += 0.04;
+
+    }
+
+    // low energy increases emotional instability
+    if (energyState < 30) {
+
+        stressState += 0.01;
+
+    }
+
+
+    // ======================================
+    // SAFE LIMITS
+    // ======================================
+
+    energyState =
+    clamp(energyState, 0, 100);
+
+    exhaustionState =
+    clamp(exhaustionState, 0, 100);
+
+    fatigueState =
+    clamp(fatigueState, 0, 100);
+
+
+}
+
+
+
 // focus level
 // high = goal-directed behavior
 export let focusState = 1;
@@ -54,33 +318,51 @@ export function updateBehavior({
     reward,
     penalty,
     success,
-    repeated
+    repeated,
+    // how many nodes AI travelled
+    pathLength,
+    // is AI back home resting
+    isHome
 
 }) {
 
     // ======================================
-    // SUCCESS INCREASES CONFIDENCE
+    // SUCCESS REASSURES THE BRAIN
     // ======================================
 
     if (success) {
 
-        confidenceState += 0.05;
+        // successful actions reduce fear
+        stressState -= 0.04;
 
-        stressState -= 0.03;
+        // success increases trust
+        confidenceState += 0.04;
+
+        // useful progress reduces suffering
+        loopStressState *= 0.97;
+
+        // rewarding progress restores mental energy
+        exhaustionState *= 0.995;
 
     }
 
 
 
     // ======================================
-    // FAILURES INCREASE STRESS
+    // 🧠 FAILURE STRESS SYSTEM
+    // repeated failure creates pressure
     // ======================================
 
     if (penalty > 0) {
 
-        stressState += penalty * 0.02;
+        // stronger penalties create stronger stress
+        stressState += penalty * 0.08;
 
-        confidenceState -= penalty * 0.01;
+        // failure reduces confidence
+        confidenceState -= penalty * 0.015;
+
+        // failure is mentally exhausting
+        fatigueState += penalty * 0.03;
 
     }
 
@@ -97,9 +379,6 @@ export function updateBehavior({
         // brain becomes more confident
         confidenceState += 0.005;
 
-        // repeated thinking consumes energy
-        fatigueState += 0.03;
-
         // focused behavior becomes stronger
         focusState += 0.02;
 
@@ -108,17 +387,24 @@ export function updateBehavior({
 
 
     // repeated bad path
-    // = trapped loop
+    // trapped mental loop
     else if (repeated && penalty > 0) {
 
-        // stress from being stuck
-        stressState += 0.04;
+        // trapped brain stress
+        stressState += 0.12;
 
-        // endless loops are mentally exhausting
-        fatigueState += 0.08;
+        // looping is exhausting
+        fatigueState += 0.06;
 
+        // trapped brains lose confidence
+        confidenceState -= 0.01;
+
+        // stressed brains explore less
+        curiosityState -= 0.003;
 
     }
+
+
 
 
 
@@ -135,13 +421,20 @@ export function updateBehavior({
 
 
 
-    // ======================================
-    // REWARD RESTORES SOME ENERGY
-    // but not too much
-    // ======================================
+    // =====================================
+    // 🏠 REST RECOVERY SYSTEM
+    // =====================================
 
-    // rewards slightly reduce fatigue
-    fatigueState -= reward * 0.002;
+    // when AI comes home and rests
+    //if (isHome) {
+
+        // recover energy gradually
+        //fatigueState -= 0.02;
+
+        // resting calms the brain
+        //stressState -= 0.005;
+    //}
+
 
 
 
@@ -204,8 +497,24 @@ export function updateBehavior({
     // confidence slowly fades
     confidenceState *= 0.998;
 
-    // stress slowly recovers
-    stressState *= 0.995;
+    // ======================================
+    // EMOTIONAL RECOVERY
+    // stress heals VERY slowly
+    // ======================================
+
+    // low stress heals faster
+    if (stressState < 20) {
+
+        stressState *= 0.998;
+
+    }
+
+    // high stress persists longer
+    else {
+
+        stressState *= 0.9995;
+
+    }
 
     // fatigue slowly recovers
     fatigueState *= 0.9998;
@@ -229,10 +538,13 @@ export function updateBehavior({
     clamp(confidenceState, 0, 5);
 
     stressState =
-    clamp(stressState, 0, 5);
+    clamp(stressState, 0, 100);
 
     fatigueState =
-    clamp(fatigueState, 0, 5);
+    clamp(fatigueState, 0, 100);
+
+    loopStressState =
+    clamp(loopStressState, 0, 100);
 
     focusState =
     clamp(focusState, -5, 5);
