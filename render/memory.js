@@ -19,6 +19,17 @@ export const penalties = new Map();
 
 
 
+
+
+
+
+
+// confidence memory
+// stores trusted successful paths
+export const confidenceMap = new Map();
+
+
+
 // signal strength memory
 export const signals = new Map();
 
@@ -31,6 +42,10 @@ export const thoughtTrail = [];
 
 // curiosity tracking
 export const curiosityMap = new Map();
+
+
+// confidence memory for each path
+export const pathConfidence = new Map();
 
 
 

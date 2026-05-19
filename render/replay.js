@@ -119,30 +119,57 @@ export function replayEpisodes() {
 
         ];
 
+    // real episode path
+    const path = ep.path;
 
 
 
     // too short
-    if (ep.length < 2) return;
+    if (path.length < 2) return;
 
+
+
+
+    // count unique concepts
+    const uniqueWords =
+    new Set(path).size;
 
 
 
     // ======================================
-    // SKIP BORING LOOPS
+    // 🚫 VERY REPETITIVE MEMORY
+    // example:
+    // meat -> meat -> meat -> eat
     // ======================================
 
-    const uniqueSteps =
-    new Set(ep);
+    if (
 
+        uniqueWords < path.length * 0.6
 
-
-
-    // ignore boring replay
-    if (uniqueSteps.size <= 2) {
+    ) {
 
         console.log(
+
+            "🚫 corrupted replay skipped"
+
+        );
+
+        return;
+    }
+
+
+
+
+    // ======================================
+    // 🚫 TOO SHORT = NOT USEFUL
+    // ======================================
+
+    if (uniqueWords <= 2) {
+
+        console.log(
+
             "🚫 boring replay skipped"
+
         );
 
         return;
@@ -155,7 +182,7 @@ export function replayEpisodes() {
 
         "🧠 Replaying episode:",
 
-        ep.join(" -> ")
+        path.join(" -> ")
 
     );
 
@@ -170,19 +197,23 @@ export function replayEpisodes() {
 
         let i = 0;
 
-        i < ep.length - 1;
+        i < path.length - 1;
 
         i++
 
     ) {
 
+        
+
+
+
         // current word
-        const fromLabel = ep[i];
+        const fromLabel = path[i];
 
 
 
         // next word
-        const toLabel = ep[i + 1];
+        const toLabel = path[i + 1];
 
 
 
@@ -255,7 +286,7 @@ export function replayEpisodes() {
 
             toId,
 
-            (map.get(toId) || 0) + 0.5
+            (map.get(toId) || 0) + 0.08
 
         );
 
@@ -289,7 +320,7 @@ export function replayEpisodes() {
 
             (rewardsRef.get(key) || 0)
 
-            + 0.2
+            + 0.03
 
         );
 
@@ -312,7 +343,7 @@ export function replayEpisodes() {
             fromId,
             toId,
 
-            oldQ + 0.05
+            oldQ + 0.01
 
         );
 

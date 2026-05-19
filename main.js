@@ -1,4 +1,5 @@
 
+
 // ======================================
 // IMPORT EMBEDDING SYSTEM
 // ======================================
@@ -11,6 +12,14 @@ import {
     setEmbeddingNeuronMap
 
 } from "./render/embeddings.js";
+
+
+import {
+
+    getLocalEmotion,
+    updateLocalEmotion
+
+} from "./render/emotionMap.js";
 
 
 // ======================================
@@ -124,9 +133,11 @@ import {
     transitions,
     rewards,
     penalties,
+    confidenceMap,
     signals,
     thoughtTrail,
     curiosityMap,
+    pathConfidence,
     episodeRewards
 
 } from "./render/memory.js";
@@ -212,6 +223,7 @@ import {
     confidenceState,
     stressState,
     fatigueState,
+    changeFatigue,
     focusState,
     explorationMode,
     regulateBiology,
@@ -219,6 +231,15 @@ import {
     updateBehavior
 
 } from "./render/behavior.js";
+
+
+// momentum sequence memory
+import {
+
+    learnMomentum,
+    getMomentumBonus
+
+} from "./render/momentumMemory.js";
 
 
 // ======================================
@@ -542,15 +563,72 @@ function runPrediction(startKey) {
   const thoughtTree = [];
   
   // ======================================
-  // 🧠 dynamic thinking depth
-  // bigger memory = deeper imagination
+  // 🧠 ADAPTIVE THINKING DEPTH
+  // real brains reduce cognition under load
   // ======================================
 
-  const STEPS = Math.min(
+  // base thinking depth
+  let dynamicDepth = 4;
 
-      2 + (memorySize * 2),
 
-      12
+  // ======================================
+  // FATIGUE REDUCES THINKING
+  // tired brains simplify decisions
+  // ======================================
+
+  if (fatigueState > 40) {
+
+      dynamicDepth -= 1;
+  }
+
+  if (fatigueState > 65) {
+
+      dynamicDepth -= 1;
+  }
+
+  if (fatigueState > 80) {
+
+      dynamicDepth -= 1;
+  }
+
+
+  // ======================================
+  // HIGH CONFIDENCE USES HABITS
+  // less future simulation needed
+  // ======================================
+
+  if (confidenceState > 60) {
+
+      dynamicDepth -= 1;
+  }
+
+
+  // ======================================
+  // UNCERTAINTY INCREASES THINKING
+  // confused brains simulate more futures
+  // ======================================
+
+  if (
+
+      confidenceState < 20 &&
+
+      curiosityState > 1
+
+  ) {
+
+      dynamicDepth += 2;
+  }
+
+
+  // ======================================
+  // SAFE LIMITS
+  // ======================================
+
+  const STEPS = Math.max(
+
+      2,
+
+      Math.min(dynamicDepth, 6)
 
   );
   
@@ -719,6 +797,24 @@ function runPrediction(startKey) {
   const habitBoost =
   Math.log(visits + 1) * 1.5; // confidence increases slowly
 
+
+  // =====================================
+  // CONFIDENCE MEMORY
+  // successful paths become trusted
+  // =====================================
+
+  // path id
+  const confidenceKey =
+  currentKey + "->" + k;
+
+  // confidence value for this path
+  const confidence =
+  confidenceMap.get(confidenceKey) || 0;
+
+  // convert confidence into score boost
+  const confidenceBoost =
+    confidence * 0.15;
+
   // too repetitive = boring
   const boredomPenalty =
   visits * 0.25; // brain gets bored of same thing
@@ -734,16 +830,19 @@ function runPrediction(startKey) {
   // how strong this path was learned
   const transitionStrength = value;
 
-  // safely scale huge memory values
-  const transitionBoost =
-  Math.log(transitionStrength + 1) * 4;
+  // ======================================
+  // 🧠 SOFT TRANSITION TRUST
+  // learned paths are preferred
+  // but not absolute truth
+  // ======================================
 
-  // debug
-  console.log(
-      "🧠 transition boost:",
-      k,
-      transitionBoost
-  );
+  // smoother memory scaling
+  const transitionBoost =
+
+  Math.log1p(transitionStrength) * 1.8;
+
+
+  
   
   // ================== SMARTER DECISION SCORE ==================
   
@@ -768,6 +867,28 @@ function runPrediction(startKey) {
   const dangerPenalty =
   penalty * 1.5;
   
+
+  // ======================================
+  // REPETITION ADDICTION DETECTOR
+  // ======================================
+
+  // punish overused repeated paths 
+  const repetitionPenalty = 0;
+
+
+  // ======================================
+  // 🧠 READ LOCAL EMOTIONS
+  // every path has emotional history
+  // ======================================
+
+  const localEmotion =
+
+      getLocalEmotion(
+          startKey,
+          k
+      );
+
+
   // ======================================
   //CALCULATE FINAL INTELLIGENCE SCORE
   // ======================================
@@ -784,18 +905,12 @@ function runPrediction(startKey) {
 
       habitBoost,
 
+      // confidence memory
+      confidenceBoost,
+
       curiosityBoost,
 
-      // survival attraction
-      homeBias:
-
-          fatigueState > 70 &&
-
-          label2.toLowerCase().includes("home")
-
-              ? 25
-
-              : 0,
+      
 
       chainReward,
 
@@ -804,6 +919,25 @@ function runPrediction(startKey) {
       futureBonus,
 
       boredomPenalty,
+
+      repetitionPenalty,
+
+      // Local emotional memory adds nuance to decision
+      localConfidence:
+      localEmotion.confidence,
+
+      localStress:
+      localEmotion.stress,
+
+      localFatigue:
+      localEmotion.fatigue,
+
+      localTrust:
+      localEmotion.trust,
+
+      localFear:
+      localEmotion.fear,
+
 
       dangerPenalty,
 
@@ -1355,6 +1489,20 @@ thoughtTree.forEach(branch => {
     const toNeuron =
     findNeuronById(branch.to);
 
+    // ======================================
+    // PATH CONFIDENCE MEMORY
+    // gets learned trust of this path
+    // ======================================
+
+    // build path key
+    const confidenceKey =
+    branch.from + "->" + branch.to;
+
+    // get confidence memory
+    const confidence =
+    pathConfidence.get(confidenceKey) || 0;
+
+
     // safety check
     if (!fromNeuron || !toNeuron) return;
 
@@ -1368,25 +1516,36 @@ thoughtTree.forEach(branch => {
 
     ]);
 
-    // deeper thoughts = different color
-    const material =
-    new THREE.LineBasicMaterial({
 
-        color: new THREE.Color().setHSL(
+        // confidence normalized 0 → 1
+        const confidenceLevel =
+        Math.min(confidence / 100, 1);
 
-            0.6 - (branch.step * 0.05),
+        // brain color evolution
+        const pathColor =
+        new THREE.Color().setHSL(
+
+            // weak = blue
+            // strong = gold
+            0.6 - (confidenceLevel * 0.5),
 
             1,
 
-            0.5
+            // brighter if trusted
+            0.3 + confidenceLevel * 0.4
+        );
 
-        ),
+        const material =
+        new THREE.LineBasicMaterial({
 
-        transparent: true,
+            color: pathColor,
 
-        opacity: 0.3
+            transparent: true,
 
-    });
+            // trusted paths glow stronger
+            opacity:
+            0.15 + confidenceLevel * 0.85
+        });
 
     // create visual line
     const line =
@@ -1476,10 +1635,26 @@ function runAgent() {
     }
   });
   
-  // 🧠 slowly forget rewards
-  rewards.forEach((value, key) => {
-    rewards.set(key, value * 0.995);
-  });
+  // ======================================
+  // 🧠 VERY SLOW REWARD DECAY
+  // good memories survive longer
+  // ======================================
+
+  if (Math.random() < 0.02) {
+
+      rewards.forEach((value, key) => {
+
+          rewards.set(
+
+              key,
+
+              value * 0.9995
+
+          );
+
+      });
+
+  }
   
   // 🧠 slowly forget transitions
   transitions.forEach((map, state) => {
@@ -1510,7 +1685,7 @@ function runAgent() {
   }
   
   // 🧠 OPTIONAL: sometimes set a random goal (makes it smart)
-  if (Math.random() < 0.1) {
+  /* if (Math.random() < 0.1) {
     
     const allIds = Array.from(neuronMap.keys());
     
@@ -1518,13 +1693,44 @@ function runAgent() {
     
     console.log("🎯 New goal:", goalNeuronId);
   }
+  */
+
+  // ======================================
+  // 🧠 SURVIVAL OVERRIDE
+  // exhausted brains seek recovery
+  // ======================================
+
+  // extremely exhausted brain
+  if (
+
+      fatigueState > 80 &&
+
+      window.homeNeuronId !== undefined
+
+  ) {
+
+      // override random goals
+      goalNeuronId = window.homeNeuronId;
+
+      console.log(
+
+          "🏠 Exhausted → seeking home"
+
+      );
+  }
+
+
   
   // 🧠 THINK → run your prediction system
   // 🧠 RUN BRAIN (decide where to go)
   // ================== SMART AUTONOMOUS TRAINING ==================
 
-  // sometimes continue current thought
-  if (Math.random() < 0.7) {
+  // ======================================
+  // 🧠 MOSTLY USE LEARNED PATHS
+  // less randomness now
+  // ======================================
+
+  if (Math.random() < 0.92) {
 
     runPrediction(agentCurrent);
 
@@ -1769,8 +1975,29 @@ oldEpisodeStrength *
 lengthBonus *
 
 0.5;
-// stronger remembered episodes
-// get bigger thinking score
+
+
+
+// ===============================
+// 🧠 ADAPTIVE SEMANTIC WEIGHT
+// high rewards rely LESS
+// on semantic guessing
+// ===============================
+
+// default semantic importance
+let semanticWeight = 1.5;
+
+
+// stronger rewards reduce semantic influence
+semanticWeight -= reward * 0.15;
+
+
+// never fully disable semantics
+semanticWeight = Math.max(
+    0.3,
+    semanticWeight
+);
+
 
 // ================== 🧠 REAL REASONING SCORE ==================
 // ===============================
@@ -1780,7 +2007,7 @@ lengthBonus *
 const score =
 
     // semantic meaning
-    sim * 1.5 +
+    sim * semanticWeight +
 
     // learned reward
     reward * 3 +
@@ -1915,8 +2142,20 @@ if (window.lastReasoning) {
 
 // ================== 🧠 SELF LEARNING ==================
 
-// if we have previous and current step
-if (agentLast !== null && next !== null) {
+// ======================================
+// 🧠 SAFE SELF LEARNING
+// prevents corrupt self-loop learning
+// ======================================
+
+if (
+
+    agentLast !== null &&
+
+    next !== null &&
+
+    agentLast !== next
+
+) {
   
   // ================== 🧠 Q-LEARNING CORE ==================
   
@@ -1928,13 +2167,73 @@ if (agentLast !== null && next !== null) {
   
   // reward signal (what happened after action)
   let rewardSignal = 0;
+
+  // ======================================
+  // 🧠 movement energy cost
+  // only punish useless repetition
+  // ======================================
+
+  // repeated same path
+  if (agentLast === next) {
+
+      rewardSignal -= 2;
+
+  }
+
+
+  // repeated replay loop
+  const repeatKey =
+  agentLast + "->" + next;
+
+  const repeatCount =
+  curiosityMap.get(repeatKey) || 0;
+
+
+  // too repetitive becomes mentally costly
+  if (repeatCount > 8) {
+
+      rewardSignal -= 0.3;
+    console.log(
+      "🧠 Repetition penalty:",
+      repeatKey,
+      "count:",
+      repeatCount
+    );
+  }
+
+
+
   
   // 🎯 if reached goal → big reward
   if (next === goalNeuronId) {
     rewardSignal = 10;   // success reward
   } else {
-  rewardSignal = -0.1; // small penalty each step (to encourage faster path)
+  rewardSignal = 0;  // no reward for normal steps
 }
+
+
+// ======================================
+// 🧠 LOCAL EMOTION UPDATE
+// each path develops emotional memory
+// ======================================
+
+updateLocalEmotion({
+
+    fromId: agentLast,
+    toId: next,
+
+    // emotional success
+    reward: rewardSignal,
+
+    // danger/stress amount
+    danger: Math.abs(rewardSignal < 0 ? rewardSignal : 0),
+
+    // repeated path usage
+    repeated: repeatCount
+
+});
+
+
 
 // get current Q value for (state → action)
 const currentQ = getQ(agentLast, next);
@@ -1979,8 +2278,32 @@ const key = prev + "->" + current;
 // get old curiosity (how many times we explored this path)
 const oldCuriosity = curiosityMap.get(key) || 0;        // if not exist -> starts from zero
 
-// increase curiosity slowly (small step = stable learning)
-let newCuriosity = oldCuriosity + 0.05;                 // small increment
+// ======================================
+// 🧠 novelty excitement
+// unexplored paths feel exciting
+// ======================================
+
+let curiosityGain = 0.03;
+
+
+// first-time exploration bonus
+if (oldCuriosity < 0.2) {
+
+    curiosityGain += 0.12;
+
+}
+
+
+// semantic discovery bonus
+if (rewardSignal > 0) {
+
+    curiosityGain += 0.04;
+
+}
+
+
+let newCuriosity =
+oldCuriosity + curiosityGain;
 
 // set maximum limit
 const MAX_CURIOSITY = 5;                                // brain cannot over-focus beyond this
@@ -2012,10 +2335,52 @@ if (current === goalNeuronId) {
   });
 
   // Save only if episode is long enough
-  if (episodeWords.length >= 3) {
+  // ======================================
+  // 🧠 SAFE EPISODE STORAGE
+  // ignore corrupted repetitive episodes
+  // ======================================
 
-      // Store full episode
-      episodes.push([...episodeWords]);
+  const uniqueCount =
+
+  new Set(episodeWords).size;
+
+
+  if (
+
+      episodeWords.length >= 3 &&
+
+      uniqueCount >= 2
+
+  ) {
+
+    // ======================================
+    // 🧠 STORE COMPLETE EXPERIENCE
+    // not only words
+    // but also emotions + success
+    // ======================================
+
+    episodes.push({
+
+        // full episode chain
+        path: [...episodeWords],
+
+        // emotional outcome
+        reward: confidenceState,
+
+        stress: stressState,
+
+        fatigue: fatigueState,
+
+        curiosity: curiosityState,
+
+        // did episode feel successful?
+        success:
+
+            confidenceState >
+
+            stressState
+
+    });
 
       // keep only latest 200 episodes
       if (episodes.length > 200) {
@@ -2027,11 +2392,45 @@ if (current === goalNeuronId) {
           episodeWords.join(" -> ")
       );
   }
+
   
+  // ======================================
+  // 🧠 REWARD DECAY LEARNING
+  // prevents infinite dopamine addiction
+  // ======================================
+
+  const oldReward =
+
+      rewards.get(key) || 0;
+
+
+  // decay old reward slightly
+  const decayedReward =
+
+      oldReward * 0.995;
+
+
+  // add new reward safely
+  const newReward =
+
+      Math.min(
+
+          decayedReward + 1,
+
+          15
+
+      );
+
+
   rewards.set(
-  key,
-  (rewards.get(key) || 0) + 1
+
+      key,
+
+      newReward
+
   );
+
+
   // ================== REWARD WHOLE RECENT PATH ==================
 
   // reward all recent successful thoughts
@@ -2045,6 +2444,26 @@ if (current === goalNeuronId) {
     rewards.set(
         pathKey,
         (rewards.get(pathKey) || 0) + 0.5
+    );
+
+
+    // =====================================
+    // CONFIDENCE LEARNING (SUCCESS)
+    // successful path becomes trusted
+    // ====================================  
+
+    // old confidence
+    const oldConfidence =
+    confidenceMap.get(pathKey) || 0;
+
+    // grow confidence slowly
+    const newConfidence =
+    Math.min(oldConfidence + 1, 100);
+
+    // save confidence
+    confidenceMap.set(
+        pathKey,
+        newConfidence
     );
   }
 }
@@ -2073,6 +2492,26 @@ else {
 
       newPenalty
 
+  );
+
+
+  // =====================================
+  // CONFIDENCE DAMAGE (FAILURE)
+  // bad path loses trust
+  // =====================================
+
+  // old confidence
+  const oldConfidence =
+  confidenceMap.get(key) || 0;
+
+  // reduce confidence slowly
+  const newConfidence =
+  Math.max(oldConfidence - 1.5, 0);
+
+  // save weaker confidence
+  confidenceMap.set(
+      key,
+      newConfidence
   );
 }
 
@@ -2194,6 +2633,36 @@ agentLast = agentCurrent;                       // 👉 store current as "previo
 if (next !== null) {
   agentCurrent = next;
   // 👉 agent moves to next neuron
+
+
+
+
+  // ======================================
+  // 🧠 ENERGY SYSTEM
+  // movement costs energy
+  // home restores energy
+  // ======================================
+
+  // normal movement fatigue
+  changeFatigue(0.05);
+
+  // recover at home
+  if (
+
+      agentCurrent === window.homeNeuronId
+
+  ) {
+
+      // deep recovery
+      changeFatigue(-0.4);
+
+      console.log(
+
+          "😴 Resting at home"
+
+      );
+  }
+
 
   // ======================================
   // 🧠 VISUAL TRAINING FLOW
@@ -2407,6 +2876,35 @@ window.addEventListener('click', (event) => {
       
       const prev = thoughtTrail[thoughtTrail.length - 2];
       const current = thoughtTrail[thoughtTrail.length - 1];
+
+      // ======================================
+      // 🧠 TEMPORAL MOMENTUM LEARNING
+      // learns flowing sequences
+      // previous -> current -> next
+      // ======================================
+
+      if (thoughtTrail.length >= 3) {
+
+          // older thought
+          const older =
+
+              thoughtTrail[
+                  thoughtTrail.length - 3
+              ];
+
+
+
+          // learn sequence flow
+          learnMomentum(
+
+              older,
+              prev,
+              current
+
+          );
+
+      }
+
       // curiosity learning (track explored paths)\
       const curKey = prev + "->" + current;
       curiosityMap.set(curKey, (curiosityMap.get(curKey) || 0) + 1);
@@ -2442,7 +2940,7 @@ window.addEventListener('click', (event) => {
 
         current,
 
-        (map.get(current) || 0) + 8
+        (map.get(current) || 0) + 25
 
     );
     
@@ -2486,12 +2984,42 @@ window.addEventListener('click', (event) => {
   console.log("Prediction running")
   
   const clickedId = obj.userData.id;
-  // set goal (right-click idea simulated)
-  if (event.shiftKey) {                     // normal click -> run prediction, SHIFT + click -> set goal
-    goalNeuronId = clickedId;
-    console.log(" Goal set:", goalNeuronId);
-    return;
+
+  // ======================================
+  // 🎯 MANUAL GOAL SETTING
+  // SHIFT + CLICK neuron
+  // ======================================
+
+  if (event.getModifierState("Shift")) {
+
+      goalNeuronId = clickedId;
+
+      console.log(
+          "🎯 Goal set:",
+          obj.userData.label
+      );
+
+      return;
   }
+
+
+  // ======================================
+  // 🧠 HOME / REST MEMORY
+  // SHIFT + click teaches safe recovery place
+  // ======================================
+
+  // ALT + click = mark neuron as home/rest place
+  if (event.altKey) {
+
+      // save globally
+      window.homeNeuronId = clickedId;
+
+      console.log("🏠 Home neuron learned:", clickedId);
+
+      return;
+  }
+
+
   currentGoal = obj.userData.label;         // set goal as clicked label
   
   // save click in memory
@@ -2569,3 +3097,4 @@ window.addEventListener('keydown', (e) => {
   //}
 
 //animate();
+

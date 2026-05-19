@@ -47,6 +47,9 @@ export function calculateDecisionScore({
     // boredom suppression
     boredomPenalty,
 
+    // repetition additional penalty
+    repetitionPenalty = 0,
+
     // ======================================
     // 🧠 BEHAVIOR STATES
     // ======================================
@@ -76,6 +79,129 @@ export function calculateDecisionScore({
 
 
     // ======================================
+    // 🧠 ATTENTION ALLOCATION SYSTEM
+    // realistic cognitive resource control
+    // ======================================
+
+
+    // reward attracts focus
+    // successful paths become mentally important
+    const rewardAttention =
+
+        reward * 0.8 +
+
+        chainReward * 1.2 +
+
+        qValue * 0.6;
+
+
+    // efficient successful behavior
+    // shortest successful paths gain trust
+    const efficiencyAttention =
+
+        transitionBoost * 0.5 +
+
+        habitBoost * 0.4;
+
+
+    // fatigue damages attention stability
+    const fatigueSuppression =
+
+        fatigueState * 0.9;
+
+
+    // stress destabilizes concentration
+    const stressSuppression =
+
+        stressState * 0.7;
+
+
+    // ======================================
+    // CONFIDENCE STABILITY
+    // ======================================
+
+    // stable successful thinking
+    const confidenceStability =
+
+        confidenceState * 0.8 +
+
+        focusState * 0.5;
+
+
+    // ======================================
+    // UNCERTAINTY SYSTEM
+    // low confidence increases exploration
+    // ======================================
+
+    const uncertaintyLevel =
+
+        1 / (1 + confidenceState);
+
+
+    // uncertain brains seek alternatives
+    const explorationDrive =
+
+        uncertaintyLevel * curiosityState * 3;
+
+
+    // ======================================
+    // FINAL DYNAMIC FOCUS
+    // ======================================
+
+    // real cognitive attention allocation
+    const dynamicFocus =
+
+        rewardAttention +
+
+        efficiencyAttention +
+
+        confidenceStability +
+
+        explorationDrive -
+
+        fatigueSuppression -
+
+        stressSuppression;
+
+
+
+    // ======================================
+    // 🧠 COGNITIVE DRIFT
+    // controlled imagination randomness
+    // ======================================
+
+    const drift =
+
+    (Math.random() - 0.5)
+
+    * curiosityState
+
+    * 2;
+
+
+    // ======================================
+    // 🧠 ADAPTIVE SEMANTIC WEIGHT
+    // successful rewards reduce
+    // dependence on semantic guessing
+    // ======================================
+
+    // default semantic importance
+    let semanticWeight = 2;
+
+
+    // strong rewards reduce semantic dominance
+    semanticWeight -= reward * 0.15;
+
+
+    // never fully disable semantics
+    semanticWeight = Math.max(
+        0.4,
+        semanticWeight
+    );
+
+
+
+    // ======================================
     // FINAL BRAIN INTELLIGENCE SCORE
     // ======================================
 
@@ -100,13 +226,16 @@ export function calculateDecisionScore({
         chainReward * 4 +
 
         // semantic meaning
-        meaningBoost * 2 +
+        meaningBoost * semanticWeight +
 
         // future imagination
         futureBonus * 1.2 -
 
         // repeated boredom
         boredomPenalty * 2 -
+
+        // repetitive obsession suppression
+        repetitionPenalty * 2 -
 
         // ======================================
         // 🧠 BEHAVIOR DYNAMICS
@@ -121,17 +250,28 @@ export function calculateDecisionScore({
         // stress suppresses risky behavior
         stressState * 1.5 -
 
-        // fatigue weakens thinking
-        fatigueState * 1.2 +
+        // ======================================
+        // 🧠 SURVIVAL FATIGUE OVERRIDE
+        // exhausted brains stop intelligent thinking
+        // ======================================
 
-        // focus improves decisions
-        focusState * 1.5 -
+        // normal fatigue damage
+        fatigueState * 1.5 -
+
+        // extreme exhaustion punishment
+        Math.max(0, fatigueState - 60) * 4 -
+
+        // dynamic attention focus
+        dynamicFocus * 2 -
 
         // dangerous bad paths
         dangerPenalty * 2 -
 
         // destroy endless self loops
-        selfLoopPenalty;
+        selfLoopPenalty +
+
+        // controlled imagination randomness
+        drift;
 
 
 

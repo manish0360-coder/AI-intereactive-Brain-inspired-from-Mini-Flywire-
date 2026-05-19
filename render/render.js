@@ -6,14 +6,14 @@ import {
 
     renderer,
     scene,
-    camera
-
+    camera,
+    group
 } from "./scene.js";
 
 
 
 // ======================================
-// STAR ANIMATION TARGET
+// STAR REFERENCE
 // ======================================
 
 // this variable will later receive stars
@@ -35,7 +35,7 @@ export function setStars(starGroup) {
 
 
 // ======================================
-// MAIN RENDER LOOP
+// MAIN ANIMATION LOOP
 // ======================================
 
 export function animate() {
@@ -45,7 +45,7 @@ export function animate() {
 
 
 
-    // rotate stars if they exist
+    // rotate stars
     if (stars) {
 
         stars.rotation.y += 0.0005;
@@ -54,10 +54,47 @@ export function animate() {
 
 
 
-    // draw scene
-    renderer.render(
-        scene,
-        camera
-    );
+    // animate neurons
+    group.traverse((obj) => {
+
+        // skip non-neurons
+        if (!obj.userData?.isNeuron) return;
+
+
+
+        // safe activation
+        const activation =
+            obj.userData.activation || 0;
+
+
+
+        // smooth decay
+        obj.userData.activation *= 0.94;
+
+
+
+        // safe neuron scale
+        const scale =
+
+            1 +
+
+            (activation * 0.3);
+
+
+
+        obj.scale.set(
+
+            scale,
+            scale,
+            scale
+
+        );
+
+    });
+
+
+
+    // render scene
+    renderer.render(scene, camera);
 
 }

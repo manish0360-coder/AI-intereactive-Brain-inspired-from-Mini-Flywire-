@@ -1,25 +1,153 @@
 [
-  {"from":1,"to":8},
-  {"from":1,"to":5},
-  {"from":2,"to":7},
-  {"from":2,"to":5},
+  {
+      "from": 1,
+      "to": 8,
 
-  {"from":3,"to":6},
-  {"from":4,"to":6},
+      "confidence": 1,
 
-  {"from":5,"to":9},
-  {"from":6,"to":9},
-  {"from":7,"to":11},
+      "rewardHistory": 0,
 
-  {"from":3,"to":10},
-  {"from":4,"to":10},
+      "penaltyHistory": 0
+  },
+  {
+      "from": 1,
+      "to": 5,
 
-  {"from":3,"to":12},
-  {"from":4,"to":12},
+      "confidence": 1,
 
-  {"from":1,"to":13},
-  {"from":2,"to":13},
+      "rewardHistory": 0,
 
-  {"from":14,"to":13},
-  {"from":14,"to":1}
+      "penaltyHistory": 0
+  },
+  {
+      "from": 2,
+      "to": 7,
+
+      "confidence": 1,
+
+      "rewardHistory": 0,
+
+      "penaltyHistory": 0
+  },
+  {
+      "from": 2,
+      "to": 5,
+
+      "confidence": 1,
+
+      "rewardHistory": 0,
+
+      "penaltyHistory": 0
+  },
+
+  {
+      "from": 3,
+      "to": 6,
+
+      "confidence": 1,
+
+      "rewardHistory": 0,
+
+      "penaltyHistory": 0
+  },
+  {
+      "from": 4,
+      "to": 6,
+
+      "confidence": 1,
+
+      "rewardHistory": 0,
+
+      "penaltyHistory": 0
+  },
+
+  {
+      "from": 5,
+      "to": 9,
+
+      "confidence": 1,
+
+      "rewardHistory": 0,
+
+      "penaltyHistory": 0
+  },
+  {
+      "from": 6,
+      "to": 9,
+
+      "confidence": 1,
+
+      "rewardHistory": 0,
+
+      "penaltyHistory": 0
+  },
+  {
+      "from": 7,
+      "to": 11,
+
+      "confidence": 1,
+
+      "rewardHistory": 0,
+
+      "penaltyHistory": 0
+  },
+
+  {
+      "from": 3,
+      "to": 10,
+
+      "confidence": 1,
+
+      "rewardHistory": 0,
+
+      "penaltyHistory": 0
+  },
+  {
+      "from": 4,
+      "to": 10,
+
+      "confidence": 1,
+
+      "rewardHistory": 0,
+
+      "penaltyHistory": 0
+  },
+
+  {
+      "from": 3,
+      "to": 12,
+
+      "confidence": 1,
+
+      "rewardHistory": 0,
+
+      "penaltyHistory": 0
+  },
+  {
+      "from": 4,
+      "to": 12,
+
+      "confidence": 1,
+
+      "rewardHistory": 0,
+
+      "penaltyHistory": 0
+  },
+
+  {
+      "from": 14,
+      "to": 13,
+      "confidence": 1,
+      "rewardHistory": 0,
+      "penaltyHistory": 0
+  },
+
+  {
+      "from": 14,
+      "to": 1,
+      "confidence": 1,
+      "rewardHistory": 0,
+      "penaltyHistory": 0
+  }
+  
 ]

@@ -1,3 +1,4 @@
+
 // ======================================
 // 🧠 BEHAVIOR DYNAMICS SYSTEM
 // controls personality-like behavior
@@ -17,7 +18,7 @@ export let curiosityState = 1;
 
 // confidence level
 // high = trusts learned habits
-export let confidenceState = 1;
+export let confidenceState = 0;
 
 
 
@@ -30,6 +31,15 @@ export let stressState = 0;
 // fatigue level
 // high = shorter thinking
 export let fatigueState = 0;
+
+// ======================================
+// CHANGE FATIGUE SAFELY
+// ======================================
+
+export function changeFatigue(amount) {
+
+    fatigueState += amount;
+}
 
 
 
@@ -45,6 +55,16 @@ export let exhaustionState = 0;
 
 // emergency rest instinct
 export let restingState = false;
+
+// emergency survival mode
+export let survivalState = false;
+
+// ======================================
+// SURVIVAL OVERLOAD PRESSURE
+// nervous system overload accumulation
+// ======================================
+
+export let survivalPressure = 0;
 
 
 // ======================================
@@ -382,6 +402,13 @@ export function updateBehavior({
         // focused behavior becomes stronger
         focusState += 0.02;
 
+        // repeated success becomes mentally tiring
+        fatigueState += 0.015;
+
+
+        // successful repetition reduces curiosity
+        curiosityState -= 0.002;
+
     }
 
 
@@ -516,9 +543,47 @@ export function updateBehavior({
 
     }
 
-    // fatigue slowly recovers
-    fatigueState *= 0.9998;
-    
+    // ======================================
+    // SURVIVAL PRESSURE SYSTEM
+    // accumulated nervous overload
+    // ======================================
+
+    // fatigue increases overload
+    survivalPressure += fatigueState * 0.002;
+
+    // stress increases overload
+    survivalPressure += stressState * 0.0015;
+
+    // trapped thinking amplifies overload
+    survivalPressure += loopStressState * 0.001;
+
+    // safe places calm nervous system
+    if (isHome) {
+
+        survivalPressure *= 0.985;
+    }
+
+    // ======================================
+    // SURVIVAL MODE
+    // emergency biological overload
+    // ======================================
+
+    // only extreme overload activates survival
+    if (
+
+        survivalPressure > 90 &&
+
+        fatigueState > 80
+
+    ) {
+
+        survivalState = true;
+
+    } else {
+
+        survivalState = false;
+    }
+
     // ======================================
     // SAFE CLAMPING
     // keeps values stable
@@ -535,7 +600,7 @@ export function updateBehavior({
     }
 
     confidenceState =
-    clamp(confidenceState, 0, 5);
+    clamp(confidenceState, 0, 100);
 
     stressState =
     clamp(stressState, 0, 100);
@@ -546,8 +611,10 @@ export function updateBehavior({
     loopStressState =
     clamp(loopStressState, 0, 100);
 
+
+
     focusState =
-    clamp(focusState, -5, 5);
+    clamp(focusState, 0, 100);
 
 }
 

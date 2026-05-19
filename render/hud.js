@@ -5,6 +5,8 @@
 // HUD container
 let hudElement = null;
 
+
+
 // ======================================
 // CREATE HUD
 // ======================================
@@ -13,6 +15,8 @@ export function createHUD() {
 
     // prevent duplicate HUD
     if (hudElement) return;
+
+
 
     // create panel
     hudElement = document.createElement("div");
@@ -76,6 +80,8 @@ export function updateHUD({
 
     // safety
     if (!hudElement) return;
+
+
 
     hudElement.innerHTML = `
 

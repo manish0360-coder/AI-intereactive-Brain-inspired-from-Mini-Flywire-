@@ -37,7 +37,12 @@ export function buildEpisodeMap({
         // FIND CURRENT NEURON POSITION
         // ======================================
 
-        const index = ep.indexOf(
+        // actual episode sequence
+        const path = ep.path;
+
+
+        // find current neuron inside episode
+        const index = path.indexOf(
 
             neuronMap
             .get(currentKey)
@@ -65,14 +70,14 @@ export function buildEpisodeMap({
 
                 let i = index + 1;
 
-                i < ep.length;
+                i < path.length;
 
                 i++
 
             ) {
 
                 // future word in memory chain
-                const futureWord = ep[i];
+                const futureWord = path[i];
 
 
 
@@ -100,7 +105,7 @@ export function buildEpisodeMap({
 
                         // later chain memory reward
                         const score =
-                        ep.length - i;
+                        path.length - i;
 
 
 
