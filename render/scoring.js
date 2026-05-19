@@ -176,7 +176,7 @@ export function calculateDecisionScore({
 
     * curiosityState
 
-    * 2;
+    * 0.3;
 
 
     // ======================================
@@ -211,16 +211,16 @@ export function calculateDecisionScore({
         transitionBoost * 3 +
 
         // learned behavior (MOST IMPORTANT)
-        qValue * 1.5 +
+        qValue * 3 +
 
         // reward memory
-        reward * 1.2 +
+        reward * 4 +
 
         // trained confidence
-        habitBoost * 0.6 +
+        habitBoost * 2 +
 
         // exploration
-        curiosityBoost * 1.5 +
+        curiosityBoost * 0.5 +
 
         // learned chain memory
         chainReward * 4 +
@@ -245,7 +245,7 @@ export function calculateDecisionScore({
         curiosityState * 0.8 +
 
         // confidence personality
-        confidenceState * 1.2 -
+        confidenceState * 0.8 -
 
         // stress suppresses risky behavior
         stressState * 1.5 -
@@ -256,10 +256,10 @@ export function calculateDecisionScore({
         // ======================================
 
         // normal fatigue damage
-        fatigueState * 1.5 -
+        fatigueState * 0.35 -
 
         // extreme exhaustion punishment
-        Math.max(0, fatigueState - 60) * 4 -
+        Math.max(0, fatigueState - 85) * 1.2 -
 
         // dynamic attention focus
         dynamicFocus * 2 -
