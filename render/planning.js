@@ -127,11 +127,16 @@ export function lookAheadScore(
 
 
             // combine current + future score
+            // FIX: was future * 2 (recursive doubling — exponential explosion).
+            // At depth=2, goal-adjacent node scored 4× raw similarity.
+            // lookAheadScore feeds into futureScore which main.js already caps
+            // at 20. The *2 multiplier is the root of the explosion so remove
+            // it here — score accumulates naturally through the max() chain.
             best = Math.max(
 
                 best,
 
-                future * 2
+                future * 1.0
 
             );
 

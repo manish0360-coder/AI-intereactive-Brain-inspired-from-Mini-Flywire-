@@ -44,10 +44,18 @@ export const thoughtTrail = [];
 export const curiosityMap = new Map();
 
 
-// confidence memory for each path
-export const pathConfidence = new Map();
-
-
-
-// successful episode memory
-export const episodeRewards = new Map();
+// ======================================
+// REMOVED: pathConfidence and episodeRewards
+// ──────────────────────────────────────────
+// These Maps were superseded by the episodic
+// unification (episodeManager.js). Nothing
+// writes to them after that refactor.
+//
+// pathConfidence  → now in confidenceMap
+// episodeRewards  → now in episodicStore
+//
+// Kept here as comments to avoid import
+// errors if any old code references them.
+// ======================================
+// export const pathConfidence = new Map();
+// export const episodeRewards = new Map();

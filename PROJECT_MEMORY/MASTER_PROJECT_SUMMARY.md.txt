@@ -1,0 +1,35 @@
+# Personal Cognitive AI Companion
+
+## Goal
+Build an AI companion capable of:
+- semantic understanding
+- autonomous movement
+- memory
+- behavior evolution
+- node-based cognition
+- embeddings
+- self-learning
+
+## Systems
+- node graph
+- fatigue system
+- home node
+- embeddings
+- semantic chains
+- behavior engine
+- autonomous navigation
+
+## Current Files
+- main.js
+- neurons.json
+- connections.json
+- render/
+- memory.js
+- behavior.js
+- qlearning.js
+
+## Rules
+- avoid hardcoded intelligence
+- preserve emergent behavior
+- scalable architecture only
+- semantic understanding and learned path is important

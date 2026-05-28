@@ -74,75 +74,70 @@ export function updateHUD({
     futureBonus,
     finalWeight,
 
-    currentThought
+    currentThought,
+
+    // new companion-relevant signals
+    dominantDrive   = null,
+    episodeCount    = 0,
+    stablePaths     = 0,
+    stressEscape    = false,
 
 }) {
 
     // safety
     if (!hudElement) return;
 
+    // stress bar width (stress max=30, normalize to %)
+    const stressBarPct = Math.min((stressState / 30) * 100, 100);
+    const stressColor  = stressState > 15 ? "#ff4444" : stressState > 8 ? "#ffaa00" : "#44ff88";
 
+    // drive color coding
+    const driveColors = { hunger:"#ffaa00", boredom:"#00aaff", stress:"#ff4444",
+                          fatigue:"#888888", social:"#cc44ff", uncertainty:"#44ffff" };
+    const driveColor  = (dominantDrive && driveColors[dominantDrive]) || "#36cdaf";
 
     hudElement.innerHTML = `
 
     <b>🧠 LIVE BRAIN HUD</b>
     <hr>
 
-    <div style="
-    font-size:22px;
-    color:#ffffff;
-    margin-bottom:12px;
-    ">
-
-    🧠 Thinking:
-    ${currentThought}
-
+    <div style="font-size:20px;color:#ffffff;margin-bottom:10px;">
+    🧠 ${currentThought}
     </div>
+
+    ${dominantDrive ? `<div style="font-size:13px;color:${driveColor};margin-bottom:8px;">
+    ⚡ Drive: <b>${dominantDrive.toUpperCase()}</b>${stressEscape ? " 🌪️ STRESS ESCAPE" : ""}
+    </div>` : ""}
 
     <hr>
 
-    🧠 Curiosity:
-    ${curiosityState.toFixed(2)}
+    🧠 Curiosity: ${curiosityState.toFixed(2)}
+    <div style="width:100%;height:7px;background:#111;border:1px solid #00ffcc;margin:3px 0 7px;">
+    <div style="width:${Math.min(curiosityState*20,100)}%;height:100%;background:#00ffcc;"></div></div>
 
-    <div style="
-    width:100%;
-    height:8px;
-    background:#111;
-    border:1px solid #00ffcc;
-    margin-top:4px;
-    margin-bottom:8px;
-    ">
+    😰 Stress: ${stressState.toFixed(2)}
+    <div style="width:100%;height:7px;background:#111;border:1px solid ${stressColor};margin:3px 0 7px;">
+    <div style="width:${stressBarPct}%;height:100%;background:${stressColor};"></div></div>
 
-    <div style="
-    width:${curiosityState * 20}%;
-    height:100%;
-    background:#00ffcc;
-    "></div>
-
-    </div>
-
-    💪 Confidence:
-    ${confidenceState.toFixed(2)}
-
-    😰 Stress:
-    ${stressState.toFixed(2)}
-
-    😴 Fatigue:
-    ${fatigueState.toFixed(2)}
-
-    🔥 Focus:
-    ${focusState.toFixed(2)}
+    💪 Confidence: ${confidenceState.toFixed(2)}
+    &nbsp;&nbsp;
+    😴 Fatigue: ${fatigueState.toFixed(2)}
+    &nbsp;&nbsp;
+    🔥 Focus: ${focusState.toFixed(2)}
 
     <hr>
 
-    📘 Q-Value:
-    ${qValue.toFixed(2)}
+    📘 Q-Value: ${qValue.toFixed(2)}
+    &nbsp;&nbsp;
+    🔮 Future: ${futureBonus.toFixed(2)}
+    &nbsp;&nbsp;
+    ⭐ Score: ${finalWeight.toFixed(2)}
 
-    🔮 Future:
-    ${futureBonus.toFixed(2)}
-
-    ⭐ Final Score:
-    ${finalWeight.toFixed(2)}
+    ${episodeCount > 0 || stablePaths > 0 ? `
+    <hr style="border-color:#333;">
+    <span style="font-size:13px;color:#888;">
+    📦 Episodes: ${episodeCount} &nbsp; 🏛️ Stable: ${stablePaths}
+    </span>` : ""}
 
     `;
 }

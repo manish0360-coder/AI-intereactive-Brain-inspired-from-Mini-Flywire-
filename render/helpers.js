@@ -80,3 +80,33 @@ export function dot(a, b) {
     return sum;
 
 }
+
+
+// ======================================
+// 🧠 EMERGENT REWARD GROWTH
+// ======================================
+// unbounded but self-decelerating growth.
+// reward keeps climbing forever, but each
+// increment shrinks as the value rises —
+// emergent reinforcement with NO artificial
+// hard ceiling. replaces Math.min(x, CAP).
+//
+//   growReward(0,   1) = 1.00
+//   growReward(20,  1) = 0.55
+//   growReward(50,  1) = 0.33
+//   growReward(100, 1) = 0.20
+//
+// the curve never flattens to zero, so the
+// brain can always learn a little more —
+// it just slows down, like a real habit.
+// ======================================
+
+export function growReward(oldValue, delta) {
+
+    // safety — treat missing memory as 0
+    const base = oldValue || 0;
+
+    // diminishing-returns increment
+    return base + delta / (1 + base * 0.04);
+
+}

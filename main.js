@@ -1,5 +1,3 @@
-
-
 // ======================================
 // IMPORT EMBEDDING SYSTEM
 // ======================================
@@ -30,7 +28,9 @@ import {
 
     Q,
     getQ,
-    setQ
+    setQ,
+    updateQ,
+    dampQ
 
 } from "./render/qlearning.js";
 
@@ -137,8 +137,6 @@ import {
     signals,
     thoughtTrail,
     curiosityMap,
-    pathConfidence,
-    episodeRewards
 
 } from "./render/memory.js";
 
@@ -155,16 +153,33 @@ import {
 } from "./render/planning.js";
 
 
-// ======================================
-// IMPORT REPLAY SYSTEM
-// ======================================
+// ================================================================
+// 🧠 UNIFIED EPISODE MANAGER
+// ================================================================
+// Single episodic substrate for ALL learning flows.
+// Replaces: replay.js (setReplayMemory / replayEpisodes),
+//           episodicTraining.js (start/append/end/commit),
+//           the inline episodes[] array + setReplayMemory call.
+//
+// Every experience — manual, autonomous, replay, imagination —
+// enters as an episodic object and flows through one pipeline.
+// ================================================================
 
 import {
 
-    replayEpisodes,
-    setReplayMemory
+    initEpisodeManager,
+    recordManualClick,
+    recordAutonomousSuccess,
+    recordAutonomousStep,
+    replayOneEpisode,
+    getEpisodesForBuildMap,
+    getAllEpisodes,
+    getEpisodeStats,
+    clearAllEpisodes,
+    exportEpisodes,
+    loadEpisodes,
 
-} from "./render/replay.js";
+} from "./render/episodeManager.js";
 
 
 
@@ -177,12 +192,10 @@ import {
 
 
 
-// import episodic future memory system
-import {
-
-    buildEpisodeMap
-
-} from "./render/episodic.js";
+// episodic.js (buildEpisodeMap) import removed:
+// buildEpisodeMap() was replaced by the unified episodeManager
+// pipeline in an earlier refactor. The import remained as dead code.
+// episodic.js is still present but no longer needed by main.js.
 
 
 // import semantic relationship system
@@ -224,11 +237,16 @@ import {
     stressState,
     fatigueState,
     changeFatigue,
+    changeStress,
     focusState,
     explorationMode,
     regulateBiology,
+    updateBehavior,
 
-    updateBehavior
+    loopStressState,      
+    exhaustionState,
+
+    applyPredictionErrorToBehavior
 
 } from "./render/behavior.js";
 
@@ -237,9 +255,135 @@ import {
 import {
 
     learnMomentum,
-    getMomentumBonus
+    getMomentumBonus,
+    momentumMemory
 
 } from "./render/momentumMemory.js";
+
+
+// ======================================
+// 🧠 PREDICTION ERROR SYSTEM
+// ──────────────────────────────────────
+// Structural predictive-processing layer.
+// Generates expectations before action,
+// evaluates outcomes after action, and
+// exposes prediction error as a first-class
+// cognitive signal across all systems.
+// ======================================
+
+import {
+
+    generateExpectation,
+    evaluatePredictionError,
+    resetExpectation,
+    getRollingError,
+    uncertaintyState as predUncertaintyState,
+
+    // ── NEW: Multi-level prediction cognition ──
+    updateTransitionUncertainty,
+    getTransitionUncertainty,
+    updateSequenceError,
+    getSequenceError,
+    recordSemanticExpectationOutcome,
+    getSemanticExpectationConfidence,
+    decayTransitionUncertainties
+
+} from "./render/predictionError.js";
+
+
+// ======================================
+// 🧠 EPISTEMIC UNCERTAINTY LEDGER
+// ──────────────────────────────────────
+// True confidence/uncertainty/volatility
+// tracking for every transition and semantic pair.
+// The fundamental anti-overconfidence layer.
+// ======================================
+
+import {
+
+    updateProceduralUncertainty,
+    getProceduralUncertainty,
+    updateSemanticUncertainty,
+    propagateUncertainty,
+    decayUncertaintyLedger,
+    getCombinedUncertainty,
+    registerOllamaPair,
+    getLedgerSummary
+
+} from "./render/uncertaintyLedger.js";
+
+
+// ======================================
+// 🧠 SEMANTIC REFRACTORY SYSTEM
+// ──────────────────────────────────────
+// Anti-perseveration dynamics.
+// Records actual traversals to inhibit
+// dominant attractor loops over time.
+// Novel paths maintain full semantic strength.
+// ======================================
+
+import {
+
+    recordSemanticActivation,
+    decaySemanticActivations
+
+} from "./render/semanticActivation.js";
+
+
+// ======================================
+// 🧠 SEMANTIC PROVENANCE SYSTEM
+// ──────────────────────────────────────
+// Tags all semantic writes with source.
+// Prevents replay/imagination from having
+// same authority as direct experience.
+// ======================================
+
+import {
+
+    PROVENANCE,
+    writeReward,
+    writeTransition,
+    shouldTrainEmbedding,
+    logActivation,
+    getActivationDominance
+
+} from "./render/semanticProvenance.js";
+
+
+// ======================================
+// 🧠 EXECUTIVE COGNITION SYSTEM IMPORTS
+// ======================================
+
+import {
+    updateMotivationalState,
+    computeExecutiveWeights,
+    recordOutcome,
+    getMotivationalSnapshot,
+} from "./render/motivationalState.js";
+
+import {
+    getSemanticSignal,
+    activateSemanticVitality,
+    reinforceSemanticStrength,
+    reinforceEpisodeSemantics,
+    penalizeSemanticPath,
+    decaySemanticSystems,
+} from "./render/semanticVitality.js";
+
+import {
+    getUncertaintyScore,
+    updateUncertainty,
+    decayUncertainty,
+} from "./render/uncertaintyEngine.js";
+
+import {
+    explainArbitration,
+    arbitrate,
+} from "./render/executiveController.js";
+
+import {
+    lastArbitrationBreakdown,
+} from "./render/scoring.js";
 
 
 // ======================================
@@ -251,6 +395,102 @@ import {
     liveFutureBonus
 
 } from "./render/scoring.js";
+
+
+import {
+    setActivation,
+    boostActivation,
+    decayActivations,
+    getCompetitionScore,
+    getActivation,
+    getTopActiveNeurons,
+    isContextEligible,
+} from "./render/activationCompetition.js";
+
+import {
+    recordSemanticEdge,
+    getNoiseSuppressedScore,
+    getSemanticEdgeStrength,
+    isNoiseEdge,
+    decaySemanticMemory,
+    getSemanticSummary,
+} from "./render/semanticMemoryLayer.js";
+
+import {
+    reinforcePath,
+    weakenPath,
+    runConsolidationPass,
+    getConsolidationScore,
+    isStableMemory,
+    decayConsolidation,
+    getConsolidationSummary,
+} from "./render/longTermConsolidation.js";
+
+import {
+    updateAttentionFocus,
+    setGoalAttention,
+    getAttentionScore,
+    applyAttentionAmplification,
+    strengthenAttention,
+    weakenAttention,
+    resetAttentionFocus,
+    getAttentionSnapshot,
+} from "./render/cognitiveAttention.js";
+
+import {
+    episodeRecordNode,
+    sealCurrentEpisode,
+    isLearningGated,
+    rewardCurrentEpisode,
+    getEpisodeVaultForReplay,
+    getCurrentEpisodeState,
+    resetManualSession,
+    wmDecay,
+    wmGetSnapshot,
+    setConceptRelations,
+    setEpisodeManagerBridge,
+} from "./render/episodicContextEngine.js";
+
+
+// ======================================
+// 🧠 BAYESIAN TRUST MEMORY SYSTEM
+// ──────────────────────────────────────
+// Separates CAN DO (Q/transitions)
+// from SHOULD TRUST (verified success rate)
+// Manual teaching does NOT write here.
+// Only autonomous validated success writes.
+// ======================================
+
+import {
+
+    pathSuccesses,
+    pathAttempts,
+    recordAttempt,
+    recordSuccess,
+    getPathTrust,
+    getTrustUncertainty,
+    decayTrust,
+    getTrustSnapshot,
+
+} from "./render/trustMemory.js";
+
+
+// ================================================================
+// 🧩 SCHEMA MEMORY — HIERARCHICAL ABSTRACTION
+// ================================================================
+// Pure recognition layer. Reads episodicStore, writes nothing.
+// Provides schemaBonus to scoring when a candidate matches a
+// known abstract pattern (e.g. predator → hunt → prey → eat).
+// ================================================================
+
+import {
+
+    initSchemaMemory,
+    rebuildSchemas,
+    getSchemaBonus,
+    getSchemas,
+
+} from "./render/schemaMemory.js";
 
 
 // create background stars
@@ -275,6 +515,7 @@ setEmbeddingNeuronMap(neuronMap);
 
 // give neuron database to connection system
 setConnectionNeuronMap(neuronMap);
+
 
 
 
@@ -357,6 +598,13 @@ return fetch('connections.json');
   });
   
   console.log("✅ Connections loaded");
+
+  // ── initialise unified episode manager ────────────────────────
+  // All memory-system references are now resolved (neuronMap
+  // populated, all imports available), so the manager can be
+  // safely wired to them.
+  _initEpisodeManagerWhenReady();
+
 });
 
 
@@ -369,8 +617,26 @@ let lastDecision = null;   // empty at start
 
 
 // ================== 🧠 SAVE / LOAD BRAIN ==================
+//
+// A cognitive companion must remember across sessions.
+// Previously only 6 maps were saved — and crucially the
+// Q-table (the core learned intelligence) and the episodic
+// memory were NOT persisted. Every reload wiped the brain's
+// actual cognition. Now the full learned state is saved:
+//
+//   transitions  — procedural pathways
+//   rewards      — value memory
+//   penalties    — avoidance memory
+//   signals      — path importance
+//   curiosity    — exploration history
+//   Q            — Q-learning table (CORE intelligence)
+//   confidence   — per-path trust
+//   episodes     — episodic memory (lived experiences)
+//
+// chainMemory was removed: it is dead (nothing writes to it
+// since the episodic unification — chainReward is hardcoded 0).
+// ==========================================================
 
-// Save everything (memory → storage)
 function saveBrain() {
   
   // 🧠 convert nested Maps properly
@@ -384,16 +650,34 @@ function saveBrain() {
   
   const data = {
     transitions: mapToObj(transitions),
-    rewards: mapToObj(rewards),
-    penalties: mapToObj(penalties),
-    signals: mapToObj(signals),
-    curiosity: mapToObj(curiosityMap),
-    chainMemory: mapToObj(chainMemory)
+    rewards:     mapToObj(rewards),
+    penalties:   mapToObj(penalties),
+    signals:     mapToObj(signals),
+    curiosity:   mapToObj(curiosityMap),
+
+    // CORE learned intelligence — was missing before
+    Q:           mapToObj(Q),
+    confidence:  mapToObj(confidenceMap),
+
+    // Episodic memory — the companion's lived experiences
+    episodes:    exportEpisodes(),
+
+    // Companion identity: where "home" is, what it's pursuing
+    homeNeuronId: window.homeNeuronId ?? null,
+    goalNeuronId: goalNeuronId ?? null,
   };
   
-  localStorage.setItem("brain", JSON.stringify(data));
-  
-  console.log("🧠 Brain saved safely");
+  try {
+    localStorage.setItem("brain", JSON.stringify(data));
+    console.log(
+        "🧠 Brain saved —",
+        Q.size, "Q-values,",
+        getAllEpisodes().length, "episodes"
+    );
+  } catch (e) {
+    // localStorage can throw QuotaExceededError on large brains
+    console.warn("🧠 Brain save failed:", e.message);
+  }
 }
 
 
@@ -403,60 +687,75 @@ function loadBrain() {
   const raw = localStorage.getItem("brain");
   
   if (!raw) {
-    console.log("🧠 No saved brain");
+    console.log("🧠 No saved brain — starting fresh");
+    return;
+  }
+
+  let data;
+  try {
+    data = JSON.parse(raw);
+  } catch (e) {
+    console.warn("🧠 Saved brain corrupt — starting fresh");
     return;
   }
   
-  const data = JSON.parse(raw);
-  
-  // 🧠 convert object back to Map
-  function objToMap(obj) {
-    const map = new Map();
-    
-    for (let key in obj) {
-      
-      if (typeof obj[key] === "object" && obj[key] !== null) {
-        map.set(Number(key), objToMap(obj[key]));
-      } else {
-      map.set(Number(key), obj[key]);
-    }
+  // Restore a flat string-keyed map (rewards, Q, penalties...)
+  // These use keys like "6->9" — they must NOT be Number()'d.
+  function restoreStringMap(targetMap, obj) {
+    targetMap.clear();
+    Object.entries(obj || {}).forEach(([k, v]) => {
+      targetMap.set(k, v);
+    });
   }
-  
-  return map;
-}
 
-// restore safely
-transitions.clear();
-Object.entries(data.transitions || {}).forEach(([k, v]) => {
-  transitions.set(Number(k), objToMap(v));
-});
+  // Restore a nested numeric-keyed map (transitions only).
+  // transitions is Map<numberId, Map<numberId, strength>>.
+  function restoreNestedNumericMap(targetMap, obj) {
+    targetMap.clear();
+    Object.entries(obj || {}).forEach(([k, v]) => {
+      const inner = new Map();
+      Object.entries(v || {}).forEach(([ik, iv]) => {
+        inner.set(Number(ik), iv);
+      });
+      targetMap.set(Number(k), inner);
+    });
+  }
 
-rewards.clear();
-Object.entries(data.rewards || {}).forEach(([k, v]) => {
-  rewards.set(k, v);
-});
+  // ── procedural pathways (nested numeric) ──
+  restoreNestedNumericMap(transitions, data.transitions);
 
-penalties.clear();
-Object.entries(data.penalties || {}).forEach(([k, v]) => {
-  penalties.set(k, v);
-});
+  // ── value / avoidance / signal / curiosity (string keys) ──
+  restoreStringMap(rewards,      data.rewards);
+  restoreStringMap(penalties,    data.penalties);
+  restoreStringMap(signals,      data.signals);
+  restoreStringMap(curiosityMap, data.curiosity);
 
-signals.clear();
-Object.entries(data.signals || {}).forEach(([k, v]) => {
-  signals.set(k, v);
-});
+  // ── CORE intelligence: Q-table (string keys "from->to") ──
+  restoreStringMap(Q,            data.Q);
 
-curiosityMap.clear();
-Object.entries(data.curiosity || {}).forEach(([k, v]) => {
-  curiosityMap.set(k, v);
-});
+  // ── per-path trust ──
+  restoreStringMap(confidenceMap, data.confidence);
 
-chainMemory.clear();
-Object.entries(data.chainMemory || {}).forEach(([k, v]) => {
-  chainMemory.set(k, objToMap(v));
-});
+  // ── episodic memory (lived experiences) ──
+  if (data.episodes) {
+    loadEpisodes(data.episodes);
+    // adjacency memory is derived from episodes — rebuild it
+    rebuildAdjacencyMemory();
+  }
 
-console.log("🧠 Brain loaded safely");
+  // ── companion identity: home + current goal ──
+  if (data.homeNeuronId !== undefined && data.homeNeuronId !== null) {
+    window.homeNeuronId = data.homeNeuronId;
+  }
+  if (data.goalNeuronId !== undefined && data.goalNeuronId !== null) {
+    goalNeuronId = data.goalNeuronId;
+  }
+
+  console.log(
+      "🧠 Brain loaded —",
+      Q.size, "Q-values,",
+      getAllEpisodes().length, "episodes restored"
+  );
 }
 
 
@@ -464,31 +763,206 @@ let currentGoal = null;  // what brain wants right now
 // sequence memory (pattern -> next)
 const chainMemory = new Map();
 
-// ===============================
-// FULL EPISODE MEMORY
-// Stores complete experiences
-// Example:
-// ["lion","hunt","meat","eat"]
-// ===============================
-const episodes = [];
+// ================================================================
+// 🧠 EPISODE MANAGER — INITIALISATION
+// ================================================================
+// Pass all memory-system references into the unified episode
+// manager so it can update each system from a single pipeline.
+// This replaces: const episodes=[] and setReplayMemory({...}).
+// ================================================================
 
-// give memories to replay system
-setReplayMemory({
+// Deferred — called after neurons.json and connections.json load,
+// because findNeuronById needs the neuronMap to be populated.
+function _initEpisodeManagerWhenReady() {
 
-    episodes,
-    neuronMap,
-    transitions,
-    rewards
+    initEpisodeManager({
 
-});
+        // ── Memory systems ──────────────────────────────────────
+        transitions,
+        rewards,
+        confidenceMap,
+
+        // ── Q-learning ──────────────────────────────────────────
+        updateQ,
+
+        // ── Reward provenance ───────────────────────────────────
+        PROVENANCE,
+        writeReward,
+        logActivation,
+
+        // ── Embeddings ──────────────────────────────────────────
+        trainEmbedding,
+
+        // ── Semantic vitality ───────────────────────────────────
+        reinforceEpisodeSemantics,
+        reinforceSemanticStrength,
+
+        // ── Bayesian trust (autonomous-only writes) ─────────────
+        recordSuccess,
+
+        // ── Long-term consolidation ──────────────────────────────
+        reinforcePath,
+
+        // ── Neuron lookup ───────────────────────────────────────
+        findNeuronById,
+
+        // ── Momentum ────────────────────────────────────────────
+        learnMomentum,
+
+        // ── Schema abstraction ───────────────────────────────────
+        // Injected so episodeManager can trigger schema rebuilds
+        // from _maybeConsolidate without a static import of
+        // schemaMemory.js (avoids circular dependency).
+        rebuildSchemas,
+
+    });
+
+    console.log("🧠 EpisodeManager wired into all memory systems");
+
+    // Schema memory shares the same system refs
+    initSchemaMemory({ findNeuronById });
+    console.log("🧩 SchemaMemory initialised");
+
+    // ── episodicContextEngine bridges ─────────────────────────────
+    // 1. Give context engine the concept relations so inferContextTag
+    //    is data-driven instead of hardcoded to the 14-node set.
+    setConceptRelations(conceptRelations);
+
+    // 2. Bridge the episodeVault to episodeManager so every sealed
+    //    episode from working-memory context detection also enters
+    //    the unified episodicStore (read by replay, schema, trust).
+    //    Use recordAutonomousSuccess as the bridge — it validates,
+    //    pipelines, and stores the episode correctly.
+    setEpisodeManagerBridge((sealedEp) => {
+        if (!sealedEp || !sealedEp.nodes || sealedEp.nodes.length < 2) return;
+        // Convert vault episode format to episodeManager format
+        recordAutonomousSuccess(
+            sealedEp.nodes.slice(0, -1),   // recentMemory = all but last node
+            sealedEp.nodes.at(-1),          // goalId = terminal node
+            neuronMap,
+            { confidenceState, stressState, fatigueState, curiosityState }
+        );
+    });
+
+    console.log("🔗 EpisodeManager ↔ EpisodicContextEngine bridged");
+
+};
 
 const attentionMap = new Map();   // create attention memmory ( focus strength)
+
+// ======================================
+// 🧠 EPISODIC ADJACENCY MEMORY
+// ──────────────────────────────────────
+// Counts how many times each A→B appeared
+// as consecutive steps in a sealed episode.
+// Human analogy: memory of steps that
+// actually happened together in experience.
+// lion→hunt: high (trained many times)
+// dog→eat:   0  (never episodically seen)
+// ======================================
+const adjacencyMemory = new Map();
+
+function rebuildAdjacencyMemory() {
+    adjacencyMemory.clear();
+    getAllEpisodes().forEach(ep => {
+        for (let i = 0; i < ep.nodes.length - 1; i++) {
+            const key = ep.nodes[i] + "->" + ep.nodes[i + 1];
+            adjacencyMemory.set(key, (adjacencyMemory.get(key) || 0) + 1);
+        }
+    });
+}
+
+// Returns 0.0 (never episodically seen) to 1.0 (seen in 5+ episodes)
+function trajectoryConfidence(fromId, toId) {
+    const count = adjacencyMemory.get(fromId + "->" + toId) || 0;
+    return Math.min(count / 5, 1.0);
+}
+
+// ======================================
+// 🧠 TRAJECTORY INTEGRITY
+// ──────────────────────────────────────
+// Checks how well "nextId" continues the
+// current path inside a known episode.
+//
+// Scans all episodes for ones where the
+// current path (recentPath + fromId) is a
+// matching prefix. If found, score by how
+// long the match is.
+//
+// score = 0: this next step never followed
+//            this context in any episode
+// score = 1: this exact sequence context
+//            is seen in 5+ episodes
+//
+// Human analogy: not just "did I see A→B?"
+// but "did I see A→B RIGHT AFTER I was
+// doing exactly what I'm doing now?"
+// ======================================
+function computeTrajectoryIntegrity(recentPath, fromId, toId) {
+
+    const allEps = getAllEpisodes();
+    if (allEps.length === 0) return 0;
+
+    fromId = Number(fromId);
+    toId   = Number(toId);
+
+    // Build the context window: last 2 steps + from
+    const context = [
+        ...recentPath.slice(-2).map(Number),
+        fromId
+    ];
+
+    let matchingEpisodes = 0;
+
+    allEps.forEach(ep => {
+
+        const nodes = ep.nodes;
+
+        // Find fromId in this episode
+        for (let i = 0; i < nodes.length - 1; i++) {
+
+            if (nodes[i] !== fromId) continue;
+            if (nodes[i + 1] !== toId) continue;
+
+            // fromId→toId exists. Now check context match.
+            // How many of the context steps match backwards?
+            let contextMatch = 1; // the pair itself counts as 1
+            for (let c = 1; c < context.length && c <= i; c++) {
+                if (nodes[i - c] === context[context.length - 1 - c]) {
+                    contextMatch++;
+                } else {
+                    break;
+                }
+            }
+
+            // Full context match (3 steps) = strong evidence
+            // Pair only (1 step) = weak evidence
+            const matchStrength = contextMatch / Math.max(context.length, 1);
+            if (matchStrength >= 0.33) {
+                matchingEpisodes++;
+            }
+            break; // one match per episode is enough
+        }
+    });
+
+    return Math.min(matchingEpisodes / 5, 1.0);
+}
+
 // stores last time each path was used
 const timeMemory = new Map();
 // Target goal (brain wants to reach this)
 let goalNeuronId = null;
 
+
 loadBrain(); // restores saved memory when page starts
+
+// Rebuild adjacency memory immediately from restored episodes.
+// Without this, rebuildAdjacencyMemory() only runs in the periodic
+// decay block (~10% chance per loop) — meaning tc=0.00 for the first
+// minute of training after a page reload. Every goal-reach showed
+// tc=0.00 even though episodes were restored from localStorage.
+rebuildAdjacencyMemory();
+
 setInterval(saveBrain, 5000);   // save brain every 5 seconds automatically
 
 
@@ -533,8 +1007,234 @@ function canReachGoal(startId, goalId, maxDepth = 4) {
 
 
 
+// ======================================
+// 🧠 GOAL DISTANCE (BFS SHORTEST PATH)
+// ──────────────────────────────────────
+// Returns the number of hops from a node
+// to the goal along the neuron graph.
+//
+// This is the GRADIENT the agent climbs.
+// Without it, the goal has no pull and the
+// agent farms whatever local loop it lands in.
+//
+//  0  = this node IS the goal
+//  1  = one hop away
+//  N  = N hops away
+// -1  = goal unreachable
+//
+// Manual-trained transitions also count as
+// edges (via trainedNeighbors), so a taught
+// path like hunt→meat works even when those
+// nodes share no physical graph edge.
+// ======================================
+
+function goalDistance(startId, goalId, maxDepth = 8) {
+
+    if (goalId == null) return -1;
+
+    startId = Number(startId);
+    goalId  = Number(goalId);
+
+    if (startId === goalId) return 0;
+
+    const visited = new Set([startId]);
+
+    // BFS frontier: [nodeId, depth]
+    let frontier = [[startId, 0]];
+
+    while (frontier.length > 0) {
+
+        const next = [];
+
+        for (const [nodeId, depth] of frontier) {
+
+            if (depth >= maxDepth) continue;
+
+            const neuron = findNeuronById(nodeId);
+            if (!neuron) continue;
+
+            // physical graph neighbors
+            const neighbors = new Set(neuron.userData.neighbors);
+
+            // PLUS manually-trained transitions
+            // (taught edges extend the graph)
+            const tMap = transitions.get(nodeId);
+            if (tMap) {
+                tMap.forEach((strength, toId) => {
+                    // only count meaningfully-trained edges
+                    if (strength > 1) neighbors.add(toId);
+                });
+            }
+
+            for (const nb of neighbors) {
+
+                const nbId = Number(nb);
+
+                if (nbId === goalId) {
+                    return depth + 1;
+                }
+
+                if (!visited.has(nbId)) {
+                    visited.add(nbId);
+                    next.push([nbId, depth + 1]);
+                }
+            }
+        }
+
+        frontier = next;
+    }
+
+    return -1; // goal unreachable within maxDepth
+}
+
+
+
+// ======================================
+// 🧠 PRUNE GOAL WRAPAROUND
+// ──────────────────────────────────────
+// A goal is a TERMINUS. A taught path
+// ENDS at the goal. So any learned
+// transition OUT of the goal node
+// (goal → X) is a wraparound artifact
+// from the user repeating their training
+// sequence (…→eat, then eat→lion→… again).
+//
+// Such wraparounds turn the taught PATH
+// into a closed LOOP — the agent reaches
+// the goal and is immediately pulled back
+// out. This deletes them deterministically
+// the moment a goal is set.
+//
+// Runs across ALL three systems so the
+// loop is cleared everywhere:
+//   - transitions   (procedural)
+//   - Q-table       (procedural value)
+//   - momentum      (sequence memory)
+// ======================================
+
+function pruneGoalWraparound(goalId) {
+
+    if (goalId == null) return;
+
+    goalId = Number(goalId);
+
+    let prunedCount = 0;
+
+    // ── 1. TRANSITIONS OUT OF GOAL ──────
+    const goalTransitions = transitions.get(goalId);
+    if (goalTransitions && goalTransitions.size > 0) {
+        prunedCount += goalTransitions.size;
+        // wipe every goal → X transition
+        goalTransitions.clear();
+        transitions.set(goalId, goalTransitions);
+    }
+
+    // ── 2. Q-VALUES OUT OF GOAL ─────────
+    // any Q key shaped "goalId->X"
+    const goalPrefix = goalId + "->";
+    Q.forEach((value, key) => {
+        if (key.startsWith(goalPrefix)) {
+            // collapse the learned value of leaving the goal
+            Q.set(key, 0);
+        }
+    });
+
+    // ── 3. REWARDS OUT OF GOAL ──────────
+    rewards.forEach((value, key) => {
+        if (typeof key === "string" && key.startsWith(goalPrefix)) {
+            rewards.set(key, 0);
+        }
+    });
+
+    // ── 4. MOMENTUM CONTAMINATED BY GOAL
+    // momentum keys are "a->b->c". Any key
+    // where the goal is NOT the final node
+    // encodes movement THROUGH/OUT of the
+    // goal — i.e. a wraparound sequence.
+    const goalStr = String(goalId);
+    momentumMemory.forEach((value, key) => {
+        const parts = key.split("->");
+        // goal appears but is not the terminus
+        if (parts.includes(goalStr) &&
+            parts[parts.length - 1] !== goalStr) {
+            momentumMemory.delete(key);
+            prunedCount++;
+        }
+    });
+
+    // ── 5. LONG-TERM CONSOLIDATION ──────
+    neuronMap.forEach((n, id) => {
+        const candidateKey = goalId + "->" + id;
+        try {
+            weakenPath(candidateKey, 1.0);
+        } catch (e) { /* edge not present */ }
+    });
+
+    // ── 6. PENALISE GRAPH-NEIGHBOR EDGES OUT OF GOAL ──
+    // eat has graph neighbors food(5) and meat(6).
+    // pruneGoalWraparound cleared trained transitions and Q,
+    // but graph-neighbor edges still score via goalGradient
+    // and semantic bonus, making eat→meat score 3-4 pts.
+    // The agent then takes one hop, lands on food/meat, and
+    // immediately reaches eat again in one more hop.
+    //
+    // Set a strong penalty on all outgoing graph edges from
+    // the goal so the scoring system avoids choosing them.
+    // The reset places the agent on a non-goal node anyway,
+    // so this only matters when the agent STARTS at eat —
+    // which shouldn't happen but sometimes does.
+    const goalNeuron = findNeuronById(goalId);
+    if (goalNeuron && goalNeuron.userData.neighbors) {
+        goalNeuron.userData.neighbors.forEach(nbId => {
+            const exitKey = goalId + "->" + nbId;
+            const existing = penalties.get(exitKey) || 0;
+            // strong penalty — blocked for ~50 steps of autonomous decay
+            penalties.set(exitKey, Math.min(existing + 8, 15));
+        });
+    }
+
+    console.log(
+        "🧹 Goal-terminus prune: removed",
+        prunedCount,
+        "wraparound links out of goal node",
+        findNeuronById(goalId)?.userData.label || goalId
+    );
+}
+
+
+
+// ============================================================
+// 🧠 LEARN TRAINING EPISODE
+// ============================================================
+// The SINGLE authorized path from a sealed episode into
+// long-term memory. Nothing else writes procedural /
+// semantic / episodic memory from manual training.
+//
+// DIFFERENTIATED REINFORCEMENT
+// ──────────────────────────────────────────────────────────
+// The spec demands that one event must NOT reinforce every
+// system equally. Each memory system here updates with its
+// OWN rate, OWN evidence requirement, and OWN decay class:
+//
+//   Procedural (transitions, Q)  — strong, immediate.
+//                                   Teaching = "you CAN do this."
+//   Episodic   (episodicStore)   — exact sequence stored once.
+//   Semantic   (embeddings)      — weak nudge, slow abstraction.
+//   Trust      (Bayesian)        — UNTOUCHED. Trust is earned
+//                                   only by autonomous success.
+//   Consolidation                — NOT done here. Consolidation
+//                                   runs later on recurring
+//                                   motifs across many episodes.
+//
+// Because transitions are extracted strictly from inside the
+// episode buffer, the wraparound can never enter any system.
+// ============================================================
+
 function runPrediction(startKey) {
   
+  // Bug 7 fix: always read from window.recentMemory so it's never undefined
+  const recentMemory = window.recentMemory || [];
+
   let currentKey = startKey;
 
   // permanent semantic safe home mode
@@ -568,7 +1268,7 @@ function runPrediction(startKey) {
   // ======================================
 
   // base thinking depth
-  let dynamicDepth = 4;
+  let dynamicDepth = agentRunning ? 4 : 1; // 4 when running, 1 for single step
 
 
   // ======================================
@@ -643,21 +1343,10 @@ function runPrediction(startKey) {
     // get learned next predictions
     const chainMap = chainMemory.get(recentPattern) || new Map();
     
-    // ======================================
-    // 🧠 BUILD EPISODIC FUTURE MEMORY
-    // ======================================
-
-    const episodeMap =
-
-    buildEpisodeMap({
-
-        episodes,
-
-        neuronMap,
-
-        currentKey
-
-    });
+    // NOTE: buildEpisodeMap was removed here.
+    // The episodicStore is now read directly via
+    // getSchemaBonus() in the candidate scoring loop,
+    // eliminating a redundant per-step Map rebuild.
 
     const structureMap = new Map();
     startNeuron.userData.neighbors.forEach(id => {
@@ -666,19 +1355,33 @@ function runPrediction(startKey) {
     
     // ======================================
     // 🧠 BUILD SEMANTIC RELATIONSHIPS
+    // ──────────────────────────────────────
+    // Only built when no goal is active.
+    // When goalNeuronId is set, the forEach
+    // block (Fix 2) immediately returns —
+    // meaning the full O(N) embedding map
+    // was being built then thrown away on
+    // every step of the STEPS loop (4× per
+    // prediction call).
+    //
+    // Guard here: if we have a goal, skip
+    // the entire build. An empty Map means
+    // the forEach loop runs 0 iterations
+    // instead of 14, at zero cost.
+    //
+    // Result: semantic exploration still
+    // works when no goal is set. During all
+    // goal-directed training: zero wasted
+    // similarity computations.
     // ======================================
 
-    const embeddingMap =
-
-    buildSemanticMap({
-
-        neuronMap,
-
-        currentKey,
-
-        startNeuron
-
-    });
+    const embeddingMap = (goalNeuronId !== null)
+        ? new Map()      // goal active → skip semantic build entirely
+        : buildSemanticMap({
+            neuronMap,
+            currentKey,
+            startNeuron
+        });
   
   
   
@@ -688,25 +1391,121 @@ function runPrediction(startKey) {
   startNeuron.userData.neighbors.forEach(id => {
     structureMap.set(id, 1);
   });
+
+
+  // ======================================
+  // 🧠 COMPUTE EXECUTIVE WEIGHTS
+  // motivational state → dynamic weights
+  // computed once per prediction step
+  // all candidates evaluated with same weights
+  // ======================================
+
+  updateMotivationalState({
+      confidenceState,
+      stressState,
+      fatigueState,
+      curiosityState,
+      loopStressState,
+      exhaustionState,
+  });
+
+  const executiveWeights = computeExecutiveWeights();
+
+  const motivationalSnapshot = getMotivationalSnapshot();
+
   
-  const choices = [];
-  
-  // Memory weight
+  // ======================================
+  // 🧠 UNIFIED CANDIDATE POOL
+  // merges trained memory + graph neighbors
+  // fixes: agent frozen on untrained nodes
+  // ======================================
+
+  const allCandidates = new Map();
+
   memoryMap.forEach((value, k) => {
+      allCandidates.set(k, value);
+  });
+
+  startNeuron.userData.neighbors.forEach(id => {
+      if (!allCandidates.has(id)) {
+          allCandidates.set(id, 0);
+      }
+  });
+
+  const choices = [];
+
+  allCandidates.forEach((value, k) => {
     
     // Block very bad paths
     if (penalties.get(currentKey + "->" + k) > 10) {
       return;
     }
-    
-    // Block paths that cannot reach goal
-    if (goalNeuronId !== null && !canReachGoal(k, goalNeuronId)) {
-      return;                         // skip this option completely
+
+    // ======================================
+    // 🧠 BLOCK DEEPLY NEGATIVE Q PATHS
+    // Q < -0.5 means this path has been
+    // repeatedly bad — don't consider it
+    // ======================================
+    const candidateQ = getQ(currentKey, k);
+    if (candidateQ < -0.5) {
+      return;
+    }
+
+    // ======================================
+    // 🧠 GRAPH INTEGRITY GUARD
+    // ──────────────────────────────────────
+    // A candidate is admitted if it is:
+    //   1. An actual graph neighbor (wired connection), OR
+    //   2. Appears in the trained transitions map with
+    //      meaningful strength (the agent has been taught
+    //      this path via episode learning), OR
+    //   3. Has reward > 4 from manual training
+    //
+    // FIX: the old threshold of 12 was ABOVE the hard reward
+    // cap of 10, so manually-trained non-graph paths like
+    // hunt→meat could NEVER qualify — the agent was always
+    // stuck on graph-only neighbors (hunt↔lion loop).
+    //
+    // New: transitions strength > 5 is the primary signal.
+    // It is written by episodeManager at +20*gain per pass,
+    // so a single manual teaching pass produces strength 18,
+    // which immediately qualifies. Shortcut contamination
+    // from auto-training (which writes tiny explore steps)
+    // is blocked because recordAutonomousStep writes only
+    // +20*0.30 = 6 and only for adjacent graph steps.
+    // ======================================
+    const isGraphNeighbor   = structureMap.has(k);
+    const trainedStrength   = (transitions.get(currentKey)?.get(k) || 0);
+    const isEpisodeTrained  = trainedStrength > 5;
+
+    // ======================================
+    // 🧠 EPISODIC TRAJECTORY GATE — Fix 6+7
+    // ──────────────────────────────────────
+    // For non-graph shortcuts to the goal,
+    // require BOTH reward threshold AND
+    // episodic adjacency evidence.
+    //
+    // reward > 4 alone is not enough — after
+    // 2 accidental goal reaches any node
+    // accumulates reward=6 and gets admitted
+    // forever, creating the shortcut collapse.
+    //
+    // Now: shortcut candidates (non-graph)
+    // also need to have appeared at least ONCE
+    // as consecutive steps in a real episode.
+    // ======================================
+    const rewardStrength    = rewards.get(currentKey + "->" + k) || 0;
+    const hasEpisodicWitness = (adjacencyMemory.get(currentKey + "->" + k) || 0) > 0;
+
+    // Non-graph path needs BOTH reward AND episodic evidence
+    const isHumanTrained = rewardStrength > 4 && hasEpisodicWitness;
+
+    if (!isGraphNeighbor && !isEpisodeTrained && !isHumanTrained) {
+      return; // skip non-graph, non-trained candidates
     }
     
-    // skip Bad Paths
-    // If this node cannot reach goal -> ignore it completely
-    if (goalNeuronId && !canReachGoal(k, goalNeuronId)) {
+    // Single goal-reachability guard (was duplicated — now unified)
+    if (goalNeuronId !== null && !canReachGoal(k, goalNeuronId)) {
       return;
     }
     
@@ -791,11 +1590,11 @@ function runPrediction(startKey) {
   // low visits = curious
   // high visits = less curious
   const curiosityBoost =
-  1 / Math.sqrt(visits + 1); // curiosity naturally fades
+  (1 / Math.sqrt(visits + 1)) * 0.08 ; // curiosity naturally fades
 
   // repeated path becomes trusted habit
   const habitBoost =
-  Math.log(visits + 1) * 1.5; // confidence increases slowly
+  Math.log(visits + 1) * 3; // confidence increases slowly
 
 
   // =====================================
@@ -815,10 +1614,26 @@ function runPrediction(startKey) {
   const confidenceBoost =
     confidence * 0.15;
 
-  // too repetitive = boring
+  // ======================================
+  // 🧠 BOREDOM PENALTY
+  // ──────────────────────────────────────
+  // Two components combined:
+  // 1. visit count (path-level habituation)
+  // 2. motivational boredom from snapshot
+  //    (previously frozen at 0.79, ignored)
+  //
+  // When the brain is globally bored (stuck
+  // in repetitive loops), it should more
+  // aggressively penalise familiar paths.
+  // ======================================
+
+  const motivationalBoredom =
+      motivationalSnapshot?.boredom ?? 0;
+
   const boredomPenalty =
-  visits * 0.25; // brain gets bored of same thing
-  
+      visits * 0.25 +
+      motivationalBoredom * 2.0;
+
   // 🧠 get learned Q value (real intelligence)
   const qValue = getQ(currentKey, k);
 
@@ -846,22 +1661,47 @@ function runPrediction(startKey) {
   
   // ================== SMARTER DECISION SCORE ==================
   
-  // reward learned chains naturally
-  // example:
-  // lion -> hunt -> meat -> eat
-  const chainReward =
-  (chainMap.get(k) || 0) * 3.5;
+  // ======================================
+  // 🧠 EPISODE MEMORY LOCK
+  // strongly preserve trained sequences
+  // ======================================
+
+  // chainMemory no longer receives writes (click-stream learning
+  // was removed in the episodic unification). chainStrength = 0
+  // always. chainReward is replaced by schemaBonus below, which
+  // provides the same "sequence pattern recognition" signal but
+  // from verified cross-episode abstraction instead of click history.
+  const chainReward = 0;
+
+  const directRewardStrength = rewards.get(currentKey + "->" + k) || 0;
   
   // future planning bonus
   // brain asks:
   // "can this path help reach goal later?"
   // 🧠 imagine future chain
-  const imaginedFuture =
-  futureScore(k, 4);
+  const targetNeuronForFuture = findNeuronById(k);
+
+  const imaginedFuture = targetNeuronForFuture
+      ? futureScore(
+          targetNeuronForFuture,
+          goalNeuronId,
+          rewards,
+          penalties,
+          curiosityMap,
+          3
+        )
+      : 0;
 
   // future planning bonus
+  // ── capped at 20 ──────────────────────────────────────────
+  // futureScore() DFS multiplies by 2 recursively, producing
+  // values like 64.80 for goal-adjacent nodes. That dominated
+  // the entire scoring formula (64.80 * 4 = 259 out of 248
+  // final score). Cap to 20 so it nudges without overriding
+  // the Q-value and reward signals.
+  // ──────────────────────────────────────────────────────────
   const futureBonus =
-  imaginedFuture * 1.5;
+  Math.min(imaginedFuture * 4, 20);
   
   // slight penalty for dangerous paths
   const dangerPenalty =
@@ -869,11 +1709,27 @@ function runPrediction(startKey) {
   
 
   // ======================================
-  // REPETITION ADDICTION DETECTOR
+  // 🧠 LOOP DETECTOR
+  // punish bouncing patterns
   // ======================================
 
-  // punish overused repeated paths 
-  const repetitionPenalty = 0;
+  let repetitionPenalty = 0;
+
+  // last 3 visited nodes
+  const recentNodes = thoughtTrail.slice(-3);
+
+  // repeated recently?
+  if (recentNodes.includes(k)) {
+
+      // ──────────────────────────────────────
+      // Was 25 → caused Math.pow(26,2.5)*2.5 = 8620 penalty.
+      // Any path scored -8523 even when it was the BEST option.
+      // Changed to 2 → Math.pow(3,2.5)*2.5 = 39 penalty.
+      // Still strong enough to discourage repetition but
+      // does not make scores catastrophically negative.
+      // ──────────────────────────────────────
+      repetitionPenalty += 2;
+  }
 
 
   // ======================================
@@ -887,6 +1743,150 @@ function runPrediction(startKey) {
           startKey,
           k
       );
+
+
+  // ======================================
+  // 🧠 GOAL GRADIENT — THE MISSING PULL
+  // ──────────────────────────────────────
+  // candidateAnalysis.js computes a goalBoost
+  // but main.js never passed it into scoring,
+  // so the agent had ZERO goal awareness and
+  // farmed whatever local loop it landed in.
+  //
+  // This computes a reliable graph-distance
+  // gradient: every step that gets CLOSER to
+  // the goal scores higher. Reaching the goal
+  // exactly gives the strongest pull.
+  //
+  // Scaled to compete with the qValue*5 term
+  // (~100 max) so goal-seeking is a real force,
+  // not a decorative HUD label.
+  // ======================================
+
+  let goalGradientBoost = 0;
+
+  if (goalNeuronId !== null) {
+
+      if (Number(k) === Number(goalNeuronId)) {
+
+          // candidate IS the goal — the final
+          // step. This must dominate even a
+          // heavily farmed local loop, so the
+          // agent always takes the last step in.
+          goalGradientBoost = 100;
+
+      } else {
+
+          const dist = goalDistance(k, goalNeuronId);
+
+          if (dist > 0) {
+              goalGradientBoost = 30 / (dist + 0.5) * 0.75 + 5;
+          } else if (dist === -1) {
+              goalGradientBoost = -8;
+          }
+      }
+
+      // ======================================
+      // 🧠 TRAJECTORY CONFIDENCE GATE
+      // ──────────────────────────────────────
+      // Human analogy: "Have I seen this step
+      // happen right here in a real story?"
+      //
+      // If the answer is no (count=0), the
+      // goal gradient is suppressed to 10%.
+      // The brain still knows the goal exists
+      // but it cannot take a shortcut it has
+      // never experienced as a genuine step.
+      //
+      // If count=5+ (well-trained path), the
+      // full goal gradient applies.
+      //
+      // This stops forest→eat, dog→eat etc.
+      // from scoring high: they have count=0
+      // so their goalGradientBoost = 0.10 × X
+      // while lion→hunt has count=8, full X.
+      //
+      // Fix 1: trajectory priority
+      // Fix 2: transitive shortcuts blocked
+      // Fix 5: causal validity filter
+      // ======================================
+
+      if (Number(k) !== Number(goalNeuronId)) {
+          const tc = trajectoryConfidence(currentKey, k);
+          goalGradientBoost *= (0.10 + 0.90 * tc);
+      } else {
+          // =============================================
+          // FIX 3: ZERO PULL FOR UNWITNESSED TRANSITIONS
+          // ─────────────────────────────────────────────
+          // If adjacencyMemory[A→B] === 0, this step was
+          // NEVER observed as consecutive in any episode.
+          // It gets NO goal gradient at all.
+          //
+          // The old minimum of 15 meant every node in the
+          // graph still had "30 free points" toward eat,
+          // which was enough to compete with short trained
+          // paths. Zero means: no episodic evidence = no
+          // goal-directed pull. Only trained steps attract.
+          //
+          // tc=0 → boost=0   (never seen)
+          // tc=0.5 → boost=50 (seen in ~2-3 episodes)
+          // tc=1.0 → boost=100 (seen in 5+ episodes)
+          // =============================================
+          const tc = trajectoryConfidence(currentKey, k);
+          goalGradientBoost = 100 * tc;
+      }
+
+  }  // end: if (goalNeuronId !== null)
+
+
+  // ======================================
+  // 🧠 SEMANTIC VITALITY SCORE
+  // experience-based semantic signal
+  // replaces raw embedding dominance
+  // ======================================
+
+  const candidatePathKey =
+      currentKey + "->" + k;
+
+  const semanticVitalityScore =
+      getSemanticSignal(candidatePathKey);
+
+  
+  // ======================================
+  // 🧠 NOISE-SUPPRESSED SEMANTIC SCORE
+  // edges seen < 3 times = noise → penalized
+  // edges seen 8+ times = stable knowledge → boosted
+  // ======================================
+
+  const noiseSuppressedScore = getNoiseSuppressedScore(
+      currentKey,
+      k,
+      startNeuron.userData.label,
+      targetNeuron?.userData.label || ""
+  );
+
+  const consolidationBonus = getConsolidationScore(currentKey, k);
+
+  // ======================================
+  // 🧠 ATTENTION AMPLIFICATION
+  // aligned with current focus = amplified
+  // misaligned = suppressed
+  // ======================================
+
+  const rawCandidateScore =
+      (reward * 3) + (qValue * 2) + noiseSuppressedScore;
+
+  const attentionAmplifiedScore =
+      applyAttentionAmplification(rawCandidateScore, targetNeuron?.userData.embedding);
+
+
+  // ======================================
+  // 🧠 UNCERTAINTY SCORE
+  // surprise + inconsistency + novelty
+  // ======================================
+
+  const uncertaintyScoreValue =
+      getUncertaintyScore(candidatePathKey);   
 
 
   // ======================================
@@ -905,16 +1905,21 @@ function runPrediction(startKey) {
 
       habitBoost,
 
-      // confidence memory
-      confidenceBoost,
-
       curiosityBoost,
-
-      
 
       chainReward,
 
-      meaningBoost,
+      meaningBoost: meaningBoost * 0.15,
+      
+      executiveWeights,
+      semanticVitalityScore,
+      uncertaintyScore: uncertaintyScoreValue,
+      dominantDrive: motivationalSnapshot.dominant,
+
+      // new cognitive systems
+      noiseSuppressedScore,
+      consolidationBonus,
+      attentionAmplifiedScore,
 
       futureBonus,
 
@@ -922,114 +1927,173 @@ function runPrediction(startKey) {
 
       repetitionPenalty,
 
-      // Local emotional memory adds nuance to decision
-      localConfidence:
-      localEmotion.confidence,
-
-      localStress:
-      localEmotion.stress,
-
-      localFatigue:
-      localEmotion.fatigue,
-
-      localTrust:
-      localEmotion.trust,
-
-      localFear:
-      localEmotion.fear,
-
-
       dangerPenalty,
 
-      // destroy self-loops like:
-      // lion -> lion
-      // eat -> eat
-
       selfLoopPenalty:
+          k === currentKey ? 1000 : 0,
 
-          k === currentKey
+      // ======================================
+      // 🧠 LOCAL PATH EMOTIONS
+      // per-path emotional memory
+      // ======================================
 
-              ? 1000
-
-              : 0,
+      localConfidence: localEmotion.confidence,
+      localStress:     localEmotion.stress,
+      localFatigue:    localEmotion.fatigue,
+      localTrust:      localEmotion.trust,
+      localFear:       localEmotion.fear,
 
       // ======================================
       // 🧠 BEHAVIOR DYNAMICS
       // ======================================
 
       curiosityState,
-
-      confidenceState,
-
-      stressState,
-
-      fatigueState,
-
-      focusState,
-
-  });
-  
-  
-  // ======================================
-  // 🧠 UPDATE LIVE BRAIN HUD
-  // ======================================
-
-  updateHUD({
-
-      // emotional states
-      curiosityState,
       confidenceState,
       stressState,
       fatigueState,
-      fatigueValue: fatigueState.toFixed(2), // for easier HUD display
       focusState,
 
-      // intelligence
-      qValue,
-      futureBonus: liveFutureBonus,
-      finalWeight,
+      // ======================================
+      // 🧠 PREDICTION UNCERTAINTY
+      // live binding from predictionError.js
+      // suppresses semantic weight when brain
+      // world model is currently unreliable
+      // ======================================
 
-      // current thinking
-      currentThought:
-      label1 + " -> " + label2
+      uncertaintyState: predUncertaintyState,
+
+      // ======================================
+      // 🧠 PER-TRANSITION UNCERTAINTY
+      // specific unreliability of THIS path
+      // (fromId → candidateId)
+      // scales penalty with qValue to compete
+      // against Q=20 highway dominance
+      // ======================================
+
+      transitionUncertainty: getTransitionUncertainty(currentKey, k),
+
+      // ======================================
+      // 🧠 SEQUENCE-LEVEL ESCAPE PRESSURE
+      // high repetition → adds breaking pressure
+      // to ALL transitions including loop ones
+      // ======================================
+
+      sequenceError: getSequenceError(),
+
+      // ======================================
+      // 🧠 EPISTEMIC UNCERTAINTY LEDGER
+      // true outcome-reliability history
+      // for THIS specific transition
+      // ======================================
+
+      ...getProceduralUncertainty(currentKey, k),
+
+      // ======================================
+      // 🧠 BAYESIAN PATH TRUST
+      // ──────────────────────────────────────
+      // Real earned certainty from autonomous
+      // verified success. Range [0 → 1].
+      // 0.5 = no evidence yet (flat prior)
+      // 0.9 = heavily proven by experience
+      // Manual clicks do NOT write here.
+      // Formula: (successes+1)/(attempts+2)
+      // ======================================
+
+      bayesianTrust: getPathTrust(currentKey + "->" + k),
+
+      // ======================================
+      // 🧠 GOAL GRADIENT
+      // ──────────────────────────────────────
+      // Graph-distance pull toward the goal.
+      // This is what makes the agent actually
+      // seek the goal instead of farming loops.
+      // ======================================
+
+      goalGradientBoost,
+
+      // ======================================
+      // 🧩 SCHEMA BONUS
+      // ──────────────────────────────────────
+      // Hierarchical abstraction bonus.
+      // High when this transition is part of a
+      // known abstract pattern (e.g. hunt→meat
+      // matches the predator-hunt-consume schema
+      // even if never directly seen with THIS
+      // predator before). Zero if no schema
+      // matches. Pure recognition — no writes.
+      // ======================================
+
+      schemaBonus: getSchemaBonus(currentKey, k),
+
+      // =============================================
+      // FIX 4: TRAJECTORY INTEGRITY SCORE
+      // ─────────────────────────────────────────────
+      // Measures how well this step fits inside a
+      // known episode structure given the current
+      // path taken so far.
+      //
+      // Human analogy: "Not only do I remember
+      // hunt→meat in isolation, I remember it
+      // happening RIGHT AFTER lion→hunt, which
+      // is EXACTLY where I am in the sequence now."
+      //
+      // Built by checking: does any known episode
+      // contain [...currentPath, k] as a prefix?
+      // The longer the matching prefix, the higher
+      // the integrity score.
+      //
+      // This gives massive preference to paths that
+      // exactly continue a known episode vs shortcuts
+      // that just happen to end at a related node.
+      // =============================================
+
+      trajectoryIntegrity: computeTrajectoryIntegrity(
+          recentMemory,
+          currentKey,
+          k
+      ),
 
   });
 
+  // ======================================
+  // 🧠 EXECUTIVE ARBITRATION BLEND
+  // ──────────────────────────────────────
+  // arbitrate() uses competitive arbitration
+  // (winner-takes-MORE) across normalized
+  // pressure signals weighted by motivation.
+  //
+  // Blended 60/40 with calculateDecisionScore
+  // to preserve learned Q/reward signals
+  // while adding motivational modulation.
+  // ======================================
+
+  const candidateArb = lastArbitrationBreakdown;
+  let arbitratedScore = finalWeight;
+
+  if (candidateArb && executiveWeights) {
+      const competitiveScore = arbitrate({
+          rewardScore:      candidateArb.rewardScore,
+          semanticScore:    candidateArb.semanticScore,
+          confidenceScore:  candidateArb.confidenceScore,
+          uncertaintyScore: uncertaintyScoreValue,
+          curiosityScore:   candidateArb.curiosityScore,
+          costScore:        candidateArb.costScore,
+          executiveWeights,
+          drift:            0,
+          isSelfLoop:       (k === currentKey),
+      });
+      // blend: 60% learned score + 40% competitive
+      arbitratedScore = finalWeight * 0.60 + competitiveScore * 0.40;
+  }
 
   choices.push({
     key: k,
-    weight: finalWeight
+    weight: arbitratedScore
   });
 
-
-  // ======================================
-  // 🧠 UPDATE INTERNAL BRAIN STATE
-  // brain emotions evolve over time
-  // ======================================
-
-  updateBehavior({
-
-      // reward strengthens confidence
-      reward,
-
-      // punishment increases stress
-      penalty,
-
-      // success if reward larger than penalty
-      success: reward > penalty,
-
-      // repeated path detection
-      repeated: visits > 5,
-
-      pathLength: choices.length,
-
-      // isHome: currentNode === homeNode
-
-  });
-
-
+  // NOTE: updateBehavior moved OUTSIDE this loop
+  // calling it per-candidate was inflating confidence to 100
 });
-// ___
 //  __________________________________________________________________________________________
 
 // pick single best choice (highest weight)
@@ -1054,23 +2118,53 @@ function runPrediction(startKey) {
 
 // Multi prediction (top 3)
 
-// 🎲 STEP 4 — RANDOM EXPLORATION (PUT EXACTLY HERE)
-if (Math.random() < 0.1 && choices.length > 0) {
-  const randomChoice = choices[Math.floor(Math.random() * choices.length)];
-  currentKey = randomChoice.key;
-  return; // stop normal decision → explore instead
+// ======================================
+// 🧠 ADAPTIVE EPSILON — STRESS + UNCERTAINTY
+// ──────────────────────────────────────
+// Base rate drops when fatigued (tired brains
+// commit to habits). But when stress rises
+// above a threshold it signals the brain is
+// STUCK in an unrewarding loop — stress is
+// accumulating because the goal isn't being
+// reached. At that point, boost epsilon to
+// force exploration and break the attractor.
+//
+// stressEscapeBoost:
+//   stress < 10  → 0     (normal operation)
+//   stress 10-20 → 0-0.2  (mild pressure)
+//   stress > 20  → 0.2-0.4 (strong escape drive)
+//
+// predEpsilonBoost is set by prediction error
+// tracking (widens attention after surprises).
+// ======================================
+
+const predEpsilonBoost = window._predictionErrorEpsilonBoost || 0;
+
+const STRESS_ESCAPE_THRESHOLD = 10;
+const stressEscapeBoost =
+    stressState > STRESS_ESCAPE_THRESHOLD
+        ? Math.min(
+              0.4,
+              ((stressState - STRESS_ESCAPE_THRESHOLD) / 20) * 0.4
+          )
+        : 0;
+
+if (stressEscapeBoost > 0.05) {
+    console.log(
+        "🌪️ Stress escape: stress=" + stressState.toFixed(1) +
+        " boost=+" + stressEscapeBoost.toFixed(2)
+    );
 }
 
-
-// tired brains explore less
-const epsilon =
-
-Math.max(
-
+const epsilon = Math.max(
     0.02,
-
-    0.2 - (fatigueState.value * 0.002)
-
+    Math.min(
+        0.7,
+        0.2
+        - (fatigueState * 0.002)
+        + predEpsilonBoost
+        + stressEscapeBoost
+    )
 );
 
 
@@ -1101,13 +2195,7 @@ lastDecision = {
 // Structure weight
 structureMap.forEach((value, k) => {
   
-  // Block paths that cannot reach goal
   if (goalNeuronId !== null && !canReachGoal(k, goalNeuronId)) {
-    return;                         // skip this option completely
-  }
-  
-  // skip nodes that can't reach goal
-  if (goalNeuronId && !canReachGoal(k, goalNeuronId)) {
     return;
   }
   
@@ -1136,24 +2224,35 @@ structureMap.forEach((value, k) => {
 });
 
 embeddingMap.forEach((value, k) => {
-  
-  // Block paths that cannot reach goal
-  if (goalNeuronId !== null && !canReachGoal(k, goalNeuronId)) {
-    return;                         // skip this option completely
+
+  // =============================================
+  // FIX 2: SEMANTIC → EXPLORATION ONLY
+  // ─────────────────────────────────────────────
+  // Semantic neighbors (embedding similarity)
+  // are imagination fuel for open exploration.
+  // When the brain has a specific goal, they
+  // must NOT compete with episodic candidates.
+  //
+  // Human analogy: "I know lion and hunt are
+  // conceptually related, but when I'm trying
+  // to reach eat, I follow the path I remember
+  // from experience — not semantic association."
+  //
+  // When goalNeuronId is set: skip ALL semantic
+  // candidates unless they already appear in
+  // the episodic candidate pool (choices).
+  // =============================================
+  if (goalNeuronId !== null) {
+    return; // episodic planning mode: no semantic candidates
   }
-  
-  // skip nodes that can't reach goal
-  if (goalNeuronId && !canReachGoal(k, goalNeuronId)) {
-    return;
-  }
-  
+
   const targetNeuron = findNeuronById(k);
   if (!targetNeuron) return;
   
   const label1 = startNeuron.userData.label;
   const label2 = targetNeuron.userData.label;
   
-  // logic filter
+  // logic filter (exploration only)
   if (conceptRelations[label1]) {
     if (!conceptRelations[label1].includes(label2)) {
       return;
@@ -1170,12 +2269,14 @@ embeddingMap.forEach((value, k) => {
 
 if (choices.length === 0) return;
 
-// ===== SOFTMAX =====
+// ===== SOFTMAX (stable — prevents Infinity/NaN) =====
+
+const maxW = Math.max(...choices.map(c => c.weight));
 
 let expSum = 0;
 
 choices.forEach(c => {
-  c.exp = Math.exp(c.weight);
+  c.exp = Math.exp(c.weight - maxW); // subtract max to prevent overflow
   expSum += c.exp;
 });
 
@@ -1308,11 +2409,79 @@ if (thoughtTrail.length >= 2) {
     nextKey = topChoices[1].key;
   }
 }
-// Save real AI prediction
-window.lastReasoning = {
-  from: currentKey,
-  to: nextKey
-};
+
+// ======================================
+// 🧠 SAVE ACTUAL NEXT MOVE — STEP 0 ONLY
+// ──────────────────────────────────────
+// window.lastReasoning tells runAgent
+// WHERE TO ACTUALLY MOVE NEXT.
+//
+// BUG (now fixed): this was written on
+// EVERY step of the STEPS loop, so a
+// 4-step prediction from lion would end
+// with lastReasoning = {eat→food} or
+// {meat→eat} — not {lion→hunt}.
+//
+// runAgent then read .to = food/eat and:
+//   a) moved the agent from lion to eat
+//   b) wrote Q[lion→eat] = 15.21
+//   c) wrote rewards["lion→eat"] += 3
+//
+// These are all false transitions. Lion
+// never actually jumped to eat. The
+// imagination chain contaminated reality.
+//
+// FIX: only set lastReasoning on step=0
+// (the genuine first action). Subsequent
+// steps are imagination/planning only and
+// must NOT alter the agent's real move.
+// ======================================
+if (step === 0) {
+  window.lastReasoning = {
+    from: currentKey,
+    to: nextKey
+  };
+}
+
+
+// ======================================
+  // 🧠 UPDATE HUD WITH ACTUAL DECISION
+  // Only on step 0 — the real move.
+  // Previous bug: HUD updated every step,
+  // so showed "meat→eat" or "food→eat"
+  // even when agent was at lion choosing hunt.
+  // ======================================
+
+  if (step === 0) {
+
+  const decidedNeuron = findNeuronById(nextKey);
+
+  if (startNeuron && decidedNeuron) {
+
+      updateHUD({
+          curiosityState,
+          confidenceState,
+          stressState,
+          fatigueState,
+          focusState: Math.max(0, confidenceState) *
+                      Math.exp(-stressState / 30),
+          qValue:       getQ(currentKey, nextKey),
+          futureBonus:  liveFutureBonus,
+          finalWeight:  bestChoice ? bestChoice.weight : 0,
+          currentThought:
+              startNeuron.userData.label +
+              " -> " +
+              decidedNeuron.userData.label,
+          // companion-relevant signals
+          dominantDrive:  getMotivationalSnapshot().dominant,
+          episodeCount:   getAllEpisodes().length,
+          stablePaths:    getConsolidationSummary().stablePaths,
+          stressEscape:   stressState > 10,
+      });
+
+  }
+
+  } // end: if (step === 0) HUD block
 
 // ======================================
 // 🧠 save imagined path into tree
@@ -1329,14 +2498,14 @@ thoughtTree.push({
 });
 
 
-currentKey = nextKey;
-}
+    currentKey = nextKey;
+
+  } // end: for (let step = 0; step < STEPS; step++)
 
 
-
-// --------------------------------------
-// difficult work nodes cost more energy
-// --------------------------------------
+  // --------------------------------------
+  // difficult work nodes cost more energy
+  // --------------------------------------
 
 const currentNeuron =
 findNeuronById(currentKey);
@@ -1498,9 +2667,10 @@ thoughtTree.forEach(branch => {
     const confidenceKey =
     branch.from + "->" + branch.to;
 
-    // get confidence memory
+    // get confidence memory (pathConfidence was removed;
+    // confidenceMap is the active per-path confidence store)
     const confidence =
-    pathConfidence.get(confidenceKey) || 0;
+    confidenceMap.get(confidenceKey) || 0;
 
 
     // safety check
@@ -1563,6 +2733,83 @@ thoughtTree.forEach(branch => {
 
 });
 
+
+// ======================================
+// 🧠 GENERATE PREDICTION EXPECTATION
+// ──────────────────────────────────────
+// MOVED from inside loop (step===0) to HERE.
+//
+// ROOT CAUSE OF THE FIX:
+// The old code stored predictedNextId = nextKey
+// from step 0 (first look-ahead step).
+// But runAgent evaluates actualNextId =
+// window.lastReasoning.to = LAST step's nextKey.
+// Different nodes → statePredictionError=1.0
+// every single step → uncertainty saturated
+// at 1.0 permanently.
+//
+// Fix: generate expectation AFTER the loop
+// using window.lastReasoning which holds the
+// FINAL predicted step — the same step that
+// runAgent will evaluate.
+//
+// Now:
+//   predictedNextId = window.lastReasoning.to
+//   actualNextId    = window.lastReasoning.to
+//   statePredictionError = 0.0 ✓
+//
+// Meaningful signal comes from rewardPredictionError:
+//   predictedReward = rewards.get(from→to) from memory
+//   actualReward    = rewardSignal (sim-based threshold)
+// These DO differ → gives real calibration signal.
+// ======================================
+
+if (window.lastReasoning) {
+
+    const lastFromNeuron =
+        findNeuronById(window.lastReasoning.from);
+
+    const lastToNeuron =
+        findNeuronById(window.lastReasoning.to);
+
+    if (lastFromNeuron && lastToNeuron) {
+
+        const predSim = similarity(
+            lastFromNeuron.userData.embedding,
+            lastToNeuron.userData.embedding
+        );
+
+        const predReward =
+            rewards.get(
+                window.lastReasoning.from + "->" +
+                window.lastReasoning.to
+            ) || 0;
+
+        generateExpectation({
+            predictedNextId:
+                window.lastReasoning.to,
+
+            predictedReward:
+                predReward,
+
+            predictedSimilarity:
+                predSim,
+
+            predictedConfidence:
+                confidenceState,
+
+            predictedGoalProgress:
+                (goalNeuronId &&
+                 window.lastReasoning.to === goalNeuronId)
+                ? 3 : 0,
+
+            fromKey: startKey
+        });
+
+    }
+
+}
+
 return currentKey;
 }
 
@@ -1617,6 +2864,19 @@ function runAgent() {
       curiosityMap.set(key, value * 0.995); // slow decay
     });
   }
+
+
+  // ======================================
+  // 🧠 DECAY EXECUTIVE SYSTEMS
+  // semantic vitality fades when unused
+  // uncertainty stabilizes with experience
+  // ======================================
+
+  if (Math.random() < 0.15) {
+      decaySemanticSystems();
+      decayUncertainty();
+  }
+  
   
   // 🟢 STEP 5 — DECAY PENALTY (PUT HERE AT TOP)
   penalties.forEach((value, key) => {
@@ -1665,9 +2925,17 @@ function runAgent() {
     
   });
   
-  // 🧠 slowly decay Q values
+  // 🧠 Q value decay — slower for manually trained paths
+  // ──────────────────────────────────────────────────────
+  // The old blanket 0.999 rate decayed a manually trained
+  // Q=15 to half in ~700 steps (~70 seconds at 10 steps/s).
+  // Paths in the reward map with r>5 (manual training) get
+  // a gentler 0.9998 decay — half-life ~3500 steps (~6 min).
+  // Untrained/exploratory paths still decay at 0.999.
   Q.forEach((value, key) => {
-    Q.set(key, value * 0.999);
+      const r = rewards.get(key) || 0;
+      const rate = r > 5 ? 0.9998 : 0.999;
+      Q.set(key, value * rate);
   });
   
   // if turned OFF → stop immediately
@@ -1678,8 +2946,12 @@ function runAgent() {
     
     const allIds = Array.from(neuronMap.keys()); // get all neuron IDs
     
-    // pick random start point
-    agentCurrent = allIds[Math.floor(Math.random() * allIds.length)];
+    // pick random start point — exclude goal node so
+    // the agent never begins an episode AT the goal
+    const _startIds = Array.from(neuronMap.keys())
+        .filter(id => Number(id) !== Number(goalNeuronId));
+    const _pool = _startIds.length > 0 ? _startIds : Array.from(neuronMap.keys());
+    agentCurrent = _pool[Math.floor(Math.random() * _pool.length)];
     
     console.log("🤖 Start from:", agentCurrent);
   }
@@ -1743,11 +3015,51 @@ function runAgent() {
   // ===============================
 
   else {
-      // replay full successful episodes
-      replayEpisodes();
+      // replay via unified episode manager
+      // reads from the single episodicStore shared by
+      // manual, autonomous, and exploration episodes
+      replayOneEpisode();
   }
   
   // ================== 🧠 FULL DECISION REASONING ==================
+
+  // ======================================
+  // 🧠 SINGLE updateBehavior PER STEP
+  // called once after choice is made
+  // uses lastDecision.best (global) not bestChoice (runPrediction scope)
+  // ======================================
+  if (lastDecision && lastDecision.best) {
+      const chosenKey     = lastDecision.best.key;
+      const chosenReward  = rewards.get(lastDecision.current + "->" + chosenKey) || 0;
+      const chosenPenalty = penalties.get(lastDecision.current + "->" + chosenKey) || 0;
+      const chosenVisits  = curiosityMap.get(lastDecision.current + "->" + chosenKey) || 0;
+
+      // ── Loop detection for stress accumulation ──────────────
+      // Count how many of the last 6 steps were the same pair.
+      // When stuck in hunt↔lion, all 6 are the same pair.
+      // recentMemory holds recent node IDs.
+      const recentWindow  = (window.recentMemory || []).slice(-6);
+      const currentPair   = lastDecision.current + "->" + chosenKey;
+      const pairRepeats   = recentWindow.filter(
+          (_, i) => i > 0 &&
+          recentWindow[i-1] + "->" + recentWindow[i] === currentPair
+      ).length;
+
+      // Stress penalty for being trapped in a loop with no goal progress
+      const loopStressPenalty =
+          (goalNeuronId !== null && chosenKey !== goalNeuronId)
+              ? pairRepeats * 0.3
+              : 0;
+
+      updateBehavior({
+          reward:     chosenReward - loopStressPenalty,
+          penalty:    chosenPenalty + loopStressPenalty,
+          success:    chosenReward > chosenPenalty && pairRepeats < 2,
+          repeated:   chosenVisits > 5 || pairRepeats >= 2,
+          pathLength: 1,
+          isHome:     chosenKey === window.homeNeuronId
+      });
+  }
   
   // ✅ FULL SAFE CHECK (very important)
   if (
@@ -1821,10 +3133,6 @@ function runAgent() {
       neuron.userData.label +
       " (" + reason + ")\n";
     });
-    
-    // ================== 🖥 SHOW ON SCREEN ==================
-    
-    reasoningBox.innerText = text;   // update UI box
     
     // also print in console
     console.log(text);
@@ -1940,8 +3248,9 @@ const pathKey = recentMemory.join("->");
 // =======================================
 
 // old learned memory
-const oldEpisodeStrength =
-episodeRewards.get(pathKey) || 0;
+// episodeRewards was removed (superseded by episodicStore in episodeManager).
+// Downstream formula still works: oldEpisodeStrength = 0 means no stale bonus.
+const oldEpisodeStrength = 0;
 
 // chain length
 const chainLength =
@@ -1980,23 +3289,17 @@ lengthBonus *
 
 // ===============================
 // 🧠 ADAPTIVE SEMANTIC WEIGHT
-// high rewards rely LESS
-// on semantic guessing
+// keep semantic LOW so trained rewards dominate
 // ===============================
 
-// default semantic importance
-let semanticWeight = 1.5;
+// low default — semantic is a tiebreaker only
+let semanticWeight = 0.3;
 
+// stronger rewards further reduce semantic influence
+semanticWeight -= reward * 0.03;
 
-// stronger rewards reduce semantic influence
-semanticWeight -= reward * 0.15;
-
-
-// never fully disable semantics
-semanticWeight = Math.max(
-    0.3,
-    semanticWeight
-);
+// minimum floor
+semanticWeight = Math.max(0.05, semanticWeight);
 
 
 // ================== 🧠 REAL REASONING SCORE ==================
@@ -2030,7 +3333,7 @@ const score =
 // 🛡️ LIMIT FINAL SCORE (VERY IMPORTANT FOR STABILITY)
 
 // clamp maximum value (prevents explosion)
-const MAX_SCORE = 100; // you can tune (50–150 range)
+const MAX_SCORE = 1000; // you can tune (500–1500 range)
 
 // clamp minimum value (prevents extreme negatives)
 const MIN_SCORE = -50;
@@ -2053,7 +3356,7 @@ if (goalNeuronId !== null) {
 // measures quality of thinking
 // ===============================
 
-const episodeScore =
+let episodeScore =
 
     reward * 10 +
 
@@ -2065,6 +3368,17 @@ const episodeScore =
 
     penalty * 10;
 
+
+
+// ======================================
+// 🧠 EPISODE STABILIZER
+// prevents memory explosion
+// ======================================
+
+episodeScore = Math.max(
+    -10,
+    Math.min(10, episodeScore)
+);
 
 
 // 🖥️ PRINT FULL THINKING (console)
@@ -2088,46 +3402,51 @@ const qVal = getQ(currentNeuron.userData.id, nextNeuron.userData.id);
 // print Q value
 console.log("🧠 Q-value:", qVal.toFixed(2));
 
-// 📺 SHOW ON SCREEN (visual brain)
-reasoningBox.innerText =
-"🧠 Thinking:\n" +
-currentNeuron.userData.label +
-" → " +
-nextNeuron.userData.label +
 
-"\n\n similarity: " + sim.toFixed(2) +
-"\n reward: " + reward.toFixed(2) +
-"\n penalty: " + penalty.toFixed(2) +
-"\n curiosity: " + curiosity.toFixed(2) +
-
-"\n\n FINAL SCORE: " + safeScore.toFixed(2) +
-"\n\n" + goalInfo;
 
 
 // ================== 🧠 SHOW ON SCREEN ==================
 
-// ================== 🧠 SHOW FULL THINKING ON SCREEN ==================
+const motivSnap  = getMotivationalSnapshot();
+const arb        = lastArbitrationBreakdown;
+const epState    = getCurrentEpisodeState();
+const attnSnap   = getAttentionSnapshot();
+const semSum     = getSemanticSummary();
+const consolSum  = getConsolidationSummary();
 
 reasoningBox.innerText =
+    "🧠 Thinking: " +
+    currentNeuron.userData.label +
+    " → " +
+    nextNeuron.userData.label +
 
-"🧠 Thinking: " +
-currentNeuron.userData.label +
-" → " +
-nextNeuron.userData.label +
+    "\n\n🎯 Dominant drive: " + motivSnap.dominant.toUpperCase() +
 
-"\n\n🔵 Similarity: " + sim.toFixed(2) +
+    "\n⭐ Reward pressure: " + (arb ? arb.rewardScore.toFixed(2) : "—") +
+    "\n🧠 Semantic pressure: " + (arb ? arb.semanticScore.toFixed(2) : "—") +
+    "\n💪 Confidence: " + (arb ? arb.confidenceScore.toFixed(2) : "—") +
+    "\n🔍 Curiosity: " + (arb ? arb.curiosityScore.toFixed(2) : "—") +
+    "\n😴 Cost: " + (arb ? arb.costScore.toFixed(2) : "—") +
 
-"\n⭐ Reward: " + reward.toFixed(2) +
+    "\n\n🔵 Semantic vitality: " + getSemanticSignal(
+        currentNeuron.userData.id + "->" + nextNeuron.userData.id
+    ).toFixed(3) +
+    "\n❓ Uncertainty: " + getUncertaintyScore(
+        currentNeuron.userData.id + "->" + nextNeuron.userData.id
+    ).toFixed(3) +
 
-"\n❌ Penalty: " + penalty.toFixed(2) +
+    "\n\n🧠 Q-value: " + qVal.toFixed(2) +
+    "\n👉 Final Score: " + safeScore.toFixed(2) +
 
-"\n🟣 Curiosity: " + curiosity.toFixed(2) +
+    "\n\n📦 Episode: [" + (epState.contextTag || "—") + "] " +
+    epState.labels.slice(-3).join("→") +
+    "\n🎯 Attention: " + (attnSnap.strength * 100).toFixed(0) + "%" +
+    (attnSnap.hasGoal ? " [goal-locked]" : "") +
+    "\n🏛️ Stable paths: " + consolSum.stablePaths +
+    " | Noise edges: " + semSum.noise +
+    "\n📚 Episode vault: " + epState.vaultSize +
 
-"\n🧠 Q-value: " + qVal.toFixed(2) +
-
-"\n\n👉 Final Score: " + safeScore.toFixed(2) +
-
-"\n\n" + goalInfo;
+    "\n\n" + goalInfo;
 
 
 // 🧠 try to get next step from memory (last prediction)
@@ -2153,7 +3472,9 @@ if (
 
     next !== null &&
 
-    agentLast !== next
+    agentLast !== next &&
+
+    agentLast !== goalNeuronId
 
 ) {
   
@@ -2204,12 +3525,67 @@ if (
 
 
   
-  // 🎯 if reached goal → big reward
+  // ======================================
+  // 🧠 STABLE LEARNING REWARD
+  // ======================================
+
+  // ──────────────────────────────────────
+  // 🛡️ ANTI-FARMING GOAL REWARD
+  // ──────────────────────────────────────
+  // The agent was farming the goal: reach
+  // eat → reward → step to meat → step back
+  // to eat → reward again. Every touch of
+  // the goal paid +12, so it locked into a
+  // meat↔eat oscillation forever.
+  //
+  // The goal reward now requires a REAL
+  // journey: the path since the last reset
+  // must contain at least 3 DISTINCT nodes.
+  // A 1–2 node dash/oscillation earns nothing.
+  // ──────────────────────────────────────
+
+  // distinct nodes travelled this episode
+  const episodeUnique =
+      new Set(recentMemory.map(Number)).size;
+
+  // reached goal
   if (next === goalNeuronId) {
-    rewardSignal = 10;   // success reward
-  } else {
-  rewardSignal = 0;  // no reward for normal steps
-}
+
+      if (episodeUnique >= 3) {
+          // genuine goal-reaching journey
+          rewardSignal = 12;
+      } else {
+          // trivial dash / oscillation onto the
+          // goal — no farming reward
+          rewardSignal = 0;
+          console.log(
+              "🚫 Goal touched via trivial path — no farm reward (unique:",
+              episodeUnique + ")"
+          );
+      }
+
+  }
+
+  // meaningful progress
+  else if (sim > 0.45) {
+
+      rewardSignal = 2;
+
+  }
+
+  // neutral movement
+  else if (sim > 0.15) {
+
+      rewardSignal = 0.3;
+
+  }
+
+  // weak nonsense movement
+  else {
+
+      rewardSignal = -0.4;
+
+  } 
 
 
 // ======================================
@@ -2235,42 +3611,364 @@ updateLocalEmotion({
 
 
 
-// get current Q value for (state → action)
-const currentQ = getQ(agentLast, next);
+// ======================================
+// 🧠 EVALUATE PREDICTION ERROR
+// ──────────────────────────────────────
+// Now that we know what ACTUALLY happened
+// (rewardSignal, sim, actual destination),
+// compare against what the brain PREDICTED
+// before it moved (stored in predictionError.js
+// via generateExpectation on step 0).
+//
+// This is the core of predictive cognition:
+// the gap between expectation and reality.
+// ======================================
 
-// find best future Q from next state
-let maxFutureQ = 0;
+const predError = evaluatePredictionError({
 
-// get next neuron object
-const nextNeuronObj = findNeuronById(next);
+    actualNextId:      next,
+    actualReward:      rewardSignal,
+    actualSimilarity:  sim,
+    actualGoalProgress: (next === goalNeuronId) ? 3 : 0
 
-// check all future options
-if (nextNeuronObj) {
-  nextNeuronObj.userData.neighbors.forEach(n => {
-    
-    // take maximum Q from next possible moves
-    maxFutureQ = Math.max(maxFutureQ, getQ(next, n));
-    
-  });
+});
+
+
+// ======================================
+// ROUTE PREDICTION ERROR SIGNALS
+// ──────────────────────────────────────
+// Each downstream system consumes the
+// relevant flags from the error object.
+// ======================================
+
+if (predError) {
+
+    // ── LEARNING AUTHORITY ────────────────────
+    // Larger prediction errors = less trustworthy
+    // learning update. Brain was wrong about what
+    // would happen, so it trusts this memory less.
+    // Prevents Q-table corruption from surprises.
+    const effectiveLR = 0.1 * predError.learningAuthority;
+
+    // ── Q-LEARNING UPDATE (AUTHORITY-SCALED) ──
+    updateQ({
+        state:     agentLast,
+        action:    next,
+        reward:    rewardSignal,
+        nextState: agentCurrent,
+        alpha:     effectiveLR,   // modulated by prediction confidence
+        gamma:     0.9
+    });
+
+    // ── PER-TRANSITION UNCERTAINTY UPDATE ─────
+    // Update this specific transition's reliability.
+    // High compositeError → this path is unpredictable.
+    // Will be read by calculateDecisionScore to
+    // apply proportional penalty on future visits.
+    updateTransitionUncertainty(
+        agentLast,
+        next,
+        predError.compositeError
+    );
+
+    // ── SEQUENCE-LEVEL ERROR UPDATE ───────────
+    // Track recent step diversity.
+    // High repetition detected by sequence buffer.
+    updateSequenceError(agentCurrent);
+
+    // ── SURPRISE-DRIVEN Q DAMPING ─────────────
+    // THE CORE FIX FOR PERMANENT Q=20 HIGHWAYS.
+    //
+    // When compositeError is significant (> 0.20),
+    // this path delivered LESS reward than expected.
+    // Actively reduce Q for this transition.
+    //
+    // dampStrength = compositeError × 0.028
+    // At compositeError=0.40 (typical loop step):
+    //   dampStrength = 0.011/step
+    //   Q after 50 steps: 20 × (1-0.011)^50 = 11.0
+    //   Q after 100 steps: 20 × 0.330 = 6.6
+    //   → Loop breaks as Q drops to competitive range
+    //
+    // Only fires when error > 0.20 to avoid
+    // damping during genuinely accurate predictions.
+    if (predError.compositeError > 0.20) {
+
+        dampQ(
+            agentLast,
+            next,
+            predError.compositeError * 0.028
+        );
+
+    }
+
+    // ── SEMANTIC EXPECTATION OUTCOME ──────────
+    // Record whether the semantic prediction for
+    // this traversal was born out by the reward.
+    // High error → semantic expectation was wrong.
+    // This reduces confidence for that label-pair,
+    // further reducing its meaningBoost.
+    const fromNeuronSemExp = neuronMap.get(Number(agentLast));
+    const toNeuronSemExp   = neuronMap.get(Number(agentCurrent));
+
+    if (fromNeuronSemExp && toNeuronSemExp) {
+
+        const fromLabel = fromNeuronSemExp.userData.label;
+        const toLabel   = toNeuronSemExp.userData.label;
+
+        recordSemanticExpectationOutcome(
+            fromLabel,
+            toLabel,
+            predError.compositeError
+        );
+
+        // ── SEMANTIC UNCERTAINTY LEDGER UPDATE ──
+        const semanticOutcome = 1.0 - predError.compositeError;
+        updateSemanticUncertainty(fromLabel, toLabel, semanticOutcome);
+
+        if (predError.compositeError > 0.25) {
+            recordSemanticActivation(
+                fromLabel,
+                toLabel,
+                predError.compositeError * 1.5
+            );
+        }
+
+    }
+
+    // ── PROCEDURAL UNCERTAINTY LEDGER UPDATE ──
+    // Normalize rewardSignal (-2..+12) to outcome [0,1]
+    const proceduralOutcome = Math.min(
+        Math.max((rewardSignal + 2) / 14.0, 0),
+        1.0
+    );
+    updateProceduralUncertainty(agentLast, agentCurrent, proceduralOutcome);
+
+    // ── UNCERTAINTY PROPAGATION ───────────────
+    propagateUncertainty(agentLast, agentCurrent, neuronMap);
+
+    // ── TRAJECTORY COMMITMENT BREAK ───────────
+    if (predError.shouldBreakTrajectory) {
+
+        // Soft break: increase exploration without destroying trail.
+        window._predictionErrorEpsilonBoost = Math.min(
+            predError.compositeError * 0.4,
+            0.45
+        );
+
+        console.log(
+            "🟡 Trajectory softbreak | severity:",
+            predError.severity,
+            "| error:", predError.compositeError.toFixed(3)
+        );
+
+    }
+
+    // ── ATTENTION WIDENING (EPSILON BOOST) ────
+    if (predError.attentionWidening > 0.45) {
+
+        window._predictionErrorEpsilonBoost =
+            predError.attentionWidening * 0.28;
+
+    } else {
+
+        window._predictionErrorEpsilonBoost = 0;
+
+    }
+
+    // ── EMERGENCY RECOVERY ────────────────────
+    if (
+
+        predError.shouldTriggerRecovery &&
+        window.homeNeuronId !== undefined
+
+    ) {
+
+        goalNeuronId = window.homeNeuronId;
+
+        console.log(
+            "🆘 Massive prediction error → emergency recovery | uncertainty:",
+            predError.uncertainty.toFixed(3)
+        );
+
+    }
+
+    // ── CURIOSITY SIGNAL ──────────────────────
+    if (predError.curiositySignal > 0) {
+
+        const curKey = agentLast + "->" + next;
+        const existingCuriosity = curiosityMap.get(curKey) || 0;
+        curiosityMap.set(
+            curKey,
+            Math.min(existingCuriosity + predError.curiositySignal, 5)
+        );
+
+    }
+
+    // ── BEHAVIOR STATE MODULATION ─────────────
+    applyPredictionErrorToBehavior(predError);
+
+    console.log(
+        "🔮 Prediction | severity:", predError.severity,
+        "| composite:", predError.compositeError.toFixed(3),
+        "| uncertainty:", predError.uncertainty.toFixed(3),
+        "| learningAuth:", predError.learningAuthority.toFixed(3),
+        "| transUnc:", getTransitionUncertainty(agentLast, next).toFixed(3),
+        "| seqErr:", getSequenceError().toFixed(3)
+    );
+
+} else {
+
+    // ── FALLBACK Q-UPDATE ─────────────────────
+    updateQ({
+        state:     agentLast,
+        action:    next,
+        reward:    rewardSignal,
+        nextState: agentCurrent,
+        alpha:     0.1,
+        gamma:     0.9
+    });
+
+
+    // ======================================
+    // 🧠 RECORD INTO SEMANTIC MEMORY LAYER
+    // builds noise-suppressed semantic knowledge
+    // ======================================
+
+    const fromNeuronSem  = findNeuronById(agentLast);
+    const toNeuronSem    = findNeuronById(next);
+
+    if (fromNeuronSem && toNeuronSem) {
+
+        recordSemanticEdge(
+            agentLast,
+            next,
+            fromNeuronSem.userData.label,
+            toNeuronSem.userData.label,
+            rewardSignal
+        );
+
+        // consolidation — strengthen if rewarding
+        if (rewardSignal > 0) {
+            reinforcePath(
+                agentLast,
+                next,
+                fromNeuronSem.userData.label,
+                toNeuronSem.userData.label,
+                rewardSignal
+            );
+        } else if (rewardSignal < 0) {
+            weakenPath(agentLast, next, Math.abs(rewardSignal) * 0.3);
+        }
+
+        // update attention toward rewarding nodes
+        if (rewardSignal > 0) {
+            updateAttentionFocus(
+                toNeuronSem.userData.embedding,
+                rewardSignal
+            );
+            strengthenAttention(0.005);
+        } else if (rewardSignal < -0.5) {
+            weakenAttention(0.01);
+        }
+
+        // boost activation of visited nodes
+        boostActivation(next, Math.min(0.3 + rewardSignal * 0.1, 1));
+    }
+
+
+    // ======================================
+    // 🧠 UPDATE UNCERTAINTY ENGINE
+    // tracks prediction vs actual outcome
+    // ======================================
+
+    const stepPathKey =
+        agentLast + "->" + next;
+
+    const predictedQ =
+        getQ(agentLast, next);
+
+    updateUncertainty(
+        stepPathKey,
+        predictedQ,
+        rewardSignal
+    );
+
+
+    // ======================================
+    // 🧠 ACTIVATE SEMANTIC VITALITY
+    // traversing a path activates it
+    // strength grows if path leads to success
+    // ======================================
+
+    activateSemanticVitality(
+        stepPathKey,
+        rewardSignal > 0 ? 1.2 : 0.4
+    );
+
+    if (rewardSignal < 0) {
+
+        penalizeSemanticPath(
+            stepPathKey,
+            Math.abs(rewardSignal)
+        );
+    }
+
+
+    // ======================================
+    // 🧠 RECORD OUTCOME FOR MOTIVATIONAL STATE
+    // ======================================
+
+    recordOutcome(rewardSignal > 0);
+
+    // still update sequence tracking on epsilon jumps
+    updateSequenceError(agentCurrent);
+
+    // clear epsilon boost on random jumps
+    window._predictionErrorEpsilonBoost = 0;
+
 }
 
-// 🧠 Q-learning formula
-const newQ =
-currentQ +                                  // old knowledge
-alpha * (                                   // learning speed
-rewardSignal +                            // immediate reward
-gamma * maxFutureQ -                      // future reward
-currentQ                                  // remove old bias
-);
 
-// save updated value
-setQ(agentLast, next, newQ);
+// ======================================
+// 🧠 BAYESIAN TRUST — RECORD ATTEMPT
+// ──────────────────────────────────────
+// Every autonomous step is one attempt.
+// Successes are recorded separately when
+// the goal is verified reached.
+// trust = successes / attempts (Bayesian)
+// ======================================
 
-// debug print
-console.log("🧠 Q updated:", agentLast, "→", next, "=", newQ.toFixed(2));
+if (agentLast !== null && next !== null && agentLast !== next) {
+
+    const attemptKey = agentLast + "->" + next;
+
+    recordAttempt(attemptKey);
+
+}
+
 
 const prev = agentLast; // 👉 where we were before
 const current = next;      // 👉 where we moved now
+
+// ======================================
+// 🧠 PUSH CURRENT INTO RECENT MEMORY NOW
+// ──────────────────────────────────────
+// Push current BEFORE the goal-reached check so that
+// recordAutonomousSuccess has a non-empty recentMemory
+// to build the episode path from. Previously this push
+// happened AFTER the check, so unique:0 was always seen
+// and 24/25 goal reaches were blocked as "trivial path".
+// ======================================
+if (current !== null && current !== prev) {
+    recentMemory.push(current);
+    if (recentMemory.length > 6) {
+        recentMemory.shift();
+    }
+    if (window.recentMemory) {
+        window.recentMemory = [...recentMemory];
+    }
+}
 
 // 🧪 curiosity = "I explored this path"
 const key = prev + "->" + current;
@@ -2324,74 +4022,39 @@ if (current === goalNeuronId) {
 
   // =====================================
   // SAVE FULL SUCCESSFUL EPISODE
-  // Example:
-  // lion -> hunt -> meat -> eat
+  // Use recentMemory (actual agent path)
+  // NOT thoughtTrail (click history)
   // =====================================
 
-  // Convert neuron IDs into words
-  const episodeWords = thoughtTrail.map(id => {
-      const n = neuronMap.get(id);
-      return n ? n.userData.label : id;
+  // Convert neuron IDs into words from actual agent path
+  const episodeWords = recentMemory.map(id => {
+      const n = neuronMap.get(Number(id));
+      return n ? n.userData.label : String(id);
   });
 
-  // Save only if episode is long enough
-  // ======================================
-  // 🧠 SAFE EPISODE STORAGE
-  // ignore corrupted repetitive episodes
-  // ======================================
-
-  const uniqueCount =
-
-  new Set(episodeWords).size;
-
-
-  if (
-
-      episodeWords.length >= 3 &&
-
-      uniqueCount >= 2
-
-  ) {
-
-    // ======================================
-    // 🧠 STORE COMPLETE EXPERIENCE
-    // not only words
-    // but also emotions + success
-    // ======================================
-
-    episodes.push({
-
-        // full episode chain
-        path: [...episodeWords],
-
-        // emotional outcome
-        reward: confidenceState,
-
-        stress: stressState,
-
-        fatigue: fatigueState,
-
-        curiosity: curiosityState,
-
-        // did episode feel successful?
-        success:
-
-            confidenceState >
-
-            stressState
-
-    });
-
-      // keep only latest 200 episodes
-      if (episodes.length > 200) {
-        episodes.shift();
-      }
-
-      console.log(
-          "🧠 Episode stored:",
-          episodeWords.join(" -> ")
-      );
+  // add the final goal step too
+  const goalN = neuronMap.get(Number(current));
+  if (goalN && !episodeWords.includes(goalN.userData.label)) {
+      episodeWords.push(goalN.userData.label);
   }
+
+  // ================================================================
+  // 🧠 UNIFIED EPISODIC COMMIT — AUTONOMOUS SUCCESS
+  // ================================================================
+  // All validation, semantic reinforcement, trust, consolidation,
+  // and replay-storage now run through episodeManager.
+  // The old inline episodes.push + reinforceEpisodeSemantics +
+  // episodes.shift was fragmented and duplicated logic.
+  // One call handles the full pipeline with correct authority.
+  // ================================================================
+
+  recordAutonomousSuccess(recentMemory, current, neuronMap, {
+      confidenceState,
+      stressState,
+      fatigueState,
+      curiosityState,
+      predictionError: getRollingError ? getRollingError() : 0
+  });
 
   
   // ======================================
@@ -2417,7 +4080,7 @@ if (current === goalNeuronId) {
 
           decayedReward + 1,
 
-          15
+          8   // hard cap at 8, not 15 — prevents qValue*14 = 1000+ scores
 
       );
 
@@ -2432,117 +4095,228 @@ if (current === goalNeuronId) {
 
 
   // ================== REWARD WHOLE RECENT PATH ==================
+  // DIRECT_EXPERIENCE provenance (1.00) — real goal-reach
+  // This is the highest authority write in the system.
 
-  // reward all recent successful thoughts
   for (let i = 0; i < recentMemory.length - 1; i++) {
 
     const from = recentMemory[i];
-    const to = recentMemory[i + 1];
-
+    const to   = recentMemory[i + 1];
     const pathKey = from + "->" + to;
 
-    rewards.set(
-        pathKey,
-        (rewards.get(pathKey) || 0) + 0.5
-    );
+    // provenance-weighted: full authority (1.00) for goal-reach
+    writeReward(rewards, pathKey, 0.5, PROVENANCE.DIRECT_EXPERIENCE, 8);
+    logActivation(pathKey, PROVENANCE.DIRECT_EXPERIENCE);
 
+    // ======================================
+    // 🧠 AUTONOMOUS SUCCESS → REAL TRUST
+    // ──────────────────────────────────────
+    // This is the ONLY place where genuine
+    // trust should grow significantly.
+    // +5 per verified step (was +1 = wrong).
+    // Manual click gave +10 with no proof.
+    // Now: real proof gives 5x what teaching gave.
+    // ======================================
+    const oldConfidence = confidenceMap.get(pathKey) || 0;
+    confidenceMap.set(pathKey, Math.min(oldConfidence + 5, 100));
 
-    // =====================================
-    // CONFIDENCE LEARNING (SUCCESS)
-    // successful path becomes trusted
-    // ====================================  
-
-    // old confidence
-    const oldConfidence =
-    confidenceMap.get(pathKey) || 0;
-
-    // grow confidence slowly
-    const newConfidence =
-    Math.min(oldConfidence + 1, 100);
-
-    // save confidence
-    confidenceMap.set(
-        pathKey,
-        newConfidence
-    );
+    // ======================================
+    // 🧠 BAYESIAN TRUST TRACKING
+    // ──────────────────────────────────────
+    // Records verified success in the
+    // success/attempt ratio system.
+    // getPathTrust(pathKey) now returns
+    // real earned certainty [0→1].
+    // ======================================
+    recordSuccess(pathKey);
   }
 }
 
 // ===============================
-// ⚠️ 3. PENALTY (wrong path), this path was not good
+// ⚠️ 3. PENALTY — only for genuinely bad moves
+// not for every untrained neutral path
 // ===============================
-else {
+else if (rewardSignal < 0) {
   
-  // 🧠 safe penalty growth
+  const oldPenalty = penalties.get(key) || 0;
+  // grow penalty slowly, hard cap at 5
+  penalties.set(key, Math.min(oldPenalty + 0.1, 5));
 
-  const oldPenalty =
-
-      penalties.get(key) || 0;
-
-
-  // never allow infinite punishment
-  const newPenalty =
-
-      Math.min(oldPenalty + 0.3, 5);
-
-
-  penalties.set(
-
-      key,
-
-      newPenalty
-
-  );
-
-
-  // =====================================
-  // CONFIDENCE DAMAGE (FAILURE)
-  // bad path loses trust
-  // =====================================
-
-  // old confidence
-  const oldConfidence =
-  confidenceMap.get(key) || 0;
-
-  // reduce confidence slowly
-  const newConfidence =
-  Math.max(oldConfidence - 1.5, 0);
-
-  // save weaker confidence
-  confidenceMap.set(
-      key,
-      newConfidence
-  );
+  // bad path loses confidence
+  const oldConfidence = confidenceMap.get(key) || 0;
+  confidenceMap.set(key, Math.max(oldConfidence - 0.5, 0));
 }
 
 
 
 
 // ================== 🧠 MEMORY LEARNING ==================
+// Only write transition memory for actual graph neighbors.
+// prev→current where eat(9) is not a graph neighbor of milk(7)
+// would otherwise build transitions[7][9] > 5, making the
+// isEpisodeTrained guard pass and milk→eat enter the candidate pool.
 
-const map = transitions.get(prev) || new Map();
-// 👉 get memory of previous neuron
+const prevNeuronForMem = findNeuronById(prev);
+const isGraphNeighborForMem =
+    prevNeuronForMem &&
+    Array.isArray(prevNeuronForMem.userData.neighbors) &&
+    prevNeuronForMem.userData.neighbors.includes(Number(current));
 
-map.set(current, (map.get(current) || 0) + 1);
-// 👉 increase strength of this path
-
-transitions.set(prev, map);
-// 👉 save back to memory
+if (isGraphNeighborForMem) {
+    const map = transitions.get(prev) || new Map();
+    map.set(current, (map.get(current) || 0) + 1);
+    transitions.set(prev, map);
+}
 
 // ================== 🎯 REWARD SYSTEM ==================
 
 if (goalNeuronId && current === goalNeuronId) {
 
-    // 👉 if we reached goal
+    const key = prev + "->" + current;
 
-    const key = prev + "->" + current; // current successful step
+    // ======================================
+    // 🧠 MINIMUM CAUSAL DEPTH — Fix 3+4
+    // ──────────────────────────────────────
+    // Human analogy: "Did I actually earn
+    // this result by doing real work, or
+    // did I just stumble onto it by luck?"
+    //
+    // A path of 1–2 steps to the goal
+    // (X→eat, or Y→Z→eat) is almost certainly
+    // a shortcut, not the trained sequence.
+    //
+    // The trained path is 4 steps:
+    // lion→hunt→meat→eat
+    //
+    // Path length ≥ 4: full goal reward
+    // Path length = 3: 60% reward
+    // Path length = 2: 20% reward (weak)
+    // Path length ≤ 1: penalty applied
+    //
+    // "Full episode reinforced" already has
+    // the episodeUnique≥3 guard for replay
+    // storage. This guard handles the direct
+    // reward signal that Q-learning propagates.
+    // ======================================
 
-    rewards.set(
-        key,
-        (rewards.get(key) || 0) + 3
-    ); // give normal reward
+    const pathDepth = recentMemory.length;
 
-    console.log("🎉 Goal-reached → reward!"); // show success
+    // trajectory confidence of the final step
+    const finalStepTC = trajectoryConfidence(prev, current);
+
+    if (pathDepth <= 1) {
+
+        // 1-hop shortcut: punish and don't reward
+        const existingPenalty = penalties.get(key) || 0;
+        penalties.set(key, Math.min(existingPenalty + 1.5, 8));
+        console.log(
+            "⚠️ Shortcut blocked:", 
+            findNeuronById(prev)?.userData.label,
+            "→",
+            findNeuronById(current)?.userData.label,
+            "(depth=1)"
+        );
+
+    } else {
+
+        // Reward scales with path depth AND trajectory confidence
+        // depthFactor: 2-step=0.2, 3-step=0.5, 4-step=0.85, 5+=1.0
+        const depthFactor = Math.min((pathDepth - 1) / 3.5, 1.0);
+
+        // tcFactor: if final step was never in an episode, reduce reward
+        const tcFactor = 0.3 + 0.7 * finalStepTC;
+
+        const scaledReward = 3 * depthFactor * tcFactor;
+
+        rewards.set(key, Math.min((rewards.get(key) || 0) + scaledReward, 8));
+
+        // ======================================
+        // 🧠 GOAL-REACHED STRESS RELIEF
+        // ──────────────────────────────────────
+        // Stress was frozen at 12.6 because the
+        // per-step decay (-0.008) was far too slow
+        // to overcome the loop-detection build
+        // (+0.3 per repeated pair). Net: +0.8/step.
+        //
+        // Reaching a goal is a genuine success
+        // event — the companion should feel relief.
+        // Deep paths earn more relief (real work).
+        // Shortcuts earn less (lucky stumble).
+        //
+        // Human analogy: finally solving a hard
+        // problem feels much better than accidentally
+        // getting the right answer by luck.
+        // ======================================
+
+        const stressRelief = pathDepth >= 4
+            ? 3.0   // deep earned path — real relief
+            : pathDepth >= 3
+                ? 1.5   // medium path — partial relief
+                : 0.3;  // shortcut — barely any relief
+
+        changeStress(-stressRelief);  // negative = reduce stress
+
+        console.log("🎉 Goal-reached → reward!", scaledReward.toFixed(2),
+            "(depth:", pathDepth, "tc:", finalStepTC.toFixed(2), ")");
+    }
+
+    // ======================================
+    // 🧠 CRITICAL FIX: RESET AFTER GOAL
+    // agent must start fresh after reaching goal
+    // prevents eat→eat→eat→tiger garbage loops
+    // clears recentMemory so next episode is clean
+    // ======================================
+    
+    // clear recent memory — next episode starts fresh
+    recentMemory.length = 0;
+    window.recentMemory = [];
+
+
+    // seal episode into vault
+    sealCurrentEpisode("goal_reached");
+    rewardCurrentEpisode(10);
+
+    // reset attention for next episode
+    resetAttentionFocus();
+
+    // boost activation of goal node strongly
+    boostActivation(Number(current), 1.0);
+
+    // ======================================
+    // 🧠 RESET PREDICTION EXPECTATION
+    // ──────────────────────────────────────
+    // Stale expectation from the goal-reaching
+    // step must not carry over into the new
+    // episode starting from a random neuron.
+    // ======================================
+    resetExpectation();
+
+    // clear epsilon boost on fresh episode start
+    window._predictionErrorEpsilonBoost = 0;
+
+    // ──────────────────────────────────────────────────
+    // 🛡️ RESET TO NON-GOAL NODE
+    // ──────────────────────────────────────────────────
+    // The random reset pool must EXCLUDE the goal node.
+    // Previously the reset could land on eat(9) itself,
+    // making the agent immediately eligible for another
+    // goal reward in one step — creating an instant loop.
+    //
+    // Also reset lastDecision so the stale "Chose: eat→meat
+    // (score: 2038)" display from the previous step
+    // doesn't pollute the reasoning box at the start of
+    // the new episode.
+    // ──────────────────────────────────────────────────
+    const allIds = Array.from(neuronMap.keys())
+        .filter(id => Number(id) !== Number(goalNeuronId));
+
+    agentCurrent = allIds[Math.floor(Math.random() * allIds.length)];
+    agentLast    = agentCurrent;
+
+    // Fix C — clear stale lastDecision display on reset
+    lastDecision = null;
+
+    console.log("🔄 Reset after goal → starting from:", agentCurrent);
 
 
 
@@ -2621,6 +4395,23 @@ timeMemory.set(timeKey, Date.now());
 // 👉 remember when this path was used
 
 console.log("🧠 Self learned:", prev, "→", current);
+
+// ================================================================
+// 🧠 UNIFIED EPISODIC RECORD — AUTONOMOUS EXPLORATION STEP
+// ================================================================
+// Non-goal steps flow into the episodeManager with
+// autonomous_explore authority (procedural only, no trust,
+// no store). This replaces the direct transitions/Q writes
+// that previously happened in the click handler and ad-hoc.
+//
+// Goal-reaching steps are already handled by
+// recordAutonomousSuccess (called earlier in this block).
+// ================================================================
+
+if (Number(current) !== Number(goalNeuronId)) {
+    recordAutonomousStep(prev, current, neuronMap);
+}
+
 }
 
 // ================== UPDATE MEMORY ==================
@@ -2630,11 +4421,62 @@ agentLast = agentCurrent;                       // 👉 store current as "previo
 
 // ================== MOVE FORWARD ==================
 
-if (next !== null) {
+// ──────────────────────────────────────────────────
+// 🛡️ GOAL-RESET GUARD
+// ──────────────────────────────────────────────────
+// When the goal was reached inside the self-learning
+// block above, agentCurrent was set to a FRESH random
+// node and agentLast was set to match it.
+//
+// Without this guard the next line (agentCurrent=next)
+// overwrites that reset — because `next` was computed
+// BEFORE the goal-reached check — and puts the agent
+// back at the goal node. This created the instant
+// meat→eat→meat oscillation (observed: "Reset after
+// goal → starting from: 9", then immediately "eat→meat").
+//
+// The guard checks whether `next` is still the goal:
+// if it is, the reset already happened and we must NOT
+// move forward to `next`. The agent will start fresh
+// in the next runAgent call from the random position.
+// ──────────────────────────────────────────────────
+
+const _goalResetJustHappened =
+    goalNeuronId !== null &&
+    Number(next) === Number(goalNeuronId);
+
+if (next !== null && !_goalResetJustHappened) {
   agentCurrent = next;
   // 👉 agent moves to next neuron
 
 
+  // ======================================
+  // 🧠 RECORD SEMANTIC ACTIVATION
+  // ──────────────────────────────────────
+  // Record that the brain ACTUALLY traversed
+  // agentLast → agentCurrent. This increments
+  // refractory strength for this concept pair.
+  //
+  // Recording uses LABELS not IDs so the
+  // refractory system operates at concept level,
+  // generalizing to all future concepts.
+  //
+  // Note: called BEFORE energy/fatigue updates
+  // because recording is movement-driven,
+  // not energy-driven.
+  // ======================================
+
+  const fromNeuronSem = neuronMap.get(Number(agentLast));
+  const toNeuronSem   = neuronMap.get(Number(agentCurrent));
+
+  if (fromNeuronSem && toNeuronSem) {
+
+      recordSemanticActivation(
+          fromNeuronSem.userData.label,
+          toNeuronSem.userData.label
+      );
+
+  }
 
 
   // ======================================
@@ -2773,18 +4615,14 @@ if (next !== null) {
   }
   
   // add visited neuron to recent memory
-  recentMemory.push(agentCurrent);
-  // keep memory small
-  if (recentMemory.length > 6) {
-    recentMemory.shift();
-  }
-  
-  // store thinking history
-  thoughtTrail.push(agentCurrent);
-  
-  // keep trail small
-  if (thoughtTrail.length > 6) {
-    thoughtTrail.shift();
+  // recentMemory is now pushed earlier (right after current/prev assignment)
+  // so the goal-reached check always has a non-empty episode path.
+  // Only thoughtTrail is pushed here for the visual breadcrumb.
+  if (!_goalResetJustHappened) {
+    thoughtTrail.push(agentCurrent);
+    if (thoughtTrail.length > 6) {
+      thoughtTrail.shift();
+    }
   }
 }
 
@@ -2798,6 +4636,62 @@ if (next !== null) {
 function runAgentLoop() {
   
   if (!agentRunning) return; // 🛑 stop if turned off
+
+  // ======================================
+  // 🧠 SEMANTIC REFRACTORY DECAY
+  // ──────────────────────────────────────
+  // Called ONCE per loop cycle (≈500ms),
+  // NOT inside runAgent (would fire 5× per cycle).
+  //
+  // Allows gradual recovery of semantic pairs
+  // that have been recently traversed.
+  // After ~3-5s without traversal, a pair
+  // returns to full semantic strength (factor→1.0).
+  // ======================================
+  decaySemanticActivations();
+
+  // decay per-transition uncertainties once per loop
+  // allows transitions that later become stable
+  // to recover toward low uncertainty over time
+  decayTransitionUncertainties();
+
+  // ── EPISTEMIC LEDGER DECAY ────────────────
+  // uncertainty/volatility heal when stable.
+  decayUncertaintyLedger();
+
+  // decay new cognitive systems
+  decayActivations(0.93);
+  wmDecay();
+
+  // semantic memory and consolidation decay (less frequent)
+  if (Math.random() < 0.1) {
+      decaySemanticMemory();
+      decayConsolidation();
+
+      // ======================================
+      // 🧠 TRUST DECAY
+      // ──────────────────────────────────────
+      // Unused paths slowly lose certainty.
+      // Prevents old stale trust from
+      // dominating over fresh experience.
+      // Rate 0.9997 = very slow — ~1000 steps
+      // to halve a well-established trust.
+      // ======================================
+      decayTrust(0.9997);
+
+      // Rebuild abstract schemas from recurring motifs.
+      rebuildSchemas(getAllEpisodes());
+
+      // Rebuild episodic adjacency memory so trajectory
+      // confidence scores stay current with new episodes.
+      rebuildAdjacencyMemory();
+  }
+
+  // offline consolidation pass during replay phase
+  if (Math.random() < 0.05) {
+      runConsolidationPass(rewards, Q, transitions);
+  }
+
   
   for (let i = 0; i < 5; i++) {
     runAgent();                    // 5 thinking steps per frame
@@ -2811,6 +4705,49 @@ function runAgentLoop() {
 
 // press SPACE → start / stop AI
 window.addEventListener("keydown", (e) => {
+
+
+  // ======================================
+  // 🧠 EPISODE BOUNDARIES ARE STRUCTURAL
+  // ──────────────────────────────────────
+  // The old "press N for a new pass" hack is
+  // gone. Episode boundaries are now a real
+  // architectural concept: a training episode
+  // is sealed automatically when the goal is
+  // reached or when a node is revisited. No
+  // keyboard reset is needed or wanted.
+  // ======================================
+
+
+  // SHIFT+R = emergency brain wipe
+  if (e.code === "KeyR" && e.shiftKey) {
+
+      agentRunning = false;
+      if (loopId) clearTimeout(loopId);
+
+      localStorage.removeItem("brain");
+
+      transitions.clear();
+      rewards.clear();
+      penalties.clear();
+      signals.clear();
+      curiosityMap.clear();
+      Q.clear();
+      confidenceMap.clear();
+
+      // clear episodic memory too
+      clearAllEpisodes();
+
+      agentCurrent = null;
+      agentLast    = null;
+      goalNeuronId = null;
+
+      reasoningBox.innerText =  "🧠 Brain wiped — press SPACE to restart";
+
+      console.log("🧹 Brain wiped. Press SPACE to restart agent.");
+      return;
+  }
+
   // if SPACE key is pressed
   if (e.code === "Space") {
     
@@ -2831,270 +4768,311 @@ window.addEventListener("keydown", (e) => {
 // memory
 
 const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
+const mouse     = new THREE.Vector2();
 
 let lastClicked = null;
 
 window.addEventListener('click', (event) => {
-  
-  // Convert mouse to 3D space
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+
+
+  // ======================================
+  // CONVERT MOUSE TO 3D SPACE
+  // ======================================
+
+  mouse.x = (event.clientX / window.innerWidth)  * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-  
+
   raycaster.setFromCamera(mouse, camera);
-  
+
   const intersects = raycaster.intersectObjects(group.children);
-  
+
   if (intersects.length === 0) return;
-  
+
   const obj = intersects.find(i => i.object.userData.isNeuron)?.object;
-  
+
   if (!obj) return;
-  
+
   console.log("Neuron clicked:", obj.userData.label);
-  
-  // reset colors
+
+
+  // ======================================
+  // HIGHLIGHT NEURONS
+  // ======================================
+
+  // reset all colors
   neuronMap.forEach(n => {
     n.material.color.set(0xffffff);
   });
-  
-  // highlight clicked
+
+  // highlight clicked neuron
   obj.material.color.set(0xff0000);
-  
+
   // highlight neighbors
   obj.userData.neighbors.forEach(id => {
     const n = findNeuronById(id);
     if (n) n.material.color.set(0x00ff00);
   });
-  
-  // ================== LEARNING (VERY IMPORTANT) ==================
-  
-  if (window.lastNeuron !== undefined) {
-    
-    // 🧠 CHAIN LEARNING (NEW)
-    if (thoughtTrail.length >= 2) {
-      
-      const prev = thoughtTrail[thoughtTrail.length - 2];
-      const current = thoughtTrail[thoughtTrail.length - 1];
-
-      // ======================================
-      // 🧠 TEMPORAL MOMENTUM LEARNING
-      // learns flowing sequences
-      // previous -> current -> next
-      // ======================================
-
-      if (thoughtTrail.length >= 3) {
-
-          // older thought
-          const older =
-
-              thoughtTrail[
-                  thoughtTrail.length - 3
-              ];
 
 
+  // ================================================================
+  // 🧠 UNIFIED EPISODIC TRAINING — MANUAL CLICK
+  // ================================================================
+  // One call. The episode manager handles boundary detection,
+  // revisit sealing, goal-terminus detection, and the full
+  // learning pipeline. No local episode state here.
+  // ================================================================
 
-          // learn sequence flow
-          learnMomentum(
+  {
+    const clickedId = obj.userData.id;
+    const isGoalClick =
+        goalNeuronId !== null &&
+        Number(clickedId) === Number(goalNeuronId);
 
-              older,
-              prev,
-              current
-
-          );
-
-      }
-
-      // curiosity learning (track explored paths)\
-      const curKey = prev + "->" + current;
-      curiosityMap.set(curKey, (curiosityMap.get(curKey) || 0) + 1);
-      
-      // strengthen connection
-      const map = transitions.get(prev) || new Map();
-      map.set(current, (map.get(current) || 0) + 2); // stronger than normal
-      transitions.set(prev, map);
-      
-      // reward chain
-      const key = prev + "->" + current;
-      rewards.set(key, (rewards.get(key) || 0) + 2);
-      
-      console.log("🧠 Chain learned:", prev, "→", current);
-    }
-    
-    
-    const prev = window.lastNeuron;
-    const current = obj.userData.id;
-    
-    trainEmbedding(prev, current);
-    
-    // get memory map of previous neuron
-    const map = transitions.get(prev) || new Map();
-    
-    // ======================================
-    // 🧠 STRONG HUMAN TRAINING
-    // when YOU teach something,
-    // brain trusts it strongly
-    // ======================================
-
-    map.set(
-
-        current,
-
-        (map.get(current) || 0) + 25
-
-    );
-    
-    // 🔥 SIGNAL LEARNING
-    const signalKey = prev + "->" + current;
-    signals.set(signalKey, (signals.get(signalKey) || 0) + 1);
-    
-    // 🧠 SIGNAL DECAY (forget slowly)
-    signals.forEach((value, key) => {
-      signals.set(key, value * 0.99);
-    });
-    
-    // ❌ weaken wrong paths
-    map.forEach((value, key) => {
-      if (key !== current) {
-        map.set(key, value * 0.9);
-      }
-    });
-    
-    // save back
-    transitions.set(prev, map);
-    
-    console.log("🧠 Learned:", prev, "→", current);
+    recordManualClick(clickedId, obj.userData.label, isGoalClick);
   }
-  
-  // store current as last
-  window.lastNeuron = obj.userData.id;
-  
-  // 🔥 increase attention for this neuron
+
+
+  // ======================================
+  // 🧠 AUTO SEQUENCE RESET
+  // check BEFORE updating lastNeuron
+  // resets only when goal is reached
+  // ======================================
+
+  const reachedGoal =
+      goalNeuronId !== null &&
+      obj.userData.id === goalNeuronId;
+
+  if (reachedGoal) {
+
+      // goal reached — next click starts fresh
+      window.lastNeuron = undefined;
+
+      console.log("🧠 Episode complete — ready for next run");
+
+  } else {
+
+      // normal click — update lastNeuron for learning
+      window.lastNeuron = obj.userData.id;
+
+  }
+
+
+  // ======================================
+  // ATTENTION MEMORY
+  // ======================================
+
   const id = obj.userData.id;
   attentionMap.set(id, (attentionMap.get(id) || 0) + 1);
-  
-  // decay others (forget old focus)
+
+  // decay others
   attentionMap.forEach((value, key) => {
     if (key !== id) {
       attentionMap.set(key, value * 0.95);
     }
   });
-  
-  // Run prediction
-  console.log("Prediction running")
-  
+
+
+  // ======================================
+  // HANDLE SPECIAL CLICKS
+  // ======================================
+
+  console.log("Prediction running");
+
   const clickedId = obj.userData.id;
 
-  // ======================================
-  // 🎯 MANUAL GOAL SETTING
-  // SHIFT + CLICK neuron
-  // ======================================
-
+  // SHIFT + CLICK = set goal
   if (event.getModifierState("Shift")) {
 
       goalNeuronId = clickedId;
 
-      console.log(
-          "🎯 Goal set:",
-          obj.userData.label
-      );
+      // shift attention toward goal embedding
+      const goalN = findNeuronById(clickedId);
+      if (goalN) {
+          setGoalAttention(goalN.userData.embedding);
+      }
 
+      // ======================================
+      // 🧠 CLEAN WRAPAROUND LOOPS
+      // ──────────────────────────────────────
+      // The taught path ENDS at this goal.
+      // Remove any learned transitions OUT of
+      // the goal — they are wraparound artifacts
+      // from repeating the training sequence and
+      // would turn the taught path into a loop.
+      // ======================================
+      pruneGoalWraparound(clickedId);
+
+      // reset manual training session
+      window.lastNeuron = undefined;
+
+      console.log("🎯 Goal set:", obj.userData.label);
       return;
   }
 
-
-  // ======================================
-  // 🧠 HOME / REST MEMORY
-  // SHIFT + click teaches safe recovery place
-  // ======================================
-
-  // ALT + click = mark neuron as home/rest place
+  // ALT + CLICK = set home node
   if (event.altKey) {
 
-      // save globally
-      window.homeNeuronId = clickedId;
+    window.homeNeuronId = clickedId;
 
-      console.log("🏠 Home neuron learned:", clickedId);
+    console.log("🏠 Home neuron learned:", clickedId);
 
-      return;
+    return;
+
   }
 
 
-  currentGoal = obj.userData.label;         // set goal as clicked label
-  
-  // save click in memory
+  // ======================================
+  // NORMAL CLICK — RUN PREDICTION
+  // ======================================
+
+  currentGoal = obj.userData.label;
+
+  // thoughtTrail is kept ONLY as a short visual
+  // breadcrumb for the prediction renderer — it
+  // is no longer a learning signal.
   thoughtTrail.push(clickedId);
-  
-  // keep only last 3 clicks
-  if (thoughtTrail.length > 3) {
-    thoughtTrail.shift();
-  }
-  
-  // keep only last 5 steps
+
   if (thoughtTrail.length > 5) {
     thoughtTrail.shift();
   }
-  
-  // learn pattern like "1-2 → 3"
-  if (thoughtTrail.length >= 2) {
-    
-    const pattern = thoughtTrail.slice(0, -1).join("->"); // "1-2"
-    const next = thoughtTrail[thoughtTrail.length - 1];  // "3"
-    
-    let map = chainMemory.get(pattern);
-    
-    if (!map) {
-      map = new Map();
-      chainMemory.set(pattern, map);
-    }
-    
-    map.set(next, (map.get(next) || 0) + 1);
+
+  // ======================================
+  // 🧠 GOAL-TERMINUS GUARD
+  // ──────────────────────────────────────
+  // When the clicked node is the goal, the
+  // episode was just committed by recordManualClick
+  // above. Q[meat->eat] is now updated.
+  //
+  // We do NOT run runPrediction from eat —
+  // eat has no trained outgoing paths and its
+  // graph neighbors (food, meat) would show
+  // Q=0, misleading the user into thinking
+  // training failed.
+  //
+  // Instead: immediately refresh the HUD with
+  // the freshly trained Q value for the final
+  // step (e.g. meat→eat), giving clear visual
+  // confirmation that training worked.
+  // ======================================
+  if (goalNeuronId !== null &&
+      Number(clickedId) === Number(goalNeuronId)) {
+
+      // Find the node that LED INTO the goal.
+      // thoughtTrail holds the last few clicks.
+      // The second-to-last entry is the pre-goal node.
+      const preGoalId = thoughtTrail.length >= 2
+          ? thoughtTrail[thoughtTrail.length - 2]
+          : null;
+
+      const freshQ = preGoalId !== null
+          ? getQ(preGoalId, clickedId)
+          : 0;
+
+      const preGoalNeuron = preGoalId
+          ? findNeuronById(preGoalId)
+          : null;
+
+      const goalNeuron = findNeuronById(clickedId);
+
+      // Refresh HUD with the just-trained values
+      updateHUD({
+          curiosityState,
+          confidenceState,
+          stressState,
+          fatigueState,
+          focusState,
+          qValue:      freshQ,
+          futureBonus: 0,
+          finalWeight: freshQ * 5,
+          currentThought:
+              (preGoalNeuron?.userData.label || "?") +
+              " → " +
+              (goalNeuron?.userData.label  || "?") +
+              "  ✅ trained"
+      });
+
+      reasoningBox.innerText =
+          "🎯 Goal reached: " + obj.userData.label +
+          "\n\n✅ Episode sealed & learned." +
+          (preGoalNeuron
+              ? "\n\nFinal step trained:" +
+                "\n  " + preGoalNeuron.userData.label +
+                " → " + obj.userData.label +
+                "\n  Q-value: " + freshQ.toFixed(2)
+              : "") +
+          "\n\nPress SPACE to start autonomous training.";
+
+  } else {
+
+      // ======================================
+      // 🧠 SKIP PREDICTION FOR UNTRAINED NODES
+      // ──────────────────────────────────────
+      // If the clicked node has no trained
+      // outgoing transitions AND no goal set,
+      // running prediction would show Q=0 for
+      // all graph neighbors — confusing the user
+      // into thinking training didn't work.
+      //
+      // Example: clicking 'eat' during manual
+      // training (no goal) shows eat->food Q=0,
+      // eat->meat Q=0 even though meat->eat was
+      // just added to the episode buffer.
+      //
+      // Show the training progress instead.
+      // ======================================
+      const clickedNeuron = findNeuronById(clickedId);
+      const clickedTransitions = transitions.get(clickedId);
+      const hasTrainedOutgoing =
+          clickedTransitions && clickedTransitions.size > 0;
+
+      if (hasTrainedOutgoing || goalNeuronId !== null) {
+          runPrediction(clickedId);
+      } else {
+          // Node has no trained outgoing paths and no goal set.
+          // Show what's been built so far in the training episode.
+          const preId = thoughtTrail.length >= 2
+              ? thoughtTrail[thoughtTrail.length - 2]
+              : null;
+          const incomingQ = preId ? getQ(preId, clickedId) : 0;
+
+          const preN  = preId ? findNeuronById(preId) : null;
+          const thisN = clickedNeuron;
+
+          reasoningBox.innerText =
+              "📖 Training in progress..." +
+              (preN && thisN
+                  ? "\n\n  " + preN.userData.label +
+                    " → " + thisN.userData.label +
+                    "\n  Q (pending commit): " + incomingQ.toFixed(2)
+                  : "") +
+              "\n\nEpisode seals when you click the first node again" +
+              "\nor Shift+click a node to set it as the goal.";
+      }
+
   }
-  
-  runPrediction(clickedId);
-  
-  // learning
-  //if (window.lastClicked !== undefined) {
-    //learn(window.lastClicked, clickedId);
-    //}
-  
-  // 🧠 store time for previous → current
+
+  // store time for previous → current
   if (window.lastClicked !== undefined) {
-    
+
     const timeKey = window.lastClicked + "->" + clickedId;
-    
     timeMemory.set(timeKey, Date.now());
+
+    // homeosensory loop breaker
+    if (window.lastClicked === clickedId) {
+      changeFatigue(15.0);
+    }
+
   }
-  
-  // update last clicked AFTER storing
+
   window.lastClicked = clickedId;
-  
+
+
 });
-
-// ================== 🎮 KEY CONTROL ==================
-
-// Press "A" key to start/stop AI
-window.addEventListener('keydown', (e) => {
-  
-  // If key is 'a'
-  if (e.key === 'a') {
     
-    // Toggle(switch) (ON → OFF, OFF → ON)
-    agentActive = !agentActive;
-    
-    // Show status in console
-    console.log("🤖 Agent:", agentActive ? "STARTED" : "STOPPED");
-    
-    // If turned ON → start thinking
-    if (agentActive) agentLoop();
-  }
-});
 
-// ====================== ANIMATION ======================
-//function animate() {
-  //requestAnimationFrame(animate);
-  //renderer.render(scene, camera);
-  //}
 
-//animate();
-
+// NOTE: a dead second keydown handler was removed here.
+// It referenced `agentActive` (never declared) and
+// `agentLoop()` (never defined — the real loop is
+// runAgentLoop). Pressing 'a' would throw a ReferenceError.
+// Agent control is the SPACE-key handler above.

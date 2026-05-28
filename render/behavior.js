@@ -1,4 +1,3 @@
-
 // ======================================
 // 🧠 BEHAVIOR DYNAMICS SYSTEM
 // controls personality-like behavior
@@ -12,7 +11,7 @@
 
 // curiosity level
 // high = explores more
-export let curiosityState = 1;
+export let curiosityState = 0.05;
 
 
 
@@ -39,6 +38,21 @@ export let fatigueState = 0;
 export function changeFatigue(amount) {
 
     fatigueState += amount;
+}
+
+// ======================================
+// CHANGE STRESS SAFELY
+// ──────────────────────────────────────
+// ES module exports are read-only bindings.
+// External files cannot assign stressState directly.
+// Use this mutator — mirrors changeFatigue.
+// Clamp keeps stress in its valid range [0.2, 30].
+// ======================================
+
+export function changeStress(amount) {
+
+    stressState = Math.max(0.2, Math.min(stressState + amount, 30));
+
 }
 
 
@@ -75,6 +89,14 @@ export let survivalPressure = 0;
 // how trapped the brain feels
 export let loopStressState = 0;
 
+
+// focus level
+// high = goal-directed behavior
+// ── declared here (before regulateBiology) ──
+// focusState is mutated inside regulateBiology
+// (fatigue reduces it). Declaring after the
+// function caused a TDZ risk in ES modules.
+export let focusState = 1;
 
 // ======================================
 // 🧠 CENTRAL BIOLOGICAL REGULATION
@@ -130,7 +152,7 @@ export function regulateBiology({
             loopStressState * 0.03;
 
             // confidence drops
-            confidenceState *= 0.998;
+            confidenceState *= 0.99995;
 
             // curiosity collapses
             curiosityState *= 0.997;
@@ -163,19 +185,20 @@ export function regulateBiology({
     // body + emotional exhaustion together
     // ======================================
 
+    // ======================================
+    // 🧠 SAFE FATIGUE SYSTEM
+    // prevents runaway exhaustion
+    // ======================================
+
     fatigueState =
 
-        // physical tiredness
-        (100 - energyState) * 0.55 +
+        (100 - energyState) * 0.18 +
 
-        // long-term burnout
-        exhaustionState * 1.4 +
+        exhaustionState * 0.35 +
 
-        // emotional exhaustion
-        stressState * 4 +
+        stressState * 0.25 +
 
-        // trapped loop suffering
-        loopStressState * 2;
+        loopStressState * 0.15;
 
 
     // ======================================
@@ -317,12 +340,6 @@ export function regulateBiology({
 
 
 
-// focus level
-// high = goal-directed behavior
-export let focusState = 1;
-
-
-
 // exploration mode
 // true = experimental behavior
 export let explorationMode = true;
@@ -348,262 +365,144 @@ export function updateBehavior({
 
     // ======================================
     // SUCCESS REASSURES THE BRAIN
+    // FIXED: was +0.04/step — hit cap instantly
+    // Now +0.008 — grows slowly and meaningfully
     // ======================================
 
     if (success) {
 
-        // successful actions reduce fear
-        stressState -= 0.04;
+        // stress drops slowly — was 0.04, drained to 0 immediately
+        stressState -= 0.008;
 
-        // success increases trust
-        confidenceState += 0.04;
+        // confidence grows slowly — was 0.04, hit 20 cap instantly
+        confidenceState += 0.008;
 
-        // useful progress reduces suffering
         loopStressState *= 0.97;
-
-        // rewarding progress restores mental energy
         exhaustionState *= 0.995;
 
     }
 
-
-
     // ======================================
     // 🧠 FAILURE STRESS SYSTEM
-    // repeated failure creates pressure
     // ======================================
 
     if (penalty > 0) {
 
-        // stronger penalties create stronger stress
-        stressState += penalty * 0.08;
-
-        // failure reduces confidence
-        confidenceState -= penalty * 0.015;
-
-        // failure is mentally exhausting
+        stressState += penalty * 0.02;
+        confidenceState -= penalty * 0.02;
         fatigueState += penalty * 0.03;
 
     }
 
+    // ======================================
+    // 🧠 NATURAL UNCERTAINTY STRESS
+    // prevents stress from hitting 0
+    // brain always has mild anxiety
+    // ======================================
 
+    const uncertaintyStress = 1 / (1 + confidenceState);
+    stressState += uncertaintyStress * 0.004;
 
     // ======================================
     // 🧠 REPETITION INTELLIGENCE
     // ======================================
 
-    // repeated successful path
-    // = learned skill / mastery
     if (repeated && success) {
 
-        // brain becomes more confident
-        confidenceState += 0.005;
-
-        // focused behavior becomes stronger
-        focusState += 0.02;
-
-        // repeated success becomes mentally tiring
-        fatigueState += 0.015;
-
-
-        // successful repetition reduces curiosity
+        confidenceState += 0.003;
+        focusState += 0.01;
+        fatigueState += 0.02;
         curiosityState -= 0.002;
 
-    }
+    } else if (repeated && penalty > 0) {
 
-
-
-    // repeated bad path
-    // trapped mental loop
-    else if (repeated && penalty > 0) {
-
-        // trapped brain stress
-        stressState += 0.12;
-
-        // looping is exhausting
+        stressState += 0.015;
         fatigueState += 0.06;
-
-        // trapped brains lose confidence
-        confidenceState -= 0.01;
-
-        // stressed brains explore less
+        confidenceState -= 0.015;
         curiosityState -= 0.003;
 
-    }
+    } else {
 
-
-
-
-
-    // discovering something new
-    else {
-
-        // exploration reward
         curiosityState += 0.003;
-
-        // new experiences reduce boredom
-        stressState -= 0.01;
+        stressState -= 0.003;  // was 0.01 — too aggressive
 
     }
-
-
-
-    // =====================================
-    // 🏠 REST RECOVERY SYSTEM
-    // =====================================
-
-    // when AI comes home and rests
-    //if (isHome) {
-
-        // recover energy gradually
-        //fatigueState -= 0.02;
-
-        // resting calms the brain
-        //stressState -= 0.005;
-    //}
-
-
-
 
     // ======================================
     // FOCUS MODE
     // ======================================
 
-    focusState =
-
-        confidenceState - stressState;
-
+    focusState = confidenceState - stressState;
 
     // ======================================
     // REAL CURIOSITY SYSTEM
-    // curiosity reacts to uncertainty
     // ======================================
 
-    // low confidence brain
-    // means brain does not understand world well
-    const uncertainty =
+    const uncertainty = 1 / (1 + confidenceState);
 
-    1 / (1 + confidenceState);
-
-
-
-    // uncertain world increases curiosity
     if (uncertainty > 0.4) {
-
-        curiosityState += 0.03;
-
+        curiosityState += 0.0003;
+    } else {
+        curiosityState -= 0.0001;
     }
-
-
-
-    // understood world lowers curiosity slowly
-    else {
-
-        curiosityState -= 0.002;
-
-    }
-
-
-    // ======================================
-    // EXPLORATION MODE
-    // ======================================
 
     explorationMode =
-
-        curiosityState > confidenceState * 0.8
-
+        curiosityState >
+        (confidenceState * 0.15 + 0.2);
 
     // ======================================
     // 🧠 EMOTIONAL DECAY
-    // emotions slowly return to neutral
+    // FIXED: confidence decay was 0.99995 (too weak)
+    // stress decay was 0.998 (too slow to drop)
+    // Now values breathe up and down properly
     // ======================================
 
-    // curiosity slowly cools down
     curiosityState *= 0.999;
 
-    // confidence slowly fades
-    confidenceState *= 0.998;
+    // confidence fades meaningfully per step
+    confidenceState *= 0.9990;
 
-    // ======================================
-    // EMOTIONAL RECOVERY
-    // stress heals VERY slowly
-    // ======================================
-
-    // low stress heals faster
+    // stress decays but not to zero
     if (stressState < 20) {
-
-        stressState *= 0.998;
-
+        stressState *= 0.994;
+    } else {
+        stressState *= 0.9985;
     }
 
-    // high stress persists longer
-    else {
-
-        stressState *= 0.9995;
-
-    }
+    // stress never fully disappears — brain always has some tension
+    if (stressState < 0.2) stressState = 0.2;
 
     // ======================================
     // SURVIVAL PRESSURE SYSTEM
-    // accumulated nervous overload
     // ======================================
 
-    // fatigue increases overload
     survivalPressure += fatigueState * 0.002;
-
-    // stress increases overload
     survivalPressure += stressState * 0.0015;
-
-    // trapped thinking amplifies overload
     survivalPressure += loopStressState * 0.001;
 
-    // safe places calm nervous system
     if (isHome) {
-
         survivalPressure *= 0.985;
     }
 
-    // ======================================
-    // SURVIVAL MODE
-    // emergency biological overload
-    // ======================================
-
-    // only extreme overload activates survival
-    if (
-
-        survivalPressure > 90 &&
-
-        fatigueState > 80
-
-    ) {
-
+    if (survivalPressure > 90 && fatigueState > 80) {
         survivalState = true;
-
     } else {
-
         survivalState = false;
     }
 
     // ======================================
     // SAFE CLAMPING
-    // keeps values stable
     // ======================================
 
     curiosityState =
-    clamp(curiosityState, 0, 5);
-
-    // brain is never fully uncurious
-    if (curiosityState < 0.15) {
-
-        curiosityState = 0.15;
-
-    }
+    clamp(curiosityState, 0.01, 0.3);
 
     confidenceState =
-    clamp(confidenceState, 0, 100);
+    clamp(confidenceState, 0, 20);
 
+    // min 0.2 — stress never reaches absolute zero
     stressState =
-    clamp(stressState, 0, 100);
+    clamp(stressState, 0.2, 30);
 
     fatigueState =
     clamp(fatigueState, 0, 100);
@@ -611,10 +510,8 @@ export function updateBehavior({
     loopStressState =
     clamp(loopStressState, 0, 100);
 
-
-
     focusState =
-    clamp(focusState, 0, 100);
+    clamp(focusState, 0, 20);
 
 }
 
@@ -633,5 +530,108 @@ function clamp(value, min, max) {
         Math.min(max, value)
 
     );
+
+}
+
+
+
+
+// ======================================
+// 🧠 APPLY PREDICTION ERROR TO BEHAVIOR
+// ======================================
+// Translates a prediction error object
+// (from predictionError.js) into direct
+// behavioral state mutations.
+//
+// Call AFTER evaluatePredictionError(),
+// once per agent step (not per candidate).
+//
+// This is the bridge between the structural
+// prediction-error layer and the biological
+// behavior engine. It modulates:
+//   - stressState    (surprise = stress)
+//   - confidenceState (accurate = confidence)
+//   - curiosityState  (surprise = exploration)
+//   - loopStressState (massive error = trapped feeling)
+//
+// Each severity tier maps to biologically
+// plausible emotional responses.
+// ======================================
+
+export function applyPredictionErrorToBehavior(predError) {
+
+    // no error computed (epsilon jump, no candidates)
+    if (!predError) return;
+
+    switch (predError.severity) {
+
+        case "massive":
+
+            // ======================================
+            // Brain is shocked.
+            // World completely violated expectations.
+            // Strong stress spike, confidence collapse,
+            // curiosity spike (need to understand),
+            // loop stress grows (trapped feeling).
+            // ======================================
+
+            stressState     = clamp(stressState     + 1.8,  0.2, 30);
+            confidenceState = clamp(confidenceState  - 0.6,  0,   20);
+            curiosityState  = clamp(curiosityState   + 0.025, 0.01, 0.3);
+            loopStressState = clamp(loopStressState  + 4.0,  0,   100);
+            break;
+
+
+        case "large":
+
+            // ======================================
+            // Notable surprise.
+            // Prediction was significantly wrong.
+            // Moderate stress, small confidence dip,
+            // mild curiosity boost.
+            // ======================================
+
+            stressState     = clamp(stressState     + 0.60, 0.2, 30);
+            confidenceState = clamp(confidenceState  - 0.18,  0,  20);
+            curiosityState  = clamp(curiosityState   + 0.012, 0.01, 0.3);
+            loopStressState = clamp(loopStressState  + 1.0,  0,   100);
+            break;
+
+
+        case "medium":
+
+            // ======================================
+            // Mild uncertainty.
+            // World slightly different from prediction.
+            // Tiny stress nudge, small curiosity tick.
+            // No confidence change (noise level).
+            // ======================================
+
+            stressState    = clamp(stressState    + 0.08, 0.2, 30);
+            curiosityState = clamp(curiosityState  + 0.003, 0.01, 0.3);
+            break;
+
+
+        case "small":
+
+            // ======================================
+            // Prediction was accurate.
+            // Brain correctly anticipated the world.
+            // Reward: confidence grows slightly,
+            // stress eases, loop stress heals.
+            // This is the only error tier that
+            // REWARDS the brain for being right.
+            // ======================================
+
+            confidenceState  = clamp(confidenceState  + 0.018,  0,  20);
+            stressState      = clamp(stressState      - 0.006,  0.2, 30);
+            loopStressState  = clamp(loopStressState  * 0.98,   0,  100);
+            break;
+
+
+        default:
+            break;
+
+    }
 
 }

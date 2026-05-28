@@ -75,15 +75,11 @@ export function learnMomentum(
 
     );
 
-
-
-    console.log(
-
-        "🧠 momentum learned:",
-
-        key
-
-    );
+    // console.log removed: momentum fires dozens of times
+    // per second during autonomous training, flooding the
+    // console and burying meaningful cognitive events.
+    // Momentum is an internal learning signal, not a
+    // user-visible cognitive event.
 
 }
 

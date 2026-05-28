@@ -1,0 +1,18 @@
+# Current Bugs
+
+## Stuck Loop Bug
+
+### Expected
+AI should move naturally between nodes.
+
+### Actual
+AI repeatedly revisits same node.
+
+### Possible Cause
+Recursive node selection or scoring issue.
+
+### Relevant Files
+- main.js
+- behavior.js
+- qlearning.js
+- scoring.js
