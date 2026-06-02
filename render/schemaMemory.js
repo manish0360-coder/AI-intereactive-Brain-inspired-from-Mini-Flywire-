@@ -65,6 +65,12 @@
 
 const schemas = [];
 
+// ── STEP 5 INTROSPECTION: last rebuild's motif snapshot ──────────
+// Populated by rebuildSchemas. Read by getSchemaDiagnostics().
+// Each entry has: key, nodes, episodeSpread, freqStrength,
+// normAvgQ, strength, episodeIndices.
+let _lastMotifs = [];
+
 // Edge → schema bonus cache (cleared on rebuild)
 // key: "fromId->toId", value: bonus scalar
 const _bonusCache = new Map();
@@ -76,6 +82,27 @@ let _lastRebuild = 0;
 
 // Minimum motif episode spread before abstraction
 const MIN_SPREAD = 2;
+
+// ── STEP 5: value-modulated schema strength ──────────────────────
+//
+// LAMBDA        : value influence on strength.
+//                 0.0 = frequency-only (identical to pre-Step-5).
+//                 1.0 = full value modulation.
+//                 Set to 0 to run λ=0 parity check.
+//
+// Q_NORM        : divisor that maps raw avg-Q into [0,1].
+//                 Should be ≈ the max |Q| value seen in practice.
+//                 Q is clamped to ±20 (qlearning.js line 175),
+//                 so 20 is a safe upper bound.
+//
+// MIN_QKEY_VISITS: minimum number of updateQ calls for a given
+//                 composite key before we trust its Q value.
+//                 Keys with fewer visits are skipped (treated as 0).
+//                 Prevents under-sampled Q from poisoning rankings.
+//
+const LAMBDA          = 1.0;
+const Q_NORM          = 20;
+const MIN_QKEY_VISITS = 3;
 
 // System refs (injected once)
 let _sys = null;
@@ -99,16 +126,23 @@ export function initSchemaMemory(systemRefs) {
 // Converts motifs into role-slot schemas.
 // ================================================================
 
-export function rebuildSchemas(episodicStore) {
+export function rebuildSchemas(episodicStore, force = false) {
 
     if (!_sys) return;
 
     const now = Date.now();
-    if (now - _lastRebuild < REBUILD_INTERVAL_MS) return;
+    if (!force && now - _lastRebuild < REBUILD_INTERVAL_MS) return;
     _lastRebuild = now;
 
     // ── collect all motifs from the store ──────────────────────
     const motifs = _detectMotifsForSchema(episodicStore);
+
+    // ── STEP 5 INTROSPECTION: cache last rebuild's motif data ────
+    // Read-only snapshot for getSchemaDiagnostics(). Computes
+    // nothing new — just retains the motif objects (which already
+    // carry freqStrength, normAvgQ, strength) so a verifier can
+    // grade the value chain as data rather than parsing console logs.
+    _lastMotifs = motifs;
 
     if (motifs.length === 0) return;
 
@@ -142,6 +176,51 @@ export function rebuildSchemas(episodicStore) {
                 ).join(",") +
                 "  strength=" + s.strength
             )
+        );
+    }
+
+    // ── STEP 5: rank-change diagnostic ──────────────────────────
+    // Shows which motifs were reordered by the value signal vs
+    // frequency-only ranking. At λ=0 this must print zero changes.
+    // At λ=1 changes indicate value is influencing promotion order.
+    if (motifs.length > 1) {
+
+        // frequency-only ranking (sort by freqStrength)
+        const freqRanked  = [...motifs].sort((a,b) => b.freqStrength - a.freqStrength);
+        const freqRankMap = new Map(freqRanked.map((m,i) => [m.key, i]));
+
+        // value-modulated ranking (motifs is already sorted by strength)
+        const valueRankMap = new Map(motifs.map((m,i) => [m.key, i]));
+
+        let rankChanges = 0;
+        motifs.forEach(m => {
+            const fr = freqRankMap.get(m.key);
+            const vr = valueRankMap.get(m.key);
+            if (fr !== vr) {
+                rankChanges++;
+                console.log(
+                    `[rank-change] "${m.key}"` +
+                    ` freq-rank:${fr} → value-rank:${vr}` +
+                    ` normAvgQ:${m.normAvgQ.toFixed(3)}` +
+                    ` freqStr:${m.freqStrength.toFixed(1)}` +
+                    ` valStr:${m.strength.toFixed(1)}`
+                );
+            }
+        });
+
+        if (rankChanges === 0) {
+            console.log('[rank-change] 0 rank changes (λ=0 parity confirmed or value uniform)');
+        }
+
+        // normAvgQ histogram (detects VF1: all-zero means value not reaching)
+        const nonzero = motifs.filter(m => m.normAvgQ > 0);
+        const sample  = motifs.slice(0, 4).map(m =>
+            `${m.key.slice(0,10)}=${m.normAvgQ.toFixed(3)}`
+        ).join(' ');
+        console.log(
+            `[normAvgQ] motifs:${motifs.length}` +
+            ` nonzero:${nonzero.length}` +
+            ` sample: ${sample}`
         );
     }
 }
@@ -178,8 +257,143 @@ export function getSchemas() {
 
 
 // ================================================================
+// GET SCHEMA DIAGNOSTICS (Step 5 verification — read-only)
+// ================================================================
+// Returns the full value-chain picture from the last rebuild as
+// structured data, so a verifier can grade it directly instead of
+// parsing console logs. Computes nothing new — surfaces existing
+// motif fields (freqStrength, normAvgQ, strength) + rank comparison.
+//
+// Returns:
+//   {
+//     motifCount, nonzeroNormAvgQ, fractionalStrengthCount,
+//     rankChanges,                     // [{key, freqRank, valueRank, normAvgQ}]
+//     motifs:  [{key, episodeSpread, freqStrength, normAvgQ, strength}],
+//     schemas: [{name, strength, fractional}]
+//   }
+export function getSchemaDiagnostics() {
+
+    const motifs = _lastMotifs || [];
+
+    // frequency-only ranking
+    const freqRanked  = [...motifs].sort((a,b) => b.freqStrength - a.freqStrength);
+    const freqRankMap = new Map(freqRanked.map((m,i) => [m.key, i]));
+    // value-modulated ranking (motifs already sorted by strength)
+    const valueRankMap = new Map(motifs.map((m,i) => [m.key, i]));
+
+    const rankChanges = [];
+    motifs.forEach(m => {
+        const fr = freqRankMap.get(m.key);
+        const vr = valueRankMap.get(m.key);
+        if (fr !== vr) {
+            rankChanges.push({
+                key:      m.key,
+                freqRank: fr,
+                valueRank: vr,
+                normAvgQ: m.normAvgQ
+            });
+        }
+    });
+
+    return {
+        motifCount:               motifs.length,
+        nonzeroNormAvgQ:          motifs.filter(m => m.normAvgQ > 0).length,
+        fractionalStrengthCount:  schemas.filter(s => !Number.isInteger(s.strength)).length,
+        rankChanges,
+        motifs: motifs.map(m => ({
+            key:           m.key,
+            episodeSpread: m.episodeSpread,
+            freqStrength:  m.freqStrength,
+            normAvgQ:      m.normAvgQ,
+            strength:      m.strength
+        })),
+        schemas: schemas.map(s => ({
+            name:       s.name,
+            strength:   s.strength,
+            fractional: !Number.isInteger(s.strength)
+        }))
+    };
+}
+
+
+
+// ================================================================
 // ── PRIVATE ─────────────────────────────────────────────────────
 // ================================================================
+
+
+
+// ── STEP 5: motifAvgQ ───────────────────────────────────────────
+//
+// Computes the average goal-conditioned Q over a motif's
+// consecutive transitions, averaged across its supporting episodes.
+//
+// DATA PATH:
+//   motif.episodeIndices
+//     → episodicStore[epIdx].activeGoal          (Step 4 field)
+//     → _sys.makeStateKey(node, goal)            (Step 1/Step 3)
+//     → _sys.diagVisits.get(stateKey+action)     (visit-count gate)
+//     → _sys.getQ(stateKey, nextNode)            (Q lookup)
+//     → average → normAvgQ → strength multiplier
+//
+// INVARIANT: always returns a finite number (never NaN).
+// When n===0 (no transitions pass the gate), returns 0.
+//
+// _sys.diagVisits may be undefined before Step 2 diagnostics
+// are initialised (or if the caller passes no diagVisits).
+// In that case the visit-count gate is skipped and every
+// transition contributes (conservative: no gating = noisier).
+
+function _motifAvgQ(motif, episodicStore) {
+
+    // guard: _sys must have getQ and makeStateKey injected (Step 5 init)
+    if (!_sys || typeof _sys.getQ !== 'function' || typeof _sys.makeStateKey !== 'function') {
+        return 0;
+    }
+
+    const nodes       = motif.nodes;
+    const diagVisits  = _sys.diagVisits;  // may be undefined — handled below
+
+    let sum = 0;
+    let n   = 0;
+
+    for (const epIdx of motif.episodeIndices) {
+
+        const ep = episodicStore[epIdx];
+        if (!ep) continue;
+
+        const goal = ep.activeGoal;
+        if (goal == null) continue;   // skip pre-Step-4 episodes with no goal
+
+        for (let i = 0; i + 1 < nodes.length; i++) {
+
+            const stateKey = _sys.makeStateKey(nodes[i], goal);
+            const action   = nodes[i + 1];
+
+            // ── visit-count gate ────────────────────────────────
+            // Skip Q entries that have not yet been updated enough
+            // times to be reliable. Uses the composite key format
+            // "pos#goal->action" written by Step 3's updateQ calls.
+            if (diagVisits) {
+                const visitKey = stateKey + "->" + String(action);
+                const visits   = diagVisits.get(visitKey) || 0;
+                if (visits < MIN_QKEY_VISITS) continue;
+            }
+
+            const qVal = _sys.getQ(stateKey, action);
+            sum += qVal;
+            n++;
+        }
+    }
+
+    // NaN guard: n===0 → return 0, never divide by zero
+    if (n === 0) return 0;
+
+    const avg = sum / n;
+
+    // extra safety: if somehow avg is NaN/Infinity, return 0
+    return Number.isFinite(avg) ? avg : 0;
+}
 
 
 
@@ -225,13 +439,44 @@ function _detectMotifsForSchema(store, minLen = 2, maxLen = 6) {
 
     motifMap.forEach((m, key) => {
         if (m.episodes.size >= MIN_SPREAD) {
+
+            const nodes          = m.nodes;
+            const episodeIndices = [...m.episodes];
+
+            // ── STEP 5: value-modulated strength ─────────────────
+            // freqStrength: the original frequency × length product.
+            //   Kept as the BASE so well-supported motifs are never
+            //   zeroed by a missing/weak value signal.
+            //
+            // normAvgQ: avg goal-conditioned Q over the motif's
+            //   transitions, normalised to [0,1] and clamped.
+            //   Reads _sys.getQ via composite makeStateKey keys.
+            //   Returns 0 (not NaN) when no transitions qualify.
+            //
+            // strength = freqStrength × (1 + λ·normAvgQ)
+            //   λ=0 → strength === freqStrength (parity with pre-Step-5)
+            //   λ=1 → value up-ranks motifs whose transitions are
+            //          highly valued under the active goal.
+            //
+            // MIN_SPREAD gate above is unchanged — frequency is
+            // still the SUPPORT FLOOR; value only modulates ranking.
+
+            const freqStrength = m.episodes.size * m.nodes.length;
+
+            const pseudoMotif  = { nodes, episodeIndices };
+            const avgQ         = _motifAvgQ(pseudoMotif, store);
+            const normAvgQ     = Math.min(Math.max(avgQ / (Q_NORM || 1), 0), 1);
+            const strength     = freqStrength * (1 + LAMBDA * normAvgQ);
+
             result.push({
                 key,
-                nodes:         m.nodes,
-                count:         m.count,
-                episodeSpread: m.episodes.size,
-                strength:      m.episodes.size * m.nodes.length,
-                episodeIndices: [...m.episodes]
+                nodes,
+                count:          m.count,
+                episodeSpread:  m.episodes.size,
+                strength,        // value-modulated (used for ranking & schema)
+                freqStrength,    // frequency-only  (used for rank-change log)
+                normAvgQ,        // [0,1]           (used for histogram log)
+                episodeIndices
             });
         }
     });
@@ -354,7 +599,11 @@ function _extractSchema(motif, episodicStore) {
         variables,
         slots,
         transitions,
-        strength:    totalEp,
+        // ── STEP 5: use value-modulated strength from the motif ──
+        // motif.strength already incorporates the λ·normAvgQ factor.
+        // Falls back to totalEp (frequency count) if the motif has
+        // no strength field (e.g. if called from older code paths).
+        strength:    (motif.strength != null) ? motif.strength : totalEp,
         lastUpdated: Date.now()
     };
 }

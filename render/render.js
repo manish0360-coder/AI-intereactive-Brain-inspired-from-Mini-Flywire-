@@ -3,7 +3,6 @@
 // ======================================
 
 import {
-
     renderer,
     scene,
     camera,
@@ -11,27 +10,22 @@ import {
 } from "./scene.js";
 
 
+// ======================================
+// IMPORT FUTURISTIC PULSE SYSTEM
+// ======================================
+
+import { tickNeuronPulse } from "./neuronVisuals.js";
+
 
 // ======================================
 // STAR REFERENCE
 // ======================================
 
-// this variable will later receive stars
 let stars = null;
 
-
-
-// ======================================
-// ALLOW MAIN.JS TO GIVE STARS
-// ======================================
-
 export function setStars(starGroup) {
-
-    // save stars reference
     stars = starGroup;
-
 }
-
 
 
 // ======================================
@@ -40,61 +34,32 @@ export function setStars(starGroup) {
 
 export function animate() {
 
-    // run forever
     requestAnimationFrame(animate);
-
-
 
     // rotate stars
     if (stars) {
-
-        stars.rotation.y += 0.0005;
-
+        stars.rotation.y += 0.0004;
+        stars.rotation.x += 0.00008;   // subtle tilt drift
     }
 
+    // futuristic neuron pulse (breathing glow + ring rotation)
+    tickNeuronPulse();
 
-
-    // animate neurons
+    // activation-based scale (for thought dots and fired neurons)
     group.traverse((obj) => {
 
-        // skip non-neurons
         if (!obj.userData?.isNeuron) return;
 
-
-
-        // safe activation
-        const activation =
-            obj.userData.activation || 0;
-
-
-
-        // smooth decay
+        const activation = obj.userData.activation || 0;
         obj.userData.activation *= 0.94;
 
-
-
-        // safe neuron scale
-        const scale =
-
-            1 +
-
-            (activation * 0.3);
-
-
-
-        obj.scale.set(
-
-            scale,
-            scale,
-            scale
-
-        );
-
+        // scale already managed by flashNeuronClick — only apply
+        // activation spike on top when explicitly activated
+        if (activation > 0.05) {
+            const scale = 1 + activation * 0.25;
+            obj.scale.set(scale, scale, scale);
+        }
     });
 
-
-
-    // render scene
     renderer.render(scene, camera);
-
 }

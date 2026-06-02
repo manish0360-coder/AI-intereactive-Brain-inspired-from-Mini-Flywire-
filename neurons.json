@@ -1,19 +1,162 @@
 [
-  {"id":1,"label":"dog","x":-2,"y":1,"z":0},
-  {"id":2,"label":"cat","x":-2,"y":-1,"z":0},
-  {"id":3,"label":"lion","x":2,"y":1,"z":0},
-  {"id":4,"label":"tiger","x":2,"y":-1,"z":0},
-
-  {"id":5,"label":"food","x":0,"y":0,"z":0},
-  {"id":6,"label":"meat","x":1,"y":0.5,"z":0},
-  {"id":7,"label":"milk","x":-1,"y":-0.5,"z":0},
-  {"id":8,"label":"bone","x":-1,"y":0.5,"z":0},
-
-  {"id":9,"label":"eat","x":0,"y":-2,"z":0},
-  {"id":10,"label":"hunt","x":2,"y":-2,"z":0},
-  {"id":11,"label":"drink","x":-2,"y":-2,"z":0},
-
-  {"id":12,"label":"forest","x":3,"y":0,"z":0},
-  {"id":13,"label":"home","x":-3,"y":0,"z":0},
-  {"id":14,"label":"human","x":-3,"y":2,"z":0}
+  {
+    "id": 1,
+    "label": "percept",
+    "cluster": "perception",
+    "x": -1.65,
+    "y": 1.1,
+    "z": 0.14
+  },
+  {
+    "id": 2,
+    "label": "signal",
+    "cluster": "perception",
+    "x": -1.93,
+    "y": 0.28,
+    "z": -0.14
+  },
+  {
+    "id": 3,
+    "label": "context",
+    "cluster": "perception",
+    "x": -1.38,
+    "y": -0.28,
+    "z": 0.14
+  },
+  {
+    "id": 4,
+    "label": "salience",
+    "cluster": "perception",
+    "x": -2.2,
+    "y": 0.55,
+    "z": 0.0
+  },
+  {
+    "id": 5,
+    "label": "encode",
+    "cluster": "memory",
+    "x": -0.55,
+    "y": 1.38,
+    "z": 0.0
+  },
+  {
+    "id": 6,
+    "label": "recall",
+    "cluster": "memory",
+    "x": -0.28,
+    "y": 0.55,
+    "z": 0.14
+  },
+  {
+    "id": 7,
+    "label": "trace",
+    "cluster": "memory",
+    "x": -0.83,
+    "y": -0.55,
+    "z": -0.14
+  },
+  {
+    "id": 8,
+    "label": "schema",
+    "cluster": "memory",
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+  },
+  {
+    "id": 9,
+    "label": "infer",
+    "cluster": "reasoning",
+    "x": 0.83,
+    "y": 1.1,
+    "z": 0.14
+  },
+  {
+    "id": 10,
+    "label": "abstract",
+    "cluster": "reasoning",
+    "x": 1.1,
+    "y": 0.28,
+    "z": -0.14
+  },
+  {
+    "id": 11,
+    "label": "predict",
+    "cluster": "reasoning",
+    "x": 1.38,
+    "y": -0.28,
+    "z": 0.14
+  },
+  {
+    "id": 12,
+    "label": "reflect",
+    "cluster": "reasoning",
+    "x": 0.55,
+    "y": -0.83,
+    "z": 0.0
+  },
+  {
+    "id": 13,
+    "label": "decide",
+    "cluster": "action",
+    "x": 1.93,
+    "y": 0.83,
+    "z": 0.0
+  },
+  {
+    "id": 14,
+    "label": "act",
+    "cluster": "action",
+    "x": 2.2,
+    "y": 0.0,
+    "z": 0.14
+  },
+  {
+    "id": 15,
+    "label": "adapt",
+    "cluster": "action",
+    "x": 1.65,
+    "y": -0.83,
+    "z": -0.14
+  },
+  {
+    "id": 16,
+    "label": "goal",
+    "cluster": "action",
+    "x": 2.48,
+    "y": -0.28,
+    "z": 0.0
+  },
+  {
+    "id": 17,
+    "label": "reward",
+    "cluster": "learning",
+    "x": 0.0,
+    "y": -1.38,
+    "z": 0.14
+  },
+  {
+    "id": 18,
+    "label": "explore",
+    "cluster": "learning",
+    "x": 0.55,
+    "y": -1.65,
+    "z": -0.14
+  },
+  {
+    "id": 19,
+    "label": "trust",
+    "cluster": "learning",
+    "x": -0.55,
+    "y": -1.65,
+    "z": 0.0
+  },
+  {
+    "id": 20,
+    "label": "identity",
+    "cluster": "learning",
+    "x": 0.0,
+    "y": -2.2,
+    "z": 0.14
+  }
 ]

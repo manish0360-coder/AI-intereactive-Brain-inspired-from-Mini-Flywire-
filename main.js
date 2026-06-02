@@ -30,7 +30,13 @@ import {
     getQ,
     setQ,
     updateQ,
-    dampQ
+    dampQ,
+
+    // ── STEP 3: composite state key ──────────
+    // makeStateKey(pos, goal) → "pos#goal"
+    // GOAL_NONE = 0 sentinel for null goal
+    makeStateKey,
+    GOAL_NONE
 
 } from "./render/qlearning.js";
 
@@ -44,6 +50,23 @@ import {
     conceptRelations
 
 } from "./render/knowledge.js";
+
+
+// ======================================
+// IMPORT FUTURISTIC VISUAL SYSTEM
+// ======================================
+
+import {
+    CLUSTER_COLORS,
+    setVisualsGroup,
+    createFuturisticNeuron,
+    createFuturisticConnection,
+    tickNeuronPulse,
+    flashNeuronClick,
+    spawnTravelDot,
+    setNeuronHighlight,
+    getNeuronCluster,
+} from "./render/neuronVisuals.js";
 
 // ======================================
 // IMPORT SCENE SYSTEM
@@ -499,6 +522,9 @@ const stars = createStars();
 // give stars to renderer animation
 setStars(stars);
 
+// give the visual system the group ref for travel dots
+setVisualsGroup(group);
+
 
 
 
@@ -537,13 +563,17 @@ fetch('neurons.json')
   
   neuronPositions.push(pos);
   
-  // Create small sphere (neuron)
-  const neuron = new THREE.Mesh(
-  new THREE.SphereGeometry(0.10, 13, 13),
-  new THREE.MeshBasicMaterial({ color: 0xffffff })
-);
+  // ── Futuristic neuron creation ─────────────────────────────────
+  const neuron = createFuturisticNeuron({
+      id:      n.id,
+      label:   n.label,
+      cluster: n.cluster || 'memory',
+      x:       pos.x,
+      y:       pos.y,
+      z:       pos.z,
+  }, group);
 
-// Set position
+// Set position (createFuturisticNeuron sets it internally)
 neuron.position.copy(pos);
 
 // Store custom data
@@ -551,6 +581,7 @@ neuron.userData = {
   isNeuron: true,
   id: n.id,
   label: n.label,
+  cluster: n.cluster || 'memory',
   type: n.type,
   neighbors: [],   // important for graph brain
   embedding: createEmbedding()
@@ -559,8 +590,7 @@ neuron.userData = {
 // Save in map
 neuronMap.set(n.id, neuron);
 
-// Add to scene
-group.add(neuron);
+// Do NOT add to scene — createFuturisticNeuron already added all meshes
 });
 
 console.log("✅ Neurons loaded");
@@ -594,6 +624,12 @@ return fetch('connections.json');
     if (!n1 || !n2) return;
     
     // Connect neurons
+    // Futuristic cluster-colored connection
+    const cl1 = n1.userData?.cluster || 'memory';
+    const cl2 = n2.userData?.cluster || 'memory';
+    createFuturisticConnection(n1.position, n2.position, cl1, cl2, group);
+
+    // Still call connectPoints to register the neighbor relationship
     connectPoints(n1.position, n2.position, 0x4444ff, c.from, c.to);
   });
   
@@ -820,7 +856,20 @@ function _initEpisodeManagerWhenReady() {
     console.log("🧠 EpisodeManager wired into all memory systems");
 
     // Schema memory shares the same system refs
-    initSchemaMemory({ findNeuronById });
+    initSchemaMemory({
+        findNeuronById,
+
+        // ── STEP 5: value-conditioned Q access ───────────────────
+        // getQ and makeStateKey are imported from qlearning.js.
+        // diagVisits is the visit-count Map from Step 2 diagnostics.
+        // These three together enable _motifAvgQ to read goal-
+        // conditioned Q values for each motif's transitions.
+        // Passing null/undefined for diagVisits disables the
+        // visit-count gate (conservative: noisier but never crashes).
+        getQ,
+        makeStateKey,
+        diagVisits: _diagCounters.visits,
+    });
     console.log("🧩 SchemaMemory initialised");
 
     // ── episodicContextEngine bridges ─────────────────────────────
@@ -2356,37 +2405,9 @@ topChoices.forEach(choice => {
   // remove after time
   setTimeout(() => group.remove(line), 1000);
   
-  // ===== DOT FLOW =====
-  const dot = new THREE.Mesh(
-  new THREE.SphereGeometry(0.05, 8, 8),
-  new THREE.MeshBasicMaterial({ color: 0x00ffff })
-);
-
-dot.userData = {
-  start: prevNeuron.position.clone(),
-  end: neuron.position.clone(),
-  progress: 0
-};
-
-group.add(dot);
-
-const interval = setInterval(() => {
-  
-  dot.userData.progress += 0.05;
-  
-  if (dot.userData.progress >= 1) {
-    group.remove(dot);
-    clearInterval(interval);
-    return;
-  }
-  
-  dot.position.lerpVectors(
-  dot.userData.start,
-  dot.userData.end,
-  dot.userData.progress
-);
-
-}, 30);
+  // ===== FUTURISTIC DOT FLOW (prediction candidates) =====
+  const predCluster = neuron.userData?.cluster || 'reasoning';
+  spawnTravelDot(prevNeuron.position, neuron.position, predCluster, group);
 });
 
 // ___________________________________________________________________________________________
@@ -2844,6 +2865,47 @@ let agentLast = null;         // this stores where i was before
 
 // stores loop timer
 let loopId = null;
+
+// ======================================
+// 🔬 STEP-2 DIAGNOSTICS
+// ──────────────────────────────────────
+// Read-only instrumentation.
+// These counters NEVER gate decisions or
+// modify Q, episodes, or trajectories.
+// Safe to remove without behaviour change.
+//
+// _diagVisits  : Map<stateActionKey, count>
+//   counts how many times updateQ has been
+//   called for each "state->action" key.
+//   Used to detect under-sampled Q entries.
+//
+// _diagMqfTotal : number
+//   total updateQ calls observed.
+//
+// _diagMqfNonzero : number
+//   calls where maxFutureQ was > 0.
+//   Rate = _diagMqfNonzero / _diagMqfTotal.
+//   Healthy baseline (node-only): 0.60–0.90.
+//   If this collapses toward 0 after Step 3,
+//   nextState was passed as a bare id.
+//
+// _diagLoops : number
+//   runAgentLoop invocation counter,
+//   used to pace the periodic log line.
+// ======================================
+
+export const _diagVisits    = new Map();  // key → visit count
+export let   _diagLoops     = 0;          // loop ticks
+
+// ── single object passed to updateQ so property mutation accumulates ──
+// updateQ does diag.mqfTotal++ which mutates the object in place.
+// Using separate `let` primitives would not work because JS passes
+// numbers by value, not by reference.
+export const _diagCounters = {
+    visits:     _diagVisits,   // shared Map reference — mutations visible here
+    mqfTotal:   0,
+    mqfNonzero: 0,
+};
 
 // ================== 🤖 AGENT THINK LOOP ==================
 
@@ -3651,13 +3713,19 @@ if (predError) {
     const effectiveLR = 0.1 * predError.learningAuthority;
 
     // ── Q-LEARNING UPDATE (AUTHORITY-SCALED) ──
+    // STEP 3: state and nextState are now composite ⟨position, goal⟩ keys.
+    // goalNeuronId is used as the goal component; GOAL_NONE (0) is the
+    // sentinel when no goal is active, producing a valid "pos#0" key.
+    // BOTH arguments use makeStateKey so the maxFutureQ scan in
+    // qlearning.js matches composite keys on both sides (F1-proof).
     updateQ({
-        state:     agentLast,
+        state:     makeStateKey(agentLast,    goalNeuronId),
         action:    next,
         reward:    rewardSignal,
-        nextState: agentCurrent,
+        nextState: makeStateKey(agentCurrent, goalNeuronId),
         alpha:     effectiveLR,   // modulated by prediction confidence
-        gamma:     0.9
+        gamma:     0.9,
+        diag:      _diagCounters
     });
 
     // ── PER-TRANSITION UNCERTAINTY UPDATE ─────
@@ -3820,13 +3888,17 @@ if (predError) {
 } else {
 
     // ── FALLBACK Q-UPDATE ─────────────────────
+    // STEP 3: same composite key as call site 1.
+    // Identical makeStateKey pattern ensures both
+    // branches write to the same key namespace.
     updateQ({
-        state:     agentLast,
+        state:     makeStateKey(agentLast,    goalNeuronId),
         action:    next,
         reward:    rewardSignal,
-        nextState: agentCurrent,
+        nextState: makeStateKey(agentCurrent, goalNeuronId),
         alpha:     0.1,
-        gamma:     0.9
+        gamma:     0.9,
+        diag:      _diagCounters
     });
 
 
@@ -4557,61 +4629,11 @@ if (next !== null && !_goalResetJustHappened) {
       }, 1500);
 
       // ======================================
-      // moving thought dot
+      // 🌟 FUTURISTIC TRAVEL DOT
+      // cluster-colored plasma dot with glow
       // ======================================
-
-      const dot =
-      new THREE.Mesh(
-
-          new THREE.SphereGeometry(0.05, 8, 8),
-
-          new THREE.MeshBasicMaterial({
-
-              color: 0xffff00
-
-          })
-
-      );
-
-      dot.userData = {
-
-          start: fromNeuron.position.clone(),
-
-          end: toNeuron.position.clone(),
-
-          progress: 0
-
-      };
-
-      group.add(dot);
-
-      // animate flow
-      const interval = setInterval(() => {
-
-          dot.userData.progress += 0.03;
-
-          // reached destination
-          if (dot.userData.progress >= 1) {
-
-              group.remove(dot);
-
-              clearInterval(interval);
-
-              return;
-          }
-
-          // move dot
-          dot.position.lerpVectors(
-
-              dot.userData.start,
-
-              dot.userData.end,
-
-              dot.userData.progress
-
-          );
-
-      }, 30);
+      const travelCluster = toNeuron.userData?.cluster || 'action';
+      spawnTravelDot(fromNeuron.position, toNeuron.position, travelCluster, group);
   }
   
   // add visited neuron to recent memory
@@ -4693,6 +4715,45 @@ function runAgentLoop() {
   }
 
   
+  // ======================================
+  // 🔬 STEP-2 DIAGNOSTIC REPORT
+  // ──────────────────────────────────────
+  // Fires every 20 loop ticks (≈ 10 s at
+  // 500 ms/loop).  Pure logging — no side
+  // effects on agent behaviour.
+  //
+  // LOG FORMAT (one line, easy to grep):
+  //   [DIAG] loops:<n> | keys:<k> | mqfnz:<r> | visits-p50:<m>
+  //
+  //   keys     : distinct Q keys seen so far
+  //   mqfnz    : maxFutureQ-nonzero rate (0–1)
+  //   visits-p50: median visit count across keys
+  //
+  // HEALTHY BASELINE (node-only, pre-Step 3):
+  //   keys ≈ 39  |  mqfnz ≈ 0.65–0.90
+  //
+  // AFTER STEP 3 (composite state):
+  //   keys ≈ 39 × #goals  |  mqfnz stays ≈ same
+  //   If mqfnz collapses → nextState bug (F1).
+  // ======================================
+  _diagLoops++;
+  if (_diagLoops % 20 === 0) {
+    const keys    = _diagCounters.visits.size;
+    const mqfnz   = _diagCounters.mqfTotal > 0
+                      ? (_diagCounters.mqfNonzero / _diagCounters.mqfTotal).toFixed(3)
+                      : "n/a";
+    const counts  = [..._diagCounters.visits.values()].sort((a,b)=>a-b);
+    const p50     = counts.length
+                      ? counts[Math.floor(counts.length / 2)]
+                      : 0;
+    console.log(
+      `[DIAG] loops:${_diagLoops}` +
+      ` | keys:${keys}` +
+      ` | mqfnz:${mqfnz}` +
+      ` | visits-p50:${p50}`
+    );
+  }
+
   for (let i = 0; i < 5; i++) {
     runAgent();                    // 5 thinking steps per frame
   }
@@ -4796,21 +4857,22 @@ window.addEventListener('click', (event) => {
 
 
   // ======================================
-  // HIGHLIGHT NEURONS
+  // 🌟 FUTURISTIC HIGHLIGHT — CLICK
   // ======================================
 
-  // reset all colors
-  neuronMap.forEach(n => {
-    n.material.color.set(0xffffff);
+  // reset all neurons to normal
+  neuronMap.forEach((n, id) => {
+    setNeuronHighlight(id, 'normal');
   });
 
-  // highlight clicked neuron
-  obj.material.color.set(0xff0000);
+  // flash-glow the clicked neuron
+  flashNeuronClick(obj.userData.id, 1200);
+  setNeuronHighlight(obj.userData.id, 'selected');
 
-  // highlight neighbors
+  // highlight neighbors with secondary glow
   obj.userData.neighbors.forEach(id => {
     const n = findNeuronById(id);
-    if (n) n.material.color.set(0x00ff00);
+    if (n) setNeuronHighlight(id, 'neighbor');
   });
 
 

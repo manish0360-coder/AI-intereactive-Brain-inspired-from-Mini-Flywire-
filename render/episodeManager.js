@@ -183,13 +183,20 @@ export function initEpisodeManager(systemRefs) {
 //
 // ================================================================
 
-export function recordManualClick(id, label, isGoalClick) {
+export function recordManualClick(id, label, isGoalClick, activeGoal = null) {
 
     id = Number(id);
 
     // ── open buffer if none is active ──────────────────────
     if (!_activeBuffer) {
         _activeBuffer = _createBuffer("manual");
+
+        // ── STEP 4: record goal at buffer-open time ──────────
+        // activeGoal is the reward-source node id passed from
+        // main.js. Set once when the buffer opens; stays fixed
+        // for the whole teaching pass so old episodes keep
+        // their original goal even if the goal changes later.
+        _activeBuffer.activeGoal = (activeGoal != null) ? Number(activeGoal) : null;
     }
 
     // ── revisit detection ────────────────────────────────────
@@ -210,6 +217,10 @@ export function recordManualClick(id, label, isGoalClick) {
 
         // begin new pass with this node as the first step
         _activeBuffer = _createBuffer("manual");
+
+        // ── STEP 4: carry goal into the new buffer too ───────
+        _activeBuffer.activeGoal = (activeGoal != null) ? Number(activeGoal) : null;
+
     }
 
     // ── append node (ignore consecutive duplicates) ──────────
@@ -280,6 +291,11 @@ export function recordAutonomousSuccess(recentMemory, goalId, neuronMap, meta) {
     ep.labels     = episodeWords;
     ep.predictionError = meta?.predictionError ?? 0;
     ep.meta       = { ...meta };
+
+    // ── STEP 4: record the goal active at episode creation time ──
+    // goalId is the reward-source node the agent reached.
+    // Written before _sealBuffer so the sealed episode inherits it.
+    ep.activeGoal = (goalId != null) ? Number(goalId) : null;
 
     const sealed = _sealBuffer(ep);
     if (sealed) _runPipeline(sealed);
@@ -458,6 +474,39 @@ export function clearAllEpisodes() {
     _episodesSinceConsolidation = 0;
 }
 
+// ── STEP 4: activeGoal coverage diagnostic ───────────────────────
+//
+// Returns coverage statistics for the activeGoal field across the
+// episodicStore. Used by the [DIAG] log and Step 4 verification.
+//
+// Returns:
+//   { total, withGoal, nullGoal, coverage, goalDist, sample }
+//
+//   coverage  : fraction of episodes with non-null activeGoal
+//   goalDist  : Map<goalId, count> — how many episodes per goal
+//   sample    : up to 3 example episodes (id, source, activeGoal, nodes)
+export function getActiveGoalCoverage() {
+    const total    = episodicStore.length;
+    const withGoal = episodicStore.filter(ep => ep.activeGoal != null).length;
+    const nullGoal = total - withGoal;
+    const coverage = total > 0 ? withGoal / total : 0;
+
+    const goalDist = new Map();
+    episodicStore.forEach(ep => {
+        const g = ep.activeGoal ?? "null";
+        goalDist.set(g, (goalDist.get(g) || 0) + 1);
+    });
+
+    const sample = episodicStore.slice(-3).map(ep => ({
+        id:         ep.id,
+        source:     ep.source,
+        activeGoal: ep.activeGoal,
+        nodes:      ep.nodes
+    }));
+
+    return { total, withGoal, nullGoal, coverage, goalDist, sample };
+}
+
 
 // ================================================================
 // 🧠 EPISODE PERSISTENCE — cross-session memory
@@ -531,7 +580,17 @@ function _createBuffer(source) {
         labels:        [],
         predictionError: 0,
         meta:          {},
-        timestamp:     Date.now()
+        timestamp:     Date.now(),
+
+        // ── STEP 4: goal context ─────────────────────────────
+        // Stores the reward-source node id active when this
+        // episode was created. Set by each entry-point function
+        // immediately after _createBuffer().
+        // Defaults to null; entry-points that know the goal
+        // write it in before calling _sealBuffer().
+        // _sealBuffer() copies it onto the sealed episode so
+        // motifAvgQ (Step 5) can read it from the store.
+        activeGoal:    null,
     };
 }
 
@@ -608,6 +667,12 @@ function _sealBuffer(buf) {
         meta:        buf.meta,
         timestamp:   buf.timestamp,
         consolidationEligible: auth.consolidation,
+
+        // ── STEP 4: carry goal context through to the store ──
+        // buf.activeGoal is set by the entry-point functions
+        // (recordAutonomousSuccess, recordManualClick) before
+        // _sealBuffer is called. Null when no goal was active.
+        activeGoal:  buf.activeGoal ?? null,
     };
 
 }

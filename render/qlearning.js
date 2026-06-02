@@ -14,6 +14,44 @@ export const Q = new Map();
 
 
 // ======================================
+// STATE KEY COMPOSER
+// ──────────────────────────────────────
+// Combines position and active goal into
+// a single string state key.
+//
+// DELIMITER RULE: uses "#" to separate
+// position from goal. "#" must never
+// appear in node ids or goal ids.
+// The action delimiter "->" is reserved
+// for the outer key "state->action" only.
+//
+// NULL GOAL: when no goal is active,
+// pass GOAL_NONE (0) as the sentinel.
+// This produces a valid key "5#0" rather
+// than the degenerate "5#null".
+//
+// INVARIANT: makeStateKey output must
+// never contain "->". Verified by the
+// unit tests in test_makeStateKey.mjs.
+// ======================================
+
+export const GOAL_NONE = 0;   // sentinel for "no active goal"
+
+export function makeStateKey(pos, goal) {
+
+    // coerce both to numbers then string so
+    // makeStateKey(5, 16) and makeStateKey("5", 16)
+    // produce the same key
+    const p = Number(pos);
+    const g = (goal != null) ? Number(goal) : GOAL_NONE;
+
+    return p + "#" + g;
+
+}
+
+
+
+// ======================================
 // GET Q VALUE
 // ======================================
 
@@ -61,7 +99,17 @@ export function updateQ({
     nextState,
 
     alpha = 0.35,
-    gamma = 0.75
+    gamma = 0.75,
+
+    // ── STEP-2 DIAGNOSTICS (optional) ──────
+    // Pass { visits, mqfTotal, mqfNonzero }
+    // from main.js to record per-key visit
+    // counts and maxFutureQ-nonzero rate.
+    // Omitting diag is safe — all counters
+    // are inside the (diag &&) guard so they
+    // never run in production callers that
+    // don't pass this parameter.
+    diag = null
 
 }) {
 
@@ -159,6 +207,21 @@ export function updateQ({
     );
 
 
+
+    // ── STEP-2 DIAGNOSTIC COUNTERS ──────────
+    // Runs only when main.js passes diag={}.
+    // No side effects on Q values or decisions.
+    if (diag) {
+
+        // per-key visit count
+        const visitKey = String(state) + "->" + String(action);
+        diag.visits.set(visitKey, (diag.visits.get(visitKey) || 0) + 1);
+
+        // maxFutureQ nonzero rate
+        diag.mqfTotal++;
+        if (maxFutureQ > 0) diag.mqfNonzero++;
+
+    }
 
     // console.log removed: fires 100+ times/min during autonomous training.
     // Q updates are internal learning signals — not cognitive events.

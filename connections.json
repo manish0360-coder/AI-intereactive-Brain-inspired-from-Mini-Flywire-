@@ -1,153 +1,41 @@
 [
-  {
-      "from": 1,
-      "to": 8,
-
-      "confidence": 1,
-
-      "rewardHistory": 0,
-
-      "penaltyHistory": 0
-  },
-  {
-      "from": 1,
-      "to": 5,
-
-      "confidence": 1,
-
-      "rewardHistory": 0,
-
-      "penaltyHistory": 0
-  },
-  {
-      "from": 2,
-      "to": 7,
-
-      "confidence": 1,
-
-      "rewardHistory": 0,
-
-      "penaltyHistory": 0
-  },
-  {
-      "from": 2,
-      "to": 5,
-
-      "confidence": 1,
-
-      "rewardHistory": 0,
-
-      "penaltyHistory": 0
-  },
-
-  {
-      "from": 3,
-      "to": 6,
-
-      "confidence": 1,
-
-      "rewardHistory": 0,
-
-      "penaltyHistory": 0
-  },
-  {
-      "from": 4,
-      "to": 6,
-
-      "confidence": 1,
-
-      "rewardHistory": 0,
-
-      "penaltyHistory": 0
-  },
-
-  {
-      "from": 5,
-      "to": 9,
-
-      "confidence": 1,
-
-      "rewardHistory": 0,
-
-      "penaltyHistory": 0
-  },
-  {
-      "from": 6,
-      "to": 9,
-
-      "confidence": 1,
-
-      "rewardHistory": 0,
-
-      "penaltyHistory": 0
-  },
-  {
-      "from": 7,
-      "to": 11,
-
-      "confidence": 1,
-
-      "rewardHistory": 0,
-
-      "penaltyHistory": 0
-  },
-
-  {
-      "from": 3,
-      "to": 10,
-
-      "confidence": 1,
-
-      "rewardHistory": 0,
-
-      "penaltyHistory": 0
-  },
-  {
-      "from": 4,
-      "to": 10,
-
-      "confidence": 1,
-
-      "rewardHistory": 0,
-
-      "penaltyHistory": 0
-  },
-
-  {
-      "from": 3,
-      "to": 12,
-
-      "confidence": 1,
-
-      "rewardHistory": 0,
-
-      "penaltyHistory": 0
-  },
-  {
-      "from": 4,
-      "to": 12,
-
-      "confidence": 1,
-
-      "rewardHistory": 0,
-
-      "penaltyHistory": 0
-  },
-
-  {
-      "from": 14,
-      "to": 13,
-      "confidence": 1,
-      "rewardHistory": 0,
-      "penaltyHistory": 0
-  },
-
-  {
-      "from": 14,
-      "to": 1,
-      "confidence": 1,
-      "rewardHistory": 0,
-      "penaltyHistory": 0
-  }
-  
+  {"from":1,"to":2,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":1,"to":4,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":2,"to":3,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":3,"to":4,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":2,"to":5,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":3,"to":6,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":1,"to":6,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":5,"to":6,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":5,"to":8,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":6,"to":7,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":7,"to":8,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":8,"to":9,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":6,"to":10,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":7,"to":12,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":9,"to":10,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":10,"to":11,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":11,"to":12,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":9,"to":12,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":11,"to":13,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":10,"to":13,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":12,"to":15,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":13,"to":14,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":13,"to":16,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":14,"to":15,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":15,"to":16,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":14,"to":17,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":15,"to":17,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":16,"to":18,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":17,"to":18,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":17,"to":19,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":18,"to":20,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":19,"to":20,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":20,"to":1,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":19,"to":6,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":17,"to":8,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":4,"to":9,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":8,"to":13,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":12,"to":17,"confidence":1,"rewardHistory":0,"penaltyHistory":0},
+  {"from":20,"to":5,"confidence":1,"rewardHistory":0,"penaltyHistory":0}
 ]

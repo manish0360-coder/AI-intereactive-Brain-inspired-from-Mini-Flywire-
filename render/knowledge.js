@@ -1,38 +1,42 @@
 // ======================================
-// KNOWLEDGE SYSTEM
+// KNOWLEDGE SYSTEM — COGNITIVE AI v2
 // ======================================
+// 5 semantic clusters × 4 nodes each
+// Primary training path:
+// percept → signal → encode → schema
+//         → infer  → predict → decide
+//         → act    → reward  → identity
 
-
-// semantic meaning relations
 export const conceptRelations = {
 
-    dog: ["food", "bone", "home", "human"],
+    // ── PERCEPTION cluster ─────────────────
+    percept:  ["signal", "context", "salience"],
+    signal:   ["percept", "encode", "context"],
+    context:  ["signal", "recall", "salience"],
+    salience: ["percept", "context", "infer"],
 
-    cat: ["milk", "food", "home"],
+    // ── MEMORY cluster ─────────────────────
+    encode:   ["signal", "recall", "schema"],
+    recall:   ["encode", "trace", "context"],
+    trace:    ["recall", "schema", "reflect"],
+    schema:   ["encode", "infer", "reward"],
 
-    lion: ["meat", "hunt", "forest"],
+    // ── REASONING cluster ──────────────────
+    infer:    ["schema", "abstract", "predict"],
+    abstract: ["infer", "recall", "decide"],
+    predict:  ["infer", "abstract", "decide"],
+    reflect:  ["trace", "predict", "reward"],
 
-    tiger: ["meat", "hunt", "forest"],
+    // ── ACTION cluster ─────────────────────
+    decide:   ["predict", "abstract", "act"],
+    act:      ["decide", "adapt", "reward"],
+    adapt:    ["act", "reflect", "trust"],
+    goal:     ["decide", "adapt", "explore"],
 
-
-    food: ["eat"],
-
-    meat: ["eat"],
-
-    milk: ["drink"],
-
-
-    hunt: ["meat"],
-
-    eat: [],
-
-    drink: [],
-
-
-    forest: ["hunt", "lion", "tiger"],
-
-    home: ["dog", "cat", "human"],
-
-    human: ["home", "dog"]
+    // ── LEARNING cluster ───────────────────
+    reward:   ["act", "schema", "trust"],
+    explore:  ["goal", "trust", "identity"],
+    trust:    ["reward", "adapt", "recall"],
+    identity: ["explore", "trust", "percept"],
 
 };
