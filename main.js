@@ -66,6 +66,7 @@ import {
     spawnTravelDot,
     setNeuronHighlight,
     getNeuronCluster,
+    setAttentionSpotlight,
 } from "./render/neuronVisuals.js";
 
 // ======================================
@@ -234,10 +235,11 @@ import {
 // ======================================
 
 import {
-
     createHUD,
-    updateHUD
-
+    updateHUD,
+    createThinkingStream,
+    updateThinkingStream,
+    createSpeedControl,
 } from "./render/hud.js";
 
 
@@ -2500,6 +2502,30 @@ if (step === 0) {
           stressEscape:   stressState > 10,
       });
 
+      // ── Thinking Stream update ──────────────────────────────────
+      const _tsCluster  = decidedNeuron.userData?.cluster || 'memory';
+      const _tsExplore  = curiosityState > 0.25;
+      const _tsQ        = getQ(currentKey, nextKey);
+      const _tsIntention = goalNeuronId
+          ? 'moving toward goal'
+          : stressState > 10
+          ? 'escaping stress'
+          : 'exploring freely';
+      updateThinkingStream(
+          startNeuron.userData.label + ' → ' + decidedNeuron.userData.label,
+          _tsCluster,
+          _tsExplore,
+          _tsQ,
+          _tsIntention
+      );
+
+      // ── Attention spotlight ─────────────────────────────────────
+      // Brighten the decided destination; dim everything else.
+      setAttentionSpotlight(
+          decidedNeuron.userData.id,
+          decidedNeuron.userData.neighbors || []
+      );
+
   }
 
   } // end: if (step === 0) HUD block
@@ -2844,6 +2870,15 @@ animate();                           // start loop
 // ======================================
 
 createHUD();
+
+// ── Cognitive Observatory panels ──────────────────────────────────
+createThinkingStream();
+createSpeedControl(
+    // onSpeedChange: update agentSpeed so the loop uses the new tempo
+    (ms) => { agentSpeed = ms; },
+    // onStep: single manual step (no-op if agent running)
+    null
+);
 
 
 // ================== 🤖 AI AGENT SYSTEM ==================
@@ -4092,6 +4127,13 @@ newCuriosity                                        // store controlled value
 // ===============================
 if (current === goalNeuronId) {
 
+  // ── PROBE 1 (instrumentation, read-only) ──────────────────────
+  // Proves Gate 0 fires (agent reached goalNeuronId on main loop).
+  console.log("[EPISODE ATTEMPT] gate0:goal-reached" +
+    " current=" + current + " goal=" + goalNeuronId +
+    " recentMemory=[" + recentMemory.join(",") + "]" +
+    " len=" + recentMemory.length);
+
   // =====================================
   // SAVE FULL SUCCESSFUL EPISODE
   // Use recentMemory (actual agent path)
@@ -4751,6 +4793,17 @@ function runAgentLoop() {
       ` | keys:${keys}` +
       ` | mqfnz:${mqfnz}` +
       ` | visits-p50:${p50}`
+    );
+
+    // ── PROBE 7 (instrumentation, read-only) ─────────────────────
+    // Dual-store census. Prints episodicStore length AND vault
+    // length together, so a divergence (one fills, the other
+    // doesn't) is visible. Cross-checks the HUD episodeCount.
+    let _vaultLen = "n/a";
+    try { _vaultLen = getCurrentEpisodeState().vaultSize; } catch (e) {}
+    console.log(
+      `[STORE CENSUS] episodicStore=${getAllEpisodes().length}` +
+      ` | episodeVault=${_vaultLen}`
     );
   }
 

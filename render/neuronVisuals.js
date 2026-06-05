@@ -34,6 +34,13 @@ export function setVisualsGroup(g) { _group = g; }
 const pulsePhases = new Map();   // id → float phase offset
 let   _animFrame  = 0;
 
+// ── Attention spotlight targets ────────────────────────────────────
+// Stores per-neuron target glow multiplier (1.0 = normal).
+// tickNeuronPulse lerps current toward target over ~300ms.
+//   2.5 = active/focused   1.4 = neighbor   0.55 = dim
+const _attentionTargets = new Map();   // id → { glowMult, labelAlpha }
+const _LERP_SPEED       = 0.12;        // per-frame lerp factor (≈300ms at 60fps)
+
 
 // ======================================
 // CREATE GLOW TEXTURE (canvas-based)
@@ -250,17 +257,33 @@ export function tickNeuronPulse() {
         const phase   = pulsePhases.get(id) || 0;
         const pulse   = Math.sin(_tick + phase);
 
-        // Glow breathes
-        const glowScale = v.baseGlowScale + pulse * 0.06;
+        // ── Attention spotlight lerp ─────────────────────────────
+        // Smoothly interpolate glow toward the target set by
+        // setAttentionSpotlight(). No lerp target = normal breathing.
+        const attn = _attentionTargets.get(id);
+        let glowMult    = 1.0;
+        let labelTarget = 0.82 + pulse * 0.10;
+        if (attn) {
+            // Store current lerped value on the target object
+            attn._curMult  = attn._curMult  === undefined ? 1.0 : attn._curMult;
+            attn._curLabel = attn._curLabel === undefined ? 0.82 : attn._curLabel;
+            attn._curMult  += (attn.glowMult   - attn._curMult)  * _LERP_SPEED;
+            attn._curLabel += (attn.labelAlpha  - attn._curLabel) * _LERP_SPEED;
+            glowMult    = attn._curMult;
+            labelTarget = attn._curLabel;
+        }
+
+        // Glow breathes + attention scale
+        const glowScale = (v.baseGlowScale + pulse * 0.06) * glowMult;
         v.glow.scale.set(glowScale, glowScale, 1);
-        v.glow.material.opacity = 0.55 + pulse * 0.18;
+        v.glow.material.opacity = (0.55 + pulse * 0.18) * Math.min(glowMult, 1.2);
 
         // Ring rotates slowly
         v.ring.rotation.z += 0.004;
-        v.ring.material.opacity = v.baseRingOpacity + pulse * 0.12;
+        v.ring.material.opacity = (v.baseRingOpacity + pulse * 0.12) * Math.min(glowMult, 1.0);
 
         // Label breathes subtly
-        v.label.material.opacity = 0.82 + pulse * 0.10;
+        v.label.material.opacity = Math.min(labelTarget, 1.0);
     });
 }
 
@@ -377,10 +400,75 @@ export function spawnTravelDot(fromPos, toPos, clusterColor, group) {
         } else {
             group.remove(dot);
             group.remove(dotGlow);
+
+            // ── ARRIVAL RIPPLE ─────────────────────────────────────
+            // A ring expands and fades at the destination node,
+            // giving a satisfying "thought arrived" pulse.
+            const rippleGeo = new THREE.RingGeometry(0.01, 0.04, 24);
+            const rippleMat = new THREE.MeshBasicMaterial({
+                color,
+                transparent: true,
+                opacity:     0.9,
+                side:        THREE.DoubleSide,
+            });
+            const ripple = new THREE.Mesh(rippleGeo, rippleMat);
+            ripple.position.set(end.x, end.y, end.z);
+            group.add(ripple);
+
+            const rippleStart = Date.now();
+            const rippleDur   = 380;
+            function expandRipple() {
+                const rp = Math.min((Date.now() - rippleStart) / rippleDur, 1);
+                const re = 1 - Math.pow(1 - rp, 3);   // ease-out cubic
+                const sc = 1 + re * 4.5;               // expand to ~5× size
+                ripple.scale.set(sc, sc, 1);
+                ripple.material.opacity = 0.9 * (1 - rp);
+                if (rp < 1) {
+                    requestAnimationFrame(expandRipple);
+                } else {
+                    group.remove(ripple);
+                    rippleGeo.dispose();
+                    rippleMat.dispose();
+                }
+            }
+            requestAnimationFrame(expandRipple);
         }
     }
 
     requestAnimationFrame(animate);
+}
+
+
+// ======================================
+// ATTENTION SPOTLIGHT
+// smooth 300ms lerp across all neurons.
+// activeId  = current node (2.5× glow)
+// neighborIds = Set/Array (1.4× glow)
+// all others dim to 0.55×
+// ======================================
+
+export function setAttentionSpotlight(activeId, neighborIds) {
+
+    const neighborSet = new Set(neighborIds || []);
+
+    neuronVisuals.forEach((v, id) => {
+        let target = _attentionTargets.get(id);
+        if (!target) {
+            target = { glowMult: 1.0, labelAlpha: 0.82, _curMult: 1.0, _curLabel: 0.82 };
+            _attentionTargets.set(id, target);
+        }
+
+        if (id === activeId) {
+            target.glowMult   = 2.5;
+            target.labelAlpha = 1.0;
+        } else if (neighborSet.has(id)) {
+            target.glowMult   = 1.4;
+            target.labelAlpha = 0.90;
+        } else {
+            target.glowMult   = 0.55;
+            target.labelAlpha = 0.42;
+        }
+    });
 }
 
 

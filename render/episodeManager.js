@@ -283,6 +283,13 @@ export function recordAutonomousSuccess(recentMemory, goalId, neuronMap, meta) {
         return id != null ? Number(id) : null;
     }).filter(id => id !== null);
 
+    // Proves recordAutonomousSuccess was entered; shows raw path.
+    console.log("[EPISODE ATTEMPT] recordAutonomousSuccess" +
+        " source=autonomous_success" +
+        " nodeIds=[" + nodeIds.join(",") + "]" +
+        " nodeCount=" + nodeIds.length +
+        (nodeIds.length < 2 ? " → REJECT gate1:nodeIds<2" : ""))
+
     if (nodeIds.length < 2) return;
 
     // assemble episode
@@ -298,7 +305,18 @@ export function recordAutonomousSuccess(recentMemory, goalId, neuronMap, meta) {
     ep.activeGoal = (goalId != null) ? Number(goalId) : null;
 
     const sealed = _sealBuffer(ep);
-    if (sealed) _runPipeline(sealed);
+    // Proves whether _sealBuffer returned a non-null episode.
+    // Wraps the existing if(sealed) WITHOUT changing its predicate
+    // or the _runPipeline(sealed) call — behaviour identical.
+    if (sealed) {
+        console.log("[EPISODE ACCEPTED] sealed id=" + sealed.id +
+            " nodes=[" + sealed.nodes.join(",") + "]" +
+            " activeGoal=" + sealed.activeGoal +
+            " quality=" + sealed.quality.toFixed(2));
+        _runPipeline(sealed);
+    } else {
+        console.log("[EPISODE REJECTED] sealBuffer returned null (see SEAL-CHECK above)");
+    }
 
 }
 
@@ -342,6 +360,16 @@ export function recordAutonomousStep(fromId, toId, neuronMap) {
     ep.labels = [fromN.userData.label, toN.userData.label];
 
     const sealed = _sealBuffer(ep);
+
+    // Proves the recordAutonomousStep path fired and whether it
+    // sealed. This path uses _runPipelineMinimal (NO store) — the
+    // log makes that explicit so a verifier knows explore-steps
+    // are not expected to fill episodicStore.
+    console.log("[EPISODE ATTEMPT] recordAutonomousStep" +
+        " source=autonomous_explore" +
+        " nodes=[" + Number(fromId) + "," + Number(toId) + "]" +
+        (sealed ? " → SEALED (minimal pipeline, NOT stored)"
+                : " → REJECT (sealBuffer null)"));
 
     // explore steps: run minimal pipeline (procedural only, no store)
     if (sealed) _runPipelineMinimal(sealed);
@@ -468,6 +496,12 @@ export function getEpisodeStats() {
 
 // Wipe all episodic memory (brain-wipe handler)
 export function clearAllEpisodes() {
+    // Proves whether the store was wiped during the run. Should
+    // NOT appear during autonomous training (only on brain-wipe
+    // button or load). If it appears mid-run, that explains a
+    // store that fills then empties (case C-by-clearing).
+    console.log("[STORE CLEARED] clearAllEpisodes called — prevStoreLen=" +
+        episodicStore.length + " stack=" + (new Error().stack || "").split("\n")[2]);
     episodicStore.length = 0;
     _activeBuffer = null;
     _replayCooldown.clear();
@@ -604,7 +638,11 @@ function _createBuffer(source) {
 
 function _sealBuffer(buf) {
 
-    if (!buf || buf.nodes.length < 2) return null;
+    if (!buf || buf.nodes.length < 2) {
+        console.log("[EPISODE REJECTED] gate2:rawNodes<2 len=" +
+            (buf ? buf.nodes.length : "null-buf"));
+        return null;
+    }
 
     const source    = buf.source;
     const req       = VALIDATION[source] || VALIDATION.autonomous_explore;
@@ -621,11 +659,30 @@ function _sealBuffer(buf) {
         }
     });
 
-    if (nodes.length < 2) return null;
+    // ── PROBE 3b (instrumentation, read-only) ────────────────────
+    if (nodes.length < 2) {
+        console.log("[EPISODE REJECTED] gate3:postDedup<2 nodes=[" + nodes.join(",") + "]");
+        return null;
+    }
 
     // ── validation ───────────────────────────────────────────
     const unique    = new Set(nodes).size;
     const diversity = unique / nodes.length;
+
+    // ── PROBE 3c (instrumentation, read-only) ────────────────────
+    // The decisive line: shows length/unique/diversity vs the
+    // per-source minimums and which of gates 4/5/6 will reject.
+    // Printed BEFORE the guards — the guards still run unchanged.
+    console.log("[EPISODE SEAL-CHECK]" +
+        " source=" + source +
+        " len=" + nodes.length + " (min " + req.minLength + ")" +
+        " unique=" + unique + " (min " + req.minUnique + ")" +
+        " diversity=" + diversity.toFixed(2) + " (min " + req.minDiversity + ")" +
+        " nodes=[" + nodes.join(",") + "]" +
+        ((nodes.length < req.minLength) ? " → REJECT gate4:length" :
+         (unique < req.minUnique)       ? " → REJECT gate5:unique" :
+         (diversity < req.minDiversity) ? " → REJECT gate6:diversity" :
+                                          " → PASS gates4-6"));
 
     if (nodes.length  < req.minLength)   return null;
     if (unique        < req.minUnique)   return null;
@@ -644,7 +701,11 @@ function _sealBuffer(buf) {
         }
     }
 
-    if (transitions.length === 0) return null;
+    // ── PROBE 3d ────────────────────
+    if (transitions.length === 0) {
+        console.log("[EPISODE REJECTED] gate7:noTransitions nodes=[" + nodes.join(",") + "]");
+        return null;
+    }
 
     // ── quality score ────────────────────────────────────────
     // coherence × (1 − predictionError influence)
@@ -687,6 +748,12 @@ function _sealBuffer(buf) {
 function _runPipeline(episode) {
 
     if (!_sys) return;
+
+    // Proves execution entered the pipeline. If [EPISODE ACCEPTED]
+    // appears, then this, but NOT [EPISODE STORED], a subsystem
+    // (A/B/C) threw before reaching storage (case C).
+    console.log("[PIPELINE ENTER] source=" + episode.source +
+        " transitions=" + (episode.transitions ? episode.transitions.length : "n/a"));
 
     const auth    = AUTHORITY[episode.source] || AUTHORITY.autonomous_explore;
     const quality = episode.quality;
@@ -954,6 +1021,11 @@ function _updateTrust(episode, auth, quality) {
 function _storeEpisode(episode) {
 
     episodicStore.push(episode);
+
+    // Proves the episode physically entered episodicStore.
+    console.log("[EPISODE STORED] id=" + episode.id +
+        " source=" + episode.source +
+        " store.length=" + episodicStore.length);
 
     if (episodicStore.length > MAX_STORE) {
         episodicStore.shift();
