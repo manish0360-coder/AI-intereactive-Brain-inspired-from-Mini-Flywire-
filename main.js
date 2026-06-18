@@ -2235,6 +2235,35 @@ const sorted = choices.sort((a, b) => b.weight - a.weight);
 // best option (highest score)
 const bestChoice = sorted[0];
 
+// ── SCHEMA REUSE MEASUREMENT LOG ─────────────────────────────────
+// Reads getSchemaBonus for the winning transition.
+// Logs ONLY when schemaBonus > 0 — every line is a confirmed
+// schema-match event, not background noise.
+//
+// schemaBonus:  raw cache value from _bonusCache (0–1.0)
+// schemaScore:  actual points added to finalWeight (schemaBonus×15)
+// finalWeight:  the score that won the argmax
+//
+// This is the falsifiable evidence that schemas causally
+// influenced a decision: the schema term can be compared
+// against finalWeight to measure its fractional contribution.
+if (bestChoice) {
+    const _sb = getSchemaBonus(currentKey, bestChoice.key);
+    if (_sb > 0) {
+        const _ss = _sb * 15;
+        const _fromLabel = startNeuron?.userData?.label || currentKey;
+        const _toLabel   = findNeuronById(bestChoice.key)?.userData?.label || bestChoice.key;
+        console.log(
+            '[SCHEMA REUSE]' +
+            ' transition=' + _fromLabel + '->' + _toLabel +
+            ' schemaBonus=' + _sb.toFixed(4) +
+            ' schemaScore=' + _ss.toFixed(3) +
+            ' finalWeight=' + bestChoice.weight.toFixed(3) +
+            ' schemaFraction=' + (_ss / Math.abs(bestChoice.weight)).toFixed(3)
+        );
+    }
+}
+
 // save decision info for later explanation
 lastDecision = {
   current: currentKey,         // where agent is now
@@ -3148,13 +3177,42 @@ function runAgent() {
               ? pairRepeats * 0.3
               : 0;
 
+      // ── Aggregate Bayesian trust (confidence floor) ───────────
+      // Mean verified success-rate across all paths with ≥2
+      // attempts. This is the "behavioral reliability" signal
+      // that grounds confidenceState in real competence rather
+      // than only in per-step reward comparison.
+      //
+      // pathSuccesses and pathAttempts are imported from
+      // trustMemory.js (main.js lines 491-492) — no new import.
+      //
+      // Filter: ≥2 attempts (mirrors getTrustSnapshot's filter)
+      // to exclude paths seen only once (prior-dominated).
+      //
+      // If no paths qualify yet (early training), passes null
+      // so behavior.js applies no floor (null guard).
+      let _aggregateTrust = null;
+      {
+          let _sum = 0;
+          let _n   = 0;
+          pathAttempts.forEach((attempts, key) => {
+              if (attempts >= 2) {
+                  const s = pathSuccesses.get(key) || 0;
+                  _sum += (s + 1) / (attempts + 2);   // Laplace-smoothed Beta mean
+                  _n++;
+              }
+          });
+          if (_n > 0) _aggregateTrust = _sum / _n;
+      }
+
       updateBehavior({
-          reward:     chosenReward - loopStressPenalty,
-          penalty:    chosenPenalty + loopStressPenalty,
-          success:    chosenReward > chosenPenalty && pairRepeats < 2,
-          repeated:   chosenVisits > 5 || pairRepeats >= 2,
-          pathLength: 1,
-          isHome:     chosenKey === window.homeNeuronId
+          reward:         chosenReward - loopStressPenalty,
+          penalty:        chosenPenalty + loopStressPenalty,
+          success:        chosenReward > chosenPenalty && pairRepeats < 2,
+          repeated:       chosenVisits > 5 || pairRepeats >= 2,
+          pathLength:     1,
+          isHome:         chosenKey === window.homeNeuronId,
+          aggregateTrust: _aggregateTrust,   // ← trust-grounded confidence floor
       });
   }
   

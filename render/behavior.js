@@ -359,7 +359,16 @@ export function updateBehavior({
     // how many nodes AI travelled
     pathLength,
     // is AI back home resting
-    isHome
+    isHome,
+
+    // ── Trust-grounded confidence floor ─────────────────────────
+    // Aggregate Bayesian trust from trustMemory.js.
+    // Mean (successes+1)/(attempts+2) across all actively-used
+    // paths (those with ≥2 attempts). Passed from main.js once
+    // per step. null = not yet enough data (first few steps).
+    // When non-null, prevents confidenceState from decaying below
+    // what verified behavioral reliability supports.
+    aggregateTrust = null,
 
 }) {
 
@@ -488,6 +497,52 @@ export function updateBehavior({
         survivalState = true;
     } else {
         survivalState = false;
+    }
+
+    // ======================================
+    // TRUST-GROUNDED CONFIDENCE FLOOR
+    // ──────────────────────────────────────
+    // Aggregate Bayesian trust (mean verified
+    // success-rate across all actively-used
+    // paths) sets a minimum floor on
+    // confidenceState.
+    //
+    // This is the architectural fix for the
+    // confidence disconnect: episodes, schemas,
+    // and stable paths now feed confidence
+    // indirectly via pathSuccesses/pathAttempts
+    // in trustMemory, which accumulate from
+    // autonomous verified goal-reaching.
+    //
+    // WHY A FLOOR (not a replacement):
+    //   All existing dynamics are preserved —
+    //   prediction-error penalties can still
+    //   spike confidence below the floor
+    //   momentarily, but decay cannot grind
+    //   it to zero when real competence exists.
+    //
+    // TRUST_SCALE = 10:
+    //   aggregateTrust ∈ [0.5, 1.0] for paths
+    //   with evidence. × 10 maps this to [5,10]
+    //   on the [0,20] confidenceState scale.
+    //   At C=5  → uncertaintyDrive = 0.50 (not pinned)
+    //   At C=10 → uncertaintyDrive = 0.00 (fully released)
+    //   This is the range that makes getDominantDrive
+    //   capable of returning something other than
+    //   "uncertainty" for the first time.
+    //
+    // NULL GUARD:
+    //   aggregateTrust is null when no paths have
+    //   ≥2 attempts yet (early training). Guard
+    //   prevents premature floor from cold-start data.
+    // ======================================
+
+    if (aggregateTrust !== null && aggregateTrust > 0) {
+        const TRUST_SCALE = 10;
+        const trustFloor  = aggregateTrust * TRUST_SCALE;
+        if (confidenceState < trustFloor) {
+            confidenceState = trustFloor;
+        }
     }
 
     // ======================================

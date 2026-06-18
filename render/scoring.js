@@ -405,6 +405,23 @@ export function calculateDecisionScore({
                 ? Math.pow(repetitionPenalty + 1, 2.5) * 2.5
                 : 0),
 
+        // ── SCHEMA REUSE MEASUREMENT ─────────────────────────────
+        // Captures the exact schema contribution to finalWeight.
+        // Expression is identical to line 326 (schemaBonus * 15)
+        // so this field is not an approximation — it IS the schema
+        // term that entered finalWeight.
+        //
+        // schemaBonus = 0  → no schema matched this transition.
+        // schemaBonus > 0  → a formed schema covers this edge;
+        //                    schemaScore is the points it added.
+        //
+        // This field enables:
+        //   1. Per-decision measurement of schema causal influence.
+        //   2. Correct wiring of the HUD's memory bar (replaces
+        //      the stablePaths proxy currently used there).
+        //   3. Falsifiable logging: log only when > 0.
+        schemaScore: schemaBonus * 15,
+
     };
 
 

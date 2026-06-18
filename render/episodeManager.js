@@ -130,6 +130,15 @@ export const episodicStore = [];
 const MAX_STORE    = 300;   // oldest evicted when exceeded
 const MAX_REPLAYS  = 200;   // how many are eligible for replay
 
+// ── Schema rebuild trigger constants ─────────────────────────────────
+// Minimum lifetime episodes before the first forced schema rebuild.
+const SCHEMA_MIN_EPISODES    = 10;
+// After MIN_EPISODES, force a full rebuild every Nth episode stored.
+// Set to 20 (not 10) to reduce overlap with _maybeConsolidate's
+// existing every-5 trigger, which already calls rebuildSchemas on
+// an opportunistic (throttle-gated) basis.
+const SCHEMA_REBUILD_EVERY   = 20;
+
 // Active open buffer for manual training (one at a time)
 let _activeBuffer = null;
 
@@ -142,6 +151,16 @@ const _replayCooldown = new Map();
 // Consolidation counter — run consolidation every N episodes
 let _episodesSinceConsolidation = 0;
 const CONSOLIDATION_INTERVAL = 5;
+
+// ── Monotonic episode counter ─────────────────────────────────────────
+// Counts every episode ever physically stored (never decrements).
+// Used by the schema rebuild trigger instead of episodicStore.length
+// because the store is capped at MAX_STORE=300: once eviction begins,
+// episodicStore.length pins at 300 and length%N becomes permanently true,
+// causing a rebuild on every single push. The monotonic counter is
+// immune to that saturation — it always increments, so %N triggers
+// exactly once per SCHEMA_REBUILD_EVERY episodes, forever.
+let _episodesStoredTotal = 0;
 
 
 
@@ -283,12 +302,13 @@ export function recordAutonomousSuccess(recentMemory, goalId, neuronMap, meta) {
         return id != null ? Number(id) : null;
     }).filter(id => id !== null);
 
+    // ── PROBE 2 (instrumentation, read-only) ─────────────────────
     // Proves recordAutonomousSuccess was entered; shows raw path.
     console.log("[EPISODE ATTEMPT] recordAutonomousSuccess" +
         " source=autonomous_success" +
         " nodeIds=[" + nodeIds.join(",") + "]" +
         " nodeCount=" + nodeIds.length +
-        (nodeIds.length < 2 ? " → REJECT gate1:nodeIds<2" : ""))
+        (nodeIds.length < 2 ? " → REJECT gate1:nodeIds<2" : ""));
 
     if (nodeIds.length < 2) return;
 
@@ -305,6 +325,8 @@ export function recordAutonomousSuccess(recentMemory, goalId, neuronMap, meta) {
     ep.activeGoal = (goalId != null) ? Number(goalId) : null;
 
     const sealed = _sealBuffer(ep);
+
+    // ── PROBE 4 (instrumentation, read-only) ─────────────────────
     // Proves whether _sealBuffer returned a non-null episode.
     // Wraps the existing if(sealed) WITHOUT changing its predicate
     // or the _runPipeline(sealed) call — behaviour identical.
@@ -361,6 +383,7 @@ export function recordAutonomousStep(fromId, toId, neuronMap) {
 
     const sealed = _sealBuffer(ep);
 
+    // ── PROBE 8 (instrumentation, read-only) ─────────────────────
     // Proves the recordAutonomousStep path fired and whether it
     // sealed. This path uses _runPipelineMinimal (NO store) — the
     // log makes that explicit so a verifier knows explore-steps
@@ -496,6 +519,7 @@ export function getEpisodeStats() {
 
 // Wipe all episodic memory (brain-wipe handler)
 export function clearAllEpisodes() {
+    // ── CLEAR-GUARD PROBE (instrumentation, read-only) ───────────
     // Proves whether the store was wiped during the run. Should
     // NOT appear during autonomous training (only on brain-wipe
     // button or load). If it appears mid-run, that explains a
@@ -638,6 +662,7 @@ function _createBuffer(source) {
 
 function _sealBuffer(buf) {
 
+    // ── PROBE 3a (instrumentation, read-only) ────────────────────
     if (!buf || buf.nodes.length < 2) {
         console.log("[EPISODE REJECTED] gate2:rawNodes<2 len=" +
             (buf ? buf.nodes.length : "null-buf"));
@@ -701,7 +726,7 @@ function _sealBuffer(buf) {
         }
     }
 
-    // ── PROBE 3d ────────────────────
+    // ── PROBE 3d (instrumentation, read-only) ────────────────────
     if (transitions.length === 0) {
         console.log("[EPISODE REJECTED] gate7:noTransitions nodes=[" + nodes.join(",") + "]");
         return null;
@@ -749,6 +774,7 @@ function _runPipeline(episode) {
 
     if (!_sys) return;
 
+    // ── PROBE 6 (instrumentation, read-only) ─────────────────────
     // Proves execution entered the pipeline. If [EPISODE ACCEPTED]
     // appears, then this, but NOT [EPISODE STORED], a subsystem
     // (A/B/C) threw before reaching storage (case C).
@@ -1022,15 +1048,46 @@ function _storeEpisode(episode) {
 
     episodicStore.push(episode);
 
+    // ── Monotonic counter — increment before eviction check ──────
+    // Must increment here, not after shift(), so it always reflects
+    // the true lifetime count of stored episodes regardless of eviction.
+    _episodesStoredTotal++;
+
+    // ── PROBE 5 (instrumentation, read-only) ─────────────────────
     // Proves the episode physically entered episodicStore.
     console.log("[EPISODE STORED] id=" + episode.id +
         " source=" + episode.source +
-        " store.length=" + episodicStore.length);
+        " store.length=" + episodicStore.length +
+        " total=" + _episodesStoredTotal);
 
     if (episodicStore.length > MAX_STORE) {
         episodicStore.shift();
     }
 
+    // ── DETERMINISTIC SCHEMA REBUILD TRIGGER ─────────────────────
+    // Uses _episodesStoredTotal (monotonic) NOT episodicStore.length.
+    //
+    // Why monotonic: episodicStore.length saturates at MAX_STORE=300
+    // once eviction begins. 300 % 10 === 0 is permanently true, which
+    // would trigger a full motif scan on every single push — O(300×n²)
+    // per episode, a confirmed performance regression.
+    //
+    // With _episodesStoredTotal the trigger fires exactly once per
+    // SCHEMA_REBUILD_EVERY episodes regardless of store saturation.
+    //
+    // force=true bypasses the 15s throttle because we have confirmed
+    // new data — this is intentional and the correct use of force.
+    //
+    // _sys.rebuildSchemas is injected at initEpisodeManager (main.js:854).
+    if (_episodesStoredTotal >= SCHEMA_MIN_EPISODES &&
+        _episodesStoredTotal % SCHEMA_REBUILD_EVERY === 0) {
+
+        if (_sys && typeof _sys.rebuildSchemas === 'function') {
+            console.log('[SCHEMA] deterministic rebuild triggered' +
+                ' total=' + _episodesStoredTotal);
+            _sys.rebuildSchemas(episodicStore, true);   // force=true bypasses throttle
+        }
+    }
 }
 
 

@@ -132,7 +132,10 @@ export function rebuildSchemas(episodicStore, force = false) {
 
     const now = Date.now();
     if (!force && now - _lastRebuild < REBUILD_INTERVAL_MS) return;
-    _lastRebuild = now;
+    // NOTE: _lastRebuild is set AFTER the empty-store check below.
+    // Previously it was set here, which meant empty-store calls consumed
+    // the 15-second slot and reset the clock even when no motifs existed.
+    // Now only a call that reaches actual motif detection marks the throttle.
 
     // ── collect all motifs from the store ──────────────────────
     const motifs = _detectMotifsForSchema(episodicStore);
@@ -144,7 +147,20 @@ export function rebuildSchemas(episodicStore, force = false) {
     // grade the value chain as data rather than parsing console logs.
     _lastMotifs = motifs;
 
-    if (motifs.length === 0) return;
+    if (motifs.length === 0) {
+        // Do NOT update _lastRebuild — an empty store call does not
+        // consume the throttle slot. The next call will retry immediately
+        // after the interval expires, so the clock only advances when
+        // real motifs exist.
+        console.log('[SCHEMA] rebuild: store has episodes but 0 motifs — slot not consumed');
+        return;
+    }
+
+    // Mark the throttle ONLY when we have real motifs to process.
+    _lastRebuild = now;
+
+    console.log('[SCHEMA] rebuild entered: episodes=' + episodicStore.length +
+        ' motifs=' + motifs.length);
 
     // ── clear existing schemas and cache ───────────────────────
     schemas.length = 0;
