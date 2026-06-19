@@ -17,6 +17,11 @@ The project serves as both a research platform for experimenting with brain-insp
 
 ---
 
+
+## 🌐 Live Portfolio
+
+**Portfolio:** https://manish-portfolio-one-gamma.vercel.app
+
 ## 🎥 Demo
 
 📹 **Full Demo Video**
