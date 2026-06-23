@@ -1,0 +1,23 @@
+{
+  "experiment": "M1 / executive-influence",
+  "seed": 12345,
+  "trials": 400,
+  "candidatesPerDecision": 4,
+  "metrics": {
+    "Q1_influence_delta_60pct_path": 0,
+    "Q1_argmax_flip_rate_60pct": 0,
+    "Q2_capability_delta_60pct_correctShape": 8.064138,
+    "Q3_influence_delta_40pct_arbitrate": 0.486548
+  },
+  "telemetry": {
+    "runId": "exec_influence_seed12345_N400",
+    "events": 6400,
+    "folder": "E:\\mini-flywire\\experiments\\exec_influence\\telemetry\\exec_influence_seed12345_N400\\"
+  },
+  "conclusion": {
+    "sixtyPercentPathInert": true,
+    "codePathIsCapableWhenWiredCorrectly": true,
+    "fortyPercentPathLive": true,
+    "verdict": "CONFIRMED: executive controller has ZERO influence on the 60% scoring path due to a field-name mismatch ({exploit,explore} expected, {wReward,...} supplied). The 40% arbitrate path is live. Fix is an M2 concern."
+  }
+}

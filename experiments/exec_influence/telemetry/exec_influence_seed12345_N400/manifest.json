@@ -1,0 +1,19 @@
+{
+  "runId": "exec_influence_seed12345_N400",
+  "seed": 12345,
+  "codeHash": "scoring.real+executiveController.real",
+  "schemaVersion": "1.0.0",
+  "createdAt": "2026-06-23T15:52:09.935Z",
+  "config": {
+    "N": 400,
+    "CANDS": 4,
+    "paths": [
+      "60%scoring",
+      "40%arbitrate"
+    ]
+  },
+  "eventCount": 6400,
+  "perChannel": {
+    "decision": 6400
+  }
+}
