@@ -210,6 +210,70 @@ Together, these computational laws define the invariant structure governing adap
 Individual algorithms, architectures, and learning procedures may differ substantially, but every valid implementation must satisfy these invariants.
 
 
+### 2.4 Computational Activation Dynamics
+
+The computational functions described in this theory are not assumed to execute in a fixed sequential pipeline.
+
+Instead, MiniFlyWire proposes that cognition is condition-driven. Computational functions become active whenever computational conditions requiring further processing become satisfied.
+
+This formulation separates the theory of cognition from any particular implementation strategy. A system may realize these activation dynamics through symbolic production rules, event-driven software, asynchronous neural computation, probabilistic inference, or other computational mechanisms while remaining consistent with the theory.
+
+---
+
+#### External Activation
+
+External activation originates from changes in Reality that become available to the cognitive system through Perception.
+
+Examples include new sensory observations, user instructions, environmental changes, external documents, engineering specifications, simulation outputs, or interactions with external cognitive tools.
+
+External activation introduces new information into the Cognitive State.
+
+---
+
+#### Internal Activation
+
+Internal activation originates from representations already existing within the cognitive system.
+
+These activations do not require new external observations.
+
+Instead, they emerge from ongoing cognition itself.
+
+Typical sources include:
+
+- Active goals
+- Evaluation signals
+- Internal inconsistencies
+- Significant uncertainty
+- Memory replay
+- Self-generated cognitive processes
+
+These conditions initiate further inference, evaluation, learning, or planning without requiring additional environmental input.
+
+---
+
+#### Goal-Driven Activation
+
+Goals are representational objects within the Cognitive State describing desired future states.
+
+Goals may originate from two sources.
+
+External goals are introduced through interaction with Reality, such as user instructions or engineering tasks.
+
+Internal goals are generated autonomously by the cognitive system, including self-improvement, knowledge refinement, contradiction resolution, long-term optimization, and curiosity-driven exploration.
+
+When multiple goals are simultaneously active, goal management mechanisms determine computational priority according to the objectives of the system.
+
+---
+
+#### Condition-Driven Computation
+
+MiniFlyWire therefore treats cognition as condition-driven rather than pipeline-driven.
+
+Computational functions are activated because computational conditions become satisfied, not because a predetermined execution sequence exists.
+
+This permits reactive cognition, proactive cognition, autonomous self-improvement, background reasoning, memory consolidation, and future computational mechanisms to coexist within a single unified theoretical framework while remaining independent of implementation details.
+
+
 
 
 ## 3. Computational Operators
