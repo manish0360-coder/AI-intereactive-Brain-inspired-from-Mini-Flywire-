@@ -273,6 +273,8 @@ Computational functions are activated because computational conditions become sa
 
 This permits reactive cognition, proactive cognition, autonomous self-improvement, background reasoning, memory consolidation, and future computational mechanisms to coexist within a single unified theoretical framework while remaining independent of implementation details.
 
+Computational activation determines when cognition proceeds; computational mechanisms determine how cognition proceeds.
+
 
 
 
