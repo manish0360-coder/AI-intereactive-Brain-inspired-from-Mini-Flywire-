@@ -1,0 +1,29 @@
+# M7 PRE-REGISTRATION — INTEGRITY RECORD
+#
+# Artifact : research/cognitive-audit/M7_PREREGISTRATION.md
+# Version  : 1.0 (frozen)
+# Frozen   : 2026-08-19, Chief Systems Engineer, under Director authorisation
+# Algorithm: SHA-256 over the exact bytes of the file
+# Size     : 55124 bytes, 874 lines
+#
+# BASELINE THIS PRE-REGISTRATION IS BOUND TO
+#   git HEAD   : 7c8bddeae3df524f0e2dd5eff09f905540b79ed3 ("Engineering Readness Review")
+#   tree state : HEAD + uncommitted M1-M6
+#   gate state : 69/69 green, re-verified immediately before freeze
+#                M1 16/16 | parity 200000/200000 | M2+M3 14/14 | M4 12/12 | M5 9/9 | M6 18/18
+#
+# STATE AT FREEZE (all verified immediately before hashing)
+#   render/scoring.js:184  still `Math.max(0, bayesianTrust - 0.5) * 8`  -> rectification NOT implemented
+#   render/planning.js:357 still `neuron.id`                             -> D2 NOT repaired
+#   main.js:3170           still `liveRng() < 0.92`                      -> F2b NOT repaired
+#   experiments/m7/        does not exist                                -> no experiment scaffolding
+#   Stage 1 / confirmatory runs: NONE executed
+#
+# VERIFY WITH
+#   cd research/cognitive-audit && sha256sum -c M7_PREREGISTRATION.sha256
+#
+# A mismatch means the pre-registration changed after freeze. That is a PROTOCOL
+# DEVIATION and must be reported in the final report with its direction and likely
+# effect on results -- never silently reconciled.
+#
+2f12e309d7409e95f3d1bca34135110e518865fd01d96e5eeaee347b6e33f6b9  M7_PREREGISTRATION.md

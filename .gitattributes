@@ -1,0 +1,27 @@
+# ==========================================================
+# FROZEN SCIENTIFIC ARTIFACTS — BYTE IDENTITY IS THE GUARANTEE
+# ==========================================================
+# M7_PREREGISTRATION.md is frozen and its identity is defined by a SHA-256
+# over its exact bytes (see M7_PREREGISTRATION.sha256:
+# 2f12e309d7409e95f3d1bca34135110e518865fd01d96e5eeaee347b6e33f6b9,
+# 55124 bytes, 874 lines). The stored blob reproduces that digest exactly.
+#
+# WITHOUT THIS FILE the digest does not survive a checkout. On Windows with
+# core.autocrlf=true, git rewrites LF to CRLF on the way out, and the working
+# copy hashes to 953d6910a287667fee7969f4a7de909bb5051667100bafacb037837ead154771
+# instead. Anyone validating the frozen artifact against their working copy
+# would get a mismatch and correctly conclude it had been tampered with.
+#
+# `-text` disables end-of-line conversion in BOTH directions for these paths,
+# so checkout content is byte-identical to the committed blob on every
+# platform. This modifies no frozen document, threshold, seed range,
+# acceptance criterion or evidence — it only stops git from rewriting bytes
+# whose exactness is the whole integrity claim.
+#
+# The errata are covered for the same reason: each binds to the frozen digest
+# and they form a cumulative chain (ERR-09 cites ERR-01..ERR-08), so the
+# supersession record must be reproducible with the same fidelity.
+
+research/cognitive-audit/M7_PREREGISTRATION.md          -text
+research/cognitive-audit/M7_PREREGISTRATION.sha256      -text
+research/cognitive-audit/M7_PREREGISTRATION_ERRATUM_*.md -text
