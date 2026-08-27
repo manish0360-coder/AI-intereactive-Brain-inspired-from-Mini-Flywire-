@@ -1,3 +1,9 @@
+// ── Q3 (Phase 1.0): seeded RNG routing ───────────────────────────
+// Live randomness draws through liveRng() so a run is reproducible
+// under an explicit seed. With no seed set liveRng() returns exactly
+// Math.random(), so unseeded behaviour is byte-for-byte unchanged.
+import { liveRng } from "../instrumentation/rng.js";
+
 // ======================================
 // DECISION SCORING SYSTEM
 // ======================================
@@ -164,7 +170,7 @@ export function calculateDecisionScore({
     // ======================================
 
     const drift =
-        (Math.random() - 0.5) *
+        (liveRng() - 0.5) *
         curiosityState *
         0.06;
 
