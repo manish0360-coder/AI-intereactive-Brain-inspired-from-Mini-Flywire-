@@ -32,6 +32,19 @@ const streams = new Map();
 export function initRng(seed) {
     streams.set("cognitive", makeRng(seed));
     streams.set("visual", makeRng((seed ^ 0x9e3779b9) >>> 0));
+
+    // ── M7 environment stream (Director ruling R1, 2026-08-20) ────────
+    // Frozen M7_PREREGISTRATION.md §3.7 requires environment draws to come
+    // from liveRng("environment"); §5.1 pins its seed as agentSeed XOR 0x5EED.
+    // Without registration liveRng() falls through to Math.random(), so
+    // environment draws would be silently irreproducible and the paired
+    // design would break invisibly.
+    //
+    // ADDITIVE ONLY: the "cognitive" and "visual" generators above are
+    // constructed from identical seeds by identical code, so their draw
+    // sequences are unchanged. Registration order does not affect draws.
+    streams.set("environment", makeRng((seed ^ 0x5EED) >>> 0));
+
     return seed >>> 0;
 }
 
@@ -45,3 +58,35 @@ export function rng(stream = "cognitive") {
 // (e.g. scoring.calculateDecisionScore({ rng: cognitiveRng })).
 export const cognitiveRng = () => rng("cognitive");
 export const visualRng = () => rng("visual");
+
+// ======================================
+// LIVE-PATH ACCESSOR  (Phase 1.0 / Q3)
+// --------------------------------------
+// The application (main.js, render/*) draws through this instead of
+// Math.random(). It exists because rng() deliberately THROWS when a
+// stream is uninitialised - correct for the offline harness, fatal
+// for the browser, where nobody calls initRng().
+//
+// CONTRACT - the whole point of Q3:
+//   no seed set  ->  returns exactly Math.random()  (legacy behaviour,
+//                    byte-for-byte; the app is unchanged unless seeded)
+//   seed set     ->  returns the named deterministic stream
+//
+// rng() keeps its throwing contract untouched, so the existing
+// exec_influence harness and its acceptance tests are unaffected.
+//
+// STREAM CHOICE. "cognitive" for anything that can influence a
+// decision, a memory write, or the agent trajectory. "visual" for
+// render-only draws, so a variable number of frame draws can never
+// desync the cognitive sequence - the separation rng.js was built
+// around in the first place.
+// ======================================
+
+export function isSeeded() {
+    return streams.size > 0;
+}
+
+export function liveRng(stream = "cognitive") {
+    const s = streams.get(stream);
+    return s ? s() : Math.random();
+}

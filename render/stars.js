@@ -1,3 +1,9 @@
+// ── Q3 (Phase 1.0): seeded RNG routing ───────────────────────────
+// Live randomness draws through liveRng() so a run is reproducible
+// under an explicit seed. With no seed set liveRng() returns exactly
+// Math.random(), so unseeded behaviour is byte-for-byte unchanged.
+import { liveRng } from "../instrumentation/rng.js";
+
 // ======================================
 // STAR SYSTEM
 // ======================================
@@ -40,9 +46,9 @@ export function createStars() {
 
         starPositions.push(
 
-            (Math.random() - 0.5) * 50,
-            (Math.random() - 0.5) * 50,
-            (Math.random() - 0.5) * 50
+            (liveRng("visual") - 0.5) * 50,
+            (liveRng("visual") - 0.5) * 50,
+            (liveRng("visual") - 0.5) * 50
 
         );
 

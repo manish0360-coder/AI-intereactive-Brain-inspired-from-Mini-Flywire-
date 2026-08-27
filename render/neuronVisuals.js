@@ -1,3 +1,9 @@
+// ── Q3 (Phase 1.0): seeded RNG routing ───────────────────────────
+// Live randomness draws through liveRng() so a run is reproducible
+// under an explicit seed. With no seed set liveRng() returns exactly
+// Math.random(), so unseeded behaviour is byte-for-byte unchanged.
+import { liveRng } from "../instrumentation/rng.js";
+
 // ======================================
 // 🧠 FUTURISTIC NEURON VISUAL SYSTEM
 // ======================================
@@ -196,7 +202,7 @@ export function createFuturisticNeuron(n, group) {
         baseRingOpacity: 0.4,
     });
 
-    pulsePhases.set(n.id, Math.random() * Math.PI * 2);
+    pulsePhases.set(n.id, liveRng("visual") * Math.PI * 2);
 
     return coreMesh;
 }
