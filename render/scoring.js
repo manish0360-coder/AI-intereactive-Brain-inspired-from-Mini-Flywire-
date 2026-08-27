@@ -10,6 +10,44 @@ import { liveRng } from "../instrumentation/rng.js";
 // calculates how intelligent each choice is
 // higher score = brain prefers this path
 // ======================================
+//
+// ── D3 REPAIR — Phase 1.0, 2026-08-18 ──────────────────────────────
+// The finalWeight expression was a single 90-line chained +/- sum.
+// The alternation drifted after `localFear * 2.2 -`, inverting five
+// terms. Measured pre-repair (Phase 0 Probe C / research/cognitive-audit):
+//
+//   boredomPenalty   d(score)/dx = +2.000   (a penalty that rewarded)
+//   dangerPenalty                 = +2.000   (a penalty that rewarded)
+//   stressState                   = +0.575
+//   curiosityState                = -0.800
+//   driveRewardBoost (hunger)     = -1.992   (an "amplifier" that suppressed)
+//
+// Intent was established from evidence internal to this file, not from
+// desired behaviour:
+//   * lastArbitrationBreakdown.costScore (below) classifies stressState
+//     and boredomPenalty as COSTS, while finalWeight was adding them.
+//   * lastArbitrationBreakdown.curiosityScore treats curiosityState as
+//     a POSITIVE contribution, while finalWeight was subtracting it.
+//   * driveRewardBoost is documented as "amplify reward-seeking" and its
+//     sibling driveCuriosityBoost was added.
+//   * dangerPenalty derives from the same `penalties` map used as a hard
+//     candidate-rejection gate; it cannot coherently also promote.
+//
+// NO COEFFICIENT WAS CHANGED. Only five signs.
+//
+// The expression is now an explicit signed term array. Each term carries
+// its own sign locally, so this defect cannot recur through operator
+// drift. The array form was proven arithmetic-identical to the previous
+// expression over 200,000 random contexts BEFORE the five signs were
+// flipped (parity harness: research/cognitive-audit/probes/).
+//
+// NOTE — multi-path variables. stressState, fatigueState, reward, qValue,
+// transitionBoost, habitBoost and confidenceState also reach finalWeight
+// indirectly through `dynamicFocus`, and curiosityState additionally
+// through `drift`. Those indirect paths are legitimate and were NOT
+// touched. Consequently the post-repair derivative of stressState is
+// -0.225 (= -0.400 direct + 0.175 via dynamicFocus), not -0.575.
+// ──────────────────────────────────────────────────────────────────
 
 
 // ======================================
@@ -282,96 +320,71 @@ export function calculateDecisionScore({
     // FINAL BRAIN INTELLIGENCE SCORE
     // ======================================
 
-    const finalWeight =
+    // ======================================
+    // FINAL BRAIN INTELLIGENCE SCORE
+    // ── explicit signed term array ─────────
+    // Every term carries its own sign. No
+    // chained +/- alternation. Arithmetic is
+    // identical to the previous expression;
+    // this form exists so a sign is locally
+    // visible and cannot drift again.
+    // ======================================
 
+    const TERMS = [
         // ── PROCEDURAL (Q + transitions) ───
-        // Scaled by executive exploit weight
-        transitionBoost * 3 * exploitW +
-        qValue * 5 * exploitW +
-        (Math.tanh(reward * 0.1) * 8) +
-        habitBoost * 2 * exploitW +
-
+        ['transitionBoost',         transitionBoost * 3 * exploitW],
+        ['qValue',                  qValue * 5 * exploitW],
+        ['reward',                  Math.tanh(reward * 0.1) * 8],
+        ['habitBoost',              habitBoost * 2 * exploitW],
         // ── NOVELTY / EXPLORATION ───────────
-        curiosityBoost * 2 * exploreW +
-
+        ['curiosityBoost',          curiosityBoost * 2 * exploreW],
         // ── CHAIN / EPISODE MEMORY ──────────
-        chainReward * 4 +
-
+        ['chainReward',             chainReward * 4],
         // ── SEMANTIC ───────────────────────
-        // uncertainty-damped so confusing
-        // situations don't over-rely on meaning
-        meaningBoost * semanticWeight * uncertaintySemanticDamp +
-
-        // ── SEMANTIC VITALITY ───────────────
-        // experience-based signal, more reliable
-        // than raw embedding similarity
-        semanticVitalityScore * 1.2 * uncertaintySemanticDamp +
-
-        // ── NOISE SUPPRESSION ───────────────
-        // positive for stable edges, negative
-        // for noise — directly improves signal
-        noiseSuppressedScore * 1.0 +
-
-        // ── CONSOLIDATION ───────────────────
-        // edges in long-term stable memory
-        consolidationBonus * 2.0 +
-
-        // ── ATTENTION AMPLIFICATION ─────────
-        // already computed relative to focus;
-        // small weight so it nudges not dominates
-        attentionAmplifiedScore * 0.4 +
-
+        ['meaningBoost',            meaningBoost * semanticWeight * uncertaintySemanticDamp],
+        ['semanticVitalityScore',   semanticVitalityScore * 1.2 * uncertaintySemanticDamp],
+        ['noiseSuppressedScore',    noiseSuppressedScore * 1.0],
+        ['consolidationBonus',      consolidationBonus * 2.0],
+        ['attentionAmplifiedScore', attentionAmplifiedScore * 0.4],
         // ── FUTURE ─────────────────────────
-        futureBonus * 1.2 +
-
+        ['futureBonus',             futureBonus * 1.2],
         // ── GOAL GRADIENT ──────────────────
-        goalGradientBoost * 2.0 +
-        driveGoalBoost +
-
-        // ── SCHEMA ─────────────────────────
-        schemaBonus * 15 +
-
-        // ── TRAJECTORY INTEGRITY ───────────
-        // Path-context coherence with known
-        // episodes. Scaled at ×40 to dominate
-        // semantic similarity (×1.2) and ensure
-        // episode-consistent paths win over
-        // shortcuts. Fix 4.
-        trajectoryIntegrity * 40 +
-
+        ['goalGradientBoost',       goalGradientBoost * 2.0],
+        ['driveGoalBoost',          driveGoalBoost],
+        // ── SCHEMA / TRAJECTORY ─────────────
+        ['schemaBonus',             schemaBonus * 15],
+        ['trajectoryIntegrity',     trajectoryIntegrity * 40],
         // ── TRUST ──────────────────────────
-        trustBonus * 1.5 +
-
+        ['trustBonus',              trustBonus * 1.5],
         // ── LOCAL PATH EMOTIONS ─────────────
-        localConfidence * 1.5 +
-        localTrust      * 1.2 -
-        localStress     * 1.4 -
-        localFatigue    * 1.1 -
-        localFear       * 2.2 -
-
+        ['localConfidence',         localConfidence * 1.5],
+        ['localTrust',              localTrust * 1.2],
+        ['localStress',            -localStress * 1.4],
+        ['localFatigue',           -localFatigue * 1.1],
+        ['localFear',              -localFear * 2.2],
         // ── MOTIVATIONAL DRIVE ──────────────
-        driveRewardBoost +
-        driveCuriosityBoost +
-
+        ['driveRewardBoost',        driveRewardBoost],                    // D3 FIX: was subtracted
+        ['driveCuriosityBoost',     driveCuriosityBoost],
         // ── PENALTIES ──────────────────────
-        boredomPenalty * 2 -
-        (repetitionPenalty > 0
-            ? Math.pow(repetitionPenalty + 1, 2.5) * 2.5
-            : 0) -
-
+        ['boredomPenalty',         -boredomPenalty * 2],                  // D3 FIX: was added
+        ['repetitionPenalty',      -(repetitionPenalty > 0
+                                        ? Math.pow(repetitionPenalty + 1, 2.5) * 2.5
+                                        : 0)],
         // ── BEHAVIOR STATE ──────────────────
-        curiosityState * 0.8 +
-        Math.min(confidenceState, 20) * 0.5 +
-        stressState  * 0.4 -
-        fatigueState * 0.35 -
-        Math.max(0, fatigueState - 140) * 0.5 -
+        ['curiosityState',          curiosityState * 0.8],                // D3 FIX: was subtracted
+        ['confidenceState',         Math.min(confidenceState, 20) * 0.5],
+        ['stressState',            -stressState * 0.4],                   // D3 FIX: was added
+        ['fatigueState',           -fatigueState * 0.35],
+        ['fatigueOverload',        -Math.max(0, fatigueState - 140) * 0.5],
+        ['dynamicFocus',           -dynamicFocus * 0.25],
+        ['dangerPenalty',          -dangerPenalty * 2],                   // D3 FIX: was added
+        ['selfLoopPenalty',        -selfLoopPenalty],
+        ['repetitionFatigue',      -repetitionFatigue],
+        ['drift',                  -drift],
+    ];
 
-        dynamicFocus * 0.25 +
-
-        dangerPenalty   * 2 -
-        selfLoopPenalty -
-        repetitionFatigue -
-        drift;
+    let finalWeight = 0;
+    for (let i = 0; i < TERMS.length; i++) finalWeight += TERMS[i][1];
 
 
     // ======================================
