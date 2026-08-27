@@ -181,7 +181,7 @@ export function calculateDecisionScore({
     // ======================================
 
     const trustBonus =
-        Math.max(0, bayesianTrust - 0.5) * 8;
+        (bayesianTrust - 0.5) * 8;
 
 
     // ======================================
