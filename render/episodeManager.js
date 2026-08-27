@@ -475,10 +475,43 @@ export function replayOneEpisode() {
 
     const replayKey = original.labels.join("->");
 
-    // cooldown: same episode can't replay more than once per 4s
-    const lastReplay = _replayCooldown.get(replayKey) || 0;
-    if (Date.now() - lastReplay < 4000) return;
-    _replayCooldown.set(replayKey, Date.now());
+    // ---- REPLAY COOLDOWN ---------------------------------------------
+    // Director ruling 2026-08-26 (M7 3000-TICK DETERMINISM), BRANCH B.
+    //
+    // The wall-clock form below was PROVEN to be the sole causal source of
+    // non-reproducible 3000-tick M7 runs: whether a repeat attempt cleared the
+    // 4000 ms window depended on machine load, so identical seeds produced
+    // different trajectories. Measured before the repair: 7 distinct
+    // fingerprints from 8 identical concurrent runs.
+    //
+    // BRANCH B semantics, authorised as the MINIMUM proven intervention:
+    //     within one run, the FIRST replay attempt for a given replayKey is
+    //     allowed; every subsequent attempt for that key is blocked.
+    // No wall clock. No tick threshold. No virtual-clock rate. No epoch.
+    // No numerical parameter of any kind is introduced.
+    //
+    // This is exactly the deterministic component the wall-clock form already
+    // had: the first attempt always cleared, because `lastReplay` defaults to
+    // the sentinel 0 and `Date.now() - 0` is ~1.7e12. Measured across 16 runs,
+    // allowedWithLastZero === distinctReplayKeys in every one. Branch B removes
+    // ONLY the 0-5 load-dependent repeat allowances per run and nothing else.
+    //
+    // GUARDED, default-off: with no experiment attached this is one falsy
+    // global read and the pre-existing wall-clock behaviour is untouched, so
+    // every non-M7 caller is bit-identical to before.
+    //
+    // The episode was already selected at the liveRng() draw ABOVE, so neither
+    // branch here consumes RNG or changes replay selection.
+    if (globalThis.__M7_REPLAY_ONCE__) {
+        if (_replayCooldown.has(replayKey)) return;
+        _replayCooldown.set(replayKey, 0);   // presence IS the state; no clock read
+    } else {
+        // pre-existing behaviour, byte-for-byte unchanged
+        // cooldown: same episode can't replay more than once per 4s
+        const lastReplay = _replayCooldown.get(replayKey) || 0;
+        if (Date.now() - lastReplay < 4000) return;
+        _replayCooldown.set(replayKey, Date.now());
+    }
 
     // build replay episode (shallow copy with new source)
     const ep = _createBuffer("replay");

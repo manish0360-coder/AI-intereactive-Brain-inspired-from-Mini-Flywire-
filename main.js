@@ -1016,8 +1016,37 @@ const timeMemory = new Map();
 // Target goal (brain wants to reach this)
 let goalNeuronId = null;
 
+// ---- FROZEN §3.7 EPISODE CAP ---------------------------------------------
+// Frozen §3.7: "Episode end | goal reached (existing reset) **or** 150 ticks
+// elapsed". 150 is an already-frozen requirement, not a new parameter
+// (confirmed by ERRATUM M7-ERR-03: "EPISODE_CAP = 150 is already pinned by
+// frozen §3.7 ... introduces no new constant").
+//
+// One tick = one runAgent() call (Director ruling 2026-08-23, deduced from
+// frozen §3.3: a slip leaves the agent at u and consumes "one tick", and a slip
+// occurs inside exactly one runAgent() call). Stale/replay ticks COUNT: frozen
+// §9.2 excludes staleExecution only from links 3 and 4 ("and only from those")
+// and §9.5 forbids new exclusions.
+const M7_EPISODE_TICK_CAP = 150;
+let _m7EpisodeTicks = 0;
+
 
 loadBrain(); // restores saved memory when page starts
+
+// ---- GOAL TRANSPORT (frozen §3.7) ------------------------------------------
+// Frozen §3.7 fixes the goal as GOALS[configIndex mod 4]. The experiment
+// harness supplies that ALREADY-FROZEN value here.
+//
+// This creates NO goal mechanism. `goalNeuronId` above, and all 54 readers of
+// it, predate M7 (committed at HEAD 7c8bdde). This initialises the EXISTING
+// state and does nothing else: no second goal, no duplicate state, no schedule,
+// no inference. The value is neither derived nor defaulted here.
+//
+// Placed after loadBrain() so the experiment configuration is authoritative.
+// Runs at module top level, so it completes before the agent loop can start.
+// GUARDED: with nothing supplied this is a single falsy global read, so the
+// app is bit-identical when no experiment is attached. Consumes no RNG.
+if (globalThis.__M7_GOAL__ != null) goalNeuronId = Number(globalThis.__M7_GOAL__);
 
 // Rebuild adjacency memory immediately from restored episodes.
 // Without this, rebuildAdjacencyMemory() only runs in the periodic
@@ -1509,7 +1538,7 @@ function runPrediction(startKey) {
     // Q < -0.5 means this path has been
     // repeatedly bad — don't consider it
     // ======================================
-    const candidateQ = getQ(currentKey, k);
+    const candidateQ = getQ(makeStateKey(currentKey, goalNeuronId), k);   // D1
     if (candidateQ < -0.5) {
       return;
     }
@@ -1698,7 +1727,7 @@ function runPrediction(startKey) {
       motivationalBoredom * 2.0;
 
   // 🧠 get learned Q value (real intelligence)
-  const qValue = getQ(currentKey, k);
+  const qValue = getQ(makeStateKey(currentKey, goalNeuronId), k);   // D1
 
   // ======================================
   // 🧠 HUMAN TRAINED TRANSITION POWER
@@ -2062,7 +2091,17 @@ function runPrediction(startKey) {
       // Formula: (successes+1)/(attempts+2)
       // ======================================
 
-      bayesianTrust: getPathTrust(currentKey + "->" + k),
+      // ── M7 E3 (frozen §18.3): arm switch on the bayesianTrust read ──
+      // Arms A2/A5 deliver 0.5, A6 delivers trust(sigma(e)), A7 delivers p_e;
+      // A1/A3/A4 pass the raw value through (experiments/m7/arms.js).
+      // GUARDED: with no harness attached this is exactly the original
+      // expression, so the browser app and every pre-M7 build are unchanged.
+      // The hook is a global rather than a static import because the harness
+      // modules are Node-only (node:fs) and main.js also runs in the browser.
+      bayesianTrust: (globalThis.__M7_ARMS__
+          ? globalThis.__M7_ARMS__.bayesianTrustFor(
+                currentKey, k, getPathTrust(currentKey + "->" + k))
+          : getPathTrust(currentKey + "->" + k)),
 
       // ======================================
       // 🧠 GOAL GRADIENT
@@ -2231,13 +2270,26 @@ const epsilon = Math.max(
 );
 
 
+// ── F2 REPAIR (Phase 1.0) ────────────────────────────────────────
+// WAS: this block picked a random candidate, assigned it to the LOCAL
+// currentKey, and `return`ed out of runPrediction entirely. Because
+// window.lastReasoning is only written further down, it was never
+// updated — so runAgent went on to read the PREVIOUS step's decision
+// and execute that move again. The random choice was discarded.
+// Measured on the real loop, seed 20260818: 67 of 381 steps (17.6%)
+// executed an action that had not been selected in that step.
+//
+// NOW: the draw is recorded as intent and the function continues. The
+// selection point, the pool it selects from, the uniform distribution
+// and the RNG draw order/count are all exactly as before — the only
+// change is that the chosen action is USED instead of thrown away.
+let exploreChoice = null;
+
 if (liveRng() < epsilon && choices.length > 0) {
-  
-  const randomChoice =
+
+  exploreChoice =
   choices[Math.floor(liveRng() * choices.length)];
-  
-  currentKey = randomChoice.key;  // jump randomly
-  return; // stop here (skip greedy choice)
+
 }
 
 const sorted = choices.sort((a, b) => b.weight - a.weight);
@@ -2278,9 +2330,14 @@ if (bestChoice) {
 
 // save decision info for later explanation
 lastDecision = {
-  current: currentKey,         // where agent is now
-  best: bestChoice,            // chosen path
-  all: sorted.slice(0, 3)      // top 3 options (for comparison)
+  current: currentKey,                         // where agent is now
+  // F2: on an exploratory step the executed action IS the explore
+  // choice, so that is what must be reported as chosen. Otherwise
+  // updateBehavior and the reasoning box would be fed the greedy
+  // candidate while a different action was performed — the same
+  // "selected != executed" mismatch this repair removes.
+  best: exploreChoice || bestChoice,
+  all: sorted.slice(0, 3)                      // top 3 options (for comparison)
 };
 
 
@@ -2457,20 +2514,29 @@ topChoices.forEach(choice => {
 //________________________________________________________________________________
 
 // Move forward
-let nextKey = topChoices[0].key;
+// F2: an exploratory step executes the candidate that was drawn.
+let nextKey = exploreChoice ? exploreChoice.key : topChoices[0].key;
 
-// prevent immediate repeat
-if (nextKey === currentKey && topChoices.length > 1) {
-  nextKey = topChoices[1].key;
-}
+// The two anti-repeat swaps below exist to stop the GREEDY path from
+// re-picking the same node. They are skipped when exploring: their
+// replacement (topChoices[1]) is a greedy candidate, so applying them
+// to an exploratory choice would discard the explored action and
+// re-create the selected-but-not-executed mismatch.
+if (!exploreChoice) {
 
-// prevent A -> B -> A loops
-if (thoughtTrail.length >= 2) {
-  
-  const prev = thoughtTrail[thoughtTrail.length - 2];
-  
-  if (nextKey === prev && topChoices.length > 1) {
+  // prevent immediate repeat
+  if (nextKey === currentKey && topChoices.length > 1) {
     nextKey = topChoices[1].key;
+  }
+
+  // prevent A -> B -> A loops
+  if (thoughtTrail.length >= 2) {
+
+    const prev = thoughtTrail[thoughtTrail.length - 2];
+
+    if (nextKey === prev && topChoices.length > 1) {
+      nextKey = topChoices[1].key;
+    }
   }
 }
 
@@ -2529,7 +2595,7 @@ if (step === 0) {
           fatigueState,
           focusState: Math.max(0, confidenceState) *
                       Math.exp(-stressState / 30),
-          qValue:       getQ(currentKey, nextKey),
+          qValue:       getQ(makeStateKey(currentKey, goalNeuronId), nextKey),   // D1
           futureBonus:  liveFutureBonus,
           finalWeight:  bestChoice ? bestChoice.weight : 0,
           currentThought:
@@ -2546,7 +2612,7 @@ if (step === 0) {
       // ── Thinking Stream update ──────────────────────────────────
       const _tsCluster  = decidedNeuron.userData?.cluster || 'memory';
       const _tsExplore  = curiosityState > 0.25;
-      const _tsQ        = getQ(currentKey, nextKey);
+      const _tsQ        = getQ(makeStateKey(currentKey, goalNeuronId), nextKey);   // D1
       const _tsIntention = goalNeuronId
           ? 'moving toward goal'
           : stressState > 10
@@ -2986,6 +3052,55 @@ export const _diagCounters = {
 // ================== 🤖 AGENT THINK LOOP ==================
 
 function runAgent() {
+  // ---- E6 STEP SITE (frozen §18.3, §9.1) --------------------------------
+  // Telemetry only. Marks the boundary of one agent step so the harness can
+  // attribute `replayBranch` and `staleExecution` to the correct step.
+  // GUARDED: with no harness attached this is a single falsy global read and
+  // nothing else happens, so the app is bit-identical when M7 is off.
+  if (globalThis.__M7_TEL__) globalThis.__M7_TEL__.step();
+
+  // ---- FROZEN §3.7 EPISODE CAP: enforce, then count this tick -------------
+  // Checked at the TOP so the boundary is immune to any early return later in
+  // this function, and so a cap restart happens BEFORE this tick's decision --
+  // which is what prevents a fabricated transition between the pre-cap node
+  // and the new random start node.
+  //
+  // Goal reach retains precedence: the goal path zeroes this counter when it
+  // seals, so the cap can never fire for an episode the goal already ended.
+  //
+  // GUARDED: with no experiment attached this is one falsy global read, so the
+  // app is bit-identical when M7 is off. Counting and comparing draw no RNG.
+  if (globalThis.__M7_EPISODE_CAP__) {
+      if (_m7EpisodeTicks >= M7_EPISODE_TICK_CAP) {
+          // --- minimal lawful episode boundary (Director ruling 2026-08-23) ---
+          sealCurrentEpisode("tick_cap");
+
+          // clear the rolling path window: main.js consumes it as CONSECUTIVE
+          // PAIRS (see the `from = recentMemory[i]; to = recentMemory[i+1]`
+          // loop), so carrying it across a restart would fabricate an edge.
+          recentMemory.length = 0;
+          window.recentMemory = [];
+
+          // a pending single expectation is position-dependent; evaluating it
+          // after a restart would score a transition that never happened.
+          resetExpectation();
+
+          // NOT called on this path, per Director ruling:
+          //   resetAttentionFocus()   -- no frozen requirement, no invariant
+          //   rewardCurrentEpisode()  -- the cap is not goal attainment
+          //   boostActivation(goal)   -- would assert an unattained goal
+
+          // existing random-start mechanism, existing cognitive stream
+          const _capIds = Array.from(neuronMap.keys())
+              .filter(id => Number(id) !== Number(goalNeuronId));
+          agentCurrent = _capIds[Math.floor(liveRng() * _capIds.length)];
+          agentLast    = agentCurrent;
+
+          _m7EpisodeTicks = 0;
+      }
+      _m7EpisodeTicks++;
+  }
+
   // ===============================
   // RECENT MEMORY
   // prevents endless loops
@@ -3153,6 +3268,13 @@ function runAgent() {
   // ===============================
 
   else {
+      // ---- E6 DECISION SITE (frozen §18.3, §9.1) ------------------------
+      // frozen §9.1: `replayBranch` = "the tick took the liveRng() < 0.92
+      // ELSE-branch (replayOneEpisode)". This is that else-branch, so the flag
+      // is recorded here and nowhere else. Telemetry only; guarded; no
+      // behavioural effect and no draw consumed.
+      if (globalThis.__M7_TEL__) globalThis.__M7_TEL__.replayBranch();
+
       // replay via unified episode manager
       // reads from the single episodicStore shared by
       // manual, autonomous, and exploration episodes
@@ -3224,7 +3346,13 @@ function runAgent() {
           repeated:       chosenVisits > 5 || pairRepeats >= 2,
           pathLength:     1,
           isHome:         chosenKey === window.homeNeuronId,
-          aggregateTrust: _aggregateTrust,   // ← trust-grounded confidence floor
+          // ── M7 E4 (frozen §18.3): arm switch on the aggregate route ──
+          // Frozen §4.1: A2 must sever BOTH trust routes, so it delivers null
+          // here. A5 keeps it live — that contrast is the whole point of the
+          // AGGREGATE-ONLY arm. GUARDED: inert with no harness attached.
+          aggregateTrust: (globalThis.__M7_ARMS__
+              ? globalThis.__M7_ARMS__.aggregateTrustFor(_aggregateTrust)
+              : _aggregateTrust),   // ← trust-grounded confidence floor
       });
   }
   
@@ -3564,7 +3692,7 @@ nextNeuron.userData.label,
 );
 
 // get learned Q value
-const qVal = getQ(currentNeuron.userData.id, nextNeuron.userData.id);
+const qVal = getQ(makeStateKey(currentNeuron.userData.id, goalNeuronId), nextNeuron.userData.id);   // D1
 
 // print Q value
 console.log("🧠 Q-value:", qVal.toFixed(2));
@@ -3815,7 +3943,15 @@ if (predError) {
     // learning update. Brain was wrong about what
     // would happen, so it trusts this memory less.
     // Prevents Q-table corruption from surprises.
-    const effectiveLR = 0.1 * predError.learningAuthority;
+    // ── M7 E5 (frozen §18.3 / §10.2): pin learningAuthority ≡ 1.0 ──
+    // Slips raise compositeError, which lowers learningAuthority and so makes
+    // the Q learning rate implicitly reliability-sensitive. Frozen §10.2:
+    // "In every confirmatory arm: learningAuthority is pinned to exactly 1.0".
+    // The pin is applied HERE, at the consumption site, so render/ is untouched
+    // (frozen §18.4). GUARDED: inert with no harness attached.
+    const effectiveLR = 0.1 * (globalThis.__M7_PE__
+        ? globalThis.__M7_PE__.learningAuthorityFor(predError.learningAuthority)
+        : predError.learningAuthority);
 
     // ── Q-LEARNING UPDATE (AUTHORITY-SCALED) ──
     // STEP 3: state and nextState are now composite ⟨position, goal⟩ keys.
@@ -3865,10 +4001,18 @@ if (predError) {
     //
     // Only fires when error > 0.20 to avoid
     // damping during genuinely accurate predictions.
-    if (predError.compositeError > 0.20) {
+    // ── M7 E5 (frozen §18.3 / §10.2): disable dampQ ──────────────
+    // The second implicitly reliability-sensitive pathway: slips raise
+    // compositeError past 0.20 and erode Q. Frozen §10.2 disables it in every
+    // confirmatory arm. GUARDED: with no harness attached the condition is
+    // exactly the original `compositeError > 0.20`, so behaviour is unchanged.
+    if (predError.compositeError > 0.20 &&
+        (globalThis.__M7_PE__ ? globalThis.__M7_PE__.dampQAllowed() : true)) {
 
+        // D1: dampQ targeted the BARE key, so the online loop only
+        // ever eroded the teaching-derived Q values it could not add to.
         dampQ(
-            agentLast,
+            makeStateKey(agentLast, goalNeuronId),
             next,
             predError.compositeError * 0.028
         );
@@ -4063,7 +4207,7 @@ if (predError) {
         agentLast + "->" + next;
 
     const predictedQ =
-        getQ(agentLast, next);
+        getQ(makeStateKey(agentLast, goalNeuronId), next);   // D1
 
     updateUncertainty(
         stepPathKey,
@@ -4116,7 +4260,13 @@ if (predError) {
 // trust = successes / attempts (Bayesian)
 // ======================================
 
-if (agentLast !== null && next !== null && agentLast !== next) {
+// ── M7 E2 (frozen §6.1): legacy attempt credit is bypassed when M7 is on ──
+// Under M7 credit is keyed by TRAVERSAL OUTCOME at the movement decision
+// (see the E1/E2 block further down), so this site must not also fire.
+// When M7 is off this runs exactly as before — including its known temporal
+// misalignment, which is deliberately preserved for G1 parity (ERR-05 §4).
+if (!globalThis.__M7_CREDIT__ &&
+    agentLast !== null && next !== null && agentLast !== next) {
 
     const attemptKey = agentLast + "->" + next;
 
@@ -4312,7 +4462,12 @@ if (current === goalNeuronId) {
     // getPathTrust(pathKey) now returns
     // real earned certainty [0→1].
     // ======================================
-    recordSuccess(pathKey);
+    // ── M7 E2 (frozen §6.1): episode-level success credit is bypassed
+    // when M7 is on. Frozen §6.1 replaces "every edge of a goal-reaching
+    // path" with "recordSuccess(u->v) iff THAT attempt succeeded", which is
+    // credited at the movement decision. confidenceMap above is untouched:
+    // §6.1 re-keys trust credit only.
+    if (!globalThis.__M7_CREDIT__) recordSuccess(pathKey);
   }
 }
 
@@ -4458,6 +4613,8 @@ if (goalNeuronId && current === goalNeuronId) {
 
     // seal episode into vault
     sealCurrentEpisode("goal_reached");
+    _m7EpisodeTicks = 0;      // frozen §3.7: goal termination ends the episode,
+                              // so the cap can never also fire for it
     rewardCurrentEpisode(10);
 
     // reset attention for next episode
@@ -4629,7 +4786,43 @@ const _goalResetJustHappened =
     goalNeuronId !== null &&
     Number(next) === Number(goalNeuronId);
 
-if (next !== null && !_goalResetJustHappened) {
+// ── M7 E1 + E2 (frozen §18.3, §3.3, §6.1; scope per ERRATUM M7-ERR-05) ──
+// env.attempt(u,v) decides whether the traversal u->v actually occurs.
+// On a slip the agent REMAINS at u and only the tick is consumed: no
+// semantic activation, no travel animation, no thoughtTrail advance, no
+// arrival-dependent fatigue. The gate covers exactly the coherent traversal
+// block below and nothing outside it.
+//
+// EXACTLY ONE environment draw per movement decision, taken here.
+//
+// E2: traversal provenance is established HERE, at the decision, from the
+// real edge being attempted -- never reconstructed later from mutable state.
+// `agentLast` was assigned `agentCurrent` immediately above, so it IS the
+// position the agent is moving from. (The legacy recordAttempt site further
+// up uses a temporally stale `agentLast`; that defect is preserved when M7
+// is off and bypassed when M7 is on -- ERR-05 §4.)
+//
+// GUARDED: with no harness attached `_m7Traversed` is true unconditionally,
+// so the block runs exactly as before.
+const _m7env = globalThis.__M7_ENV__;
+const _m7From = agentLast;
+const _m7To   = next;
+const _m7Traversed =
+    (next !== null && !_goalResetJustHappened && _m7env)
+        ? _m7env.attempt(_m7From, _m7To)
+        : true;
+
+// E2 is a SEPARATE switch from E1 (ERRATUM M7-ERR-06 §2.3). __M7_ENV__
+// controls the environment transition mechanism; __M7_CREDIT__ controls
+// traversal-outcome credit. They are independently switchable so G3 can
+// evaluate E1 alone at p_e = 1.0 without E2 confounding the comparison.
+const _m7cred = globalThis.__M7_CREDIT__;
+if (next !== null && !_goalResetJustHappened && _m7cred) {
+    // E2: credit the ACTUAL attempted edge, with the realised outcome.
+    _m7cred.recordTraversal(_m7From, _m7To, _m7Traversed);
+}
+
+if (next !== null && !_goalResetJustHappened && _m7Traversed) {
   agentCurrent = next;
   // 👉 agent moves to next neuron
 
@@ -5013,7 +5206,10 @@ window.addEventListener('click', (event) => {
         goalNeuronId !== null &&
         Number(clickedId) === Number(goalNeuronId);
 
-    recordManualClick(clickedId, obj.userData.label, isGoalClick);
+    // D1: goalNeuronId must be passed. Without it every manually
+    // taught episode was sealed with activeGoal = null and its Q
+    // written under "pos#0" while the agent read "pos#<goal>".
+    recordManualClick(clickedId, obj.userData.label, isGoalClick, goalNeuronId);
   }
 
 
@@ -5150,7 +5346,7 @@ window.addEventListener('click', (event) => {
           : null;
 
       const freshQ = preGoalId !== null
-          ? getQ(preGoalId, clickedId)
+          ? getQ(makeStateKey(preGoalId, goalNeuronId), clickedId)   // D1
           : 0;
 
       const preGoalNeuron = preGoalId
@@ -5218,7 +5414,7 @@ window.addEventListener('click', (event) => {
           const preId = thoughtTrail.length >= 2
               ? thoughtTrail[thoughtTrail.length - 2]
               : null;
-          const incomingQ = preId ? getQ(preId, clickedId) : 0;
+          const incomingQ = preId ? getQ(makeStateKey(preId, goalNeuronId), clickedId) : 0;   // D1
 
           const preN  = preId ? findNeuronById(preId) : null;
           const thisN = clickedNeuron;
