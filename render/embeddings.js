@@ -71,7 +71,7 @@ import {
 
 import {
 
-    getQ
+    getQAny
 
 } from "./qlearning.js";
 
@@ -196,8 +196,8 @@ export function trainEmbedding(id1, id2) {
     //   maximum lr = baseLr * 1.0 = 0.050 (Q=20)
     // ======================================
 
-    const qFwd  = Math.max(getQ(id1, id2) || 0, 0);
-    const qBwd  = Math.max(getQ(id2, id1) || 0, 0);
+    const qFwd  = Math.max(getQAny(id1, id2) || 0, 0);
+    const qBwd  = Math.max(getQAny(id2, id1) || 0, 0);
     const qBest = Math.max(qFwd, qBwd);
 
     const qCertainty = Math.min(qBest, 20.0) / 20.0;
@@ -290,13 +290,13 @@ export function trainEmbedding(id1, id2) {
 
         // ── PROTECTION B: Q-confirmed neighbors ─
         const qWith1 = Math.max(
-            getQ(id1, id) || 0,
-            getQ(id,  id1) || 0
+            getQAny(id1, id) || 0,
+            getQAny(id,  id1) || 0
         );
 
         const qWith2 = Math.max(
-            getQ(id2, id) || 0,
-            getQ(id,  id2) || 0
+            getQAny(id2, id) || 0,
+            getQAny(id,  id2) || 0
         );
 
         if (

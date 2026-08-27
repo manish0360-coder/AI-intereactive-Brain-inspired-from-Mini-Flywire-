@@ -68,6 +68,57 @@ export function getQ(state, action) {
 
 
 // ======================================
+// 🔎 GOAL-AGNOSTIC Q READ  (Phase 1.0 / Q4)
+// ──────────────────────────────────────
+// Returns the best Q for (pos, action) across EVERY goal
+// context, i.e. the max over all "pos#*->action" keys.
+//
+// WHY THIS EXISTS
+// The D1 repair unified Q on the composite "pos#goal->action"
+// namespace. embeddings.js gates its semantic learning rate on
+// Q as a measure of PROCEDURAL CERTAINTY — "has this path been
+// confirmed?" — a question that is not about any particular
+// goal. A bare getQ(id1, id2) would return 0 after D1 and pin
+// the embedding learning rate at its floor, silently changing
+// semantic dynamics during a phase whose whole purpose is to
+// change nothing except what is being repaired.
+//
+// PURE. Reads Q, writes nothing. Also tolerates legacy bare
+// "pos->action" keys so a partially-migrated or restored
+// localStorage brain still resolves.
+// ======================================
+
+export function getQAny(pos, action) {
+
+    const exact  = String(Number(pos));      // legacy bare state
+    const prefix = exact + "#";              // composite state
+    const suffix = "->" + String(action);
+
+    let best  = 0;
+    let found = false;
+
+    Q.forEach((value, key) => {
+
+        if (!key.endsWith(suffix)) return;
+
+        const state = key.slice(0, key.length - suffix.length);
+
+        if (state === exact || state.startsWith(prefix)) {
+            if (!found || value > best) {
+                best  = value;
+                found = true;
+            }
+        }
+
+    });
+
+    return found ? best : 0;
+
+}
+
+
+
+// ======================================
 // DIRECT SETTER
 // used for replay memory
 // ======================================
