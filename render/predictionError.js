@@ -526,6 +526,55 @@ export function updateTransitionUncertainty(fromId, toId, errorMagnitude) {
 
 
 
+// ======================================
+// PURE OBSERVATION PATH  (Phase 1.0 / M6)
+// --------------------------------------
+// Returns the stored transition uncertainty for (fromId -> toId)
+// WITHOUT touching it.
+//
+// WHY THIS EXISTS
+// getTransitionUncertainty() below decays the stored value by
+// TRANSITION_UNCERTAINTY_DECAY on every read, and deletes the entry
+// once it falls under 0.005. Measured on the live agent (seed
+// 20260818, 60 ticks): 4,278 reads across 292 learning steps =
+// 14.54 reads per step, against ONE EMA update per step. An entry
+// sitting at the EMA floor is destroyed after 22 reads.
+//
+// So the stored value is partly a function of HOW OFTEN IT WAS READ,
+// which depends on node degree and on the policy. A calibration probe
+// using that getter would change the very quantity it is measuring,
+// and would preferentially delete the LOW-uncertainty entries (the
+// reliable edges) - truncating one tail of the distribution under
+// study, in a direction known in advance.
+//
+// CONTRACT
+//   peek(u,v) != get(u,v) BY DESIGN. get() returns the value AFTER
+//   applying one decay and floors to 0 below 0.005; peek() returns
+//   the value exactly as stored. Compare peek against the store,
+//   never against get.
+//
+// PURE: one Map.prototype.get and a || default. No set, no delete,
+// no arithmetic on stored state, no call to any other function, no
+// RNG. MEASUREMENT ONLY - must never be called from the agent
+// decision path (asserted by gate M6.8).
+//
+// The key expression is copied verbatim from
+// updateTransitionUncertainty / getTransitionUncertainty so all three
+// address the same entry: ids arrive as both numbers and strings
+// depending on call path, and the String() coercion is what makes
+// them agree.
+// ======================================
+
+export function peekTransitionUncertainty(fromId, toId) {
+
+    return transitionUncertaintyMap.get(
+        String(fromId) + "->" + String(toId)
+    ) || 0;
+
+}
+
+
+
 export function getTransitionUncertainty(fromId, toId) {
 
     const key = String(fromId) + "->" + String(toId);
