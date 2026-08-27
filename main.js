@@ -829,6 +829,12 @@ function _initEpisodeManagerWhenReady() {
         // ── Q-learning ──────────────────────────────────────────
         updateQ,
 
+        // ── D1: composite state-key builder ─────────────────────
+        // episodeManager must write Q under the SAME namespace the
+        // decision path reads. Injected rather than statically
+        // imported, matching how every other system reaches it.
+        makeStateKey,
+
         // ── Reward provenance ───────────────────────────────────
         PROVENANCE,
         writeReward,
@@ -4587,7 +4593,7 @@ console.log("🧠 Self learned:", prev, "→", current);
 // ================================================================
 
 if (Number(current) !== Number(goalNeuronId)) {
-    recordAutonomousStep(prev, current, neuronMap);
+    recordAutonomousStep(prev, current, neuronMap, goalNeuronId);   // D1
 }
 
 }

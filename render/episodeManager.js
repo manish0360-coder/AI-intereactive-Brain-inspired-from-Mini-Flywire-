@@ -362,8 +362,15 @@ export function recordAutonomousSuccess(recentMemory, goalId, neuronMap, meta) {
 //
 // ================================================================
 
-export function recordAutonomousStep(fromId, toId, neuronMap) {
+export function recordAutonomousStep(fromId, toId, neuronMap, activeGoal = null) {
 
+    // ── D1 REPAIR (Phase 1.0) ────────────────────────────────
+    // activeGoal added. Before this, explore-step episodes were
+    // created with activeGoal = null, so _learnProcedural wrote
+    // Q under "pos#0" while the agent — with a goal set — read
+    // "pos#<goal>". That is the same namespace split D1 exists
+    // to remove, reintroduced through a different door.
+    // Optional with a null default: existing callers keep working.
     if (!_sys || fromId == null || toId == null) return;
     if (Number(fromId) === Number(toId)) return;   // no self-steps
 
@@ -386,6 +393,7 @@ export function recordAutonomousStep(fromId, toId, neuronMap) {
     const ep = _createBuffer("autonomous_explore");
     ep.nodes  = [Number(fromId), Number(toId)];
     ep.labels = [fromN.userData.label, toN.userData.label];
+    ep.activeGoal = (activeGoal != null) ? Number(activeGoal) : null;   // D1
 
     const sealed = _sealBuffer(ep);
 
@@ -945,11 +953,25 @@ function _learnProcedural(episode, auth, quality) {
         const alphaBase  = Math.min(0.35, 0.3 * gain + 0.05);
         const causalAlpha = alphaBase * (1 + causalBonus * 0.3);
 
+        // ── D1 REPAIR (Phase 1.0) ───────────────────────────
+        // Was: state/nextState written as BARE node ids while
+        // main.js wrote composite "pos#goal" keys and read bare
+        // ones. Measured effect (Phase 0 Probe A): 500 autonomous
+        // updates produced 0 entries readable by the scorer, and
+        // the only readable Q came from this function — which the
+        // online loop then eroded via dampQ.
+        //
+        // Both sides now use the composite namespace. episode
+        // .activeGoal is the goal context in force when the
+        // episode was created; makeStateKey maps null -> GOAL_NONE.
+        const _stateKey     = sys.makeStateKey(from, episode.activeGoal);
+        const _nextStateKey = sys.makeStateKey(to,   episode.activeGoal);
+
         sys.updateQ({
-            state:     from,
+            state:     _stateKey,
             action:    to,
             reward:    causalReward,
-            nextState: to,
+            nextState: _nextStateKey,
             alpha:     Math.min(causalAlpha, 0.45),
             gamma:     0.9
         });
