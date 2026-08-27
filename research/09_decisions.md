@@ -7,6 +7,44 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-002 — G16.4b: retired, not repaired
+
+**Date:** 2026-08-28 · **Authority:** Director ruling of 2026-08-28, following independent
+three-model review · **Status:** in force
+**Scope:** frozen §13.4 G16.4 clause (b) only. Frozen artifact untouched —
+`M7_PREREGISTRATION.md`, SHA-256
+`2f12e309d7409e95f3d1bca34135110e518865fd01d96e5eeaee347b6e33f6b9`.
+
+### 1. Decision
+
+Clause (b) of G16.4 — *"No other `render/` file modified"* — is **retired as an executable
+runtime assertion** under [M7-ERR-10](cognitive-audit/M7_PREREGISTRATION_ERRATUM_10.md).
+Disposition D5 was adopted; D1 (create 36 frozen references), D2 (select a Git commit range)
+and D3 (reduce to a literal allowlist assertion) were rejected.
+
+### 2. Why retirement rather than repair
+
+The implementation measured filesystem edit chronology, not content divergence. It returned
+three different answers over byte-identical content, and in the authoring tree it passed while
+seven content-changed `render/` modules lay outside its measurement. Any substitute mechanism
+would enlarge the population the gate quantifies over, which is a change to the measured
+property rather than a repair of it.
+
+### 3. Status of the historical PASS
+
+The historical G16.4b PASS is **not** valid evidence for the claimed isolation property,
+because its measurement was non-reproducible and did not reliably cover the full content-change
+population. This is not a finding that unauthorised work occurred, nor that the isolation
+property is false.
+
+### 4. Constraint carried forward
+
+No replacement gate is created. Any future isolation gate must be authorised in advance by a
+separate ruling and must carry a mutation control in which modifying an unauthorised `render/`
+module turns the gate **RED**.
+
+---
+
 ## D-001 — M7 goal transport: authorised as a narrow integration bridge
 
 **Date:** 2026-08-23 · **Authority:** Director ruling of 2026-08-23 · **Status:** in force
