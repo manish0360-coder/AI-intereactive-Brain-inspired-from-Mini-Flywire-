@@ -1030,6 +1030,71 @@ let goalNeuronId = null;
 const M7_EPISODE_TICK_CAP = 150;
 let _m7EpisodeTicks = 0;
 
+// ---- STEP LEDGER -----------------------------------------------------------
+// Director ruling 2026-08-26 (E7-a), following the M7-G15.4 cognitive-semantic
+// audit. The architecture computes four causally distinct quantities every tick
+// but retains only one of them, so a failed traversal erases the evidence that
+// the agent made and executed a behavioural commitment.
+//
+// FORMAL PRINCIPLE (ruled):
+//   Decision quality, executed behaviour, and environmental outcome are
+//   separate causal layers. A failed environmental outcome must not erase
+//   evidence that the agent made and executed a behavioural commitment.
+//
+// The ledger retains all four per tick:
+//   from      the realised position the attempt was made from
+//   intent    the action SELECTED this tick (lastDecision.best.key)
+//   attempted the action actually EXECUTED (may differ from intent under the
+//             unrepaired F2b replay-branch staleness; frozen §18.4 pins that
+//             branch as NOT changed, so this records the divergence and does
+//             not repair it)
+//   outcome   whether the environment realised the traversal
+//
+// TRAJECTORY SUPPORT, exactly as ruled:
+//   1. consecutive duplicate `attempted` targets collapse into ONE commitment
+//   2. support = the number of DISTINCT attempted targets after that collapse
+//   3. eligibility is unchanged: support >= 3
+//
+// ANTI-FARMING IS PRESERVED BY CONSTRUCTION. The frozen adversary (main.js
+// "ANTI-FARMING GOAL REWARD") is the eat<->meat 2-cycle: it attempts exactly
+// two distinct targets, so support = 2 < 3 and it stays blocked. Repeated
+// attempts on one target collapse to a single commitment, support = 1.
+//
+// ADDITIVE: recentMemory is NOT mutated or replaced, so its six other consumers
+// (pathKey, pathDepth, the consecutive-pair credit loop, recordAutonomousSuccess,
+// recentWindow, and the episode->recentMemory reconstruction) are untouched.
+// Only the eligibility computation reads the ledger, and only when armed.
+//
+// GUARDED, DEFAULT OFF: with `__MFW_STEP_LEDGER__` unset every site below is
+// one falsy global read, so the build is bit-identical to the pre-ledger build.
+// The guard is named __MFW_ rather than __M7_ deliberately: this is a
+// MiniFlyWire cognitive-architecture feature, not an M7 experiment hook, and
+// must not be mistaken for part of the frozen experiment.
+const _mfwLedger = [];
+
+function _mfwTrajectorySupport() {
+    // Step 1 - collapse consecutive duplicates into one behavioural commitment.
+    // Step 2 - count distinct attempted targets.
+    // NOTE, stated honestly: the collapse is idempotent with respect to the
+    // DISTINCT count (a set is unchanged by removing repeats). It is retained
+    // because the ruling defines support in these two steps and because the
+    // collapsed commitment sequence is the meaningful object for any future
+    // consumer that counts commitments rather than distinct targets. The
+    // behavioural change against the legacy statistic comes from the ledger
+    // being per-episode rather than a 6-slot rolling window - which is what
+    // the original comment meant by "the path since the last reset".
+    const commitments = [];
+    let last = null;
+    for (let i = 0; i < _mfwLedger.length; i++) {
+        const a = _mfwLedger[i].attempted;
+        if (a === null || a === undefined) continue;
+        if (last !== null && a === last) continue;   // consecutive duplicate
+        commitments.push(a);
+        last = a;
+    }
+    return new Set(commitments).size;
+}
+
 
 loadBrain(); // restores saved memory when page starts
 
@@ -3080,6 +3145,8 @@ function runAgent() {
           // loop), so carrying it across a restart would fabricate an edge.
           recentMemory.length = 0;
           window.recentMemory = [];
+          // the step ledger is per-episode and clears wherever recentMemory does
+          if (globalThis.__MFW_STEP_LEDGER__) _mfwLedger.length = 0;
 
           // a pending single expectation is position-dependent; evaluating it
           // after a restart would score a transition that never happened.
@@ -3840,8 +3907,16 @@ if (
   // ──────────────────────────────────────
 
   // distinct nodes travelled this episode
-  const episodeUnique =
-      new Set(recentMemory.map(Number)).size;
+  //
+  // STEP LEDGER (Director ruling 2026-08-26, E7-a): when armed, trajectory
+  // support counts DISTINCT ATTEMPTED TARGETS - behavioural commitments the
+  // agent actually executed - instead of entries in the 6-slot realised-target
+  // window. A slipped attempt still evidences a commitment and is counted; the
+  // environmental outcome is retained separately in the ledger. The >= 3
+  // threshold and the anti-farming purpose are unchanged.
+  const episodeUnique = globalThis.__MFW_STEP_LEDGER__
+      ? _mfwTrajectorySupport()
+      : new Set(recentMemory.map(Number)).size;
 
   // reached goal
   if (next === goalNeuronId) {
@@ -4609,6 +4684,8 @@ if (goalNeuronId && current === goalNeuronId) {
     // clear recent memory — next episode starts fresh
     recentMemory.length = 0;
     window.recentMemory = [];
+    // the step ledger is per-episode and clears wherever recentMemory does
+    if (globalThis.__MFW_STEP_LEDGER__) _mfwLedger.length = 0;
 
 
     // seal episode into vault
@@ -4811,6 +4888,20 @@ const _m7Traversed =
     (next !== null && !_goalResetJustHappened && _m7env)
         ? _m7env.attempt(_m7From, _m7To)
         : true;
+
+// ---- STEP LEDGER WRITE ---------------------------------------------------
+// The ONLY point in the tick where all four causal layers are simultaneously
+// in scope: the realised position, the selected action, the executed action,
+// and the environment's verdict on it. Recorded here and nowhere else.
+// Guarded; consumes no RNG; does not read or modify recentMemory.
+if (globalThis.__MFW_STEP_LEDGER__ && next !== null && !_goalResetJustHappened) {
+    _mfwLedger.push({
+        from:      _m7From,
+        intent:    (lastDecision && lastDecision.best) ? lastDecision.best.key : null,
+        attempted: _m7To,
+        outcome:   _m7Traversed
+    });
+}
 
 // E2 is a SEPARATE switch from E1 (ERRATUM M7-ERR-06 §2.3). __M7_ENV__
 // controls the environment transition mechanism; __M7_CREDIT__ controls
