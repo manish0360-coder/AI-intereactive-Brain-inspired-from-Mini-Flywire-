@@ -1,3 +1,9 @@
+// ── Q3 (Phase 1.0): seeded RNG routing ───────────────────────────
+// Live randomness draws through liveRng() so a run is reproducible
+// under an explicit seed. With no seed set liveRng() returns exactly
+// Math.random(), so unseeded behaviour is byte-for-byte unchanged.
+import { liveRng } from "../instrumentation/rng.js";
+
 // ======================================
 // 🧠 SEMANTIC PROVENANCE SYSTEM
 // ======================================
@@ -235,8 +241,8 @@ export function shouldTrainEmbedding(source) {
     switch (source) {
         case PROVENANCE.DIRECT_EXPERIENCE:  return true;
         case PROVENANCE.MANUAL_TRAINING:    return true;
-        case PROVENANCE.AUTONOMOUS_ACTION:  return Math.random() < 0.40;
-        case PROVENANCE.REPLAY_MEMORY:      return Math.random() < 0.12;
+        case PROVENANCE.AUTONOMOUS_ACTION:  return liveRng() < 0.40;
+        case PROVENANCE.REPLAY_MEMORY:      return liveRng() < 0.12;
         case PROVENANCE.SEMANTIC_INFERENCE: return false;
         case PROVENANCE.IMAGINATION:        return false;
         case PROVENANCE.LLM_GENERATED:      return false;

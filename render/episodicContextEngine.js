@@ -1,3 +1,9 @@
+// ── Q3 (Phase 1.0): seeded RNG routing ───────────────────────────
+// Live randomness draws through liveRng() so a run is reproducible
+// under an explicit seed. With no seed set liveRng() returns exactly
+// Math.random(), so unseeded behaviour is byte-for-byte unchanged.
+import { liveRng } from "../instrumentation/rng.js";
+
 // ======================================
 // 🧠 EPISODIC CONTEXT ENGINE
 // ======================================
@@ -111,7 +117,7 @@ function generateEpisodeId() {
     return "ep_" +
         Date.now().toString(36) +
         "_" +
-        Math.random().toString(36).slice(2, 6);
+        liveRng().toString(36).slice(2, 6);
 }
 
 

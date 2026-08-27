@@ -1,3 +1,9 @@
+// ── Q3 (Phase 1.0): seeded RNG routing ───────────────────────────
+// Live randomness draws through liveRng() so a run is reproducible
+// under an explicit seed. With no seed set liveRng() returns exactly
+// Math.random(), so unseeded behaviour is byte-for-byte unchanged.
+import { liveRng } from "../instrumentation/rng.js";
+
 // ======================================
 // EMBEDDING SYSTEM
 // ======================================
@@ -101,7 +107,7 @@ export function createEmbedding(size = 32) {
     for (let i = 0; i < size; i++) {
 
         // random number between -1 and +1
-        vec.push(Math.random() * 2 - 1);
+        vec.push(liveRng() * 2 - 1);
     }
 
     // normalize vector

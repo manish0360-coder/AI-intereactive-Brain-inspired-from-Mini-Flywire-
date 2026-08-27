@@ -1,3 +1,9 @@
+// ── Q3 (Phase 1.0): seeded RNG routing ───────────────────────────
+// Live randomness draws through liveRng() so a run is reproducible
+// under an explicit seed. With no seed set liveRng() returns exactly
+// Math.random(), so unseeded behaviour is byte-for-byte unchanged.
+import { liveRng } from "./instrumentation/rng.js";
+
 // ======================================
 // IMPORT EMBEDDING SYSTEM
 // ======================================
@@ -2219,10 +2225,10 @@ const epsilon = Math.max(
 );
 
 
-if (Math.random() < epsilon && choices.length > 0) {
+if (liveRng() < epsilon && choices.length > 0) {
   
   const randomChoice =
-  choices[Math.floor(Math.random() * choices.length)];
+  choices[Math.floor(liveRng() * choices.length)];
   
   currentKey = randomChoice.key;  // jump randomly
   return; // stop here (skip greedy choice)
@@ -2984,7 +2990,7 @@ function runAgent() {
     window.recentMemory = [];
   }
   
-  if (Math.random() < 0.1) {                // only 10% of time
+  if (liveRng() < 0.1) {                // only 10% of time
     // 🧠 slowly forget old curiosity (keeps brain flexible)
     curiosityMap.forEach((value, key) => {
       curiosityMap.set(key, value * 0.995); // slow decay
@@ -2998,7 +3004,7 @@ function runAgent() {
   // uncertainty stabilizes with experience
   // ======================================
 
-  if (Math.random() < 0.15) {
+  if (liveRng() < 0.15) {
       decaySemanticSystems();
       decayUncertainty();
   }
@@ -3026,7 +3032,7 @@ function runAgent() {
   // good memories survive longer
   // ======================================
 
-  if (Math.random() < 0.02) {
+  if (liveRng() < 0.02) {
 
       rewards.forEach((value, key) => {
 
@@ -3077,7 +3083,7 @@ function runAgent() {
     const _startIds = Array.from(neuronMap.keys())
         .filter(id => Number(id) !== Number(goalNeuronId));
     const _pool = _startIds.length > 0 ? _startIds : Array.from(neuronMap.keys());
-    agentCurrent = _pool[Math.floor(Math.random() * _pool.length)];
+    agentCurrent = _pool[Math.floor(liveRng() * _pool.length)];
     
     console.log("🤖 Start from:", agentCurrent);
   }
@@ -3128,7 +3134,7 @@ function runAgent() {
   // less randomness now
   // ======================================
 
-  if (Math.random() < 0.92) {
+  if (liveRng() < 0.92) {
 
     runPrediction(agentCurrent);
 
@@ -4482,7 +4488,7 @@ if (goalNeuronId && current === goalNeuronId) {
     const allIds = Array.from(neuronMap.keys())
         .filter(id => Number(id) !== Number(goalNeuronId));
 
-    agentCurrent = allIds[Math.floor(Math.random() * allIds.length)];
+    agentCurrent = allIds[Math.floor(liveRng() * allIds.length)];
     agentLast    = agentCurrent;
 
     // Fix C — clear stale lastDecision display on reset
@@ -4786,7 +4792,7 @@ function runAgentLoop() {
   wmDecay();
 
   // semantic memory and consolidation decay (less frequent)
-  if (Math.random() < 0.1) {
+  if (liveRng() < 0.1) {
       decaySemanticMemory();
       decayConsolidation();
 
@@ -4810,7 +4816,7 @@ function runAgentLoop() {
   }
 
   // offline consolidation pass during replay phase
-  if (Math.random() < 0.05) {
+  if (liveRng() < 0.05) {
       runConsolidationPass(rewards, Q, transitions);
   }
 

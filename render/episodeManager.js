@@ -1,3 +1,9 @@
+// ── Q3 (Phase 1.0): seeded RNG routing ───────────────────────────
+// Live randomness draws through liveRng() so a run is reproducible
+// under an explicit seed. With no seed set liveRng() returns exactly
+// Math.random(), so unseeded behaviour is byte-for-byte unchanged.
+import { liveRng } from "../instrumentation/rng.js";
+
 // ================================================================
 // 🧠 EPISODE MANAGER — UNIFIED EPISODIC MEMORY SUBSTRATE
 // ================================================================
@@ -456,7 +462,7 @@ export function replayOneEpisode() {
 
     // pick random eligible episode
     const original = eligible[
-        Math.floor(Math.random() * eligible.length)
+        Math.floor(liveRng() * eligible.length)
     ];
 
     const replayKey = original.labels.join("->");
@@ -603,7 +609,7 @@ export function loadEpisodes(savedEpisodes) {
         // Basic validation — skip corrupt entries
         if (!ep || !Array.isArray(ep.nodes) || ep.nodes.length < 2) return;
         episodicStore.push({
-            id:          ep.id || ("loaded_" + Math.random().toString(36).slice(2, 9)),
+            id:          ep.id || ("loaded_" + liveRng().toString(36).slice(2, 9)),
             source:      ep.source || "autonomous_success",
             nodes:       ep.nodes,
             labels:      ep.labels || ep.nodes.map(String),
@@ -739,7 +745,7 @@ function _sealBuffer(buf) {
     const quality   = coherence * (1 - predErr * 0.4);
 
     return {
-        id:          `${source}_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+        id:          `${source}_${Date.now()}_${liveRng().toString(36).slice(2, 7)}`,
         source,
         nodes,
         labels,
