@@ -7,6 +7,69 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-004 — M9: secondary analysis of the frozen M8 evidence, pre-registered
+
+**Date:** 2026-08-29 · **Authority:** Director ruling of 2026-08-29, M9 Governance Gate accepted
+· **Status:** in force
+**Scope:** analysis only. M8 evidence untouched and byte-identical at
+`f9d97b9a180fa5a4aed6def06788eb4b38c037f0`; M7 untouched and frozen at
+`707cb1e5205a7e9979f81092ee1ebfa0fe28922e`, digest
+`2f12e309d7409e95f3d1bca34135110e518865fd01d96e5eeaee347b6e33f6b9`.
+
+### 1. Decision
+
+[`research/preregistrations/M9_PREREGISTRATION.md`](preregistrations/M9_PREREGISTRATION.md) is
+frozen before any analysis is run, digest recorded in its `.sha256` sidecar. M9 is a **secondary
+analysis of an existing dataset**: it performs no measurement, consumes no seed, and changes
+nothing in M8 or M7.
+
+### 2. Why M9 rather than an M8 erratum
+
+The M8 analysis layer (§10, §11) is degenerate and is **not repaired and not superseded** — it
+stands in history as issued and as demonstrated degenerate. An erratum would touch the M8
+governance chain to fix an analysis defect; M9 leaves the M8 evidence and its record entirely
+intact. M8 §19 permits this because M9 modifies no M8 text, and M8 §13 is not engaged because M9
+performs no measurement.
+
+### 3. Frozen Director decisions
+
+| | Decision |
+|---|---|
+| **Question** | Candidate A — the proportion of DESYNC events arising from a teleport-class reset within the write→read gap versus ordinary advance alone. |
+| **Denominator** | Fixed at 7,178 DESYNC events; single denominator throughout; no exclusions. |
+| **ORIGIN** | Partition on when the most recent teleport fell relative to the write, per M9 §4. |
+| **Equality case** | `teleportSource` resolves in-tick order: `cap`/`pool` precede the write → ADVANCE; `goalReset` follows the evaluation → TELEPORT. |
+| **Null case** | UNCLASSIFIED: counted, reported separately, excluded from proportions, never assigned to a category, never dropped. |
+| **Unobserved cells** | No cell excluded, merged, or collapsed. Zero-count cells are NOT OBSERVED; UNREACHABLE requires a cited source proof. |
+| **Statistical policy** | Descriptive only — counts and proportions. No test, null, threshold, interval or model pre-registered, and none may be added after the data is seen except by numbered erratum frozen beforehand. |
+| **Multiple comparisons** | No inferential test, so no correction. The complete grid is emitted on every run; selective reporting is a protocol violation. |
+| **Minimum evidence** | Evaluable iff the regenerated dataset yields exactly 7,178 DESYNC events, UNCLASSIFIED = 0, and both ORIGIN categories are non-empty. Otherwise NOT EVALUABLE; no re-collection or substitute denominator. |
+| **Falsification** | Six named statements, each falsifiable by a data pattern possible under the frozen definitions (M9 §14). |
+
+### 4. Demotions carried from the source audits
+
+AGE is duration, not a mechanism. Replay is a constant precondition, reported as the constant it
+is. H4 is harness-unreachable, not absent. NON_CANONICAL is a consequence; S_PAIR an observable
+signature. `agentCurrentChangedSinceLastWrite` is excluded entirely, being identically DESYNC.
+The sole-attribution layer and the composite rule are excluded.
+
+### 5. Post-hoc disclosure
+
+The ORIGIN rule was formulated after the M8 collection existed and was retained knowing both its
+categories are populated. Its inputs and the in-tick ordering it relies on predate collection, and
+it was derived from control flow rather than selected by its answer — but the residue is real and
+is disclosed on the face of M9 §16. M9's conclusions therefore carry less evidential weight than a
+result from a rule frozen before collection.
+
+### 6. Governance consequence
+
+Changes to M9 arrive only as numbered errata quoting its text and binding to its digest.
+Implementation of the analysis is a separate milestone requiring its own authorisation. No M9
+result is authorised to reinterpret M7, and no M9 statistic may be compared with, correlated
+against, or selected to explain the G15 outcome.
+
+---
+
 ## D-003 — M8 successor phase: pre-data design decisions frozen
 
 **Date:** 2026-08-28 · **Authority:** Director decisions A-H of 2026-08-28 · **Status:** in force

@@ -1,0 +1,32 @@
+# M9 PRE-REGISTRATION — INTEGRITY RECORD
+#
+# Artifact : research/preregistrations/M9_PREREGISTRATION.md
+# Version  : 1.0 (frozen)
+# Frozen   : 2026-08-29, Chief Systems Engineer, under Director authorisation (D-004)
+# Algorithm: SHA-256 over the exact bytes of the file
+# Size     : 14224 bytes, 269 lines
+#
+# BASELINE THIS PRE-REGISTRATION IS BOUND TO
+#   git HEAD   : f9d97b9a180fa5a4aed6def06788eb4b38c037f0 ("feat(m8): execute the frozen collection over 899500-899999")
+#   evidence   : the frozen M8 collection at the same commit, unchanged
+#   M8 digest  : 14d5eef9cf304ef3... (M8_PREREGISTRATION.sha256 validates unchanged)
+#   M7 digest  : 2f12e309d7409e95f3d1bca34135110e518865fd01d96e5eeaee347b6e33f6b9 (unchanged)
+#   predecessor: M7 frozen and closed at 707cb1e5205a7e9979f81092ee1ebfa0fe28922e
+#
+# STATE AT FREEZE (all verified immediately before hashing)
+#   M9 analysis code         : NOT implemented
+#   ORIGIN statistics        : NONE computed
+#   mechanism frequencies    : NONE computed
+#   configuration seeds      : NONE generated or inspected
+#   held-out block >= 900500 : UNTOUCHED
+#   M8 evidence              : UNCHANGED (raw events, candidates, manifest, integrity, code)
+#   M7 artifacts             : UNCHANGED
+#
+# VERIFY WITH
+#   cd research/preregistrations && sha256sum -c M9_PREREGISTRATION.sha256
+#
+# A mismatch means the pre-registration changed after freeze. That is a PROTOCOL
+# DEVIATION and must be reported in the final report with its direction and likely
+# effect on results -- never silently reconciled.
+#
+98c9dee82f832ea2e2541e82de90c42cf158cc97302ad0d8ca18cf9cb38fa7a4  M9_PREREGISTRATION.md

@@ -31,3 +31,7 @@ research/cognitive-audit/M7_PREREGISTRATION_ERRATUM_*.md -text
 # conversion must be disabled in both directions or the digest fails to validate on checkout.
 research/preregistrations/M8_PREREGISTRATION.md      -text
 research/preregistrations/M8_PREREGISTRATION.sha256  -text
+
+# M9 pre-registration — same byte-integrity guarantee as the M7 and M8 frozen artifacts.
+research/preregistrations/M9_PREREGISTRATION.md      -text
+research/preregistrations/M9_PREREGISTRATION.sha256  -text
