@@ -1,0 +1,1353 @@
+{
+  "accounting": {
+    "preregistration": "8fb0bec13bb2940fa2e7e7f823c632427a28fae3",
+    "frozenRange": {
+      "lo": 899500,
+      "hi": 899999
+    },
+    "runParameters": {
+      "agentSeed": 20260819000,
+      "arm": "A1",
+      "ticks": 3000
+    },
+    "candidatesTotal": 2000,
+    "tally": {
+      "REJECTED": 1959,
+      "COLLECTED": 41,
+      "FAILED": 0,
+      "PENDING": 0
+    },
+    "closure": true,
+    "distinctSeeds": 500,
+    "seedBoundary": {
+      "evaluatedSeedCount": 500,
+      "min": 899500,
+      "max": 899999,
+      "outsideFrozenRange": 0,
+      "heldOutTouched": 0,
+      "consumedTouched": 0
+    },
+    "events": {
+      "total": 118179,
+      "tupleFields": 14
+    },
+    "strata": {
+      "degree5": 20,
+      "degree3": 21
+    }
+  },
+  "runs": [
+    {
+      "configSeed": 899502,
+      "configIndex": 0,
+      "goal": 8,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2874,
+      "fingerprint": "b2fbf9a0281ade53147f76f964696c240ad0e696371e130f4714282ee5e7ed46",
+      "artifacts": {
+        "cogDraws": 60540,
+        "visDraws": 3020,
+        "qEntries": 153
+      },
+      "envCounters": {
+        "attempts": 2788,
+        "successes": 1644,
+        "slips": 1144,
+        "envDraws": 2788
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2786,
+        "reads": 3005,
+        "evals": 2874,
+        "teleports": 102,
+        "unpairedReads": 131
+      },
+      "evaluatedSeeds": [
+        899502
+      ],
+      "eventsSha256": "d9d59a6ef46a20947e4c79ec5e8bee059797d499e6aa0e69c6b631774641a2d5"
+    },
+    {
+      "configSeed": 899502,
+      "configIndex": 1,
+      "goal": 12,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2904,
+      "fingerprint": "2dfb3894c96eb8dc1eff5964a29180b5c74209cf2414d94e439af17402cdc3ee",
+      "artifacts": {
+        "cogDraws": 82670,
+        "visDraws": 3020,
+        "qEntries": 185
+      },
+      "envCounters": {
+        "attempts": 1987,
+        "successes": 1239,
+        "slips": 748,
+        "envDraws": 1987
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2754,
+        "reads": 3005,
+        "evals": 2904,
+        "teleports": 592,
+        "unpairedReads": 101
+      },
+      "evaluatedSeeds": [
+        899502
+      ],
+      "eventsSha256": "ac5b35f621a9bc5daebf2b971afb70d0b844fa18be4d26934dfa3ff7f9b9be6b"
+    },
+    {
+      "configSeed": 899502,
+      "configIndex": 2,
+      "goal": 16,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2955,
+      "fingerprint": "8f8f2cde855689beabb97115cd402d9546e2d8b3a673a97a7362f9a3d7148a45",
+      "artifacts": {
+        "cogDraws": 82732,
+        "visDraws": 3020,
+        "qEntries": 195
+      },
+      "envCounters": {
+        "attempts": 1610,
+        "successes": 878,
+        "slips": 732,
+        "envDraws": 1610
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2708,
+        "reads": 3005,
+        "evals": 2955,
+        "teleports": 855,
+        "unpairedReads": 50
+      },
+      "evaluatedSeeds": [
+        899502
+      ],
+      "eventsSha256": "13dfdb30a00d141d9525985448032e73fd56393c612a98cafb09fc8c3a33b5be"
+    },
+    {
+      "configSeed": 899502,
+      "configIndex": 3,
+      "goal": 19,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2760,
+      "fingerprint": "7e8eff1e6cfaa5fe9531d631c372431cf6244e04f86b252e823374436864c074",
+      "artifacts": {
+        "cogDraws": 73525,
+        "visDraws": 3020,
+        "qEntries": 200
+      },
+      "envCounters": {
+        "attempts": 1798,
+        "successes": 1012,
+        "slips": 786,
+        "envDraws": 1798
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2772,
+        "reads": 3005,
+        "evals": 2760,
+        "teleports": 744,
+        "unpairedReads": 245
+      },
+      "evaluatedSeeds": [
+        899502
+      ],
+      "eventsSha256": "613ea8153de7ac428b9745b94ceae95b4d2a641529971ba4bbff70c204606cf2"
+    },
+    {
+      "configSeed": 899507,
+      "configIndex": 1,
+      "goal": 12,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2910,
+      "fingerprint": "0a0ab2b2d0c268a9124667cbd939a8d672167033106f4755f4acfc0ef434680b",
+      "artifacts": {
+        "cogDraws": 85185,
+        "visDraws": 3020,
+        "qEntries": 216
+      },
+      "envCounters": {
+        "attempts": 1811,
+        "successes": 1124,
+        "slips": 687,
+        "envDraws": 1811
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2761,
+        "reads": 3005,
+        "evals": 2910,
+        "teleports": 685,
+        "unpairedReads": 95
+      },
+      "evaluatedSeeds": [
+        899507
+      ],
+      "eventsSha256": "9f35652f7a15fe7856d8fd4dbe45094eef09e7cbc61e88bcae7bf38c85126b34"
+    },
+    {
+      "configSeed": 899544,
+      "configIndex": 1,
+      "goal": 12,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2936,
+      "fingerprint": "686f295f9341cb110666e7b98ce04c93b819ee7a7087f600c2155c4b02df825a",
+      "artifacts": {
+        "cogDraws": 96152,
+        "visDraws": 3020,
+        "qEntries": 225
+      },
+      "envCounters": {
+        "attempts": 1829,
+        "successes": 990,
+        "slips": 839,
+        "envDraws": 1829
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2785,
+        "reads": 3005,
+        "evals": 2936,
+        "teleports": 676,
+        "unpairedReads": 69
+      },
+      "evaluatedSeeds": [
+        899544
+      ],
+      "eventsSha256": "7c72459175af7fddadb96c8ce80f2efd0c7ef78073b52c049659b4a1d9047024"
+    },
+    {
+      "configSeed": 899544,
+      "configIndex": 3,
+      "goal": 19,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2650,
+      "fingerprint": "34bfed90a043f8743cc4bc90816f9025b6b1349e11aa31611152c4208521e73e",
+      "artifacts": {
+        "cogDraws": 69218,
+        "visDraws": 3020,
+        "qEntries": 210
+      },
+      "envCounters": {
+        "attempts": 1774,
+        "successes": 1094,
+        "slips": 680,
+        "envDraws": 1774
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2722,
+        "reads": 3005,
+        "evals": 2650,
+        "teleports": 568,
+        "unpairedReads": 355
+      },
+      "evaluatedSeeds": [
+        899544
+      ],
+      "eventsSha256": "505986ebc49766a919e12d83737be1a2c0dd4f143aba3c1002686c0bbf523088"
+    },
+    {
+      "configSeed": 899585,
+      "configIndex": 0,
+      "goal": 8,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2948,
+      "fingerprint": "e674f6eeb2f2429ec8bda435e34134cf5193751c2457485a543c9ddb91e03b79",
+      "artifacts": {
+        "cogDraws": 84401,
+        "visDraws": 3020,
+        "qEntries": 220
+      },
+      "envCounters": {
+        "attempts": 2092,
+        "successes": 1024,
+        "slips": 1068,
+        "envDraws": 2092
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2765,
+        "reads": 3005,
+        "evals": 2948,
+        "teleports": 553,
+        "unpairedReads": 57
+      },
+      "evaluatedSeeds": [
+        899585
+      ],
+      "eventsSha256": "e5de78b704bcb035d227de42650bb61c15fc87c563fb096b5872fca48b1bc337"
+    },
+    {
+      "configSeed": 899585,
+      "configIndex": 3,
+      "goal": 19,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2926,
+      "fingerprint": "9a255e4b2209c13f94df36ea297d44dc097c531588b5fa07b86becaa4f99a6b0",
+      "artifacts": {
+        "cogDraws": 83771,
+        "visDraws": 3020,
+        "qEntries": 206
+      },
+      "envCounters": {
+        "attempts": 1554,
+        "successes": 768,
+        "slips": 786,
+        "envDraws": 1554
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2759,
+        "reads": 3005,
+        "evals": 2926,
+        "teleports": 669,
+        "unpairedReads": 79
+      },
+      "evaluatedSeeds": [
+        899585
+      ],
+      "eventsSha256": "6cfc7c593c0d19f31ee010b55c677c279e6cf60f745b361a6aeea64f61e7ef42"
+    },
+    {
+      "configSeed": 899593,
+      "configIndex": 0,
+      "goal": 8,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2926,
+      "fingerprint": "7214bc9aa4dd62d54b208c45c059e9e750809fa6527863b767ba6b0d5ca74834",
+      "artifacts": {
+        "cogDraws": 91356,
+        "visDraws": 3020,
+        "qEntries": 228
+      },
+      "envCounters": {
+        "attempts": 1545,
+        "successes": 882,
+        "slips": 663,
+        "envDraws": 1545
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2776,
+        "reads": 3005,
+        "evals": 2926,
+        "teleports": 631,
+        "unpairedReads": 79
+      },
+      "evaluatedSeeds": [
+        899593
+      ],
+      "eventsSha256": "852a386143bad5fab88be2707f8b555c0d8a121d914121aabdb9fd816b2f3a36"
+    },
+    {
+      "configSeed": 899593,
+      "configIndex": 2,
+      "goal": 16,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2915,
+      "fingerprint": "e7a0dd7be7e5ec1ca0143d8a118e0e1c9f7e7613bf02f42abc5d2b54348593d9",
+      "artifacts": {
+        "cogDraws": 84489,
+        "visDraws": 3020,
+        "qEntries": 191
+      },
+      "envCounters": {
+        "attempts": 1848,
+        "successes": 1044,
+        "slips": 804,
+        "envDraws": 1848
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2715,
+        "reads": 3005,
+        "evals": 2915,
+        "teleports": 746,
+        "unpairedReads": 90
+      },
+      "evaluatedSeeds": [
+        899593
+      ],
+      "eventsSha256": "a60789510a9c3bff008a637abcd745eb4e948f147ba8efb81ee09d4f3dd37a3f"
+    },
+    {
+      "configSeed": 899593,
+      "configIndex": 3,
+      "goal": 19,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2862,
+      "fingerprint": "a2a3dc51c67a49263fb50c345c3c9f9811b70b242dea2e14d10f4d3b3fdbc558",
+      "artifacts": {
+        "cogDraws": 86138,
+        "visDraws": 3020,
+        "qEntries": 194
+      },
+      "envCounters": {
+        "attempts": 1824,
+        "successes": 1084,
+        "slips": 740,
+        "envDraws": 1824
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2746,
+        "reads": 3005,
+        "evals": 2862,
+        "teleports": 663,
+        "unpairedReads": 143
+      },
+      "evaluatedSeeds": [
+        899593
+      ],
+      "eventsSha256": "d65107570710c013d8928b53a3ced97ca2d02c51e3f6b0ab6e9e89d1725f2768"
+    },
+    {
+      "configSeed": 899616,
+      "configIndex": 0,
+      "goal": 8,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2935,
+      "fingerprint": "4d4fa3316f568fe08c7c80bfdc1377e41cd02dd074b9750782d272ef2948a090",
+      "artifacts": {
+        "cogDraws": 72795,
+        "visDraws": 3020,
+        "qEntries": 214
+      },
+      "envCounters": {
+        "attempts": 2214,
+        "successes": 1074,
+        "slips": 1140,
+        "envDraws": 2214
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2766,
+        "reads": 3005,
+        "evals": 2935,
+        "teleports": 313,
+        "unpairedReads": 70
+      },
+      "evaluatedSeeds": [
+        899616
+      ],
+      "eventsSha256": "2d1f4ca38c25629308ecd4f90d3c65fef1433b623031540e7d493d2e00f5e423"
+    },
+    {
+      "configSeed": 899618,
+      "configIndex": 3,
+      "goal": 19,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2280,
+      "fingerprint": "657dcc5bb8e061b6bafbeb2241f2e37df43b8b010c56eb17deb24e2316ab3fc4",
+      "artifacts": {
+        "cogDraws": 82016,
+        "visDraws": 3020,
+        "qEntries": 174
+      },
+      "envCounters": {
+        "attempts": 1572,
+        "successes": 1068,
+        "slips": 504,
+        "envDraws": 1572
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2769,
+        "reads": 3005,
+        "evals": 2280,
+        "teleports": 354,
+        "unpairedReads": 724
+      },
+      "evaluatedSeeds": [
+        899618
+      ],
+      "eventsSha256": "6f260ac8fa1e45f452718bfbbb9b154b2c8aa6c225763c6e03cceb5b3a0f392d"
+    },
+    {
+      "configSeed": 899708,
+      "configIndex": 3,
+      "goal": 19,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2912,
+      "fingerprint": "6c39866c1c7872fe6437d3ad84b94fd9718b50caec5aeba9497a1f35a28b56ab",
+      "artifacts": {
+        "cogDraws": 78298,
+        "visDraws": 3020,
+        "qEntries": 178
+      },
+      "envCounters": {
+        "attempts": 2128,
+        "successes": 1261,
+        "slips": 867,
+        "envDraws": 2128
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2737,
+        "reads": 3005,
+        "evals": 2912,
+        "teleports": 485,
+        "unpairedReads": 93
+      },
+      "evaluatedSeeds": [
+        899708
+      ],
+      "eventsSha256": "6990e68f3f39a8e0d5db8d701ae339a9ea90e68e970e1c660a400cc603b34920"
+    },
+    {
+      "configSeed": 899709,
+      "configIndex": 1,
+      "goal": 12,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2940,
+      "fingerprint": "186049905b13ad8280e83396b867a2cb7e961571af45d7fa53af5a22fb8d9f3c",
+      "artifacts": {
+        "cogDraws": 87087,
+        "visDraws": 3020,
+        "qEntries": 192
+      },
+      "envCounters": {
+        "attempts": 1434,
+        "successes": 772,
+        "slips": 662,
+        "envDraws": 1434
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2752,
+        "reads": 3005,
+        "evals": 2940,
+        "teleports": 704,
+        "unpairedReads": 65
+      },
+      "evaluatedSeeds": [
+        899709
+      ],
+      "eventsSha256": "6e0115b9f15f7369c4074ea1c82bdf39c3bc5d604256830adb073b98eae9ccac"
+    },
+    {
+      "configSeed": 899709,
+      "configIndex": 3,
+      "goal": 19,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2894,
+      "fingerprint": "441e758dfe9a07f00d62a9504a910e8711eb23f048c2bcfeed20899c8e687396",
+      "artifacts": {
+        "cogDraws": 82224,
+        "visDraws": 3020,
+        "qEntries": 189
+      },
+      "envCounters": {
+        "attempts": 1861,
+        "successes": 1059,
+        "slips": 802,
+        "envDraws": 1861
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2763,
+        "reads": 3005,
+        "evals": 2894,
+        "teleports": 627,
+        "unpairedReads": 111
+      },
+      "evaluatedSeeds": [
+        899709
+      ],
+      "eventsSha256": "47369a6c253513c8139add1199b46d7b4c57753559017c12ee4eb58a52efd171"
+    },
+    {
+      "configSeed": 899738,
+      "configIndex": 0,
+      "goal": 8,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2894,
+      "fingerprint": "ecf805e69604caa7d1fcd6bb9eb9abd9f7a967b72fd2453deff6708e1ad4c0c4",
+      "artifacts": {
+        "cogDraws": 88917,
+        "visDraws": 3020,
+        "qEntries": 211
+      },
+      "envCounters": {
+        "attempts": 1553,
+        "successes": 1048,
+        "slips": 505,
+        "envDraws": 1553
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2767,
+        "reads": 3005,
+        "evals": 2894,
+        "teleports": 878,
+        "unpairedReads": 111
+      },
+      "evaluatedSeeds": [
+        899738
+      ],
+      "eventsSha256": "1b2df2aaf752a137930d2a6678c67b44519e78582662301750e860a5ce353539"
+    },
+    {
+      "configSeed": 899738,
+      "configIndex": 1,
+      "goal": 12,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2905,
+      "fingerprint": "3b63652fadc05c45614593b7ae564d389760c1f43eb718ae7d993c9a93df08df",
+      "artifacts": {
+        "cogDraws": 85846,
+        "visDraws": 3020,
+        "qEntries": 204
+      },
+      "envCounters": {
+        "attempts": 1867,
+        "successes": 1167,
+        "slips": 700,
+        "envDraws": 1867
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2744,
+        "reads": 3005,
+        "evals": 2905,
+        "teleports": 733,
+        "unpairedReads": 100
+      },
+      "evaluatedSeeds": [
+        899738
+      ],
+      "eventsSha256": "b4daf4f92cfee9f1c49e76e4719211b6fef090d70849a52d7576dbbc02d21225"
+    },
+    {
+      "configSeed": 899738,
+      "configIndex": 3,
+      "goal": 19,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2847,
+      "fingerprint": "24de66f84d20beccef13bb959a3bd3e94578682f00fc87d0f0e667f4f07d9255",
+      "artifacts": {
+        "cogDraws": 76853,
+        "visDraws": 3020,
+        "qEntries": 197
+      },
+      "envCounters": {
+        "attempts": 1179,
+        "successes": 781,
+        "slips": 398,
+        "envDraws": 1179
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2750,
+        "reads": 3005,
+        "evals": 2847,
+        "teleports": 777,
+        "unpairedReads": 158
+      },
+      "evaluatedSeeds": [
+        899738
+      ],
+      "eventsSha256": "c74730b442907b0bd4cbe655253aeb2aab1460e36699eef2415ea5c55e1f6b6d"
+    },
+    {
+      "configSeed": 899766,
+      "configIndex": 0,
+      "goal": 8,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2918,
+      "fingerprint": "3ce3e387c3f6b4d4c9543717f7321d9eecaf1cefa53f5faf0f05f283447af802",
+      "artifacts": {
+        "cogDraws": 79041,
+        "visDraws": 3020,
+        "qEntries": 211
+      },
+      "envCounters": {
+        "attempts": 2310,
+        "successes": 1150,
+        "slips": 1160,
+        "envDraws": 2310
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2754,
+        "reads": 3005,
+        "evals": 2918,
+        "teleports": 447,
+        "unpairedReads": 87
+      },
+      "evaluatedSeeds": [
+        899766
+      ],
+      "eventsSha256": "e61f85bdd87eadf9b50f55d863c42998a3dcc712b2e5c70ce832741b20a81da0"
+    },
+    {
+      "configSeed": 899766,
+      "configIndex": 1,
+      "goal": 12,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2926,
+      "fingerprint": "cee2f4081e20f750c3cecea6d400258866ef6a07381c995fa2a40ef32dde5e3f",
+      "artifacts": {
+        "cogDraws": 86325,
+        "visDraws": 3020,
+        "qEntries": 208
+      },
+      "envCounters": {
+        "attempts": 1721,
+        "successes": 1133,
+        "slips": 588,
+        "envDraws": 1721
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2770,
+        "reads": 3005,
+        "evals": 2926,
+        "teleports": 773,
+        "unpairedReads": 79
+      },
+      "evaluatedSeeds": [
+        899766
+      ],
+      "eventsSha256": "9015da55182676ba2fe6ea27acc3d49074a4f257f59c78666f5c405c501684da"
+    },
+    {
+      "configSeed": 899766,
+      "configIndex": 2,
+      "goal": 16,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2928,
+      "fingerprint": "0e8373984deec1b009b5145636fb052178370e5ed279d69b7e35b349dad7483a",
+      "artifacts": {
+        "cogDraws": 85526,
+        "visDraws": 3020,
+        "qEntries": 187
+      },
+      "envCounters": {
+        "attempts": 2066,
+        "successes": 1122,
+        "slips": 944,
+        "envDraws": 2066
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2728,
+        "reads": 3005,
+        "evals": 2928,
+        "teleports": 641,
+        "unpairedReads": 77
+      },
+      "evaluatedSeeds": [
+        899766
+      ],
+      "eventsSha256": "0ccff25ed9616f7c61c0123b751686cbc1b0fb06796e64686e8a210bbd904ac9"
+    },
+    {
+      "configSeed": 899859,
+      "configIndex": 2,
+      "goal": 16,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2943,
+      "fingerprint": "478e702f16c7f51d609f14ff67ab3dab78909d10910eab96de47f07dc30d5efc",
+      "artifacts": {
+        "cogDraws": 81025,
+        "visDraws": 3020,
+        "qEntries": 181
+      },
+      "envCounters": {
+        "attempts": 1598,
+        "successes": 915,
+        "slips": 683,
+        "envDraws": 1598
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2720,
+        "reads": 3005,
+        "evals": 2943,
+        "teleports": 732,
+        "unpairedReads": 62
+      },
+      "evaluatedSeeds": [
+        899859
+      ],
+      "eventsSha256": "2fb3991538cfae38becc6098de81a975a58113d07bffcd989d7a4c290ee29880"
+    },
+    {
+      "configSeed": 899873,
+      "configIndex": 0,
+      "goal": 8,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2934,
+      "fingerprint": "33e90109e2629883186adb5cbf2b4629ff8db88dbfa43953be6e75bd2e914384",
+      "artifacts": {
+        "cogDraws": 85091,
+        "visDraws": 3020,
+        "qEntries": 227
+      },
+      "envCounters": {
+        "attempts": 1837,
+        "successes": 944,
+        "slips": 893,
+        "envDraws": 1837
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2731,
+        "reads": 3005,
+        "evals": 2934,
+        "teleports": 616,
+        "unpairedReads": 71
+      },
+      "evaluatedSeeds": [
+        899873
+      ],
+      "eventsSha256": "557ca44daeb551f1d8fe962937425e05af634d346d1cd748558eea2cf2436c82"
+    },
+    {
+      "configSeed": 899873,
+      "configIndex": 1,
+      "goal": 12,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2929,
+      "fingerprint": "e661fc11195ecf2385e0a269da0d694159a1f42b14da6cb96691beeccc4e2ab9",
+      "artifacts": {
+        "cogDraws": 85048,
+        "visDraws": 3020,
+        "qEntries": 220
+      },
+      "envCounters": {
+        "attempts": 1466,
+        "successes": 841,
+        "slips": 625,
+        "envDraws": 1466
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2790,
+        "reads": 3005,
+        "evals": 2929,
+        "teleports": 754,
+        "unpairedReads": 76
+      },
+      "evaluatedSeeds": [
+        899873
+      ],
+      "eventsSha256": "353318c0351e1430a75ea96e764f1e5d18056b8fe8f4ecea0999bf0cfb92b258"
+    },
+    {
+      "configSeed": 899873,
+      "configIndex": 2,
+      "goal": 16,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2929,
+      "fingerprint": "35df089b98e1b9dc5eb814be0e24067e31b14380347cbc22946c0cf3ffdb472a",
+      "artifacts": {
+        "cogDraws": 85508,
+        "visDraws": 3020,
+        "qEntries": 191
+      },
+      "envCounters": {
+        "attempts": 1820,
+        "successes": 1025,
+        "slips": 795,
+        "envDraws": 1820
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2752,
+        "reads": 3005,
+        "evals": 2929,
+        "teleports": 605,
+        "unpairedReads": 76
+      },
+      "evaluatedSeeds": [
+        899873
+      ],
+      "eventsSha256": "72fea1c8c556ad19df3ec5dd24b17572964281c0b04cfe4cf146f37d65054df3"
+    },
+    {
+      "configSeed": 899873,
+      "configIndex": 3,
+      "goal": 19,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2845,
+      "fingerprint": "488985ea8ce61f8795322badf1f677f992beb93d6678537c277edbc9e27aef05",
+      "artifacts": {
+        "cogDraws": 75346,
+        "visDraws": 3020,
+        "qEntries": 187
+      },
+      "envCounters": {
+        "attempts": 2033,
+        "successes": 1196,
+        "slips": 837,
+        "envDraws": 2033
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2748,
+        "reads": 3005,
+        "evals": 2845,
+        "teleports": 394,
+        "unpairedReads": 160
+      },
+      "evaluatedSeeds": [
+        899873
+      ],
+      "eventsSha256": "f21de4ce0d48dc3407fb3ef1989ee686fe7e28b3f56ca19d6796f63f632f4d07"
+    },
+    {
+      "configSeed": 899874,
+      "configIndex": 2,
+      "goal": 16,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2918,
+      "fingerprint": "0df0851262151bd54e05d6c07c0c6f574ce3cb77dc193d1939ed2fc22743c56f",
+      "artifacts": {
+        "cogDraws": 78008,
+        "visDraws": 3020,
+        "qEntries": 178
+      },
+      "envCounters": {
+        "attempts": 1980,
+        "successes": 1176,
+        "slips": 804,
+        "envDraws": 1980
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2749,
+        "reads": 3005,
+        "evals": 2918,
+        "teleports": 635,
+        "unpairedReads": 87
+      },
+      "evaluatedSeeds": [
+        899874
+      ],
+      "eventsSha256": "4357155362022ce7ef047ef18ed5f398edd70a210251e93f39d370d0b82609b0"
+    },
+    {
+      "configSeed": 899928,
+      "configIndex": 1,
+      "goal": 12,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2908,
+      "fingerprint": "2296e7e8426fceea209d8500287e580eb13014d856e68d42f6e9d50b2f6da571",
+      "artifacts": {
+        "cogDraws": 91150,
+        "visDraws": 3020,
+        "qEntries": 208
+      },
+      "envCounters": {
+        "attempts": 1855,
+        "successes": 1022,
+        "slips": 833,
+        "envDraws": 1855
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2739,
+        "reads": 3005,
+        "evals": 2908,
+        "teleports": 547,
+        "unpairedReads": 97
+      },
+      "evaluatedSeeds": [
+        899928
+      ],
+      "eventsSha256": "cb8084131b450d5358faae6fd7c91169ec329b0e714dbd131879b77891a13d09"
+    },
+    {
+      "configSeed": 899928,
+      "configIndex": 2,
+      "goal": 16,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2933,
+      "fingerprint": "da713dc8c3154b40eda51f8086835858133f979baac9392ffd64e6683d5e6753",
+      "artifacts": {
+        "cogDraws": 79040,
+        "visDraws": 3020,
+        "qEntries": 191
+      },
+      "envCounters": {
+        "attempts": 2245,
+        "successes": 1168,
+        "slips": 1077,
+        "envDraws": 2245
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2748,
+        "reads": 3005,
+        "evals": 2933,
+        "teleports": 504,
+        "unpairedReads": 72
+      },
+      "evaluatedSeeds": [
+        899928
+      ],
+      "eventsSha256": "2b663fbfac84222bb4f7e1829226eb338afbecce154e81d9e1e8f8b11e95d621"
+    },
+    {
+      "configSeed": 899930,
+      "configIndex": 3,
+      "goal": 19,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2928,
+      "fingerprint": "b272870bcc1ea48a163ee6a3eae59f8d6f65b7b6faf412dca8e7f46a69bac4a0",
+      "artifacts": {
+        "cogDraws": 74436,
+        "visDraws": 3020,
+        "qEntries": 199
+      },
+      "envCounters": {
+        "attempts": 1413,
+        "successes": 892,
+        "slips": 521,
+        "envDraws": 1413
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2760,
+        "reads": 3005,
+        "evals": 2928,
+        "teleports": 946,
+        "unpairedReads": 77
+      },
+      "evaluatedSeeds": [
+        899930
+      ],
+      "eventsSha256": "65460537f1d562445fe84124521d54312f342f3ba929dd7ba3a97365ad2b7e56"
+    },
+    {
+      "configSeed": 899967,
+      "configIndex": 0,
+      "goal": 8,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2846,
+      "fingerprint": "03e4e396bd8b4382901eb9e6ab5bc4d6291f914b582b6155b091b3d2ebce33e2",
+      "artifacts": {
+        "cogDraws": 83531,
+        "visDraws": 3020,
+        "qEntries": 215
+      },
+      "envCounters": {
+        "attempts": 2223,
+        "successes": 1231,
+        "slips": 992,
+        "envDraws": 2223
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2766,
+        "reads": 3005,
+        "evals": 2846,
+        "teleports": 440,
+        "unpairedReads": 159
+      },
+      "evaluatedSeeds": [
+        899967
+      ],
+      "eventsSha256": "127871fa1777d826134b8c9bd8830c52f50e4dded1d84cbfbe0a20b8f72e5934"
+    },
+    {
+      "configSeed": 899967,
+      "configIndex": 1,
+      "goal": 12,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2928,
+      "fingerprint": "e65ab569e52004fb23afde05d203c9a6661c364d5ee3c8ab5859bb133f3e32ed",
+      "artifacts": {
+        "cogDraws": 88139,
+        "visDraws": 3020,
+        "qEntries": 209
+      },
+      "envCounters": {
+        "attempts": 1460,
+        "successes": 886,
+        "slips": 574,
+        "envDraws": 1460
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2757,
+        "reads": 3005,
+        "evals": 2928,
+        "teleports": 956,
+        "unpairedReads": 77
+      },
+      "evaluatedSeeds": [
+        899967
+      ],
+      "eventsSha256": "bc775532f483d801ffa90afd916f05145bbf7c91f79072d75e31b01dd93474a2"
+    },
+    {
+      "configSeed": 899967,
+      "configIndex": 2,
+      "goal": 16,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2920,
+      "fingerprint": "420a62ad83ba864f7e480285dc5b373b02783308dd772626ed96662cbabae052",
+      "artifacts": {
+        "cogDraws": 86330,
+        "visDraws": 3020,
+        "qEntries": 176
+      },
+      "envCounters": {
+        "attempts": 2140,
+        "successes": 1134,
+        "slips": 1006,
+        "envDraws": 2140
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2751,
+        "reads": 3005,
+        "evals": 2920,
+        "teleports": 441,
+        "unpairedReads": 85
+      },
+      "evaluatedSeeds": [
+        899967
+      ],
+      "eventsSha256": "1e1878e4677676ff80f9179cc173d51f157228edd66a5a194b4a9872bd7476af"
+    },
+    {
+      "configSeed": 899971,
+      "configIndex": 0,
+      "goal": 8,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2918,
+      "fingerprint": "a89d2ac480b04c2f0b387e9babc7456bbcdd37c12f2de2acac400db698ed6b09",
+      "artifacts": {
+        "cogDraws": 89156,
+        "visDraws": 3020,
+        "qEntries": 222
+      },
+      "envCounters": {
+        "attempts": 1781,
+        "successes": 1067,
+        "slips": 714,
+        "envDraws": 1781
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2767,
+        "reads": 3005,
+        "evals": 2918,
+        "teleports": 655,
+        "unpairedReads": 87
+      },
+      "evaluatedSeeds": [
+        899971
+      ],
+      "eventsSha256": "cdc914c166063eaf6fa6247cb6e5c30d0d8489d5655bffac5169dda496b27a39"
+    },
+    {
+      "configSeed": 899971,
+      "configIndex": 1,
+      "goal": 12,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2629,
+      "fingerprint": "dee9a39ee5b2df7d0f687113a69664886f3cfa61ab4f4b8308de79a054ea071c",
+      "artifacts": {
+        "cogDraws": 80219,
+        "visDraws": 3020,
+        "qEntries": 194
+      },
+      "envCounters": {
+        "attempts": 2015,
+        "successes": 1210,
+        "slips": 805,
+        "envDraws": 2015
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2758,
+        "reads": 3005,
+        "evals": 2629,
+        "teleports": 577,
+        "unpairedReads": 376
+      },
+      "evaluatedSeeds": [
+        899971
+      ],
+      "eventsSha256": "b605121abc6babd16e8a5eeaf40126c31654ca5ffb9cfe581957ab93d82ae294"
+    },
+    {
+      "configSeed": 899971,
+      "configIndex": 2,
+      "goal": 16,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2947,
+      "fingerprint": "da25ad4f1e5deb63d07c946326a4511c2fbaf4953733786742d937941275e723",
+      "artifacts": {
+        "cogDraws": 79753,
+        "visDraws": 3020,
+        "qEntries": 190
+      },
+      "envCounters": {
+        "attempts": 1537,
+        "successes": 906,
+        "slips": 631,
+        "envDraws": 1537
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2729,
+        "reads": 3005,
+        "evals": 2947,
+        "teleports": 846,
+        "unpairedReads": 58
+      },
+      "evaluatedSeeds": [
+        899971
+      ],
+      "eventsSha256": "d41fa18231d2a4f35009ba90f7641d0b11cf35911ad639fbf849f507f7b93f76"
+    },
+    {
+      "configSeed": 899971,
+      "configIndex": 3,
+      "goal": 19,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2936,
+      "fingerprint": "d240714387baa37a250e0bcfa409653fdb5139a6609f5fc885784d781330e1d0",
+      "artifacts": {
+        "cogDraws": 79444,
+        "visDraws": 3020,
+        "qEntries": 216
+      },
+      "envCounters": {
+        "attempts": 1864,
+        "successes": 1069,
+        "slips": 795,
+        "envDraws": 1864
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2755,
+        "reads": 3005,
+        "evals": 2936,
+        "teleports": 622,
+        "unpairedReads": 69
+      },
+      "evaluatedSeeds": [
+        899971
+      ],
+      "eventsSha256": "010c69f36aff5c82a2b245a028879a1a5916f1e06a264c404d4a01ab0ca9491d"
+    },
+    {
+      "configSeed": 899995,
+      "configIndex": 0,
+      "goal": 8,
+      "stratum": "degree5",
+      "status": "COLLECTED",
+      "events": 2899,
+      "fingerprint": "7dedb14cfdfaa92f4ad3e3620c58348697c97f1d3b02af967f18305063cdf868",
+      "artifacts": {
+        "cogDraws": 86480,
+        "visDraws": 3020,
+        "qEntries": 218
+      },
+      "envCounters": {
+        "attempts": 1924,
+        "successes": 1144,
+        "slips": 780,
+        "envDraws": 1924
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2779,
+        "reads": 3005,
+        "evals": 2899,
+        "teleports": 557,
+        "unpairedReads": 106
+      },
+      "evaluatedSeeds": [
+        899995
+      ],
+      "eventsSha256": "ed2141bf7fb51a813a51f9e067d8dbb63a1b46a48e2b1271ea8780602c9893a7"
+    },
+    {
+      "configSeed": 899995,
+      "configIndex": 3,
+      "goal": 19,
+      "stratum": "degree3",
+      "status": "COLLECTED",
+      "events": 2944,
+      "fingerprint": "6632766eae229ce94f46a46d45c07c161f982bf0c4e31a9261231d9f111d5f20",
+      "artifacts": {
+        "cogDraws": 81989,
+        "visDraws": 3020,
+        "qEntries": 202
+      },
+      "envCounters": {
+        "attempts": 1219,
+        "successes": 804,
+        "slips": 415,
+        "envDraws": 1219
+      },
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2787,
+        "reads": 3005,
+        "evals": 2944,
+        "teleports": 871,
+        "unpairedReads": 61
+      },
+      "evaluatedSeeds": [
+        899995
+      ],
+      "eventsSha256": "d182cd69af6ee65a78b1424581f63833c937e9b245489ced15eec8c882e0abe3"
+    }
+  ]
+}

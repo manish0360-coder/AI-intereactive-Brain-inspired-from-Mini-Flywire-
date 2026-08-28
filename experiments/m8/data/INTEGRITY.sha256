@@ -1,0 +1,10 @@
+# M8 COLLECTION — INTEGRITY RECORD
+# Pre-registration : 8fb0bec13bb2940fa2e7e7f823c632427a28fae3
+# Frozen range     : 899500-899999
+# Run parameters   : agentSeed 20260819000, arm A1, 3000 ticks
+# Regenerate with  : cd experiments/m8 && node run_collection.js
+# Verify with      : cd experiments/m8 && node verify_m8_collection.js
+#
+239677be64d11f942ae00939094be09f3d539a92ba255d070c1d0d3ccc6cabab  candidates.jsonl
+23c416bc99cab641e18a40baa79c7a4da348d5b98ef2224ac29115b9116eb617  manifest.json
+ce45025c1601b6dc590c68ecb0c29a0e7f16802f882406498f88f9e2b2e7bf2f  events.jsonl

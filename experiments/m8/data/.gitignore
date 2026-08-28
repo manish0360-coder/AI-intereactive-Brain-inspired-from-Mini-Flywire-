@@ -1,0 +1,12 @@
+# The raw event stream is 51.65 MB and is NOT committed, following the M7
+# convention: no raw measurement data is versioned, and every verifier
+# recomputes from frozen seeds instead (see experiments/m7/verify_G15.js).
+#
+# What IS committed is sufficient to reproduce and validate it exactly:
+#   candidates.jsonl   every one of the 2000 candidates with its disposition
+#   manifest.json      per-run fingerprint, diagnostics and SHA-256 of that
+#                      run's event stream
+#   INTEGRITY.sha256   digests of all three artifacts + the regeneration command
+#
+# Regenerate with:  cd experiments/m8 && node run_collection.js
+events.jsonl
