@@ -99,6 +99,11 @@ export function transformWith(source, sites) {
 // agentCurrentAtWrite) are INTERNAL MEASUREMENT INFRASTRUCTURE. They exist
 // only to produce frozen observables 4, 6, 7 and 10 and are never read by
 // agent code.
+// Run-level context resolver. A plain value is stored as-is; a function is a
+// pure getter called at capture time. It must consume no randomness and mutate
+// nothing — the only intended use is env.getPhase.
+const ctxVal = (v) => (v === undefined ? null : (typeof v === 'function' ? v() : v));
+
 export function createRecorder(ctx = {}) {
     const events = [];
     const diag = { ticks: 0, writes: 0, reads: 0, evals: 0, teleports: 0, unpairedReads: 0 };
@@ -143,9 +148,13 @@ export function createRecorder(ctx = {}) {
                 agentCurrentChangedSinceLastWrite: agentCurrentAtWrite !== null
                     && agentCurrent !== agentCurrentAtWrite,
                 tickIndex,
-                phase:      ctx.phase      === undefined ? null : ctx.phase,
-                configSeed: ctx.configSeed === undefined ? null : ctx.configSeed,
-                goalNode:   ctx.goalNode   === undefined ? null : ctx.goalNode,
+                // §8 field 12 `phase` is PER EVENT: the frozen protocol runs
+                // 3000 ticks with a phase switch at T_SHIFT. A context value may
+                // therefore be a pure getter, resolved at capture time. Fields 13
+                // and 14 are genuinely run-level and are normally plain values.
+                phase:      ctxVal(ctx.phase),
+                configSeed: ctxVal(ctx.configSeed),
+                goalNode:   ctxVal(ctx.goalNode),
             };
         },
         onEval(goalId) {
