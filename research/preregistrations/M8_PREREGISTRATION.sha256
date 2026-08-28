@@ -1,0 +1,29 @@
+# M8 PRE-REGISTRATION — INTEGRITY RECORD
+#
+# Artifact : research/preregistrations/M8_PREREGISTRATION.md
+# Version  : 1.0 (frozen)
+# Frozen   : 2026-08-28, Chief Systems Engineer, under Director authorisation (D-003)
+# Algorithm: SHA-256 over the exact bytes of the file
+# Size     : 20544 bytes, 453 lines
+#
+# BASELINE THIS PRE-REGISTRATION IS BOUND TO
+#   git HEAD   : b167e7e6e1a466bb737b81791efdb70d22b8039e ("docs(research): M7 postmortem and research handoff")
+#   predecessor: M7 frozen and closed at 707cb1e5205a7e9979f81092ee1ebfa0fe28922e
+#   M7 digest  : 2f12e309d7409e95f3d1bca34135110e518865fd01d96e5eeaee347b6e33f6b9 (unchanged)
+#
+# STATE AT FREEZE (all verified immediately before hashing)
+#   instrumentation          : NOT implemented
+#   M8 measurement           : NONE executed
+#   configuration seeds      : NONE generated or inspected
+#   held-out block >= 900500 : UNTOUCHED
+#   M7 artifacts             : UNCHANGED
+#   runtime behaviour        : UNCHANGED
+#
+# VERIFY WITH
+#   cd research/preregistrations && sha256sum -c M8_PREREGISTRATION.sha256
+#
+# A mismatch means the pre-registration changed after freeze. That is a PROTOCOL
+# DEVIATION and must be reported in the final report with its direction and likely
+# effect on results -- never silently reconciled.
+#
+14d5eef9cf304ef36b269613f23a0c12d43790dc1fe6393cfc26db86bada0d24  M8_PREREGISTRATION.md

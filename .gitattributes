@@ -25,3 +25,9 @@
 research/cognitive-audit/M7_PREREGISTRATION.md          -text
 research/cognitive-audit/M7_PREREGISTRATION.sha256      -text
 research/cognitive-audit/M7_PREREGISTRATION_ERRATUM_*.md -text
+
+# M8 pre-registration — same byte-integrity guarantee as the M7 frozen artifact.
+# Its identity is a SHA-256 over exact bytes (M8_PREREGISTRATION.sha256), so end-of-line
+# conversion must be disabled in both directions or the digest fails to validate on checkout.
+research/preregistrations/M8_PREREGISTRATION.md      -text
+research/preregistrations/M8_PREREGISTRATION.sha256  -text
