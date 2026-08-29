@@ -7,6 +7,209 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-007 — Q1 post-INCONCLUSIVE governance: B′ adopted, §9.5 retired, D-006 §4 corrected
+
+**Date:** 2026-08-30 · **Authority:** Director ruling of 2026-08-30, following the read-only D-007
+pre-analysis governance audit and an independent scientific governance review by Gemini
+(verdict: *analysis may proceed only for specified claims*) · **Status:** in force
+**Scope:** the disposition of the already-collected Q1 evidence. This is a governance decision. No
+analysis was executed, no raw Q1 transition record was read, no scientific result was computed, no
+seed was generated or inspected. Q1 pre-registration frozen at `0ad12fe`, D-006 at `612c69c`,
+instrumentation at `50be4b4`, collection at `d16d568` — all unchanged.
+
+### 1. Decision
+
+Q1 completed over its complete frozen range and returned **INCONCLUSIVE — INSUFFICIENT MATERIAL**:
+17 accepted configurations (from 9 distinct configuration seeds) against minima of 20
+configurations and 15 per goal-degree stratum. This entry rules on what that disposition permits.
+
+| | Ruling |
+|---|---|
+| **A** | **Interpretation B′ is adopted.** The INCONCLUSIVE disposition is a verdict on *distributional sufficiency*. The five existence-based refutation claims in Q1 §9 remain independently evaluable **for refutation only**. |
+| **B** | **D-006 §4 contains a material governance defect.** Its premise that "every" Q1 §9 falsification statement is an existence claim is false. The same overstatement appears in the frozen Q1 §9. Both are corrected *by this record*; neither historical document is rewritten. |
+| **C** | **Q1 §9.5 is unevaluable as frozen and is RETIRED for Q1.** Increasing the sample size cannot repair a missing decision rule. |
+| **D** | **Evaluation of the five existence claims is AUTHORISED**, on the existing frozen Q1 evidence only. |
+| **E** | **Four non-refutation safeguards are MANDATORY** and apply verbatim to every downstream report. |
+| **F** | **The post-hoc timing of the partition decision is disclosed**, without mitigation. |
+
+### 2. A — the B′ interpretation
+
+The INCONCLUSIVE disposition attaches to distributional sufficiency, not to the whole evidential
+record. The controlling text is D-006 §4, frozen before any Q1 data existed:
+
+> "The minimum-evidence rule governs *distributional characterisation* — the precision with which
+> `GAP_COMPOSITION` proportions are reported — **and nothing else. It cannot make a Q1 refutation
+> more or less valid.**"
+
+The operative prohibitions in D-006 §5 bind **sampling, collection, acquisition, extension and
+adaptation**. No frozen provision in Q1 or D-006 prohibits analysis of Q1's own evidence; Q1 §17's
+prohibitions concern predecessor artifacts, added observables and the held-out block. Q1 §15
+independently presupposes evaluation, naming "no falsifiable statement is overturned" as a valid
+and complete Q1 outcome.
+
+**The strongest counterargument is recorded rather than dismissed.** D-006 §5.6 predicates the
+disposition of "the Q1 **result**", unqualified, and a plain reading assigns it to the whole study.
+The independent review resolved this on the interpretive principle that **a specific clause takes
+precedence over a general one**, particularly where the specific clause (§4) was written expressly
+to define the scope of the general one (§5.6). This decision adopts that resolution and records the
+counterargument so a future reader can weigh it.
+
+### 3. B — the exact defect in D-006 §4
+
+**What D-006 §4 says:** "**every** falsification statement in Q1 §9 is an existence claim, refuted
+by a single counterexample."
+
+**Why it is false.** Q1 §9's fifth row is *"Gap composition is independent of AGE"*, falsified by
+*"composition distributions differing across AGE values"*. Refutation requires comparing
+**distributions across a partition**. It is not a property of any single gap and cannot be
+witnessed by one counterexample. **Five** of the six statements are existence claims; the sixth is
+comparative and distributional.
+
+**The same overstatement exists in the frozen Q1 §9**, whose closing line reads "Each statement is
+falsified by the existence of a counterexample, which requires no cut-point to evaluate."
+
+**Materiality.** This is not a harmless drafting error. The false premise is the justification for
+scoping the minimum-evidence rule, and its falsity means **§9.5 was never correctly reasoned about
+at ratification** — a structurally different kind of claim passed scrutiny under a rule that did
+not apply to it. An error in the justifying premise of a governance rule is never harmless.
+
+**Remedy.** The error is corrected **by this record, in both locations**. Per the independent
+review, a numbered erratum to the frozen Q1 document is not required because this decision
+addresses the error in both places explicitly.
+**`D-006` and `Q1_PREREGISTRATION.md` are NOT rewritten.** Their historical text and their digests
+stand unchanged; that is the whole point of freezing them. D-006's operative content is otherwise
+undisturbed — the conclusion it drew holds for the five existence claims, and only its universal
+quantifier and its treatment of §9.5 are corrected here.
+
+**Attribution.** The defective text was drafted by the Chief Systems Engineer and ratified by the
+Director on that memo. It is recorded as an error of this project's own making, not an inherited
+one.
+
+### 4. C — Q1 §9.5 is retired
+
+Q1 §9.5's refuting condition, *"composition distributions differing across AGE values"*, admits no
+non-vacuous decision rule under Q1's own frozen constraints:
+
+- **"Differ" as exact observed inequality** is essentially certain in any finite sample with more
+  than one AGE value, so the statement would be refuted by construction. Q1 §9's own header forbids
+  exactly that: "None is predetermined — the failure mode that made M8's own analysis layer
+  degenerate."
+- **"Differ" as a material difference** requires a threshold or a test. Q1 §9 states "No threshold
+  is introduced", and Q1 §10 prohibits tests, intervals, effect sizes and any post-hoc statistical
+  addition.
+
+**Both failure modes are independent of sample size.** One is vacuous at every *n*; the other lacks
+a criterion at every *n*. **Increasing the sample cannot repair a missing decision rule**, and no
+successor study may be justified on the basis of §9.5.
+
+**§9.5 is retired for Q1 and will not be evaluated.** No threshold, statistical test, effect size,
+interval or other criterion may be introduced to rescue it — doing so would be a post-hoc
+alteration of the study's core statistical philosophy. Reporting per-AGE composition descriptively
+is *not* an evaluation of §9.5 and is in any case barred by §6 of this decision.
+
+### 5. D — the five authorised claims
+
+Authorised for evaluation **on the existing frozen Q1 evidence only**:
+
+| | Statement (Q1 §9, verbatim) | Refuted by |
+|---|---|---|
+| **E1** | TELEPORT-classified gaps contain only teleports | any such gap containing an `advance` record |
+| **E2** | Every gap contains exactly one transition | any gap with `TRANSITION_COUNT` >= 2 |
+| **E3** | The last transition in a TELEPORT-classified gap is always the teleport | any such gap whose `LAST_TRANSITION_BEFORE_EVALUATION` is `advance` |
+| **E4** | `FIRST_DIVERGING_TRANSITION` always equals `LAST_TRANSITION_BEFORE_EVALUATION` | any gap where they differ |
+| **E5** | ADVANCE-classified gaps are single-transition | any such gap with `TRANSITION_COUNT` >= 2 |
+
+**Refutation only.** A counterexample refutes at any sample size. Non-refutation is governed by §6.
+
+**Prerequisite carried forward from the D-007 audit, and NOT part of the independent review.** E1,
+E3 and E5 are quantified over gaps bearing an M9 ORIGIN label. Q1's §6 schema records
+`{seq, tickIndex, site, fromPos, toPos}` and the write/read boundaries — **not** M9's
+`ticksSinceTeleport`, `ticksSinceWrite` or `teleportSource`. Whether M9's frozen classification is
+faithfully reconstructible from Q1's schema is a schema-level question that **has not been
+resolved**, and reconstructing "what M9 would have classified" requires deliberately emulating
+M9's lossy last-write-wins bookkeeping — a design decision, not a lookup. **E1, E3 and E5 are not
+evaluable until that reconstruction rule is established and frozen.** E2 and E4 carry no such
+prerequisite. This is an implementation precondition on the next milestone, not a reopening of the
+ruling.
+
+### 6. E — mandatory non-refutation safeguards
+
+Refutation is sample-size independent; **non-refutation is not**. The evidential weight of "no
+counterexample found" depends entirely on *n*, and Q1's *n* is 17 accepted configurations drawn
+from **9 distinct configuration seeds** — configurations sharing a seed share that seed's
+edge-reliability draw and embeddings, so the effective independent replication is nearer 9 than 17.
+
+All four safeguards are **mandatory and apply verbatim** to every downstream report:
+
+1. **Permitted wording only** — quoted here on one unbroken line so downstream reports can
+   reproduce it verbatim:
+
+   > no counterexample observed in 17 accepted configurations drawn from 9 distinct configuration seeds.
+
+   **Prohibited:** "established", "confirmed", "holds", "always", "the statement is true", and any
+   unqualified present tense. **Non-observation is never converted into confirmation.**
+2. **All five existence statements are reported, refuted or not.** Reporting only the refuted ones
+   would convert a legitimate analysis into selective reporting.
+3. **INCONCLUSIVE — INSUFFICIENT MATERIAL travels with every reported statement.**
+4. **The 9-distinct-seed clustering is disclosed wherever counts appear.**
+
+### 7. F — post-hoc disclosure, stated without mitigation
+
+| Event | Commit | Status |
+|---|---|---|
+| Q1 §9 frozen (five existence claims + §9.5) | `0ad12fe` | a-priori — no instrumentation, no seed generated |
+| D-006 §4 scoping of the minima | `612c69c` | a-priori — before any Q1 data existed |
+| Q1 instrumentation | `50be4b4` | before collection |
+| Q1 collection over the complete frozen range | `d16d568` | — |
+| INCONCLUSIVE disposition determined | `d16d568` | — |
+| **Decision to operationally partition the analysis** | **this decision** | **AFTER the disposition** |
+
+The §9 criteria and the D-006 §4 conceptual distinction both **existed before collection**. The
+decision to **act** on that pre-existing partition was taken **after the disposition was known**.
+
+**Consequence, which downstream write-ups must reproduce rather than soften:** the resulting
+analysis has **weaker evidential status than a fully a-priori analysis** and must never be
+described as fully a-priori. The aggravating factor is recorded too — the scoping in D-006 §4 was
+authored by the same party that later invoked it, and no independent party assessed it before
+ratification. The independent review judged that the mitigation is transparency, and that voiding
+an a-priori rule because its outcome proved adverse would be a more dangerous post-hoc
+intervention than applying it as written. This decision adopts that judgement and records the
+concern alongside it.
+
+### 8. G — boundary
+
+This decision authorises **no measurement and no computation**. In force until superseded:
+
+- **No new Q1 sampling.** D-006 §5.6 stands: no additional sampling is permitted under Q1.
+- **No seed extension**, no substitution, no retry, no new seed generated or inspected.
+- **No Q2.** No successor study is designed, sized, sampled or authorised here.
+- **No protocol repair.** Q1 §9.5 is retired, not fixed.
+- **No statistical additions** — no test, threshold, interval, effect size or model.
+- **No modification of frozen text.** `Q1_PREREGISTRATION.md`, D-006's historical text, and all
+  M7, M8 and M9 artifacts remain byte-identical; every digest revalidates.
+- **No scientific analysis in this milestone.** No raw Q1 transition record was read and no
+  result, distribution, proportion or existence verdict was computed.
+
+### 9. Q1 remains INCONCLUSIVE for distributional characterisation
+
+Permanently, and not curable by reinterpretation. The 17 configurations may **not** be treated as
+sufficient for distributional claims. No `GAP_COMPOSITION` distributional characterisation may be
+performed, and no proportion may be produced as evidence for a distributional conclusion. Q1's
+denominator is Q1's; no pooling with any future evidence is permitted.
+
+### 10. H — next milestone
+
+The next milestone is the **implementation of the authorised five-claim analysis**, as a
+**separate milestone requiring its own authorisation**. Given the M8 precedent — where the analysis
+layer, not the instrumentation, was where degeneracy entered — that milestone should freeze its
+analysis design before running it, with adversarial mutation controls and Q1 §12 reproducibility,
+and must resolve the E1/E3/E5 ORIGIN-reconstruction prerequisite in §5 first.
+
+No Q1 result is authorised to reinterpret M7, M8 or M9, or to bear on the G15 outcome. Q1 §7's
+prohibition on causal language, including the express ban on "proximate cause", survives unchanged.
+
+---
+
 ## D-006 — Q1 collection parameters: ratified and frozen
 
 **Date:** 2026-08-29 · **Authority:** Director ruling of 2026-08-29, following the read-only D-006
