@@ -1,0 +1,662 @@
+{
+  "provenance": {
+    "preregistration": "f40f83c9454144106366422f97258321374a8462",
+    "m8Collection": "f9d97b9a180fa5a4aed6def06788eb4b38c037f0",
+    "rawEventsRead": 118179,
+    "collectedRuns": 41,
+    "m8EvidenceDigest": "ce45025c1601b6dc590c68ecb0c29a0e7f16802f882406498f88f9e2b2e7bf2f"
+  },
+  "denominator": {
+    "frozen": 7178,
+    "observed": 7178,
+    "matchesFrozen": true
+  },
+  "evaluability": {
+    "denominatorReproduced": true,
+    "unclassifiedIsZero": true,
+    "bothOriginsNonEmpty": true
+  },
+  "origin": {
+    "TELEPORT": {
+      "n": 2281,
+      "pctOfDenominator": 31.7777
+    },
+    "ADVANCE": {
+      "n": 4897,
+      "pctOfDenominator": 68.2223
+    },
+    "UNCLASSIFIED": {
+      "n": 0,
+      "pctOfDenominator": 0
+    }
+  },
+  "age": {
+    "1": {
+      "n": 6903,
+      "pctOfDenominator": 96.1688
+    },
+    "2": {
+      "n": 256,
+      "pctOfDenominator": 3.5665
+    },
+    "3": {
+      "n": 17,
+      "pctOfDenominator": 0.2368
+    },
+    "4": {
+      "n": 2,
+      "pctOfDenominator": 0.0279
+    }
+  },
+  "ageByOrigin": {
+    "TELEPORT": {
+      "1": {
+        "n": 2077,
+        "pctOfOrigin": 91.0566
+      },
+      "2": {
+        "n": 188,
+        "pctOfOrigin": 8.242
+      },
+      "3": {
+        "n": 15,
+        "pctOfOrigin": 0.6576
+      },
+      "4": {
+        "n": 1,
+        "pctOfOrigin": 0.0438
+      }
+    },
+    "ADVANCE": {
+      "1": {
+        "n": 4826,
+        "pctOfOrigin": 98.5501
+      },
+      "2": {
+        "n": 68,
+        "pctOfOrigin": 1.3886
+      },
+      "3": {
+        "n": 2,
+        "pctOfOrigin": 0.0408
+      },
+      "4": {
+        "n": 1,
+        "pctOfOrigin": 0.0204
+      }
+    }
+  },
+  "originByStratum": {
+    "degree5": {
+      "TELEPORT": {
+        "n": 906,
+        "pctOfStratum": 27.6388
+      },
+      "ADVANCE": {
+        "n": 2372,
+        "pctOfStratum": 72.3612
+      }
+    },
+    "degree3": {
+      "TELEPORT": {
+        "n": 1375,
+        "pctOfStratum": 35.2564
+      },
+      "ADVANCE": {
+        "n": 2525,
+        "pctOfStratum": 64.7436
+      }
+    }
+  },
+  "originByPhase": {
+    "1": {
+      "TELEPORT": {
+        "n": 951,
+        "pctOfPhase": 25.3532
+      },
+      "ADVANCE": {
+        "n": 2800,
+        "pctOfPhase": 74.6468
+      }
+    },
+    "2": {
+      "TELEPORT": {
+        "n": 1330,
+        "pctOfPhase": 38.8095
+      },
+      "ADVANCE": {
+        "n": 2097,
+        "pctOfPhase": 61.1905
+      }
+    }
+  },
+  "originByGoal": {
+    "8": {
+      "TELEPORT": 372,
+      "ADVANCE": 1173
+    },
+    "12": {
+      "TELEPORT": 534,
+      "ADVANCE": 1199
+    },
+    "16": {
+      "TELEPORT": 734,
+      "ADVANCE": 1003
+    },
+    "19": {
+      "TELEPORT": 641,
+      "ADVANCE": 1522
+    }
+  },
+  "consequence": {
+    "TELEPORT": {
+      "n": 2281,
+      "nonCanonical": 1938,
+      "nonCanonicalPct": 84.9627,
+      "sPair": 0,
+      "sPairPct": 0
+    },
+    "ADVANCE": {
+      "n": 4897,
+      "nonCanonical": 4897,
+      "nonCanonicalPct": 100,
+      "sPair": 4897,
+      "sPairPct": 100
+    }
+  },
+  "precondition": {
+    "selectionRanThisTickTrue": 0,
+    "selectionRanThisTickFalse": 7178,
+    "note": "reported as a constant precondition of the phenomenon, never as a mechanism"
+  },
+  "h4": {
+    "goalMismatchCount": 0,
+    "status": "UNTESTABLE UNDER THIS HARNESS",
+    "note": "not \"absent\": both in-tick goal-write sites are gated on window.homeNeuronId, which is never defined in the headless harness"
+  },
+  "configurationsContributing": 41,
+  "grid": [
+    {
+      "origin": "TELEPORT",
+      "stratum": "degree5",
+      "phase": 1,
+      "age": 1,
+      "n": 348,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "TELEPORT",
+      "stratum": "degree5",
+      "phase": 1,
+      "age": 2,
+      "n": 23,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "TELEPORT",
+      "stratum": "degree5",
+      "phase": 1,
+      "age": 3,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "TELEPORT",
+      "stratum": "degree5",
+      "phase": 1,
+      "age": 4,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "TELEPORT",
+      "stratum": "degree5",
+      "phase": 2,
+      "age": 1,
+      "n": 497,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "TELEPORT",
+      "stratum": "degree5",
+      "phase": 2,
+      "age": 2,
+      "n": 34,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "TELEPORT",
+      "stratum": "degree5",
+      "phase": 2,
+      "age": 3,
+      "n": 4,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "TELEPORT",
+      "stratum": "degree5",
+      "phase": 2,
+      "age": 4,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "TELEPORT",
+      "stratum": "degree3",
+      "phase": 1,
+      "age": 1,
+      "n": 513,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "TELEPORT",
+      "stratum": "degree3",
+      "phase": 1,
+      "age": 2,
+      "n": 60,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "TELEPORT",
+      "stratum": "degree3",
+      "phase": 1,
+      "age": 3,
+      "n": 6,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "TELEPORT",
+      "stratum": "degree3",
+      "phase": 1,
+      "age": 4,
+      "n": 1,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "TELEPORT",
+      "stratum": "degree3",
+      "phase": 2,
+      "age": 1,
+      "n": 719,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "TELEPORT",
+      "stratum": "degree3",
+      "phase": 2,
+      "age": 2,
+      "n": 71,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "TELEPORT",
+      "stratum": "degree3",
+      "phase": 2,
+      "age": 3,
+      "n": 5,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "TELEPORT",
+      "stratum": "degree3",
+      "phase": 2,
+      "age": 4,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "ADVANCE",
+      "stratum": "degree5",
+      "phase": 1,
+      "age": 1,
+      "n": 1359,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "ADVANCE",
+      "stratum": "degree5",
+      "phase": 1,
+      "age": 2,
+      "n": 11,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "ADVANCE",
+      "stratum": "degree5",
+      "phase": 1,
+      "age": 3,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "ADVANCE",
+      "stratum": "degree5",
+      "phase": 1,
+      "age": 4,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "ADVANCE",
+      "stratum": "degree5",
+      "phase": 2,
+      "age": 1,
+      "n": 981,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "ADVANCE",
+      "stratum": "degree5",
+      "phase": 2,
+      "age": 2,
+      "n": 19,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "ADVANCE",
+      "stratum": "degree5",
+      "phase": 2,
+      "age": 3,
+      "n": 2,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "ADVANCE",
+      "stratum": "degree5",
+      "phase": 2,
+      "age": 4,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "ADVANCE",
+      "stratum": "degree3",
+      "phase": 1,
+      "age": 1,
+      "n": 1413,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "ADVANCE",
+      "stratum": "degree3",
+      "phase": 1,
+      "age": 2,
+      "n": 17,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "ADVANCE",
+      "stratum": "degree3",
+      "phase": 1,
+      "age": 3,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "ADVANCE",
+      "stratum": "degree3",
+      "phase": 1,
+      "age": 4,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "ADVANCE",
+      "stratum": "degree3",
+      "phase": 2,
+      "age": 1,
+      "n": 1073,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "ADVANCE",
+      "stratum": "degree3",
+      "phase": 2,
+      "age": 2,
+      "n": 21,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "ADVANCE",
+      "stratum": "degree3",
+      "phase": 2,
+      "age": 3,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "ADVANCE",
+      "stratum": "degree3",
+      "phase": 2,
+      "age": 4,
+      "n": 1,
+      "status": "OBSERVED"
+    },
+    {
+      "origin": "UNCLASSIFIED",
+      "stratum": "degree5",
+      "phase": 1,
+      "age": 1,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "UNCLASSIFIED",
+      "stratum": "degree5",
+      "phase": 1,
+      "age": 2,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "UNCLASSIFIED",
+      "stratum": "degree5",
+      "phase": 1,
+      "age": 3,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "UNCLASSIFIED",
+      "stratum": "degree5",
+      "phase": 1,
+      "age": 4,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "UNCLASSIFIED",
+      "stratum": "degree5",
+      "phase": 2,
+      "age": 1,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "UNCLASSIFIED",
+      "stratum": "degree5",
+      "phase": 2,
+      "age": 2,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "UNCLASSIFIED",
+      "stratum": "degree5",
+      "phase": 2,
+      "age": 3,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "UNCLASSIFIED",
+      "stratum": "degree5",
+      "phase": 2,
+      "age": 4,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "UNCLASSIFIED",
+      "stratum": "degree3",
+      "phase": 1,
+      "age": 1,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "UNCLASSIFIED",
+      "stratum": "degree3",
+      "phase": 1,
+      "age": 2,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "UNCLASSIFIED",
+      "stratum": "degree3",
+      "phase": 1,
+      "age": 3,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "UNCLASSIFIED",
+      "stratum": "degree3",
+      "phase": 1,
+      "age": 4,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "UNCLASSIFIED",
+      "stratum": "degree3",
+      "phase": 2,
+      "age": 1,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "UNCLASSIFIED",
+      "stratum": "degree3",
+      "phase": 2,
+      "age": 2,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "UNCLASSIFIED",
+      "stratum": "degree3",
+      "phase": 2,
+      "age": 3,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "origin": "UNCLASSIFIED",
+      "stratum": "degree3",
+      "phase": 2,
+      "age": 4,
+      "n": 0,
+      "status": "NOT OBSERVED"
+    }
+  ],
+  "comparisonCells": [
+    {
+      "cmp": "LT",
+      "teleportSource": "cap",
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "cmp": "LT",
+      "teleportSource": "pool",
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "cmp": "LT",
+      "teleportSource": "goalReset",
+      "n": 204,
+      "status": "OBSERVED"
+    },
+    {
+      "cmp": "LT",
+      "teleportSource": "none",
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "cmp": "EQ",
+      "teleportSource": "cap",
+      "n": 1,
+      "status": "OBSERVED"
+    },
+    {
+      "cmp": "EQ",
+      "teleportSource": "pool",
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "cmp": "EQ",
+      "teleportSource": "goalReset",
+      "n": 2077,
+      "status": "OBSERVED"
+    },
+    {
+      "cmp": "EQ",
+      "teleportSource": "none",
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "cmp": "GT",
+      "teleportSource": "cap",
+      "n": 159,
+      "status": "OBSERVED"
+    },
+    {
+      "cmp": "GT",
+      "teleportSource": "pool",
+      "n": 168,
+      "status": "OBSERVED"
+    },
+    {
+      "cmp": "GT",
+      "teleportSource": "goalReset",
+      "n": 4569,
+      "status": "OBSERVED"
+    },
+    {
+      "cmp": "GT",
+      "teleportSource": "none",
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "cmp": "NULL",
+      "teleportSource": "cap",
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "cmp": "NULL",
+      "teleportSource": "pool",
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "cmp": "NULL",
+      "teleportSource": "goalReset",
+      "n": 0,
+      "status": "NOT OBSERVED"
+    },
+    {
+      "cmp": "NULL",
+      "teleportSource": "none",
+      "n": 0,
+      "status": "NOT OBSERVED"
+    }
+  ]
+}

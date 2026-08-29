@@ -1,0 +1,9 @@
+# M9 ANALYSIS RESULTS — INTEGRITY RECORD
+#
+# Pre-registration : f40f83c9454144106366422f97258321374a8462
+# Evidence         : experiments/m8/data/events.jsonl (unmodified)
+# Evidence digest  : ce45025c1601b6dc590c68ecb0c29a0e7f16802f882406498f88f9e2b2e7bf2f
+# Regenerate with  : cd experiments/m9 && node analyze.js
+# Verify with      : cd experiments/m9 && node verify_m9_analysis.js
+#
+9443c25f631345ccec55eb656a551a53c5e73e4bb0033c3d808eeefd20f76ed6  m9_results.json
