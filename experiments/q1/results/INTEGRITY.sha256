@@ -1,0 +1,23 @@
+# Q1 FIVE-CLAIM ANALYSIS — INTEGRITY RECORD
+#
+# Artifact   : experiments/q1/results/q1_claim_results.json
+# Study      : Q1 ordered transition composition in DESYNC gaps
+# Protocol   : research/preregistrations/Q1_PREREGISTRATION.md 0ad12fe2f190645d2126c9e55aef4f270f853009
+# Governed by: D-007, D-008, D-009
+# Analysis   : 1.0.0
+# Disposition: INCONCLUSIVE — INSUFFICIENT MATERIAL
+#
+# EVIDENCE THIS RESULT IS BOUND TO (verified before any gap was built)
+#   transitions.jsonl  0aae29e8be31950e0622af11edf7ab5250e42dca40b24d5faf87c3fa727f40e7
+#   boundaries.jsonl   4cfef46f0719d101370671cb7c671bf0c68c06b440c3b36002ffd5adcbad2e5f
+#   candidates.jsonl   ccca69d59611b406cd14a70999dc18d7619dc32aca455e3bc437bac4f734e51b
+#   manifest.json      79b8a2ffe20cd88a74008da73c485ff394888700c6c36bf86c40de188ae6e562
+#
+# Regenerate with : cd experiments/q1 && node run_analysis.js
+# Verify with     : cd experiments/q1 && node verify_q1_analysis.js
+#
+# A mismatch means the result changed after computation. That is a PROTOCOL
+# DEVIATION and must be reported with its direction and likely effect -- never
+# silently reconciled.
+#
+4bba103c563b6ce4ff25cc72793c845190c3509c17b48d5ae8726dc57816466b  q1_claim_results.json

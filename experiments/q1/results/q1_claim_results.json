@@ -1,0 +1,454 @@
+{
+  "study": "Q1",
+  "analysisVersion": "1.0.0",
+  "preregistration": "0ad12fe2f190645d2126c9e55aef4f270f853009",
+  "governingDecisions": [
+    "D-007",
+    "D-008",
+    "D-009"
+  ],
+  "disposition": "INCONCLUSIVE — INSUFFICIENT MATERIAL",
+  "dispositionNote": "Q1 failed three of four D-006 minimum-evidence conditions (17 accepted configurations vs 20 required; degree5 9 vs 15; degree3 8 vs 15). This disposition applies to distributional characterisation and travels with every claim verdict below. The claims are evaluated by REFUTATION ONLY under D-007. Absence of a counterexample is not confirmation and is never reported as proof of universal truth.",
+  "frozenParameters": {
+    "seedLo": 899000,
+    "seedHi": 899499,
+    "agentSeed": 20260819000,
+    "arm": "A1",
+    "ticks": 3000
+  },
+  "digests": {
+    "evidence": {
+      "transitions.jsonl": "0aae29e8be31950e0622af11edf7ab5250e42dca40b24d5faf87c3fa727f40e7",
+      "boundaries.jsonl": "4cfef46f0719d101370671cb7c671bf0c68c06b440c3b36002ffd5adcbad2e5f",
+      "candidates.jsonl": "ccca69d59611b406cd14a70999dc18d7619dc32aca455e3bc437bac4f734e51b",
+      "manifest.json": "79b8a2ffe20cd88a74008da73c485ff394888700c6c36bf86c40de188ae6e562"
+    },
+    "protocol": {
+      "Q1_PREREGISTRATION.md": "a148373eb05f4cbcfc21ba77b825a5f7641341c593e5e9596fd78129ca26f7f8",
+      "M8_PREREGISTRATION.md": "14d5eef9cf304ef36b269613f23a0c12d43790dc1fe6393cfc26db86bada0d24",
+      "M9_PREREGISTRATION.md": "98c9dee82f832ea2e2541e82de90c42cf158cc97302ad0d8ca18cf9cb38fa7a4",
+      "M7_PREREGISTRATION.md": "2f12e309d7409e95f3d1bca34135110e518865fd01d96e5eeaee347b6e33f6b9",
+      "09_decisions.md": "a58926bf1e415550fa2a0d39e0a59b684cbbb774b59f9adfe2a28522d4d5a7ac"
+    }
+  },
+  "transitionDefinition": {
+    "rule": "fromPos !== toPos",
+    "authority": "D-009 Ruling 1",
+    "basis": "Q1 §6 \"executed position-changing transition\"; Q1 §15.6 \"Q1 measures realised position changes only\". The committed instrument recorded every executed assignment, a superset; the frozen protocol governs.",
+    "excludedRecordsRemainInEvidence": true
+  },
+  "originLabelling": {
+    "rule": "the frozen M9 originOf() rule, imported verbatim from experiments/m9/analyze.js",
+    "authority": "D-008",
+    "appliedTo": "Q1's own gap population",
+    "statement": "Q1 gaps were classified using the frozen M9 originOf() rule.",
+    "notReconstruction": "M9's historical event population is NOT reconstructed and is not reconstructible: M9 event eligibility required the evaluation probe at main.js:3922, which Q1 does not carry. Q1 has its own denominator and its counts are not comparable like-for-like with M9's published proportions.",
+    "teleportScanScope": "ALL assignment records at cap/pool/goalReset, including self-loops, because D-008 §4 requires the ORIGIN inputs to reproduce M8's recorder exactly and M8's onTeleport probe fired on every executed assignment. D-009 Ruling 1 narrows \"transition\" explicitly and only \"for the five claims\", which is a different computation.",
+    "originSensitivity": 0,
+    "originSensitivityNote": "Number of gaps whose ORIGIN label would change if the teleport scan were restricted to position-changing records. A specification-sensitivity audit quantity, not a claim, not a verdict, and not a scientific result."
+  },
+  "selfLoopAccounting": {
+    "records": 37659,
+    "selfLoops": 2686,
+    "bySite": {
+      "advance": 2086,
+      "goalReset": 600
+    },
+    "authority": "D-009 §8",
+    "note": "Measurement accounting, not a Q1 transition statistic. These records remain untouched in the raw evidence and do not participate in E1-E5.",
+    "agreesWithD009": true
+  },
+  "gapAccounting": {
+    "runs": 17,
+    "reads": 51085,
+    "desyncReads": 3166,
+    "nonDesyncReads": 47919,
+    "readsWithoutWrite": 0,
+    "gaps": 3166,
+    "emptyGaps": 0,
+    "originSensitivity": 0,
+    "originCensus": {
+      "ADVANCE": 2086,
+      "TELEPORT": 1080
+    }
+  },
+  "e4Equivalence": {
+    "gaps": 3166,
+    "agree": 3166,
+    "disagree": 0,
+    "disagreements": [],
+    "equivalent": true,
+    "authority": "D-009 Ruling 2",
+    "note": "E4 \"equals\" is record identity, so E4 is logically equivalent to E2. Established per gap here, not assumed."
+  },
+  "retired": {
+    "Q1 §9.5": {
+      "statement": "Gap composition is independent of AGE",
+      "status": "RETIRED",
+      "authority": "D-007 §4",
+      "reason": "Unevaluable as frozen at any sample size: its refuting condition is either vacuous or requires a threshold Q1 §9 and §10 forbid. Not implemented."
+    }
+  },
+  "permittedNonRefutationWording": "no counterexample observed in 17 accepted configurations drawn from 9 distinct configuration seeds",
+  "exemplarCap": 5,
+  "exemplarCapNote": "Counterexample totals are exact. Stored exemplars are capped; exemplarsTruncated records how many were not stored. No silent truncation.",
+  "claims": [
+    {
+      "id": "E1",
+      "statement": "TELEPORT-classified gaps contain only teleports",
+      "refutedBy": "any such gap containing an `advance` record",
+      "usesOriginLabel": true,
+      "counterexampleCount": 0,
+      "verdict": "NOT REFUTED",
+      "statement_if_not_refuted": "no counterexample observed in 17 accepted configurations drawn from 9 distinct configuration seeds",
+      "disposition": "INCONCLUSIVE — INSUFFICIENT MATERIAL",
+      "exemplarCap": 5,
+      "exemplarsTruncated": 0,
+      "exemplars": []
+    },
+    {
+      "id": "E2",
+      "statement": "Every gap contains exactly one transition",
+      "refutedBy": "any gap with `TRANSITION_COUNT` ≥ 2",
+      "usesOriginLabel": false,
+      "counterexampleCount": 85,
+      "verdict": "REFUTED",
+      "statement_if_not_refuted": null,
+      "disposition": "INCONCLUSIVE — INSUFFICIENT MATERIAL",
+      "exemplarCap": 5,
+      "exemplarsTruncated": 80,
+      "exemplars": [
+        {
+          "runKey": "899000:0",
+          "writeSeq": 753,
+          "readSeq": 758,
+          "writeTick": 280,
+          "readTick": 282,
+          "origin": "TELEPORT",
+          "teleportSource": "goalReset",
+          "ticksSinceWrite": 2,
+          "ticksSinceTeleport": 1,
+          "transitionCount": 2,
+          "composition": [
+            "goalReset",
+            "goalReset"
+          ],
+          "selfLoopsExcluded": 0,
+          "firstTransition": {
+            "seq": 755,
+            "site": "goalReset",
+            "fromPos": 9,
+            "toPos": 19
+          },
+          "lastTransition": {
+            "seq": 757,
+            "site": "goalReset",
+            "fromPos": 19,
+            "toPos": 1
+          }
+        },
+        {
+          "runKey": "899000:0",
+          "writeSeq": 2276,
+          "readSeq": 2281,
+          "writeTick": 832,
+          "readTick": 834,
+          "origin": "TELEPORT",
+          "teleportSource": "goalReset",
+          "ticksSinceWrite": 2,
+          "ticksSinceTeleport": 1,
+          "transitionCount": 2,
+          "composition": [
+            "goalReset",
+            "goalReset"
+          ],
+          "selfLoopsExcluded": 0,
+          "firstTransition": {
+            "seq": 2278,
+            "site": "goalReset",
+            "fromPos": 10,
+            "toPos": 17
+          },
+          "lastTransition": {
+            "seq": 2280,
+            "site": "goalReset",
+            "fromPos": 17,
+            "toPos": 7
+          }
+        },
+        {
+          "runKey": "899000:0",
+          "writeSeq": 3423,
+          "readSeq": 3428,
+          "writeTick": 1244,
+          "readTick": 1246,
+          "origin": "TELEPORT",
+          "teleportSource": "goalReset",
+          "ticksSinceWrite": 2,
+          "ticksSinceTeleport": 1,
+          "transitionCount": 2,
+          "composition": [
+            "goalReset",
+            "goalReset"
+          ],
+          "selfLoopsExcluded": 0,
+          "firstTransition": {
+            "seq": 3425,
+            "site": "goalReset",
+            "fromPos": 10,
+            "toPos": 16
+          },
+          "lastTransition": {
+            "seq": 3427,
+            "site": "goalReset",
+            "fromPos": 16,
+            "toPos": 13
+          }
+        },
+        {
+          "runKey": "899017:2",
+          "writeSeq": 1928,
+          "readSeq": 1933,
+          "writeTick": 751,
+          "readTick": 753,
+          "origin": "TELEPORT",
+          "teleportSource": "goalReset",
+          "ticksSinceWrite": 2,
+          "ticksSinceTeleport": 1,
+          "transitionCount": 2,
+          "composition": [
+            "goalReset",
+            "goalReset"
+          ],
+          "selfLoopsExcluded": 0,
+          "firstTransition": {
+            "seq": 1930,
+            "site": "goalReset",
+            "fromPos": 13,
+            "toPos": 5
+          },
+          "lastTransition": {
+            "seq": 1932,
+            "site": "goalReset",
+            "fromPos": 5,
+            "toPos": 3
+          }
+        },
+        {
+          "runKey": "899017:2",
+          "writeSeq": 4129,
+          "readSeq": 4134,
+          "writeTick": 1579,
+          "readTick": 1581,
+          "origin": "TELEPORT",
+          "teleportSource": "goalReset",
+          "ticksSinceWrite": 2,
+          "ticksSinceTeleport": 1,
+          "transitionCount": 2,
+          "composition": [
+            "goalReset",
+            "goalReset"
+          ],
+          "selfLoopsExcluded": 0,
+          "firstTransition": {
+            "seq": 4131,
+            "site": "goalReset",
+            "fromPos": 18,
+            "toPos": 7
+          },
+          "lastTransition": {
+            "seq": 4133,
+            "site": "goalReset",
+            "fromPos": 7,
+            "toPos": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "E3",
+      "statement": "The last transition in a TELEPORT-classified gap is always the teleport",
+      "refutedBy": "any such gap whose `LAST_TRANSITION_BEFORE_EVALUATION` is `advance`",
+      "usesOriginLabel": true,
+      "counterexampleCount": 0,
+      "verdict": "NOT REFUTED",
+      "statement_if_not_refuted": "no counterexample observed in 17 accepted configurations drawn from 9 distinct configuration seeds",
+      "disposition": "INCONCLUSIVE — INSUFFICIENT MATERIAL",
+      "exemplarCap": 5,
+      "exemplarsTruncated": 0,
+      "exemplars": []
+    },
+    {
+      "id": "E4",
+      "statement": "`FIRST_DIVERGING_TRANSITION` always equals `LAST_TRANSITION_BEFORE_EVALUATION`",
+      "refutedBy": "any gap where they differ",
+      "usesOriginLabel": false,
+      "counterexampleCount": 85,
+      "verdict": "REFUTED",
+      "statement_if_not_refuted": null,
+      "disposition": "INCONCLUSIVE — INSUFFICIENT MATERIAL",
+      "exemplarCap": 5,
+      "exemplarsTruncated": 80,
+      "exemplars": [
+        {
+          "runKey": "899000:0",
+          "writeSeq": 753,
+          "readSeq": 758,
+          "writeTick": 280,
+          "readTick": 282,
+          "origin": "TELEPORT",
+          "teleportSource": "goalReset",
+          "ticksSinceWrite": 2,
+          "ticksSinceTeleport": 1,
+          "transitionCount": 2,
+          "composition": [
+            "goalReset",
+            "goalReset"
+          ],
+          "selfLoopsExcluded": 0,
+          "firstTransition": {
+            "seq": 755,
+            "site": "goalReset",
+            "fromPos": 9,
+            "toPos": 19
+          },
+          "lastTransition": {
+            "seq": 757,
+            "site": "goalReset",
+            "fromPos": 19,
+            "toPos": 1
+          }
+        },
+        {
+          "runKey": "899000:0",
+          "writeSeq": 2276,
+          "readSeq": 2281,
+          "writeTick": 832,
+          "readTick": 834,
+          "origin": "TELEPORT",
+          "teleportSource": "goalReset",
+          "ticksSinceWrite": 2,
+          "ticksSinceTeleport": 1,
+          "transitionCount": 2,
+          "composition": [
+            "goalReset",
+            "goalReset"
+          ],
+          "selfLoopsExcluded": 0,
+          "firstTransition": {
+            "seq": 2278,
+            "site": "goalReset",
+            "fromPos": 10,
+            "toPos": 17
+          },
+          "lastTransition": {
+            "seq": 2280,
+            "site": "goalReset",
+            "fromPos": 17,
+            "toPos": 7
+          }
+        },
+        {
+          "runKey": "899000:0",
+          "writeSeq": 3423,
+          "readSeq": 3428,
+          "writeTick": 1244,
+          "readTick": 1246,
+          "origin": "TELEPORT",
+          "teleportSource": "goalReset",
+          "ticksSinceWrite": 2,
+          "ticksSinceTeleport": 1,
+          "transitionCount": 2,
+          "composition": [
+            "goalReset",
+            "goalReset"
+          ],
+          "selfLoopsExcluded": 0,
+          "firstTransition": {
+            "seq": 3425,
+            "site": "goalReset",
+            "fromPos": 10,
+            "toPos": 16
+          },
+          "lastTransition": {
+            "seq": 3427,
+            "site": "goalReset",
+            "fromPos": 16,
+            "toPos": 13
+          }
+        },
+        {
+          "runKey": "899017:2",
+          "writeSeq": 1928,
+          "readSeq": 1933,
+          "writeTick": 751,
+          "readTick": 753,
+          "origin": "TELEPORT",
+          "teleportSource": "goalReset",
+          "ticksSinceWrite": 2,
+          "ticksSinceTeleport": 1,
+          "transitionCount": 2,
+          "composition": [
+            "goalReset",
+            "goalReset"
+          ],
+          "selfLoopsExcluded": 0,
+          "firstTransition": {
+            "seq": 1930,
+            "site": "goalReset",
+            "fromPos": 13,
+            "toPos": 5
+          },
+          "lastTransition": {
+            "seq": 1932,
+            "site": "goalReset",
+            "fromPos": 5,
+            "toPos": 3
+          }
+        },
+        {
+          "runKey": "899017:2",
+          "writeSeq": 4129,
+          "readSeq": 4134,
+          "writeTick": 1579,
+          "readTick": 1581,
+          "origin": "TELEPORT",
+          "teleportSource": "goalReset",
+          "ticksSinceWrite": 2,
+          "ticksSinceTeleport": 1,
+          "transitionCount": 2,
+          "composition": [
+            "goalReset",
+            "goalReset"
+          ],
+          "selfLoopsExcluded": 0,
+          "firstTransition": {
+            "seq": 4131,
+            "site": "goalReset",
+            "fromPos": 18,
+            "toPos": 7
+          },
+          "lastTransition": {
+            "seq": 4133,
+            "site": "goalReset",
+            "fromPos": 7,
+            "toPos": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "E5",
+      "statement": "ADVANCE-classified gaps are single-transition",
+      "refutedBy": "any such gap with `TRANSITION_COUNT` ≥ 2",
+      "usesOriginLabel": true,
+      "counterexampleCount": 0,
+      "verdict": "NOT REFUTED",
+      "statement_if_not_refuted": "no counterexample observed in 17 accepted configurations drawn from 9 distinct configuration seeds",
+      "disposition": "INCONCLUSIVE — INSUFFICIENT MATERIAL",
+      "exemplarCap": 5,
+      "exemplarsTruncated": 0,
+      "exemplars": []
+    }
+  ]
+}
