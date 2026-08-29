@@ -7,6 +7,186 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-008 — Q1 §9 labelling: the frozen M9 rule is APPLIED to Q1's population, not reconstructed
+
+**Date:** 2026-08-30 · **Authority:** Director ruling of 2026-08-30, following the read-only Q1
+M9-label reconstruction audit and an independent scientific review by Gemini (verdict: **adopt
+β**) · **Status:** in force
+**Scope:** the meaning of "TELEPORT-classified" and "ADVANCE-classified" in Q1 §9. This is a
+governance decision. No analysis code exists, no Q1 event was read or classified, no ORIGIN count,
+proportion or statistic was computed, and no seed was generated or evaluated. Q1 pre-registration
+frozen at `0ad12fe`, D-006 at `612c69c`, instrumentation at `50be4b4`, collection at `d16d568`,
+D-007 at `db9305e` — all unchanged.
+
+### 1. The question this decision closes
+
+D-007 §5 recorded, and the subsequent audit confirmed, that Q1 §9 says *"TELEPORT-classified"*
+without saying **by what**. Two readings were available:
+
+| | Reading | Consequence |
+|---|---|---|
+| **α** | the label M9 actually assigned — its rule **and** its event population | **not reconstructible**; E1, E3, E5 permanently unevaluable |
+| **β** | M9's frozen `originOf()` rule **applied to Q1's own gap population** | reconstructible and deterministic; E1, E3, E5 evaluable |
+
+**β is adopted.**
+
+### 2. The distinction that governs everything below
+
+This decision authorises **RULE APPLICATION**. It does **NOT** authorise **POPULATION
+RECONSTRUCTION**. The two are different acts and must never be conflated:
+
+| | **RULE APPLICATION — authorised** | **POPULATION RECONSTRUCTION — NOT authorised, and NOT possible** |
+|---|---|---|
+| What is taken from M9 | the frozen `originOf()` classification function, verbatim | which events M9 admitted to its analysis |
+| What it is applied to | **Q1's own gap population**, collected under Q1's own protocol | — |
+| Denominator | **Q1's**, always | M9's 7,178 — never Q1's |
+| Feasibility | exact and deterministic | **impossible**: M9's event eligibility required the evaluation probe at `main.js:3922`, which Q1's instrumentation does not carry |
+
+**M9's historical event membership is NOT reconstructed, is not reconstructible, and no Q1 output
+may be presented as if it were.** M9's results, protocol, analysis and interpretation stand
+entirely unchanged and are not re-derived, re-run, subsetted or reinterpreted.
+
+**Why α is impossible, recorded as a source fact.** M8's recorder emits an event only when
+`onEval` fires while a read is pending; a read that never reaches `main.js:3922` is discarded as
+unpaired. Q1 has no `eval` capture site. A `goalReset` or `advance` record proves the evaluation
+was reached, but its *absence* is ambiguous between "did not reach 3922" and "reached 3922 and
+produced no transition" — the latter occurring on every slip and whenever `next` is null. The two
+are indistinguishable in Q1's §6 schema. **No amount of additional data repairs this**, because
+D-007 §8 forbids new sampling and the missing probe cannot be added retroactively.
+
+### 3. Q1's population is and remains the denominator
+
+Q1 §8 already froze this: *"Q1 collects its own evidence and has its own denominator"*, and M9's
+figures are *"for context only, never as Q1's population."* This decision changes nothing about
+that. Applying M9's rule to Q1's gaps labels **Q1's** gaps; it does not import M9's population, and
+it does not make Q1's labelled counts comparable like-for-like with M9's published proportions.
+
+### 4. The frozen rule, and the specification pinned before analysis
+
+The rule applied is M9 §4, implemented verbatim in `experiments/m9/analyze.js`, **unmodified**:
+
+```
+ORIGIN = UNCLASSIFIED  if ticksSinceTeleport or ticksSinceWrite is null/undefined
+ORIGIN = TELEPORT      if ticksSinceTeleport <  ticksSinceWrite
+ORIGIN = ADVANCE       if ticksSinceTeleport >  ticksSinceWrite
+                       (on equality) TELEPORT if teleportSource == 'goalReset'
+                                     ADVANCE  if teleportSource == 'cap' or 'pool'
+                                     UNCLASSIFIED otherwise
+```
+
+Its three inputs must be derived from Q1's log by emulating the M8 recorder's state machine. That
+emulation is **pinned here, before any analysis exists**, so the analysis milestone implements a
+specification rather than inventing one — the M8 lesson, where the analysis layer and not the
+instrumentation was where degeneracy entered:
+
+1. **`ticksSinceWrite`** = `tickIndex(read) − tickIndex(W)`, where `W` is the most recent boundary
+   record with `kind === 'write'` and `seq < seq(read)`; **null** if no such record exists.
+2. **`ticksSinceTeleport`** = `tickIndex(read) − tickIndex(X)`, where `X` is the most recent
+   transition record with `site ∈ {cap, pool, goalReset}` and `seq < seq(read)`; **null** if none.
+3. **`teleportSource`** = `site` of that same `X`; **`'none'`** if none.
+4. **`advance` is excluded from the teleport set.** M8 instrumented only three teleport anchors;
+   `main.js:4917` was never a teleport in M8's ontology.
+5. **Last-write-wins is emulated deliberately.** Only the most recent qualifying record is used;
+   earlier teleports in the same gap are discarded, exactly as M8's overwriting counter discarded
+   them. Q1's log retains them, and that retention is Q1's own contribution — it must not leak into
+   the ORIGIN computation.
+6. **Ordering is by `seq`, not by tick.** Q1 assigns `seq` inside `onTransitionEnd`, the same
+   program position as M8's `onTeleport` probe, and both use the same anchors, so `seq` order is
+   M8's program order.
+7. **Null handling is M9's.** A null input yields `UNCLASSIFIED`, which is counted and reported
+   separately and never silently assigned to either category.
+
+**Equivalence established by the audit:** properties 1–6 above reproduce M8's recorder exactly, on
+source-verifiable grounds — Q1 imports M8's anchors rather than restating them, emits exactly one
+record per transition at the same program position, and runs single-threaded so `seq` order is call
+order. The seventh property, **event eligibility, is the one that does not reproduce**, and §2
+records why that does not block β.
+
+### 5. Authorised claims
+
+| | Statement | Status |
+|---|---|---|
+| **E1** | TELEPORT-classified gaps contain only teleports | **AUTHORISED** under β |
+| **E2** | Every gap contains exactly one transition | already authorised (D-007 §5); needs no ORIGIN label |
+| **E3** | The last transition in a TELEPORT-classified gap is always the teleport | **AUTHORISED** under β |
+| **E4** | `FIRST_DIVERGING_TRANSITION` equals `LAST_TRANSITION_BEFORE_EVALUATION` | already authorised (D-007 §5); needs no ORIGIN label |
+| **§9.5** | Gap composition is independent of AGE | **REMAINS RETIRED** under D-007 §4 — unevaluable as frozen, at any sample size |
+
+All five authorised claims remain **refutation-only**, on the **existing frozen Q1 evidence only**.
+Every D-007 §6 non-refutation safeguard applies unchanged, including the permitted wording and the
+requirement that all five be reported whether refuted or not.
+
+**A naming hazard, recorded so it is not mistaken for a dependency.** E4 references
+`LAST_TRANSITION_BEFORE_EVALUATION`, but Q1 §7 defines that observable as *"the final transition in
+the gap"*, and §3 closes the gap at the read (`main.js:3819`), not at the evaluation (`3922`). The
+name implies an evaluation dependency the definition does not carry. E4 requires no ORIGIN label
+and no evaluation probe.
+
+### 6. Required terminology
+
+**Mandatory wording** in every downstream report, verbatim:
+
+> Q1 gaps were classified using the frozen M9 `originOf()` rule.
+
+> Gaps were labelled according to the M9 pre-registered classification logic.
+
+**Prohibited, without exception:**
+
+- "gaps that were classified as TELEPORT in M9"
+- "M9's historical TELEPORT population"
+- any phrasing implying Q1 reconstructed M9's original eligible event set
+- any presentation of Q1 labelled counts as continuous with, poolable with, or directly comparable
+  to M9's published ORIGIN proportions
+
+### 7. Independent review, and the strongest counterargument
+
+**Gemini's conclusion, recorded:** β is the strongest reading of Q1 §1 together with §8 and §9. The
+Q1 wording is **genuinely ambiguous**, but §1's counterfactual — *"gaps that M9 **would** classify
+TELEPORT versus ADVANCE"* — combined with §8's explicit population separation, supports β. This is a
+**clarification of a frozen ambiguity, not a new classification rule**. α is not reconstructible
+because M9's event eligibility depended on an eval probe absent from Q1. The Q1 dataset remains
+valid.
+
+**Strongest counterargument, recorded rather than dismissed.** Q1 §9's own rows say
+*"TELEPORT-classified"* with no stated classifier, and §1's "would classify" appears in the
+**question statement**, not in an operational definition — no frozen section specifies the
+labelling procedure. β therefore fills a gap in the frozen text rather than applying something the
+text supplied. Two aggravating facts belong beside it: β labels a **superset** of the gaps M9 would
+have admitted, so any resemblance between Q1's labelled counts and M9's proportions is not
+like-for-like; and β is the reading under which **more of the Chief Systems Engineer's own work
+becomes evaluable**, which is precisely why the question was routed for independent review.
+
+**Post-hoc timing.** The D-007 §7 disclosure carries forward unchanged and is not weakened by this
+decision: the decision to act on the pre-existing partition was taken after the INCONCLUSIVE
+disposition was known, the resulting analysis has weaker evidential status than a fully a-priori
+analysis, and it must never be described as fully a-priori. The independent review found that this
+disclosure, together with the stronger textual reading, does not override β — **not** that the
+concern is void.
+
+### 8. Boundary
+
+- **No new sampling.** D-006 §5.6 and D-007 §8 stand.
+- **No protocol repair.** Q1 §9.5 stays retired; nothing in Q1 is amended.
+- **No new statistical method** — no test, threshold, interval, effect size or model. Q1 §10
+  governs unchanged.
+- **No modification of Q1, M8 or M9 evidence, code or frozen text.** All digests revalidate.
+- **No causal language.** Q1 §7's prohibition, including the express ban on "proximate cause",
+  survives unchanged.
+- **Q1 remains INCONCLUSIVE for distributional characterisation** (D-007 §9), permanently. No
+  `GAP_COMPOSITION` characterisation and no proportion as distributional evidence.
+- **No analysis in this milestone.** No Q1 event was read or classified and no statistic computed.
+
+### 9. Next milestone
+
+The next milestone is the **implementation of the authorised five-claim refutation analysis**, as a
+**separate milestone requiring its own authorisation**. It implements the §4 specification rather
+than defining it, must freeze its analysis design before running it, and must carry adversarial
+mutation controls and Q1 §12 reproducibility — the same discipline the instrumentation received.
+
+No Q1 result is authorised to reinterpret M7, M8 or M9, or to bear on the G15 outcome.
+
+---
+
 ## D-007 — Q1 post-INCONCLUSIVE governance: B′ adopted, §9.5 retired, D-006 §4 corrected
 
 **Date:** 2026-08-30 · **Authority:** Director ruling of 2026-08-30, following the read-only D-007
