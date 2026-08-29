@@ -7,6 +7,123 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-010 — U1 closed as unidentifiable on the current observational substrate
+
+**Date:** 2026-09-03 · **Authority:** Director ruling of 2026-09-03, following the internal
+pre-registration-level identifiability audit of `U1_FORMULATION_DRAFT.md` · **Status:** in force
+**Scope:** the U1 question only. This is a governance decision. No implementation exists, no
+observable was created, no seed was generated or inspected, no data was collected or examined, and
+no frozen artifact was modified. M7 frozen at `707cb1e`, M8 evidence at `f9d97b9`, M9 at
+`04dda03`/`9044c3b`, Q1 at `d16d568`/`057ceb0`/`21c7238`, U1 formulation draft at `a0d99f4` — all
+unchanged.
+
+### 1. Decision
+
+**U1 — *"Does decision/position desynchronization have any measurable consequence for executed
+behaviour?"* — is scientifically important and is CURRENTLY UNIDENTIFIABLE with the available
+observational substrate. U1 is closed on that substrate.**
+
+U1 was identified by the M7→Q1 synthesis as the strongest remaining unknown, and an independent
+review agreed it was the strongest next question and ready for formulation. The formulation
+milestone then established, from committed source alone, that no operationalization available on
+this architecture can identify it. **That is the correct outcome of a formulation gate, and it cost
+no data.**
+
+### 2. Source-grounded reasons — all five candidates rejected
+
+| | Candidate | Reason for rejection |
+|---|---|---|
+| **A** | environmental realization (slip vs success) | **Structurally degenerate.** `env.attempt` returns `true` unconditionally when `pFor` finds no graph edge — no draw, no slip. `_m7From = agentLast` (`main.js:4885`), and `4837` sets `agentLast = agentCurrent` unconditionally before it. M9 recorded ADVANCE-classified DESYNC events as **100% `sPair`** (4,897 of 4,897), the pair being `(agentCurrent, agentCurrent)`, never a graph edge. On that entire class the outcome is `true` by construction and the environment is bypassed. |
+| **B** | StepLedger trajectory support | **Requires an intervention, so it cannot serve an observational U1 design.** `main.js:3917` swaps the eligibility computation on the `__MFW_STEP_LEDGER__` guard, and eligibility gates `rewardSignal`. Arming it modifies the agent under study. The ledger's *fields* remain recordable neutrally; the *aggregate* does not. |
+| **C** | intent → executed-action divergence | **Confounded, and not attributable to DESYNC.** `lastDecision` is assigned at `main.js:2397` with no step gate; `window.lastReasoning` is written at `2635` under `if (step === 0)`. Both sit inside `for (let step = 0; step < STEPS; step++)` (`1492`–`2722`). A divergence therefore measures how far the imagination chain wandered after step 0 — the artifact the `2626–2632` comment records the step-0 gate as existing to prevent. Two further divergence paths are independent of DESYNC: the anti-repeat swaps at `2594` and `2603` overwrite `nextKey`, while `lastDecision.best = exploreChoice \|\| bestChoice` takes no such override. |
+| **D** | episode termination mode | **Contaminated, and the comparison arm is near-empty.** The goalReset arm is decided at `main.js:3922` by `next === goalNeuronId`, where `next = window.lastReasoning.to` read at `3819`; the exposure is `lastReasoning.from !== agentCurrent` at that same line. Exposure and outcome are two projections of **one object written in one instant** at `2635`. Separately, the cap arm is armed (`experiments/m7/run.js:189`, `M7_EPISODE_TICK_CAP = 150`) yet the whole-collection site census of the committed Q1 transition evidence is `advance 25984, goalReset 11653, pool 17, cap 5` — **five cap terminations against 11,653 goal terminations.** |
+| **E** | reward branch at `main.js:3922` | **Inherits D's contamination and adds its own.** The outer test is the same `next === goalNeuronId`. The inner test uses `episodeUnique`, which unarmed reads `recentMemory` — written from realised positions — and is therefore itself partly a function of the exposure. |
+
+**No cleaner existing downstream behavioural observable was identified.** The committed architecture
+was searched; the result is a general fact rather than a list of near-misses. `next =
+lastReasoning.to` **is** the executed action — that is what the write→read seam carries — and DESYNC
+is defined as the staleness of the record carrying it. **Every observable at the executed-behaviour
+layer is therefore evaluated on the same object whose staleness constitutes the exposure.** The five
+rejections are one structural fact appearing five times, not five independent problems.
+
+**No observable was invented to rescue U1.**
+
+### 3. The failure is STRUCTURAL, not a sample-size failure
+
+**More sampling cannot repair U1 on the current substrate**, and no quantity of additional Q1
+evidence would change any rejection in §2. The rejections rest on source mechanics —
+`env.attempt`/`pFor` returning early on a non-edge, the `__MFW_STEP_LEDGER__` eligibility swap, the
+differing write gates on `lastDecision` and `lastReasoning`, and the shared `lastReasoning` object at
+the exposure and the outcome. None of these is a property of a sample.
+
+The single arithmetic point in §2 — the cap arm at *n* = 5 — is likewise not a sampling shortfall: it
+is a property of the 150-tick cap against this agent's goal-reach rate, and no sampling decision
+available under any protocol changes that ratio.
+
+**This distinction is load-bearing.** D-006 §5 and D-007 §8 already forbid further Q1 sampling; §3
+records that even if they did not, sampling would not be the remedy.
+
+### 4. What U1 does NOT establish
+
+**U1 does NOT establish that DESYNC has no behavioural consequence.**
+
+It establishes only that **the current observational architecture cannot identify such a
+consequence.** These are different statements and must never be conflated. Absence of an
+identifiable measurement is not evidence of absence of an effect, and no downstream write-up may
+present this closure as a null result about the phenomenon.
+
+Q1 §7's prohibition on causal language, including the express ban on "proximate cause", carries
+forward unchanged.
+
+### 5. Closure without further evidence
+
+**U1 is closed on the current observational substrate, and no additional Q1 evidence was collected
+to reach that closure.** The determination was made entirely from committed source and previously
+committed results. Q1 remains **INCONCLUSIVE — INSUFFICIENT MATERIAL** and is unaffected by this
+decision.
+
+### 6. What is NOT authorised
+
+This decision authorises **nothing**. In particular it does **not** authorise:
+
+- a new behavioural outcome;
+- an intervention of any kind, including any design that manipulates DESYNC;
+- a new observable, instrument, probe or capture site;
+- additional Q1 sampling, extension, substitution or recollection;
+- U1 implementation, prototyping, or inspection of data in preparation for it.
+
+No protocol, seed range, tick budget, arm, sample size, instrumentation or analysis is specified
+anywhere in this decision, and none may be inferred from it.
+
+### 7. Future candidate research direction — recorded only, NOT authorised
+
+**Observability-design question** — quoted here on one unbroken line so any future charter can
+reproduce it verbatim:
+
+> Is there a behavioural observable downstream of the write→read seam that is independent of `lastReasoning` and can be measured without intervention?
+
+**This is ONLY a candidate question.** It is **not authorised**, not chartered, and not scheduled.
+No protocol, seed range, instrumentation or implementation is specified for it, and none may be
+begun without a separate numbered Director decision. It is recorded here so that the structural
+obstacle in §2 is not rediscovered from scratch, and for no other purpose.
+
+### 8. U3 is not selected
+
+**U3** — whether the configuration-acceptance yield is a stable property of the acceptance predicate
+— **remains an unauthorised methodological candidate.** This decision does not select it, does not
+rank it above any other candidate, and confers no priority on it. Every other candidate recorded in
+the M7→Q1 synthesis likewise remains unauthorised.
+
+### 9. Governance consequence
+
+D-001 through D-009 are preserved byte-for-byte; this entry is append-only and supersedes nothing.
+No frozen artifact, raw evidence file or result artifact is modified, and every digest revalidates.
+No M7, M8, M9 or Q1 result is reinterpreted, and none is authorised to bear on the G15 outcome.
+
+The next milestone, whatever it is, requires its own authorisation.
+
+---
+
 ## D-009 — adjudication of two ambiguities in the frozen Q1 protocol
 
 **Date:** 2026-09-01 · **Authority:** Director ruling of 2026-09-01, following the pre-flight
