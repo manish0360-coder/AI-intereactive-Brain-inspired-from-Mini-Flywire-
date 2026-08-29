@@ -7,6 +7,206 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-009 — adjudication of two ambiguities in the frozen Q1 protocol
+
+**Date:** 2026-09-01 · **Authority:** Director ruling of 2026-09-01, following the pre-flight
+ambiguity report and an independent scientific governance review by Gemini · **Status:** in force
+**Scope:** the semantics of "transition" and of E4's "equals", for the purpose of evaluating the
+five authorised Q1 existence claims. This is a **clarification of the frozen protocol, not an
+amendment**, and a governance decision only. No analysis code exists, no claim was evaluated, no
+gap was classified, no proportion, distribution or gap count was computed, and no seed was
+generated or evaluated. Q1 pre-registration frozen at `0ad12fe`, D-006 at `612c69c`,
+instrumentation at `50be4b4`, collection at `d16d568`, D-007 at `db9305e`, D-008 at `b5be26e` —
+all unchanged.
+
+### 1. Ruling 1 — what counts as a transition
+
+**For the purpose of evaluating the five authorised Q1 claims, a "transition" is a record in
+`transitions.jsonl` satisfying `fromPos !== toPos`.**
+
+Records where `fromPos === toPos` are **self-loop assignments** and are **NOT counted as
+transitions** for the five claims.
+
+**Frozen-text basis.** Two independent provisions of the frozen pre-registration state the
+qualifier, and neither is explanatory:
+
+> **Q1 §6:** "One append-only record per executed **position-changing** transition inside the §3
+> window."
+>
+> **Q1 §15.6:** "a slip produces no transition and therefore no record. **Q1 measures realised
+> position changes only.**"
+
+**The protocol definition takes precedence over the instrument's over-inclusive recording
+behaviour.** The committed instrumentation records every *executed* assignment at the four §4
+sites, which is a superset of what §6 describes. The pre-registration was frozen at `0ad12fe`
+**before** the instrumentation existed at `50be4b4`; where the two conflict, the frozen protocol
+governs. The presence of `fromPos` on every record is what makes the correct reading computable —
+Q1 §6 introduced that field expressly for auditability, and this is the audit it enables.
+
+**Handling of excluded records — mandatory.**
+
+- **Do not delete them.** **Do not alter them.** **Do not hide them.**
+- They remain part of the frozen raw evidence, unchanged and digest-pinned.
+- The analysis and reporting milestone **must count and report them separately**, as a matter of
+  transparency. They are an explicit, disclosed exclusion, never a silent filter — the M8 §F
+  discipline for exclusions, carried forward.
+- **This ruling interprets the protocol; it does not modify the evidence.**
+
+**A structural consequence, recorded so it is not mistaken for a result.** DESYNC means the
+position at the read differs from the position at the write. Since position changes only through
+the four §4 sites, and the collection gate established the position chain is continuous with zero
+breaks, **every DESYNC gap necessarily contains at least one record with `fromPos !== toPos`**. The
+narrowed definition therefore cannot empty a gap. This is a deduction from the definitions, not a
+computed quantity.
+
+### 2. Ruling 2 — E4 equality semantics
+
+**E4's "equals" means identity of the transition RECORDS.**
+
+```
+FIRST_DIVERGING_TRANSITION == LAST_TRANSITION_BEFORE_EVALUATION
+```
+
+is true iff the first and last transition in the gap are **literally the same transition record**.
+
+**Consequence: E4 is logically equivalent to E2.** First and last differ iff the gap holds more
+than one transition, which is exactly E2's refutation condition.
+
+**Basis.** Q1 §7 defines both names as **transitions** — *"the earliest transition in the gap"* and
+*"the final transition in the gap"* — not as sites or types. Its rationale speaks of *"different
+transitions answering different questions"*. There is no textual basis for reading "equals" as a
+comparison of the `site` property.
+
+**"Equals" must NOT be reinterpreted as site or type equality.** A reviewer cannot repair a
+protocol's wording from inferred intent; the redundancy is a finding about the protocol, not an
+error to be corrected post hoc by inventing a new meaning.
+
+**Both claims are evaluated as frozen**, and **the eventual report MUST explicitly state that E4 is
+redundant with — logically equivalent to — E2 under the frozen semantics.**
+
+### 3. Ruling 3 — `FIRST_DIVERGING_TRANSITION` wording
+
+The **operative** definition is:
+
+> "the earliest transition in the gap"
+
+The trailing clause *"where `from !== agentCurrent` first became true"* is **explanatory, not an
+alternative operative selection rule**. It must not be implemented as a dynamic state-crossing
+test, which would select a different record whenever the position oscillates back through the
+write-time position mid-gap. The operative reading is the more conservative one and removes that
+ambiguity.
+
+### 4. Data validity — no recollection
+
+**The existing Q1 dataset remains valid.** No recollection is required, and none is authorised.
+`fromPos` and `toPos` were recorded on every transition record, so the correct interpretation is
+computable from the frozen evidence exactly as collected. The dataset is not defective; only its
+interpretation was ambiguous.
+
+### 5. Q1 disposition — unchanged
+
+**Q1 remains INCONCLUSIVE — INSUFFICIENT MATERIAL.**
+
+D-009 **does not reopen or alter the D-006 minimum-evidence rule.** The minimum-evidence failure
+stands exactly as recorded:
+
+| Condition | Required | Observed |
+|---|---:|---:|
+| accepted configurations | 20 | **17** |
+| configurations in `degree5` | 15 | **9** |
+| configurations in `degree3` | 15 | **8** |
+
+**These thresholds are not reinterpreted**, and nothing in this decision makes 17 configurations
+sufficient for distributional characterisation. **Any future claim verdict must carry the
+INCONCLUSIVE disposition**, together with every D-007 §6 non-refutation safeguard.
+
+### 6. Governance status — clarification, not amendment
+
+**D-009 is a CLARIFICATION.** The reasons, recorded so a future reader can test the
+characterisation rather than accept it:
+
+1. Q1 was **frozen before** the instrumentation existed.
+2. The frozen text **explicitly** says "position-changing" and "realised position changes only".
+3. The instrument recorded a **superset** of what the protocol describes.
+4. The **required fields already exist** in the frozen data.
+5. Applying `fromPos !== toPos` therefore **applies the existing protocol** rather than changing it.
+
+The same characterisation holds for Ruling 2: it applies a plain-text reading of the frozen
+definitions and accepts the logical consequence, rather than amending the meaning of "equals" to
+create a new, unspecified claim.
+
+### 7. Post-hoc disclosure
+
+**Stated without mitigation.** D-009 is issued **after collection** (`d16d568`) but **before claim
+analysis** — no analysis code exists and no claim has been evaluated.
+
+- The choice is based on **frozen wording** (§6, §15.6, §7), not on observed claim outcomes.
+- **No claim outcome was known** when this ruling was made, and none was computed to inform it.
+- **No new sampling is authorised.** D-006 §5.6 and D-007 §8 stand.
+- **No protocol repair is introduced.** Q1 §9.5 remains retired under D-007 §4.
+
+The D-007 §7 disclosure carries forward unchanged: the decision to act on the pre-existing
+analytical partition was taken after the INCONCLUSIVE disposition was known, the resulting analysis
+has weaker evidential status than a fully a-priori analysis, and it must never be described as
+fully a-priori.
+
+### 8. Self-loop records — the structural fact
+
+Established by the read-only pre-flight audit and **reproduced here, not recomputed**:
+
+| | Count | |
+|---|---:|---|
+| Recorded assignment records in the frozen evidence | 37,659 | |
+| **Records with `fromPos === toPos`** | **2,686** | **7.1%** |
+| — `advance` | 2,086 | |
+| — `goalReset` | 600 | |
+
+`goalReset` selects uniformly from all nodes excluding the goal, so it can land on the node already
+occupied; `advance` assigns `next`, which can equal `agentCurrent`. Both produce an executed
+assignment with no realised position change.
+
+**These records must remain separately reportable** in the analysis milestone. No new statistic
+beyond these already-established audit quantities is computed here.
+
+### 9. Independent review, and the strongest counterargument
+
+**Gemini's conclusion, recorded.** Both ambiguities are real and required a formal ruling before
+analysis. On Ruling 1, interpretation `fromPos !== toPos` is the only reading consistent with the
+protocol's stated scientific intent, despite the conflicting instrumentation behaviour. On Ruling 2,
+record identity is the only reading supported by the plain text, rendering E4 redundant with E2.
+The INCONCLUSIVE disposition is unaffected, no recollection is required, and with both rulings
+frozen **no interpretive flexibility remains** in the analysis.
+
+**Strongest counterargument, recorded rather than dismissed.** The instrument was built, gated
+(86/0) and the data collected on the working assumption that every record was a transition.
+Excluding 7.1% of records is a data-processing step that was not explicitly operationalised
+anywhere before the data existed, and it has the shape of an after-the-fact change. The review's
+rebuttal, adopted here: the protocol was frozen before the instrument, and where they conflict the
+protocol governs — the analysis is not changing the rule but applying one that was there all along,
+even though the instrument's author overlooked its full implication. **That oversight is recorded
+as the Chief Systems Engineer's own**: neither the instrumentation gate nor the collection gate
+asserted anything about §6's "position-changing" qualifier.
+
+### 10. Boundary
+
+D-009 does **not** evaluate E1–E5, does not state whether any claim is refuted, and reports no
+claim frequency, gap count, transition-count distribution, gap classification, or FIRST/LAST
+transition result. **Its sole purpose is to remove the semantic ambiguity before analysis.**
+
+Also in force, unchanged: no new sampling; no protocol repair; no new statistical method — no test,
+threshold, interval, effect size or model; no modification of Q1, M8 or M9 evidence, code or frozen
+text; no causal language, including the express ban on "proximate cause" in Q1 §7; and Q1 remains
+INCONCLUSIVE for distributional characterisation, permanently.
+
+### 11. Next milestone
+
+The next milestone is the **implementation of the authorised five-claim refutation analysis**, as a
+**separate milestone requiring its own authorisation**. With D-008 §4's ORIGIN specification and
+D-009's two rulings frozen, that analysis is a deterministic, mechanical application of already-
+frozen definitions with no remaining interpretive flexibility.
+
+---
+
 ## D-008 — Q1 §9 labelling: the frozen M9 rule is APPLIED to Q1's population, not reconstructed
 
 **Date:** 2026-08-30 · **Authority:** Director ruling of 2026-08-30, following the read-only Q1
