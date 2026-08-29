@@ -1,0 +1,13 @@
+# The raw record streams are NOT committed, following the M7/M8 convention:
+# no raw measurement data is versioned, and every verifier recomputes from
+# frozen seeds instead (see experiments/m7/verify_G15.js, experiments/m8/data).
+#
+# What IS committed is sufficient to reproduce and validate them exactly:
+#   candidates.jsonl   every one of the 2000 candidates with its disposition
+#   manifest.json      per-run fingerprint, diagnostics, digests and the
+#                      pre-declared D-006 sufficiency counts
+#   INTEGRITY.sha256   digests of all artifacts + the regeneration command
+#
+# Regenerate with:  cd experiments/q1 && node run_collection.js
+transitions.jsonl
+boundaries.jsonl

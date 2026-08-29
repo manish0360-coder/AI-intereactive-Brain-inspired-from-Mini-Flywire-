@@ -1,0 +1,20 @@
+# Q1 COLLECTION — INTEGRITY RECORD
+#
+# Study      : Q1 ordered transition composition in DESYNC gaps
+# Protocol   : research/preregistrations/Q1_PREREGISTRATION.md 0ad12fe2f190645d2126c9e55aef4f270f853009
+# Parameters : Director decision D-006
+# Instrument : 50be4b409142dfe67c72263874cbb4473871fbe1
+# Range      : 899000-899499 | agent 20260819000 | arm A1 | 3000 ticks
+#
+# Regenerate with : cd experiments/q1 && node run_collection.js
+# Verify with     : cd experiments/q1 && node verify_q1_collection.js
+#
+# transitions.jsonl and boundaries.jsonl are NOT committed (repository
+# convention: raw measurement data is not versioned). Their digests are here,
+# and manifest.json carries a per-configuration digest so a single run can be
+# validated without regenerating the others.
+#
+0aae29e8be31950e0622af11edf7ab5250e42dca40b24d5faf87c3fa727f40e7  transitions.jsonl
+4cfef46f0719d101370671cb7c671bf0c68c06b440c3b36002ffd5adcbad2e5f  boundaries.jsonl
+ccca69d59611b406cd14a70999dc18d7619dc32aca455e3bc437bac4f734e51b  candidates.jsonl
+79b8a2ffe20cd88a74008da73c485ff394888700c6c36bf86c40de188ae6e562  manifest.json

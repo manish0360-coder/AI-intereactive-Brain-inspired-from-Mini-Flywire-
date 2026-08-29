@@ -1,0 +1,907 @@
+{
+  "study": "Q1",
+  "preregistration": "0ad12fe2f190645d2126c9e55aef4f270f853009",
+  "decision": "D-006",
+  "instrumentation": "50be4b409142dfe67c72263874cbb4473871fbe1",
+  "frozen": {
+    "seedLo": 899000,
+    "seedHi": 899499,
+    "agentSeed": 20260819000,
+    "arm": "A1",
+    "ticks": 3000,
+    "goalIndices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "minDesyncEvents": 100,
+    "minConfigurations": 20,
+    "minPerStratum": 15
+  },
+  "boundaries": {
+    "consumed": [
+      {
+        "lo": 899500,
+        "hi": 899999,
+        "why": "M8 collection (D-003 H), consumed at f9d97b9"
+      },
+      {
+        "lo": 900000,
+        "hi": 900029,
+        "why": "M7 pilot block (frozen §5.1)"
+      },
+      {
+        "lo": 900030,
+        "hi": 900499,
+        "why": "M7-ERR-09 gate-diagnostic range"
+      }
+    ],
+    "heldOutFloor": 900500
+  },
+  "accounting": {
+    "expectedCandidates": 2000,
+    "candidates": 2000,
+    "seedsEnumerated": 500,
+    "perSeedCandidates": 4,
+    "dispositions": {
+      "COLLECTED": 17,
+      "REJECTED": 1983
+    },
+    "problems": []
+  },
+  "seedCensus": {
+    "min": 899000,
+    "max": 899499,
+    "evaluatedByEnv": 500,
+    "evaluatedMin": 899000,
+    "evaluatedMax": 899499
+  },
+  "totals": {
+    "transitions": 37659,
+    "boundaries": 97810
+  },
+  "sufficiency": {
+    "conditions": [
+      {
+        "id": "desyncEvents",
+        "required": 100,
+        "observed": 3166,
+        "met": true
+      },
+      {
+        "id": "configurations",
+        "required": 20,
+        "observed": 17,
+        "met": false
+      },
+      {
+        "id": "stratum:degree5",
+        "required": 15,
+        "observed": 9,
+        "met": false
+      },
+      {
+        "id": "stratum:degree3",
+        "required": 15,
+        "observed": 8,
+        "met": false
+      }
+    ],
+    "unmet": [
+      "configurations",
+      "stratum:degree5",
+      "stratum:degree3"
+    ],
+    "status": "INCONCLUSIVE — INSUFFICIENT MATERIAL",
+    "desyncEvents": 3166,
+    "reads": 51085,
+    "configurations": 17,
+    "perStratum": {
+      "degree5": 9,
+      "degree3": 8
+    },
+    "note": "Collection/evaluability counts only. DESYNC is the frozen §2 predicate lastReasoning.from !== agentCurrent evaluated at the §3 closing edge (main.js:3819). Q1 has its own denominator (§8); these are not Q1 scientific results."
+  },
+  "runs": [
+    {
+      "configSeed": 899000,
+      "configIndex": 0,
+      "goal": 8,
+      "stratum": "degree5",
+      "agentSeed": 20260819000,
+      "arm": "A1",
+      "ticks": 3000,
+      "preregistration": "0ad12fe2f190645d2126c9e55aef4f270f853009",
+      "decision": "D-006",
+      "fixture": false,
+      "transitions": 2406,
+      "boundaries": 5788,
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2783,
+        "reads": 3005,
+        "transitions": 2406,
+        "pairingViolations": 0,
+        "seq": 8194,
+        "openTransition": false
+      },
+      "fingerprint": "323c27c27e73ef8720b0850e72ba02f4b78754caa629b548bbe6ce3d7b9d820d",
+      "artifacts": {
+        "cogDraws": 91300,
+        "visDraws": 3020,
+        "qEntries": 225
+      },
+      "envCounters": {
+        "attempts": 1463,
+        "successes": 863,
+        "slips": 600,
+        "envDraws": 1463
+      },
+      "evaluatedSeeds": [
+        899000
+      ],
+      "used": {
+        "agentSeed": 20260819000,
+        "arm": "A1",
+        "ticks": 3000,
+        "configSeed": 899000,
+        "configIndex": 0
+      },
+      "transitionsDigest": "6fbac23d59f797298415dd9d2fa6144a148c0f69018742dd8dd26aedfd2d43bc",
+      "boundariesDigest": "6b72730f4b5f31db0347962b57a0192f0c71e0a064fdaf72545aae0482f41938"
+    },
+    {
+      "configSeed": 899017,
+      "configIndex": 2,
+      "goal": 16,
+      "stratum": "degree3",
+      "agentSeed": 20260819000,
+      "arm": "A1",
+      "ticks": 3000,
+      "preregistration": "0ad12fe2f190645d2126c9e55aef4f270f853009",
+      "decision": "D-006",
+      "fixture": false,
+      "transitions": 2107,
+      "boundaries": 5700,
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2695,
+        "reads": 3005,
+        "transitions": 2107,
+        "pairingViolations": 0,
+        "seq": 7807,
+        "openTransition": false
+      },
+      "fingerprint": "b547cd9f6b1a72518946d6eaa4e3e93379b335db79369320ed9fab3a4123db9e",
+      "artifacts": {
+        "cogDraws": 81878,
+        "visDraws": 3020,
+        "qEntries": 180
+      },
+      "envCounters": {
+        "attempts": 1997,
+        "successes": 1097,
+        "slips": 900,
+        "envDraws": 1997
+      },
+      "evaluatedSeeds": [
+        899017
+      ],
+      "used": {
+        "agentSeed": 20260819000,
+        "arm": "A1",
+        "ticks": 3000,
+        "configSeed": 899017,
+        "configIndex": 2
+      },
+      "transitionsDigest": "94a33109cc5dbf42049b941edd161f68ac68be73928369d79d24647fe1d48999",
+      "boundariesDigest": "ce961252417ba3f1382f8d6c2d5f49efc2843e864dbba833c9b09321d92a652b"
+    },
+    {
+      "configSeed": 899018,
+      "configIndex": 2,
+      "goal": 16,
+      "stratum": "degree3",
+      "agentSeed": 20260819000,
+      "arm": "A1",
+      "ticks": 3000,
+      "preregistration": "0ad12fe2f190645d2126c9e55aef4f270f853009",
+      "decision": "D-006",
+      "fixture": false,
+      "transitions": 2204,
+      "boundaries": 5733,
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2728,
+        "reads": 3005,
+        "transitions": 2204,
+        "pairingViolations": 0,
+        "seq": 7937,
+        "openTransition": false
+      },
+      "fingerprint": "01e425bbc1b59840a77282f5639cca75fd0233161ca4dc91e450a60a69ba9b7d",
+      "artifacts": {
+        "cogDraws": 81359,
+        "visDraws": 3020,
+        "qEntries": 192
+      },
+      "envCounters": {
+        "attempts": 1758,
+        "successes": 956,
+        "slips": 802,
+        "envDraws": 1758
+      },
+      "evaluatedSeeds": [
+        899018
+      ],
+      "used": {
+        "agentSeed": 20260819000,
+        "arm": "A1",
+        "ticks": 3000,
+        "configSeed": 899018,
+        "configIndex": 2
+      },
+      "transitionsDigest": "3b606fe65150fb3e5dd2fd41155fddd8cef10395b132fd34b3b83df40f659c17",
+      "boundariesDigest": "93b964d42270b5910663071c2c614b3f040bb3361aeb09c9ba569cb2476631d2"
+    },
+    {
+      "configSeed": 899072,
+      "configIndex": 1,
+      "goal": 12,
+      "stratum": "degree5",
+      "agentSeed": 20260819000,
+      "arm": "A1",
+      "ticks": 3000,
+      "preregistration": "0ad12fe2f190645d2126c9e55aef4f270f853009",
+      "decision": "D-006",
+      "fixture": false,
+      "transitions": 2245,
+      "boundaries": 5747,
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2742,
+        "reads": 3005,
+        "transitions": 2245,
+        "pairingViolations": 0,
+        "seq": 7992,
+        "openTransition": false
+      },
+      "fingerprint": "a70e1edee022d681f318cea473c9b870e369fa8a3a02f0dba58b3703ee8f60f0",
+      "artifacts": {
+        "cogDraws": 84521,
+        "visDraws": 3020,
+        "qEntries": 217
+      },
+      "envCounters": {
+        "attempts": 1710,
+        "successes": 949,
+        "slips": 761,
+        "envDraws": 1710
+      },
+      "evaluatedSeeds": [
+        899072
+      ],
+      "used": {
+        "agentSeed": 20260819000,
+        "arm": "A1",
+        "ticks": 3000,
+        "configSeed": 899072,
+        "configIndex": 1
+      },
+      "transitionsDigest": "86d7902a04bd0625af3e5a4d6b3938265c1ba7f0a638b02444ed2ed73e30492d",
+      "boundariesDigest": "d650e414d56db07afd7c7030eb9cf7fc5d69a69b962901c25655b4106c205892"
+    },
+    {
+      "configSeed": 899269,
+      "configIndex": 0,
+      "goal": 8,
+      "stratum": "degree5",
+      "agentSeed": 20260819000,
+      "arm": "A1",
+      "ticks": 3000,
+      "preregistration": "0ad12fe2f190645d2126c9e55aef4f270f853009",
+      "decision": "D-006",
+      "fixture": false,
+      "transitions": 2257,
+      "boundaries": 5749,
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2744,
+        "reads": 3005,
+        "transitions": 2257,
+        "pairingViolations": 0,
+        "seq": 8006,
+        "openTransition": false
+      },
+      "fingerprint": "6140568e97f65e17a11b016f8013f8def336fa316e799f7fa67d34c0be6f2ec5",
+      "artifacts": {
+        "cogDraws": 87450,
+        "visDraws": 3020,
+        "qEntries": 236
+      },
+      "envCounters": {
+        "attempts": 1719,
+        "successes": 970,
+        "slips": 749,
+        "envDraws": 1719
+      },
+      "evaluatedSeeds": [
+        899269
+      ],
+      "used": {
+        "agentSeed": 20260819000,
+        "arm": "A1",
+        "ticks": 3000,
+        "configSeed": 899269,
+        "configIndex": 0
+      },
+      "transitionsDigest": "d25964525cc110a41276c74c3b8b12dd962a2fb682d1b0082fcdd8efba071f59",
+      "boundariesDigest": "8fedb8a2c99444f127fbbf01cbd95e3606128d2cd1cdaf81216ff2b02e3b43a2"
+    },
+    {
+      "configSeed": 899269,
+      "configIndex": 1,
+      "goal": 12,
+      "stratum": "degree5",
+      "agentSeed": 20260819000,
+      "arm": "A1",
+      "ticks": 3000,
+      "preregistration": "0ad12fe2f190645d2126c9e55aef4f270f853009",
+      "decision": "D-006",
+      "fixture": false,
+      "transitions": 2221,
+      "boundaries": 5791,
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2786,
+        "reads": 3005,
+        "transitions": 2221,
+        "pairingViolations": 0,
+        "seq": 8012,
+        "openTransition": false
+      },
+      "fingerprint": "43b58e8a0c5bfa5bad02016904fde650c21a5013cec9ef6fb5fd6024bed8d192",
+      "artifacts": {
+        "cogDraws": 89596,
+        "visDraws": 3020,
+        "qEntries": 211
+      },
+      "envCounters": {
+        "attempts": 1801,
+        "successes": 1016,
+        "slips": 785,
+        "envDraws": 1801
+      },
+      "evaluatedSeeds": [
+        899269
+      ],
+      "used": {
+        "agentSeed": 20260819000,
+        "arm": "A1",
+        "ticks": 3000,
+        "configSeed": 899269,
+        "configIndex": 1
+      },
+      "transitionsDigest": "c62623cb83a6d1fb304a8bdc31e0156206e9e5c4a8d04aea9a5493b114018f0a",
+      "boundariesDigest": "1fc9b243900a79cb7efc820fa452b62de4864bd4913662001e6f4099d6d4e3c4"
+    },
+    {
+      "configSeed": 899367,
+      "configIndex": 1,
+      "goal": 12,
+      "stratum": "degree5",
+      "agentSeed": 20260819000,
+      "arm": "A1",
+      "ticks": 3000,
+      "preregistration": "0ad12fe2f190645d2126c9e55aef4f270f853009",
+      "decision": "D-006",
+      "fixture": false,
+      "transitions": 2134,
+      "boundaries": 5794,
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2789,
+        "reads": 3005,
+        "transitions": 2134,
+        "pairingViolations": 0,
+        "seq": 7928,
+        "openTransition": false
+      },
+      "fingerprint": "91520e56d3c27ea304e093f5299ce8ce8705ea93a4f3433537bb2ce5565c7ff5",
+      "artifacts": {
+        "cogDraws": 91241,
+        "visDraws": 3020,
+        "qEntries": 199
+      },
+      "envCounters": {
+        "attempts": 1814,
+        "successes": 942,
+        "slips": 872,
+        "envDraws": 1814
+      },
+      "evaluatedSeeds": [
+        899367
+      ],
+      "used": {
+        "agentSeed": 20260819000,
+        "arm": "A1",
+        "ticks": 3000,
+        "configSeed": 899367,
+        "configIndex": 1
+      },
+      "transitionsDigest": "7bb26d65e00cc4bde41b9642111f0bbc2aa75b7ce56c2db7dd6313994447c3b4",
+      "boundariesDigest": "25200b054dab43d41602d3a423e3b0a3f4256853260a1755bb8d286395a6894b"
+    },
+    {
+      "configSeed": 899367,
+      "configIndex": 2,
+      "goal": 16,
+      "stratum": "degree3",
+      "agentSeed": 20260819000,
+      "arm": "A1",
+      "ticks": 3000,
+      "preregistration": "0ad12fe2f190645d2126c9e55aef4f270f853009",
+      "decision": "D-006",
+      "fixture": false,
+      "transitions": 2234,
+      "boundaries": 5728,
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2723,
+        "reads": 3005,
+        "transitions": 2234,
+        "pairingViolations": 0,
+        "seq": 7962,
+        "openTransition": false
+      },
+      "fingerprint": "1d48b63c7b23ff19953037189d134f6e800885063eac4684e885d98335b18e36",
+      "artifacts": {
+        "cogDraws": 79981,
+        "visDraws": 3020,
+        "qEntries": 180
+      },
+      "envCounters": {
+        "attempts": 1840,
+        "successes": 1068,
+        "slips": 772,
+        "envDraws": 1840
+      },
+      "evaluatedSeeds": [
+        899367
+      ],
+      "used": {
+        "agentSeed": 20260819000,
+        "arm": "A1",
+        "ticks": 3000,
+        "configSeed": 899367,
+        "configIndex": 2
+      },
+      "transitionsDigest": "b81138a921a6cf52388a8787eedd42fd62fbd5f9bbd94ff4b7d98b43998dae34",
+      "boundariesDigest": "697fe68ff775fa6214f3d25df03ee2ee5bf29aa69cd195e492405ef1e4c9404c"
+    },
+    {
+      "configSeed": 899367,
+      "configIndex": 3,
+      "goal": 19,
+      "stratum": "degree3",
+      "agentSeed": 20260819000,
+      "arm": "A1",
+      "ticks": 3000,
+      "preregistration": "0ad12fe2f190645d2126c9e55aef4f270f853009",
+      "decision": "D-006",
+      "fixture": false,
+      "transitions": 2346,
+      "boundaries": 5766,
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2761,
+        "reads": 3005,
+        "transitions": 2346,
+        "pairingViolations": 0,
+        "seq": 8112,
+        "openTransition": false
+      },
+      "fingerprint": "04ccc0af86a7ebc0613d049391ce35baf9cc5d8945878a7c4154e3b5d3c7857c",
+      "artifacts": {
+        "cogDraws": 79614,
+        "visDraws": 3020,
+        "qEntries": 195
+      },
+      "envCounters": {
+        "attempts": 1646,
+        "successes": 986,
+        "slips": 660,
+        "envDraws": 1646
+      },
+      "evaluatedSeeds": [
+        899367
+      ],
+      "used": {
+        "agentSeed": 20260819000,
+        "arm": "A1",
+        "ticks": 3000,
+        "configSeed": 899367,
+        "configIndex": 3
+      },
+      "transitionsDigest": "ff2875f72906dda7043d1b095cb082774f662304dcc42876a2025a577fe6cdd7",
+      "boundariesDigest": "38fddd91767d5f5d40c8a656d8a15e85001934997eb2fe06ad884e01971b4e51"
+    },
+    {
+      "configSeed": 899371,
+      "configIndex": 1,
+      "goal": 12,
+      "stratum": "degree5",
+      "agentSeed": 20260819000,
+      "arm": "A1",
+      "ticks": 3000,
+      "preregistration": "0ad12fe2f190645d2126c9e55aef4f270f853009",
+      "decision": "D-006",
+      "fixture": false,
+      "transitions": 2120,
+      "boundaries": 5770,
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2765,
+        "reads": 3005,
+        "transitions": 2120,
+        "pairingViolations": 0,
+        "seq": 7890,
+        "openTransition": false
+      },
+      "fingerprint": "abae775b0e3fd1c002da590153902addb15a967e353cb4d46a784526b24736f8",
+      "artifacts": {
+        "cogDraws": 88745,
+        "visDraws": 3020,
+        "qEntries": 193
+      },
+      "envCounters": {
+        "attempts": 1849,
+        "successes": 963,
+        "slips": 886,
+        "envDraws": 1849
+      },
+      "evaluatedSeeds": [
+        899371
+      ],
+      "used": {
+        "agentSeed": 20260819000,
+        "arm": "A1",
+        "ticks": 3000,
+        "configSeed": 899371,
+        "configIndex": 1
+      },
+      "transitionsDigest": "a69d85fea2391c1bc3c422a6ea911f2ae45a36958e4391f0eece39646cbefc6d",
+      "boundariesDigest": "79601461e01c864c4557601e03733be42ed6a99515b9f61c161bc8b2fdc83e83"
+    },
+    {
+      "configSeed": 899371,
+      "configIndex": 2,
+      "goal": 16,
+      "stratum": "degree3",
+      "agentSeed": 20260819000,
+      "arm": "A1",
+      "ticks": 3000,
+      "preregistration": "0ad12fe2f190645d2126c9e55aef4f270f853009",
+      "decision": "D-006",
+      "fixture": false,
+      "transitions": 2083,
+      "boundaries": 5741,
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2736,
+        "reads": 3005,
+        "transitions": 2083,
+        "pairingViolations": 0,
+        "seq": 7824,
+        "openTransition": false
+      },
+      "fingerprint": "4e09fc5e20ebbbc0727db021477956e920fdb4323489dc79601a3adcde114a7d",
+      "artifacts": {
+        "cogDraws": 83961,
+        "visDraws": 3020,
+        "qEntries": 185
+      },
+      "envCounters": {
+        "attempts": 1828,
+        "successes": 905,
+        "slips": 923,
+        "envDraws": 1828
+      },
+      "evaluatedSeeds": [
+        899371
+      ],
+      "used": {
+        "agentSeed": 20260819000,
+        "arm": "A1",
+        "ticks": 3000,
+        "configSeed": 899371,
+        "configIndex": 2
+      },
+      "transitionsDigest": "ef4fee47a048cdf3ec2a203e7d856a0d05e73eb545ed3655c585c6c18957bed6",
+      "boundariesDigest": "dc3256223d52122f5df598b0242c98676fda49ae6f23b7f898c893b01616ad86"
+    },
+    {
+      "configSeed": 899371,
+      "configIndex": 3,
+      "goal": 19,
+      "stratum": "degree3",
+      "agentSeed": 20260819000,
+      "arm": "A1",
+      "ticks": 3000,
+      "preregistration": "0ad12fe2f190645d2126c9e55aef4f270f853009",
+      "decision": "D-006",
+      "fixture": false,
+      "transitions": 2210,
+      "boundaries": 5762,
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2757,
+        "reads": 3005,
+        "transitions": 2210,
+        "pairingViolations": 0,
+        "seq": 7972,
+        "openTransition": false
+      },
+      "fingerprint": "fb50768d9cdb30705cce09e8beac4fa5ba807d10cc2b1497805dc8a822820077",
+      "artifacts": {
+        "cogDraws": 80196,
+        "visDraws": 3020,
+        "qEntries": 199
+      },
+      "envCounters": {
+        "attempts": 1712,
+        "successes": 916,
+        "slips": 796,
+        "envDraws": 1712
+      },
+      "evaluatedSeeds": [
+        899371
+      ],
+      "used": {
+        "agentSeed": 20260819000,
+        "arm": "A1",
+        "ticks": 3000,
+        "configSeed": 899371,
+        "configIndex": 3
+      },
+      "transitionsDigest": "5009eb2a8dc5baecc3ab854553ab72a0822515c66a5749404ef214de32a995df",
+      "boundariesDigest": "87ffd8f96f64eea02831f791a17c3ddddc2d05ad3c0b74a072a617c22785e709"
+    },
+    {
+      "configSeed": 899418,
+      "configIndex": 0,
+      "goal": 8,
+      "stratum": "degree5",
+      "agentSeed": 20260819000,
+      "arm": "A1",
+      "ticks": 3000,
+      "preregistration": "0ad12fe2f190645d2126c9e55aef4f270f853009",
+      "decision": "D-006",
+      "fixture": false,
+      "transitions": 2230,
+      "boundaries": 5756,
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2751,
+        "reads": 3005,
+        "transitions": 2230,
+        "pairingViolations": 0,
+        "seq": 7986,
+        "openTransition": false
+      },
+      "fingerprint": "89071f278c3e58ee4cd8b76be34f10250ee074f96991328c641f7b23eabfa0b5",
+      "artifacts": {
+        "cogDraws": 83997,
+        "visDraws": 3020,
+        "qEntries": 212
+      },
+      "envCounters": {
+        "attempts": 1784,
+        "successes": 1007,
+        "slips": 777,
+        "envDraws": 1784
+      },
+      "evaluatedSeeds": [
+        899418
+      ],
+      "used": {
+        "agentSeed": 20260819000,
+        "arm": "A1",
+        "ticks": 3000,
+        "configSeed": 899418,
+        "configIndex": 0
+      },
+      "transitionsDigest": "8e42cd5d179ffa3b7a557c85043e1f041ee73db990d44430135ab3cfabff22da",
+      "boundariesDigest": "4b4addcccab1aa8200ffd238f775edb8a598780a4b7c06e44694d6b6081d070f"
+    },
+    {
+      "configSeed": 899418,
+      "configIndex": 2,
+      "goal": 16,
+      "stratum": "degree3",
+      "agentSeed": 20260819000,
+      "arm": "A1",
+      "ticks": 3000,
+      "preregistration": "0ad12fe2f190645d2126c9e55aef4f270f853009",
+      "decision": "D-006",
+      "fixture": false,
+      "transitions": 2274,
+      "boundaries": 5717,
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2712,
+        "reads": 3005,
+        "transitions": 2274,
+        "pairingViolations": 0,
+        "seq": 7991,
+        "openTransition": false
+      },
+      "fingerprint": "65ac2835029f0999d7f5eadc74da15731cc80fbb6f38343e52ca48e4b87e01fa",
+      "artifacts": {
+        "cogDraws": 84104,
+        "visDraws": 3020,
+        "qEntries": 187
+      },
+      "envCounters": {
+        "attempts": 1659,
+        "successes": 927,
+        "slips": 732,
+        "envDraws": 1659
+      },
+      "evaluatedSeeds": [
+        899418
+      ],
+      "used": {
+        "agentSeed": 20260819000,
+        "arm": "A1",
+        "ticks": 3000,
+        "configSeed": 899418,
+        "configIndex": 2
+      },
+      "transitionsDigest": "04ee8120601b243cc0fac26b057f56f28c925d57e32acaf1fb7105a5d5dc255e",
+      "boundariesDigest": "c8a0769e75d5cc198ef0fed646fe8832679ee36beff3b27ca59825557ec18ad7"
+    },
+    {
+      "configSeed": 899454,
+      "configIndex": 0,
+      "goal": 8,
+      "stratum": "degree5",
+      "agentSeed": 20260819000,
+      "arm": "A1",
+      "ticks": 3000,
+      "preregistration": "0ad12fe2f190645d2126c9e55aef4f270f853009",
+      "decision": "D-006",
+      "fixture": false,
+      "transitions": 2329,
+      "boundaries": 5751,
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2746,
+        "reads": 3005,
+        "transitions": 2329,
+        "pairingViolations": 0,
+        "seq": 8080,
+        "openTransition": false
+      },
+      "fingerprint": "695589df7600ee6e23ff8c04edfce5481502080962a5aae8bc86d8c2a1fa8149",
+      "artifacts": {
+        "cogDraws": 85816,
+        "visDraws": 3020,
+        "qEntries": 213
+      },
+      "envCounters": {
+        "attempts": 1525,
+        "successes": 848,
+        "slips": 677,
+        "envDraws": 1525
+      },
+      "evaluatedSeeds": [
+        899454
+      ],
+      "used": {
+        "agentSeed": 20260819000,
+        "arm": "A1",
+        "ticks": 3000,
+        "configSeed": 899454,
+        "configIndex": 0
+      },
+      "transitionsDigest": "4930ced45753f32552f9feccce6224273bb5cc58494fcec0297f48dca4a5435e",
+      "boundariesDigest": "65982d3f923b6a8b97bb1e1a5b2a498d013b0ab074f6fc0737dd205a52129f5d"
+    },
+    {
+      "configSeed": 899454,
+      "configIndex": 1,
+      "goal": 12,
+      "stratum": "degree5",
+      "agentSeed": 20260819000,
+      "arm": "A1",
+      "ticks": 3000,
+      "preregistration": "0ad12fe2f190645d2126c9e55aef4f270f853009",
+      "decision": "D-006",
+      "fixture": false,
+      "transitions": 2137,
+      "boundaries": 5775,
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2770,
+        "reads": 3005,
+        "transitions": 2137,
+        "pairingViolations": 0,
+        "seq": 7912,
+        "openTransition": false
+      },
+      "fingerprint": "3eb8a29b13f6f3c0e66403e684a58c20a81b7669c9a1854e0b6a2eb0d2f0cd54",
+      "artifacts": {
+        "cogDraws": 86064,
+        "visDraws": 3020,
+        "qEntries": 200
+      },
+      "envCounters": {
+        "attempts": 1859,
+        "successes": 990,
+        "slips": 869,
+        "envDraws": 1859
+      },
+      "evaluatedSeeds": [
+        899454
+      ],
+      "used": {
+        "agentSeed": 20260819000,
+        "arm": "A1",
+        "ticks": 3000,
+        "configSeed": 899454,
+        "configIndex": 1
+      },
+      "transitionsDigest": "5ed546084d2041ed99219fe916eb9726cd60cbfa5eb4de7dde0ba46cbfc25799",
+      "boundariesDigest": "b1ed76eac94a62dd60ac5f270a2f5fc0d61caa4af7d53f79df5cea69844a2f52"
+    },
+    {
+      "configSeed": 899454,
+      "configIndex": 3,
+      "goal": 19,
+      "stratum": "degree3",
+      "agentSeed": 20260819000,
+      "arm": "A1",
+      "ticks": 3000,
+      "preregistration": "0ad12fe2f190645d2126c9e55aef4f270f853009",
+      "decision": "D-006",
+      "fixture": false,
+      "transitions": 2122,
+      "boundaries": 5742,
+      "diagnostics": {
+        "ticks": 3005,
+        "writes": 2737,
+        "reads": 3005,
+        "transitions": 2122,
+        "pairingViolations": 0,
+        "seq": 7864,
+        "openTransition": false
+      },
+      "fingerprint": "595c31e53f9bd177b499fc99167310026aee3019734b58e4d450441dea7ca44f",
+      "artifacts": {
+        "cogDraws": 71276,
+        "visDraws": 3020,
+        "qEntries": 177
+      },
+      "envCounters": {
+        "attempts": 2033,
+        "successes": 1146,
+        "slips": 887,
+        "envDraws": 2033
+      },
+      "evaluatedSeeds": [
+        899454
+      ],
+      "used": {
+        "agentSeed": 20260819000,
+        "arm": "A1",
+        "ticks": 3000,
+        "configSeed": 899454,
+        "configIndex": 3
+      },
+      "transitionsDigest": "fa6fa5a8f503d09056eb75657683e0ddd9b1e0a6529bb9b42fa755dce7be1129",
+      "boundariesDigest": "8ed933fbaf74ec6409485667dad0b2f53082bbe1c561cb403f7456b5565059d3"
+    }
+  ]
+}
