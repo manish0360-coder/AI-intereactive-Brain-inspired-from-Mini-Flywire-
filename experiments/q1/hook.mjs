@@ -1,0 +1,22 @@
+// ==========================================================
+// Q1 ESM LOAD HOOK — in-memory source transform, no disk write
+// ==========================================================
+// The technique is the one already proven in experiments/m8/hook.mjs and
+// experiments/m7/verify_G15.js: intercept main.js as it loads, splice probe
+// lines in, hand the result to the module system. The repository file is
+// never touched and nothing is written to disk.
+//
+// Registering this hook is the ONLY way Q1 probes enter the build. With the
+// hook unregistered, main.js is byte-identical to HEAD; with the hook
+// registered but globalThis.__MFW_Q1__ unset, every probe is one falsy global
+// read. Both states are asserted by verify_q1_instrument.js.
+//
+// The hook reads no filesystem metadata, no wall clock, no network and no
+// untracked file: its only input is the module source the loader hands it.
+import { transform } from './instrument.js';
+
+export async function load(url, ctx, next) {
+    const r = await next(url, ctx);
+    if (!/\/main\.js$/.test(decodeURIComponent(url)) || !r.source) return r;
+    return { ...r, source: transform(String(r.source)) };
+}
