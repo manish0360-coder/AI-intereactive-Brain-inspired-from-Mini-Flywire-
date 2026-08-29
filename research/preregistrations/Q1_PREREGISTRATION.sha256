@@ -1,0 +1,32 @@
+# Q1 PRE-REGISTRATION — INTEGRITY RECORD
+#
+# Artifact : research/preregistrations/Q1_PREREGISTRATION.md
+# Version  : 1.0 (frozen)
+# Frozen   : 2026-08-29, Chief Systems Engineer, under Director authorisation (D-005)
+# Algorithm: SHA-256 over the exact bytes of the file
+# Size     : 17544 bytes, 325 lines
+#
+# BASELINE THIS PRE-REGISTRATION IS BOUND TO
+#   git HEAD   : 9044c3b6f999bd4820dc49b5842adc2629005733 ("docs(m9): final interpretation of the frozen M9 analysis")
+#   predecessor: M9 analysis 04dda030e7615c24a84a6009fd23ba9d5dc14d46, interpretation 9044c3b
+#   M9 digest  : M9_PREREGISTRATION.sha256 validates unchanged
+#   M8 digest  : M8_PREREGISTRATION.sha256 validates unchanged
+#   M7 digest  : 2f12e309d7409e95f3d1bca34135110e518865fd01d96e5eeaee347b6e33f6b9 (unchanged)
+#
+# STATE AT FREEZE (all verified immediately before hashing)
+#   Q1 instrumentation       : NOT implemented
+#   Q1 collection            : NONE executed
+#   Q1 configuration seeds   : NONE generated or inspected; range NOT YET FROZEN (see 14)
+#   agent seed / arm / ticks : NOT YET FROZEN (open Director decisions)
+#   held-out block >= 900500 : UNTOUCHED
+#   M7, M8, M9 artifacts     : UNCHANGED
+#   production/runtime code  : UNCHANGED
+#
+# VERIFY WITH
+#   cd research/preregistrations && sha256sum -c Q1_PREREGISTRATION.sha256
+#
+# A mismatch means the pre-registration changed after freeze. That is a PROTOCOL
+# DEVIATION and must be reported in the final report with its direction and likely
+# effect on results -- never silently reconciled.
+#
+a148373eb05f4cbcfc21ba77b825a5f7641341c593e5e9596fd78129ca26f7f8  Q1_PREREGISTRATION.md

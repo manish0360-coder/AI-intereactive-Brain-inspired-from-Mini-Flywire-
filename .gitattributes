@@ -35,3 +35,7 @@ research/preregistrations/M8_PREREGISTRATION.sha256  -text
 # M9 pre-registration — same byte-integrity guarantee as the M7 and M8 frozen artifacts.
 research/preregistrations/M9_PREREGISTRATION.md      -text
 research/preregistrations/M9_PREREGISTRATION.sha256  -text
+
+# Q1 pre-registration — same byte-integrity guarantee as the M7, M8 and M9 frozen artifacts.
+research/preregistrations/Q1_PREREGISTRATION.md      -text
+research/preregistrations/Q1_PREREGISTRATION.sha256  -text

@@ -7,6 +7,89 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-005 — Q1: ordered transition composition in DESYNC gaps, pre-registered
+
+**Date:** 2026-08-29 · **Authority:** Director ruling of 2026-08-29, following independent
+scientific review of the Q1 formulation (verdict A) · **Status:** in force
+**Scope:** a new descriptive follow-up requiring its own collection. M7 frozen at `707cb1e`,
+M8 evidence at `f9d97b9`, M9 at `04dda03`/`9044c3b` — all unchanged.
+
+### 1. Decision
+
+[`research/preregistrations/Q1_PREREGISTRATION.md`](preregistrations/Q1_PREREGISTRATION.md) is
+frozen before any instrumentation or measurement exists, digest recorded in its `.sha256` sidecar.
+
+Q1 asks what **ordered sequence of position-changing transitions** occurs within a DESYNC gap, and
+how that sequence is distributed across gaps M9 would classify TELEPORT versus ADVANCE.
+
+### 2. Why Q1 is not a repeat of M9
+
+M9's observable was a last-only, overwriting teleport counter yielding one boolean: did at least
+one teleport fall in the gap. Under it, the histories `write→teleport→read`,
+`write→teleport→advance→read`, `write→advance→teleport→read` and
+`write→teleport→advance→teleport→read` are **indistinguishable** — all four classify TELEPORT. The
+Q1 log separates them. Q1 decomposes an information gap M9 identified and disclosed in its own §4,
+and converts M9's ADVANCE from an inference by exclusion into a direct observation.
+
+**Q1 requires a new collection.** The observable was never recorded, so no re-analysis of the M8
+evidence can answer it. Q1 has its own denominator; M9's 7,178 is context, not Q1's population.
+
+### 3. Frozen in the pre-registration
+
+| | Decision |
+|---|---|
+| **Question** | The §1 wording, with "proximate" deliberately absent. |
+| **Phenomenon** | `DESYNC := lastReasoning.from !== agentCurrent`, inherited unchanged from M8 §2. |
+| **Window** | Strictly between `main.js:2635` and `main.js:3819`, with per-tick membership fixed by the audited in-tick ordering. Maximum 2k transitions at age k — two even at age 1. |
+| **Taxonomy** | Closed: `cap`, `pool`, `goalReset`, `advance`. The wipe at `main.js:5209` is excluded as unreachable in this harness, with the reason recorded rather than the site omitted. |
+| **Completeness gate** | Mandatory source-level verification that every reachable `agentCurrent` assignment maps to exactly one taxonomy member. **An additional reachable assignment HALTS the study** — it is never silently ignored or absorbed. |
+| **Raw observable** | Closed schema `{seq, tickIndex, site, fromPos, toPos}`. No field addable after data exists. `fromPos` is formally redundant and retained so a dropped record is detectable rather than silently corrupting the chain. |
+| **Derived** | `GAP_COMPOSITION`, `FIRST_DIVERGING_TRANSITION`, `LAST_TRANSITION_BEFORE_EVALUATION`, `TRANSITION_COUNT`. **None may be named a cause; "proximate cause" is prohibited.** |
+| **Falsification** | Six statements, each refuted by a counterexample, requiring no threshold. |
+| **Statistics** | Descriptive only — counts, proportions, sequence frequencies. No test, interval, model or causal estimate, and none addable post hoc. |
+| **Intervention-free** | No RNG, no mutation, no branch substitution, no change to selection/teleport/advance/goal logic, default-off, bit-identical when disabled, run-neutrality verified. |
+| **Reproducibility** | Deterministic, digest-pinned, identical across authoring tree, archive and CRLF checkout; no mtime, wall-clock, network or undeclared seed. |
+
+### 4. Why "proximate" was removed
+
+The independent review and the source audit agree: the evidence supports **temporal ordering**,
+not causal responsibility. Two source facts make this substantive. DESYNC is a **conjunction** — no
+fresh selection **and** a net position change — so no single transition carries responsibility for
+it. And with up to 2k transitions per gap the position may oscillate, so the transition that
+*established* divergence and the one that *determined the executed position* are different
+transitions answering different questions. Both are therefore recorded, and neither is privileged.
+
+### 5. Seed governance — OPEN, deliberately not chosen here
+
+The admissible space is **below 899500**: not overlapping M8's `899500-899999`, not overlapping
+M7's `900000-900029` or `900030-900499`, strictly below the held-out floor `900500`.
+
+**The exact bounds are NOT frozen.** Sizing depends on acceptance yield and the number of DESYNC
+gaps required, which is a scientific judgement; per the Director's instruction it is recorded as an
+open decision rather than silently chosen. The same applies to the agent seed, arm, tick budget,
+minimum evidence rule and stopping rule. **All must be ratified as a numbered Director decision
+before the collection milestone begins.**
+
+Sizing basis available to that decision, from documented figures only: M8 accepted 41
+configurations from 500 seeds (0.082 per seed), close to the 0.0872 M7 figure used to size M8.
+
+### 6. Post-hoc disclosure
+
+Q1 was motivated by an observability limitation **M9 disclosed in its own protocol**, and the
+formulation was written after the M9 results existed. Q1's *design* is therefore post-hoc relative
+to M9. Its *measurement* is a-priori relative to its own evidence, because it requires a new
+collection under a pre-registration frozen beforehand. Downstream write-ups must reproduce that
+distinction rather than claiming either extreme.
+
+### 7. Governance consequence
+
+Changes to Q1 arrive only as numbered errata quoting its text and binding to its digest.
+Instrumentation, seed ratification, and collection are separate milestones, each requiring its own
+authorisation. No Q1 result is authorised to reinterpret M7, M8 or M9, or to bear on the G15
+outcome.
+
+---
+
 ## D-004 — M9: secondary analysis of the frozen M8 evidence, pre-registered
 
 **Date:** 2026-08-29 · **Authority:** Director ruling of 2026-08-29, M9 Governance Gate accepted
