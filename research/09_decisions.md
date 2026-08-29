@@ -7,6 +7,183 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-006 — Q1 collection parameters: ratified and frozen
+
+**Date:** 2026-08-29 · **Authority:** Director ruling of 2026-08-29, following the read-only D-006
+collection-parameter design audit · **Status:** in force
+**Scope:** the Q1 collection only. This is a governance decision. No instrumentation exists, no
+candidate was enumerated, no seed was generated or inspected, no configuration was run, and no Q1
+outcome has been observed. M7 frozen at `707cb1e`, M8 evidence at `f9d97b9`, M9 at
+`04dda03`/`9044c3b`, Q1 pre-registration at `0ad12fe` — all unchanged.
+
+### 1. Decision
+
+Q1 [§14](preregistrations/Q1_PREREGISTRATION.md) left six collection parameters explicitly open and
+required them to be ratified as a numbered Director decision **before the collection milestone
+begins**. This entry ratifies all six. They are frozen; a change arrives only as a superseding
+numbered decision, never by adjustment during collection.
+
+| | Parameter | Ratified value | Basis |
+|---|---|---|---|
+| **A** | Configuration-seed range | **899000-899499** inclusive — 500 configuration seeds, four frozen goal indices per seed, **2000 candidate configurations** | admissible space **mechanically constrained**; size **judgment**, informed by documented yield |
+| **B** | Agent seed | **20260819000** | **judgment**, with strong evidential support |
+| **C** | Arm | **A1** | **judgment**, with strong evidential support |
+| **D** | Tick budget | **3000 ticks** per accepted configuration | **mechanically constrained** via phase balance, reinforced by precedent |
+| **E** | Minimum evidence | **100** DESYNC events pooled · **20** accepted configurations · **15** accepted configurations per goal-degree stratum | **Director judgment** — see §4 |
+| **F** | Stopping rule | Fixed range, full enumeration, **no extension**, no adaptation | **mechanically constrained** by Q1 §14, precedent M8 §13 |
+
+### 2. Exact seed boundaries
+
+| Block | Range | Status |
+|---|---|---|
+| **Q1 (this decision)** | **899000-899499** | ratified for consumption |
+| M8 | 899500-899999 | consumed (D-003 H) |
+| M7 pilot | 900000-900029 | consumed (M7 frozen §5.1) |
+| M7-ERR-09 gate diagnostic | 900030-900499 | consumed |
+| **Held-out** | **>= 900500** | never generated, inspected, or inferred |
+
+The Q1 range is contiguous, lies strictly below 899500, and is **disjoint from every consumed block
+and from the held-out floor**. Disjointness is arithmetic on the boundaries above, not an empirical
+finding: 899499 < 899500 <= every consumed and held-out seed.
+
+The agent seed `20260819000` is **not** a configuration seed. Configuration seeds are six-digit
+values in the blocks above; the agent seed inhabits a separate namespace, and a numeric comparison
+across the two is a category error — the error corrected during M8 verification, recorded here so it
+is not repeated.
+
+### 3. Basis classification — what is constrained, what is evidence, what is judgment
+
+The audit classified each parameter as exactly one of: **mechanically constrained** by already-frozen
+protocol or source; **evidence-supported** by prior committed experimental results; or **Director
+judgment**. That distinction is recorded so downstream write-ups do not present a judgment as a
+derivation.
+
+**Mechanically constrained.**
+
+- The admissible seed *space* — below 899500, disjoint, contiguous, enumerated — per Q1 §14.
+- The **tick budget of 3000**. This is the least obvious item in the audit. `T_SHIFT = 1500` is
+  frozen in `env.js`, so at 3000 ticks the phase-1/phase-2 split is balanced. Any other budget
+  unbalances the `phase` stratifier. The budget is therefore constrained *through a stratifier*, not
+  merely conventional.
+- The stopping-rule **form**: Q1 §14 requires an under-yield to be handled by a stopping rule rather
+  than by extension.
+
+**Evidence-supported** — from documented figures only; no seed was generated to produce them.
+
+- M8 accepted 41 configurations from 500 seeds, a realised yield of **0.082 accepted configurations
+  per seed**, close to the 0.0872 M7 figure used to size M8.
+- M9 recorded **7,178 DESYNC events across 41 configurations** — 175.07 per accepted configuration.
+- Arithmetic on those two figures gives about 14.36 DESYNC gaps per seed, so 500 seeds **project**
+  about 41 accepted configurations and about 7,180 gaps. This is a projection from a different seed
+  block, **not a guarantee**; yield is a property of the acceptance predicate and need not reproduce.
+  The stopping rule (§5), not the range, absorbs an under-yield.
+- M8 §12 established the *form* 100 / 20 / 15 as a workable information-sufficiency rule.
+
+**Director judgment.**
+
+- The seed-range **size** — 500 rather than 250 or 200.
+- The **agent seed** and the **arm**, per §6.
+- The minimum-evidence **numbers**, per §4.
+
+### 4. Minimum evidence — explicitly Director judgment
+
+**The values 100 / 20 / 15 are a pre-data design choice by the Research Director, informed by M8
+precedent. They are NOT mechanically required by source, and must never be represented as such.**
+
+Two facts make that labelling substantive rather than ceremonial.
+
+First, **every falsification statement in Q1 §9 is an existence claim**, refuted by a single
+counterexample. Falsification under Q1 therefore requires **no minimum sample and no threshold at
+all**. The minimum-evidence rule governs *distributional characterisation* — the precision with
+which `GAP_COMPOSITION` proportions are reported — and nothing else. It cannot make a Q1 refutation
+more or less valid.
+
+Second, Q1 §10 pre-registers **no test and no precision target**, so there is no mechanical anchor
+from which any specific number could be derived. The numbers are inherited in form from M8 §12
+(D-003 B) because that form is the established project precedent, not because the evidence
+determines them.
+
+**Goal-degree stratum.** Q1's frozen text does not itself define one. The stratification is
+inherited unchanged from M8 §12 / D-003 B: **degree 5 = goals 8, 12; degree 3 = goals 16, 19**. This
+decision is the instrument that fixes it for Q1, and it is stated here rather than assumed, because
+Q1 does not supply it.
+
+Strata are **not balanced by construction.** Goals cycle `GOALS[configIndex % 4]` over candidates,
+but acceptance is not uniform: M8 realised 10 / 10 / 9 / 12 by goal, i.e. 20 versus 21 configurations
+across the two strata. A per-stratum minimum of 15 therefore binds the seed range more tightly than
+the pooled minimum of 20 does.
+
+### 5. Stopping rule — fixed range, no extension, no adaptation
+
+1. Enumerate the **entire** frozen range 899000-899499.
+2. Evaluate **every** candidate directly at its own seed. There is no acceptance walk, so no seed
+   outside the frozen range is ever reached — the M7-ERR-09 §3.3 discipline, carried forward.
+3. Collect **every** accepted configuration in that range.
+4. **Do not extend the range for any reason**, including an observed under-yield.
+5. **Do not adapt collection after observing any Q1 result.** No parameter in §1 may be revised in
+   response to Q1 data.
+6. If **any** minimum-evidence condition in §1 E is unmet, the Q1 result is
+   **INCONCLUSIVE — INSUFFICIENT MATERIAL**, and the report must name the specific failing
+   condition. **No additional sampling is permitted under Q1.**
+
+Because the range is fixed and extension is prohibited, the minimum-evidence rule is a **reporting
+threshold, not a collection target**. It decides the disposition of the evidence actually obtained;
+it never drives the acquisition of more.
+
+### 6. Comparability, and what reuse does not buy
+
+The agent seed and the arm are reused from M8/M9 so that the **only** changed variable between M9
+and Q1 is the configuration range. Changing the agent seed would change two variables at once and
+would foreclose reading Q1's composition results against M9's ORIGIN proportions. Arm A1 is recorded
+in `arms.js` as **BELIEF**, is in `LOCKED_ARMS`, and the transition sites Q1 observes — `cap`,
+`pool`, `goalReset`, `advance` — are arm-independent in source, so no other arm offers an identified
+advantage for this question.
+
+**Reuse does not establish seed-robustness.** M7, M8, M9 and Q1 all inherit any idiosyncrasy of this
+single agent seed, with no independent check. That is a real limitation of the series, it is not
+removed by this decision, and downstream write-ups must state it rather than treat comparability as
+if it were replication. Testing robustness across agent seeds would be a **different study**, not a
+parameter adjustment to Q1.
+
+### 7. Dependencies identified by the D-006 audit
+
+Recorded because each coupling can silently invalidate a parameter that looks independently chosen.
+
+1. **Tick budget ⇄ phase stratifier.** `T_SHIFT = 1500` is frozen, so the budget controls a
+   stratifier, not just sample size. 3000 looks like a free convention and is not.
+2. **Seed range ⇄ tick budget.** Both scale total gaps. With the budget fixed at 3000, the range is
+   the only remaining sample-size lever.
+3. **Minimum evidence ⇄ stopping rule.** With no extension permitted, the minimum determines the
+   probability of a pre-declared INCONCLUSIVE. The two were decided together, not separately.
+4. **Per-stratum minimum ⇄ seed range.** Because strata are not balanced by construction (§4), the
+   15-per-stratum condition constrains the range more tightly than the pooled 20 at the same nominal
+   level.
+5. **Agent seed ⇄ comparability with M9.** Changing it alters two variables at once relative to
+   M8/M9, per §6.
+6. **Seed range ⇄ minimum evidence, through an unverifiable assumption.** The range was sized from
+   M8's yield, which may not reproduce on a different block. Dependency 3 absorbs that risk; no
+   minimum was chosen on the assumption that the projection holds.
+
+**Recorded from the audit, and deliberately not acted on:** the AGE distribution is governed by the
+per-tick probability of the DESYNC conjunction — no fresh selection (the `liveRng() < 0.92` gate at
+`main.js:3325`) **and** a realised position change — rather than by the tick budget or the
+`EPISODE_CAP = 150` ceiling. Observed successive AGE ratios, 27.0 : 15.1 : 8.5, do not cleanly match
+the gate alone, which is consistent with the conjunction being the driver. **The exact functional
+form is not established and is not claimed.** Only the negative consequence is used here: the tick
+budget is a sample-size lever and does not shape the phenomenon.
+
+### 8. Boundary and governance consequence
+
+D-006 is a **governance decision only**. It adds no instrumentation, enumerates no candidate,
+generates or inspects no seed, runs no configuration, produces no data, and observes no Q1 outcome.
+It modifies no scientific definition in Q1, and does not touch M7, M8 or M9.
+
+Q1 instrumentation design and implementation is a **separate milestone requiring its own
+authorisation**, and collection is a further milestone after that. No Q1 result is authorised to
+reinterpret M7, M8 or M9, or to bear on the G15 outcome.
+
+---
+
 ## D-005 — Q1: ordered transition composition in DESYNC gaps, pre-registered
 
 **Date:** 2026-08-29 · **Authority:** Director ruling of 2026-08-29, following independent
