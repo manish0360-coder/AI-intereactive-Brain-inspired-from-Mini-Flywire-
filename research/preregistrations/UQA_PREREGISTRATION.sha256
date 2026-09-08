@@ -1,0 +1,37 @@
+# UQ-A PRE-REGISTRATION — INTEGRITY RECORD
+#
+# Artifact : research/preregistrations/UQA_PREREGISTRATION.md
+# Version  : 1.0 (frozen)
+# Frozen   : 2026-09-03, Chief Systems Engineer, under Director authorisation
+#            (UQ-A freeze milestone; §5 exposure E-BOTH, §17 block S-1000)
+# Algorithm: SHA-256 over the exact bytes of the file
+# Size     : 24548 bytes, 417 lines
+#
+# BASELINE THIS PRE-REGISTRATION IS BOUND TO
+#   git HEAD   : 3580685440790fd1c2e140d49024824f5d10bff7 ("docs(u-uncertainty): candidate research track formulation, gated HOLD")
+#   predecessor: Q1 closed at 21c7238; U1 closed by D-010 at e4a1d09
+#   M7 digest  : 2f12e309d7409e95f3d1bca34135110e518865fd01d96e5eeaee347b6e33f6b9 (unchanged)
+#   M8 digest  : M8_PREREGISTRATION.sha256 validates unchanged
+#   M9 digest  : M9_PREREGISTRATION.sha256 validates unchanged
+#   Q1 digest  : Q1_PREREGISTRATION.sha256 validates unchanged
+#
+# STATE AT FREEZE (all verified immediately before hashing)
+#   UQ-A instrumentation     : NOT implemented
+#   liveness pre-check       : NOT run
+#   UQ-A collection          : NONE executed
+#   configuration seeds      : NONE generated or inspected
+#   frozen seed block        : 898000-898999 (1000 seeds, 4000 candidates)
+#   consumed blocks          : Q1 899000-899499, M8 899500-899999, M7 900000-900499
+#   held-out block >= 900500 : UNTOUCHED
+#   production source        : UNCHANGED
+#   M7, M8, M9, Q1 artifacts : UNCHANGED
+#   open Director decisions  : NONE
+#
+# VERIFY WITH
+#   cd research/preregistrations && sha256sum -c UQA_PREREGISTRATION.sha256
+#
+# A mismatch means the pre-registration changed after freeze. That is a PROTOCOL
+# DEVIATION and must be reported in the final report with its direction and likely
+# effect on results -- never silently reconciled.
+#
+03eba04ac908861332fb2d7b0d3c0994468e1bd5ab5f78a5acf092dcd20196c4  UQA_PREREGISTRATION.md

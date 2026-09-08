@@ -39,3 +39,10 @@ research/preregistrations/M9_PREREGISTRATION.sha256  -text
 # Q1 pre-registration — same byte-integrity guarantee as the M7, M8 and M9 frozen artifacts.
 research/preregistrations/Q1_PREREGISTRATION.md      -text
 research/preregistrations/Q1_PREREGISTRATION.sha256  -text
+
+# UQ-A pre-registration — same byte-integrity guarantee as the M7, M8, M9 and Q1
+# frozen artifacts. Its identity is a SHA-256 over exact bytes
+# (UQA_PREREGISTRATION.sha256), so end-of-line conversion must be disabled in both
+# directions or the digest fails to validate on checkout.
+research/preregistrations/UQA_PREREGISTRATION.md      -text
+research/preregistrations/UQA_PREREGISTRATION.sha256  -text
