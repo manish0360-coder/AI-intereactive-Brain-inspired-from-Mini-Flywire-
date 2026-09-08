@@ -1,0 +1,34 @@
+{
+  "check": "UQ-A / §14b liveness pre-check",
+  "preregistration": {
+    "path": "research/preregistrations/UQA_PREREGISTRATION.md",
+    "digest": "03eba04ac908861332fb2d7b0d3c0994468e1bd5ab5f78a5acf092dcd20196c4",
+    "commit": "63247bb546d62f15296edbdf3da34206bce3ef87"
+  },
+  "exposure": "E-BOTH",
+  "ablation": "uncertaintyScore delivered as exactly 0 at both frozen read sites",
+  "battery": {
+    "seed": 12345,
+    "trials": 400,
+    "candidatesPerDecision": 4,
+    "decisions": 400,
+    "method": "inherited from experiments/exec_influence/run.js (M1)",
+    "modules": "LIVE render/scoring.js + render/executiveController.js"
+  },
+  "criterion": "LIVE iff argmax flip rate > 0; INERT iff argmax flip rate == 0",
+  "metrics": {
+    "argmax_flip_rate": 0.0075,
+    "argmax_flips": 3,
+    "influence_delta_blended": 0.039333,
+    "competitive_score_null_count": 0
+  },
+  "diagnosticNote": "influence_delta_blended is a MANDATORY DIAGNOSTIC and is never the criterion.",
+  "cosmeticCase": false,
+  "cosmeticNote": null,
+  "verdict": "LIVE",
+  "consequence": "UQ-A is operationally live. The main collection is authorised as a SEPARATE milestone; it is NOT run here.",
+  "seedsConsumed": {
+    "uqaConfigurationSeeds": 0,
+    "note": "This check runs no agent and consumes no configuration seed. The battery seed 12345 is inherited from M1 and is not a configuration seed."
+  }
+}

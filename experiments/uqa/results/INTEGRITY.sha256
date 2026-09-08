@@ -1,0 +1,13 @@
+# UQ-A LIVENESS PRE-CHECK — INTEGRITY RECORD
+#
+# Artifact  : experiments/uqa/results/uqa_liveness.json
+# Protocol  : research/preregistrations/UQA_PREREGISTRATION.md 03eba04ac908861332fb2d7b0d3c0994468e1bd5ab5f78a5acf092dcd20196c4
+# Component : frozen §14b liveness pre-check (pre-registered)
+# Verdict   : LIVE
+#
+# This is NOT a UQ-A result. No configuration seed was consumed and no
+# collection was run.
+#
+# Regenerate with : cd experiments/uqa && node liveness.js
+#
+ff2f18ec85c6f046cae0ebb7f6ff317e7db51047f75259fae60c6f6429571efb  uqa_liveness.json
