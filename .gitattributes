@@ -46,3 +46,25 @@ research/preregistrations/Q1_PREREGISTRATION.sha256  -text
 # directions or the digest fails to validate on checkout.
 research/preregistrations/UQA_PREREGISTRATION.md      -text
 research/preregistrations/UQA_PREREGISTRATION.sha256  -text
+
+# UQ-A EVIDENCE ARTIFACTS — the same byte-integrity guarantee, extended from the
+# pre-registration to the evidence it governs.
+#
+# uqa_results.sha256, uqa_liveness.json's INTEGRITY.sha256 and data/INTEGRITY.sha256
+# identify their artifacts by a SHA-256 over exact bytes. With core.autocrlf=true
+# and no attribute, git rewrites LF to CRLF on checkout and every one of those
+# digests fails on a fresh clone. Demonstrated, not assumed: checking the blobs
+# out through the smudge filter reproduces the claimed digest only for paths
+# carrying `-text`.
+#
+# This modifies no frozen document, threshold, seed range, acceptance criterion
+# or item of evidence. It only stops git from rewriting bytes whose exactness is
+# the whole integrity claim.
+#
+# NOTE — the same exposure exists for the M8, M9 and Q1 data artifacts and is
+# NOT repaired here: those belong to closed milestones and their repair is a
+# separate governance decision, not something to fold silently into this commit.
+experiments/uqa/data/*.jsonl        -text
+experiments/uqa/data/INTEGRITY.sha256 -text
+experiments/uqa/results/*.json      -text
+experiments/uqa/results/*.sha256    -text

@@ -1,0 +1,13 @@
+# The raw Q tables are NOT committed, following the M7/M8/Q1 convention: no raw
+# measurement data is versioned, and every verifier recomputes from frozen seeds
+# instead (see experiments/m7/verify_G15.js, experiments/q1/data).
+#
+# What IS committed is sufficient to reproduce and validate them exactly:
+#   candidates.jsonl          every one of the 4000 candidates with its disposition
+#   INTEGRITY.sha256          digests of the artifacts + the regeneration command
+#   ../results/uqa_results.json  the frozen-protocol outcome, with a per-arm
+#                             fingerprint and a per-arm load-hook attestation for
+#                             every configuration
+#
+# Regenerate with:  cd experiments/uqa && node run_collection.js
+qtables.jsonl

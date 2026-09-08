@@ -1,0 +1,19 @@
+# UQ-A MAIN COLLECTION — INTEGRITY RECORD
+#
+# Study      : UQ-A does the uncertainty pathway change value-structure alignment
+# Protocol   : research/preregistrations/UQA_PREREGISTRATION.md 03eba04ac908861332fb2d7b0d3c0994468e1bd5ab5f78a5acf092dcd20196c4
+# Freeze     : 63247bb546d62f15296edbdf3da34206bce3ef87
+# Liveness   : LIVE at 5d04469af7adbe4a0d03a6afc889849c32c2cf96
+# Range      : 898000-898999 | agent 20260819000 | M7 arm A1 | 3000 ticks
+# Exposure   : E-BOTH | arms ARMED + ABLATED
+#
+# Regenerate with : cd experiments/uqa && node run_collection.js
+# Verify with     : cd experiments/uqa && node verify_uqa.js
+#
+# qtables.jsonl is NOT committed (repository convention: raw measurement data is
+# not versioned). Its digest is here, and results/uqa_results.json carries a
+# per-configuration per-arm fingerprint and arm attestation so a single run can
+# be validated without regenerating the others.
+#
+f1ccb0998fb28322544423aea36b73fa880948a4b3e1fac0308155ab0e431e47  qtables.jsonl
+9b6b80a44c34f78c0486c34d663759e7993a857f20e8a5ddf1e64dc365d9ac58  candidates.jsonl
