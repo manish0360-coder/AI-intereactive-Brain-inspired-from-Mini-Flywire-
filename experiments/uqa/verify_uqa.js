@@ -40,6 +40,12 @@ import { collectOne } from './collect.js';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '../..');
 const sha = (s) => crypto.createHash('sha256').update(s).digest('hex');
+// Digests of SOURCE match the load hook and the collector: taken over
+// line-ending-normalised text, so a recorded attestation is comparable from a
+// CRLF clone as well as an LF one. D12 proves the transform preserves rather
+// than rewrites terminators, so nothing is weakened by normalising here.
+const CR = String.fromCharCode(13), LF = String.fromCharCode(10);
+const shaSource = (t) => sha(String(t).split(CR + LF).join(LF));
 const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8');
 
 const FIXTURE = { configSeed: 100026, configIndex: 0, goal: 8 };
@@ -164,6 +170,29 @@ P('D8', throws(() => instrument.transform(mainSrc, 'ARMEDISH'))
   'an unrecognised or absent arm is REFUSED; there is no default');
 P('D9', /\(getUncertaintyScore\(candidatePathKey\), 0\)/.test(ablatedSrc),
   'the ablated value is the literal 0 the frozen text names, not a substitute');
+{
+    // On a fresh clone under core.autocrlf=true, main.js materialises with CRLF.
+    // The transform must therefore be end-of-line agnostic AND must not rewrite
+    // the file's own terminators. Binding the MEASUREMENT INPUT: the check runs
+    // the real transform over a CRLF rendering of the real main.js, which is
+    // exactly what a fresh checkout hands the loader.
+    const crlf = mainSrc.replace(/\n/g, '\r\n');
+    const crlfArmed = instrument.transform(crlf, 'ARMED');
+    const crlfAblated = instrument.transform(crlf, 'ABLATED');
+    P('D10', crlfArmed === crlf,
+      'CRLF checkout — ARMED is byte-identical to the file as delivered');
+    {
+        const a = crlf.split('\r\n'), b = crlfAblated.split('\r\n');
+        const diff = a.map((_, i) => i).filter(i => a[i] !== b[i]);
+        P('D11', a.length === b.length && diff.length === 1
+              && b[diff[0]] === instrument.ABLATED_LINE,
+          'CRLF checkout — ABLATED still differs on exactly one line');
+    }
+    P('D12', (crlfAblated.match(/\r\n/g) || []).length === (crlf.match(/\r\n/g) || []).length
+          && !/[^\r]\n/.test(crlfAblated),
+      'the transform preserves the file’s own terminators; it introduces no bare LF into a ' +
+      'CRLF file and normalises nothing');
+}
 
 // ==========================================================================
 console.log('\n-- E. the designated statistic ------------------------------------------');
@@ -292,16 +321,20 @@ console.log('     (two 3000-tick runs; this takes about 15 seconds)');
 const armed = collectOne({ ...FIXTURE, uqaArm: 'ARMED', fixture: true });
 const ablated = collectOne({ ...FIXTURE, uqaArm: 'ABLATED', fixture: true });
 
-P('H1', armed.provenance.armAttestation.deliveredDigest === sha(armedSrc)
-     && ablated.provenance.armAttestation.deliveredDigest === sha(ablatedSrc),
+P('H1', armed.provenance.armAttestation.deliveredDigest === shaSource(armedSrc)
+     && ablated.provenance.armAttestation.deliveredDigest === shaSource(ablatedSrc),
   'the loader thread attests it delivered exactly the ARMED / ABLATED transforms');
 P('H2', armed.provenance.armAttestation.receivedDigest
      === ablated.provenance.armAttestation.receivedDigest
-     && armed.provenance.armAttestation.receivedDigest === sha(mainSrc),
+     && armed.provenance.armAttestation.receivedDigest === shaSource(mainSrc),
   '§15 — both arms received the SAME committed main.js from disk; nothing was written to it');
 P('H3', armed.provenance.armAttestation.deliveredDigest
      !== ablated.provenance.armAttestation.deliveredDigest,
   'and the two arms executed DIFFERENT source, so the arm label is a fact, not an assertion');
+P('H3b', shaSource(mainSrc) === shaSource(mainSrc.split(LF).join(CR + LF))
+      && shaSource(armedSrc) !== shaSource(ablatedSrc),
+  'the attestation digest is checkout-independent (CRLF and LF agree) yet still separates the ' +
+  'two arms — normalising line endings costs the proof nothing');
 P('H4', armed.provenance.evaluatedSeeds.length === 1
      && armed.provenance.evaluatedSeeds[0] === FIXTURE.configSeed
      && ablated.provenance.evaluatedSeeds.length === 1,
@@ -455,12 +488,12 @@ console.log('\n-- K. the produced artifact -------------------------------------
         P('K10', cfgs.every(x => x.arms.ARMED && x.arms.ABLATED),
           'every configuration carries BOTH arms — there is no one-armed row');
         P('K11', cfgs.every(x =>
-              x.provenance.ARMED.armAttestation.deliveredDigest === sha(armedSrc) &&
-              x.provenance.ABLATED.armAttestation.deliveredDigest === sha(ablatedSrc)),
+              x.provenance.ARMED.armAttestation.deliveredDigest === shaSource(armedSrc) &&
+              x.provenance.ABLATED.armAttestation.deliveredDigest === shaSource(ablatedSrc)),
           'every run attests the loader delivered exactly the transform its arm names');
         P('K12', cfgs.every(x =>
-              x.provenance.ARMED.armAttestation.receivedDigest === sha(mainSrc) &&
-              x.provenance.ABLATED.armAttestation.receivedDigest === sha(mainSrc)),
+              x.provenance.ARMED.armAttestation.receivedDigest === shaSource(mainSrc) &&
+              x.provenance.ABLATED.armAttestation.receivedDigest === shaSource(mainSrc)),
           '§15 — every run read the SAME committed main.js from disk; it was never modified');
         P('K13', cfgs.every(x => x.arms.ARMED.n === 78 && x.arms.ABLATED.n === 78
                               && x.arms.ARMED.coverageDenominator === 78),

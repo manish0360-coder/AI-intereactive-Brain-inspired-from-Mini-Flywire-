@@ -88,6 +88,16 @@ The `getUncertaintyScore` call is preserved and only its value is discarded, so
 both arms execute the same call sequence. The function is pure — it reads
 `surpriseMap`, `inconsistencyMap` and `visitCount` and mutates nothing.
 
+Attestation digests are taken over line-ending-normalised source, and only line
+endings are normalised. Under `core.autocrlf=true` a fresh clone materialises
+`main.js` with CRLF, so a raw-byte digest would differ between checkouts and the
+recorded evidence would not regenerate. Terminators are semantically void in
+JavaScript, and `verify_uqa.js` D12 proves the transform preserves rather than
+rewrites them, so the proof is unchanged and becomes checkout-independent —
+D10–D12 exercise the real transform over a CRLF rendering of the real `main.js`,
+and H3b requires the digest to agree across both forms while still separating the
+two arms.
+
 ## Raw Q-table schema
 
 Each `qtables.jsonl` line is one run: the run identity joined to the complete

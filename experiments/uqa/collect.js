@@ -39,9 +39,11 @@
 // THE FOUR PROOFS, all read back from the child rather than assumed
 //   1. SEED    — env's own record of every configSeed the process evaluated.
 //   2. PARAMS  — agent seed, arm, tick budget, config seed and index.
-//   3. ARM     — the SHA-256 of the exact source the loader thread delivered to
-//                the module system, compared with an independently recomputed
-//                transform. This is what makes "ABLATED" a fact and not a label.
+//   3. ARM     — the SHA-256 of the source the loader thread delivered to the
+//                module system, compared with an independently recomputed
+//                transform. Digested over line-ending-normalised text so the
+//                evidence regenerates from any checkout; see shaSource below.
+//                This is what makes "ABLATED" a fact and not a label.
 //   4. SCHEMA  — the Q table's key shape, and that the population's own keys are
 //                drawn from the namespace the run actually wrote into.
 // ==========================================================
@@ -58,7 +60,14 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '../..');
 const U = 'file:///' + ROOT.split(path.sep).join('/');
 
-const sha = (s) => crypto.createHash('sha256').update(s).digest('hex');
+// Digests of SOURCE are taken over the line-ending-normalised text, matching the
+// load hook. Under core.autocrlf=true a fresh clone materialises main.js with
+// CRLF, so a raw-byte digest would differ between checkouts and the recorded
+// evidence would not regenerate. Terminators are semantically void in JavaScript
+// and verify_uqa.js D12 proves the transform preserves rather than rewrites
+// them, so the proof is unchanged and becomes checkout-independent.
+const shaSource = (s) => crypto.createHash('sha256')
+    .update(String(s).replace(/\r\n/g, '\n')).digest('hex');
 
 // The committed Q key shape (F6): "pos#goal->action", all three numeric.
 const Q_KEY_SHAPE = /^-?\d+#-?\d+->-?\d+$/;
@@ -136,7 +145,7 @@ export function collectOne(o) {
 
     // Proof 3, parent half: what the loader thread MUST have delivered, derived
     // independently from the committed file.
-    const expectedDelivered = sha(transform(fs.readFileSync(path.join(ROOT, 'main.js'), 'utf8'),
+    const expectedDelivered = shaSource(transform(fs.readFileSync(path.join(ROOT, "main.js"), "utf8"),
                                             o.uqaArm));
 
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'uqarun-'));

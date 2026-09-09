@@ -15,10 +15,19 @@
 // THE HOOK ATTESTS WHAT IT ACTUALLY DELIVERED
 //   The transform runs in the loader thread, so the main thread cannot observe
 //   it directly. When UQA_MARKER names a path, the hook writes the arm and the
-//   SHA-256 of the exact source text it handed to the module system. The
-//   collector recomputes that digest independently and refuses the run unless
-//   the two agree. That converts "the ablation was applied" from an assumption
-//   into an end-to-end proof over the actual bytes executed.
+//   SHA-256 of the source text it handed to the module system. The collector
+//   recomputes that digest independently and refuses the run unless the two
+//   agree. That converts "the ablation was applied" from an assumption into an
+//   end-to-end proof over the code actually executed.
+//
+//   LINE ENDINGS ARE NORMALISED BEFORE DIGESTING, and only line endings. Under
+//   core.autocrlf=true a fresh clone materialises main.js with CRLF, so a digest
+//   over raw bytes would differ between checkouts and the recorded evidence
+//   would not regenerate. Line terminators are semantically void in JavaScript,
+//   and verify_uqa.js D12 proves the transform preserves whatever terminators it
+//   was given rather than rewriting them. Normalising here therefore costs the
+//   proof nothing: it still shows the delivered source is exactly the arm's
+//   transform of committed main.js, and it makes that showable from any clone.
 //
 //   The marker is written under the OS temp directory chosen by the collector
 //   and is deleted with it. Nothing is written inside the repository.
@@ -40,11 +49,15 @@ export async function load(url, ctx, next) {
 
     const marker = process.env.UQA_MARKER;
     if (marker) {
+        const eolNormalised = (s) => s.replace(/\r\n/g, '\n');
+        const digest = (s) => crypto.createHash('sha256')
+            .update(eolNormalised(s)).digest('hex');
         fs.writeFileSync(marker, JSON.stringify({
             arm: ARM,
             url: decodeURIComponent(url),
-            deliveredDigest: crypto.createHash('sha256').update(delivered).digest('hex'),
-            receivedDigest: crypto.createHash('sha256').update(String(r.source)).digest('hex'),
+            digestBasis: 'sha256 over the source with CRLF normalised to LF',
+            deliveredDigest: digest(delivered),
+            receivedDigest: digest(String(r.source)),
         }) + '\n');
     }
     return { ...r, source: delivered };

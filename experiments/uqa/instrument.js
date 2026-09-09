@@ -27,12 +27,21 @@
 //   so that the ARMED and ABLATED builds execute the same call sequence and
 //   differ ONLY in the delivered value, which is what §5 specifies.
 //
-// TRAILING WHITESPACE
-//   The committed main.js:2046 ends with three trailing spaces. Trailing
-//   whitespace is semantically void in JavaScript, so the anchor is matched on
-//   the line's trailing-trimmed form. Leading indentation is NOT trimmed: it is
-//   part of the structural identity being asserted. A comparison that also
+// TRAILING WHITESPACE AND LINE ENDINGS
+//   The committed main.js:2046 ends with three trailing spaces, and on a fresh
+//   clone under core.autocrlf=true the whole file materialises with CRLF line
+//   endings. Both are semantically void in JavaScript, so the anchor is matched
+//   on the line's trailing-trimmed form. Leading indentation is NOT trimmed: it
+//   is part of the structural identity being asserted. A comparison that also
 //   trimmed the left would match a line of the same text in a different block.
+//
+//   The transform does NOT normalise line endings. It splices one line into the
+//   original text and leaves every other byte, including that line's own
+//   terminator, exactly as the loader handed it over. So ARMED stays
+//   byte-identical to the file on disk on every platform, and ABLATED differs
+//   from it on exactly one line's content and nowhere else. An earlier version
+//   refused CRLF outright; that made the study unrunnable from a fresh clone,
+//   which the clean-tree verification caught.
 //
 // NEUTRALITY (§15)
 //   No production source is modified. The transform runs in memory through an
@@ -74,27 +83,37 @@ export function transform(source, arm) {
         throw new Error(`UQ-A: arm must be ARMED or ABLATED, got ${arm}`);
     }
     const text = String(source);
-    if (text.includes('\r')) {
-        throw new Error('UQ-A: main.js contains a carriage return; the committed file is LF-only ' +
-            'and the anchor identity is asserted against that form.');
+
+    // Line spans over the ORIGINAL text: [start, contentEnd). The terminator,
+    // whether "\n" or "\r\n" or absent at end of file, lies outside the span and
+    // is therefore never rewritten.
+    const spans = [];
+    for (let i = 0, start = 0; i <= text.length; i++) {
+        if (i === text.length || text[i] === '\n') {
+            let end = i;
+            if (end > start && text[end - 1] === '\r') end--;
+            if (!(i === text.length && start === i)) spans.push([start, end]);
+            start = i + 1;
+        }
     }
-    const lines = text.split('\n');
+    const lineAt = (k) => text.slice(spans[k][0], spans[k][1]);
 
     const hits = [];
-    for (let i = 0; i < lines.length; i++) if (lines[i].replace(/\s+$/, '') === ANCHOR) hits.push(i);
+    for (let i = 0; i < spans.length; i++) {
+        if (lineAt(i).replace(/\s+$/, '') === ANCHOR) hits.push(i);
+    }
     if (hits.length !== 1) {
         throw new Error(`UQ-A: exposure anchor matched ${hits.length} lines, expected exactly 1: ` +
             `${JSON.stringify(ANCHOR)}`);
     }
     const at = hits[0];
-    const above = at > 0 ? lines[at - 1].trim() : null;
+    const above = at > 0 ? lineAt(at - 1).trim() : null;
     if (above !== ANCHOR_PRECEDED_BY) {
         throw new Error(`UQ-A: exposure structural pin failed. Expected the line above the anchor ` +
             `to be ${JSON.stringify(ANCHOR_PRECEDED_BY)}, found ${JSON.stringify(above)}.`);
     }
 
-    const occurrences = lines.reduce(
-        (n, l) => n + (l.split(EXPOSURE_IDENTIFIER).length - 1), 0);
+    const occurrences = text.split(EXPOSURE_IDENTIFIER).length - 1;
     if (occurrences !== EXPECTED_IDENTIFIER_OCCURRENCES) {
         throw new Error(`UQ-A: "${EXPOSURE_IDENTIFIER}" occurs ${occurrences} times, expected ` +
             `${EXPECTED_IDENTIFIER_OCCURRENCES} (assignment + two frozen read sites). ` +
@@ -103,6 +122,7 @@ export function transform(source, arm) {
 
     if (arm === 'ARMED') return text;
 
-    lines[at] = ABLATED_LINE;
-    return lines.join('\n');
+    // Surgical splice: replace only the anchor line's CONTENT. Everything before
+    // it, everything after it, and its own terminator are untouched.
+    return text.slice(0, spans[at][0]) + ABLATED_LINE + text.slice(spans[at][1]);
 }
