@@ -134,7 +134,10 @@ const armedSrc = instrument.transform(mainSrc, 'ARMED');
 const ablatedSrc = instrument.transform(mainSrc, 'ABLATED');
 P('D1', armedSrc === mainSrc, 'ARMED is byte-identical to committed main.js (§15 neutrality)');
 {
-    const a = mainSrc.split('\n'), b = ablatedSrc.split('\n');
+    // Split on either terminator: from a fresh clone main.js arrives as CRLF,
+    // and an assertion that assumed LF would fail on the implementation being
+    // correct rather than on it being wrong.
+    const a = mainSrc.split(/\r?\n/), b = ablatedSrc.split(/\r?\n/);
     const diff = a.map((l, i) => i).filter(i => a[i] !== b[i]);
     P('D2', a.length === b.length && diff.length === 1,
       `ABLATED differs on exactly one line (main.js:${diff[0] + 1})`);
@@ -331,7 +334,10 @@ P('H2', armed.provenance.armAttestation.receivedDigest
 P('H3', armed.provenance.armAttestation.deliveredDigest
      !== ablated.provenance.armAttestation.deliveredDigest,
   'and the two arms executed DIFFERENT source, so the arm label is a fact, not an assertion');
-P('H3b', shaSource(mainSrc) === shaSource(mainSrc.split(LF).join(CR + LF))
+// Build BOTH forms from the same normalised text, so the comparison holds
+// whichever way this checkout materialised main.js.
+const mainLf = mainSrc.split(CR + LF).join(LF);
+P('H3b', shaSource(mainLf) === shaSource(mainLf.split(LF).join(CR + LF))
       && shaSource(armedSrc) !== shaSource(ablatedSrc),
   'the attestation digest is checkout-independent (CRLF and LF agree) yet still separates the ' +
   'two arms — normalising line endings costs the proof nothing');
