@@ -20,6 +20,7 @@
 //   injected site is one falsy global read and the build is behaviourally
 //   identical to HEAD. verify_uqb_impl.js proves this rather than asserting it.
 import { transform, transformPredictionError } from './instrument.js';
+import { transformBehavior } from './bio.js';
 
 export async function load(url, ctx, next) {
     const r = await next(url, ctx);
@@ -33,6 +34,11 @@ export async function load(url, ctx, next) {
     // getTransitionUncertainty during the readout. Guarded and default-off.
     if (/\/render\/predictionError\.js$/.test(p)) {
         return { ...r, source: transformPredictionError(String(r.source)) };
+    }
+    // R3, authorised by UQB-ERR-02 §8: suspend regulateBiology's persistent
+    // writes during the readout. Guarded and default-off.
+    if (/\/render\/behavior\.js$/.test(p)) {
+        return { ...r, source: transformBehavior(String(r.source)) };
     }
     return r;
 }

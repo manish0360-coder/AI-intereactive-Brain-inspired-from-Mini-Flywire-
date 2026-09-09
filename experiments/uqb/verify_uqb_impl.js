@@ -28,6 +28,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as I from './instrument.js';
 import * as P from './permute.js';
+import * as BIO from './bio.js';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '../..');
@@ -305,6 +306,10 @@ function readout(u) {
     // R2 (UQB-ERR-01 §4/§5): suspend read-side persistence for the duration of
     // the readout, so all 20 arrangements are compared from the same state.
     globalThis.__UQB_FREEZE__ = true;
+    // R3 (UQB-ERR-02 §8): suspend regulateBiology's persistent writes, so
+    // repeated arrangement measurements probe the same pre-readout cognitive
+    // state rather than progressively ageing the agent across arrangement order.
+    globalThis.__UQB_FREEZE_BIO__ = true;
     globalThis.__UQB_PROBE__ = (from, key, step) => {
         calls++;
         if (step === 0 && best === null) { best = key; canary0 = liveRng(); }
@@ -314,6 +319,7 @@ function readout(u) {
     const canary = liveRng();
     globalThis.__UQB_PROBE__ = null;
     globalThis.__UQB_FREEZE__ = false;
+    globalThis.__UQB_FREEZE_BIO__ = false;
     return { best, calls, canary, canary0 };
 }
 
@@ -482,14 +488,22 @@ P_('C2', R1.states.every(u => R1.arms.ARMED.rows[0].best[u] === R1.arms.ARMED.of
 
         // The unfrozen writer the truncated span hid.
         const tail = L.slice(2722, end + 1).join('\n');
+        // Controlled by a Director-authorised erratum: regulateBiology by R3
+        // (UQB-ERR-02 §8). Any OTHER cognitive-state writer reached from
+        // runPrediction is uncontrolled and must fail this gate.
+        const CONTROLLED = ['regulateBiology'];
         const writers = ['regulateBiology', 'updateBehavior', 'changeStress', 'changeFatigue',
                          'applyPredictionErrorToBehavior']
             .filter(f => new RegExp('(?<![A-Za-z0-9_$.])' + f + '\\s*\\(').test(tail));
-        P_('J4', writers.length === 0,
-           `SPAN — cognitive-state writers reached from runPrediction but NOT frozen by R2: ` +
-           `${writers.length ? writers.join(', ') : 'none'}. regulateBiology (main.js:2822) writes ` +
-           'energyState, exhaustionState, fatigueState, stressState, confidenceState, ' +
-           'curiosityState and loopStressState, all accumulating, and epsilon reads them.');
+        const uncontrolled = writers.filter(f => !CONTROLLED.includes(f));
+        P_('J4', uncontrolled.length === 0,
+           `SPAN — cognitive-state writers reached from runPrediction: ` +
+           `${writers.join(', ') || 'none'}; uncontrolled: ` +
+           `${uncontrolled.join(', ') || 'none'}. regulateBiology (main.js:2822) is controlled by ` +
+           'R3 under UQB-ERR-02 §8.');
+        P_('J4m', writers.includes('regulateBiology'),
+           'MUTATION GUARD — regulateBiology is still reached from runPrediction, so J4 is not ' +
+           'passing because the writer vanished');
     }
     {
         // The structural half of E, which does not depend on any run: the
@@ -550,7 +564,7 @@ console.log('\n-- seed accounting ----------------------------------------------
     // The MACHINERY is scanned. This verifier is excluded by necessity: it must
     // name the block's bounds in order to check that nothing else does, so
     // including it would make the check unsatisfiable rather than strict.
-    const srcs = ['instrument.js', 'permute.js', 'hook.mjs']
+    const srcs = ['instrument.js', 'permute.js', 'hook.mjs', 'bio.js']
         .map(f => fs.readFileSync(path.join(HERE, f), 'utf8')).join('\n');
     const inBlock = [...srcs.matchAll(/\b(89[0-9]{4}|90[0-9]{4})\b/g)]
         .map(m => Number(m[1])).filter(n => n >= BLOCK_LO && n <= BLOCK_HI);
@@ -643,6 +657,108 @@ process.stdout.write('@@UQB@@' + JSON.stringify({ rows, guard }));
        'including across the threshold where the committed code deletes the entry');
     P_('R12', rows.every(r => r.afterOff !== r.before || r.before === 0),
        'PERSISTENCE — with the guard OFF the stored value DOES change, so R11 is not vacuous');
+}
+
+// ==========================================================================
+console.log('\n-- B. the R3 control: regulateBiology persistence suspended -----------------');
+// ==========================================================================
+{
+    const behRaw = fs.readFileSync(path.join(ROOT, 'render/behavior.js'), 'utf8');
+    const behLF = behRaw.split('\r\n').join('\n');
+    const L = BIO.bioLines(behLF);
+    const t = BIO.transformBehavior(behLF);
+    const a = behLF.split('\n'), b = t.split('\n');
+
+    P_('BIO1', L.decl === 105 && L.open === 119 && L.close === 339,
+       `TARGET — regulateBiology identified at behavior.js:${L.decl}, body ${L.open}..${L.close}`);
+    P_('BIO2', b.length - a.length === 5,
+       'the transform adds exactly 5 lines: 1 snapshot at body entry, 4 restore at body exit');
+    P_('BIO3', BIO.BIO_STATES.length === 9 && BIO.BIO_WRITE_STATEMENTS === 34,
+       `SCOPE — nine persistent bindings, ${BIO.BIO_WRITE_STATEMENTS} write statements pinned`);
+    {
+        const added = [];
+        let j = 0;
+        for (let i = 0; i < b.length; i++) { if (j < a.length && a[j] === b[i]) j++; else added.push(b[i]); }
+        // The restore block's closing brace legitimately names no binding, so
+        // requiring every LINE to reference the snapshot was the wrong shape.
+        // What must hold: the block is entered only under the guard, and every
+        // line inside it that does anything references the snapshot.
+        const meaningful = added.filter(l => l.trim() !== '}');
+        P_('BIO4', added.length === 5 && meaningful.every(l => /__UQB_BIO/.test(l))
+                && /^\s*if \(__UQB_BIO\) \{$/.test(added[1]),
+           'the restore block is entered only under the snapshot guard, and every acting line ' +
+           'inside it references the snapshot');
+        P_('BIO5', BIO.BIO_STATES.every(s => added.some(l => l.includes(s + ' = __UQB_BIO['))),
+           'INTENDED WRITES — all nine bindings are restored, none omitted');
+        // No unrelated binding may be restored.
+        const restored = [...added.join('\n').matchAll(/([A-Za-z_$][A-Za-z0-9_$]*) = __UQB_BIO\[/g)]
+            .map(m => m[1]);
+        P_('BIO6', restored.length === 9 && restored.every(r => BIO.BIO_STATES.includes(r)),
+           `NO UNRELATED WRITES — exactly ${restored.length} bindings restored, all from the ` +
+           'authorised set');
+        P_('BIO7', added[0].includes(BIO.BIO_GUARD) && /: null;$/.test(added[0].trim()),
+           'the snapshot is guarded and is null when the guard is unset');
+    }
+    P_('BIO8', BIO.transformBehavior(behLF.split('\n').join('\r\n')).includes('\r\n')
+          && BIO.transformBehavior(behLF.split('\n').join('\r\n')).split('\r\n').join('\n') === t,
+       'terminator-agnostic: CRLF input keeps CRLF and agrees with the LF transform');
+    // MUTATIONS binding the real source.
+    P_('BIO9', throws(() => BIO.transformBehavior(
+            behLF.replace('export function regulateBiology({', 'export function regulateBiologyX({'))),
+       'MUTATION — a renamed target function is REFUSED');
+    P_('BIO10', throws(() => BIO.transformBehavior(
+            behLF.replace('    restingState = true;', '    return;'))),
+       'MUTATION — a `return` in the body is REFUSED: a tail restore would be unreachable');
+    P_('BIO11', throws(() => BIO.transformBehavior(
+            behLF.replace('    restingState = true;', '    void 0;'))),
+       'MUTATION — a removed write is REFUSED: the pinned statement count would not match');
+}
+
+// The control, exercised on the REAL module through the REAL hook.
+const BIOSEM = child(`
+import { register } from 'node:module';
+const U = ${JSON.stringify(U)};
+register(U + '/experiments/uqb/hook.mjs', import.meta.url);
+const beh = await import(U + '/render/behavior.js');
+const S = ['curiosityState','confidenceState','stressState','fatigueState','focusState',
+           'energyState','exhaustionState','restingState','loopStressState'];
+const snap = () => S.map(k => beh[k]);
+const args = { activity: 1, mentalLoad: 4, repetition: 2, loopDepth: 1, danger: 0, isHome: false };
+
+const before = snap();
+globalThis.__UQB_FREEZE_BIO__ = true;
+for (let i = 0; i < 50; i++) beh.regulateBiology(args);
+const afterOn = snap();
+globalThis.__UQB_FREEZE_BIO__ = false;
+beh.regulateBiology(args);
+const afterOff = snap();
+process.stdout.write('@@UQB@@' + JSON.stringify({ S, before, afterOn, afterOff }));
+`);
+{
+    const { S, before, afterOn, afterOff } = BIOSEM;
+    P_('BIO12', S.every((k, i) => afterOn[i] === before[i]),
+       'GUARD ON — 50 regulateBiology calls left all nine bindings EXACTLY unchanged');
+    P_('BIO13', S.some((k, i) => afterOff[i] !== before[i]),
+       'GUARD OFF — a single call DOES change them, so B12 is not vacuous');
+    const changed = S.filter((k, i) => afterOff[i] !== before[i]);
+    // No arbitrary count is asserted. Many of the 34 writes are conditional on
+    // state thresholds, so how many bindings move in ONE call is data-dependent
+    // and is not a property the control must have. What must hold is that every
+    // binding that DID move is one the snapshot covers.
+    P_('BIO14', changed.length > 0 && changed.every(c => BIO.BIO_STATES.includes(c)),
+       `GUARD OFF — ${changed.length} of 9 bindings moved in one call (${changed.join(', ')}), ` +
+       'all of them inside the authorised snapshot set');
+}
+
+// Structural ordering: the control cannot alter the current call's bestChoice.
+{
+    const L = mainSrc.split('\n');
+    const bc = L.findIndex(l => /const bestChoice = sorted\[0\];/.test(l));
+    const rb = L.findIndex(l => /regulateBiology\(\{/.test(l));
+    P_('BIO15', bc > 0 && rb > 0 && bc < rb,
+       `ORDERING — bestChoice is determined at main.js:${bc + 1}, regulateBiology runs at ` +
+       `:${rb + 1}. The control therefore cannot alter the value measured in its own call ` +
+       '(UQB-ERR-02 §4/§5) — structural, not empirical.');
 }
 
 console.log('\n' + '='.repeat(80));
