@@ -97,3 +97,9 @@ research/preregistrations/UQB_PREREGISTRATION_ERRATUM_*.sha256 -text
 # UQ-B collection evidence — the same byte-integrity guarantee as UQ-A's.
 experiments/uqb/data/*.jsonl        -text
 experiments/uqb/data/INTEGRITY.sha256 -text
+
+# C1 pre-registration (M15 draft) — the same byte-integrity guarantee as the
+# UQ-B pre-registration. Its digest sidecar pins the exact bytes reviewed, so
+# `-text` is required or an end-of-line-converting checkout breaks the digest.
+research/preregistrations/C1_PREREGISTRATION.md     -text
+research/preregistrations/C1_PREREGISTRATION.sha256 -text

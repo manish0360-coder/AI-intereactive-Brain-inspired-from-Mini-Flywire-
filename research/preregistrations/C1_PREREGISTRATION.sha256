@@ -1,0 +1,21 @@
+# C1 PRE-REGISTRATION — INTEGRITY RECORD
+#
+# Artifact : research/preregistrations/C1_PREREGISTRATION.md
+# Version  : 1.0 DRAFT — FROZEN FOR REVIEW, NOT AUTHORISED FOR COLLECTION
+# Frozen   : 2026-09-09, Chief Systems Engineer, under the Director ruling of
+#            2026-09-09 (M15, frozen C1 preregistration draft)
+# Algorithm: SHA-256 over the exact bytes of the file
+# Size     : 20665 bytes, 422 lines
+#
+# INHERITS
+#   research/spec/CANDIDATE_ADMISSION_SPEC.md      (M13, e12bb98)
+#   research/preregistrations/C1_SUCCESSOR_FORMULATION_MEMO.md (M14, b825d1a)
+#   source baseline 0f47d7b (M11 canReachGoal repair)
+#
+# STATUS
+#   NO registered seed consumed. Registered block 895000-895999 is UNTOUCHED.
+#   UQ-B block 897000-897999 is SPENT and must never be reused.
+#
+# Verify with : cd research/preregistrations && sha256sum -c C1_PREREGISTRATION.sha256
+#
+b9520f83cbb3c6d99cac7396936a6f811f8388dfb249cf03a7d26a139474bad1  C1_PREREGISTRATION.md
