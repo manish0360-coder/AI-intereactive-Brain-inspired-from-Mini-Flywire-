@@ -89,3 +89,7 @@ experiments/uqb/results/*.sha256    -text
 # fidelity as the document it amends.
 research/preregistrations/UQB_PREREGISTRATION_ERRATUM_*.md     -text
 research/preregistrations/UQB_PREREGISTRATION_ERRATUM_*.sha256 -text
+
+# UQ-B collection evidence — the same byte-integrity guarantee as UQ-A's.
+experiments/uqb/data/*.jsonl        -text
+experiments/uqb/data/INTEGRITY.sha256 -text

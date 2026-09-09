@@ -1,0 +1,12 @@
+# Raw readouts are NOT committed, following the M7/M8/Q1/UQ-A convention: no raw
+# measurement data is versioned, and every verifier recomputes from frozen seeds.
+#
+# What IS committed is sufficient to reproduce and validate them exactly:
+#   candidates.jsonl             every one of the 4000 candidates with its disposition
+#   INTEGRITY.sha256             digests + the regeneration command
+#   ../results/uqb_results.json  the frozen-protocol outcome, with a per-arm
+#                                fingerprint for every configuration
+#
+# Regenerate with:  cd experiments/uqb && UQB_COLLECTION_AUTHORISED=1 node run_collection.js
+# Preflight with :  cd experiments/uqb && node preflight.js
+readouts.jsonl
