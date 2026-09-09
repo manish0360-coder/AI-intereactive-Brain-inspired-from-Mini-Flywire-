@@ -82,3 +82,10 @@ research/preregistrations/UQB_PREREGISTRATION.sha256  -text
 # fresh clone.
 experiments/uqb/results/*.json      -text
 experiments/uqb/results/*.sha256    -text
+
+# UQ-B errata — the same byte-integrity guarantee as the UQ-B pre-registration
+# they bind to. Each erratum quotes the frozen digest and supersedes a clause by
+# reference, so the supersession record must be reproducible with the same
+# fidelity as the document it amends.
+research/preregistrations/UQB_PREREGISTRATION_ERRATUM_*.md     -text
+research/preregistrations/UQB_PREREGISTRATION_ERRATUM_*.sha256 -text

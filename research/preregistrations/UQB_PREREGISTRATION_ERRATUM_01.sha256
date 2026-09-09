@@ -1,0 +1,41 @@
+# UQ-B PRE-REGISTRATION ERRATUM 01 — INTEGRITY RECORD
+#
+# Artifact : research/preregistrations/UQB_PREREGISTRATION_ERRATUM_01.md
+# Erratum  : UQB-ERR-01 (J1 resolution; G12/G13 corrected, §15 extended, §8 added)
+# Frozen   : 2026-09-09, Chief Systems Engineer, under Director authorisation
+# Algorithm: SHA-256 over the exact bytes of the file
+# Size     : 12263 bytes, 232 lines
+#
+# BINDS TO
+#   UQB_PREREGISTRATION.md v1.0, frozen at 3b3d195, digest
+#   bc655022b63e8022ed6427001da6a90eb2f9ec139cf413ab367e9bc7269ba46e
+#   That document is NOT modified by this erratum; its digest is unchanged and
+#   was verified immediately before and immediately after this freeze.
+#
+# WHAT IT CHANGES
+#   G12, G13 : corrected — runPrediction mutates persistent learned state via a
+#              read-mutating accessor (predictionError.js:578-598)
+#   §15      : extended — guarded in-memory transform of render/predictionError.js
+#              permitted, for suspending persistence during a §8 readout only.
+#              The on-disk and no-new-export prohibitions remain in force.
+#   §8       : added — the readout is taken with that persistence suspended
+#
+# WHAT IT DOES NOT CHANGE
+#   No estimand, exposure, population, statistic, discriminator, tie rule, phase
+#   handling, K, alpha, minimum evidence, stopping rule, INCONCLUSIVE rule, seed
+#   block or post-result prohibition. Twenty frozen elements are enumerated and
+#   confirmed unchanged in §7 of the erratum.
+#
+# STATE AT FREEZE
+#   R2 is NOT implemented. No collection run. No configuration seed from
+#   897000-897999 generated, evaluated or inspected. Production source unchanged
+#   on disk. Acceptance condition for the authorised repair: control J1 must
+#   reach exactly 0/19 and may not be weakened.
+#
+# The digest below was computed over the STAGED BLOB, not merely the working-tree
+# file, and .gitattributes carries -text for both paths.
+#
+# VERIFY WITH
+#   cd research/preregistrations && sha256sum -c UQB_PREREGISTRATION_ERRATUM_01.sha256
+#
+10e0981df5e4eec78e6c77f5bb9c94c852d36525ce61cd66f12165ae3c64b9e1  UQB_PREREGISTRATION_ERRATUM_01.md
