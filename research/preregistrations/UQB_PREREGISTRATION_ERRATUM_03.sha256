@@ -1,0 +1,21 @@
+# UQ-B PRE-REGISTRATION ERRATUM 03 — INTEGRITY RECORD
+#
+# Artifact : research/preregistrations/UQB_PREREGISTRATION_ERRATUM_03.md
+# Version  : frozen
+# Frozen   : 2026-09-09, Chief Systems Engineer, under the Director ruling of
+#            2026-09-09 (HOLD collection; instrument generalization stress test), section 7
+# Algorithm: SHA-256 over the exact bytes of the file
+# Size     : 7483 bytes, 155 lines
+#
+# BINDS TO, AND MODIFIES NONE OF
+#   UQB_PREREGISTRATION.md            bc655022b63e8022ed6427001da6a90eb2f9ec139cf413ab367e9bc7269ba46e
+#   UQB_PREREGISTRATION_ERRATUM_01.md 10e0981df5e4eec78e6c77f5bb9c94c852d36525ce61cd66f12165ae3c64b9e1
+#   UQB_PREREGISTRATION_ERRATUM_02.md 88b9edbe8e7f4cb706c8a61400bd439fe64249e57facfc7446fa1168380786f3
+#
+# SUBJECT
+#   One interpretive limitation on the scope of C1 and C2 under the R3 control.
+#   A documentation clarification. 21 of 21 frozen elements confirmed UNCHANGED.
+#
+# Verify with : cd research/preregistrations && sha256sum -c UQB_PREREGISTRATION_ERRATUM_03.sha256
+#
+0cbcb991e21cd1b1293dbc33ce4c3a8ca12443268a632d99f90b23ef01c077d3  UQB_PREREGISTRATION_ERRATUM_03.md
