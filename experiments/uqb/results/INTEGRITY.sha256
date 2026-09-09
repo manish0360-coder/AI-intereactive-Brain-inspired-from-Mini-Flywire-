@@ -1,0 +1,15 @@
+# UQ-B LIVENESS PRE-CHECK — INTEGRITY RECORD
+#
+# Artifact  : experiments/uqb/results/uqb_liveness.json
+# Protocol  : research/preregistrations/UQB_PREREGISTRATION.md bc655022b63e8022ed6427001da6a90eb2f9ec139cf413ab367e9bc7269ba46e
+# Freeze    : 3b3d195b5b29ea0ada16872b3e1ea08e54d37f20 (v1.0)
+# Component : frozen §14a liveness pre-check (pre-registered)
+# Verdict   : LIVE
+# Controls  : ALL PASS
+#
+# This is NOT a UQ-B result. No configuration seed from 897000-897999 was
+# consumed, and no collection was run.
+#
+# Regenerate with : cd experiments/uqb && node liveness.js
+#
+0dfcfc54d3a7d3c5c06dc0b65f8eeab0a0b0c2efeb0be9e85aa01056a0d8dd88  uqb_liveness.json

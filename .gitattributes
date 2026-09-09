@@ -75,3 +75,10 @@ experiments/uqa/results/*.sha256    -text
 # directions or the digest fails to validate on checkout.
 research/preregistrations/UQB_PREREGISTRATION.md      -text
 research/preregistrations/UQB_PREREGISTRATION.sha256  -text
+
+# UQ-B liveness evidence — the same byte-integrity guarantee as the UQ-A evidence
+# artifacts. INTEGRITY.sha256 identifies uqb_liveness.json by a SHA-256 over exact
+# bytes; without `-text` an end-of-line-converting checkout breaks that digest on a
+# fresh clone.
+experiments/uqb/results/*.json      -text
+experiments/uqb/results/*.sha256    -text

@@ -1,0 +1,86 @@
+{
+  "check": "UQ-B / §14a liveness pre-check",
+  "preregistration": {
+    "path": "research/preregistrations/UQB_PREREGISTRATION.md",
+    "digest": "bc655022b63e8022ed6427001da6a90eb2f9ec139cf413ab367e9bc7269ba46e",
+    "commit": "3b3d195b5b29ea0ada16872b3e1ea08e54d37f20",
+    "version": "1.0"
+  },
+  "exposure": {
+    "term": "futureBonus",
+    "anchor": "main.js:1860-1861",
+    "ablatedValue": 0,
+    "paths": "dual — 60% learned score (scoring.js:350) and 40% arbitration (scoring.js:406 semanticScore -> arbitrate), reached from one assignment",
+    "note": "uncertaintyScoreValue is held fixed across arms; it is UQ-A's exposure, not this one."
+  },
+  "battery": {
+    "seed": 12345,
+    "trials": 400,
+    "candidatesPerDecision": 4,
+    "decisions": 400,
+    "method": "inherited exactly from experiments/exec_influence/run.js (M1); §14a does not restate battery parameters, so they are inherited rather than invented",
+    "modules": "LIVE render/scoring.js + render/executiveController.js",
+    "armedRange": "[0, 20] — the committed cap at main.js:1861"
+  },
+  "criterion": "LIVE iff argmax flip rate > 0; INERT iff argmax flip rate == 0",
+  "metrics": {
+    "argmax_flip_rate": 0.4275,
+    "argmax_flips": 171,
+    "decisions": 400,
+    "influence_delta_blended": 7.384541,
+    "competitive_score_null_count": 0
+  },
+  "diagnosticNote": "influence_delta_blended is a MANDATORY DIAGNOSTIC and is never the criterion.",
+  "controls": {
+    "nullControl": {
+      "description": "armed vs armed — must be exactly 0 flips and 0 delta",
+      "flips": 0,
+      "decisions": 400,
+      "flipRate": 0,
+      "influenceDelta": 0,
+      "competitiveNull": 0,
+      "pass": true
+    },
+    "positiveControl": {
+      "description": "futureBonus 20 on ONE candidate and 0 on the rest, vs all-0 — the knob must be connected; anti-vacuity control. It must be DIFFERENTIAL: a constant across candidates shifts every score equally and cannot move an argmax",
+      "flips": 292,
+      "decisions": 400,
+      "flipRate": 0.73,
+      "influenceDelta": 3.630501,
+      "competitiveNull": 0,
+      "criterion": "flips > 0. Delta magnitude is NOT compared across batteries: this control perturbs 1 of 4 candidates by design, so three of its per-candidate deltas are exactly 0 and its mean is diluted by construction.",
+      "pass": true
+    },
+    "determinism": {
+      "description": "the frozen comparison re-run must reproduce exactly",
+      "reproduced": true,
+      "second": {
+        "flips": 171,
+        "decisions": 400,
+        "flipRate": 0.4275,
+        "influenceDelta": 7.384541,
+        "competitiveNull": 0
+      }
+    },
+    "arbitrationReached": {
+      "description": "every probe reached the 40% arbitrate path",
+      "nullCount": 0,
+      "pass": true
+    },
+    "allPass": true
+  },
+  "controlConstructionCorrections": [
+    "The positive control was first written as a CONSTANT futureBonus across all candidates (cap in one arm, 0 in the other). That returned 0 flips with a delta of 14.521809 — correct behaviour and a wrong control, because a constant shifts every candidate score equally and therefore cannot move an argmax. Corrected to a differential assignment.",
+    "Its pass condition then compared mean influence delta against the frozen battery. That is not a meaningful comparison: the control perturbs 1 of 4 candidates by design, so three of its four per-candidate deltas are exactly 0 and its mean is diluted by construction. The criterion is flips > 0 — the same quantity the frozen criterion uses.",
+    "Neither correction touched the frozen §14a criterion, the exposure, the battery parameters, or the frozen comparison, whose result was identical (171/400) in every run."
+  ],
+  "cosmeticCase": false,
+  "cosmeticNote": null,
+  "verdict": "LIVE",
+  "consequence": "UQ-B is operationally live. The main collection is authorised as a SEPARATE milestone; it is NOT run here.",
+  "seedsConsumed": {
+    "uqbConfigurationSeeds": 0,
+    "frozenBlock": "897000-897999",
+    "note": "This check runs no agent and consumes no configuration seed. The battery seed 12345 is inherited from M1 and is not a configuration seed. No seed in 897000-897999 was generated, evaluated or inspected."
+  }
+}
