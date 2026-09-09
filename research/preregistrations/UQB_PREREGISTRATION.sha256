@@ -1,0 +1,50 @@
+# UQ-B PRE-REGISTRATION — INTEGRITY RECORD
+#
+# Artifact : research/preregistrations/UQB_PREREGISTRATION.md
+# Version  : 1.0 (frozen)
+# Frozen   : 2026-09-09, Chief Systems Engineer, under Director authorisation
+#            (UQ-B freeze milestone; path β, readout-level term shuffle, K = 19,
+#            §17 block 897000-897999, two mandatory pre-freeze clarifications)
+# Algorithm: SHA-256 over the exact bytes of the file
+# Size     : 34266 bytes, 617 lines
+#
+# BASELINE THIS PRE-REGISTRATION IS BOUND TO
+#   git HEAD   : cfc9e66b975bc654468929371cec3ee587c5cd97
+#   formulation: PLANNING_FORMULATION_DRAFT d499f60; DISCRIMINATOR_ANALYSIS cc97279;
+#                SHUFFLED_CONTROL_GATE 0ee851b; DISCRIMINATOR_SPEC b8270cf
+#   governance : D-011 (discriminator completeness) at f6e580f
+#   predecessor: UQ-A closed; Q1 closed at 21c7238; U1 closed by D-010 at e4a1d09
+#   M7 digest  : 2f12e309d7409e95f3d1bca34135110e518865fd01d96e5eeaee347b6e33f6b9 (unchanged)
+#   M8 digest  : M8_PREREGISTRATION.sha256 validates unchanged
+#   M9 digest  : M9_PREREGISTRATION.sha256 validates unchanged
+#   Q1 digest  : Q1_PREREGISTRATION.sha256 validates unchanged
+#   UQ-A digest: UQA_PREREGISTRATION.sha256 validates unchanged
+#
+# STATE AT FREEZE (all verified immediately before hashing)
+#   UQ-B instrumentation     : NOT implemented
+#   liveness pre-check       : NOT run
+#   UQ-B collection          : NONE executed
+#   configuration seeds      : NONE generated or inspected
+#   frozen seed block        : 897000-897999 (1000 seeds, 4000 candidates)
+#   consumed blocks          : UQ-A 898000-898999, Q1 899000-899499,
+#                              M8 899500-899999, M7 900000-900499
+#   held-out block >= 900500 : UNTOUCHED
+#   production source        : UNCHANGED
+#   M7, M8, M9, Q1, UQ-A     : UNCHANGED
+#   open Director decisions  : NONE
+#   K                        : 19 (Director judgment, NOT source-derived)
+#   alpha                    : 1/(K+1) = 0.05, one-sided, C2 only
+#   minimum evidence         : 20 complete accepted configurations
+#
+# The digest below was computed over the STAGED BLOB, not merely the working-tree
+# file, and .gitattributes carries a -text entry for both paths so an
+# end-of-line-converting checkout reproduces it byte for byte.
+#
+# VERIFY WITH
+#   cd research/preregistrations && sha256sum -c UQB_PREREGISTRATION.sha256
+#
+# A mismatch means the pre-registration changed after freeze. That is a PROTOCOL
+# DEVIATION and must be reported in the final report with its direction and likely
+# effect on results -- never silently reconciled.
+#
+bc655022b63e8022ed6427001da6a90eb2f9ec139cf413ab367e9bc7269ba46e  UQB_PREREGISTRATION.md

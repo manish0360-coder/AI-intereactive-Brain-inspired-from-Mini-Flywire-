@@ -3,16 +3,18 @@
 **Study:** Does the `futureScore` search mechanism produce correct application of acquired knowledge
 in a way distinguishable from arbitrary redistribution?
 
-**Version:** 0.9 (DRAFT — **NOT FROZEN**)
+**Version:** 1.0 (frozen)
 **Date:** 2026-09-09
 **Authority:** Director rulings of 2026-09-09 — mechanism selection (planning / `futureScore`); path
-β accepted; readout-level term shuffle adopted; `K = 19`; minimum evidence 20 configurations.
+β accepted; readout-level term shuffle adopted; `K = 19`; minimum evidence 20 configurations; §17
+seed block `897000–897999`; and the two mandatory pre-freeze clarifications in §2 and §12, inserted
+verbatim following independent adversarial review.
 
-> **THIS DOCUMENT IS NOT YET FROZEN.** Exactly one element remains open: the §17 configuration-seed
-> block, which is a Director decision and is marked as such. Nothing else is open, and no other
-> element may be changed except through a numbered erratum that quotes this text and binds to its
-> digest. No measurement exists for this study, and none may be taken until this document is frozen,
-> committed, and pushed.
+> **THIS DOCUMENT IS FROZEN BEFORE ANY MEASUREMENT EXISTS.** No UQ-B implementation exists, no
+> liveness pre-check has been run, no configuration seed has been generated or inspected, and no
+> data has been collected. **No Director decision remains open.** After this freeze the document may
+> be changed only as a numbered erratum that quotes this text and binds to its digest — never by
+> editing it in place.
 
 **Formulation lineage** — the audit trail this document freezes:
 `PLANNING_FORMULATION_DRAFT.md` (`d499f60`) · `PLANNING_DISCRIMINATOR_ANALYSIS.md` (`cc97279`) ·
@@ -35,6 +37,11 @@ predecessor artifact is modified, regenerated, re-collected, subset or re-derive
 
 **C1 — the causal comparison.** The **total effect** of the `futureScore` term on the end-of-run
 policy, ARMED against ABLATED, paired per configuration, over the fixed §7 population.
+
+> The C1 estimand is the total causal effect of the futureScore mechanism's continuous presence on
+> the agent's final greedy policy. It is not an estimate of the mechanism's instantaneous
+> contribution at the time of readout. It compares the policies that result from two different
+> experiential histories.
 
 **C2 — the redistribution test.** A within-arm exact test of §5's null: whether the observed
 assignment of `futureBonus` values to candidates outperforms 19 rearrangements of those same values.
@@ -228,6 +235,11 @@ NOT-REJECTED             otherwise
 
 Evaluated **per configuration, per phase**. Declared one-sided level `α = 1/(K+1) = 1/20 = 0.05`.
 
+> A REJECTED verdict for C2 indicates that the observed alignment was higher than all 19
+> deterministic alternative redistributions of the same numerical values for this specific
+> configuration. It is an exact statement about this sample and does not carry the same frequentist
+> guarantees as a p-value derived from a distributional test.
+
 **Tie rule — FROZEN.** **Ties do not reject.** Equality with any `A(j)` fails the strict inequality
 and yields NOT-REJECTED. **No post-hoc tie breaking, no jitter, no secondary criterion, no
 re-ranking, no mid-p adjustment.** This is what makes the level exact rather than nominal.
@@ -354,37 +366,38 @@ battery may be generated; UQ-B closes on that disposition.
 
 ---
 
-## 17. Seed governance — **OPEN DIRECTOR DECISION**
+## 17. Seed governance — FROZEN
 
-> ### ⚠ THIS IS THE ONE ELEMENT NOT YET FROZEN.
->
-> **The configuration-seed block for UQ-B requires a Director ruling and has not been made.** It is
-> recorded here as open rather than chosen, and this document **cannot be frozen until it is ruled**.
-> No seed in any candidate block has been generated, evaluated or inspected in the course of drafting.
+**Configuration-seed block: `897000–897999` inclusive.**
 
-**Constraints the block must satisfy — all source-verified:**
+Ruled by the Director on 2026-09-09. This is a **pre-data design decision, not an optimisation for
+any expected outcome**: it was made before any UQ-B seed was generated, evaluated or inspected, and
+before any implementation existed.
 
-| | Block | Status |
-|---|---|---|
-| | `≥ 900500` | **HELD OUT** — never generated, inspected, inferred or touched |
-| | `900030-900499` | consumed — M7-ERR-09 gate-diagnostic range |
-| | `900000-900029` | consumed — M7 pilot (frozen §5.1) |
-| | `899500-899999` | consumed — M8 collection (D-003 H), at `f9d97b9` |
-| | `899000-899499` | consumed — Q1 collection (D-006 §1 A), at `d16d568` |
-| | `898000-898999` | consumed — UQ-A collection, at `f7cc052` |
+`1,000 seeds × 4 frozen goal indices = 4,000 candidate configurations.`
 
-**The lowest consumed seed is `898000`.** Any UQ-B block must therefore lie **entirely at or below
-`897999`**, be disjoint from every row above, and be recorded with its arithmetic proof of
-disjointness.
+**Disjointness, with the arithmetic stated rather than asserted:**
 
-**For the Director's convenience, and not as a recommendation:** the descending block pattern of the
-four predecessor studies (900000s → 899500s → 899000s → 898000s) would place the next 1,000-seed block
-at `897000–897999`. **This is an observation about precedent, not a proposal, and it must not be read
-as one.** Whatever is ruled becomes §17 verbatim, with the pre-data character of the choice recorded
-exactly as UQ-A §17 recorded its own.
+| | Block | Status | Disjoint because |
+|---|---|---|---|
+| | `≥ 900500` | **HELD OUT** — never generated, inspected, inferred or touched | `897999 < 900500` |
+| | `900030-900499` | consumed — M7-ERR-09 gate-diagnostic range | `897999 < 900030` |
+| | `900000-900029` | consumed — M7 pilot (frozen §5.1) | `897999 < 900000` |
+| | `899500-899999` | consumed — M8 collection (D-003 H), at `f9d97b9` | `897999 < 899500` |
+| | `899000-899499` | consumed — Q1 collection (D-006 §1 A), at `d16d568` | `897999 < 899000` |
+| | `898000-898999` | consumed — UQ-A collection, at `f7cc052` | `897999 < 898000` |
 
-`1,000 seeds × 4 frozen goal indices = 4,000 candidate configurations`, if a 1,000-seed block is
-ruled.
+The UQ-B block lies **entirely below every consumed block and every held-out seed**. The lowest
+previously consumed seed is `898000`, and `897999 < 898000`, so a single comparison establishes
+disjointness from all six rows at once.
+
+**The held-out block `≥ 900500` is never generated, inspected, inferred or touched**, and this is
+proven at runtime by the environment's own seed census rather than asserted in prose.
+
+**No acceptance walk.** Every candidate is evaluated **directly at its own seed** (M7-ERR-09 §3.3), so
+no seed outside `897000–897999` is ever reached. `env.generateAccepted` walks forward from a rejected
+seed; from the upper bound `897999` such a walk would cross into UQ-A's consumed `898000`, and the
+collection must refuse it rather than permit it.
 
 ---
 
@@ -578,15 +591,27 @@ registered block.
 | **Established repository facts** | G1–G20, §3 |
 | **Frozen design decisions** | §2, §5–§16, §18–§27 |
 | **Hypotheses** | S0–S2, §4 — **not facts, none favoured** |
-| **Open Director decisions** | **ONE: the §17 configuration-seed block.** |
+| **Open Director decisions** | **NONE.** All frozen, including §5 exposure, §6 permutation, §12 `K` and α, §17 seed block and §18 minimum evidence. |
 | **Open implementation details** | §29 |
 
 ---
 
-## 31. Freeze
+## 31. Integrity and freeze
 
-This document is **NOT FROZEN**. On the §17 ruling it becomes version 1.0, is committed with a
-SHA-256 sidecar and a `.gitattributes` `-text` entry so the digest survives CRLF checkout, and is
-pushed **before** the §14a liveness pre-check is run and before any configuration seed is consumed.
+This document is **FROZEN at version 1.0**. Its identity is a SHA-256 over its exact bytes, recorded
+in `UQB_PREREGISTRATION.sha256`, and `.gitattributes` carries a `-text` entry for both files so the
+digest survives an end-of-line-converting checkout on any platform.
 
-Until then, no measurement exists for this study and none may be taken.
+**Verify with:** `cd research/preregistrations && sha256sum -c UQB_PREREGISTRATION.sha256`
+
+A mismatch means the pre-registration changed after freeze. That is a **PROTOCOL DEVIATION** and must
+be reported in the final report with its direction and likely effect on results — never silently
+reconciled.
+
+**State at freeze, each verified immediately before hashing:** no UQ-B implementation exists; the
+§14a liveness pre-check has NOT been run; no collection has been executed; no configuration seed has
+been generated or inspected; the held-out block `≥ 900500` is untouched; production source is
+unchanged; the M7, M8, M9, Q1 and UQ-A artifacts are unchanged and their digests revalidate.
+
+**The next milestone is the §14a liveness pre-check, run against this frozen document, as a separate
+authorised milestone. The main collection is not authorised by this freeze.**

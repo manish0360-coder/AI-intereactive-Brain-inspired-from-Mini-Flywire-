@@ -68,3 +68,10 @@ experiments/uqa/data/*.jsonl        -text
 experiments/uqa/data/INTEGRITY.sha256 -text
 experiments/uqa/results/*.json      -text
 experiments/uqa/results/*.sha256    -text
+
+# UQ-B pre-registration — same byte-integrity guarantee as the M7, M8, M9, Q1 and
+# UQ-A frozen artifacts. Its identity is a SHA-256 over exact bytes
+# (UQB_PREREGISTRATION.sha256), so end-of-line conversion must be disabled in both
+# directions or the digest fails to validate on checkout.
+research/preregistrations/UQB_PREREGISTRATION.md      -text
+research/preregistrations/UQB_PREREGISTRATION.sha256  -text
