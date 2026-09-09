@@ -1,11 +1,25 @@
 # C1 PRE-REGISTRATION — INTEGRITY RECORD
 #
 # Artifact : research/preregistrations/C1_PREREGISTRATION.md
-# Version  : 1.0 DRAFT — FROZEN FOR REVIEW, NOT AUTHORISED FOR COLLECTION
+# Version  : 1.1 — FINAL FREEZE CANDIDATE, NOT AUTHORISED FOR COLLECTION
 # Frozen   : 2026-09-09, Chief Systems Engineer, under the Director ruling of
-#            2026-09-09 (M15, frozen C1 preregistration draft)
+#            2026-09-09 (M16, final C1 preregistration freeze)
 # Algorithm: SHA-256 over the exact bytes of the file
-# Size     : 20665 bytes, 422 lines
+# Size     : 31823 bytes, 598 lines
+#
+# SUPERSEDES
+#   v1.0 review draft b9520f83cbb3c6d99cac7396936a6f811f8388dfb249cf03a7d26a139474bad1
+#   (commit 10ff372), never authorised for collection; its bytes remain in git
+#   history as the reviewed artifact.
+#
+# M16 REPAIRS APPLIED
+#   1. primary test is now the two-sided paired sign-flip PERMUTATION test;
+#      the sign test is demoted to a secondary robustness check
+#   2. the arbitrary jointlyDefined >= 10 rule is REMOVED and replaced by
+#      jointlyDefined >= 1, derived from the estimator, plus a mandatory
+#      sensitivity analysis
+#   3. an asymmetric-missingness rule is added as an outcome-independent
+#      concordance analysis on the asym = 0 subset; NO numeric threshold adopted
 #
 # INHERITS
 #   research/spec/CANDIDATE_ADMISSION_SPEC.md      (M13, e12bb98)
@@ -18,4 +32,4 @@
 #
 # Verify with : cd research/preregistrations && sha256sum -c C1_PREREGISTRATION.sha256
 #
-b9520f83cbb3c6d99cac7396936a6f811f8388dfb249cf03a7d26a139474bad1  C1_PREREGISTRATION.md
+ff04df64b2ad73dfbbf03eb1a7e086c7259a97dd34c1ab236964e4a89d8f7219  C1_PREREGISTRATION.md

@@ -30,6 +30,24 @@ const MAIN = rd('main.js').split('\n');
 const PRE = rd('research/preregistrations/C1_PREREGISTRATION.md');
 const PILOT = JSON.parse(rd('experiments/m14/m14_attainability.json'));
 
+// SUPERSEDED BY experiments/m16/verify_freeze.js
+//   This verifier encodes the expectations of C1_PREREGISTRATION.md **v1.0**,
+//   the M15 review draft. M16 revised that document to v1.1 under Director
+//   authorisation (permutation test, derived validity rule, asymmetric-
+//   missingness concordance). Running these v1.0 assertions against v1.1 would
+//   report a FAIL that means "the document was legitimately revised", not "the
+//   document is wrong" — a false alarm for any future reader.
+//
+//   So it guards on the version and exits cleanly when it is not the version it
+//   was written for. It is retained unchanged in substance as the record of what
+//   M15 verified.
+if (!/\*\*Version:\*\* 1\.0/.test(fs.readFileSync(
+        path.join(ROOT, 'research/preregistrations/C1_PREREGISTRATION.md'), 'utf8'))) {
+    console.log('M15 verifier: SUPERSEDED — the preregistration is no longer v1.0.');
+    console.log('Run experiments/m16/verify_freeze.js, which is authoritative for v1.1.');
+    process.exit(0);
+}
+
 let pass = 0, fail = 0;
 const P = (id, cond, msg) => {
     if (cond) { pass++; console.log(`PASS  ${id.padEnd(6)} ${msg}`); }

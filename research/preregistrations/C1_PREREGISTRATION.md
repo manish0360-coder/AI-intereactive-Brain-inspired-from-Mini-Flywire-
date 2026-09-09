@@ -1,7 +1,9 @@
 # C1 Pre-Registration — Oracle-Alignment of the Candidate-Ranking Policy
 
-**Version:** 1.0 — **DRAFT, FROZEN FOR REVIEW. NOT AUTHORISED FOR COLLECTION.**
-**Milestone:** M15
+**Version:** 1.1 — **FINAL FREEZE CANDIDATE. NOT AUTHORISED FOR COLLECTION.**
+**Milestone:** M16 (supersedes the M15 v1.0 review draft, digest
+`b9520f83cbb3c6d99cac7396936a6f811f8388dfb249cf03a7d26a139474bad1`, commit `10ff372`, which was
+never authorised for collection and whose bytes remain in git history as the reviewed artifact)
 **Date:** 2026-09-09
 **Author:** Chief Systems Engineer
 **Authority:** Director ruling of 2026-09-09 — *M15, frozen C1 preregistration draft*
@@ -208,10 +210,38 @@ structural impossibility.** `v*`'s survival through F1–F4 depends on learned s
 treatment-dependent, so asymmetric missingness is structurally possible.
 
 **Monitoring, preregistered:** `armedOnlyUndefined` and `ablatedOnlyUndefined` are reported for
-every configuration and summed study-wide. If the study-wide one-arm-only count is non-zero, the
-final report **must** state that the jointly-defined population was shaped by the treatment and
-must qualify the causal interpretation accordingly. This is a **disclosure requirement, not a
-threshold**: no count triggers exclusion, adjustment, or reanalysis.
+every configuration and summed study-wide.
+
+### 7.2 Asymmetric-missingness rule — and why no numeric threshold is adopted
+
+Per configuration and phase, report:
+
+```
+missing_A = 19 − |{u : ρ_ARMED(u,p) defined}|
+missing_B = 19 − |{u : ρ_ABLATED(u,p) defined}|
+asym      = |missing_A − missing_B|
+```
+
+**No `asym > k` exclusion threshold is adopted for any k ≥ 1.** A reviewer proposed `> 2` as an
+example. It is not adopted, because **no principled, pre-data basis exists for choosing 1, 2, or 3**:
+`asym` is a count with no natural scale, its distribution under C1 is unknown before collection, and
+any non-zero cut would be a number selected for convenience — the exact defect Repair 2 removes
+elsewhere in this document. Adopting one here while deleting one there would be incoherent.
+
+**The only non-arbitrary cut on `asym` is 0.** It is therefore used, but as a **pre-specified
+concordance analysis rather than as a primary exclusion**:
+
+- **Primary analysis** includes every configuration satisfying §13's validity rule.
+- **Concordance analysis** repeats the identical primary test on the subset with `asym = 0`
+  (exactly symmetric definedness), which is the unique subset in which the jointly-defined state
+  count cannot have been differentially selected by the treatment.
+- **Reporting rule, pre-specified:** if the primary and concordance analyses agree in both
+  rejection decision and sign, the primary conclusion stands. **If they disagree, the study reports
+  `INCONCLUSIVE — DIFFERENTIAL DEFINEDNESS`**, and that disagreement is the finding.
+
+This rule is pre-specified, computed **only** from definedness counts (never from `ρ`, `δ`, or `Δ`),
+treatment-aware, reproducible, and introduces no arbitrary constant. Equal counts do not guarantee
+identical missing *sets*; that residual is declared in §16.
 
 ---
 
@@ -267,34 +297,124 @@ for weighting them differently; inventing one would be inventing rationale.
 
 ### 10.3 Configuration → study
 
-**Primary test (frozen): two-sided exact sign test** on the configuration-level `Δ(c,p)` values
-against a null median of 0, run **separately per phase**.
+**Primary test (frozen): two-sided paired sign-flip permutation (randomization-of-signs) test** on
+the configuration-level `Δ(c,p)` values, run **separately per phase**, `α = 0.025` per phase.
 
-- `α = 0.025` per phase (Bonferroni across the two phases; family-wise `α = 0.05`).
-- Configurations with `Δ(c,p)` **exactly** 0 are dropped and `N` reduced, preregistered.
+It replaces the sign test used in the v1.0 draft, which discarded the magnitude information that
+was the entire reason for moving to a continuous estimand.
 
-**Why the sign test is primary.** It assumes only that, under H0, the sign of each paired
-difference is equally likely — no normality, no symmetry, no variance-homogeneity. This program has
-now twice been damaged by instruments whose assumptions were never examined (C2's tie structure;
-E2's treatment-dependent definedness). An assumption-light exact test removes distributional
-assumption as a failure mode entirely, at a known cost in power.
+#### 10.3.1 The permutation operation, specified exactly
 
-**Secondary disclosure (no α, never primary):** Wilcoxon signed-rank on the same values, reported
-alongside. It uses magnitude and is more powerful, but it assumes symmetry of the difference
-distribution under H0, which this program has no committed basis to assert. It is therefore
-reported, never relied upon.
+| Element | Specification |
+|---|---|
+| **What is permuted** | the **sign** of each configuration's `Δ(c,p)`. One sign per configuration; states are never permuted |
+| **Exchangeable units** | **configurations**. The configuration is the sampling unit (§10.1); a sign vector `s ∈ {−1,+1}^N` assigns one flip per configuration |
+| **Test statistic** | `T = Σ_c Δ(c,p)` (equivalently the mean; the two give identical p-values since `N` is fixed within a phase) |
+| **Null distribution** | the distribution of `T(s) = Σ_c s_c · Δ(c,p)` over sign vectors `s` |
+| **Rejection rule** | two-sided: `p = Pr(|T(s)| ≥ |T_obs|)`; reject `H0_sym` iff `p ≤ 0.025` |
+| **Zero differences** | `Δ(c,p) = 0` contributes 0 under either sign, so it neither perturbs the null distribution nor requires dropping. **Zeros are retained and `N` is not reduced** — unlike the sign test, which must discard them |
+| **Missing configurations** | configurations failing §13 validity are excluded **before** the test; `N` is the count entering it, reported |
+
+#### 10.3.2 Justification of the permutation operation — stated honestly
+
+**The sign-flip is NOT justified by randomization, and this document does not claim that it is.**
+
+C1 contains **no randomised treatment assignment anywhere**: the agent seed is fixed, configuration
+seeds are enumerated deterministically, both arms are run on **every** configuration, and the
+runtime is deterministic (demonstrated in M11 and M14 by byte-identical reproduction across
+independent processes). There is therefore no assignment mechanism whose re-randomisation the
+permutation could mimic. A claim that the test is "exact because the design is deterministic" would
+be false, and is explicitly rejected here.
+
+Determinism supplies **reproducibility of each `Δ(c,p)`**. It does **not** supply exchangeability of
+arm labels.
+
+Worse, the *sharp* null is unusable: under "the mechanism has no effect on `ρ` in any
+configuration", determinism forces `ρ_ARMED(u) = ρ_ABLATED(u)` and hence `Δ(c,p) = 0` for **every**
+`c`. The permutation distribution then collapses to a point mass at 0, and any non-zero `Δ` refutes
+the sharp null by inspection with no test required. **The sharp null is therefore not this study's
+null.**
+
+**The operative null is the symmetry null:**
+
+> **`H0_sym`: over the population of configurations from which the registered block draws, the
+> distribution of `Δ(c,p)` is symmetric about 0.**
+
+Under `H0_sym` the sign vector `s` is uniformly distributed and the permutation distribution of
+`T(s)` is the exact null distribution of `T`. The test is exact **conditional on `H0_sym`**.
+
+**`H0_sym` is an assumption about the configuration population. It is not derived from the design,
+and no attempt is made here to derive it.** What the design does supply is that the randomness is
+purely configuration sampling — the `Δ(c,p)` are fixed numbers per configuration, and the only
+stochastic element is which configurations the seed block produces.
+
+**Interpretation of rejection, stated precisely:** rejecting `H0_sym` establishes that the
+distribution of `Δ(c,p)` is **not symmetric about 0**. That is a weaker and different claim than
+"the mean is non-zero", and the report must state it that way. Any asymmetry — including one driven
+by a minority of configurations — can produce rejection.
+
+#### 10.3.3 Enumeration vs Monte Carlo — this test is NOT called exact
+
+Complete enumeration requires `2^N` sign vectors. With the expected `N ≈ 70`, `2^70 ≈ 1.2 × 10^21`,
+which is not enumerable. The preregistered rule:
+
+- **`N ≤ 20`** (`2^20 = 1,048,576`): **complete enumeration**, and the p-value is exact.
+- **`N > 20`**: **Monte Carlo permutation** with `M = 100,000` sign vectors drawn uniformly, using a
+  preregistered generator seed of `20260909` recorded in the analysis code. The p-value is
+
+  ```
+  p = (1 + #{ m : |T(s_m)| ≥ |T_obs| }) / (1 + M)
+  ```
+
+  the Phipson–Smyth estimator, which is a **valid** p-value (it controls the type-I error rate at
+  the nominal level) but is **not** an exact enumeration. **In the `N > 20` case the test MUST be
+  reported as a "Monte Carlo permutation test", never as "exact".**
+
+#### 10.3.4 Secondary disclosures (no α, never primary)
+
+- **Sign test** — retained as the assumption-lighter robustness check it always was: it requires
+  only `P(Δ>0) = P(Δ<0)` under H0, not symmetry. Reported alongside; if it disagrees with the
+  primary, the disagreement is reported and not adjudicated.
+- **Wilcoxon signed-rank** — reported for continuity with the v1.0 draft. It assumes the same
+  symmetry as the primary, so it is not an independent check of that assumption.
 
 **No other test may be added after data exist.** No p-value beyond these, no confidence intervals
 on the primary, no effect-size model, no covariate adjustment, no subgroup analysis.
 
 ### 10.4 Hypotheses
 
-- **H0:** the population mean (median, for the sign test) of `Δ(c,p)` is 0 — `futureScore`'s
-  presence does not systematically change the oracle-alignment of the candidate-ranking policy.
-- **H1 (two-sided):** it is not 0.
+- **`H0_sym` (primary):** the distribution of `Δ(c,p)` over the configuration population is
+  symmetric about 0 — `futureScore`'s presence produces no systematic directional change in the
+  oracle-alignment of the candidate-ranking policy.
+- **`H1` (two-sided):** that distribution is not symmetric about 0.
 
 Two-sided deliberately: this program has no committed basis for predicting a direction, and
 predicting one after UQ-B's recorded direction counts would be post-hoc.
+
+### 10.5 Phase multiplicity — re-examined, and why co-primary is retained
+
+The two phases are **retained as co-primary confirmatory hypotheses**, on the following grounds
+rather than on precedent:
+
+1. **They are distinct questions.** Phase 1 scores the end-of-run policy against the *pre-shift*
+   reliability regime and phase 2 against the *post-shift* regime (`T_SHIFT = 1500` of 3000 ticks).
+   Neither is a sub-hypothesis of the other; a mechanism could plausibly affect alignment with the
+   regime the agent most recently experienced without affecting alignment with the earlier one.
+2. **Both are confirmatory.** Each has a pre-specified estimand, test and α, and neither is
+   exploratory or conditional on the other's outcome.
+3. **α allocation: `0.025` per phase, Bonferroni, family-wise `0.05`.**
+4. **Why Bonferroni specifically, and why its conservatism is accepted deliberately.** The two tests
+   are **not independent** — they score the **same** end-of-run policy against two different
+   oracles, so their `Δ` values are positively dependent. Bonferroni controls the family-wise error
+   rate under **any** dependence structure, including this one. A less conservative correction
+   (Šidák, or a resampling-based step-down) would require modelling that dependence, and this
+   program has no committed basis for a dependence model. The power cost is accepted in exchange
+   for a correction that cannot be wrong about the dependence.
+
+**A single-primary-phase alternative was considered and rejected**: designating one phase primary
+would require an a-priori scientific reason to privilege retention over adaptation (or the reverse),
+and no such reason exists in the committed record. Inventing one to buy power would be exactly the
+kind of unsupported rationale this program forbids.
 
 ---
 
@@ -309,9 +429,9 @@ gate may alter any definition above; it can only permit or block collection.
 
 | # | Check | Pass condition |
 |---|---|---|
-| **A1** | **Rejection region non-empty** | With `N` valid configurations, the two-sided exact sign test at `α = 0.025` must have a non-empty rejection region. Minimum: `2·(1/2)^N ≤ 0.025`, i.e. **`N ≥ 7`**. The gate asserts the expected `N` clears this with margin. |
+| **A1** | **Rejection region non-empty** | For the sign-flip permutation test the smallest attainable two-sided p-value under complete enumeration is `2/2^N = 2^(1−N)`, achieved when every `Δ` shares a sign. Non-empty rejection at `α = 0.025` therefore requires `2^(1−N) ≤ 0.025`, i.e. **`N ≥ 7`**. Under the Monte Carlo branch the floor is `1/(1+M) = 1/100001`, far below α. The gate asserts the expected `N` clears `N ≥ 7` with margin. |
 | **A2** | E6 definedness | jointly-defined states per configuration/phase recorded; the gate reports the rate and fails if **any** configuration/phase has fewer than **10 of 19** jointly defined (a majority of the frozen population) |
-| **A3** | One-arm-only missingness | counted and reported; a non-zero count does not fail the gate but is escalated to the Director before collection |
+| **A3** | Asymmetric / one-arm-only missingness | `missing_A`, `missing_B` and `asym` counted and reported per fixture; the size of the `asym = 0` concordance subset (§7.2) is reported. A non-zero count does not fail the gate but is escalated to the Director before collection |
 | **A4** | `n = 1` incidence | counted and reported per arm |
 | **A5** | Rank ties | weight ties within a pool counted; any tie requires a preregistered tie-break to be added **before** collection |
 | **A6** | Attainable rank range | the observed set of `r` values must contain more than one distinct value |
@@ -360,12 +480,45 @@ extensible.
 
 **Per-configuration dispositions:**
 
+**Configuration validity rule, derived — not chosen.** The v1.0 draft required
+`jointlyDefined ≥ 10` ("a majority of the population"). **That threshold is removed.** Majority-rule
+is a heuristic, not a statistical principle: there is no a-priori reason 10 is correct, a
+configuration with 9 defined states may give a perfectly stable `Δ` and one with 10 may not, and
+no committed evidence bears on the question.
+
+The only minimum that is **mathematically necessary** follows from the estimator itself:
+
+```
+Δ(c,p) = mean over jointly defined u of δ(u,p)
+```
+
+is undefined when the jointly-defined set is empty (`0/0`). Therefore:
+
+> **`jointlyDefined ≥ 1` is the validity rule**, derived from the estimator and from nothing else.
+
+No other count-based exclusion is applied. `jointlyDefined` is instead reported in full (§13.1).
+
 | Disposition | Meaning |
 |---|---|
-| `ACCEPTED` | accepted by `makeConfig`, both arms collected, `E1 ≥ 1`, `jointlyDefined ≥ 10` |
+| `ACCEPTED` | accepted by `makeConfig`, both arms collected, `E1 ≥ 1`, `jointlyDefined ≥ 1` |
 | `REJECTED` | not accepted by `makeConfig` |
-| `INVALID` | `E1 = 0`, or `jointlyDefined < 10` |
+| `INVALID` | `E1 = 0`, or `jointlyDefined = 0` (`Δ` undefined) |
 | `FAILED` | a runtime fault prevented collection |
+
+### 13.1 Mandatory sensitivity analysis on jointly-defined count
+
+Because no cutoff is imposed, the relationship between definedness and outcome must be shown rather
+than assumed away. Reported for each phase, descriptively and with **no test, no α, and no
+exclusion**:
+
+1. the full distribution of `jointlyDefined` across configurations (min, quartiles, max, histogram);
+2. `Δ(c,p)` plotted against `jointlyDefined(c,p)` — every configuration, no binning-away;
+3. the primary statistic recomputed on the subsets `jointlyDefined ≥ k` for
+   `k = 1, 5, 10, 15, 19`, reported as a **stability curve**.
+
+Item 3 is a **disclosure**, not a decision rule: the primary conclusion is always the `k = 1`
+analysis. The curve exists so a reader can see whether the result depends on sparsely-defined
+configurations, which an arbitrary cutoff would have hidden rather than answered.
 
 **Minimum evidence:** at least **20 valid configurations per phase**. Below that the study is
 reported **INCONCLUSIVE — INSUFFICIENT MATERIAL**, and no test is interpreted. This is a reporting
@@ -413,7 +566,30 @@ interpretation milestone.
 
 ---
 
-## 15. What this study cannot establish
+## 15. Residual limitations, declared
+
+These are known weaknesses of the frozen design. They are recorded so that no reader has to
+discover them, and so that no later report can present them as new.
+
+1. **`H0_sym` is an assumption.** The primary test is exact only conditional on symmetry of `Δ`
+   about 0 under the null (§10.3.2). The design supplies no randomization that would make it exact
+   unconditionally, and none is claimed. The sign test (§10.3.4) is reported as a check that needs
+   only median-0, but it is less powerful and cannot rescue a symmetry failure.
+2. **Rejection means asymmetry, not a non-zero mean.** A minority of configurations with large `Δ`
+   can produce rejection. The report must phrase the conclusion as asymmetry.
+3. **Equal missingness counts do not imply equal missing sets.** The `asym = 0` concordance subset
+   (§7.2) controls the *count* of differentially-defined states, not *which* states they are. Two
+   arms can each lose two states and lose different ones. This residual is not controlled by any
+   rule in this document.
+4. **Normalisation carries treatment dependence.** `n_a(u)` is itself affected by the arm (§2.1);
+   `ρ` is a normalised total-effect outcome, not a within-fixed-pool contrast.
+5. **The substrate is declared, not justified.** 13 of the 17 candidate-admission parameters have no
+   rationale recoverable from the committed record (M13).
+6. **Monte Carlo p-values are not exact** when `N > 20` (§10.3.3).
+
+---
+
+## 16. What this study cannot establish
 
 It cannot establish that `futureScore` constitutes planning, improves cognition, or changes
 internal representations. It measures one property — the ranking position of an
