@@ -1130,8 +1130,20 @@ function canReachGoal(startId, goalId, maxDepth = 4) {
   // If no goal → allow everything
   if (!goalId) return true;
   
-  const visited = new Set(); // remember visited nodes
-  
+  // Nodes on the CURRENT path — not every node ever seen. A node is marked on
+  // entry and unmarked on backtrack, so it can only block a cycle within the
+  // path being explored.
+  //
+  // M10 (0227a5f): sharing one set across sibling branches made this an
+  // INCOMPLETE depth-limited search. A node explored — and failed — with little
+  // depth remaining stayed marked forever, so a later sibling branch that could
+  // have reached the goal inside the budget was pruned anyway. That produced 9
+  // false negatives over the 20x4 state/goal domain, silently shrank the
+  // candidate pool in 28 decision contexts, and made state 3 / goal 16
+  // undecidable outright. Unmarking on backtrack is the entire fix. The depth
+  // budget and every other filter are untouched.
+  const visited = new Set(); // nodes on the current path
+
   // DFS = explore neighbors step by step
   function dfs(currentId, depth) {
     
@@ -1144,18 +1156,19 @@ function canReachGoal(startId, goalId, maxDepth = 4) {
     visited.add(currentId);
     
     const neuron = findNeuronById(currentId);
-    if (!neuron) return false;
-    
+    if (!neuron) { visited.delete(currentId); return false; }
+
     // check all neighbors
     for (let nextId of neuron.userData.neighbors) {
-      
-      // skip already visited (avoid loop)
+
+      // skip nodes already on THIS path (avoid loop)
       if (visited.has(nextId)) continue;
-      
+
       // if ANY path reaches goal → true
-      if (dfs(nextId, depth - 1)) return true;
+      if (dfs(nextId, depth - 1)) { visited.delete(currentId); return true; }
     }
-    
+
+    visited.delete(currentId);   // backtrack: release for sibling branches
     return false; // no path found
   }
   

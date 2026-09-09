@@ -1,0 +1,3592 @@
+{
+  "preDigest": "3c900455dd9859e9f74fbb98065de1e9ea789e44b459347b88c6bc9928f4308e",
+  "postDigest": "09263d9ce5e43adcd3e02625569b82939db68147c9ed5a7679d804bdd7a49a90",
+  "m10Commit": "0227a5f",
+  "before": {
+    "cells": 80,
+    "runtimeReachable": 67,
+    "referenceReachable": 76,
+    "falseNegatives": 9,
+    "falsePositives": 0
+  },
+  "after": {
+    "cells": 80,
+    "runtimeReachable": 76,
+    "referenceReachable": 76,
+    "falseNegatives": 0,
+    "falsePositives": 0
+  },
+  "cells": [
+    {
+      "node": 1,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 1,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 1,
+      "goal": 16,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 1,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 2,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 2,
+      "goal": 12,
+      "runtime": false,
+      "reference": false,
+      "dist": 4,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 2,
+      "goal": 16,
+      "runtime": false,
+      "reference": false,
+      "dist": 4,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 2,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 3,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 3,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 3,
+      "goal": 16,
+      "runtime": false,
+      "reference": false,
+      "dist": 4,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 3,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 4,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 4,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 4,
+      "goal": 16,
+      "runtime": false,
+      "reference": false,
+      "dist": 4,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 4,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 5,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 1,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 5,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 5,
+      "goal": 16,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 5,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 6,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 6,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 6,
+      "goal": 16,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 6,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 1,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 7,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 1,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 7,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 1,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 7,
+      "goal": 16,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 7,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 8,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 0,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 8,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 8,
+      "goal": 16,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 8,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 9,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 1,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 9,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 1,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 9,
+      "goal": 16,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 9,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 10,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 10,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 10,
+      "goal": 16,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 10,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 11,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 11,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 1,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 11,
+      "goal": 16,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 11,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 12,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 12,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 0,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 12,
+      "goal": 16,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 12,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 13,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 1,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 13,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 13,
+      "goal": 16,
+      "runtime": true,
+      "reference": true,
+      "dist": 1,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 13,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 14,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 14,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 14,
+      "goal": 16,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 14,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 15,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 15,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 1,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 15,
+      "goal": 16,
+      "runtime": true,
+      "reference": true,
+      "dist": 1,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 15,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 16,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 16,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 16,
+      "goal": 16,
+      "runtime": true,
+      "reference": true,
+      "dist": 0,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 16,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 17,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 1,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 17,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 1,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 17,
+      "goal": 16,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 17,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 1,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 18,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 18,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 18,
+      "goal": 16,
+      "runtime": true,
+      "reference": true,
+      "dist": 1,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 18,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 19,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 19,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 19,
+      "goal": 16,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 19,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 0,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 20,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 20,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 20,
+      "goal": 16,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 20,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 1,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    }
+  ],
+  "changedCells": [
+    {
+      "node": 1,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 1,
+      "goal": 16,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 1,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 2,
+      "goal": 8,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 3,
+      "goal": 12,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 3,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 6,
+      "goal": 16,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 13,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 3,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    },
+    {
+      "node": 14,
+      "goal": 19,
+      "runtime": true,
+      "reference": true,
+      "dist": 2,
+      "agree": true,
+      "falseNegative": false,
+      "falsePositive": false
+    }
+  ],
+  "contexts": [
+    {
+      "state": 1,
+      "goal": 8,
+      "neighbours": [
+        2,
+        4,
+        6,
+        20
+      ],
+      "poolBefore": [
+        4,
+        6,
+        20
+      ],
+      "poolAfter": [
+        2,
+        4,
+        6,
+        20
+      ],
+      "newlyAdmitted": [
+        2
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 1,
+      "goal": 16,
+      "neighbours": [
+        2,
+        4,
+        6,
+        20
+      ],
+      "poolBefore": [
+        20
+      ],
+      "poolAfter": [
+        6,
+        20
+      ],
+      "newlyAdmitted": [
+        6
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 2,
+      "goal": 12,
+      "neighbours": [
+        1,
+        3,
+        5
+      ],
+      "poolBefore": [
+        5
+      ],
+      "poolAfter": [
+        1,
+        3,
+        5
+      ],
+      "newlyAdmitted": [
+        1,
+        3
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 2,
+      "goal": 16,
+      "neighbours": [
+        1,
+        3,
+        5
+      ],
+      "poolBefore": [
+        5
+      ],
+      "poolAfter": [
+        1,
+        5
+      ],
+      "newlyAdmitted": [
+        1
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 2,
+      "goal": 19,
+      "neighbours": [
+        1,
+        3,
+        5
+      ],
+      "poolBefore": [
+        5
+      ],
+      "poolAfter": [
+        1,
+        3,
+        5
+      ],
+      "newlyAdmitted": [
+        1,
+        3
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 3,
+      "goal": 8,
+      "neighbours": [
+        2,
+        4,
+        6
+      ],
+      "poolBefore": [
+        4,
+        6
+      ],
+      "poolAfter": [
+        2,
+        4,
+        6
+      ],
+      "newlyAdmitted": [
+        2
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 3,
+      "goal": 16,
+      "neighbours": [
+        2,
+        4,
+        6
+      ],
+      "poolBefore": [],
+      "poolAfter": [
+        6
+      ],
+      "newlyAdmitted": [
+        6
+      ],
+      "fatalBefore": true,
+      "fatalAfter": false
+    },
+    {
+      "state": 4,
+      "goal": 12,
+      "neighbours": [
+        1,
+        3,
+        9
+      ],
+      "poolBefore": [
+        9
+      ],
+      "poolAfter": [
+        1,
+        3,
+        9
+      ],
+      "newlyAdmitted": [
+        1,
+        3
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 4,
+      "goal": 16,
+      "neighbours": [
+        1,
+        3,
+        9
+      ],
+      "poolBefore": [
+        9
+      ],
+      "poolAfter": [
+        1,
+        9
+      ],
+      "newlyAdmitted": [
+        1
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 4,
+      "goal": 19,
+      "neighbours": [
+        1,
+        3,
+        9
+      ],
+      "poolBefore": [
+        9
+      ],
+      "poolAfter": [
+        1,
+        3,
+        9
+      ],
+      "newlyAdmitted": [
+        1,
+        3
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 5,
+      "goal": 8,
+      "neighbours": [
+        2,
+        6,
+        8,
+        20
+      ],
+      "poolBefore": [
+        6,
+        8,
+        20
+      ],
+      "poolAfter": [
+        2,
+        6,
+        8,
+        20
+      ],
+      "newlyAdmitted": [
+        2
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 5,
+      "goal": 16,
+      "neighbours": [
+        2,
+        6,
+        8,
+        20
+      ],
+      "poolBefore": [
+        8,
+        20
+      ],
+      "poolAfter": [
+        6,
+        8,
+        20
+      ],
+      "newlyAdmitted": [
+        6
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 6,
+      "goal": 12,
+      "neighbours": [
+        3,
+        1,
+        5,
+        7,
+        10,
+        19
+      ],
+      "poolBefore": [
+        5,
+        7,
+        10,
+        19
+      ],
+      "poolAfter": [
+        3,
+        1,
+        5,
+        7,
+        10,
+        19
+      ],
+      "newlyAdmitted": [
+        3,
+        1
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 6,
+      "goal": 16,
+      "neighbours": [
+        3,
+        1,
+        5,
+        7,
+        10,
+        19
+      ],
+      "poolBefore": [
+        5,
+        7,
+        10,
+        19
+      ],
+      "poolAfter": [
+        1,
+        5,
+        7,
+        10,
+        19
+      ],
+      "newlyAdmitted": [
+        1
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 6,
+      "goal": 19,
+      "neighbours": [
+        3,
+        1,
+        5,
+        7,
+        10,
+        19
+      ],
+      "poolBefore": [
+        5,
+        7,
+        10,
+        19
+      ],
+      "poolAfter": [
+        3,
+        1,
+        5,
+        7,
+        10,
+        19
+      ],
+      "newlyAdmitted": [
+        3,
+        1
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 7,
+      "goal": 16,
+      "neighbours": [
+        6,
+        8,
+        12
+      ],
+      "poolBefore": [
+        8,
+        12
+      ],
+      "poolAfter": [
+        6,
+        8,
+        12
+      ],
+      "newlyAdmitted": [
+        6
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 8,
+      "goal": 19,
+      "neighbours": [
+        5,
+        7,
+        9,
+        17,
+        13
+      ],
+      "poolBefore": [
+        5,
+        7,
+        9,
+        17
+      ],
+      "poolAfter": [
+        5,
+        7,
+        9,
+        17,
+        13
+      ],
+      "newlyAdmitted": [
+        13
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 10,
+      "goal": 16,
+      "neighbours": [
+        6,
+        9,
+        11,
+        13
+      ],
+      "poolBefore": [
+        9,
+        11,
+        13
+      ],
+      "poolAfter": [
+        6,
+        9,
+        11,
+        13
+      ],
+      "newlyAdmitted": [
+        6
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 10,
+      "goal": 19,
+      "neighbours": [
+        6,
+        9,
+        11,
+        13
+      ],
+      "poolBefore": [
+        6,
+        9,
+        11
+      ],
+      "poolAfter": [
+        6,
+        9,
+        11,
+        13
+      ],
+      "newlyAdmitted": [
+        13
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 11,
+      "goal": 19,
+      "neighbours": [
+        10,
+        12,
+        13
+      ],
+      "poolBefore": [
+        10,
+        12
+      ],
+      "poolAfter": [
+        10,
+        12,
+        13
+      ],
+      "newlyAdmitted": [
+        13
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 13,
+      "goal": 19,
+      "neighbours": [
+        11,
+        10,
+        14,
+        16,
+        8
+      ],
+      "poolBefore": [
+        11,
+        10,
+        16,
+        8
+      ],
+      "poolAfter": [
+        11,
+        10,
+        14,
+        16,
+        8
+      ],
+      "newlyAdmitted": [
+        14
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 14,
+      "goal": 19,
+      "neighbours": [
+        13,
+        15,
+        17
+      ],
+      "poolBefore": [
+        15,
+        17
+      ],
+      "poolAfter": [
+        13,
+        15,
+        17
+      ],
+      "newlyAdmitted": [
+        13
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 15,
+      "goal": 19,
+      "neighbours": [
+        12,
+        14,
+        16,
+        17
+      ],
+      "poolBefore": [
+        12,
+        16,
+        17
+      ],
+      "poolAfter": [
+        12,
+        14,
+        16,
+        17
+      ],
+      "newlyAdmitted": [
+        14
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 16,
+      "goal": 19,
+      "neighbours": [
+        13,
+        15,
+        18
+      ],
+      "poolBefore": [
+        15,
+        18
+      ],
+      "poolAfter": [
+        13,
+        15,
+        18
+      ],
+      "newlyAdmitted": [
+        13
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 17,
+      "goal": 19,
+      "neighbours": [
+        14,
+        15,
+        18,
+        19,
+        8,
+        12
+      ],
+      "poolBefore": [
+        15,
+        18,
+        19,
+        8,
+        12
+      ],
+      "poolAfter": [
+        14,
+        15,
+        18,
+        19,
+        8,
+        12
+      ],
+      "newlyAdmitted": [
+        14
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 19,
+      "goal": 16,
+      "neighbours": [
+        17,
+        20,
+        6
+      ],
+      "poolBefore": [
+        17,
+        20
+      ],
+      "poolAfter": [
+        17,
+        20,
+        6
+      ],
+      "newlyAdmitted": [
+        6
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 20,
+      "goal": 12,
+      "neighbours": [
+        18,
+        19,
+        1,
+        5
+      ],
+      "poolBefore": [
+        18,
+        19,
+        5
+      ],
+      "poolAfter": [
+        18,
+        19,
+        1,
+        5
+      ],
+      "newlyAdmitted": [
+        1
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 20,
+      "goal": 16,
+      "neighbours": [
+        18,
+        19,
+        1,
+        5
+      ],
+      "poolBefore": [
+        18,
+        19,
+        5
+      ],
+      "poolAfter": [
+        18,
+        19,
+        1,
+        5
+      ],
+      "newlyAdmitted": [
+        1
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    },
+    {
+      "state": 20,
+      "goal": 19,
+      "neighbours": [
+        18,
+        19,
+        1,
+        5
+      ],
+      "poolBefore": [
+        18,
+        19,
+        5
+      ],
+      "poolAfter": [
+        18,
+        19,
+        1,
+        5
+      ],
+      "newlyAdmitted": [
+        1
+      ],
+      "fatalBefore": false,
+      "fatalAfter": false
+    }
+  ],
+  "fixtures": [
+    {
+      "configSeed": 896066,
+      "configIndex": 0,
+      "goal": 8,
+      "fingerprintPre": "f3835437b2850f178390d8f43d7dc9e68f473cb1301164a0c99c27a73f6ec56e",
+      "fingerprintPost": "da21b9ba4b48b71fd9ec6ffec76bc3c3592e4105eb55c4a6a6797e52dcc13588",
+      "deadPre": [],
+      "deadPost": [],
+      "movedStates": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        9,
+        10,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "probesPre": [
+        {
+          "state": 1,
+          "best": 5,
+          "size": 10,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 9
+        },
+        {
+          "state": 2,
+          "best": 1,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 3
+        },
+        {
+          "state": 3,
+          "best": 1,
+          "size": 9,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 8
+        },
+        {
+          "state": 4,
+          "best": 1,
+          "size": 4,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 4
+        },
+        {
+          "state": 5,
+          "best": 8,
+          "size": 8,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 7
+        },
+        {
+          "state": 6,
+          "best": 12,
+          "size": 9,
+          "rejected": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "choices": 8
+        },
+        {
+          "state": 7,
+          "best": 6,
+          "size": 4,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 4
+        },
+        {
+          "state": 9,
+          "best": 4,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 6
+        },
+        {
+          "state": 10,
+          "best": 5,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 7
+        },
+        {
+          "state": 11,
+          "best": 10,
+          "size": 4,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 4
+        },
+        {
+          "state": 12,
+          "best": 8,
+          "size": 11,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 11
+        },
+        {
+          "state": 13,
+          "best": 10,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 6
+        },
+        {
+          "state": 14,
+          "best": 15,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 15,
+          "best": 8,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 7
+        },
+        {
+          "state": 16,
+          "best": 13,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 3
+        },
+        {
+          "state": 17,
+          "best": 14,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 7
+        },
+        {
+          "state": 18,
+          "best": 17,
+          "size": 4,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 4
+        },
+        {
+          "state": 19,
+          "best": 12,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 6
+        },
+        {
+          "state": 20,
+          "best": 1,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "choices": 5
+        }
+      ],
+      "probesPost": [
+        {
+          "state": 1,
+          "best": 4,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 7
+        },
+        {
+          "state": 2,
+          "best": 1,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 7
+        },
+        {
+          "state": 3,
+          "best": 9,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 4,
+          "best": 8,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 5,
+          "best": 2,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 6,
+          "best": 3,
+          "size": 10,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 10
+        },
+        {
+          "state": 7,
+          "best": 12,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 3
+        },
+        {
+          "state": 9,
+          "best": 8,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 6
+        },
+        {
+          "state": 10,
+          "best": 8,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 6
+        },
+        {
+          "state": 11,
+          "best": 10,
+          "size": 4,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 4
+        },
+        {
+          "state": 12,
+          "best": 8,
+          "size": 8,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 8
+        },
+        {
+          "state": 13,
+          "best": 10,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "choices": 6
+        },
+        {
+          "state": 14,
+          "best": 17,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 3
+        },
+        {
+          "state": 15,
+          "best": 9,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 16,
+          "best": 18,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 3
+        },
+        {
+          "state": 17,
+          "best": 13,
+          "size": 8,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 8
+        },
+        {
+          "state": 18,
+          "best": 1,
+          "size": 4,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 4
+        },
+        {
+          "state": 19,
+          "best": 20,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 3
+        },
+        {
+          "state": 20,
+          "best": 1,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 7
+        }
+      ]
+    },
+    {
+      "configSeed": 896066,
+      "configIndex": 1,
+      "goal": 12,
+      "fingerprintPre": "8af8769b02484ab50f5fd5d0e4674cce9db71dce87dc677eff71e60f81819f18",
+      "fingerprintPost": "8fbabe04427d627670924781b960f46b80f5be5bbf46a04637f0d0985837f228",
+      "deadPre": [],
+      "deadPost": [],
+      "movedStates": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        9,
+        10,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "probesPre": [
+        {
+          "state": 1,
+          "best": 4,
+          "size": 4,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 3
+        },
+        {
+          "state": 2,
+          "best": 5,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            2
+          ],
+          "choices": 1
+        },
+        {
+          "state": 3,
+          "best": 4,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 2
+        },
+        {
+          "state": 4,
+          "best": 9,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            2
+          ],
+          "choices": 1
+        },
+        {
+          "state": 5,
+          "best": 12,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 6
+        },
+        {
+          "state": 6,
+          "best": 11,
+          "size": 11,
+          "rejected": [
+            0,
+            0,
+            0,
+            2
+          ],
+          "choices": 9
+        },
+        {
+          "state": 7,
+          "best": 12,
+          "size": 4,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 4
+        },
+        {
+          "state": 8,
+          "best": 12,
+          "size": 8,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 8
+        },
+        {
+          "state": 9,
+          "best": 12,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 6
+        },
+        {
+          "state": 10,
+          "best": 11,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 11,
+          "best": 12,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 13,
+          "best": 12,
+          "size": 8,
+          "rejected": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "choices": 7
+        },
+        {
+          "state": 14,
+          "best": 12,
+          "size": 4,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 4
+        },
+        {
+          "state": 15,
+          "best": 17,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 16,
+          "best": 13,
+          "size": 4,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 4
+        },
+        {
+          "state": 17,
+          "best": 12,
+          "size": 9,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 9
+        },
+        {
+          "state": 18,
+          "best": 12,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 19,
+          "best": 6,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 3
+        },
+        {
+          "state": 20,
+          "best": 16,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 6
+        }
+      ],
+      "probesPost": [
+        {
+          "state": 1,
+          "best": 6,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 6
+        },
+        {
+          "state": 2,
+          "best": 1,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 3
+        },
+        {
+          "state": 3,
+          "best": 6,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 4
+        },
+        {
+          "state": 4,
+          "best": 3,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 5,
+          "best": 20,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 4
+        },
+        {
+          "state": 6,
+          "best": 12,
+          "size": 10,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 10
+        },
+        {
+          "state": 7,
+          "best": 12,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 7
+        },
+        {
+          "state": 8,
+          "best": 17,
+          "size": 8,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 8
+        },
+        {
+          "state": 9,
+          "best": 4,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 10,
+          "best": 12,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 7
+        },
+        {
+          "state": 11,
+          "best": 12,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 13,
+          "best": 10,
+          "size": 9,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 9
+        },
+        {
+          "state": 14,
+          "best": 13,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "choices": 4
+        },
+        {
+          "state": 15,
+          "best": 14,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 16,
+          "best": 15,
+          "size": 4,
+          "rejected": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "choices": 3
+        },
+        {
+          "state": 17,
+          "best": 14,
+          "size": 8,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 8
+        },
+        {
+          "state": 18,
+          "best": 1,
+          "size": 4,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 4
+        },
+        {
+          "state": 19,
+          "best": 17,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 3
+        },
+        {
+          "state": 20,
+          "best": 1,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 6
+        }
+      ]
+    },
+    {
+      "configSeed": 896238,
+      "configIndex": 2,
+      "goal": 16,
+      "fingerprintPre": "c274afe72798e4635dddfebe81c803ba10ee1d354de4d7580215406e4f3b4b0d",
+      "fingerprintPost": "83effac4531ef6307f478246213f5b8f7f6866e842add845bedcc7bcfc59107f",
+      "deadPre": [
+        3
+      ],
+      "deadPost": [],
+      "movedStates": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        19,
+        20
+      ],
+      "probesPre": [
+        {
+          "state": 1,
+          "best": 20,
+          "size": 4,
+          "rejected": [
+            0,
+            0,
+            0,
+            3
+          ],
+          "choices": 1
+        },
+        {
+          "state": 2,
+          "best": 5,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            2
+          ],
+          "choices": 1
+        },
+        {
+          "state": 3,
+          "best": null,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            3
+          ],
+          "choices": 0
+        },
+        {
+          "state": 4,
+          "best": 9,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            2
+          ],
+          "choices": 1
+        },
+        {
+          "state": 5,
+          "best": 12,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            1,
+            2
+          ],
+          "choices": 4
+        },
+        {
+          "state": 6,
+          "best": 5,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            0,
+            2
+          ],
+          "choices": 4
+        },
+        {
+          "state": 7,
+          "best": 18,
+          "size": 4,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 3
+        },
+        {
+          "state": 8,
+          "best": 12,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 7
+        },
+        {
+          "state": 9,
+          "best": 12,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 4
+        },
+        {
+          "state": 10,
+          "best": 12,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 6
+        },
+        {
+          "state": 11,
+          "best": 18,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 12,
+          "best": 18,
+          "size": 9,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 9
+        },
+        {
+          "state": 13,
+          "best": 15,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 7
+        },
+        {
+          "state": 14,
+          "best": 15,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 6
+        },
+        {
+          "state": 15,
+          "best": 16,
+          "size": 8,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 8
+        },
+        {
+          "state": 17,
+          "best": 16,
+          "size": 9,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 9
+        },
+        {
+          "state": 18,
+          "best": 16,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 6
+        },
+        {
+          "state": 19,
+          "best": 17,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 4
+        },
+        {
+          "state": 20,
+          "best": 8,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 6
+        }
+      ],
+      "probesPost": [
+        {
+          "state": 1,
+          "best": 19,
+          "size": 8,
+          "rejected": [
+            0,
+            0,
+            0,
+            2
+          ],
+          "choices": 6
+        },
+        {
+          "state": 2,
+          "best": 1,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 2
+        },
+        {
+          "state": 3,
+          "best": 6,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            2
+          ],
+          "choices": 1
+        },
+        {
+          "state": 4,
+          "best": 9,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 2
+        },
+        {
+          "state": 5,
+          "best": 16,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 4
+        },
+        {
+          "state": 6,
+          "best": 20,
+          "size": 9,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 8
+        },
+        {
+          "state": 7,
+          "best": 1,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 6
+        },
+        {
+          "state": 8,
+          "best": 6,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 7
+        },
+        {
+          "state": 9,
+          "best": 6,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 5
+        },
+        {
+          "state": 10,
+          "best": 11,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 7
+        },
+        {
+          "state": 11,
+          "best": 12,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 6
+        },
+        {
+          "state": 12,
+          "best": 16,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 7
+        },
+        {
+          "state": 13,
+          "best": 12,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 7
+        },
+        {
+          "state": 14,
+          "best": 18,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 15,
+          "best": 16,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 17,
+          "best": 16,
+          "size": 10,
+          "rejected": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "choices": 9
+        },
+        {
+          "state": 18,
+          "best": 16,
+          "size": 4,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 4
+        },
+        {
+          "state": 19,
+          "best": 16,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 20,
+          "best": 16,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 7
+        }
+      ]
+    },
+    {
+      "configSeed": 896329,
+      "configIndex": 3,
+      "goal": 19,
+      "fingerprintPre": "26f57cf69a252dd2c9919311023c47ab48354f26b200cfe7c1a90add8359868f",
+      "fingerprintPost": "9f66da3364e2c5df910d6705494d5795036dfc59d1f782c74712c8026873696e",
+      "deadPre": [],
+      "deadPost": [],
+      "movedStates": [
+        1,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "probesPre": [
+        {
+          "state": 1,
+          "best": 2,
+          "size": 4,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 4
+        },
+        {
+          "state": 2,
+          "best": 20,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            0,
+            2
+          ],
+          "choices": 4
+        },
+        {
+          "state": 3,
+          "best": 4,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 3
+        },
+        {
+          "state": 4,
+          "best": 10,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            2
+          ],
+          "choices": 3
+        },
+        {
+          "state": 5,
+          "best": 19,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 6,
+          "best": 19,
+          "size": 8,
+          "rejected": [
+            0,
+            0,
+            0,
+            2
+          ],
+          "choices": 6
+        },
+        {
+          "state": 7,
+          "best": 19,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 8,
+          "best": 19,
+          "size": 8,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 7
+        },
+        {
+          "state": 9,
+          "best": 6,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 7
+        },
+        {
+          "state": 10,
+          "best": 19,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 5
+        },
+        {
+          "state": 11,
+          "best": 6,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 4
+        },
+        {
+          "state": 12,
+          "best": 15,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 7
+        },
+        {
+          "state": 13,
+          "best": 11,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 4
+        },
+        {
+          "state": 14,
+          "best": 15,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 2
+        },
+        {
+          "state": 15,
+          "best": 18,
+          "size": 8,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 7
+        },
+        {
+          "state": 16,
+          "best": 18,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 4
+        },
+        {
+          "state": 17,
+          "best": 20,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 6
+        },
+        {
+          "state": 18,
+          "best": 19,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 20,
+          "best": 19,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "choices": 6
+        }
+      ],
+      "probesPost": [
+        {
+          "state": 1,
+          "best": 19,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "choices": 6
+        },
+        {
+          "state": 2,
+          "best": 20,
+          "size": 8,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 8
+        },
+        {
+          "state": 3,
+          "best": 2,
+          "size": 8,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 8
+        },
+        {
+          "state": 4,
+          "best": 2,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 5,
+          "best": 19,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 6
+        },
+        {
+          "state": 6,
+          "best": 3,
+          "size": 10,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 10
+        },
+        {
+          "state": 7,
+          "best": 3,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 8,
+          "best": 18,
+          "size": 8,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 8
+        },
+        {
+          "state": 9,
+          "best": 4,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 10,
+          "best": 6,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 6
+        },
+        {
+          "state": 11,
+          "best": 10,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 3
+        },
+        {
+          "state": 12,
+          "best": 18,
+          "size": 8,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 8
+        },
+        {
+          "state": 13,
+          "best": 10,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 7
+        },
+        {
+          "state": 14,
+          "best": 17,
+          "size": 3,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 3
+        },
+        {
+          "state": 15,
+          "best": 14,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 16,
+          "best": 15,
+          "size": 5,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 5
+        },
+        {
+          "state": 17,
+          "best": 19,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 6
+        },
+        {
+          "state": 18,
+          "best": 19,
+          "size": 6,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 6
+        },
+        {
+          "state": 20,
+          "best": 19,
+          "size": 7,
+          "rejected": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "choices": 7
+        }
+      ]
+    }
+  ]
+}
