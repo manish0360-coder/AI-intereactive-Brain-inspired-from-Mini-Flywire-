@@ -1,0 +1,67 @@
+# UQ-B PRE-REGISTRATION ERRATUM 02 — INTEGRITY RECORD
+#
+# Artifact : research/preregistrations/UQB_PREREGISTRATION_ERRATUM_02.md
+# Erratum  : UQB-ERR-02 (corrected state closure; regulateBiology control authorised)
+# Frozen   : 2026-09-09, Chief Systems Engineer, under Director authorisation
+#            (Milestone 2B — second erratum and corrected methodology freeze)
+# Algorithm: SHA-256 over the exact bytes of the file
+# Size     : 15119 bytes, 266 lines
+#
+# BINDS TO
+#   UQB_PREREGISTRATION.md v1.0, frozen at 3b3d195, digest
+#   bc655022b63e8022ed6427001da6a90eb2f9ec139cf413ab367e9bc7269ba46e
+#   UQB_PREREGISTRATION_ERRATUM_01.md, frozen at 84c738e, digest
+#   10e0981df5e4eec78e6c77f5bb9c94c852d36525ce61cd66f12165ae3c64b9e1
+#   NEITHER is modified by this erratum. Both digests are unchanged and were
+#   verified immediately before and immediately after this freeze.
+#
+# WHAT IT CHANGES
+#   ERR-01 section 2 : CORRECTED — the readout state closure is seven writers,
+#                      of which TWO are cross-call contamination sources, not
+#                      one. The earlier claim was an artefact of a truncated
+#                      audit boundary.
+#   boundary         : RECORDED — runPrediction spans main.js:1390-3033,
+#                      established by brace-depth walk. 2722 is the STEPS loop,
+#                      an internal boundary, not the function exit.
+#   regulateBiology  : RECORDED as the second contamination pathway
+#                      (main.js:2822, nine accumulating behavior.js states,
+#                      five of which enter the scoring context at :2107-2111),
+#                      and RECORDED as executing strictly AFTER bestChoice is
+#                      determined at :2365 — so it cannot alter the current
+#                      call's measured value, only subsequent readouts.
+#   section 15       : FURTHER EXTENDED — guarded in-memory transform of
+#                      render/behavior.js permitted, for suspending those
+#                      persistent writes during a section 8 readout only. The
+#                      on-disk and no-new-export prohibitions remain in force.
+#   C2 confound      : RECORDED — arrangement 0, the observed identity, is
+#                      always measured at the least-aged state, so any drift
+#                      effect is systematically correlated with arrangement
+#                      index in the comparison that decides H_redistribution.
+#
+# WHAT IT DOES NOT CHANGE
+#   No estimand, exposure, population, statistic, discriminator, tie rule,
+#   phase handling, K, alpha, minimum evidence, stopping rule, INCONCLUSIVE
+#   rule, seed block or post-result prohibition. Twenty-one frozen elements are
+#   enumerated and confirmed unchanged in section 10. The hypothesis and the
+#   estimand are untouched. J1 acceptance remains EXACTLY 0/19 and no gate is
+#   weakened.
+#
+# WHAT IT DOES NOT ASSERT
+#   The authorised control does not claim that biological or cognitive state is
+#   irrelevant, nor that regulateBiology is unimportant, nor that the
+#   architecture would be improved by its absence. It is an experimental
+#   measurement control, not a production architecture change.
+#
+# STATE AT FREEZE
+#   The regulateBiology control is NOT implemented. No collection run. No
+#   configuration seed from 897000-897999 generated, evaluated or inspected.
+#   Production source unchanged on disk. Implementation and verification are a
+#   separate Director-authorised milestone.
+#
+# The digest below was computed over the STAGED BLOB, not merely the working-tree
+# file, and .gitattributes carries -text for both paths by wildcard.
+#
+# VERIFY WITH
+#   cd research/preregistrations && sha256sum -c UQB_PREREGISTRATION_ERRATUM_02.sha256
+#
+88b9edbe8e7f4cb706c8a61400bd439fe64249e57facfc7446fa1168380786f3  UQB_PREREGISTRATION_ERRATUM_02.md
