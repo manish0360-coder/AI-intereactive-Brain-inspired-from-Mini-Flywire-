@@ -1,0 +1,17 @@
+# UQ-B MAIN COLLECTION — INTEGRITY RECORD
+#
+# Protocol  : UQB_PREREGISTRATION.md v1.0 bc655022b63e8022ed6427001da6a90eb2f9ec139cf413ab367e9bc7269ba46e
+# Errata    : ERR-01 10e0981df5e4eec78e6c77f5bb9c94c852d36525ce61cd66f12165ae3c64b9e1
+#             ERR-02 88b9edbe8e7f4cb706c8a61400bd439fe64249e57facfc7446fa1168380786f3
+# Range     : 897000-897999 | agent 20260819000 | 3000 ticks
+# Design    : ARMED + ABLATED | K=19 | 19 states x 20 arrangements
+#
+# Regenerate with : cd experiments/uqb && UQB_COLLECTION_AUTHORISED=1 node run_collection.js
+# Preflight with  : cd experiments/uqb && node preflight.js
+#
+# readouts.jsonl is NOT committed (repository convention: raw measurement data is
+# not versioned). Its digest is here, and results/uqb_results.json carries a
+# per-arm fingerprint for every configuration.
+#
+88865fd5d0d08ecc9e61225dfb66cadccf40c7aa3bd4e5b79bc964548dcc772f  readouts.jsonl
+496d3a7c6da7736cd4277235b21ac7762e4d6519eb280f0eaf71b9f9eea5abcf  candidates.jsonl
