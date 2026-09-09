@@ -82,6 +82,10 @@ research/preregistrations/UQB_PREREGISTRATION.sha256  -text
 # fresh clone.
 experiments/uqb/results/*.json      -text
 experiments/uqb/results/*.sha256    -text
+# The instrument-generalization stress gate records its evidence as a text log,
+# which the two patterns above do not cover. Without `-text` uqb_stress.sha256
+# would fail on any end-of-line-converting checkout.
+experiments/uqb/results/*.txt       -text
 
 # UQ-B errata — the same byte-integrity guarantee as the UQ-B pre-registration
 # they bind to. Each erratum quotes the frozen digest and supersedes a clause by

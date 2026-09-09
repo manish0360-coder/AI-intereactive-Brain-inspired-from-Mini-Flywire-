@@ -1,0 +1,17 @@
+# UQ-B INSTRUMENT GENERALIZATION STRESS TEST — INTEGRITY RECORD
+#
+# Artifact  : experiments/uqb/results/uqb_stress.txt
+# Protocol  : research/preregistrations/UQB_PREREGISTRATION.md bc655022b63e8022ed6427001da6a90eb2f9ec139cf413ab367e9bc7269ba46e
+# Freeze    : 3b3d195b5b29ea0ada16872b3e1ea08e54d37f20 (v1.0)
+# Component : instrument robustness gate — NOT a pre-registered UQ-B component
+# Block     : 896000-896099 (non-registered, non-consumed, non-held-out)
+# Verdict   : GREEN — 27 passed, 0 failed
+# J1        : 0/19 on all 3 configurations x 2 arms
+#
+# This is NOT a UQ-B result. It computes no alignment count, no C1 difference
+# and no C2 verdict. No configuration seed from 897000-897999 was consumed,
+# and no collection was run.
+#
+# Regenerate with : cd experiments/uqb && node run_stress.js
+#
+bd67220682efc2814c814f27d4e9268d405c7725a964230b95814d8c8656edf4  uqb_stress.txt
