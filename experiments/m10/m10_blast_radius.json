@@ -1,0 +1,1646 @@
+{
+  "maxDepth": 4,
+  "semantics": "reachable iff dist <= 3",
+  "functionDigest": "3c900455dd9859e9f74fbb98065de1e9ea789e44b459347b88c6bc9928f4308e",
+  "nodes": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ],
+  "goals": [
+    8,
+    12,
+    16,
+    19
+  ],
+  "totals": {
+    "cells": 80,
+    "runtimeReachable": 67,
+    "referenceReachable": 76,
+    "falseNegatives": 9,
+    "falsePositives": 0
+  },
+  "cells": [
+    {
+      "node": 1,
+      "goal": 8,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 1,
+      "goal": 12,
+      "runtime": false,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": true,
+      "falsePositive": false,
+      "witness": [
+        1,
+        4,
+        9,
+        12
+      ]
+    },
+    {
+      "node": 1,
+      "goal": 16,
+      "runtime": false,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": true,
+      "falsePositive": false,
+      "witness": [
+        1,
+        20,
+        18,
+        16
+      ]
+    },
+    {
+      "node": 1,
+      "goal": 19,
+      "runtime": false,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": true,
+      "falsePositive": false,
+      "witness": [
+        1,
+        6,
+        19
+      ]
+    },
+    {
+      "node": 2,
+      "goal": 8,
+      "runtime": false,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": true,
+      "falsePositive": false,
+      "witness": [
+        2,
+        5,
+        8
+      ]
+    },
+    {
+      "node": 2,
+      "goal": 12,
+      "runtime": false,
+      "refA": false,
+      "refB": false,
+      "dist": 4,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 2,
+      "goal": 16,
+      "runtime": false,
+      "refA": false,
+      "refB": false,
+      "dist": 4,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 2,
+      "goal": 19,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 3,
+      "goal": 8,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 3,
+      "goal": 12,
+      "runtime": false,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": true,
+      "falsePositive": false,
+      "witness": [
+        3,
+        4,
+        9,
+        12
+      ]
+    },
+    {
+      "node": 3,
+      "goal": 16,
+      "runtime": false,
+      "refA": false,
+      "refB": false,
+      "dist": 4,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 3,
+      "goal": 19,
+      "runtime": false,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": true,
+      "falsePositive": false,
+      "witness": [
+        3,
+        6,
+        19
+      ]
+    },
+    {
+      "node": 4,
+      "goal": 8,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 4,
+      "goal": 12,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 4,
+      "goal": 16,
+      "runtime": false,
+      "refA": false,
+      "refB": false,
+      "dist": 4,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 4,
+      "goal": 19,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 5,
+      "goal": 8,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 1,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 5,
+      "goal": 12,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 5,
+      "goal": 16,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 5,
+      "goal": 19,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 6,
+      "goal": 8,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 6,
+      "goal": 12,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 6,
+      "goal": 16,
+      "runtime": false,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": true,
+      "falsePositive": false,
+      "witness": [
+        6,
+        10,
+        13,
+        16
+      ]
+    },
+    {
+      "node": 6,
+      "goal": 19,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 1,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 7,
+      "goal": 8,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 1,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 7,
+      "goal": 12,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 1,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 7,
+      "goal": 16,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 7,
+      "goal": 19,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 8,
+      "goal": 8,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 0,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 8,
+      "goal": 12,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 8,
+      "goal": 16,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 8,
+      "goal": 19,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 9,
+      "goal": 8,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 1,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 9,
+      "goal": 12,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 1,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 9,
+      "goal": 16,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 9,
+      "goal": 19,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 10,
+      "goal": 8,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 10,
+      "goal": 12,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 10,
+      "goal": 16,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 10,
+      "goal": 19,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 11,
+      "goal": 8,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 11,
+      "goal": 12,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 1,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 11,
+      "goal": 16,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 11,
+      "goal": 19,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 12,
+      "goal": 8,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 12,
+      "goal": 12,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 0,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 12,
+      "goal": 16,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 12,
+      "goal": 19,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 13,
+      "goal": 8,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 1,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 13,
+      "goal": 12,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 13,
+      "goal": 16,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 1,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 13,
+      "goal": 19,
+      "runtime": false,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": true,
+      "falsePositive": false,
+      "witness": [
+        13,
+        10,
+        6,
+        19
+      ]
+    },
+    {
+      "node": 14,
+      "goal": 8,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 14,
+      "goal": 12,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 14,
+      "goal": 16,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 14,
+      "goal": 19,
+      "runtime": false,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": true,
+      "falsePositive": false,
+      "witness": [
+        14,
+        15,
+        17,
+        19
+      ]
+    },
+    {
+      "node": 15,
+      "goal": 8,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 15,
+      "goal": 12,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 1,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 15,
+      "goal": 16,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 1,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 15,
+      "goal": 19,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 16,
+      "goal": 8,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 16,
+      "goal": 12,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 16,
+      "goal": 16,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 0,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 16,
+      "goal": 19,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 17,
+      "goal": 8,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 1,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 17,
+      "goal": 12,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 1,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 17,
+      "goal": 16,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 17,
+      "goal": 19,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 1,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 18,
+      "goal": 8,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 18,
+      "goal": 12,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 18,
+      "goal": 16,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 1,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 18,
+      "goal": 19,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 19,
+      "goal": 8,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 19,
+      "goal": 12,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 19,
+      "goal": 16,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 19,
+      "goal": 19,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 0,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 20,
+      "goal": 8,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 20,
+      "goal": 12,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 20,
+      "goal": 16,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    },
+    {
+      "node": 20,
+      "goal": 19,
+      "runtime": true,
+      "refA": true,
+      "refB": true,
+      "dist": 1,
+      "falseNegative": false,
+      "falsePositive": false,
+      "witness": null
+    }
+  ],
+  "falseNegatives": [
+    {
+      "node": 1,
+      "goal": 12,
+      "runtime": false,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": true,
+      "falsePositive": false,
+      "witness": [
+        1,
+        4,
+        9,
+        12
+      ]
+    },
+    {
+      "node": 1,
+      "goal": 16,
+      "runtime": false,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": true,
+      "falsePositive": false,
+      "witness": [
+        1,
+        20,
+        18,
+        16
+      ]
+    },
+    {
+      "node": 1,
+      "goal": 19,
+      "runtime": false,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": true,
+      "falsePositive": false,
+      "witness": [
+        1,
+        6,
+        19
+      ]
+    },
+    {
+      "node": 2,
+      "goal": 8,
+      "runtime": false,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": true,
+      "falsePositive": false,
+      "witness": [
+        2,
+        5,
+        8
+      ]
+    },
+    {
+      "node": 3,
+      "goal": 12,
+      "runtime": false,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": true,
+      "falsePositive": false,
+      "witness": [
+        3,
+        4,
+        9,
+        12
+      ]
+    },
+    {
+      "node": 3,
+      "goal": 19,
+      "runtime": false,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": true,
+      "falsePositive": false,
+      "witness": [
+        3,
+        6,
+        19
+      ]
+    },
+    {
+      "node": 6,
+      "goal": 16,
+      "runtime": false,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": true,
+      "falsePositive": false,
+      "witness": [
+        6,
+        10,
+        13,
+        16
+      ]
+    },
+    {
+      "node": 13,
+      "goal": 19,
+      "runtime": false,
+      "refA": true,
+      "refB": true,
+      "dist": 3,
+      "falseNegative": true,
+      "falsePositive": false,
+      "witness": [
+        13,
+        10,
+        6,
+        19
+      ]
+    },
+    {
+      "node": 14,
+      "goal": 19,
+      "runtime": false,
+      "refA": true,
+      "refB": true,
+      "dist": 2,
+      "falseNegative": true,
+      "falsePositive": false,
+      "witness": [
+        14,
+        15,
+        17,
+        19
+      ]
+    }
+  ],
+  "falsePositives": [],
+  "affectedDecisions": [
+    {
+      "state": 1,
+      "goal": 8,
+      "neighbours": [
+        2,
+        4,
+        6,
+        20
+      ],
+      "pruned": [
+        2
+      ],
+      "survivors": [
+        4,
+        6,
+        20
+      ],
+      "fatal": false
+    },
+    {
+      "state": 1,
+      "goal": 16,
+      "neighbours": [
+        2,
+        4,
+        6,
+        20
+      ],
+      "pruned": [
+        6
+      ],
+      "survivors": [
+        20
+      ],
+      "fatal": false
+    },
+    {
+      "state": 2,
+      "goal": 12,
+      "neighbours": [
+        1,
+        3,
+        5
+      ],
+      "pruned": [
+        1,
+        3
+      ],
+      "survivors": [
+        5
+      ],
+      "fatal": false
+    },
+    {
+      "state": 2,
+      "goal": 16,
+      "neighbours": [
+        1,
+        3,
+        5
+      ],
+      "pruned": [
+        1
+      ],
+      "survivors": [
+        5
+      ],
+      "fatal": false
+    },
+    {
+      "state": 2,
+      "goal": 19,
+      "neighbours": [
+        1,
+        3,
+        5
+      ],
+      "pruned": [
+        1,
+        3
+      ],
+      "survivors": [
+        5
+      ],
+      "fatal": false
+    },
+    {
+      "state": 3,
+      "goal": 8,
+      "neighbours": [
+        2,
+        4,
+        6
+      ],
+      "pruned": [
+        2
+      ],
+      "survivors": [
+        4,
+        6
+      ],
+      "fatal": false
+    },
+    {
+      "state": 3,
+      "goal": 16,
+      "neighbours": [
+        2,
+        4,
+        6
+      ],
+      "pruned": [
+        6
+      ],
+      "survivors": [],
+      "fatal": true
+    },
+    {
+      "state": 4,
+      "goal": 12,
+      "neighbours": [
+        1,
+        3,
+        9
+      ],
+      "pruned": [
+        1,
+        3
+      ],
+      "survivors": [
+        9
+      ],
+      "fatal": false
+    },
+    {
+      "state": 4,
+      "goal": 16,
+      "neighbours": [
+        1,
+        3,
+        9
+      ],
+      "pruned": [
+        1
+      ],
+      "survivors": [
+        9
+      ],
+      "fatal": false
+    },
+    {
+      "state": 4,
+      "goal": 19,
+      "neighbours": [
+        1,
+        3,
+        9
+      ],
+      "pruned": [
+        1,
+        3
+      ],
+      "survivors": [
+        9
+      ],
+      "fatal": false
+    },
+    {
+      "state": 5,
+      "goal": 8,
+      "neighbours": [
+        2,
+        6,
+        8,
+        20
+      ],
+      "pruned": [
+        2
+      ],
+      "survivors": [
+        6,
+        8,
+        20
+      ],
+      "fatal": false
+    },
+    {
+      "state": 5,
+      "goal": 16,
+      "neighbours": [
+        2,
+        6,
+        8,
+        20
+      ],
+      "pruned": [
+        6
+      ],
+      "survivors": [
+        8,
+        20
+      ],
+      "fatal": false
+    },
+    {
+      "state": 6,
+      "goal": 12,
+      "neighbours": [
+        3,
+        1,
+        5,
+        7,
+        10,
+        19
+      ],
+      "pruned": [
+        3,
+        1
+      ],
+      "survivors": [
+        5,
+        7,
+        10,
+        19
+      ],
+      "fatal": false
+    },
+    {
+      "state": 6,
+      "goal": 16,
+      "neighbours": [
+        3,
+        1,
+        5,
+        7,
+        10,
+        19
+      ],
+      "pruned": [
+        1
+      ],
+      "survivors": [
+        5,
+        7,
+        10,
+        19
+      ],
+      "fatal": false
+    },
+    {
+      "state": 6,
+      "goal": 19,
+      "neighbours": [
+        3,
+        1,
+        5,
+        7,
+        10,
+        19
+      ],
+      "pruned": [
+        3,
+        1
+      ],
+      "survivors": [
+        5,
+        7,
+        10,
+        19
+      ],
+      "fatal": false
+    },
+    {
+      "state": 7,
+      "goal": 16,
+      "neighbours": [
+        6,
+        8,
+        12
+      ],
+      "pruned": [
+        6
+      ],
+      "survivors": [
+        8,
+        12
+      ],
+      "fatal": false
+    },
+    {
+      "state": 8,
+      "goal": 19,
+      "neighbours": [
+        5,
+        7,
+        9,
+        17,
+        13
+      ],
+      "pruned": [
+        13
+      ],
+      "survivors": [
+        5,
+        7,
+        9,
+        17
+      ],
+      "fatal": false
+    },
+    {
+      "state": 10,
+      "goal": 16,
+      "neighbours": [
+        6,
+        9,
+        11,
+        13
+      ],
+      "pruned": [
+        6
+      ],
+      "survivors": [
+        9,
+        11,
+        13
+      ],
+      "fatal": false
+    },
+    {
+      "state": 10,
+      "goal": 19,
+      "neighbours": [
+        6,
+        9,
+        11,
+        13
+      ],
+      "pruned": [
+        13
+      ],
+      "survivors": [
+        6,
+        9,
+        11
+      ],
+      "fatal": false
+    },
+    {
+      "state": 11,
+      "goal": 19,
+      "neighbours": [
+        10,
+        12,
+        13
+      ],
+      "pruned": [
+        13
+      ],
+      "survivors": [
+        10,
+        12
+      ],
+      "fatal": false
+    },
+    {
+      "state": 13,
+      "goal": 19,
+      "neighbours": [
+        11,
+        10,
+        14,
+        16,
+        8
+      ],
+      "pruned": [
+        14
+      ],
+      "survivors": [
+        11,
+        10,
+        16,
+        8
+      ],
+      "fatal": false
+    },
+    {
+      "state": 14,
+      "goal": 19,
+      "neighbours": [
+        13,
+        15,
+        17
+      ],
+      "pruned": [
+        13
+      ],
+      "survivors": [
+        15,
+        17
+      ],
+      "fatal": false
+    },
+    {
+      "state": 15,
+      "goal": 19,
+      "neighbours": [
+        12,
+        14,
+        16,
+        17
+      ],
+      "pruned": [
+        14
+      ],
+      "survivors": [
+        12,
+        16,
+        17
+      ],
+      "fatal": false
+    },
+    {
+      "state": 16,
+      "goal": 19,
+      "neighbours": [
+        13,
+        15,
+        18
+      ],
+      "pruned": [
+        13
+      ],
+      "survivors": [
+        15,
+        18
+      ],
+      "fatal": false
+    },
+    {
+      "state": 17,
+      "goal": 19,
+      "neighbours": [
+        14,
+        15,
+        18,
+        19,
+        8,
+        12
+      ],
+      "pruned": [
+        14
+      ],
+      "survivors": [
+        15,
+        18,
+        19,
+        8,
+        12
+      ],
+      "fatal": false
+    },
+    {
+      "state": 19,
+      "goal": 16,
+      "neighbours": [
+        17,
+        20,
+        6
+      ],
+      "pruned": [
+        6
+      ],
+      "survivors": [
+        17,
+        20
+      ],
+      "fatal": false
+    },
+    {
+      "state": 20,
+      "goal": 12,
+      "neighbours": [
+        18,
+        19,
+        1,
+        5
+      ],
+      "pruned": [
+        1
+      ],
+      "survivors": [
+        18,
+        19,
+        5
+      ],
+      "fatal": false
+    },
+    {
+      "state": 20,
+      "goal": 16,
+      "neighbours": [
+        18,
+        19,
+        1,
+        5
+      ],
+      "pruned": [
+        1
+      ],
+      "survivors": [
+        18,
+        19,
+        5
+      ],
+      "fatal": false
+    },
+    {
+      "state": 20,
+      "goal": 19,
+      "neighbours": [
+        18,
+        19,
+        1,
+        5
+      ],
+      "pruned": [
+        1
+      ],
+      "survivors": [
+        18,
+        19,
+        5
+      ],
+      "fatal": false
+    }
+  ]
+}
