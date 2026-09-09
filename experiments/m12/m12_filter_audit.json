@@ -1,0 +1,76 @@
+{
+  "thresholds": {
+    "F1_penaltyOver": 10,
+    "F2_qUnder": -0.5,
+    "F3_trainedStrengthOver": 5,
+    "F3_rewardOver": 4,
+    "F3_witnessOver": 0,
+    "F4_maxDepth": 4
+  },
+  "locations": {
+    "F1": 1610,
+    "F2": 1620,
+    "F3": 1673,
+    "F4": 1678
+  },
+  "penaltyWrites": [
+    {
+      "line": 1362,
+      "expr": "existing + 8",
+      "cap": 15
+    },
+    {
+      "line": 4570,
+      "expr": "oldPenalty + 0.1",
+      "cap": 5
+    },
+    {
+      "line": 4638,
+      "expr": "existingPenalty + 1.5",
+      "cap": 8
+    }
+  ],
+  "unreachableProducers": [
+    {
+      "line": 4570,
+      "expr": "oldPenalty + 0.1",
+      "cap": 5
+    },
+    {
+      "line": 4638,
+      "expr": "existingPenalty + 1.5",
+      "cap": 8
+    }
+  ],
+  "observations": 1825,
+  "selfVerificationMismatches": 0,
+  "typeMisses": 0,
+  "candidateKeyTypes": [
+    "number"
+  ],
+  "interaction": {
+    "fires": [
+      0,
+      0,
+      29,
+      29
+    ],
+    "soleCause": [
+      0,
+      0,
+      29,
+      29
+    ],
+    "multi": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "silentPruning": {
+    "F1": 0,
+    "F2": 0,
+    "F3": 29
+  }
+}
