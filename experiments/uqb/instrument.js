@@ -270,3 +270,92 @@ export function anchorLines(source) {
         bestChoice: findLine(lines, ANCHOR_BESTCHOICE, 'bestChoice') + 1,
     };
 }
+
+// ==========================================================
+// R2 — SUSPEND READ-SIDE PERSISTENCE DURING THE §8 READOUT
+// ==========================================================
+// AUTHORITY
+//   UQB-ERR-01 (frozen 84c738e, digest
+//   10e0981df5e4eec78e6c77f5bb9c94c852d36525ce61cd66f12165ae3c64b9e1), which
+//   corrects G12/G13 and extends §15 to permit this transform for this sole
+//   purpose.
+//
+// THE PROBLEM IT REPAIRS
+//   `getTransitionUncertainty` (render/predictionError.js:578-598) decays the
+//   stored value by 0.998 and WRITES IT BACK on every read, and is called at
+//   main.js:2130 inside the candidate loop. Every readout therefore mutates the
+//   state the next readout reads, so §6.2's "same state" across arrangements
+//   does not hold. Measured: J1 = 1/19 at 9988acf.
+//
+// WHAT THIS CHANGES — persistence, and nothing else
+//   The two persistence statements are guarded. The returned value is untouched:
+//   still `raw * TRANSITION_UNCERTAINTY_DECAY`, still `0` under the
+//   `< 0.005` rule, still the same key construction. Only whether the result is
+//   written back changes.
+//
+// WHAT IT IS NOT
+//   It is NOT a change to the cognitive architecture and must never be described
+//   as one. Transition uncertainty still decays on read in normal execution;
+//   this suspends only the PERSISTENCE of that read-side mutation, and only
+//   during the controlled readout, so the 20 arrangements are compared from the
+//   same relevant state. UQB-ERR-01 §6.
+//
+// SCOPED TO ONE FUNCTION
+//   Both statements also occur inside `decayTransitionUncertainties`
+//   (:730, :732), which is a DIFFERENT mechanism and must keep persisting. The
+//   transform therefore resolves the target function's span first and rewrites
+//   only inside it, rather than trusting indentation to disambiguate.
+// ==========================================================
+
+export const PE_FUNCTION_OPEN = 'export function getTransitionUncertainty(fromId, toId) {';
+export const PE_DELETE = '        transitionUncertaintyMap.delete(key);';
+export const PE_SET    = '    transitionUncertaintyMap.set(key, decayed);';
+export const PE_GUARD  = 'globalThis.__UQB_FREEZE__';
+
+/**
+ * Pure. Guards the two persistence statements inside `getTransitionUncertainty`.
+ * With `__UQB_FREEZE__` unset every guard is one falsy read and the committed
+ * behaviour runs unchanged.
+ */
+export function transformPredictionError(source) {
+    const raw = String(source);
+    const crlf = raw.includes('\r\n');
+    const text = crlf ? raw.replace(/\r\n/g, '\n') : raw;
+    if (text.includes('\r')) {
+        throw new Error('UQ-B: predictionError.js contains a bare carriage return; only LF and ' +
+            'CRLF terminators are recognised.');
+    }
+    const lines = text.split('\n');
+
+    const open = lines.findIndex(l => l.replace(/\s+$/, '') === PE_FUNCTION_OPEN);
+    if (open < 0) {
+        throw new Error(`UQ-B: could not locate ${JSON.stringify(PE_FUNCTION_OPEN)} in ` +
+            `render/predictionError.js. The committed source moved; the transform refuses to guess.`);
+    }
+    let close = -1;
+    for (let i = open + 1; i < lines.length; i++) {
+        if (lines[i].replace(/\s+$/, '') === '}') { close = i; break; }
+    }
+    if (close < 0) throw new Error('UQ-B: getTransitionUncertainty has no closing brace at column 0.');
+
+    // Rewrite ONLY inside the function span, so decayTransitionUncertainties'
+    // identical statements at :730/:732 are untouched.
+    const out = lines.slice();
+    let hitDelete = 0, hitSet = 0;
+    for (let i = open; i <= close; i++) {
+        const t = out[i].replace(/\s+$/, '');
+        if (t === PE_DELETE) {
+            out[i] = `        if (!${PE_GUARD}) transitionUncertaintyMap.delete(key);`;
+            hitDelete++;
+        } else if (t === PE_SET) {
+            out[i] = `    if (!${PE_GUARD}) transitionUncertaintyMap.set(key, decayed);`;
+            hitSet++;
+        }
+    }
+    if (hitDelete !== 1 || hitSet !== 1) {
+        throw new Error(`UQ-B: expected exactly one delete and one set inside ` +
+            `getTransitionUncertainty, found ${hitDelete} and ${hitSet}. The function's persistence ` +
+            `structure changed and the transform would not be the one UQB-ERR-01 authorised.`);
+    }
+    return out.join(crlf ? '\r\n' : '\n');
+}

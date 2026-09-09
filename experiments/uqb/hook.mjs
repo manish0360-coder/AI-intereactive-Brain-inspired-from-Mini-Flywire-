@@ -19,10 +19,20 @@
 //   With `__UQB__`, `__UQB_PROBE__` and `__UQB_EXPOSE__` all unset, every
 //   injected site is one falsy global read and the build is behaviourally
 //   identical to HEAD. verify_uqb_impl.js proves this rather than asserting it.
-import { transform } from './instrument.js';
+import { transform, transformPredictionError } from './instrument.js';
 
 export async function load(url, ctx, next) {
     const r = await next(url, ctx);
-    if (!/\/main\.js$/.test(decodeURIComponent(url)) || !r.source) return r;
-    return { ...r, source: transform(String(r.source)) };
+    if (!r.source) return r;
+    const p = decodeURIComponent(url);
+
+    if (/\/main\.js$/.test(p)) {
+        return { ...r, source: transform(String(r.source)) };
+    }
+    // R2, authorised by UQB-ERR-01 §4: suspend read-side persistence in
+    // getTransitionUncertainty during the readout. Guarded and default-off.
+    if (/\/render\/predictionError\.js$/.test(p)) {
+        return { ...r, source: transformPredictionError(String(r.source)) };
+    }
+    return r;
 }

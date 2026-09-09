@@ -302,6 +302,9 @@ const READOUT_SEED = (u) => 700000 + u;
 // would be requiring the arrangement to have no effect at all.
 function readout(u) {
     let best = null, calls = 0, canary0 = null;
+    // R2 (UQB-ERR-01 §4/§5): suspend read-side persistence for the duration of
+    // the readout, so all 20 arrangements are compared from the same state.
+    globalThis.__UQB_FREEZE__ = true;
     globalThis.__UQB_PROBE__ = (from, key, step) => {
         calls++;
         if (step === 0 && best === null) { best = key; canary0 = liveRng(); }
@@ -310,6 +313,7 @@ function readout(u) {
     runPrediction(u);
     const canary = liveRng();
     globalThis.__UQB_PROBE__ = null;
+    globalThis.__UQB_FREEZE__ = false;
     return { best, calls, canary, canary0 };
 }
 
@@ -452,13 +456,40 @@ P_('C2', R1.states.every(u => R1.arms.ARMED.rows[0].best[u] === R1.arms.ARMED.of
             R1.offPre[u].b  !== R1.arms.ARMED.off[u]);
         P_('J1', preVsPost.length === 0,
            `J — the SAME guard-off readout taken before and after the arrangement sweep differs ` +
-           `at ${preVsPost.length}/19 states. Readouts are ORDER-DEPENDENT through ` +
-           `updateMotivationalState (main.js:1560); §6.2's "same state" is not yet satisfied ` +
-           `across arrangements. Escalated for a Director decision.`);
+           `at ${preVsPost.length}/19 states. ACCEPTANCE REQUIRES 0/19 (UQB-ERR-01 §8).`);
         P_('J2', R1.states.every(u => R1.offPre[u].b === R1.arms.ARMED.off[u]),
            'J — the DECISIONS themselves were unaffected in this fixture; the drift observed is ' +
-           'in randomness consumed, not in the statistic. Reported so the scope of J1 is not ' +
-           'overstated.');
+           'in randomness consumed. Reported so the scope of J1 is not overstated.');
+    }
+    {
+        // J3/J4 — the SPAN CONTROL. The state-closure audit at e77de21 bounded
+        // runPrediction at main.js:2722, which is where the STEPS loop ends, not
+        // where the function ends. It actually spans 1390-3033, so 311 lines were
+        // never audited. This control pins the true span so that class of error
+        // is detected rather than repeated.
+        const LINE_COMMENT = new RegExp('//[^' + String.fromCharCode(92) + 'n]*$');
+        const L = mainSrc.replace(/\/\*[\s\S]*?\*\//g, ' ').split('\n')
+            .map(l => l.replace(LINE_COMMENT, ''));
+        const start = L.findIndex(l => /^function runPrediction\(startKey\)/.test(l));
+        let d = 0, seen = false, end = -1;
+        for (let i = start; i < L.length; i++) {
+            for (const ch of L[i]) { if (ch === '{') { d++; seen = true; } else if (ch === '}') d--; }
+            if (seen && d === 0) { end = i; break; }
+        }
+        P_('J3', start + 1 === 1390 && end + 1 === 3033,
+           `SPAN — runPrediction spans main.js:${start + 1}..${end + 1}; the closure audit must ` +
+           'cover all of it, not merely the STEPS loop that ends at 2722');
+
+        // The unfrozen writer the truncated span hid.
+        const tail = L.slice(2722, end + 1).join('\n');
+        const writers = ['regulateBiology', 'updateBehavior', 'changeStress', 'changeFatigue',
+                         'applyPredictionErrorToBehavior']
+            .filter(f => new RegExp('(?<![A-Za-z0-9_$.])' + f + '\\s*\\(').test(tail));
+        P_('J4', writers.length === 0,
+           `SPAN — cognitive-state writers reached from runPrediction but NOT frozen by R2: ` +
+           `${writers.length ? writers.join(', ') : 'none'}. regulateBiology (main.js:2822) writes ` +
+           'energyState, exhaustionState, fatigueState, stressState, confidenceState, ' +
+           'curiosityState and loopStressState, all accumulating, and epsilon reads them.');
     }
     {
         // The structural half of E, which does not depend on any run: the
@@ -536,6 +567,82 @@ console.log('\n-- seed accounting ----------------------------------------------
        `the fixture seed ${FIXTURE_SEED} lies outside the frozen block`);
     P_('S3', baseline.evaluatedSeeds.every(s => s < BLOCK_LO || s > BLOCK_HI),
        'no run in this verification evaluated a seed inside the frozen block');
+}
+
+// ==========================================================================
+console.log('\n-- R. the R2 repair: return semantics, persistence, default-off ------------');
+// ==========================================================================
+{
+    const peRaw = fs.readFileSync(path.join(ROOT, 'render/predictionError.js'), 'utf8');
+    const peLF = peRaw.split('\r\n').join('\n');
+    const peT = I.transformPredictionError(peLF);
+    const a = peLF.split('\n'), b = peT.split('\n');
+    const diff = a.map((l, i) => i).filter(i => a[i] !== b[i]);
+
+    P_('R1', a.length === b.length && diff.length === 2,
+       `the R2 transform changes exactly two lines (predictionError.js:${diff.map(i => i + 1).join(', ')})`);
+    P_('R2', diff.every(i => /globalThis\.__UQB_FREEZE__/.test(b[i])
+                          && /transitionUncertaintyMap\.(delete|set)/.test(b[i])),
+       'both changed lines are the persistence statements, now guarded');
+    P_('R3', b.filter(l => /transitionUncertaintyMap\.(delete|set)/.test(l)
+                        && !/__UQB_FREEZE__/.test(l)).length
+          === a.filter(l => /transitionUncertaintyMap\.(delete|set)/.test(l)).length - 2,
+       'every OTHER persistence statement is untouched — decayTransitionUncertainties still persists');
+    P_('R4', I.transformPredictionError(peLF.split('\n').join('\r\n')).includes('\r\n'),
+       'the R2 transform is terminator-agnostic and preserves the input form');
+    P_('R5', throws(() => I.transformPredictionError(
+            peLF.replace('        transitionUncertaintyMap.delete(key);', '        noop();'))),
+       'MUTATION — a missing delete statement is REFUSED');
+    P_('R6', throws(() => I.transformPredictionError(
+            peLF.replace('    transitionUncertaintyMap.set(key, decayed);', '    noop();'))),
+       'MUTATION — a missing set statement is REFUSED');
+    P_('R7', throws(() => I.transformPredictionError(
+            peLF.replace('export function getTransitionUncertainty(fromId, toId) {',
+                         'export function getTransitionUncertaintyX(fromId, toId) {'))),
+       'MUTATION — a renamed target function is REFUSED');
+}
+
+// Return semantics and persistence, exercised on the REAL module through the
+// real hook, walking the stored value down through the < 0.005 threshold.
+const SEM = child(`
+import { register } from 'node:module';
+const U = ${JSON.stringify(U)};
+register(U + '/experiments/uqb/hook.mjs', import.meta.url);
+const pe = await import(U + '/render/predictionError.js');
+
+const F = 9001, T = 9002;
+for (let i = 0; i < 400; i++) pe.updateTransitionUncertainty(F, T, 1);
+
+const rows = [];
+let guard = 0;
+while (pe.peekTransitionUncertainty(F, T) > 0 && guard++ < 5000) {
+    const before = pe.peekTransitionUncertainty(F, T);
+    globalThis.__UQB_FREEZE__ = true;
+    const rOn = pe.getTransitionUncertainty(F, T);
+    const afterOn = pe.peekTransitionUncertainty(F, T);
+    globalThis.__UQB_FREEZE__ = false;
+    const rOff = pe.getTransitionUncertainty(F, T);
+    const afterOff = pe.peekTransitionUncertainty(F, T);
+    rows.push({ before, rOn, afterOn, rOff, afterOff });
+}
+process.stdout.write('@@UQB@@' + JSON.stringify({ rows, guard }));
+`);
+{
+    const rows = SEM.rows;
+    P_('R8', rows.length > 100,
+       `the sweep walked ${rows.length} distinct stored values down to zero`);
+    P_('R9', rows.filter(r => r.rOn !== r.rOff).length === 0,
+       'RETURN SEMANTICS — the frozen getter returns EXACTLY the committed value at every one of ' +
+       `the ${rows.length} sampled stored values`);
+    const crossed = rows.filter(r => r.rOff === 0);
+    P_('R10', crossed.length > 0 && crossed.every(r => r.rOn === 0),
+       `RETURN SEMANTICS — the < 0.005 threshold branch was exercised (${crossed.length} samples) ` +
+       'and the frozen getter returns 0 there too');
+    P_('R11', rows.every(r => r.afterOn === r.before),
+       'PERSISTENCE — under the freeze guard the stored value is UNCHANGED at every sample, ' +
+       'including across the threshold where the committed code deletes the entry');
+    P_('R12', rows.every(r => r.afterOff !== r.before || r.before === 0),
+       'PERSISTENCE — with the guard OFF the stored value DOES change, so R11 is not vacuous');
 }
 
 console.log('\n' + '='.repeat(80));
