@@ -7,6 +7,143 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-011 — discriminator completeness, required prospectively of every frozen hypothesis
+
+**Date:** 2026-09-09 · **Authority:** Director ruling of 2026-09-09, following the terminal UQ-A
+interpretation gate · **Status:** in force
+**Scope:** **PROSPECTIVE ONLY.** This is a governance decision about how future pre-registrations are
+written. It authorises no experiment, creates no observable, specifies no protocol, generates or
+inspects no seed, and modifies no frozen artifact. M7 at `707cb1e`, M8 at `f9d97b9`, M9 at
+`04dda03`/`9044c3b`, Q1 at `d16d568`/`057ceb0`/`21c7238`, U1 at `a0d99f4`/`e4a1d09`, UQ-A at
+`63247bb`/`5d04469`/`31aef86` — all unchanged and all unreopened.
+
+### 1. Decision
+
+**Before a pre-registration is frozen, every hypothesis it states must carry a DISCRIMINATOR — the
+thing that would decide it. A hypothesis whose discriminator is absent is not ready to be frozen.**
+
+The remedy for an incomplete hypothesis is to complete it or to decline to state it. It is never to
+supply the missing piece after the data exist.
+
+### 2. The seven required elements
+
+| | Element | Satisfied when |
+|---|---|---|
+| **1** | **Discriminator** | the hypothesis names what would tell it apart from its alternatives |
+| **2** | **Observables** | the exact quantities that discriminator consumes are named and are already measurable, or are specified to be created |
+| **3** | **Comparison or decision rule** | the exact operation on those observables, and the exact criterion applied to the result |
+| **4** | **Refutation criteria** | what observation would refute the hypothesis, stated so that it *could* occur |
+| **5** | **Identifiability audit** | a demonstration, from committed source, that the discriminator is computable from the data the study will actually register |
+| **6** | **Stopping / minimum-evidence rule** | where applicable, pre-declared, with the disposition when it is unmet |
+| **7** | **Post-hoc prohibition** | an explicit statement that the discriminator may not be added, altered or relaxed after any result is observed |
+
+**Element 4 is not satisfied by a condition that cannot occur, nor by one that occurs by
+construction.** Both are vacuity, and both are independent of sample size.
+
+### 3. Why — three completed studies, three distinct failure modes
+
+| Study | Failure mode | Missing element | Where it was caught |
+|---|---|---|---|
+| **U1** | **Unidentifiable observable** — every candidate at the executed-behaviour layer is evaluated on the same object whose staleness constitutes the exposure | **2**, and therefore **5** | at formulation, before any data — D-010 |
+| **Q1** | **Insufficient material** — 17 accepted configurations against a pre-declared minimum of 20 | **none.** Element 6 was present and it worked | at collection close — the study reported `INCONCLUSIVE — INSUFFICIENT MATERIAL` rather than extending the range |
+| **UQ-A** | **Undecidable** — evidence complete, sound, deterministic and sufficient; no frozen rule to decide the directional hypotheses | **3**, and therefore **4** for H1/H3 | at the interpretation gate, after collection |
+
+**Q1 is in this table as the case where the rule already held.** Its stopping rule was pre-declared,
+the yield fell short, and the study closed cleanly on its own pre-declared disposition instead of
+drifting. Element 6 is required because Q1 demonstrates what it buys, not because Q1 lacked it.
+
+**UQ-A is the case that motivates elements 3 and 4.** Its §4 states plainly, on one line and in the
+frozen text's own words:
+
+> **No threshold is pre-registered for "materially indistinguishable"** — see §11.
+
+Its §11 in turn forbids the cross-configuration aggregate that a directional comparison would
+require. H1 (*improves*) and H3 (*degrades*) were
+therefore undecidable **before any datum existed** — visible in the frozen text itself. H0 and H2
+were decidable and were decided, because §14b gave them a threshold-free discriminator. The
+difference between the two pairs of hypotheses inside one frozen document is the clearest available
+statement of what this rule is for.
+
+**This is a promotion of an existing case ruling, not a new invention.** D-007 §4 already found that
+Q1 §9.5 *"admits no non-vacuous decision rule"* and retired it, recording: **"Increasing the sample
+cannot repair a missing decision rule."** D-011 raises that finding from one claim inside one study
+to a standing requirement on every future pre-registration.
+
+### 4. The rule is already practised — two exemplars to copy
+
+- **M8 §11**, the H5 composite decision rule: two named denominators and an explicit accept
+  criterion, frozen as a pre-data design choice.
+- **UQ-A §14b**, the liveness criterion: **threshold-free** — *LIVE iff the argmax flip rate is
+  strictly greater than zero* — discrete, requiring no threshold, and mechanistically exact because
+  only the winning candidate is executed.
+
+**§14b is the preferred shape.** Where a discriminator can be made discrete and threshold-free, it
+should be. A discriminator is not required to be a statistical test and usually should not be one.
+
+### 5. What D-011 does NOT require
+
+Stated explicitly, because a rule that grows is a rule that stops being used.
+
+- **No statistical test, p-value, confidence interval or effect size.** D-011 weakens no existing
+  prohibition on any of them; a frozen threshold-free criterion satisfies element 3 completely.
+- **No new document, artifact class or file.** The seven elements live inside the pre-registration
+  that already exists.
+- **No separate identifiability report.** A section suffices. U1's identifiability finding was a
+  short set of source facts, and it was decisive.
+- **No new review step, approval stage or sign-off loop.**
+- **No requirement that every hypothesis be decidable.** A question may be recorded as explicitly
+  undecidable on the current substrate — that is exactly what D-010 did for U1. What D-011 forbids
+  is discovering the undecidability *after* collecting the evidence.
+- **No renumbering, reformatting or migration of any existing document.**
+
+### 6. Retroactivity — none
+
+**D-011 has no retroactive effect.** It may not be cited to reinterpret, reopen, retire, extend,
+re-collect or add any analysis to U1, Q1, UQ-A or any predecessor study, nor to justify a post-hoc
+aggregate for UQ-A.
+
+Stated plainly so it cannot be mistaken later: **UQ-A could not have been frozen in its present form
+under D-011.** That is what a prospective rule means. It is not a criticism of UQ-A, whose collection
+executed its own frozen protocol completely — the entire registered range, 96 paired configurations,
+accounting closed, deterministic across two independent executions, verified on a clean checkout.
+UQ-A's conclusions stand exactly as ruled.
+
+### 7. Compatibility with the research constitution
+
+| Constitutional source | Check |
+|---|---|
+| `00_project_definition.md` §2 — *every mechanism must be supported by a clearly defined hypothesis, measurable evaluation criteria, reproducible experiments, and explicit comparisons* | **Consistent, and operational.** D-011 makes "measurable evaluation criteria" checkable at freeze time instead of at interpretation time. |
+| `00_research_axioms.md` — evaluation framework item 7, *Falsifiability* | **Consistent.** Element 4 is falsifiability stated per hypothesis rather than per axiom. |
+| `01_core_question.md` — the single guiding question | **No competition.** D-011 states no question and ranks no candidate. |
+| Anti-vacuity discipline (M7-ERR-10) — *controls must bind the measurement input* | **Consistent, same principle one level up.** A control must be able to fail; so must a hypothesis. |
+| The no-tuning rule — *never tune parameters or thresholds* | **Consistent.** Freezing a criterion before data is the opposite of tuning; element 7 forbids the tuning case explicitly. |
+| Descriptive-only statistics policy (M9 §, Q1 §10, UQ-A §11) | **Consistent.** §5 above forbids reading D-011 as a mandate for inferential machinery. |
+| One-ruling-per-entry, append-only ledger | **Consistent.** This entry rules on one thing and supersedes nothing. |
+
+**No contradiction found.** D-011 adds a completeness check at a point in the workflow that
+previously had none, and removes nothing.
+
+### 8. What is NOT authorised
+
+This decision authorises **nothing** beyond how future pre-registrations are written. In particular
+it does **not** authorise: UQ-B; any further uncertainty experiment; any new experiment, mechanism,
+observable, instrument, probe or capture site; any implementation; any seed generation or
+inspection; any additional sampling of any completed study; or any re-analysis.
+
+No protocol, seed range, tick budget, arm, sample size, instrumentation or analysis is specified
+anywhere in this decision, and none may be inferred from it.
+
+### 9. Governance consequence
+
+D-001 through D-010 are preserved byte-for-byte; this entry is append-only and supersedes nothing.
+No frozen artifact, raw evidence file or result artifact is modified, and every digest revalidates.
+No M7, M8, M9, Q1, U1 or UQ-A result is reinterpreted, and none is authorised to bear on the G15
+outcome.
+
+The next milestone, whatever it is, requires its own authorisation.
+
+---
+
 ## D-010 — U1 closed as unidentifiable on the current observational substrate
 
 **Date:** 2026-09-03 · **Authority:** Director ruling of 2026-09-03, following the internal
