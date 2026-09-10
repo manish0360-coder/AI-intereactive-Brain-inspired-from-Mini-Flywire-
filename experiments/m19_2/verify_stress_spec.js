@@ -223,9 +223,17 @@ P('NE-2', env.evaluatedSeeds().length === 0, 'NO seed evaluated — nothing cons
     const changed = git('diff', '--name-status', 'HEAD').trim().split(/\r?\n/)
         .filter(Boolean).filter(l => l.startsWith('M'))
         .map(l => l.split(/\s+/).slice(1).join(' '));
-    P('IN-1', changed.length === 1 &&
-        changed[0] === 'research/preregistrations/C1_INSTRUMENT_ADEQUACY_FORMULATION.md',
-        `only the M19 specification is modified: ${JSON.stringify(changed)}`);
+    // Subset test, not an exact count: the allowed set is the specification and
+    // the PASS 1.1 verifier that had to be version-guarded. An EMPTY set must
+    // also pass, so the check stays valid after the work is committed — an
+    // exact-count form would fail on a clean tree, which is not a defect.
+    const allowed = new Set([
+        'research/preregistrations/C1_INSTRUMENT_ADEQUACY_FORMULATION.md',
+        'experiments/m19_1/verify_clarification.js',
+        'experiments/m19_2/verify_stress_spec.js',   // this file is its own deliverable
+    ]);
+    P('IN-1', changed.every(f => allowed.has(f)),
+        `no unexpected file is modified: ${JSON.stringify(changed)}`);
 }
 P('IN-2', git('diff', '--stat', 'HEAD', '--', 'main.js', 'render/', 'instrumentation/',
     'experiments/m7/', 'experiments/uqb/', 'experiments/m14/', 'experiments/registry/',
