@@ -114,3 +114,7 @@ experiments/c1/results/*.sha256    -text
 # because verify_interpretation.js lifts the C1 v2.0 §15.3 required phrasing out of the
 # prereg and asserts the memo reproduces it verbatim.
 research/preregistrations/C1_INTERPRETATION.md -text
+
+# M21 formulation memo — gated by verify_m21.js, which matches text in the memo
+# against figures re-derived from the committed artifacts.
+research/preregistrations/M21_NEXT_RESEARCH_QUESTION.md -text
