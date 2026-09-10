@@ -109,3 +109,8 @@ experiments/c1/data/*.jsonl        -text
 experiments/c1/data/INTEGRITY.sha256 -text
 experiments/c1/results/*.json      -text
 experiments/c1/results/*.sha256    -text
+
+# C1 interpretation memo — quoted frozen text must survive checkout byte-identically,
+# because verify_interpretation.js lifts the C1 v2.0 §15.3 required phrasing out of the
+# prereg and asserts the memo reproduces it verbatim.
+research/preregistrations/C1_INTERPRETATION.md -text
