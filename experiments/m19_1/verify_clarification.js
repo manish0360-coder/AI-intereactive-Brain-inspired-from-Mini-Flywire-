@@ -26,6 +26,18 @@ const FLAT = MEMO.replace(/^\s*>\s?/gm, '').replace(/\s+/g, ' ');
 const doc = (s) => FLAT.includes(s.replace(/\s+/g, ' '));
 const gone = (s) => !FLAT.includes(s.replace(/\s+/g, ' '));
 
+// SUPERSEDED BY experiments/m19_2/verify_stress_spec.js
+//   This verifier encodes PASS 1.1, whose satisfaction standard was S1 + S2 and
+//   whose outcomes included MARGINAL. PASS 1.2 reframed the diagnostic as a
+//   stress test for known failure modes and REMOVED S1 and S2 under Director
+//   authorisation. Running PASS 1.1's assertions against PASS 1.2 would report a
+//   FAIL meaning "the specification was legitimately reframed".
+if (!/\*\*Milestone:\*\* M19 PASS 1\.1/.test(MEMO)) {
+    console.log('M19 PASS 1.1 verifier: SUPERSEDED — the specification is no longer PASS 1.1.');
+    console.log('Run experiments/m19_2/verify_stress_spec.js, authoritative for PASS 1.2.');
+    process.exit(0);
+}
+
 let pass = 0, fail = 0;
 const P = (id, cond, msg) => {
     if (cond) { pass++; console.log(`PASS  ${id.padEnd(7)} ${msg}`); }

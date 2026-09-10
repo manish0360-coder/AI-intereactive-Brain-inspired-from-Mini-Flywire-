@@ -1,10 +1,11 @@
-# C1 Instrument-Adequacy — Formulation and Frozen Diagnostic Specification (M19 PASS 1.1)
+# C1 Pre-Collection Instrument Stress Test — Frozen Specification (M19 PASS 1.2)
 
-**Status:** FORMULATION AND FROZEN SPECIFICATION, v1.1. **THE DIAGNOSTIC HAS NOT BEEN RUN.**
-**Milestone:** M19 PASS 1.1 (supersedes the M19 PASS 1 formulation at `7e6617f`)
+**Status:** FROZEN SPECIFICATION, v1.2 — a **PRE-COLLECTION INSTRUMENT STRESS TEST**, not an
+adequacy certification. **THE STRESS TEST HAS NOT BEEN RUN.**
+**Milestone:** M19 PASS 1.2 (supersedes PASS 1.1 at `7198b46` and PASS 1 at `7e6617f`)
 **Date:** 2026-09-10
 **Author:** Chief Systems Engineer
-**Authority:** Director ruling of 2026-09-10 — *M19 PASS 1.1, adequacy decision-rule clarification*
+**Authority:** Director ruling of 2026-09-10 — *M19 PASS 1.2, reframe as pre-collection stress test*
 
 **Binds to:** `C1_PREREGISTRATION.md` v2.0 (M17, digest
 `a2168c418aaf64b84a3170dba7bd11b4776afd2e0ba8ac1bf42b7c0880f95439`, commit `f57820b`) §12
@@ -32,24 +33,32 @@ response — never by a test on data, and (per §0.1) never fully established be
 `futureScore`, and none may be reported as a C1 finding. This is the same fence M14 operated
 under, and for the same reason.
 
-### 0.1 The gate's epistemic status — it falsifies, it does not certify
+### 0.1 What this is: a stress test for KNOWN failure modes
 
-**This gate cannot establish that the instrument is adequate on the registered block, and v1.1 does
-not claim it can.**
+**v1.2 reframes this diagnostic. It is a PRE-COLLECTION INSTRUMENT STRESS TEST, not an adequacy
+certification.**
 
-The fixtures live in `896xxx`; the registered block is `895000–895999`. Concluding from the former
-to the latter is a **sampling-frame inference**, and this program has no sampling frame — that
-absence is precisely why M17 deleted C1's entire inferential layer. Adequacy on `895xxx` is
-therefore not establishable before collection, **with or without a numerical threshold**. The
-threshold question, which prompted this revision, turns out to be secondary to a prior one.
+Its purpose is narrow and stated exactly: **to detect, before the registered C1 block is consumed,
+the specific classes of E6 measurement failure this program has already identified** (§2.4). It
+looks for known faults. It does not survey unknown ones, and it does not certify.
 
-What the gate can do is **detect a failure**. If the instrument is degenerate on the fixtures, that
-is a fact about the instrument and it blocks collection. If no failure is detected, the correct
-conclusion is *"no adequacy failure was detected on the fixtures examined"* — not *"the instrument
-is adequate"*.
+**The three outcomes, and what each may be said to mean:**
 
-The gate is therefore **asymmetric by construction**: a failure is informative and blocking; a
-non-failure is permissive but not probative. §6 names the outcomes accordingly.
+| Outcome | Meaning — verbatim, and no other reading is permitted |
+|---|---|
+| **NO KNOWN FAILURE DETECTED** | *The stress test did not detect the specified failure modes on the examined development fixtures.* |
+| **KNOWN FAILURE DETECTED** | *A specified failure mode was detected. This is sufficient reason to block C1 collection pending repair.* |
+| **INSTRUMENT ADEQUATE FOR C1** | **NOT established by this diagnostic. This conclusion must never appear in any report of it.** |
+
+Why the third is impossible here: the fixtures live in `896xxx` and the registered block is
+`895000–895999`. Concluding from one to the other is a **sampling-frame inference**, and this
+program has no sampling frame — the same absence that forced M17 to delete C1's entire inferential
+layer. No amount of fixture evidence, and no numerical threshold, repairs that.
+
+The stress test is therefore **asymmetric by construction**: a detected failure is informative and
+blocking; a non-detection is permissive but not probative. §6 names the outcomes accordingly.
+
+**`NO KNOWN FAILURE DETECTED` is a permission to proceed, not a finding about the instrument.**
 
 ---
 
@@ -85,7 +94,7 @@ established*. Silently equating them is how an existence-based gate can pass on 
 |---|---|---|
 | **Exercisable** | Some attainable data would satisfy the criterion; it is not unsatisfiable by construction | Reasoning about the measurement space, **before** any run |
 | **Observed** | At least one instance satisfying the criterion appears in the data | Bare existence — the v1.0 standard |
-| **Sufficiently demonstrated** | The observation is not an artifact of a single cell, and it reproduces across the strata the frozen design already defines | §2.3 |
+| **Sufficiently demonstrated** | The observation is not an artifact of a single cell, and it reproduces across the strata the frozen design already defines | **Not this diagnostic's standard** — see §1.4 |
 | **Instrument is adequate** | The instrument will produce a non-degenerate description **on the registered block** | **Not establishable pre-collection** (§0.1) |
 
 **`Exercisable` ⇏ `Observed` ⇏ `Sufficiently demonstrated` ⇏ `Adequate`.** None of these
@@ -109,9 +118,35 @@ reason in §0.1. So:
 > is missing, but because the fixture-to-block step is an inference this program has no basis to
 > make.** No threshold, arbitrary or derived, would repair that.
 
-The minimum defensible alternative, adopted in §2.3 and §6, is therefore twofold: **raise the
-evidential standard from `Observed` to `Sufficiently demonstrated` without introducing any
-threshold**, and **rename the gate's output so it claims only what it can support.**
+### 1.4 What follows for the stress test — and why `Sufficiently demonstrated` is NOT its standard
+
+v1.1 answered the insufficiency of bare existence by raising the evidential standard to
+`Sufficiently demonstrated`, via two robustness rules (leave-one-out, per-stratum replication).
+**v1.2 removes both.** They were building evidence toward a certification the gate does not attempt,
+and §2.3 gives the argument in full.
+
+Under the stress-test frame the operative logic is different, and simpler:
+
+> Each known failure mode is a **universal statement** about the instrument — "`δ = 0` everywhere",
+> "`r` is constant everywhere", "no pool is graded anywhere". **A universal statement is falsified by
+> a single counterexample.** One genuine non-zero `δ` refutes inertness as a matter of logic, not of
+> evidential weight.
+
+So the three concepts remain distinct and remain worth naming — and the stress test deliberately
+operates at the middle one:
+
+- **`Exercisable`** is established before running, by reasoning about the measurement space.
+- **`Observed`** — a single counterexample — is **logically sufficient to falsify a universal failure
+  mode**, and is therefore the stress test's operative standard.
+- **`Sufficiently demonstrated`** remains defined, and remains **something this diagnostic does not
+  claim**. It was the right standard for certification; certification is not what this is.
+
+**The narrow-falsification caveat, handled by disclosure rather than by a rule.** A failure mode
+falsified by one counterexample out of hundreds is *technically* refuted while describing an
+instrument that barely responds. "Barely" is a matter of **degree**, and converting degree into a
+verdict requires a threshold this program can neither derive nor invent. The stress test therefore
+**reports every count in full** so narrowness is visible, and **does not adjudicate it**. A narrowly
+falsified failure mode is reported as narrowly falsified, and the judgment is the Director's.
 
 ---
 
@@ -147,45 +182,73 @@ No criterion requires "at least *k*" defined cells, configurations, or non-zero 
 `k > 1`. Any such `k` would be invented. Instead the criteria are existence-based, **and every
 count is reported in full** so marginality is visible rather than hidden behind a cutoff.
 
-### 2.3 The satisfaction standard — from `Observed` to `Sufficiently demonstrated`
+### 2.3 The satisfaction standard — WITHDRAWN, and why
 
-v1.0 required bare existence. v1.1 replaces that with **two robustness properties, neither of which
-is a count, a percentage, an effect size, or a sample size.** A criterion counts as
-`Sufficiently demonstrated` only when **both** hold.
+v1.1 required each criterion to be `Sufficiently demonstrated` via two rules: **S1** leave-one-out
+robustness and **S2** per-stratum replication. **v1.2 removes both.** They are not preserved merely
+because they were formulated; they were re-examined against the reframed purpose and do not earn
+their place.
 
-#### S1 — Leave-one-out robustness
+**Why S1 is unnecessary.** S1 guarded against a criterion being satisfied by a single-cell
+*artifact*. But **A5 already does that work**: A5 requires that re-measuring the same arm twice
+yields `δ = 0` at **every** cell, which excludes apparatus artefact outright. With A5 holding, any
+non-zero `δ` is a real response, and one real counterexample falsifies inertness as a matter of
+logic. S1 added a second guard against a hazard A5 had already closed.
 
-> The criterion still holds after deleting **any single** observation from the fixture set.
+**Why S2 is unnecessary.** S2 required replication across the four goal indices × {Set C, Set F}.
+Replication accumulates evidence *toward a general claim* — which is exactly what §0.1 forbids this
+diagnostic from making. Falsifying a universal failure mode does not require it: one counterexample
+anywhere suffices. S2 was therefore building toward a certification the gate does not attempt, at
+the cost of a conjunction rule that could return `MARGINAL` for reasons that are properties of the
+environment rather than faults of E6.
 
-This is a **robustness property, not a quantity**: it says the conclusion does not rest on one
-cell. It happens to imply at least two instances, but `2` is **derived** from
-"not-dependent-on-a-single-observation" rather than chosen — the same style of derivation as the
-`n ≥ 3` boundary in §2.1. No larger number is imposed, because no larger number is derivable.
+**What replaces them: nothing, plus full disclosure.** The stress test's standard is a single
+genuine counterexample per failure mode (§1.4), and **every count is reported in full** (§5, §6) so
+that a narrow falsification is visible rather than hidden. **No replacement threshold, percentage,
+count or effect size is introduced.**
 
-#### S2 — Replication across the design's own strata
+**Set C / Set F is preserved — as reporting, not as a conjunction rule.** The split still exists to
+expose the circularity in §4, and results are reported **separately for each set**. But a failure
+detected in *either* set is a failure, and a failure mode falsified in *either* set is falsified;
+neither set is required to replicate the other. This preserves the circularity disclosure while
+removing S2's arbitrary conjunction.
 
-> Wherever the criterion's precondition arises, the criterion holds **independently within each
-> stratum** of the partition the frozen design already defines: the **four frozen goal indices**
-> × **{Set C, Set F}** (§4).
+**Applicable vs satisfied is preserved.** Where a failure mode's precondition never arises — for
+example A9 requires the two phase oracles to disagree somewhere — that is reported
+**`NOT EXERCISABLE`**, never silently counted as a success and never counted as a failure.
 
-The strata are **not chosen by this document**. The four goal indices are frozen in the C1
-substrate; the Set C / Set F split already exists to break the circularity in §4. S2 adds no new
-partition and no new number.
+### 2.4 The known failure-mode register — the complete list this stress test looks for
 
-**Applicable vs satisfied — these are distinguished, not conflated.** If a criterion's precondition
-never arises in a stratum (for example, `A9` requires the two phase oracles to disagree somewhere,
-which is a property of the configuration), that stratum is reported as **`NOT EXERCISABLE`**. A
-stratum where the criterion is exercisable but unsatisfied is a **failure**. Silence about which of
-the two occurred would be the conflation this section exists to prevent, so both are reported per
-stratum.
+The stress test detects **these failure modes and no others**. Each is a **universal statement about
+the instrument**, and each is therefore **falsifiable by a single genuine counterexample** (§1.4).
+Each is drawn from a fault this program has already identified — none is hypothetical.
 
-**What S1 and S2 do not do.** They raise the standard from `Observed` to
-`Sufficiently demonstrated` on the fixtures examined. They do **not** reach `Adequate` (§0.1, §1.3),
-and no accumulation of fixture evidence would.
+| ID | Known failure mode | Universal form | Falsified by | Detector | Where it was identified |
+|---|---|---|---|---|---|
+| **K1** | **Undefined** — the instrument produces nothing to describe | `ρ` undefined in every cell | one jointly-defined cell | A1, A2 | M14: `n = 1` cases and 3 undefined cells |
+| **K2** | **Inert** — no response to the treatment | `δ = 0` in every cell | one non-zero `δ` | A4, A11 | UQ-B C2's `0/71` |
+| **K3** | **Noisy** — response when nothing changed | some `δ ≠ 0` on a same-arm re-measurement | *(not falsified by example — see below)* | **A5** | general apparatus risk |
+| **K4** | **Stuck** — no response when the tracked reference changes | rank identical for `v*₁` and `v*₂` wherever they differ | one cell where the rank differs | **A9** | the blindness half of UQ-B's ambiguity |
+| **K5** | **Normalisation artifact** — variation reports pool size, not rank | every non-zero `δ` is normalisation-driven | one cell with `r_A ≠ r_B` | **A6, A7** | M14: 31 of 149 cells normalisation-only |
+| **K6** | **Coarse** — resolution collapses to binary | no defined pool has `n ≥ 3` | one pool with `n ≥ 3` | A8 | **the UQ-B lesson**: measurable and variable, yet non-informative |
+| **K7** | **Forced** — the description could not have differed | `r` identical in every defined cell | two distinct `r` values | A10 | UQ-B C2's unattainable outcome |
+| **K8** | **Saturated** — the instrument is pinned at an extreme | `\|δ\| = 1` in every cell | one interior `δ` | A11 | resolution risk, symmetric to K2 |
+
+**K3 is the one that is not falsified by example, and that asymmetry is deliberate.** K3 asserts the
+*presence* of spurious response; a counterexample would be a single quiet cell, which proves
+nothing. A5 therefore requires the **universal** condition — `δ = 0` at **every** cell of a
+same-arm re-measurement — and a single violation **detects** K3 rather than falsifying it. A5 is
+consequently the one criterion where an exception is fatal rather than informative, and it is what
+licenses reading any non-zero `δ` elsewhere as a real response (§2.3).
+
+**Nothing outside this register is a failure for the purposes of this gate.** A property not listed
+here — however undesirable — is reported descriptively and does **not** produce
+`KNOWN FAILURE DETECTED`. Adding a failure mode after the stress test runs is forbidden by §6's
+anti-tuning rule.
 
 ---
 
-## 3. The adequacy criteria
+## 3. The detectors for the known failure modes
 
 All are evaluated on non-registered development fixtures (§4). `cell` means a
 (fixture, phase, state) triple for which the relevant quantity is defined.
@@ -320,18 +383,23 @@ production code and seed governance are all unmodified.
 
 ## 6. Acceptance criteria and outcomes
 
-The outcome names are **renamed in v1.1** so they claim only what §0.1 permits. `ADEQUATE` is
-withdrawn: no result of this gate can certify adequacy.
+The outcomes are those fixed in §0.1. `ADEQUATE` was withdrawn in v1.1; `MARGINAL` is withdrawn in
+v1.2 along with S1 and S2, since it existed only to flag a failure of those rules.
 
 | Outcome | Condition | What it licenses |
 |---|---|---|
-| **NO FAILURE DETECTED** | Every criterion is `Sufficiently demonstrated` (§2.3: S1 **and** S2), on every stratum where it is exercisable | Collection **may** proceed, subject to a Director ruling. It does **not** assert the instrument is adequate |
-| **MARGINAL** | Every criterion is `Observed`, but at least one fails **S1** (rests on a single observation) or **S2** (does not replicate across a stratum where it is exercisable) | **Escalates. Does not permit collection** |
-| **FAILURE DETECTED** | Any criterion is exercisable in a stratum and unsatisfied there | **Blocks collection.** The criterion and its diagnosis are reported |
-| **NOT EXERCISABLE** | Reported *per criterion per stratum* where the precondition never arises | Neither pass nor fail; disclosed so silence is never read as success |
+| **NO KNOWN FAILURE DETECTED** | Every failure mode in the §2.4 register is either **falsified** by at least one genuine counterexample, or **`NOT EXERCISABLE`**; and **A5 holds at every cell** | Collection **may** proceed, subject to a Director ruling. It asserts only that *the specified failure modes were not detected on the examined development fixtures* |
+| **KNOWN FAILURE DETECTED** | Any failure mode in the register is exercisable and **not** falsified, or **A5 is violated at any cell** | **Blocks C1 collection pending repair.** The mode, its detector and its diagnosis are reported |
+| **NOT EXERCISABLE** | Reported **per failure mode, per fixture set** where the precondition never arises | Neither detection nor falsification; disclosed so silence is never read as success |
 
-**`NO FAILURE DETECTED` is a permission, not a finding.** The phrase "the instrument is adequate"
-may not appear in any report of this diagnostic.
+**Mandatory disclosure with every outcome.** The full counts behind each falsification are reported
+— how many counterexamples, in which fixture set, at which goal index — so that a **narrowly
+falsified** mode is visible as such (§1.4). Narrowness is **reported, never adjudicated**: turning
+it into a verdict would require a threshold this document refuses to invent.
+
+**`NO KNOWN FAILURE DETECTED` is a permission to proceed, not a finding about the instrument.** The
+conclusion **"INSTRUMENT ADEQUATE FOR C1" is not established by this diagnostic and must never
+appear in any report of it.**
 
 **No criterion may be relaxed, and no threshold introduced, after the diagnostic runs.** If a
 criterion proves unsatisfiable, that is a finding about the instrument and returns to the Director —
@@ -378,10 +446,10 @@ and is untestable by this diagnostic, which measures the instrument and not the 
 It cannot establish that `futureScore` changes oracle-alignment, that any effect exists, or
 anything cognitive or representational.
 
-It also **cannot establish that the instrument is adequate** (§0.1, §1.3). It can detect a failure
-on the fixtures examined, and it can fail to detect one. A `NO FAILURE DETECTED` outcome licenses
-**collection** and nothing else — it is a permission, not a finding, and the phrase "the instrument
-is adequate" may not appear in any report of this diagnostic.
+It also **cannot establish that the instrument is adequate** (§0.1, §1.3), and it does not look for
+unknown faults — only for the register in §2.4. A `NO KNOWN FAILURE DETECTED` outcome licenses
+**collection** and nothing else. It is a permission, not a finding, and the conclusion
+**"INSTRUMENT ADEQUATE FOR C1" must never appear in any report of this diagnostic.**
 
 Nor do its controls establish that E6 is sensitive to every change the treatment could produce
 (§3.1). An inert C1 result would remain ambiguous, and that ambiguity must be reported rather than
