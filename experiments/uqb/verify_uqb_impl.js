@@ -69,9 +69,62 @@ const mainRaw = fs.readFileSync(path.join(ROOT, 'main.js'), 'utf8');
 const mainSrc = mainRaw.split('\r\n').join('\n');
 const mainCRLF = mainSrc.split('\n').join('\r\n');
 const anchors = I.anchorLines(mainSrc);
-P_('Z2', anchors.loop === 1594 && anchors.imaginedFuture === 1841
-       && anchors.futureBonus === 1860 && anchors.bestChoice === 2365,
-   `anchors resolve to the audited lines ${JSON.stringify(anchors)}`);
+
+// ---------------------------------------------------------------------------
+// SOURCE BINDING for the line-number pins (M18.1)
+//
+// Z2 and J3 pin ABSOLUTE line numbers. Those numbers were audited against, and
+// are only meaningful for, the main.js that UQ-B was verified and collected
+// against — blob 537f37a2, identical across 1cc441f (the UQ-B collection),
+// b7820b0 (M9) and 0227a5f (M10).
+//
+// M11's Director-authorised canReachGoal repair (0f47d7b) inserted 13 comment
+// lines ABOVE the audited region, translating every pin by +13. The pins did
+// not become wrong; the source they describe was superseded.
+//
+// They are therefore NOT re-pinned to the current numbers. Re-pinning would
+// silently rewrite what UQ-B was verified against, and UQ-B's evidence was
+// collected before the repair (1cc441f is an ancestor of 0f47d7b).
+//
+// Instead: on the bound source the original pins are asserted exactly as
+// before; off it, the assertion becomes the property that still carries
+// meaning — that the audited region was TRANSLATED, not restructured. That is
+// a real check, not a suppression: it fails if anything inside the audited
+// region moves relative to anything else.
+// ---------------------------------------------------------------------------
+const UQB_SOURCE_BINDING = Object.freeze({
+    digest: '537f37a20144de07e39e2273ee2e78777e4c0f8ec3259b1e033f8a897d522e2b',
+    provenance: '1cc441f (UQ-B collection) through 0227a5f (M10); superseded by 0f47d7b (M11)',
+    anchors: Object.freeze({ loop: 1594, imaginedFuture: 1841, futureBonus: 1860, bestChoice: 2365 }),
+    span: Object.freeze({ start: 1390, end: 3033 }),
+});
+const mainDigest = crypto.createHash('sha256').update(mainSrc).digest('hex');
+const onBoundSource = mainDigest === UQB_SOURCE_BINDING.digest;
+if (!onBoundSource) {
+    console.log(`      SOURCE BINDING — the line pins belong to main.js ` +
+        `${UQB_SOURCE_BINDING.digest.slice(0, 16)} (${UQB_SOURCE_BINDING.provenance}).`);
+    console.log(`      Working tree is ${mainDigest.slice(0, 16)}; Z2/J3 assert translation ` +
+        `invariance instead of absolute lines. Pins are NOT re-pinned.`);
+}
+
+if (onBoundSource) {
+    P_('Z2', anchors.loop === UQB_SOURCE_BINDING.anchors.loop
+           && anchors.imaginedFuture === UQB_SOURCE_BINDING.anchors.imaginedFuture
+           && anchors.futureBonus === UQB_SOURCE_BINDING.anchors.futureBonus
+           && anchors.bestChoice === UQB_SOURCE_BINDING.anchors.bestChoice,
+       `anchors resolve to the audited lines ${JSON.stringify(anchors)}`);
+} else {
+    const B = UQB_SOURCE_BINDING.anchors;
+    const shift = anchors.loop - B.loop;
+    const translated =
+        anchors.imaginedFuture - B.imaginedFuture === shift &&
+        anchors.futureBonus    - B.futureBonus    === shift &&
+        anchors.bestChoice     - B.bestChoice     === shift;
+    P_('Z2b', translated,
+       `SOURCE-BOUND — every audited anchor is displaced by exactly ${shift} lines, so the ` +
+       `audited region is translated, not restructured. Audited ${JSON.stringify(B)} ` +
+       `-> current ${JSON.stringify(anchors)}`);
+}
 
 // ==========================================================================
 console.log('\n-- I. production safety: default-off is bit-identical ----------------------');
@@ -482,9 +535,23 @@ P_('C2', R1.states.every(u => R1.arms.ARMED.rows[0].best[u] === R1.arms.ARMED.of
             for (const ch of L[i]) { if (ch === '{') { d++; seen = true; } else if (ch === '}') d--; }
             if (seen && d === 0) { end = i; break; }
         }
-        P_('J3', start + 1 === 1390 && end + 1 === 3033,
-           `SPAN — runPrediction spans main.js:${start + 1}..${end + 1}; the closure audit must ` +
-           'cover all of it, not merely the STEPS loop that ends at 2722');
+        // Source-bound, exactly as Z2 above: on the audited source the original
+        // pins hold; off it, the surviving property is that the span was
+        // translated whole rather than resized.
+        if (onBoundSource) {
+            P_('J3', start + 1 === UQB_SOURCE_BINDING.span.start
+                   && end + 1 === UQB_SOURCE_BINDING.span.end,
+               `SPAN — runPrediction spans main.js:${start + 1}..${end + 1}; the closure audit ` +
+               'must cover all of it, not merely the STEPS loop that ends at 2722');
+        } else {
+            const S = UQB_SOURCE_BINDING.span;
+            const shift = (start + 1) - S.start;
+            const sameLength = (end + 1) - (start + 1) === S.end - S.start;
+            P_('J3b', sameLength && (end + 1) - S.end === shift,
+               `SOURCE-BOUND — runPrediction spans main.js:${start + 1}..${end + 1}, a ` +
+               `${shift}-line translation of the audited span ${S.start}..${S.end} with its ` +
+               `length unchanged at ${S.end - S.start}; the closure audit still covers all of it`);
+        }
 
         // The unfrozen writer the truncated span hid.
         const tail = L.slice(2722, end + 1).join('\n');
