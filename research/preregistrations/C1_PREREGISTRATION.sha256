@@ -1,30 +1,32 @@
 # C1 PRE-REGISTRATION — INTEGRITY RECORD
 #
 # Artifact : research/preregistrations/C1_PREREGISTRATION.md
-# Version  : 1.1 — FINAL FREEZE CANDIDATE, NOT AUTHORISED FOR COLLECTION
-# Frozen   : 2026-09-09, Chief Systems Engineer, under the Director ruling of
-#            2026-09-09 (M16, final C1 preregistration freeze)
+# Version  : 2.0 — DESCRIPTIVE REFORMULATION, freeze candidate,
+#            NOT AUTHORISED FOR COLLECTION
+# Frozen   : 2026-09-10, Chief Systems Engineer, under the Director ruling of
+#            2026-09-10 (M17, descriptive C1 reformulation) following the
+#            Gemini M16 HOLD
 # Algorithm: SHA-256 over the exact bytes of the file
-# Size     : 31823 bytes, 598 lines
+# Size     : 28556 bytes, 543 lines
 #
 # SUPERSEDES
-#   v1.0 review draft b9520f83cbb3c6d99cac7396936a6f811f8388dfb249cf03a7d26a139474bad1
-#   (commit 10ff372), never authorised for collection; its bytes remain in git
-#   history as the reviewed artifact.
+#   v1.1 ff04df64b2ad73dfbbf03eb1a7e086c7259a97dd34c1ab236964e4a89d8f7219 (49c91d5)
+#   v1.0 b9520f83cbb3c6d99cac7396936a6f811f8388dfb249cf03a7d26a139474bad1 (10ff372)
+#   Neither was authorised for collection; both remain in git history.
 #
-# M16 REPAIRS APPLIED
-#   1. primary test is now the two-sided paired sign-flip PERMUTATION test;
-#      the sign test is demoted to a secondary robustness check
-#   2. the arbitrary jointlyDefined >= 10 rule is REMOVED and replaced by
-#      jointlyDefined >= 1, derived from the estimator, plus a mandatory
-#      sensitivity analysis
-#   3. an asymmetric-missingness rule is added as an outcome-independent
-#      concordance analysis on the asym = 0 subset; NO numeric threshold adopted
-#
-# INHERITS
-#   research/spec/CANDIDATE_ADMISSION_SPEC.md      (M13, e12bb98)
-#   research/preregistrations/C1_SUCCESSOR_FORMULATION_MEMO.md (M14, b825d1a)
-#   source baseline 0f47d7b (M11 canReachGoal repair)
+# M17 REFORMULATION
+#   REMOVED: H0_sym, the sign-flip permutation test, the sign test, Wilcoxon,
+#            alpha, Bonferroni, p-values, the N>=7 rejection-region arithmetic,
+#            EFFECT DETECTED / NO EFFECT DETECTED, the 20-configuration
+#            minimum-evidence rule, and all population-level inferential claims.
+#   PRESERVED: E6, the decision-time population and its machine-checked
+#            ordering, the oracle, n>=2 definedness, pairwise deletion, the
+#            mandatory diagnostics, E1, seed governance, M14 pilot evidence.
+#   REPLACED BY: a census frame. The block is enumerated exhaustively and both
+#            arms are run on every accepted configuration under a deterministic
+#            runtime, so per-configuration effects are EXACT measurements and
+#            the census summaries are exact descriptions, not estimates.
+#            Generalisation beyond the enumerated configurations is forbidden.
 #
 # STATUS
 #   NO registered seed consumed. Registered block 895000-895999 is UNTOUCHED.
@@ -32,4 +34,4 @@
 #
 # Verify with : cd research/preregistrations && sha256sum -c C1_PREREGISTRATION.sha256
 #
-ff04df64b2ad73dfbbf03eb1a7e086c7259a97dd34c1ab236964e4a89d8f7219  C1_PREREGISTRATION.md
+a2168c418aaf64b84a3170dba7bd11b4776afd2e0ba8ac1bf42b7c0880f95439  C1_PREREGISTRATION.md

@@ -26,6 +26,24 @@ const MAIN = rd('main.js').split('\n');
 const PRE = rd('research/preregistrations/C1_PREREGISTRATION.md');
 const PILOT = JSON.parse(rd('experiments/m14/m14_attainability.json'));
 
+// SUPERSEDED BY experiments/m17/verify_descriptive.js
+//   This verifier encodes the expectations of C1_PREREGISTRATION.md **v1.1**,
+//   which carried an inferential layer. M17 reformulated the study as purely
+//   descriptive under Director authorisation, removing H0_sym, the permutation
+//   test, alpha and p-values. Running v1.1's assertions against v2.0 would
+//   report a FAIL meaning "the document was legitimately reformulated", not
+//   "the document is wrong" — a false alarm for any future reader.
+//
+//   It therefore guards on the version and exits cleanly when it is not the
+//   version it was written for, and is retained unchanged in substance as the
+//   record of what M16 verified.
+if (!/\*\*Version:\*\* 1\.1/.test(fs.readFileSync(
+        path.join(ROOT, 'research/preregistrations/C1_PREREGISTRATION.md'), 'utf8'))) {
+    console.log('M16 verifier: SUPERSEDED — the preregistration is no longer v1.1.');
+    console.log('Run experiments/m17/verify_descriptive.js, which is authoritative for v2.0.');
+    process.exit(0);
+}
+
 let pass = 0, fail = 0;
 const P = (id, cond, msg) => {
     if (cond) { pass++; console.log(`PASS  ${id.padEnd(7)} ${msg}`); }
