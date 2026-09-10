@@ -1,0 +1,11 @@
+# C1 DESCRIPTIVE CENSUS — INTEGRITY RECORD
+#
+# Protocol  : C1_PREREGISTRATION.md v2.0 a2168c418aaf64b84a3170dba7bd11b4776afd2e0ba8ac1bf42b7c0880f95439
+# Range     : 895000-895999 | agent 20260819000 | 3000 ticks
+# Design    : ARMED + ABLATED | 19 states x 2 phases | E6 rho = r/(n-1)
+# Gate      : M19 PASS 3 (b00fec2) — NO KNOWN FAILURE DETECTED
+#
+# Regenerate with : cd experiments/c1 && C1_COLLECTION_AUTHORISED=1 node run_collection.js
+#
+76ba70efa6f16f0a04046e843ac1fe2378a7b9048f095d1f2a73abee55e7c22b  readouts.jsonl
+408cc04b2b223f1386ade1830c0b5044b31bb840b7acdc91ded6c55a2da40617  candidates.jsonl

@@ -103,3 +103,9 @@ experiments/uqb/data/INTEGRITY.sha256 -text
 # `-text` is required or an end-of-line-converting checkout breaks the digest.
 research/preregistrations/C1_PREREGISTRATION.md     -text
 research/preregistrations/C1_PREREGISTRATION.sha256 -text
+
+# C1 census evidence — the same byte-integrity guarantee as UQ-A's and UQ-B's.
+experiments/c1/data/*.jsonl        -text
+experiments/c1/data/INTEGRITY.sha256 -text
+experiments/c1/results/*.json      -text
+experiments/c1/results/*.sha256    -text
