@@ -28,6 +28,19 @@ const FLAT = MEMO.replace(/^\s*>\s?/gm, '').replace(/\s+/g, ' ');
 const doc = (s) => FLAT.includes(s.replace(/\s+/g, ' '));
 const gone = (s) => !FLAT.includes(s.replace(/\s+/g, ' '));
 
+// SUPERSEDED BY experiments/m19_1/verify_clarification.js
+//   This verifier encodes the M19 PASS 1 formulation, whose criteria were
+//   satisfied by bare existence and whose outcomes were ADEQUATE / MARGINAL /
+//   INADEQUATE. PASS 1.1 raised the satisfaction standard and renamed the
+//   outcomes under Director authorisation. Running PASS 1's assertions against
+//   PASS 1.1 would report a FAIL meaning "the formulation was legitimately
+//   revised" — a false alarm for a future reader.
+if (!/\*\*Milestone:\*\* M19 PASS 1$/m.test(MEMO)) {
+    console.log('M19 PASS 1 verifier: SUPERSEDED — the formulation is no longer PASS 1.');
+    console.log('Run experiments/m19_1/verify_clarification.js, authoritative for PASS 1.1.');
+    process.exit(0);
+}
+
 let pass = 0, fail = 0;
 const P = (id, cond, msg) => {
     if (cond) { pass++; console.log(`PASS  ${id.padEnd(7)} ${msg}`); }
