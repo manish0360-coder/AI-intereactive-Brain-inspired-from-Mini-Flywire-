@@ -14,6 +14,15 @@ configuration was instantiated; no statistical test was introduced.** `env.js`, 
 
 ---
 
+> **CORRECTED IN PART by M25 (2026-09-11).** §2.1(d) below states that duplicate-content keys are
+> **"exact replicas"** carrying no information. That is **too strong**. It holds for the 3000-tick
+> learning run, whose four RNG streams all derive from `agentSeed` (`run.js:318-321`), but **not for
+> the readout**: `readoutSeed = f(configSeed, arm, state)` (`uqb/collect.js:53`), so duplicate-content
+> keys receive **different readout streams**. They are **readout-level replicates**, not exact
+> replicas, and whether `Delta` is invariant to readout randomisation is **UNKNOWN**. See
+> `M25_TARGET_POPULATION_SPECIFICATION.md` §3 and §7 case 2. Corrected forward, not rewritten; the
+> YELLOW verdict and every other conclusion of M24-R1 are unaffected.
+
 ## 1. Verdict
 
 > # M24-R1: YELLOW SUSTAINED — with three corrections

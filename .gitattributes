@@ -131,3 +131,6 @@ research/preregistrations/M24_SAMPLING_FRAME_FORMULATION.md -text
 
 # M24-R1 sampling-unit repair — gated by verify_m24_r1.js.
 research/preregistrations/M24_R1_SAMPLING_UNIT_REPAIR.md -text
+
+# M25 target-population specification — gated by verify_m25.js.
+research/preregistrations/M25_TARGET_POPULATION_SPECIFICATION.md -text
