@@ -92,6 +92,52 @@ console.log('\n-- G2. prohibited reinterpretations -----------------------------
         ok(re.test(FLATMEMO), `memo explicitly forbids reinterpretation: ${label}`);
     ok(/must never become a post-hoc exclusion criterion/i.test(FLATMEMO),
         'memo forbids the goal-16 post-hoc exclusion');
+
+    // M21-R1: the causal-attribution overstatement the Director required repaired.
+    // Statements inside the hypothesis register are exempt — a hypothesis is the one
+    // place such a sentence belongs — so H-1..H-3 and the candidate table are excluded.
+    // Context-sensitive, not range-based: the phrasing is legitimate in exactly two
+    // places — inside a labelled HYPOTHESIS, and inside the repair note that quotes the
+    // superseded wording in order to retract it. Anywhere else it is an assertion.
+    // Classify by SOURCE BLOCK, not by a lookbehind window. A lookbehind exempts
+    // whatever happens to precede the sentence, which is not a property of the sentence
+    // — the first version of this gate passed a reinstated overstatement because
+    // "H-1/H-2/H-3" appeared in the paragraph above it. The phrasing is legitimate in
+    // exactly two constructs: a hypothesis TABLE ROW, and the M21-R1 blockquote that
+    // quotes the superseded wording in order to retract it. Everything else asserts it.
+    const ATTRIB = [
+        /(?:difference|contrast|Δ|effect) is carried by (?:pool|set|admission)/i,
+        /carriage is (?:not hypothetical|real|established)/i,
+        /(?:is|was) caused by (?:pool|admission|set composition)/i,
+        /pool (?:size|change) (?:causes|caused|drives|drove|explains|explained) the/i,
+    ];
+    const attribution = [];
+    for (const block of prose.split(/\n\s*\n/)) {
+        const f = flat(block);
+        const isHypothesisRow = /^\|/.test(block.trim())
+            && /Admission pathway|Ranking pathway|\bH-[123]\b/.test(block);
+        const isRepairNote = /^\s*>/.test(block)
+            && /M21-R1|The original I-5 and L-A stated/.test(block);
+        if (isHypothesisRow || isRepairNote) continue;
+        for (const re of ATTRIB) { const m = f.match(re); if (m) attribution.push(m[0]); }
+    }
+    ok(attribution.length === 0,
+        'memo does NOT attribute the observed C1 difference to a pool/admission cause',
+        attribution.length ? JSON.stringify(attribution) : 'clean');
+
+    // and it must carry the licensed formulation verbatim in substance
+    ok(/a smaller (?:candidate )?pool produces a larger normalised rank at the same raw rank/i.test(FLATMEMO),
+        'memo states the licensed mathematical consequence');
+    ok(/treatment-dependent pool size can contribute to the observed E6 contrast even when raw rank is unchanged/i
+        .test(FLATMEMO), 'memo states the licensed "can contribute" formulation');
+    for (const [lbl, re] of [
+        ['observed co-occurrence', /observed co-occurrence/i],
+        ['mathematical consequence', /mathematical consequence of (?:the )?normalisation/i],
+        ['causal pathway', /causal pathway[^.]{0,40}NOT established/i],
+        ['unresolved hypothesis', /unresolved hypothesis/i]])
+        ok(re.test(FLATMEMO), `memo keeps the level distinct: ${lbl}`);
+    ok(/M21-R1/.test(MEMO) && /corrected forward here, not erased/i.test(FLATMEMO),
+        'repair is recorded as a forward correction, not a silent rewrite');
     ok(notDo.length > 500, 'WHAT NOT TO DO section is present and substantive',
         notDo.length + ' chars');
 }

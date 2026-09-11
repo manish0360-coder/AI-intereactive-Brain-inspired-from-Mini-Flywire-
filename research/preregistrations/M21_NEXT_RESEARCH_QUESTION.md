@@ -6,6 +6,16 @@
 **Author:** Chief Systems Engineer
 **Authority:** Director ruling of 2026-09-10 — *M20 ACCEPTED, C1 CLOSED; formulate M21*
 
+> **M21-R1 — REPAIR APPLIED, Director ruling of 2026-09-11 (M21 ACCEPT WITH SPECIFIC REPAIR).**
+> The original I-5 and L-A stated that part of the observed C1 difference **is carried by** pool
+> change. That asserted a causal attribution the record does not establish. Both are repaired to the
+> licensed formulation — *because `ρ = r/(n − 1)`, a smaller candidate pool produces a larger
+> normalised rank at the same raw rank; therefore treatment-dependent pool size **can** contribute
+> to the observed E6 contrast even when raw rank is unchanged* — and the four levels are now kept
+> explicitly apart: **observed co-occurrence**, **mathematical consequence of normalisation**,
+> **causal pathway**, and **unresolved hypothesis**. See I-5(a)–(d). The superseded wording remains
+> in the git history at `9ab7427`; it is corrected forward here, not erased.
+
 **North Star (unchanged, not redesigned):** MiniFlyWire discovers and validates cognitive
 mechanisms that can later be reimplemented by Noetica. The frozen
 MiniFlyWire → Noetica → Velith → Mini Prometheus architecture is untouched by this memo.
@@ -73,9 +83,24 @@ Licensed **only** over each study's own enumerated population.
 - **I-3.** The intervention **changed the greedy policy in every C1 configuration** (E-8).
 - **I-4.** The C1 jointly-defined population was **not shaped by treatment** (E-11), so the census
   mean is not a definedness artefact.
-- **I-5.** **A non-trivial part of the measured C1 difference is carried by pool change rather than
-  by ranking position** (E-9, E-10). This is an inference about the *instrument*, not about the
-  mechanism, and it is licensed by C1 v2.0 §2.1, which declared it in advance.
+- **I-5 — repaired at M21-R1. Four statements, deliberately kept apart:**
+  - **(a) Mathematical consequence of the normalisation.** Because `ρ = r/(n − 1)`, a smaller
+    candidate pool produces a **larger normalised rank at the same raw rank**. Therefore
+    **treatment-dependent pool size *can* contribute to the observed E6 contrast even when raw rank
+    is unchanged.** This follows from the definition alone and would hold if no data had been
+    collected.
+  - **(b) Observed co-occurrence.** Over the C1 census, ARMED's mean pool is smaller (5.674 vs
+    5.919) and in 218 of 2114 rank-moved cells the normalised `δ` sign opposes the raw-rank
+    difference (E-9, E-10). These are exact measurements of co-occurrence.
+  - **(c) Causal pathway — NOT established.** That the observed C1 difference **is** caused, in
+    whole or in part, by pool-size or admission effects **does not follow** from (a) and (b)
+    together. (a) establishes possibility, (b) establishes co-occurrence; neither establishes
+    attribution.
+  - **(d) Unresolved hypothesis.** Which pathway carries the observed contrast, and in what
+    proportion, is **open** — it is exactly what H-1/H-2/H-3 below propose to make testable.
+
+  Statement (a) is an inference about the *instrument's definition*; (b) is evidence; (c) and (d)
+  mark the boundary this memo must not cross.
 
 ## 1.3 Remaining hypotheses — untested
 
@@ -108,9 +133,14 @@ measurement currently separates any of them.
 
 - **L-A — the confound is structural, declared, and unresolved.** E6 is a **normalised total-effect
   outcome**: `ρ_a(u,p) = r_a(u,p)/(n_a(u) − 1)` where `n_a(u)` is *itself a function of the arm*.
-  C1 v2.0 §2.1 states this and forbids describing E6 as a within-fixed-pool contrast. E-9 and E-10
-  show the carriage is not hypothetical: ARMED's pools are systematically **smaller**, which for a
-  fixed rank mechanically **raises** `ρ_ARMED` and pushes Δ positive, independent of ranking quality.
+  C1 v2.0 §2.1 states this and forbids describing E6 as a within-fixed-pool contrast. **Repaired at
+  M21-R1:** because `ρ = r/(n − 1)`, a smaller pool produces a larger normalised rank at the same
+  raw rank, so **treatment-dependent pool size can contribute to the observed E6 contrast even when
+  raw rank is unchanged** — a consequence of the definition, not a finding. Separately, and as
+  co-occurrence only, ARMED's mean pool in the C1 census is the smaller of the two (E-9, E-10).
+  **Whether that possibility is realised in the observed contrast is unresolved** (I-5c, I-5d), and
+  nothing here may be read as saying the C1 difference is known to be caused by pool-size or
+  admission effects.
 - **L-B — the same limitation is program-wide, not a C1 quirk.** UQ-A's **coverage** diagnostic
   (E-1) is explicitly declared *"part of the total causal pathway"* and *"never an adjustment, a
   covariate, or a filter"*. UQ-B's alignment count is an argmax over the same arm-dependent pool.
