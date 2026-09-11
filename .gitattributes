@@ -153,3 +153,6 @@ research/preregistrations/M30_TRAJECTORY_ROBUSTNESS_FORMULATION.md -text
 # M31 attainability memo and observations.
 research/preregistrations/M31_TRAJECTORY_ATTAINABILITY.md -text
 experiments/m31/data/*.json -text
+
+# M32 trajectory-seed governance formulation.
+research/preregistrations/M32_TRAJECTORY_SEED_GOVERNANCE.md -text
