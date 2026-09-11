@@ -143,3 +143,6 @@ research/preregistrations/M27_INITIALISATION_AXIS_FEASIBILITY.md -text
 
 # M28 next-direction decision analysis — gated by verify_m28.js.
 research/preregistrations/M28_NEXT_DIRECTION_DECISION_ANALYSIS.md -text
+
+# M29 baseline formulation audit — gated by verify_m29.js.
+research/preregistrations/M29_BASELINE_FORMULATION_AUDIT.md -text

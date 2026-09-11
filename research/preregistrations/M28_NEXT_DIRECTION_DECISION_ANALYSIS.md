@@ -17,6 +17,19 @@ mechanism (M26/M27). The initial-state channel exists via `loadBrain` but is clo
 
 ---
 
+> **CORRECTED IN PART by M29 (2026-09-11).** Two statements below are retracted:
+> **(i)** the claim that frozen §5.4 is *"broader than its stated purpose"* was **TOO STRONG** — the
+> cold-start clause also secures **attributability** of learned state to the measured exposure, which
+> the frozen UQ-B estimand ("continuous presence") requires. M29 §7 retracts it and withdraws the
+> implicit suggestion that a "smallest possible refinement" was in view.
+> **(ii)** the burn-in baseline candidate of §5 is **REJECTED** — `makeGuard` admits only ARMED and
+> ABLATED and throws otherwise, and the guard-off default is ARMED-equivalent, so **no
+> treatment-neutral baseline can be generated**; and `saveBrain` omits `timeMemory`, so a
+> round-tripped baseline is a reconstruction rather than a copy.
+> The **B → A ordering recommendation stands and was vindicated**: B resolved negatively at zero
+> compute, which is exactly why it was sequenced first. See
+> `M29_BASELINE_FORMULATION_AUDIT.md`. Corrected forward, not rewritten.
+
 ## 1. Verdict and recommendation
 
 > # M28-YELLOW
