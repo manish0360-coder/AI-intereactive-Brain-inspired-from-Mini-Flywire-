@@ -12,6 +12,24 @@ experiment; no preregistration, registry, production, C1/UQ-B or frozen M7 gover
 
 ---
 
+> **M29-R1 — WORDING REPAIR APPLIED, Director ruling of 2026-09-11 (Gemini independent review).**
+> M29 originally wrote that `C × R` is *"the complete available space"* / *"known to be final"*. That
+> **overstated the evidence** and is narrowed at five sites to: **under the current frozen
+> architecture, `C × R` is the only space for varying the agent's experiential history that the
+> source audit identified.**
+>
+> **Why not the reviewer's exact wording.** The proposed replacement — *"the complete, source-verified
+> space…"* — fixes two of three problems and I have adopted both: scoping the domain to *experiential
+> history* (correct, since `H = f(C, R)` when `I` is constant, M25) and scoping to the *current frozen
+> architecture*. But it retains **"complete"**, and **M29's own Hy-1 records that "a trace found none;
+> not proof."** Asserting completeness inside an INFERENCE (In-6) would upgrade Hy-1 from HYPOTHESIS
+> to INFERENCE — the category error this program's evidence discipline forbids. The narrower wording
+> is therefore not a stylistic preference: it is what M29's own hypothesis register already requires.
+>
+> **No scientific conclusion of M29 changes.** The three grounds, the HOLD verdict, the M28 retraction
+> and the M30 recommendation all stand. Corrected forward, not rewritten; the superseded wording
+> remains in the history at `44cf49e`.
+
 ## 1. Verdict
 
 > # M29-HOLD
@@ -32,7 +50,9 @@ experiment; no preregistration, registry, production, C1/UQ-B or frozen M7 gover
 >
 > **Consequence: M28's B → A ordering is now resolved.** B is closed. **Option A — stochastic-
 > trajectory robustness over `C × R` — is the correct next direction**, and it can now be specified
-> over a space *known* to be final rather than assumed to be.
+> over the **only space for varying the agent's experiential history that the source audit
+> identified** under the current frozen architecture — established by audit rather than assumed,
+> and bounded by **Hy-1** (a trace finding no further channel is not proof that none exists).
 
 ---
 
@@ -273,7 +293,7 @@ M28's implicit suggestion that a "smallest possible refinement" was in view.**
 | **B** | controlled pre-treatment experience history | **REJECTED** — same three grounds; "pre-treatment" is precisely what §3.1 denies |
 | **C** | immutable baseline snapshot / clone | **REJECTED** — the snapshot is lossy (§6); a clone of a reconstruction is still a reconstruction |
 | **D** | another existing state channel | **NONE FOUND.** M27 traced the pre-tick channels; `localStorage['brain']` is the only one, and §6 shows it is incomplete |
-| **E** | stochastic-trajectory robustness (`C × R`) only | **ACCEPTED as the next direction** — the only axes available, now *known* rather than assumed |
+| **E** | stochastic-trajectory robustness (`C × R`) only | **ACCEPTED as the next direction** — the only axes the source audit identified, now established by audit rather than assumed (bounded by Hy-1) |
 | **F** | deeper architecture research | **Available, and not recommended now** — it would require making persistence complete *and* inventing a neutral arm. Two architectural changes, for a design that would still measure a different object than C1 |
 | **G** | 2×2 burn-in-arm × measurement-arm factorial | **Noted and rejected for now.** It is a *legitimate* design for a **history-dependence** question, and it sidesteps the "which arm?" free parameter by crossing it. But it still requires §7's attributability sacrifice and §6's lossy snapshot, and it answers a question the program has not posed |
 
@@ -285,8 +305,10 @@ M28's implicit suggestion that a "smallest possible refinement" was in view.**
 > the demonstration, not an argument for it.**
 
 - B resolved **negatively**, at **zero compute**.
-- The resolution **changed what A means**: `C × R` is now known to be the complete available space,
-  not assumed to be. A future `C × R` study can state that as established rather than provisional.
+- The resolution **changed what A means**: under the current frozen architecture, `C × R` is now the
+  **only source-identified** space for varying the agent's experiential history — established by
+  audit rather than assumed. A future `C × R` study may state that scoping as established, **not**
+  as a completeness proof (Hy-1).
 - Had A run first, an expensive product design would have been executed without knowing whether its
   space was final — and §3.1/§6/§7 would still have been sitting there, unexamined.
 
@@ -377,7 +399,10 @@ HYPOTHESIS rather than stated as an interpretation of fact, and §7 corrects it.
   **M28's "broader than its stated purpose" is retracted.**
 - **In-4.** `B` is a new experimental factor, not a covariate or nuisance (In-1).
 - **In-5.** A baseline design would be `C × B × R`, not `C × B` (PASS 2 §7).
-- **In-6.** With B closed, `C × R` is the complete available space — **established, not assumed.**
+- **In-6.** With B closed, `C × R` is the **only source-identified** space for varying the agent's
+  experiential history under the current frozen architecture. **This is the result of an audit that
+  found no further axis — NOT a proof of completeness. Hy-1 bounds it, and In-6 may never be read as
+  upgrading Hy-1 into an inference.**
 
 **HYPOTHESIS**
 - **Hy-1.** No further pre-tick state channel exists (M27) — a trace found none; not proof.
@@ -405,7 +430,8 @@ require architectural change to address.
 > ## M30 — Stochastic-Trajectory Robustness Formulation *(formulation only)*
 >
 > **Option A, now reached by elimination rather than by default.** Formulate the `C × R` design over
-> the space M29 has established is complete: estimand as the **distribution** of `τ` across
+> the space M29 established is the **only one source-identified** under the current
+> frozen architecture: estimand as the **distribution** of `τ` across
 > trajectories (never the mean); direction frozen in advance; **trajectory multiplicity** and
 > **content multiplicity** as falsifiable preconditions checked by fingerprint and content hash; and
 > the naming discipline forbidding any initialisation reading.

@@ -217,6 +217,63 @@ console.log('-- G8. governance -------------------------------------------------
         'frozen M7 preregistration digest still verifies', d.slice(0, 16) + '…');
 }
 
+// ── G8b. M29-R1 — the completeness claim is narrowed, and stays narrowed ────
+console.log('');
+console.log('-- G8b. M29-R1 wording repair --------------------------------------------');
+{
+    ok(/M29-R1 — WORDING REPAIR APPLIED/.test(M29), 'M29-R1 forward note present');
+    ok(/Corrected forward, not rewritten/i.test(F), 'repair is forward-only, not a rewrite');
+    ok(/44cf49e/.test(M29), 'note cites the commit holding the superseded wording');
+
+    // The overstatement must be GONE everywhere except where the note quotes it to retract it.
+    const OVERSTATED = [
+        /the complete available space/i,
+        /known to be final/i,
+        /C . R is complete/i,
+        /the complete, source-verified space/i,
+    ];
+    const bad = [];
+    for (const b of M29.split(NL + NL)) {
+        const fb = flat(b);
+        if (/WORDING REPAIR APPLIED|overstated|Why not the reviewer/i.test(fb)) continue;
+        for (const re of OVERSTATED) { const m = fb.match(re); if (m) bad.push(m[0]); }
+    }
+    ok(bad.length === 0, 'no un-retracted completeness overstatement remains',
+        bad.join(' | ') || 'clean');
+
+    // The narrowed claim must actually be present, with all three required scopings.
+    // Scope to the In-6 LINE. A whole-document presence check is vacuous: reverting In-6
+    // still leaves the phrase elsewhere, so the gate would pass on a reverted inference.
+    const in6 = (M29.split(NL).find(l => l.includes('**In-6.')) || '') +
+                ' ' + (M29.split(NL)[M29.split(NL).findIndex(l => l.includes('**In-6.')) + 1] || '') +
+                ' ' + (M29.split(NL)[M29.split(NL).findIndex(l => l.includes('**In-6.')) + 2] || '');
+    ok(/only source-identified/i.test(flat(in6)),
+        'narrowed claim present IN In-6 itself: only SOURCE-IDENTIFIED, not complete',
+        flat(in6).slice(0, 60));
+    ok(/experiential history/i.test(F), 'narrowed claim scopes the domain to experiential history');
+    ok(/current frozen architecture/i.test(F), 'narrowed claim scopes to the frozen architecture');
+
+    // INTERNAL CONSISTENCY: Hy-1 is a HYPOTHESIS, so no INFERENCE may assert completeness.
+    // Scope to the Hy-1 LINE. The R1 note QUOTES Hy-1 in order to reason about it, so a
+    // whole-document scan passes even if Hy-1 itself is upgraded to a proof.
+    const hy1 = M29.split(NL).find(l => l.includes('**Hy-1.')) || '';
+    ok(/not proof/i.test(hy1) && !/proven|exhaustive/i.test(hy1),
+        'Hy-1 ITSELF still records that a trace finding none is not proof',
+        flat(hy1).slice(0, 70));
+    const inf = M29.slice(M29.indexOf('**INFERENCE**'), M29.indexOf('**HYPOTHESIS**'));
+    ok(inf.length > 100, 'INFERENCE block located', inf.length + ' chars');
+    ok(!/complete available space|is complete/i.test(flat(inf)),
+        'no INFERENCE asserts completeness — Hy-1 is not upgraded');
+    ok(/NOT a proof of completeness/i.test(M29),
+        'In-6 states explicitly that it is not a completeness proof');
+
+    // the reviewer's wording was considered, not ignored
+    ok(/Why not the reviewer.s exact wording/i.test(M29),
+        'memo explains why the proposed wording was narrowed further');
+    ok(/No scientific conclusion of M29 changes/i.test(F),
+        'repair is scoped to wording — no conclusion changed');
+}
+
 // ── G9. Anti-vacuity ────────────────────────────────────────────────────────
 console.log('');
 console.log('-- G9. anti-vacuity ------------------------------------------------------');
