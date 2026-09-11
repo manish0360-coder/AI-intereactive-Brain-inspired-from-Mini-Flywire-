@@ -18,6 +18,16 @@ more observations; explaining the positive C1 `Δ` before a discriminating measu
 
 ---
 
+> **SUPERSEDED IN PART by M24-R1 (Director ruling, 2026-09-11).** Four statements below are
+> corrected in `M24_R1_SAMPLING_UNIT_REPAIR.md` §12 and must be read through it:
+> **(C-1)** "known, equal inclusion probabilities" holds over accepted **keys**, not over unique
+> accepted **configurations**, where sampling is size-biased by preimage multiplicity `m(c)`;
+> **(C-2)** the positivity conclusion applies to the generated-key population only — positivity
+> holds and is equal on accepted keys, and holds but unequally on unique configurations;
+> **(C-3)** the cluster-size-4 claim is a property of contiguous-block enumeration, not of uniform
+> key sampling; **(C-4)** "P2" conflated the key population with the configuration population.
+> The verdict YELLOW is sustained. This text is corrected forward, not rewritten.
+
 ## 0. Decision gate — stated first
 
 > # M24-YELLOW
