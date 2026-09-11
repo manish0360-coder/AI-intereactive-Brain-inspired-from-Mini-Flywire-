@@ -134,3 +134,6 @@ research/preregistrations/M24_R1_SAMPLING_UNIT_REPAIR.md -text
 
 # M25 target-population specification — gated by verify_m25.js.
 research/preregistrations/M25_TARGET_POPULATION_SPECIFICATION.md -text
+
+# M26 two-axis population formulation — gated by verify_m26.js.
+research/preregistrations/M26_TWO_AXIS_POPULATION_FORMULATION.md -text
