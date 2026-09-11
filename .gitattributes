@@ -122,3 +122,6 @@ research/preregistrations/M21_NEXT_RESEARCH_QUESTION.md -text
 # M22 formulation memo — gated by verify_m22.js, which matches memo text against
 # recomputed toy-case arithmetic and M14 counts.
 research/preregistrations/M22_PATHWAY_DECOMPOSITION_FORMULATION.md -text
+
+# M23 formulation memo — gated by verify_m23.js.
+research/preregistrations/M23_COMMON_CANDIDATE_RANKING_FORMULATION.md -text
