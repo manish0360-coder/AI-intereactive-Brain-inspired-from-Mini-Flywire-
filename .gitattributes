@@ -137,3 +137,6 @@ research/preregistrations/M25_TARGET_POPULATION_SPECIFICATION.md -text
 
 # M26 two-axis population formulation — gated by verify_m26.js.
 research/preregistrations/M26_TWO_AXIS_POPULATION_FORMULATION.md -text
+
+# M27 initialisation-axis feasibility audit — gated by verify_m27.js.
+research/preregistrations/M27_INITIALISATION_AXIS_FEASIBILITY.md -text
