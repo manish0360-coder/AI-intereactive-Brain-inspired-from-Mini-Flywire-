@@ -156,8 +156,25 @@ console.log('-- G6. registry namespace collision -------------------------------
 console.log('');
 console.log('-- G7. the decision --------------------------------------------------------');
 {
-    ok(/only.{0,40}design that.{0,30}(?:decomposes|separat)/i.test(F),
-        'memo claims the variance-separation rationale');
+    // M30-R1: the claim is that the design makes apportionment ESTIMABLE, not that it
+    // performs separation. Both halves are checked: the new claim present, old absent.
+    ok(/yield data structured to permit|permit that apportionment to be estimated|become estimable/i.test(F),
+        'memo claims the design ENABLES estimation, not that it separates');
+    {   const bad = [];
+        for (const b of M30.split(NL + NL)) {
+            const fb = flat(b);
+            if (/WORDING REPAIR|Too strong|repaired|does not itself perform/i.test(fb)) continue;
+            if (/(?:design|C . R) (?:that )?(?:can )?(?:separates?|decomposes)/i.test(fb))
+                bad.push(fb.slice(0, 70));
+        }
+        ok(bad.length === 0, 'no un-retracted claim that the design separates/decomposes',
+            bad.join(' | ') || 'clean'); }
+    ok(/this program has not adopted and M30 does not propose/i.test(F),
+        'memo states the estimation model is neither adopted nor proposed');
+    ok(/Design enables data collection; it does not constitute\s*estimation|enables data collection .{0,10}≠|Design enables data collection/i.test(M30),
+        'memo states design-enables != model-estimates');
+    ok(/M30-R1 — WORDING REPAIR APPLIED/.test(M30), 'M30-R1 forward note present');
+    ok(/d16decb/.test(M30), 'note cites the commit holding the superseded wording');
     ok(/conflates between-configuration heterogeneity with within-configuration trajectory noise|conflates/i.test(F),
         'memo states what C1 structurally conflated');
     ok(/rationale of \*?\*?elimination\*?\*?|only axis left/i.test(M30 + F),

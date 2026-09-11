@@ -15,6 +15,24 @@ and was not invalid.
 
 ---
 
+> **M30-R1 — WORDING REPAIR APPLIED, Director ruling of 2026-09-11 (Gemini review).**
+> M30 said `C × R` **separates** / **decomposes** the two variance components. **Too strong**, and
+> repaired at seven sites.
+>
+> **Why not the reviewer's exact wording.** The proposal — *"provides the data necessary to estimate
+> between-configuration and within-configuration variance components"* — is correct and I have
+> adopted its substance. I did not adopt it verbatim for one reason: *"the data necessary to
+> estimate"* still leaves unsaid **which** estimator, and this program removed its inferential layer
+> at M17 and forbade inferential statistics at M20. A reader could take the phrase as licensing a
+> variance-components model. The repaired text therefore says the design would **yield data
+> structured to permit the apportionment to be estimated**, and adds explicitly that doing so
+> **requires an estimation model this program has not adopted and M30 does not propose.**
+>
+> **Design enables data collection ≠ a model estimates variance components.** That distinction is now
+> stated in the artifact rather than left to the reader. No other conclusion of M30 changes; the
+> YELLOW verdict, the two source findings and the M31 recommendation all stand. Corrected forward,
+> not rewritten; superseded wording remains at `d16decb`.
+
 ## 1. Verdict
 
 > # M30-YELLOW
@@ -25,7 +43,8 @@ and was not invalid.
 > **The upgraded rationale (§5.2):** `C1` measured one trajectory per configuration, so its observed
 > spread (SD 0.127 / 0.109 against means of 0.043 / 0.038) **necessarily conflates between-
 > configuration heterogeneity with within-configuration trajectory noise.** `C × R` is the **only**
-> design that can separate them. That is new information, not repetition — and if most of C1's
+> design whose data would **permit that apportionment to be estimated**. That is new information,
+> not repetition — and if most of C1's
 > spread is trajectory noise, the configuration heterogeneity M20 reported is substantially
 > overstated.
 >
@@ -132,18 +151,25 @@ C1 reports, per configuration, a single `Δ` computed under **one** trajectory. 
 observed spread in C1  =  between-configuration heterogeneity  ⊕  within-configuration trajectory noise
 ```
 
-and **C1 cannot separate the two**, because it has one draw of the second per configuration.
+and **C1's data cannot support apportioning the two**, because it holds one draw of the second per
+configuration.
 
-> **INFERENCE. `C × R` is the only available design that decomposes C1's observed spread into a
-> between-configuration component and a within-configuration (trajectory) component.**
+> **INFERENCE. `C × R` is the only available design that would YIELD DATA STRUCTURED TO PERMIT
+> apportioning C1's observed spread between a between-configuration and a within-configuration
+> (trajectory) component.**
+>
+> **The design does not itself perform that apportionment.** Estimating variance components requires
+> an estimation model — a random-effects or ANOVA-like specification — that **this program has not
+> adopted and M30 does not propose.** Design enables data collection; it does not constitute
+> estimation.
 >
 > This matters concretely: M20 reported SD 0.127 / 0.109 against means of 0.043 / 0.038, and read
 > the spread as configuration heterogeneity. **If a substantial share is trajectory noise, that
 > reading is overstated** — a correction to how C1's spread is *understood*, with no change to C1's
 > numbers.
 
-**So M30 is not replication, and not robustness only. It is a variance-source separation plus a
-sign-stability check.** *Adopting a variance-decomposition quantity as the reported estimand would
+**So M30 is not replication, and not robustness only. It is a design that would make a
+variance-source apportionment ESTIMABLE, plus a sign-stability check.** *Adopting a variance-decomposition quantity as the reported estimand would
 require its own freeze (§6); M30 identifies it, and does not adopt it.*
 
 ---
@@ -278,10 +304,10 @@ a **product**, so cost grows multiplicatively in both axes.
 | **L0** | one `C`, one `R` | one `Δ` | that cell | none | none | everything else |
 | **L1** | many `C`, one `R` | **C1** | census over configurations | none | **conflated** with trajectory noise | trajectory, initialisation, generalisation |
 | **L2** | one `C`, many `R` | `Δ` spread at one configuration | that configuration | **sign stability there** | within-configuration only | other configurations |
-| **L3** | many `C`, many `R` | full grid | census over both | **sign stability across trajectories** | **both components, separated (§5.2)** | initialisation, graph, task, arm, identifiability |
+| **L3** | many `C`, many `R` | full grid | census over both | **sign stability across trajectories** | **both components become estimable (§5.2)** | initialisation, graph, task, arm, identifiability |
 
 > **L3 is not mechanism validation and must never be described as one.** It removes one alternative
-> explanation and separates two variance sources. Initialisation (M27/M29), graph, task, `m7Arm`, and
+> explanation and makes two variance sources estimable. Initialisation (M27/M29), graph, task, `m7Arm`, and
 > the M22/M23 obstacles all survive it untouched.
 
 ---
@@ -367,7 +393,7 @@ program has refused. It is specified at §11 as a precondition on collection.
 - **In-2.** The arms diverge in stream position after their first differing choice (Ev-5 + threshold
   consumption) ⇒ **pairing controls environment, not randomness**.
 - **In-3.** C1's spread conflates between-configuration and within-configuration components, and
-  `C × R` is the only available separation (Ev-5).
+  `C × R` is the only available design that would make apportioning them estimable (Ev-5).
 - **In-4.** M28's readout-invariance carries to M30 because `R` does not alter the readout path
   (Ev-6).
 - **In-5.** The registry cannot govern `R` selection — namespace collision (Ev-7).
