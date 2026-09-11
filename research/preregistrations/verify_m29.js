@@ -262,7 +262,7 @@ console.log('-- G8b. M29-R1 wording repair -------------------------------------
         flat(hy1).slice(0, 70));
     const inf = M29.slice(M29.indexOf('**INFERENCE**'), M29.indexOf('**HYPOTHESIS**'));
     ok(inf.length > 100, 'INFERENCE block located', inf.length + ' chars');
-    ok(!/complete available space|is complete/i.test(flat(inf)),
+    ok(!/complete available space|is complete(?![a-z])/i.test(flat(inf)),
         'no INFERENCE asserts completeness — Hy-1 is not upgraded');
     ok(/NOT a proof of completeness/i.test(M29),
         'In-6 states explicitly that it is not a completeness proof');

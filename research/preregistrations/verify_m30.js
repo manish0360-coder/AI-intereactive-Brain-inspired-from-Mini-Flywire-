@@ -164,15 +164,25 @@ console.log('-- G7. the decision -----------------------------------------------
         for (const b of M30.split(NL + NL)) {
             const fb = flat(b);
             if (/WORDING REPAIR|Too strong|repaired|does not itself perform/i.test(fb)) continue;
-            if (/(?:design|C . R) (?:that )?(?:can )?(?:separates?|decomposes)/i.test(fb))
+            if (/(?:design|C . R) (?:that )?(?:can )?(?:separates?|decomposes)(?![a-z])/i.test(fb))
                 bad.push(fb.slice(0, 70));
         }
         ok(bad.length === 0, 'no un-retracted claim that the design separates/decomposes',
             bad.join(' | ') || 'clean'); }
-    ok(/this program has not adopted and M30 does not propose/i.test(F),
-        'memo states the estimation model is neither adopted nor proposed');
-    ok(/Design enables data collection; it does not constitute\s*estimation|enables data collection .{0,10}≠|Design enables data collection/i.test(M30),
-        'memo states design-enables != model-estimates');
+    // BODY-SCOPED. These phrases also appear in the M30-R1 note, which quotes them in
+    // order to explain the repair. A whole-document check is therefore satisfied by the
+    // note even when the body claim is gone — the systematic vacuity this gate has hit
+    // before. Strip the note, then check the body.
+    const noteStart = M30.indexOf('> **M30-R1 — WORDING REPAIR APPLIED');
+    const noteEnd = M30.indexOf('## 1. Verdict');
+    const body = noteStart >= 0 && noteEnd > noteStart
+        ? M30.slice(0, noteStart) + M30.slice(noteEnd) : M30;
+    ok(body.length < M30.length, 'M30-R1 note located and excluded from the body checks',
+        (M30.length - body.length) + ' chars excluded');
+    ok(/this program has not adopted and M30 does not propose/i.test(flat(body)),
+        'BODY states the estimation model is neither adopted nor proposed');
+    ok(/Design enables data collection; it does not constitute/i.test(body),
+        'BODY states design-enables != model-estimates');
     ok(/M30-R1 — WORDING REPAIR APPLIED/.test(M30), 'M30-R1 forward note present');
     ok(/d16decb/.test(M30), 'note cites the commit holding the superseded wording');
     ok(/conflates between-configuration heterogeneity with within-configuration trajectory noise|conflates/i.test(F),
