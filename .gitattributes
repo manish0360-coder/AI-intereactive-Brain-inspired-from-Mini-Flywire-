@@ -149,3 +149,7 @@ research/preregistrations/M29_BASELINE_FORMULATION_AUDIT.md -text
 
 # M30 trajectory robustness formulation — gated by verify_m30.js.
 research/preregistrations/M30_TRAJECTORY_ROBUSTNESS_FORMULATION.md -text
+
+# M31 attainability memo and observations.
+research/preregistrations/M31_TRAJECTORY_ATTAINABILITY.md -text
+experiments/m31/data/*.json -text
