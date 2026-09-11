@@ -207,6 +207,54 @@ console.log('-- G6. verdict and discipline -------------------------------------
         ok(new RegExp('\\*\\*' + s + '\\*\\*').test(M31), `separation level: ${s}`);
 }
 
+// ── G6b. M31-R1 — the K8 claim is narrowed and stays narrowed ──────────────
+console.log('');
+console.log('-- G6b. M31-R1 K8 wording repair -----------------------------------------');
+{
+    ok(/M31-R1 — WORDING REPAIR APPLIED/.test(M31), 'M31-R1 forward note present');
+    ok(/0453c14/.test(M31), 'note cites the commit holding the superseded wording');
+    ok(/Corrected forward, not rewritten/i.test(F), 'repair is forward-only');
+    // the narrowed claim must be present
+    ok(/No fingerprint collision was detected in this development set/i.test(F),
+        'narrowed K8 claim present');
+    // and the overstatement must be gone everywhere except where the note retracts it
+    const bad = [];
+    for (const b of M31.split(NL + NL)) {
+        const fb = flat(b);
+        if (/WORDING REPAIR|too strong|narrowed|Forbidden and not claimed|Not a claim|cannot establish|is NOT an adequacy/i.test(fb)) continue;
+        if (/fingerprint[^.]{0,24}adequa|adequa[^.]{0,24}(?:trajectory )?identifier|It is adequate|universally adequate/i.test(fb))
+            bad.push(fb.slice(0, 70));
+    }
+    ok(bad.length === 0, 'no un-retracted fingerprint-adequacy claim', bad.join(' | ') || 'clean');
+    // m(r|c)=1 must not be asserted as general
+    const bad2 = [];
+    for (const b of M31.split(NL + NL)) {
+        const fb = flat(b);
+        if (/NOT established|cannot estimate|cannot establish|not a rate|throughout this sample|Hy-12|bounded|Not a claim/i.test(fb)) continue;
+        if (/m\(r\|c\) = 1 is established|m\(r\|c\)=1 generally|is universally (?:sound|adequate|established)/i.test(fb))
+            bad2.push(fb.slice(0, 70));
+    }
+    ok(bad2.length === 0, 'm(r|c)=1 is never asserted as general', bad2.join(' | ') || 'clean');
+    // the approved conclusion must appear verbatim in substance
+    for (const frag of ['common source of stochasticity rather than an identical realized trajectory',
+                        'C×R axis is exercisable for the intended measurement',
+                        'subject to separate trajectory-seed governance'])
+        ok(F.includes(frag), `approved conclusion fragment present: ${frag.slice(0, 40)}…`);
+    // the three forbidden phrasings
+    for (const [l, re] of [
+        ['separates variance components', /M31 separates the variance components|separates variance components/i],
+        ['universally adequate', /trajectory axis is universally adequate/i],
+        ['same trajectory across arms', /same realized trajectory across arms/i]]) {
+        const hits = [];
+        for (const b of M31.split(NL + NL)) {
+            const fb = flat(b);
+            if (/Forbidden|not claimed|rather than an identical|NOT/i.test(fb)) continue;
+            if (re.test(fb)) hits.push(fb.slice(0, 60));
+        }
+        ok(hits.length === 0, `forbidden phrasing absent: ${l}`, hits.join(' | ') || 'clean');
+    }
+}
+
 // ── G7. Working tree and protected paths ────────────────────────────────────
 console.log('');
 console.log('-- G7. protected paths ---------------------------------------------------');

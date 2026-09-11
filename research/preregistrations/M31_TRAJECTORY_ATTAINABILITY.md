@@ -16,6 +16,36 @@ M7 change. No preregistration. No registered collection authorised.
 
 ---
 
+> **M31-R1 — WORDING REPAIR APPLIED, Director ruling of 2026-09-11 (Gemini review).**
+> K8's claim of *"fingerprint adequacy"* was **too strong** and is narrowed at six sites to
+> **"no fingerprint collision was detected in this development set."** A hash collision is
+> theoretically possible at any scale; 24 runs cannot establish universal adequacy, and
+> **`m(r|c) = 1` is NOT established generally.**
+>
+> **The approved scientific conclusion, adopted verbatim:**
+>
+> *"The M31 pilot provides empirical evidence that varying `agentSeed` produces distinct,
+> measurable, and E6-relevant variation under the tested development configurations. ARMED and
+> ABLATED trajectories diverged despite sharing the same `agentSeed`, demonstrating that the seed
+> defines a common source of stochasticity rather than an identical realized trajectory across arms.
+> The observed trajectory-conditioned E6 variation establishes that the C×R axis is exercisable for
+> the intended measurement. No fingerprint collision was detected in this development set. These
+> results support proceeding to C×R design work, subject to separate trajectory-seed governance."*
+>
+> **Forbidden and not claimed anywhere:** that M31 separates variance components; that the
+> trajectory axis is universally adequate; that the arms share the same realized trajectory.
+>
+> **On M31's own use of `20260819000` and five offsets.** The reviewer notes that using values the
+> registry classifies as held-out is a governance violation. **The observation is correct and the
+> classification is the defect itself**: `20260819000` is the frozen production `agentSeed` that
+> M7, M8, Q1, UQ-A, UQ-B and C1 have all already used, and `isHeldOut` returns true for it only
+> because a configuration-seed floor is being applied to a namespace it was never written for
+> (M30 §13). **M31 introduced no new transgression; it made an existing one visible.** That is
+> exactly what M32 must repair, and M31 changed no registry.
+>
+> No result, count or verdict of M31 changes. Corrected forward, not rewritten; superseded wording
+> remains at `0453c14`.
+
 ## 1. Verdict
 
 > # M31-YELLOW
@@ -62,7 +92,7 @@ observed*, and §5's K6 is reported in whichever direction it came out.
 | 5. does E6 vary across trajectories? | **kept** — K2 |
 | 6. can sign reversal occur within a configuration? | **kept** — K6 |
 | 7. does `C × R` justify its cost? | **deferred, and deliberately.** A 2-fixture pilot cannot answer a cost-justification question for a registered census. §8 supplies what the pilot *can* contribute: the **allocation** between `|R|` and `|C|` |
-| **ADDED — K8** | **is the existing fingerprint adequate to distinguish trajectories?** Not in the Director's list, and load-bearing: every other answer depends on the identifier being sound |
+| **ADDED — K8** | **did any fingerprint collision occur in this development set?** Not in the Director's list, and load-bearing: every other answer depends on the identifier separating what it is asked to separate |
 
 ---
 
@@ -82,15 +112,20 @@ observed*, and §5's K6 is reported in whichever direction it came out.
 (tested, K1); same seed ≠ same trajectory across arms (tested, K3); different trajectories ≠
 different E6 (tested, K2).
 
-### 3.1 K8 — fingerprint adequacy, settled first
+### 3.1 K8 — no fingerprint collision detected in this development set
 
 The fingerprint hashes `writes, qEntries, qSum, pathAttemptKeys, pathSuccessKeys, creditKeys,
 creditRejected, envCounters, attempts, successes, slips, laSteps, dampInvoked, cogDraws, visDraws`.
 
-> It contains **both** the learned-state summary **and** exact RNG consumption. Two runs agreeing on
-> all of that are trajectory-equivalent for every purpose M30 cares about. **It is adequate, and no
-> new measurement was required.** *Its one limitation is honest: agreement is sufficient for
-> equivalence, but the hash cannot say how far apart two differing runs are.*
+> It contains **both** the learned-state summary **and** exact RNG consumption, so two runs agreeing
+> on all of it are trajectory-equivalent for every purpose M30 cares about.
+>
+> **What the pilot establishes is narrower than adequacy: NO FINGERPRINT COLLISION WAS DETECTED IN
+> THIS DEVELOPMENT SET.** A hash collision remains theoretically possible at any scale, and 24 runs
+> cannot establish that the identifier is universally sound. **No new measurement was required for
+> this pilot**, and the duplicate-checking procedure is precisely the mechanism that would surface a
+> collision if one occurred. *Two further limits, stated: the hash cannot say how far apart two
+> DIFFERING runs are, and absence of collision here is not evidence of absence at larger `|R|`.*
 
 ---
 
@@ -181,7 +216,10 @@ group, **one seed yields one trajectory**; the concern does not arise at this sc
 K7 concerns multiplicity changing an aggregate. With `m(r|c) = 1` observed, no weighting distortion
 arises **in this sample**. *It remains a live risk at larger `|R|` and is not dismissed.*
 
-### K8 — fingerprint adequacy: **PASSED** (§3.1)
+### K8 — **no fingerprint collision detected in this development set** (§3.1)
+
+**Not** a claim of universal fingerprint adequacy, and **not** a claim that `m(r|c) = 1` is
+established generally.
 
 ---
 
@@ -192,7 +230,7 @@ arises **in this sample**. *It remains a live risk at larger `|R|` and is not di
 | K1, K2, K3, K5, K6 | **necessary and each fired informatively** |
 | K4 | **redundant given K1** — it is K1 restated as a rate. Kept for completeness, reported as not-triggered |
 | K7 | **not testable at `m(r|c) = 1`** — retained as a forward risk, not a pilot outcome |
-| **K8 (added)** | **necessary, and logically prior to all others** — every other verdict depends on the trajectory identifier being sound |
+| **K8 (added)** | **necessary, and logically prior to all others** — every other verdict depends on the identifier separating what it is asked to separate. Answered only for this development set |
 
 ---
 
@@ -269,7 +307,8 @@ no arm (M24-R1 §2.1c). Varying `R` cannot change which configurations are eligi
   CRN remains valid but its variance-reduction benefit is reduced.
 - **In-3.** Trajectory variation is comparable in magnitude to C1's between-configuration spread ⇒
   `|R|` deserves priority over `|C|` (§8).
-- **In-4.** The existing fingerprint is an adequate trajectory identifier ⇒ no new instrumentation.
+- **In-4.** No fingerprint collision was detected in this development set ⇒ no new instrumentation
+  was required **for this pilot**. This is **not** an adequacy result and does not generalise.
 
 **HYPOTHESIS**
 - **Hy-12.** That `m(r|c) = 1` holds at larger `|R|`. **6 seeds cannot establish a rate.**
