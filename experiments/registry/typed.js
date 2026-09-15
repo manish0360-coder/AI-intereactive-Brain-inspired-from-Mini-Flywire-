@@ -160,13 +160,23 @@ export const config = Object.freeze({
 });
 
 // ---- trajectory namespace -----------------------------------------------------
-// A trajectory seed seeds four RNG streams. Every derivation reduces the value
-// modulo 2^32 (instrumentation/rng.js initRng: seed >>> 0 and (seed ^ c) >>> 0;
-// experiments/m7/arms.js sigma: (agentSeed ^ 0xBEEF) >>> 0), and makeRng maps a
-// zero seed to 1. Two values are therefore the same source of stochasticity when
-// any derived stream seed coincides — which raw-value identity cannot see
-// (20260819000 and 3080949816 seed identical streams). Consumption conflicts are
-// decided on these derived stream seeds. Identity equality stays (namespace, value).
+// FIVE DIFFERENT OBJECTS (M33-R1 §3) — never substituted for one another:
+//   raw value        the integer passed as agentSeed and written to provenance.
+//                    Identity equality is (namespace, raw value).
+//   normalized seed  raw >>> 0. Every runtime derivation is a function of it, so raw
+//                    values congruent modulo 2^32 are indistinguishable at runtime.
+//   derived seed     per stream, ((raw ^ c) >>> 0) || 1 — the initial mulberry32
+//                    state (instrumentation/rng.js initRng; experiments/m7/arms.js
+//                    sigma). The zero state maps to 1, so four raw keys partially alias.
+//   stochastic stream the draw sequence. mulberry32 advances its state by a fixed odd
+//                    constant, so EVERY stream is a segment of one 2^32-long cycle.
+//   realised trajectory an arm-dependent OUTCOME of (configuration, streams, arm);
+//                    fingerprinted after the fact, never a governance identity (M32 §8.2).
+//
+// GOVERNANCE IDENTITY OF A STOCHASTIC SOURCE = its derived stream seeds (lag 0). Two
+// raw values share a source when any derived seed coincides. Overlap of two streams at a
+// NON-ZERO lag on the single cycle is NOT detected here: deciding it needs a per-run
+// draw budget, which is a scientific parameter this module does not own (M33-R1 Q-LAG).
 const STREAM_XOR = Object.freeze({ cognitive: 0, visual: 0x9e3779b9, environment: 0x5EED,
                                    sigma: 0xBEEF });
 
@@ -238,17 +248,46 @@ function validateHeldOut(h, i) {
     }
 }
 
+// A cross-study reuse authorization (M33-R1 rule R4). It names one exact raw value, the
+// study that holds it and the study permitted to reuse it. It never covers an alias.
+const AUTH_FIELDS = 'authorization,fromStudy,namespace,toStudy,value,why';
+
+function validateAuthorization(a, i) {
+    const keys = Object.keys(a).sort().join(',');
+    if (keys !== AUTH_FIELDS) {
+        throw new RegistryIntegrityError(`authorization ${i} has fields ${keys}`);
+    }
+    if (a.namespace !== NAMESPACE.TRAJECTORY || !Number.isSafeInteger(a.value)) {
+        throw new RegistryIntegrityError(`authorization ${i} is not a trajectory authorization`);
+    }
+    for (const f of ['fromStudy', 'toStudy', 'authorization', 'why']) {
+        if (typeof a[f] !== 'string' || a[f].trim() === '') {
+            throw new RegistryIntegrityError(`authorization ${i} has empty ${f}`);
+        }
+    }
+    if (a.fromStudy === a.toStudy) {
+        throw new RegistryIntegrityError(`authorization ${i} names one study twice`);
+    }
+}
+
 /**
- * Build a trajectory registry from enumerated consumption records and held-out
- * ranges. Construction asserts the M32 invariants that are properties of the data:
- * record uniqueness per (value, study), and HELD-OUT ∩ CONSUMED = ∅.
+ * Build a trajectory registry from enumerated consumption records, held-out ranges and
+ * cross-study reuse authorizations. Construction asserts every invariant that is a
+ * property of the data, so an inconsistent registry cannot exist:
+ *   - record uniqueness per (value, study);
+ *   - HELD-OUT ∩ CONSUMED = ∅;
+ *   - no study records two different raw values that share a source (no aliased replicate);
+ *   - two studies share a source only through one exact raw value, in one category, under
+ *     an authorization for exactly that value and that pair of studies;
+ *   - an authorization is issued by a study that holds that exact value.
  */
-export function createTrajectoryRegistry({ records, heldOut }) {
-    if (!Array.isArray(records) || !Array.isArray(heldOut)) {
-        throw new RegistryIntegrityError('records and heldOut must be arrays');
+export function createTrajectoryRegistry({ records, heldOut, authorizations = [] }) {
+    if (!Array.isArray(records) || !Array.isArray(heldOut) || !Array.isArray(authorizations)) {
+        throw new RegistryIntegrityError('records, heldOut and authorizations must be arrays');
     }
     records.forEach(validateRecord);
     heldOut.forEach(validateHeldOut);
+    authorizations.forEach(validateAuthorization);
 
     const seen = new Set();
     for (const r of records) {
@@ -263,15 +302,47 @@ export function createTrajectoryRegistry({ records, heldOut }) {
         }
     }
 
+    const authSeen = new Set();
+    for (const a of authorizations) {
+        const k = `${a.value}|${[a.fromStudy, a.toStudy].sort().join('|')}`;
+        if (authSeen.has(k)) throw new RegistryIntegrityError(`duplicate authorization ${k}`);
+        authSeen.add(k);
+        if (!records.some(r => r.value === a.value && r.study === a.fromStudy)) {
+            throw new RegistryIntegrityError(`authorization for ${a.value} is issued by ` +
+                `${a.fromStudy}, which holds no record of that exact value`);
+        }
+    }
+    // Pair-specific and direction-free for reruns: once H authorized S, both may reproduce.
+    const isAuthorized = (value, a, b) => authorizations.some(x => x.value === value &&
+        ((x.fromStudy === a && x.toStudy === b) || (x.fromStudy === b && x.toStudy === a)));
+
+    for (let i = 0; i < records.length; i++) {
+        for (let j = i + 1; j < records.length; j++) {
+            const ri = records[i], rj = records[j];
+            if (!sharesStochasticity(trajectorySeed(ri.value), trajectorySeed(rj.value))) continue;
+            if (ri.study === rj.study) {
+                throw new RegistryIntegrityError(`${ri.study} records ${ri.value} and ${rj.value}, ` +
+                    `which share a stochastic source`);
+            }
+            if (ri.value !== rj.value || ri.status !== rj.status ||
+                !isAuthorized(ri.value, ri.study, rj.study)) {
+                throw new RegistryIntegrityError(`${ri.study} (${ri.value}) and ${rj.study} ` +
+                    `(${rj.value}) share a stochastic source without an exact, same-category ` +
+                    `authorization`);
+            }
+        }
+    }
+
     const frozenRecords = Object.freeze(records.map(r => Object.freeze({ ...r })));
     const frozenHeldOut = Object.freeze(heldOut.map(h => Object.freeze({ ...h })));
+    const frozenAuths = Object.freeze(authorizations.map(a => Object.freeze({ ...a })));
 
     function isHeldOut(id) {
         const v = requireNamespace(id, NAMESPACE.TRAJECTORY).value;
         return inHeldOut(v);
     }
 
-    // Every record whose source shares any stochastic stream with this identity.
+    // Every record whose source shares any derived stream seed with this identity.
     function consumptionOf(id) {
         requireNamespace(id, NAMESPACE.TRAJECTORY);
         return frozenRecords.filter(r => sharesStochasticity(id, trajectorySeed(r.value)));
@@ -289,14 +360,17 @@ export function createTrajectoryRegistry({ records, heldOut }) {
      *
      *   use = { study, category, arm?, configSeed? }
      *
-     * The consumption identity is (source, study). `arm` and `configSeed` describe
-     * the cell and are validated (a configSeed must be a config identity), but they
-     * are NOT part of the identity: a C x R study applies the same trajectory seed
-     * to every configuration and to both arms.
+     * The consumption identity is (source, study). `arm` and `configSeed` describe the
+     * cell and are validated (a configSeed must be a config identity), but they are NOT
+     * part of the identity: a C x R study applies one trajectory seed to every
+     * configuration and to both arms.
      *
-     * Returns { decision: 'AVAILABLE' } for a source no study has used, or
-     * { decision: 'REPRODUCTION' } when this study already used it in the same
-     * category. Throws GovernanceRefusal otherwise. Never returns a boolean.
+     * Returns, never a boolean:
+     *   { decision: 'AVAILABLE' }         no study has used this source
+     *   { decision: 'REPRODUCTION' }      this study already used this exact raw value
+     *   { decision: 'AUTHORIZED_REUSE' }  first use under a recorded authorization
+     * Throws GovernanceRefusal:
+     *   HELD_OUT | CONSUMED_BY_OTHER_STUDY | ALIASED_SOURCE | CATEGORY_TRANSITION
      */
     function checkUse(id, use) {
         requireNamespace(id, NAMESPACE.TRAJECTORY);
@@ -322,23 +396,36 @@ export function createTrajectoryRegistry({ records, heldOut }) {
             throw new GovernanceRefusal('HELD_OUT', `trajectory seed ${id.value} is held out`);
         }
         const prior = consumptionOf(id);
+        const mine = prior.filter(r => r.study === study);
         const other = prior.filter(r => r.study !== study);
-        if (other.length) {
+
+        const unauthorized = other.filter(r => r.value !== id.value ||
+                                               !isAuthorized(id.value, r.study, study));
+        if (unauthorized.length) {
             throw new GovernanceRefusal('CONSUMED_BY_OTHER_STUDY',
                 `trajectory seed ${id.value} shares a stochastic source with ` +
-                other.map(r => `${r.value} (${r.study})`).join(', '));
+                unauthorized.map(r => `${r.value} (${r.study})`).join(', ') +
+                ' and no authorization covers this exact value and study pair');
         }
-        const mine = prior.filter(r => r.study === study);
-        if (mine.some(r => r.status !== category)) {
+        const aliased = mine.filter(r => r.value !== id.value);
+        if (aliased.length) {
+            throw new GovernanceRefusal('ALIASED_SOURCE',
+                `trajectory seed ${id.value} is a different raw value for the source ${study} ` +
+                `already recorded as ${aliased.map(r => r.value).join(', ')}; a rerun must use ` +
+                `the recorded value, and a new replicate must be a new source`);
+        }
+        const involved = [...mine, ...other];
+        if (involved.some(r => r.status !== category)) {
             throw new GovernanceRefusal('CATEGORY_TRANSITION',
-                `trajectory seed ${id.value} is recorded in ${study} as ` +
-                `${[...new Set(mine.map(r => r.status))].join('/')}; requested ${category}`);
+                `trajectory seed ${id.value} is recorded as ` +
+                `${[...new Set(involved.map(r => r.status))].join('/')}; requested ${category}`);
         }
-        return Object.freeze({ decision: mine.length ? 'REPRODUCTION' : 'AVAILABLE' });
+        const decision = mine.length ? 'REPRODUCTION' : other.length ? 'AUTHORIZED_REUSE' : 'AVAILABLE';
+        return Object.freeze({ decision });
     }
 
     return Object.freeze({
-        records: frozenRecords, heldOut: frozenHeldOut,
+        records: frozenRecords, heldOut: frozenHeldOut, authorizations: frozenAuths,
         isHeldOut, consumptionOf, isConsumedByStudy, checkUse,
     });
 }
@@ -370,6 +457,11 @@ export const TRAJECTORY_RECORDS = Object.freeze([
 // current requirement demands a reservation.
 export const TRAJECTORY_HELD_OUT = Object.freeze([]);
 
+// No cross-study reuse is authorized (M33-R1). An authorization is a committed record,
+// so it exists in the registry before any checkUse that relies on it.
+export const TRAJECTORY_AUTHORIZATIONS = Object.freeze([]);
+
 export const trajectory = createTrajectoryRegistry({
     records: TRAJECTORY_RECORDS, heldOut: TRAJECTORY_HELD_OUT,
+    authorizations: TRAJECTORY_AUTHORIZATIONS,
 });

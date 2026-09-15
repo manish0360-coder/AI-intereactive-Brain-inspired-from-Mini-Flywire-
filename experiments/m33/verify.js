@@ -46,7 +46,11 @@ const GOVERNANCE_MODULES = [
 ];
 
 const log = (...a) => { if (!JSON_MODE) console.log(...a); };
-const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'm33-'));
+// Created on first use, so importing this module (verify_m33.js, verify_r1.js) leaves
+// no temp directory behind.
+let TMP_DIR = null;
+const tmp = () => (TMP_DIR ??= fs.mkdtempSync(path.join(os.tmpdir(), 'm33-')));
+export const cleanupTmp = () => { if (TMP_DIR) fs.rmSync(TMP_DIR, { recursive: true, force: true }); TMP_DIR = null; };
 
 // ---- helpers ------------------------------------------------------------------
 const importSpecifiers = (src) => {
@@ -514,21 +518,25 @@ export const MUTANTS = [
 // is "caught" might be catching import failures rather than semantics.
 export const EQUIVALENT_CONTROL = 'MU21 no-op control (semantics unchanged)';
 
-export async function buildMutant(src, anchor, replacement, i) {
-    if (!src.includes(anchor)) throw new Error(`mutation anchor not found: ${anchor.slice(0, 60)}`);
-    const mutated = src.replace(anchor, replacement);
-    const dir = path.join(TMP, `mut${i}`);
+// Load a typed.js source text as a module, resolving './consumed.js' to the live registry.
+export async function loadTyped(text, tag) {
+    const dir = path.join(tmp(), `typed-${tag}`);
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, 'consumed.js'),
         `export * from ${JSON.stringify(pathToFileURL(path.join(ROOT, 'experiments/registry/consumed.js')).href)};\n`);
     const f = path.join(dir, 'typed.js');
-    fs.writeFileSync(f, mutated);
+    fs.writeFileSync(f, text);
     return import(pathToFileURL(f).href);
 }
 
-// ---- main ---------------------------------------------------------------------------
-async function main() {
-    const baseDir = path.join(TMP, 'base');
+export async function buildMutant(src, anchor, replacement, i) {
+    if (!src.includes(anchor)) throw new Error(`mutation anchor not found: ${anchor.slice(0, 60)}`);
+    return loadTyped(src.replace(anchor, replacement), `mut${i}`);
+}
+
+// ---- shared context (exported for experiments/m33/verify_r1.js) --------------------
+export async function buildContext() {
+    const baseDir = path.join(tmp(), 'base');
     const chain = materialiseAtCommit(BASE, 'experiments/registry/consumed.js', baseDir);
     for (const p of GOVERNANCE_MODULES) materialiseAtCommit(BASE, p, baseDir);
     const imp = (p, dir = baseDir) => import(pathToFileURL(path.join(dir, p)).href);
@@ -555,6 +563,24 @@ async function main() {
     const vectors = { WINDOW, oldHeld: o.held, oldCons: o.cons,
         hist: Object.fromEntries(Object.entries(HIST).map(([k, P]) => [k, vec(P)])) };
     const ctx = { OLD, HIST, rng, armsMakeRng: rng.makeRng, c1Frozen: HIST.c1.FROZEN, m31Seeds, vectors };
+    return { ctx, chain, armsImportsMakeRng };
+}
+
+export function importerSets() {
+    const baseFiles = git('ls-tree', '-r', '--name-only', BASE).split(/\r?\n/).filter(Boolean);
+    // Only files whose base content mentions a governance module name can import one.
+    const mention = new Set(git('grep', '-l', '-e', 'protocol', '-e', 'consumed', BASE, '--', '*.js', '*.mjs')
+        .split(/\r?\n/).filter(Boolean).map(l => l.slice(BASE.length + 1)));
+    const allowlist = governanceImporters(baseFiles.filter(f => mention.has(f)),
+        f => git('show', `${BASE}:${f}`));
+    const nowFiles = git('ls-files', '-co', '--exclude-standard').split(/\r?\n/).filter(Boolean);
+    const current = governanceImporters(nowFiles, f => fs.readFileSync(path.join(ROOT, f), 'utf8'));
+    return { allowlist, current };
+}
+
+// ---- main ---------------------------------------------------------------------------
+async function main() {
+    const { ctx, chain, armsImportsMakeRng } = await buildContext();
 
     const report = { base: BASE, oracleChain: chain.sort(), sections: {} };
     let fails = 0;
@@ -572,21 +598,22 @@ async function main() {
     log('='.repeat(78));
     log(`  oracle: base ${BASE.slice(0, 7)} — ${chain.length} modules materialised with git show`);
 
-    const T = await import(pathToFileURL(path.join(ROOT, TYPED_PATH)).href);
+    const target = git('log', '--diff-filter=A', '--format=%H', '--', TYPED_PATH).trim().split(/\r?\n/).pop();
+    // SOURCE BINDING. This verifier certifies typed.js AS COMMITTED BY M33 (the commit that
+    // added it), not whatever typed.js later becomes. M33-R1 changes typed.js and carries
+    // its own verifier (experiments/m33/verify_r1.js). Before M33 is committed, the
+    // working tree is the only version and is used.
+    const typedSrc = target ? git('show', `${target}:${TYPED_PATH}`)
+                            : fs.readFileSync(path.join(ROOT, TYPED_PATH), 'utf8');
+    const T = await loadTyped(typedSrc, 'bound');
+    log(`  subject: typed.js ${target ? 'at ' + target.slice(0, 7) + ' (source-bound)' : 'working tree'}`);
     emit('behavioural suite (real module)', await runSuite(T, ctx));
     emit('runtime binding', [{ id: 'B1', ok: armsImportsMakeRng,
         msg: 'arms.js derives sigma as makeRng((agentSeed ^ 0xBEEF) >>> 0) from instrumentation/rng.js, ' +
              'so T11/T12 test the runtime derivation itself' }]);
 
     // raw-import gate
-    const baseFiles = git('ls-tree', '-r', '--name-only', BASE).split(/\r?\n/).filter(Boolean);
-    // Only files whose base content mentions a governance module name can import one.
-    const mention = new Set(git('grep', '-l', '-e', 'protocol', '-e', 'consumed', BASE, '--', '*.js', '*.mjs')
-        .split(/\r?\n/).filter(Boolean).map(l => l.slice(BASE.length + 1)));
-    const allowlist = governanceImporters(baseFiles.filter(f => mention.has(f)),
-        f => git('show', `${BASE}:${f}`));
-    const nowFiles = git('ls-files', '-co', '--exclude-standard').split(/\r?\n/).filter(Boolean);
-    const current = governanceImporters(nowFiles, f => fs.readFileSync(path.join(ROOT, f), 'utf8'));
+    const { allowlist, current } = importerSets();
     const offenders = gateVerdict(current, allowlist);
     const gateCatches = gateVerdict([...current, 'experiments/future_study/protocol.js'], allowlist)
         .includes('experiments/future_study/protocol.js');
@@ -603,7 +630,6 @@ async function main() {
     report.allowlist = allowlist;
 
     // protected paths and seed accounting
-    const target = git('log', '--diff-filter=A', '--format=%H', '--', TYPED_PATH).trim().split(/\r?\n/).pop();
     const changed = (target
         ? git('diff', '--name-only', BASE, target)
         : git('diff', '--name-only', BASE)).split(/\r?\n/).filter(Boolean);
@@ -633,7 +659,7 @@ async function main() {
     report.target = target || null;
 
     // mutation testing
-    const src = fs.readFileSync(path.join(ROOT, TYPED_PATH), 'utf8');
+    const src = typedSrc;
     const mutRows = [];
     report.mutants = [];
     for (let i = 0; i < MUTANTS.length; i++) {
@@ -658,7 +684,7 @@ async function main() {
     report.fails = fails;
     report.total = Object.values(report.sections).flat().length;
     report.verdict = fails === 0 ? 'VERIFIED' : 'NOT VERIFIED';
-    fs.rmSync(TMP, { recursive: true, force: true });
+    if (TMP_DIR) fs.rmSync(TMP_DIR, { recursive: true, force: true });
     if (JSON_MODE) {
         process.stdout.write(JSON.stringify(report));
     } else {
