@@ -1,417 +1,122 @@
-# 🧠 MiniFlyWire
+# MiniFlyWire
 
-> **A Brain-Inspired Cognitive Architecture for Interactive Artificial Intelligence**
+> A real-time 3D agent that moves through a 20-node concept graph — and an audit-driven
+> research programme that measures which of its mechanisms actually change what it does.
 
 <p align="center">
-  <img src="Portfolio_Assets/MiniFlyWire/assets/screenshots/hero.png" alt="MiniFlyWire Hero" width="95%">
+  <img src="Portfolio_Assets/MiniFlyWire/assets/screenshots/hero.png" alt="MiniFlyWire" width="95%">
 </p>
 
-
-MiniFlyWire is an interactive cognitive architecture...
-
-MiniFlyWire is an interactive cognitive architecture that combines reinforcement learning, episodic memory, semantic memory, embedding learning, attention, executive control, planning, motivation, and long-term memory consolidation inside a real-time 3D neural visualization.
-
-Instead of treating intelligence as a single algorithm, MiniFlyWire models intelligence as the cooperation of multiple specialized cognitive systems. Every decision emerges from the interaction between memory, learning, planning, attention, executive control, and behavioral regulation.
-
-The project serves as both a research platform for experimenting with brain-inspired AI architectures and an educational visualization that makes internal cognitive processes transparent and observable.
-
----
-
-
-## 🌐 Live Portfolio
-
+[▶️ 20-second demo](Portfolio_Assets/MiniFlyWire/assets/videos/demo.mp4) ·
 **Portfolio:** https://manish-portfolio-one-gamma.vercel.app
 
-## 🎥 Demo
+---
 
-📹 **Full Demo Video**
+## In 30 seconds
 
-[▶️ Watch the 20-second MiniFlyWire Demo](Portfolio_Assets/MiniFlyWire/assets/videos/demo.mp4)
+- **What it is.** A browser app (Three.js) where an agent chooses its next node by combining a
+  learned score (Q-learning, reward and habit memory, trust) with a competitive arbitration step,
+  and shows its internal state live in a HUD.
+- **What makes it different.** I audited my own system, found that several of its "cognitive"
+  modules did not affect behaviour, and then repaired and measured it under frozen,
+  preregistered protocols with executable verification gates.
+- **What is verified.** Five defects are repaired and gated (Q-value namespace, scoring
+  sign inversions, goal-aware Q lookup, seeded randomness, the exploration branch).
+  13 gate scripts: 11 fully green, 2 keep one historical failure each, superseded by corrected
+  gates that pass.
+- **What is open.** The executive controller has **no effect** on the main (60%) scoring path.
+  The look-ahead (`futureScore`) id defect is **not repaired**. Neither is presented as solved.
+- **What it is not.** It is not a demonstrated cognitive architecture. The audit's verdict — a
+  heuristic scoring function over a fully observable graph — has not been overturned.
 
-> **🌐 Live Demo:** *(Coming Soon)*
-
+**Full evidence:** [`docs/VERIFICATION_STATUS.md`](docs/VERIFICATION_STATUS.md)
 
 ---
 
-## ✨ Key Highlights
+## Status at a glance
 
-* 🧠 Interactive 3D Brain Visualization
-* 🏆 Reinforcement Learning
-* 📚 Semantic Memory
-* 🧩 Episodic Memory
-* 🔍 Embedding-Based Similarity Learning
-* 🎯 Cognitive Attention System
-* 🧭 Goal-Oriented Planning
-* 🎮 Executive Decision Controller
-* ⚡ Motivational & Behavioral Regulation
-* 🔄 Experience Replay
-* 🏛 Long-Term Memory Consolidation
-* 📊 Live Cognitive Observatory (HUD)
-
----
-
-## 📖 Executive Summary
-
-Modern AI systems often specialize in a single capability, such as reinforcement learning, neural networks, or knowledge graphs. MiniFlyWire explores a different approach by integrating multiple cognitive mechanisms into one modular architecture.
-
-The system combines memory, learning, planning, attention, executive control, motivation, and visualization into a unified cognitive framework where each subsystem contributes to adaptive decision making. Every cognitive process is implemented as an independent module, making the architecture interpretable, extensible, and suitable for experimentation.
-
-Unlike traditional neural visualizations that only display neurons and connections, MiniFlyWire visualizes how an artificial cognitive system learns, remembers, reasons, and adapts through continuous interaction.
+| Area | Status | Evidence |
+|---|---|---|
+| Q-learning value namespace (D1) | ✅ Repaired · verified | [`verify_S2.js`](experiments/phase1_0/verify_S2.js) |
+| Scoring sign inversions (D3) | ✅ Repaired · verified | [`verify_S1.js`](experiments/phase1_0/verify_S1.js) |
+| Goal-aware Q lookup (Q4) | ✅ Repaired · verified | [`verify_S2_Q4.js`](experiments/phase1_0/verify_S2_Q4.js) |
+| Seeded, reproducible randomness (Q3) | ✅ Repaired · verified | [`verify_S4.js`](experiments/phase1_0/verify_S4.js) |
+| Exploration branch (F2) | ✅ Repaired · verified by corrected gate | [`verify_S3prime.js`](experiments/phase1_0/verify_S3prime.js) |
+| Executive controller → main scoring path | ❌ **Open** — inert (influence 0, capability 8.06) | [`exec_influence/report.json`](experiments/exec_influence/report.json) |
+| Look-ahead planning (`futureScore`, D2) | ❌ **Open** — id defect not repaired | [`render/planning.js`](render/planning.js) |
+| Prediction error in the browser app | ⚠️ Zero by construction — environment is fully observable | [Status §6](docs/VERIFICATION_STATUS.md) |
+| Hidden-structure environment | 🧪 Harness only — not in the browser app | [`experiments/m7/env.js`](experiments/m7/env.js) |
 
 ---
 
-## ❓ Why MiniFlyWire?
-
-MiniFlyWire was built to answer a simple research question:
-
-> **Can adaptive intelligent behavior emerge from the cooperation of multiple specialized cognitive systems instead of a single learning algorithm?**
-
-Rather than maximizing performance on one task, the project focuses on understanding how reinforcement learning, memory systems, planning, executive control, attention, and motivation can cooperate inside a unified cognitive architecture.
-
-The goal is to create an interpretable AI system where internal reasoning remains visible rather than hidden inside black-box models.
-
-
-# 🏗️ System Architecture
-
-MiniFlyWire is organized as a collection of independent cognitive modules that cooperate to produce adaptive behavior. Each module has a clearly defined responsibility, allowing the architecture to remain modular, extensible, and easy to maintain.
-
-The following diagram illustrates the high-level cognitive pipeline.
+## How a decision is made
 
 ```text
-                    User Interaction
-                           │
-                           ▼
-                Interactive Neural Graph
-                           │
-                           ▼
-                 Candidate Generation
-                           │
-                           ▼
-                 Candidate Analysis
-                           │
-                           ▼
-                Cognitive Attention
-                           │
-                           ▼
-                 Motivational State
-                           │
-                           ▼
-               Executive Controller
-                           │
-                           ▼
-                  Decision Selection
-                           │
-                           ▼
-          ┌─────────────────────────────────┐
-          │                                 │
-          ▼                                 ▼
- Reinforcement Learning            Episodic Memory
-          │                                 │
-          ▼                                 ▼
- Embedding Learning              Semantic Memory
-          │                                 │
-          └──────────────┬──────────────────┘
-                         ▼
-          Long-Term Memory Consolidation
-                         │
-                         ▼
-            Cognitive Observatory (HUD)
-                         │
-                         ▼
-             Real-Time Brain Visualization
+candidate neighbours
+   ├─ learned score (60%)   Q-value, rewards, habits, trust, look-ahead, penalties, attention
+   └─ arbitration   (40%)   competitive weighting of reward, semantic, confidence, curiosity, cost, schema
+            ▼
+   softmax → epsilon-greedy → move → Q-learning, reward and memory updates → HUD
 ```
 
----
-
-## Core Cognitive Modules
-
-| Module                     | Responsibility                                                          |
-| -------------------------- | ----------------------------------------------------------------------- |
-| 🧠 Neural Graph            | Represents concepts and relationships inside the cognitive environment. |
-| 🔎 Candidate Analysis      | Evaluates possible future actions before decision making.               |
-| 🎯 Attention System        | Prioritizes relevant concepts based on context and activation.          |
-| ⚡ Motivational State       | Regulates curiosity, confidence, stress, and behavioral drives.         |
-| 🎮 Executive Controller    | Resolves competition between multiple cognitive pressures.              |
-| 🏆 Reinforcement Learning  | Learns from rewards and penalties through experience.                   |
-| 🧩 Episodic Memory         | Stores successful experiences as reusable episodes.                     |
-| 📚 Semantic Memory         | Maintains conceptual relationships between ideas.                       |
-| 🔍 Embedding Learning      | Learns vector representations for semantic similarity.                  |
-| 🏛 Long-Term Consolidation | Stabilizes repeated experiences into durable knowledge.                 |
-| 📊 Cognitive Observatory   | Visualizes the internal state of the architecture in real time.         |
-
-> 📖 A complete explanation of each module is available in **Architecture.md** and **Technical_Dossier.md**.
-
-
-# 💻 Technology Stack
-
-MiniFlyWire is built using modern web technologies combined with modular JavaScript architecture to create an interactive, real-time cognitive simulation.
-
-| Category                 | Technologies                   |
-| ------------------------ | ------------------------------ |
-| **Programming Language** | JavaScript (ES6 Modules)       |
-| **Graphics & Rendering** | Three.js, WebGL                |
-| **User Interface**       | HTML5, CSS3                    |
-| **Visualization**        | Canvas API                     |
-| **Data Structures**      | Maps, Sets, Graph Structures   |
-| **Architecture**         | Modular Component-Based Design |
-| **Development Tools**    | VS Code, Git, GitHub           |
-| **Package Management**   | npm                            |
-| **Version Control**      | Git                            |
+The executive controller's weights are computed but read under field names that do not exist on
+the 60% path — see [Status §5](docs/VERIFICATION_STATUS.md).
 
 ---
 
-# 🧠 Current Capabilities
+## Research method
 
-MiniFlyWire currently implements multiple interacting cognitive subsystems that cooperate to simulate adaptive decision making inside a real-time neural environment.
-
-The architecture is capable of:
-
-## Learning
-
-* ✅ Learning through rewards and penalties
-* ✅ Reinforcement-based behavioral adaptation
-* ✅ Continuous experience accumulation
-* ✅ Autonomous exploration
-* ✅ Manual knowledge acquisition
+- **Audit first.** A read-only audit with falsification probes:
+  [`research/cognitive-audit/`](research/cognitive-audit/).
+- **Preregistration.** Each study is written and frozen (SHA-256) before data collection:
+  [`research/preregistrations/`](research/preregistrations/).
+- **Executable gates.** Later verifiers include mutation tests that confirm a gate can fail.
+- **Errata, never edits.** Failed or superseded gates stay in the repository and still run.
+- **Null and inconclusive results are reported as such** (e.g. Q1: *inconclusive — insufficient
+  material*).
 
 ---
 
-## Memory
+## Run it
 
-* ✅ Episodic memory formation
-* ✅ Semantic memory organization
-* ✅ Working memory
-* ✅ Experience replay
-* ✅ Long-term memory consolidation
-* ✅ Memory retrieval
-* ✅ Context-aware episode segmentation
-
----
-
-## Decision Making
-
-* ✅ Candidate evaluation
-* ✅ Competitive executive arbitration
-* ✅ Goal-oriented planning
-* ✅ Future path prediction
-* ✅ Dynamic action selection
-
----
-
-## Cognitive Processing
-
-* ✅ Embedding-based similarity learning
-* ✅ Cognitive attention
-* ✅ Activation competition
-* ✅ Behavioral regulation
-* ✅ Motivational state management
-* ✅ Confidence estimation
-* ✅ Curiosity-driven exploration
-* ✅ Stress and fatigue regulation
-
----
-
-## Knowledge Representation
-
-* ✅ Dynamic concept graph
-* ✅ Semantic relationships
-* ✅ Embedding vectors
-* ✅ Knowledge propagation
-* ✅ Concept similarity estimation
-
----
-
-## Visualization
-
-* ✅ Interactive 3D neural graph
-* ✅ Real-time neuron activation
-* ✅ Live cognitive observatory (HUD)
-* ✅ Animated signal propagation
-* ✅ Interactive neural exploration
-
----
-
-MiniFlyWire continues to evolve as additional cognitive mechanisms are integrated into the architecture. The modular design allows new subsystems to be introduced without redesigning the existing framework.
-
-
-# 📚 Documentation
-
-MiniFlyWire is accompanied by a complete set of technical documents that explain the architecture, algorithms, engineering decisions, and future development plans in detail.
-
-| Document                   | Description                                                                                                              |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| **README.md**              | Project overview, features, architecture, and setup instructions.                                                        |
-| **Architecture.md**        | High-level system architecture, module interactions, and data flow.                                                      |
-| **Technical_Dossier.md**   | Comprehensive technical documentation covering every subsystem of the cognitive architecture.                            |
-| **AI_Algorithms.md**       | Detailed explanation of learning algorithms, memory systems, planning, executive control, and decision-making processes. |
-| **Design_Decisions.md**    | Engineering trade-offs, architectural choices, and implementation rationale.                                             |
-| **Development_Journal.md** | Development history, major milestones, architectural evolution, and lessons learned.                                     |
-| **Future_Roadmap.md**      | Planned features, upcoming research directions, and long-term project vision.                                            |
-
----
-
-### Documentation Navigation
-
-```text
-README.md
-     │
-     ▼
-Architecture.md
-     │
-     ▼
-Technical_Dossier.md
-     │
-     ▼
-AI_Algorithms.md
-     │
-     ▼
-Design_Decisions.md
-     │
-     ▼
-Development_Journal.md
-     │
-     ▼
-Future_Roadmap.md
-```
-
-Whether you are a recruiter, software engineer, researcher, or student, these documents provide progressively deeper insight into the design and implementation of MiniFlyWire.
-
-
-
-# 📂 Project Structure
-
-MiniFlyWire follows a modular architecture where each cognitive subsystem is implemented as an independent module. This organization allows the project to remain maintainable, extensible, and easy to experiment with.
-
-```text
-MiniFlyWire/
-│
-├── render/                        # Core cognitive architecture
-│   ├── main.js                    # System initialization & orchestration
-│   ├── neuronVisuals.js           # 3D brain visualization
-│   ├── connections.js             # Neural graph connectivity
-│   ├── candidateAnalysis.js       # Candidate evaluation
-│   ├── cognitiveAttention.js      # Attention mechanism
-│   ├── executiveController.js     # Decision arbitration
-│   ├── motivationalState.js       # Internal drives & motivation
-│   ├── planning.js                # Goal-oriented planning
-│   ├── memory.js                  # Reinforcement learning memory
-│   ├── episodic.js                # Episodic memory
-│   ├── episodicContextEngine.js   # Context-aware episodic memory
-│   ├── episodeManager.js          # Episode management
-│   ├── embeddings.js             # Embedding learning
-│   ├── knowledge.js              # Semantic knowledge graph
-│   ├── behavior.js               # Behavioral regulation
-│   ├── activationCompetition.js  # Neural competition
-│   ├── longTermConsolidation.js  # Memory consolidation
-│   ├── hud.js                    # Cognitive observatory
-│   └── ...                       # Additional cognitive modules
-│
-├── Portfolio_Assets/             # Project documentation
-│   ├── README.md
-│   ├── Architecture.md
-│   ├── Technical_Dossier.md
-│   ├── AI_Algorithms.md
-│   ├── Design_Decisions.md
-│   ├── Development_Journal.md
-│   ├── Future_Roadmap.md
-│   ├── assets/
-│   └── docs/
-│
-├── index.html                    # Application entry point
-├── neurons.json                  # Neural graph data
-├── connections.json              # Graph connectivity
-└── README.md
-```
-
----
-
-## Repository Organization
-
-The project is divided into two primary areas:
-
-### 🧠 Core Cognitive Architecture (`render/`)
-
-Contains all cognitive subsystems responsible for learning, memory, planning, reasoning, visualization, and behavioral regulation.
-
-### 📚 Documentation (`Portfolio_Assets/`)
-
-Contains comprehensive engineering documentation, architecture descriptions, algorithms, design decisions, and future development plans.
-
-This separation keeps the implementation independent from the documentation while making the repository easy to navigate for developers, researchers, and recruiters.
-
-
-# ⚙️ Installation
-
-### Clone the Repository
+**Browser app.** The page loads `neurons.json` and `connections.json` with `fetch`, so serve the
+repository root over HTTP (any static server), then open `index.html`. Three.js loads from a CDN.
 
 ```bash
-git clone https://github.com/your-username/MiniFlyWire.git
-cd MiniFlyWire
+python -m http.server 8000
 ```
 
-### Install Dependencies
+Press **Space** to start or stop the agent. Click nodes to interact. **Shift+R** resets learned
+state.
+
+**Verification gates.** Node.js only, no install step. Gates in `experiments/phase1_0/` must be
+run from that directory.
 
 ```bash
-npm install
+cd experiments/phase1_0
 ```
-
-### Start the Development Server
 
 ```bash
-npm run dev
+node verify_S2.js
 ```
-
-### Open in Browser
-
-Visit:
-
-```text
-http://localhost:5173
-```
-
-> **Note:** Replace the URL if your development server uses a different port.
 
 ---
 
-# 🚀 Usage
+## Repository layout
 
-1. Launch the application.
-2. Explore the interactive neural graph.
-3. Select neurons and observe activations.
-4. Train the system through interaction.
-5. Watch reinforcement learning, memory formation, and decision-making evolve in real time.
-6. Monitor the Cognitive Observatory (HUD) to inspect internal cognitive processes.
-
-For detailed explanations of the architecture and algorithms, refer to the documentation in the `Portfolio_Assets` directory.
-
-
-
-# 🛣️ Roadmap
-
-MiniFlyWire is an active research and engineering project. Future development will continue expanding the cognitive architecture while maintaining a modular and interpretable design.
-
-| Version  | Planned Improvements                                                                                                   | Status         |
-| -------- | ---------------------------------------------------------------------------------------------------------------------- | -------------- |
-| **v0.1** | Interactive neural graph, reinforcement learning, memory systems, executive control, planning, cognitive visualization | ✅ Completed    |
-| **v0.2** | Enhanced semantic memory, improved consolidation, richer visualization, performance optimization                       | 🚧 In Progress |
-| **v0.3** | Persistent memory across sessions, advanced knowledge organization, improved reasoning                                 | 📅 Planned     |
-| **v0.4** | Natural language interaction, external knowledge integration, advanced planning                                        | 📅 Planned     |
-| **v0.5** | Multi-agent cognitive collaboration, distributed memory, collaborative reasoning                                       | 📅 Planned     |
-| **v1.0** | Complete brain-inspired cognitive architecture for interactive artificial intelligence                                 | 🎯 Vision      |
+| Path | Contents |
+|---|---|
+| `index.html`, `main.js` | Browser entry point and agent loop |
+| `render/` | Scoring, Q-learning, memory, motivational state, visualisation modules |
+| `instrumentation/` | Seeded RNG, telemetry bus, trace schema, session recorder |
+| `benchmarks/harness/` | Headless shim that runs the real `main.js` under Node |
+| `experiments/` | Gates (`phase1_0/`), controller measurement (`exec_influence/`), studies (`m7/` onward, `c1/`, `q1/`, `uqa/`, `uqb/`) |
+| `research/` | Audit, preregistrations, errata, interpretations |
+| `docs/` | [`VERIFICATION_STATUS.md`](docs/VERIFICATION_STATUS.md) |
+| `Portfolio_Assets/MiniFlyWire/` | Design documents and media. They describe design intent and predate the audit; where they differ, `docs/VERIFICATION_STATUS.md` is current. |
 
 ---
 
-### Long-Term Vision
+## License
 
-The long-term goal of MiniFlyWire is to evolve into a fully modular cognitive architecture that combines memory, learning, reasoning, planning, motivation, attention, and autonomous adaptation within a transparent and interactive environment.
-
-Rather than focusing on a single AI technique, the project aims to explore how multiple specialized cognitive systems can cooperate to produce increasingly adaptive and explainable intelligent behavior.
-
-
-# 📄 License
-
-This project is released under the **MIT License**.
-
-You are free to use, modify, and distribute the software in accordance with the terms of the license.
-
-See the `LICENSE` file for complete details.
+No license file is included in this repository.
