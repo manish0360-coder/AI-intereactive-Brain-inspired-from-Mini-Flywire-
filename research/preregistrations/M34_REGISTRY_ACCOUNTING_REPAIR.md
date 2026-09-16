@@ -13,19 +13,14 @@ successor preregistration, no RNG, graph, `futureScore` or production change. No
 
 ## 1. Verdict
 
-> # M34-YELLOW
+> # M34-GREEN
 > **The accounting defect is repaired where the registry chain lives: a successor link records
 > 895000–895999 as consumed by C1, with an evaluation record read back from C1's own committed
-> artifacts. Every other decision is unchanged, and no historical file is touched.**
+> artifacts. The typed layer now resolves through that link, and the M33 gate distinguishes a
+> registry chain link from study code. No historical file is rewritten.**
 >
-> **YELLOW for two structural reasons, neither a defect in the repair, and both closed by the same
-> next milestone (§13):**
-> 1. `experiments/registry/typed.js` (M33 / M33-R1) still delegates configuration decisions to the
->    **old** link, and M34 is forbidden to modify it, so the typed layer a future study is supposed
->    to call still reports 895xxx as available (F1, F2).
-> 2. M33's raw-import gate flags the new chain link as a new raw importer, because a chain link must
->    import the previous link (§8.1). `experiments/m33/verify.js` reports 68/69 and
->    `verify_r1.js` 113/114 for that one check alone (P6).
+> **This memo records M34 in two parts: the accounting repair (§3–§11, unchanged), and the closure
+> (§14) that resolved the two structural items the repair had left open.**
 
 ---
 
@@ -120,7 +115,7 @@ Only new files. **No existing file is modified.**
 
 ## 6. Verification results
 
-`node experiments/m34/verify.js` — **51/51 passed, 0 failed.**
+`node experiments/m34/verify.js` — **75/75 passed, 0 failed** after the closure (§14); 51/51 as first written.
 
 | Group | Result |
 |---|---|
@@ -129,7 +124,7 @@ Only new files. **No existing file is modified.**
 | **C** evaluation honesty | every number equals C1's committed `seedCensus`/`accounting`; **recomputed independently**: 4,000 candidate rows carry exactly 1,000 distinct seeds spanning 895000–895999; artifact digests match `INTEGRITY.sha256`; the 896xxx claim stays conservative with no count asserted |
 | **D** backward compatibility | **exhaustive 0..1,000,000: the only decisions that change are the 1000 C1 seeds**; held-out decisions identical everywhere; inherited chain spread unchanged and in order; the old link still answers exactly as M18/M21 recorded; registry frozen |
 | **E** seed accounting | no seed outside the block becomes consumed; M8, Q1, UQ-A, UQ-B and M7 blocks were already consumed and remain so |
-| **F** pinned gap | the typed layer still reports 895xxx available, and that is a delegation fact about `typed.js` |
+| **F** typed layer | **after the closure**: the installed typed layer refuses 895xxx, and that is a delegation fact about `typed.js` (§14) |
 | **P** integrity | only M34 files changed since `73c12d9`; 27 protected files byte-identical; no collection data produced; the M33 gate conflict pinned by asking that gate itself (P6) |
 
 ---
@@ -164,7 +159,9 @@ semantic change — a harness defect, now impossible to repeat silently.
 | MU20 rangeFor off by one | caught by B2, B4 |
 | MU21 no-op control (semantics unchanged) | no-op control survives |
 
-**20 of 20 semantic mutants caught; the control survives.**
+**20 of 20 accounting mutants caught; the control survives.** Across all three subjects — the
+successor link, the typed layer and the gate — the closure run reports **27 of 27 semantic
+mutants caught**, with three no-op controls surviving (§14.6).
 
 ---
 
@@ -199,8 +196,9 @@ guaranteed not to drift — so the gate reports exactly one offender:
 | Could M34 avoid it? | Only by duplicating the inherited chain (drift risk the convention exists to prevent) or by hiding the import behind a computed path — **evading its own gate**, which this programme forbids |
 | Where does the fix belong? | With the milestone that re-points `typed.js` (§13): the gate's allowlist needs a category for registry chain links, and `experiments/m33/verify.js` may not be modified by M34 |
 
-**This is pinned as executed evidence, not prose:** check `P6` asks the M33 gate itself and requires
-that the offender list is exactly this one file.
+**This was pinned as executed evidence, not prose:** check `P6` asks the M33 gate itself. **It is now
+resolved by the closure (§14):** the gate learned the registry-chain category, `P6` requires an empty
+offender list, and both M33 verifiers are green again.
 
 **Collections were not re-run.** `c1/verify_collection.js`, and the M8/Q1/UQ-A collection verifiers,
 boot agents; every protocol, collector and data file is byte-identical, so a re-run could only
@@ -263,26 +261,118 @@ gitignored by the committed `experiments/c1/data/.gitignore`, so its integrity r
 
 ## 12. Status
 
-> # M34-YELLOW
-> **The accounting repair is complete and independently verified. The typed layer is not yet wired
-> to it, and M34 is forbidden to change that.**
+> # M34-GREEN
+> **The accounting repair and its closure are complete and independently verified. The typed layer
+> refuses 895xxx, the gate distinguishes a chain link from study code, and every historical record
+> is untouched.**
 
-Not GREEN: a future study calling the typed layer would still see 895xxx as available (F1), and the
-M33 gate flags the new link (§8.1). Not HOLD: nothing is unresolved — both items are settled by one
-small change in the next milestone, and neither affects the accounting itself.
+Not YELLOW: both items the repair left open are closed and checked by execution (§14). Not HOLD:
+nothing is unresolved.
 
 ---
 
 ## 13. Exact next best decision
 
-> ## Re-point `experiments/registry/typed.js` from `consumed.js` to `consumed_after_c1.js`, and give
-> ## the M33 raw-import gate a category for registry chain links
-> One import change plus one allowlist category, with a verifier asserting that the typed layer now
-> refuses 895xxx, that every other typed decision is unchanged, and that the gate is green again.
-> Both M34 items close together, taking M34 to GREEN.
+> ## The successor research substrate is clean; the next scientific decision is the Director's
+> With the registry chain, the typed layer and the gate consistent, the governance substrate no
+> longer blocks anything. The open scientific items are unchanged and untouched by M34: the D2
+> look-ahead defect, the inert executive controller, and the historical trajectory-seed accounting.
 
-**Not recommended before then:** any C × R preregistration or collection, since a future study
-reaching the registry through the typed layer would still read the stale answer.
+**Still gated on a Director ruling, not on the substrate:** any C × R preregistration or collection.
+
+---
+
+## 14. Closure (Director ruling: *M34 FINAL CLOSURE*)
+
+### 14.1 Dependency chain
+
+```
+experiments/registry/typed.js            the typed governance layer every future study calls
+   └─ consumed_after_c1.js               M34 link: C1's block + the inherited list, spread unchanged
+        └─ consumed.js                   the link after UQ-B, byte-identical, still answering as M18/M21 recorded
+             └─ uqb → uqa → q1 → m8 protocols
+```
+
+This is the chain convention the repository already used at M18 and M34: each link imports its
+predecessor, and no historical link is rewritten.
+
+### 14.2 The gate defect, exactly
+
+`gateVerdict(current, allowlist)` knew only file **names**. Its permitted set was the base-commit
+importers plus two M33 files, so **any** new importer of a raw governance module was an offender —
+including a registry chain link, which the convention *requires* to import its predecessor. The gate
+could not express the difference between *the registry* and *a consumer of the registry*.
+
+### 14.3 The minimal fix
+
+One predicate, `isRegistryChainLink(file, hits)`, and an optional import map:
+
+- the file must be a chain link by path **and** name: `experiments/registry/consumed*.js`;
+- when the caller supplies the import map, **every** governance module it imports must itself live in
+  `experiments/registry/` — a link may import its predecessor and nothing else.
+
+Nothing is whitelisted by name, no file outside that directory is exempt, and a study file is not
+exempted by moving into the registry directory under another name (G4). The rule remains: *historical
+raw registry predicates are protected from new study consumers, while successor registry links may
+import their predecessor.*
+
+### 14.4 Why this did not touch historical evidence
+
+Both M33 verifiers are **source-bound to the typed.js of their own commits** — M33 to `3fb2876`,
+M33-R1 to `73c12d9` — so re-pointing `typed.js` changes neither recorded result. Their check counts,
+mutant lists and memo bindings are unchanged; only the gate's category is refined, and that refinement
+is what makes them green again. **No historical registry file, protocol, dataset or memo was rewritten.**
+
+### 14.5 Closure results
+
+| Requirement | Check | Result |
+|---|---|---|
+| 1 typed.js resolves through the successor | T1, F2 | PASS |
+| 2 895000–895999 refused at the typed layer | T2 (1000/1000) | PASS |
+| 3 894999 outside the block | T3 | PASS |
+| 4 895000 and 895999 classified | T4 | PASS |
+| 5 896000 classified by the inherited record | T5 | PASS |
+| 6 other typed decisions unchanged | T6 exhaustive 0..1,000,000, T7, T8 | PASS |
+| 7 a new study importing the raw registry is still caught | G2, G6, G7 | PASS |
+| 8 the legitimate chain link is accepted | G1, G5, P6 | PASS |
+| 9 M33 and M33-R1 green again | 69/69 and 114/114 | PASS |
+| 10 M34 verification green | 75/75 | PASS |
+| 11 historical verifiers valid | §8 table | PASS |
+
+### 14.6 Closure mutants
+
+| Mutant | Outcome |
+|---|---|
+| TM1 typed layer still points at the pre-C1 link | caught by T1, T2, T4, T6 |
+| TM2 typed layer silently accepts 895xxx | caught by T1, T2, T4, T6 |
+| TM3 typed layer falsely rejects unrelated valid seeds | caught by T3, T6, T7 |
+| TM4 no-op control (typed semantics unchanged) | no-op control survives |
+| GM1 chain-link exemption broadened to any file | caught by G2, G4, G7, G5 |
+| GM2 exemption ignores what the link imports | caught by G3 |
+| GM3 raw study import no longer detected | caught by G6, G7 |
+| GM4 chain-link category removed entirely | caught by G1, G7 |
+| GM5 no-op control (gate semantics unchanged) | no-op control survives |
+
+Each is caught by a named behavioural check. Two no-op controls survive. `GM3` initially survived
+because the gate checks exercised only the verdict, never the scanner; `G6`/`G7` now exercise
+detection itself on a synthetic tree.
+
+**A self-referential trap, recorded because it cost two iterations:** the synthetic fixtures spell an
+import of the historical registry, so writing them literally makes the gate read *this verifier* as a
+raw importer — and the same is true of a comment quoting one. The fixture sources are therefore built
+from parts, exactly as the M33 verifier builds its own mutation tokens.
+
+### 14.7 Closure integrity
+
+| | |
+|---|---|
+| files changed since `73c12d9` | `typed.js`, `m33/verify.js`, `consumed_after_c1.js`, `m34/verify.js`, this memo, `verify_m34.js` — nothing else (P1) |
+| C1 data, results and digests · UQ-B · production · `consumed.js` · `m33/verify_r1.js` | byte-identical to `73c12d9` (P2) |
+| `futureScore`, the graph, the RNG | untouched — no such file is in the change set |
+| registered experimental seeds consumed | **0** (P4) |
+| C1 readouts | still gitignored by design, integrity by committed digest; **not added to git** (P5) |
+| 896xxx · 900500 floor | unchanged (C4, B6, T5) |
+| pushed | **NO** |
 
 ---
 

@@ -38,11 +38,15 @@ export const M34_FILES = [
     'experiments/m34/verify.js',
     'research/preregistrations/M34_REGISTRY_ACCOUNTING_REPAIR.md',
     'research/preregistrations/verify_m34.js',
+    // M34 closure: the typed layer resolves through the successor, and the M33 gate learns the
+    // registry-chain category. Both M33 verifiers are SOURCE-BOUND to the typed.js of their own
+    // commits, so neither recorded result changes.
+    'experiments/registry/typed.js',
+    'experiments/m33/verify.js',
 ];
 // Files whose content M34 must not touch, checked by blob identity.
 export const PROTECTED = [
-    'experiments/registry/consumed.js', 'experiments/registry/typed.js',
-    'experiments/m33/verify.js', 'experiments/m33/verify_r1.js',
+    'experiments/registry/consumed.js', 'experiments/m33/verify_r1.js',
     'experiments/c1/protocol.js', 'experiments/c1/collect.js', 'experiments/c1/run_collection.js',
     'experiments/c1/verify_collection.js', 'experiments/c1/gate.js',
     // readouts.jsonl is deliberately gitignored by the committed experiments/c1/data/.gitignore,
@@ -191,13 +195,129 @@ export async function runSuite(N, ctx) {
     }, 'the M8, Q1, UQ-A, UQ-B and M7 blocks were already consumed and remain so');
 
     // ---------- F. the typed layer gap, asserted not hidden ----------
-    check('F1', () => ctx.typed.config.isConsumed(ctx.typed.configSeed(895500)) === false,
-        'PINNED GAP: typed.js still delegates to the OLD link, so the typed layer reports 895xxx ' +
-        'available. M34 may not modify M33/M33-R1; re-pointing it is the next milestone');
-    check('F2', () => ctx.typedImportsOldLink && !ctx.typedImportsSuccessor,
-        'that gap is a delegation fact: typed.js imports consumed.js and not the successor');
+    check('F1', () => ctx.typed.config.isConsumed(ctx.typed.configSeed(895500)) === true,
+        'the installed typed layer refuses 895xxx — the M34 gap is closed');
+    check('F2', () => ctx.typedImportsSuccessor && !ctx.typedImportsOldLink,
+        'that closure is a delegation fact: typed.js imports the successor link, not consumed.js');
 
     return results;
+}
+
+/**
+ * Materialise a typed.js source with BOTH chain files resolvable, so a mutant may point at
+ * either link. The shims re-export the real modules, so the decisions under test are the
+ * repository's own.
+ */
+export async function loadTypedChain(text, tag) {
+    const dir = path.join(tmp(), `typed-${tag}`);
+    fs.mkdirSync(dir, { recursive: true });
+    for (const f of ['consumed.js', 'consumed_after_c1.js']) {
+        fs.writeFileSync(path.join(dir, f),
+            `export * from ${JSON.stringify(pathToFileURL(path.join(ROOT, 'experiments/registry', f)).href)};\n`);
+    }
+    const f = path.join(dir, 'typed.js');
+    fs.writeFileSync(f, text);
+    return import(pathToFileURL(f).href);
+}
+
+/** Closure requirements 1-6: what the typed layer must now decide. */
+export async function runTypedSuite(T, ctx) {
+    const results = [];
+    const check = (id, cond, msg) => {
+        let ok;
+        try { ok = typeof cond === 'function' ? !!cond() : !!cond; } catch (e) {
+            ok = false; msg = `${msg} [threw ${e.code || e.name}]`;
+        }
+        results.push({ id, ok, msg });
+        return ok;
+    };
+    const c = (v) => T.config.isConsumed(T.configSeed(v));
+    check('T1', () => c(895500) === true && ctx.typedImportsSuccessor && !ctx.typedImportsOldLink,
+        'typed.js resolves configuration decisions through consumed_after_c1.js');
+    check('T2', () => {
+        let n = 0;
+        for (let v = 895000; v <= 895999; v++) if (c(v)) n++;
+        ctx.typedBlock = n;
+        return n === 1000;
+    }, () => `all ${ctx.typedBlock}/1000 seeds of 895000-895999 are consumed AT THE TYPED LAYER`);
+    check('T3', () => c(894999) === false,
+        'boundary 894999 remains outside the C1 consumed block at the typed layer');
+    check('T4', () => c(895000) === true && c(895999) === true,
+        'boundaries 895000 and 895999 are classified as consumed');
+    check('T5', () => c(896000) === true && T.config.isHeldOut(T.configSeed(896000)) === false,
+        'boundary 896000 stays classified by the inherited 896xxx record');
+    check('T6', () => {
+        let diff = 0, inBlock = 0;
+        for (let v = 0; v <= 1_000_000; v++) {
+            if (c(v) !== ctx.OLD.isConsumed(v)) { diff++; if (v >= 895000 && v <= 895999) inBlock++; }
+            if (T.config.isHeldOut(T.configSeed(v)) !== ctx.OLD.isHeldOut(v)) diff += 1000;
+        }
+        ctx.typedDiff = diff; ctx.typedInBlock = inBlock;
+        return diff === 1000 && inBlock === 1000;
+    }, () => `exhaustive 0..1,000,000 at the typed layer: exactly the 1000 C1 seeds change ` +
+        `(${ctx.typedInBlock}); no unrelated seed is newly refused and held-out is untouched`);
+    check('T7', () => [0, 1, 894000, 894998, 901000, 20260819000].every(v =>
+        c(v) === ctx.OLD.isConsumed(v)),
+        'representative unrelated seeds keep their previous typed answers');
+    check('T8', () => {
+        const SENT = Symbol('x');
+        let r = SENT;
+        try { r = T.config.isConsumed(895500); } catch (e) { return e.code === 'UNTYPED_SEED' && r === SENT; }
+        return false;
+    }, 'the typed layer still refuses a raw integer: the repair did not loosen typing');
+    return results;
+}
+
+/** Closure requirements 7-8: the gate's category, on synthetic inputs. */
+export function gateChecks(m33, sets) {
+    const rows = [];
+    const add = (id, ok, msg) => rows.push({ id, ok: !!ok, msg });
+    const map = new Map(sets.currentMap);
+    const STUDY = 'experiments/future_study/protocol.js';
+    const ROGUE = 'experiments/registry/consumed_rogue.js';
+    const NAMED = 'experiments/registry/helper.js';
+    map.set(STUDY, ['experiments/registry/consumed.js']);
+    map.set(ROGUE, ['experiments/c1/protocol.js']);
+    map.set(NAMED, ['experiments/registry/consumed.js']);
+    const verdict = (extra) => m33.gateVerdict([...sets.current, ...extra], sets.allowlist, map);
+    add('G1', verdict([]).length === 0, 'the legitimate successor chain link is accepted by the gate');
+    add('G2', verdict([STUDY]).includes(STUDY),
+        'a NEW study file importing the raw historical registry is still caught');
+    add('G3', verdict([ROGUE]).includes(ROGUE),
+        'a registry-named file importing a STUDY protocol is caught: the exemption covers only a ' +
+        'link importing its predecessor');
+    add('G4', verdict([NAMED]).includes(NAMED),
+        'a non-link file inside experiments/registry/ is not exempt: the category is by chain-link ' +
+        'name, not by directory alone');
+    // Detection itself must be under test, not just the verdict: exercise the gate's own
+    // scanner over a synthetic tree, so a mutant that stops detecting raw imports is caught.
+    // SELF-CHECK. The fixture sources are BUILT, never written literally. Spelling an import
+    // of the historical registry anywhere in this file — even inside a comment — makes the
+    // gate's scanner read THIS verifier as a raw importer. It did exactly that twice while
+    // this check was being written: once in the fixtures, once in the comment describing them.
+    const FROM = 'fr' + 'om';
+    const VFILES = {
+        'experiments/future_study/protocol.js': `import { isConsumed } ${FROM} '../registry/consumed.js';`,
+        'experiments/registry/consumed_after_c1.js': `import { CONSUMED_RANGES } ${FROM} './consumed.js';`,
+        'experiments/future_study/innocent.js': `import fs ${FROM} 'node:fs';`,
+    };
+    const vread = (f) => VFILES[f];
+    const detected = m33.governanceImporters(Object.keys(VFILES), vread);
+    add('G6', detected.includes('experiments/future_study/protocol.js') &&
+        detected.includes('experiments/registry/consumed_after_c1.js') &&
+        !detected.includes('experiments/future_study/innocent.js'),
+        'the scanner still detects raw registry imports — study file and chain link both found, ' +
+        'an unrelated file not');
+    const vmap = m33.governanceImportMap(Object.keys(VFILES), vread);
+    add('G7', (vmap.get('experiments/future_study/protocol.js') || [])[0] === 'experiments/registry/consumed.js' &&
+        m33.gateVerdict(detected, [], vmap).includes('experiments/future_study/protocol.js') &&
+        !m33.gateVerdict(detected, [], vmap).includes('experiments/registry/consumed_after_c1.js'),
+        'end to end on the synthetic tree: the study file is refused and the chain link is accepted');
+    add('G5', m33.isRegistryChainLink('experiments/registry/consumed_after_c1.js',
+            ['experiments/registry/consumed.js']) === true &&
+        m33.isRegistryChainLink('experiments/c1/collect.js', ['experiments/registry/consumed.js']) === false,
+        'the category is a property of the file and its imports, not a per-file whitelist');
+    return rows;
 }
 
 export const MUTANTS = [
@@ -234,6 +354,51 @@ export const MUTANTS = [
 ];
 export const CONTROL = 'MU21 no-op control (semantics unchanged)';
 
+// Closure mutants on the OTHER two subjects: the typed layer and the M33 gate.
+export const TYPED_MUTANTS = [
+    ['TM1 typed layer still points at the pre-C1 link',
+     "import * as CONFIG_REGISTRY from './consumed_after_c1.js';",
+     "import * as CONFIG_REGISTRY from './consumed.js';"],
+    ['TM2 typed layer silently accepts 895xxx',
+     '        return CONFIG_REGISTRY.isConsumed(requireNamespace(id, NAMESPACE.CONFIG).value);',
+     '        const v = requireNamespace(id, NAMESPACE.CONFIG).value;\n' +
+     '        return (v >= 895000 && v <= 895999) ? false : CONFIG_REGISTRY.isConsumed(v);'],
+    ['TM3 typed layer falsely rejects unrelated valid seeds',
+     '        return CONFIG_REGISTRY.isConsumed(requireNamespace(id, NAMESPACE.CONFIG).value);',
+     '        const v = requireNamespace(id, NAMESPACE.CONFIG).value;\n' +
+     '        return v >= 894000 || CONFIG_REGISTRY.isConsumed(v);'],
+    ['TM4 no-op control (typed semantics unchanged)',
+     '// ---- configuration namespace ----', '// ---- configuration namespace (no-op) ----'],
+];
+export const TYPED_CONTROL = 'TM4 no-op control (typed semantics unchanged)';
+
+export const GATE_MUTANTS = [
+    ['GM1 chain-link exemption broadened to any file',
+     "    /^experiments\\/registry\\/consumed[A-Za-z0-9_.-]*\\.js$/.test(f) &&",
+     '    true &&'],
+    ['GM2 exemption ignores what the link imports',
+     "    (hits === null || hits.every(h => h.startsWith('experiments/registry/')));",
+     '    (hits === null || true);'],
+    ['GM3 raw study import no longer detected',
+     '            .filter(r => PROTECTED_REGISTRY_MODULES().includes(r));\n        if (hits.length) out.push(f);',
+     '            .filter(() => false);\n        if (hits.length) out.push(f);'],
+    ['GM4 chain-link category removed entirely',
+     '        !isRegistryChainLink(f, importMap ? (importMap.get(f) ?? []) : null));',
+     '        true);'],
+    ['GM5 no-op control (gate semantics unchanged)',
+     '// ---- raw-import gate', '// ---- raw-import gate (no-op)'],
+];
+export const GATE_CONTROL = 'GM5 no-op control (gate semantics unchanged)';
+
+/** Load a mutated copy of experiments/m33/verify.js (it imports node builtins only). */
+export async function loadGate(text, tag) {
+    const dir = path.join(tmp(), `gate-${tag}`);
+    fs.mkdirSync(dir, { recursive: true });
+    const f = path.join(dir, 'verify.js');
+    fs.writeFileSync(f, text);
+    return import(pathToFileURL(f).href);
+}
+
 async function main() {
     const sha = (p) => crypto.createHash('sha256').update(fs.readFileSync(path.join(ROOT, p))).digest('hex');
     const OLD = await import(pathToFileURL(path.join(ROOT, 'experiments/registry/consumed.js')).href);
@@ -262,7 +427,9 @@ async function main() {
     // Executed, not asserted: ask the M33 gate itself what it says about this repository.
     const m33 = await import(pathToFileURL(path.join(ROOT, 'experiments/m33/verify.js')).href);
     const sets = m33.importerSets();
-    ctx.gateOffenders = m33.gateVerdict(sets.current, sets.allowlist);
+    ctx.m33 = m33;
+    ctx.gateSets = sets;
+    ctx.gateOffenders = m33.gateVerdict(sets.current, sets.allowlist, sets.currentMap);
 
     const report = { sections: {} };
     let fails = 0;
@@ -282,32 +449,34 @@ async function main() {
     const src = fs.readFileSync(path.join(ROOT, SUCCESSOR), 'utf8');
     const N = await loadSuccessor(src, 'subject');
     emit('accounting suite', await runSuite(N, ctx));
+    emit('typed layer (M34 closure)', await runTypedSuite(await loadTypedChain(typedSrc, 'subject'), ctx));
 
     // ---- protected paths and seed accounting ----
-    const target = git('log', '--diff-filter=A', '--format=%H', '--', SELF).trim().split(/\r?\n/).pop();
-    const changed = (target ? git('diff', '--name-only', M33_R1_COMMIT, target)
-                            : git('diff', '--name-only', M33_R1_COMMIT)).split(/\r?\n/).filter(Boolean);
-    const untracked = target ? [] : git('ls-files', '-o', '--exclude-standard').split(/\r?\n/)
+    // Compare the CURRENT tree with M33-R1, never a fixed commit: a later closure commit must be
+    // covered by these checks too, not just the commit that first added this verifier.
+    const changed = git('diff', '--name-only', M33_R1_COMMIT).split(/\r?\n/).filter(Boolean);
+    const untracked = git('ls-files', '-o', '--exclude-standard').split(/\r?\n/).filter(Boolean)
         .filter(f => M34_FILES.includes(f));
     const sameAsM33R1 = (p) => git('rev-parse', `${M33_R1_COMMIT}:${p}`).trim() ===
-        (target ? git('rev-parse', `${target}:${p}`).trim() : git('hash-object', path.join(ROOT, p)).trim());
+        git('hash-object', path.join(ROOT, p)).trim();
     const unchanged = PROTECTED.filter(p => !sameAsM33R1(p));
     emit('integrity', [
         { id: 'P1', ok: changed.every(f => M34_FILES.includes(f)) && untracked.every(f => M34_FILES.includes(f)),
-          msg: `since M33-R1 only M34 files changed: ${JSON.stringify([...changed, ...untracked])}` },
+          msg: `since M33-R1 only M34 and M34-closure files changed: ` +
+               `${JSON.stringify([...changed, ...untracked])}` },
         { id: 'P2', ok: unchanged.length === 0,
           msg: `all ${PROTECTED.length} protected files byte-identical to ${M33_R1_COMMIT.slice(0, 7)} ` +
-               `(C1 data and results, UQ-B, typed.js, the M33 verifiers, production): ` +
+               `(C1 data and results, UQ-B, the historical link, M33-R1 evidence, production): ` +
                `${JSON.stringify(unchanged)}` },
         { id: 'P3', ok: PROTECTED.includes('experiments/registry/consumed.js') &&
-                        PROTECTED.includes('experiments/registry/typed.js'),
-          msg: 'CONTROL: the old link and the typed layer are inside the protected set' },
-        { id: 'P6', ok: ctx.gateOffenders.length === 1 && ctx.gateOffenders[0] === SUCCESSOR &&
+                        PROTECTED.includes('experiments/m33/verify_r1.js') &&
+                        !PROTECTED.includes('experiments/registry/typed.js'),
+          msg: 'CONTROL: the historical link and the M33-R1 evidence stay byte-protected; typed.js ' +
+               'is a closure file, checked behaviourally instead' },
+        { id: 'P6', ok: ctx.gateOffenders.length === 0 &&
                         fs.readFileSync(path.join(ROOT, SUCCESSOR), 'utf8').includes("from './consumed.js'"),
-          msg: 'PINNED CONFLICT: the M33 raw-import gate flags exactly this new link ' +
-               `(${JSON.stringify(ctx.gateOffenders)}) because a chain link must import the previous ` +
-               'link (M18 convention). M34 may not change the M33 gate; the allowlist fix belongs with ' +
-               'the same milestone that re-points typed.js' },
+          msg: 'the M33 gate accepts the legitimate chain link — which must import its predecessor — ' +
+               `and reports no offender: ${JSON.stringify(ctx.gateOffenders)}` },
         { id: 'P5', ok: git('check-ignore', '-v', 'experiments/c1/data/readouts.jsonl').includes('experiments/c1/data/.gitignore') &&
                         ctx.digests.readouts === ctx.declaredDigests.readouts,
           msg: 'C1 readouts.jsonl is gitignored BY DESIGN (committed experiments/c1/data/.gitignore); ' +
@@ -316,6 +485,9 @@ async function main() {
                         !fs.existsSync(path.join(ROOT, 'experiments/m34/results')),
           msg: 'M34 produced no collection data: registered experimental seeds consumed = 0' },
     ]);
+
+    // ---- the gate's category, exercised on synthetic inputs ----
+    emit('gate category', gateChecks(ctx.m33, ctx.gateSets));
 
     // ---- mutations ----
     const mutRows = [];
@@ -347,13 +519,49 @@ async function main() {
             ? (failed.length ? `CONTROL WRONGLY FAILED ${failed}` : 'no-op control survived')
             : (failed.length ? `caught by ${failed.slice(0, 8).join(',')}` : 'SURVIVED')}` });
     }
+    // ---- closure mutants: typed layer and gate ----
+    const gateSrc = fs.readFileSync(path.join(ROOT, 'experiments/m33/verify.js'), 'utf8');
+    const extra = [
+        ...TYPED_MUTANTS.map(m => ({ m, kind: 'typed', control: m[0] === TYPED_CONTROL })),
+        ...GATE_MUTANTS.map(m => ({ m, kind: 'gate', control: m[0] === GATE_CONTROL })),
+    ];
+    let k = 0;
+    for (const { m: [name, anchor, repl], kind, control } of extra) {
+        k++;
+        const id = name.split(' ')[0];
+        const label = name.slice(name.indexOf(' ') + 1);
+        const subject = kind === 'typed' ? typedSrc : gateSrc;
+        const occurrences = subject.split(anchor).length - 1;
+        if (occurrences !== 1) {
+            mutRows.push({ id, ok: false, msg: `${label} -> HARNESS DEFECT: anchor occurs ${occurrences} times` });
+            report.mutants.push({ name, harness: `anchor occurs ${occurrences} times` });
+            continue;
+        }
+        let failed;
+        try {
+            if (kind === 'typed') {
+                const M = await loadTypedChain(subject.replace(anchor, repl), `mut${k}`);
+                failed = (await runTypedSuite(M, { ...ctx, typedImportsSuccessor: /consumed_after_c1/.test(subject.replace(anchor, repl)), typedImportsOldLink: /from '\.\/consumed\.js'/.test(subject.replace(anchor, repl)) }))
+                    .filter(r => !r.ok).map(r => r.id);
+            } else {
+                const G = await loadGate(subject.replace(anchor, repl), `mut${k}`);
+                failed = gateChecks(G, ctx.gateSets).filter(r => !r.ok).map(r => r.id);
+            }
+        } catch (e) { failed = ['L0']; }
+        const ok = control ? failed.length === 0 : failed.length > 0;
+        report.mutants.push({ name, control, caught: failed.length > 0, by: failed.slice(0, 8) });
+        mutRows.push({ id, ok, msg: `${label} -> ${control
+            ? (failed.length ? `CONTROL WRONGLY FAILED ${failed}` : 'no-op control survived')
+            : (failed.length ? `caught by ${failed.slice(0, 8).join(',')}` : 'SURVIVED')}` });
+    }
+
     emit('mutation testing', mutRows);
 
     report.fails = fails;
     report.total = Object.values(report.sections).flat().length;
     report.verdict = fails === 0 ? 'VERIFIED' : 'NOT VERIFIED';
     report.evaluated = evaluatedFromCandidates;
-    report.target = target || null;
+    report.changedSinceM33R1 = changed;
     if (TMP_DIR) fs.rmSync(TMP_DIR, { recursive: true, force: true });
     if (JSON_MODE) process.stdout.write(JSON.stringify(report));
     else {

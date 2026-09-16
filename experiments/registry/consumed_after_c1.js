@@ -39,11 +39,11 @@
 //   896xxx it is explicitly a conservative block declaration over a partially
 //   evaluated block, and this file does not upgrade that claim.
 //
-// NOT YET WIRED INTO THE TYPED LAYER
-//   experiments/registry/typed.js (M33 / M33-R1) still delegates configuration
-//   decisions to consumed.js, and M34 may not modify it. Until a later milestone
-//   re-points that delegation, the typed layer still reports 895xxx as available.
-//   experiments/m34/verify.js asserts that gap so it cannot be forgotten.
+// WIRED INTO THE TYPED LAYER (M34 closure)
+//   experiments/registry/typed.js delegates configuration decisions here, so a study
+//   reaching governance through the typed layer is refused 895xxx. The M33 and M33-R1
+//   verifiers are SOURCE-BOUND to the typed.js of their own commits, so that re-point
+//   changes neither of their recorded results.
 // ==========================================================
 import { CONSUMED_RANGES as UQB_LINK_CONSUMED, HELD_OUT_FLOOR as UQB_LINK_FLOOR,
          DEV_FIXTURE_RANGE } from './consumed.js';

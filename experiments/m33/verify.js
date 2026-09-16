@@ -45,6 +45,12 @@ const GOVERNANCE_MODULES = [
     'experiments/uqb/protocol.js', 'experiments/c1/protocol.js',
 ];
 
+// The gate protects the historical modules AND every later registry link: a study must reach
+// them through typed.js, never by importing one directly. GOVERNANCE_MODULES itself stays the
+// historical list, because it is also the set materialised from BASE as the compatibility oracle.
+const PROTECTED_REGISTRY_MODULES = () => [...GOVERNANCE_MODULES,
+    'experiments/registry/consumed_after_c1.js'];
+
 const log = (...a) => { if (!JSON_MODE) console.log(...a); };
 // Created on first use, so importing this module (verify_m33.js, verify_r1.js) leaves
 // no temp directory behind.
@@ -435,21 +441,49 @@ export async function runSuite(T, ctx) {
 }
 
 // ---- raw-import gate ----------------------------------------------------------
+/** file -> the governance modules it statically imports (only files that import one). */
+export function governanceImportMap(files, readFile) {
+    const map = new Map();
+    for (const f of files) {
+        if (!/\.(m?js)$/.test(f)) continue;
+        let src;
+        try { src = readFile(f); } catch { continue; }
+        const hits = importSpecifiers(src).map(s => resolveRel(f, s))
+            .filter(r => PROTECTED_REGISTRY_MODULES().includes(r));
+        if (hits.length) map.set(f, hits);
+    }
+    return map;
+}
+
 export function governanceImporters(files, readFile) {
     const out = [];
     for (const f of files) {
         if (!/\.(m?js)$/.test(f)) continue;
         let src;
         try { src = readFile(f); } catch { continue; }
-        const hits = importSpecifiers(src).map(s => resolveRel(f, s)).filter(r => GOVERNANCE_MODULES.includes(r));
+        const hits = importSpecifiers(src).map(s => resolveRel(f, s))
+            .filter(r => PROTECTED_REGISTRY_MODULES().includes(r));
         if (hits.length) out.push(f);
     }
     return out.sort();
 }
 
-export function gateVerdict(current, allowlist) {
+// A REGISTRY CHAIN LINK is not a consumer: it IS the registry. The chain convention
+// (M18, M34) requires each link to import its predecessor, so the link would otherwise be
+// reported as a new raw importer. The category is deliberately narrow:
+//   * the file must be a registry chain link by path AND name — experiments/registry/consumed*.js;
+//   * when the caller supplies an import map, EVERY governance module it imports must itself
+//     live in experiments/registry/, so a link may import its predecessor and nothing else.
+// A study file is not exempted by moving into experiments/registry/ under another name, and
+// no file outside that directory is exempted at all.
+export const isRegistryChainLink = (f, hits = null) =>
+    /^experiments\/registry\/consumed[A-Za-z0-9_.-]*\.js$/.test(f) &&
+    (hits === null || hits.every(h => h.startsWith('experiments/registry/')));
+
+export function gateVerdict(current, allowlist, importMap = null) {
     const permitted = new Set([...allowlist, TYPED_PATH, 'experiments/m33/verify.js']);
-    return current.filter(f => !permitted.has(f));
+    return current.filter(f => !permitted.has(f) &&
+        !isRegistryChainLink(f, importMap ? (importMap.get(f) ?? []) : null));
 }
 
 export function protectedVerdict(changed) {
@@ -574,8 +608,10 @@ export function importerSets() {
     const allowlist = governanceImporters(baseFiles.filter(f => mention.has(f)),
         f => git('show', `${BASE}:${f}`));
     const nowFiles = git('ls-files', '-co', '--exclude-standard').split(/\r?\n/).filter(Boolean);
-    const current = governanceImporters(nowFiles, f => fs.readFileSync(path.join(ROOT, f), 'utf8'));
-    return { allowlist, current };
+    const read = (f) => fs.readFileSync(path.join(ROOT, f), 'utf8');
+    const current = governanceImporters(nowFiles, read);
+    const currentMap = governanceImportMap(nowFiles, read);
+    return { allowlist, current, currentMap };
 }
 
 // ---- main ---------------------------------------------------------------------------
@@ -613,8 +649,8 @@ async function main() {
              'so T11/T12 test the runtime derivation itself' }]);
 
     // raw-import gate
-    const { allowlist, current } = importerSets();
-    const offenders = gateVerdict(current, allowlist);
+    const { allowlist, current, currentMap } = importerSets();
+    const offenders = gateVerdict(current, allowlist, currentMap);
     const gateCatches = gateVerdict([...current, 'experiments/future_study/protocol.js'], allowlist)
         .includes('experiments/future_study/protocol.js');
     const typedImportsOnlyConsumed = governanceImporters([TYPED_PATH],
@@ -622,7 +658,8 @@ async function main() {
     emit('raw-import gate', [
         { id: 'I1', ok: offenders.length === 0,
           msg: `every file importing a raw governance module is a historical importer at base ` +
-               `(${allowlist.length}) or an M33 file; offenders: ${JSON.stringify(offenders)}` },
+               `(${allowlist.length}), an M33 file, or a registry chain link importing only its ` +
+               `predecessor; offenders: ${JSON.stringify(offenders)}` },
         { id: 'I2', ok: gateCatches, msg: 'CONTROL: a new raw importer is flagged' },
         { id: 'I3', ok: typedImportsOnlyConsumed && allowlist.length > 30,
           msg: `typed.js is the only new importer; historical importer set is non-trivial (${allowlist.length})` },

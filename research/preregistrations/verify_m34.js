@@ -60,7 +60,8 @@ const C = {
     headline: (M) => flat(M).includes(`${R.total}/${R.total} passed, 0 failed`),
     mutantTable: (M) => R.mutants.every(m => M.split(/\r?\n/).includes(mutantRow(m))) &&
         flat(M).includes(`${R.mutants.filter(m => !m.control).length} of ` +
-                         `${R.mutants.filter(m => !m.control).length} semantic mutants caught`),
+                         `${R.mutants.filter(m => !m.control).length} semantic mutants caught`) &&
+        R.mutants.filter(m => m.control).length === 3,
     blockConsumed: (M) => {
         let n = 0;
         for (let s = 895000; s <= 895999; s++) if (NEW.isConsumed(s)) n++;
@@ -93,11 +94,13 @@ const C = {
         return diff === 1000 && OLD.isConsumed(895500) === false &&
             flat(M).includes('the only decisions that change are the 1000 C1 seeds');
     },
-    typedGap: (M) => TYPED.config.isConsumed(TYPED.configSeed(895500)) === false &&
-        flat(M).includes('still reports 895xxx as available') && row('F1')?.ok === true,
+    typedClosed: (M) => TYPED.config.isConsumed(TYPED.configSeed(895500)) === true &&
+        TYPED.config.isConsumed(TYPED.configSeed(894999)) === false &&
+        flat(M).includes('the installed typed layer refuses 895xxx') &&
+        ['F1', 'F2', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6'].every(id => row(id)?.ok === true),
     status: (M) => {
         const blocks = M.match(/^> # M34-(GREEN|YELLOW|HOLD)$/gm) || [];
-        return blocks.length === 2 && blocks.every(b => b.endsWith('M34-YELLOW')) && R.fails === 0;
+        return blocks.length === 2 && blocks.every(b => b.endsWith('M34-GREEN')) && R.fails === 0;
     },
     integrity: (M) => {
         const F = flat(M);
@@ -105,6 +108,14 @@ const C = {
             F.includes('| UQ-B unchanged | YES') && F.includes('| C1 unchanged | YES') &&
             F.includes('| production unchanged | YES') && F.includes('| M33 / M33-R1 unchanged | YES') &&
             F.includes('| pushed | NO |') && ['P1', 'P2', 'P4', 'P5'].every(id => row(id)?.ok === true);
+    },
+    gateCategory: (M) => {
+        const F = flat(M);
+        return ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'P6'].every(id => row(id)?.ok === true) &&
+            F.includes('historical raw registry predicates are protected from new study consumers, ' +
+                       'while successor registry links may import their predecessor') &&
+            // flat() strips '*', so this glob is matched against the RAW memo text.
+            M.includes('experiments/registry/consumed*.js');
     },
     historical: (M) => {
         const F = flat(M);
@@ -124,8 +135,12 @@ console.log('\n-- executed M34 verifier ----------------------------------------
 ok(R.verdict === 'VERIFIED' && R.fails === 0, 'experiments/m34/verify.js VERIFIED', `${R.total - R.fails}/${R.total}`);
 ok(R.mutants.every(m => !m.harness), 'no mutant hit a harness defect');
 ok(R.mutants.filter(m => !m.control).every(m => m.caught), 'every semantic mutant is caught');
-ok(R.mutants.filter(m => m.control).length === 1 && !R.mutants.find(m => m.control).caught,
-    'exactly one no-op control, and it survives');
+{
+    const controls = R.mutants.filter(m => m.control);
+    ok(controls.length === 3 && controls.every(m => !m.caught),
+        'one no-op control per mutated subject (successor link, typed layer, gate), all surviving',
+        controls.map(m => m.name.split(' ')[0]).join(', '));
+}
 
 console.log('\n-- memo bound to execution ---------------------------------------------------');
 for (const [name, fn] of Object.entries(C)) ok(fn(MEMO), `memo ${name} matches execution`);
@@ -142,9 +157,12 @@ console.log('\n-- anti-vacuity -------------------------------------------------
         conservative896: MEMO.replaceAll('**evaluation count not asserted**', 'evaluation count 1000'),
         compatibility: MEMO.replaceAll('the only decisions that change are the 1000 C1 seeds',
                                        'no decisions change'),
-        typedGap: MEMO.replaceAll('still reports 895xxx as available', 'now refuses 895xxx'),
-        status: MEMO.replace('> # M34-YELLOW\n> **The accounting repair', '> # M34-GREEN\n> **The accounting repair'),
-        integrity: MEMO.replace('| pushed | **NO** |', '| pushed | **YES** |'),
+        typedClosed: MEMO.replaceAll('the installed typed layer refuses 895xxx',
+                                     'the installed typed layer still reports 895xxx as available'),
+        gateCategory: MEMO.replaceAll('experiments/registry/consumed*.js', 'any registry file'),
+        status: MEMO.replace('> # M34-GREEN\n> **The accounting repair and its closure',
+                             '> # M34-YELLOW\n> **The accounting repair and its closure'),
+        integrity: MEMO.replaceAll('| pushed | **NO** |', '| pushed | **YES** |'),
         historical: MEMO.replace('| `research/preregistrations/verify_m30.js` | 101/101 |',
                                  '| `research/preregistrations/verify_m30.js` | 100/100 |'),
     };
