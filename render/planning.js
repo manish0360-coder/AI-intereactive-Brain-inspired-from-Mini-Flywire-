@@ -354,7 +354,7 @@ export function futureScore(
 
     return dfs(
 
-        neuron.id,
+        neuron.userData.id,
         depth
 
     );
