@@ -9,6 +9,10 @@ preregistration, no change to production code, M39, M39-P1 or any historical art
 prefix-equivalence gate (§12a), the lookahead-diagnostic purity gate (§12b) and the oracle
 phase-mismatch mutation (§14), with normative predicates in `research/preregistrations/m40_spec.js`.
 No locked decision changed.
+**Erratum M40-R2 (measurement-instrument correction only):** the M40-P1 PASS-1 source audit found two
+gate-construction defects before any execution. §12a gains a narrowly declared wall-clock projection for
+PE, and §12b's bracket is re-ordered so that it contains the diagnostic only. T_A, the grid, go/no-go,
+the oracle, E2 and stage-1 blindness are unchanged.
 
 > # M40-GREEN
 > A successor is justified, and it changes the **time** of the snapshot and nothing else that
@@ -254,14 +258,30 @@ A longitudinal estimand would require its own formulation.
 - **Scope:** per approved fixture, in two independent processes.
 - **Wording of any pass:** "empirical prefix equivalence under the tested M40 execution conditions".
   It is never "determinism" in general.
+- **Wall-clock canonicalization (M40-R2, for PE only).** A and B run in separate processes at
+  different wall times, so fields holding raw `Date.now()` readings would differ by construction. Exactly
+  three are projected out before PE digests (`projectForPE`, `CLOCK_PROJECTION` in `m40_spec.js`):
+
+  | Field | Why it is wall-clock-derived | Why it is not decision-relevant |
+  |---|---|---|
+  | episode `timestamp` | `timestamp: Date.now()` at creation (`episodeManager.js:688`), carried (`:801`), restored (`:663`) | only ever copied; no reader in `main.js` or `render/` |
+  | the millisecond segment of an episode `id` | ``id: `${source}_${Date.now()}_${rand}` `` (`:789`) | ids are only copied (`:606, :630, :653`) and logged (`:1119`); the replay key uses `labels` (`:476`). The source and random suffix are **kept** |
+  | `timeMemory` values | `timeMemory.set(timeKey, Date.now())` (`main.js:4825, :5543`) | read only as `lastUsed → age → timeScore` (`candidateAnalysis.js:336–356`), and `timeScore` is never used by `main.js` (`:1731`). Keys are **kept**, because `:411` reads their existence |
+
+  Prior empirical support: M39-P1 P4 found every readout unchanged under a 1e8 ms clock shift, at all
+  76 states. Nothing else is normalized. An id without a 13-digit millisecond segment is compared
+  verbatim, and a `timestamp` field anywhere else is compared. DP digests are **not** projected.
 
 ## 12b. Lookahead-diagnostic purity gate DP (M40-R1)
 
-At every snapshot where the stage-1 lookahead-only diagnostic runs, in this order:
+At every snapshot where the stage-1 lookahead-only diagnostic runs, in this order (**M40-R2 order**,
+fixed as the executable procedure `runPurityProtocol`):
 
-1. `digestBefore`;
-2. readouts;
-3. the same readouts again, as an idempotence control;
+1. readouts;
+2. the same readouts again, as an idempotence control;
+3. `digestBefore`: taken **after** the readouts, because every readout calls `runPrediction`, which
+   writes the declared component `lastDecision` (`main.js:2410`). In the M40-R1 order that write fell
+   inside the bracket, and a pure diagnostic would fail;
 4. `initRng(sentinel)`;
 5. **the diagnostic** (`futureScore` with empty reward, penalty and curiosity maps);
 6. one probe draw per RNG stream;
@@ -352,6 +372,9 @@ Production FutureScore is not modified. This is a measurement control only.
 6. **M40-R1:** the prefix-equivalence gate (§12a), the diagnostic purity gate (§12b), the declared
    state (§7a) and the oracle phase-mismatch mutation. The predicates are fixed in `m40_spec.js`
    and proven discriminating by `verify_m40.js` on synthetic records.
+7. **M40-R2 erratum:** the DP bracket contains the diagnostic only (`runPurityProtocol`), and PE projects out
+   exactly three wall-clock fields (`projectForPE`). Both defects were found by source audit before any
+   execution.
 
 ## 19. Requires Gemini review before M40-P1 runs
 

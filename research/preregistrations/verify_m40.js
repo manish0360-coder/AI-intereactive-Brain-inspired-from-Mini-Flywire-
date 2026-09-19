@@ -209,6 +209,78 @@ function specChecks(S) {
   const goSrc = fs.readFileSync(SPEC_PATH_OF(S), 'utf8'); const goBody = goSrc.slice(goSrc.indexOf('export function goNoGo'));
   ok2('R9', g1.go && g1.rankable === 1 && !g0.go && !gLeak.go && !/oracle|zero|nPlus|nMinus|bestChoice|aligned/i.test(goBody),
     'go/no-go: GO iff some T_A pool holds two distinct values; outcome fields cannot change it; its source names no outcome quantity');
+
+  // ---- M40-R2: a synthetic world whose readouts write lastDecision, as runPrediction does (main.js:2410) ----
+  const world = (clockBase) => ({
+    lastDecision: { current: 0 },
+    rewards: new Map([['1->2', 3]]),
+    episodes: [{ id: `live_${clockBase + 123}_ab12c`, timestamp: clockBase + 123, nodes: [1, 2, 3], labels: ['a', 'b'], coherence: 0.5 },
+               { id: `replay_${clockBase + 900}_k3z9q`, timestamp: clockBase + 900, nodes: [2, 3], labels: ['b', 'c'], coherence: 0.7 }],
+    timeMemory: new Map([['1->2', clockBase + 456], ['2->3', clockBase + 789]]),
+    streams: new Map(),
+  });
+  const canonV = (v) => v instanceof Map ? [...v.entries()].map(([k, x]) => [String(k), canonV(x)]).sort((a, b) => a[0] < b[0] ? -1 : 1)
+    : Array.isArray(v) ? v.map(canonV) : (v && typeof v === 'object') ? Object.fromEntries(Object.keys(v).sort().map(k => [k, canonV(v[k])])) : v;
+  const worldDigest = (w, project) => {
+    const d = {};
+    for (const c of S.STATE_COMPONENTS) if (c.cls === 'direct' || c.cls === 'exposed') d[c.id] = 'const-' + c.id;
+    for (const id of ['lastDecision', 'rewards', 'episodes', 'timeMemory']) {
+      const v = project ? S.projectForPE(id, w[id]) : w[id];
+      d[id] = JSON.stringify(canonV(v));
+    }
+    return d;
+  };
+  const worldReadouts = (w) => { w.lastDecision = { current: 3 };          // the readout's own write
+    return { 1: { poolKeys: [2], poolWeights: [w.rewards.get('1->2')], futureBonusValues: [12], bestChoiceON: 2 } }; };
+  const ops = (w, diagnostic) => ({
+    readouts: () => worldReadouts(w), digest: () => worldDigest(w, false), sentinel: SENTINEL, makeRng,
+    initRng: (seed) => { for (const [s, sd] of Object.entries(S.streamSeeds(seed))) w.streams.set(s, makeRng(sd)); },
+    diagnostic: () => diagnostic(w), probe: () => Object.fromEntries([...w.streams.entries()].map(([s, g]) => [s, g()])),
+  });
+  const pure = (w) => { void w.rewards.get('1->2'); };
+  const R2_OLD_ORDER = (o) => {                                              // the M40-R1 order, for exposure only
+    const digestBefore = o.digest(); const readoutsBefore = o.readouts(); const readoutsRepeat = o.readouts();
+    o.initRng(o.sentinel); o.diagnostic(); const rngAfterDiagnostic = o.probe(); const digestAfter = o.digest();
+    const readoutsAfter = o.readouts();
+    const rngExpected = Object.fromEntries(Object.entries(S.streamSeeds(o.sentinel)).map(([s, sd]) => [s, makeRng(sd)()]));
+    return S.purityHolds({ digestBefore, digestAfter, rngExpected, rngAfterDiagnostic, readoutsBefore, readoutsRepeat, readoutsAfter });
+  };
+  const rPure = S.runPurityProtocol(ops(world(1760000000000), pure));
+  const rOld = R2_OLD_ORDER(ops(world(1760000000000), pure));
+  ok2('R11', rPure.pass && !rOld.pass && JSON.stringify(rOld.mismatches) === '["digest:lastDecision"]',
+    `DP BRACKET: a pure diagnostic passes the corrected order although every readout writes lastDecision; the M40-R1 order fails it on exactly ${JSON.stringify(rOld.mismatches)} — the defect is exposed`);
+  const diag = {
+    'mutates rewards': (w) => { w.rewards.set('1->2', 4); },
+    'consumes one cognitive draw': (w) => { w.streams.get('cognitive')(); },
+    'writes lastDecision itself': (w) => { w.lastDecision = { current: 99 }; },
+    'rewrites an episode timestamp': (w) => { w.episodes[0].timestamp += 1; },
+    'adds a timeMemory entry': (w) => { w.timeMemory.set('9->9', 1); },
+  };
+  const caughtDiag = Object.entries(diag).filter(([, f]) => !S.runPurityProtocol(ops(world(1760000000000), f)).pass).map(([k]) => k);
+  ok2('R12', caughtDiag.length === Object.keys(diag).length,
+    `DP still catches genuine diagnostic mutations under the corrected order (${caughtDiag.length}/${Object.keys(diag).length}: ${caughtDiag.join('; ')}); DP digests are not clock-projected`);
+  // PE: two processes at different wall times, otherwise identical
+  const peRec = (w, ticks) => ({ ticksRequested: ticks, capturedAt: 1500, digest: worldDigest(w, true),
+    rng: { cognitive: 1001, visual: 1002, environment: 1003 }, readouts: worldReadouts(w) });
+  const peRaw = (w, ticks) => ({ ...peRec(w, ticks), digest: worldDigest(w, false) });
+  // every comparison builds FRESH worlds: a readout rewrites lastDecision, so a reused world would differ for that reason alone
+  const TA = 1760000000000, TB = 1760000987654;
+  ok2('R13', S.prefixEquivalent(peRec(world(TA), 1500), peRec(world(TB), 3000)).pass &&
+    JSON.stringify(S.prefixEquivalent(peRaw(world(TA), 1500), peRaw(world(TB), 3000)).mismatches) === '["digest:episodes","digest:timeMemory"]',
+    'PE CLOCK: runs identical except for wall time pass with the projection; unprojected digests fail on exactly episodes and timeMemory — the false-failure defect is exposed');
+  const still = {
+    'timeMemory key set': (w) => { w.timeMemory.set('3->4', w.timeMemory.get('1->2')); },
+    'episode nodes': (w) => { w.episodes[1].nodes = [2, 4]; },
+    'episode id random suffix': (w) => { w.episodes[0].id = w.episodes[0].id.replace('ab12c', 'ab12d'); },
+    'episode id source': (w) => { w.episodes[0].id = w.episodes[0].id.replace('live_', 'click_'); },
+    'episode non-clock field': (w) => { w.episodes[0].coherence = 0.51; },
+    'id without a 13-digit ms segment': (w) => { w.episodes[1].id = 'loaded_x7y8z9'; },
+    'a timestamp field outside episodes': (w) => { w.lastDecision.timestamp = 5; },
+    'rewards': (w) => { w.rewards.set('1->2', 3.5); },
+  };
+  const caughtPE = Object.entries(still).filter(([, f]) => { const b = world(TB); f(b); return !S.prefixEquivalent(peRec(world(TA), 1500), peRec(b, 3000)).pass; }).map(([k]) => k);
+  ok2('R14', caughtPE.length === Object.keys(still).length && JSON.stringify(S.CLOCK_PROJECTION) === '{"episodes":["timestamp","id:ms-segment"],"timeMemory":["values"]}',
+    `PE projection is narrow: ${caughtPE.length}/${Object.keys(still).length} decision-relevant or non-clock differences are still caught (${caughtPE.join('; ')}); exactly three fields are projected`);
   return rows;
 }
 const specPathMap = new Map();
@@ -220,7 +292,7 @@ for (const r of specChecks(SPEC)) ok(r.id, r.ok, r.msg);
 ok('R10', env.evaluatedSeeds().length === 0, 'the R checks evaluated no configuration seed (synthetic reliabilities only)');
 
 // ---- mutation suite over the spec (each mutant must fail at least one R check) ---------------------------------------
-section('X  mutation suite (14 mutants of m40_spec.js)');
+section('X  mutation suite (20 mutants of m40_spec.js)');
 const SPEC_SRC = fs.readFileSync(SPEC_PATH, 'utf8').replace(/\r\n/g, '\n');
 const MUTANTS = [
   ['prefix ignores embeddings', 'for (const id of digestIds()) if (A.digest', "for (const id of digestIds().filter(i => i !== 'embeddings')) if (A.digest"],
@@ -237,6 +309,18 @@ const MUTANTS = [
   ['declared state drops adjacencyMemory', "  { id: 'adjacencyMemory', cls: 'exposed', covers: 'visit state', source: 'main.js:926 const adjacencyMemory' },\n", ''],
   ['go/no-go reads an outcome', 'const rankable = atTA.filter(r => new Set(r.poolValues).size >= 2).length;', 'const rankable = atTA.filter(r => new Set(r.poolValues).size >= 2 || r.oracleAligned).length;'],
   ['T_A moved to 1250', 'export const T_A = 1500;', 'export const T_A = 1250;'],
+  // M40-R2
+  ['DP bracket back to the M40-R1 order (digestBefore before the readouts)',
+    '  const readoutsBefore = ops.readouts();\n  const readoutsRepeat = ops.readouts();\n  const digestBefore = ops.digest();',
+    '  const digestBefore = ops.digest();\n  const readoutsBefore = ops.readouts();\n  const readoutsRepeat = ops.readouts();'],
+  ['PE projection removed', "  if (id === 'episodes') {\n    return value.map(ep => {", "  if (false) {\n    return value.map(ep => {"],
+  ['PE projection drops the whole episode id', "out[k] = (k === 'id' && typeof v === 'string' && EPISODE_ID.test(v)) ? v.replace(EPISODE_ID, '$1_$3') : v;",
+    "if (k === 'id') continue; out[k] = v;"],
+  ['PE projection strips timestamp from every component', "    return keys.map(String).sort();\n  }\n  return value;",
+    "    return keys.map(String).sort();\n  }\n  if (value && typeof value === 'object' && !Array.isArray(value) && !(value instanceof Map)) { const { timestamp, ...rest } = value; return rest; }\n  return value;"],
+  ['PE projection drops timeMemory keys too', '    return keys.map(String).sort();', '    return [];'],
+  ['DP digests clock-projected (would hide a diagnostic that rewrites clock fields)', 'export function runPurityProtocol(ops) {\n',
+    "export function runPurityProtocol(ops0) {\n  const ops = { ...ops0, digest: () => Object.fromEntries(Object.entries(ops0.digest()).map(([k, v]) => [k, /^(episodes|timeMemory)$/.test(k) ? 'projected' : v])) };\n"],
 ];
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'm40-'));
 let mi = 0;
@@ -311,6 +395,10 @@ const C = {
     flat(M).includes('Lineage correction (M39-P1, not edited)'),
   language: (M) => !/entire learned history|mathematically guarantee|absolute correct path|FutureScore planning|FutureScore cognition|complete learned and behavioural state/i.test(flat(M)) &&
     !/theoretical channel[- ]capacity/i.test(flat(M).replace('It is not an absolute or theoretical channel-capacity ceiling.', '')),
+  erratumR2: (M) => flat(M).includes('Erratum M40-R2 (measurement-instrument correction only)') &&
+    flat(M).includes('M40-R2 order') && flat(M).includes('writes the declared component lastDecision (main.js:2410)') &&
+    flat(M).includes('Wall-clock canonicalization (M40-R2, for PE only)') && flat(M).includes('DP digests are not projected.') &&
+    flat(M).includes('Nothing else is normalized.'),
   status: (M) => (M.match(/^> # M40-(GREEN|YELLOW|RED|HOLD)/gm) || []).length === 2 && !/^> # M40-(YELLOW|RED|HOLD)/m.test(M),
 };
 if (MEMO) {
@@ -332,6 +420,7 @@ if (MEMO) {
     stops: MEMO.replace('| **XC7** |', '| XC7? |'),
     declared: MEMO.replace('**Stated limitation:**', 'Note:'),
     language: MEMO + '\nThe snapshot holds the entire learned history.\n',
+    erratumR2: MEMO.replace('Nothing else is normalized.', 'Other differing fields may also be normalized.'),
     status: MEMO.replaceAll('# M40-GREEN', '# M40-YELLOW'),
   };
   for (const [k, t] of Object.entries(corrupt)) ok(`X-${k}`.slice(0, 14), t !== MEMO && C[k](t) === false, `corrupting the memo breaks '${k}'`);

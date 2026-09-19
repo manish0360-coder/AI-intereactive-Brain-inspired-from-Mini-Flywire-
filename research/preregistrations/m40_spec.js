@@ -85,10 +85,44 @@ export function prefixEquivalent(A, B) {
   return { pass: mismatches.length === 0, mismatches };
 }
 
+// ---- §12a (M40-R2) wall-clock canonicalization, for PE ONLY ------------------------------------------------------
+// Exactly three wall-clock-derived fields are projected out before PE digests; nothing else is normalized.
+//   episodes[].timestamp          Date.now() at buffer creation (render/episodeManager.js:688), carried (:801),
+//                                 restored (:663); only ever copied, never read by a decision
+//   episodes[].id  Date.now part  `${source}_${Date.now()}_${rand}` (:789); ids are only copied (:606, :630, :653)
+//                                 and logged (:1119); the replay key uses labels, not id (:476). The source and the
+//                                 random suffix are KEPT; only a 13-digit millisecond segment is removed
+//   timeMemory values             Date.now() (main.js:4825, :5543); read only as lastUsed -> age -> timeScore
+//                                 (candidateAnalysis.js:336-356), which main.js never uses (:1731). Keys are KEPT,
+//                                 because candidateAnalysis.js:411 reads their existence
+// Prior empirical support: M39-P1 P4, readouts invariant under a 1e8 ms clock shift at all 76 states.
+// DP digests are NOT projected: within one process a diagnostic that changed these fields is still caught.
+export const CLOCK_PROJECTION = Object.freeze({ episodes: ['timestamp', 'id:ms-segment'], timeMemory: ['values'] });
+const EPISODE_ID = /^(.+)_(\d{13})_([0-9a-z]+)$/;
+export function projectForPE(id, value) {
+  if (id === 'episodes') {
+    return value.map(ep => {
+      const out = {};
+      for (const [k, v] of Object.entries(ep)) {
+        if (k === 'timestamp') continue;
+        out[k] = (k === 'id' && typeof v === 'string' && EPISODE_ID.test(v)) ? v.replace(EPISODE_ID, '$1_$3') : v;
+      }
+      return out;
+    });
+  }
+  if (id === 'timeMemory') {
+    const keys = value instanceof Map ? [...value.keys()] : value.map(([k]) => k);
+    return keys.map(String).sort();
+  }
+  return value;
+}
+
 // ---- §12b lookahead-diagnostic purity ---------------------------------------------------------------------------
-// Record shape, all taken at the snapshot, in this order:
-//   digestBefore → readoutsBefore → readoutsRepeat (idempotence control) → initRng(sentinel) →
+// Record shape, all taken at the snapshot, in this order (M40-R2 order; see runPurityProtocol):
+//   readoutsBefore → readoutsRepeat (idempotence control) → digestBefore → initRng(sentinel) →
 //   DIAGNOSTIC → rngAfterDiagnostic (one probe per stream) → digestAfter → readoutsAfter
+// digestBefore is taken AFTER the readouts because every readout calls runPrediction, which writes the declared
+// component lastDecision (main.js:2410); the bracket must contain the diagnostic and nothing else.
 // rngExpected is the first draw of makeRng for each stream seeded exactly as initRng seeds it.
 export function purityHolds(R) {
   const mismatches = [];
@@ -99,6 +133,24 @@ export function purityHolds(R) {
   if (!same(R.readoutsBefore, R.readoutsAfter)) mismatches.push('readouts:changed-by-diagnostic');
   return { pass: mismatches.length === 0, mismatches };
 }
+/**
+ * §12b (M40-R2) the normative purity procedure. M40-P1 must call this; the order is part of the gate.
+ * ops: { readouts(), digest(), initRng(seed), diagnostic(), probe() -> {stream: draw}, makeRng(seed), sentinel }
+ */
+export function runPurityProtocol(ops) {
+  const readoutsBefore = ops.readouts();
+  const readoutsRepeat = ops.readouts();
+  const digestBefore = ops.digest();
+  ops.initRng(ops.sentinel);
+  ops.diagnostic();
+  const rngAfterDiagnostic = ops.probe();
+  const digestAfter = ops.digest();
+  const readoutsAfter = ops.readouts();
+  const rngExpected = Object.fromEntries(Object.entries(streamSeeds(ops.sentinel)).map(([s, seed]) => [s, ops.makeRng(seed)()]));
+  const record = { digestBefore, digestAfter, rngExpected, rngAfterDiagnostic, readoutsBefore, readoutsRepeat, readoutsAfter };
+  return { record, ...purityHolds(record) };
+}
+
 /** the seeds initRng gives each stream (instrumentation/rng.js:33-46), for the sentinel expectation */
 export const streamSeeds = (sentinel) => ({
   cognitive: sentinel >>> 0,
