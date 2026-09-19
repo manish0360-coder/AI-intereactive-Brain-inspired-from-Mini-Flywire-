@@ -1,0 +1,1459 @@
+{
+  "stage": "M40-P1 stage 1",
+  "spec": "m40_spec.js @ b74064766c27e1bfbed83cf6afcfab9ceb34f81c",
+  "processes": 104,
+  "processFailures": [],
+  "gates": {
+    "seeds": {
+      "pass": true,
+      "rule": "every process evaluated exactly its own approved fixture seed"
+    },
+    "blindness": {
+      "pass": true,
+      "forbiddenTokensFound": [],
+      "guardArms": [
+        "ARMED"
+      ]
+    },
+    "pe": [
+      {
+        "fixture": "896066:0",
+        "replicate": "a",
+        "pass": true,
+        "mismatches": [],
+        "rawComponentsDifferingBeforeProjection": [
+          "episodes",
+          "timeMemory"
+        ],
+        "capturedAt": 1500,
+        "phaseAtCapture": 1
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "b",
+        "pass": true,
+        "mismatches": [],
+        "rawComponentsDifferingBeforeProjection": [
+          "episodes",
+          "timeMemory"
+        ],
+        "capturedAt": 1500,
+        "phaseAtCapture": 1
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "a",
+        "pass": true,
+        "mismatches": [],
+        "rawComponentsDifferingBeforeProjection": [
+          "episodes",
+          "timeMemory"
+        ],
+        "capturedAt": 1500,
+        "phaseAtCapture": 1
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "b",
+        "pass": true,
+        "mismatches": [],
+        "rawComponentsDifferingBeforeProjection": [
+          "episodes",
+          "timeMemory"
+        ],
+        "capturedAt": 1500,
+        "phaseAtCapture": 1
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "a",
+        "pass": true,
+        "mismatches": [],
+        "rawComponentsDifferingBeforeProjection": [
+          "episodes",
+          "timeMemory"
+        ],
+        "capturedAt": 1500,
+        "phaseAtCapture": 1
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "b",
+        "pass": true,
+        "mismatches": [],
+        "rawComponentsDifferingBeforeProjection": [
+          "episodes",
+          "timeMemory"
+        ],
+        "capturedAt": 1500,
+        "phaseAtCapture": 1
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "a",
+        "pass": true,
+        "mismatches": [],
+        "rawComponentsDifferingBeforeProjection": [
+          "episodes",
+          "timeMemory"
+        ],
+        "capturedAt": 1500,
+        "phaseAtCapture": 1
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "b",
+        "pass": true,
+        "mismatches": [],
+        "rawComponentsDifferingBeforeProjection": [
+          "episodes",
+          "timeMemory"
+        ],
+        "capturedAt": 1500,
+        "phaseAtCapture": 1
+      }
+    ],
+    "dp": [
+      {
+        "fixture": "896066:0",
+        "replicate": "a",
+        "T": 250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "a",
+        "T": 500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "a",
+        "T": 750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "a",
+        "T": 1000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "a",
+        "T": 1250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "a",
+        "T": 1500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "a",
+        "T": 1750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "a",
+        "T": 2000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "a",
+        "T": 2250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "a",
+        "T": 2500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "a",
+        "T": 2750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "a",
+        "T": 3000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "b",
+        "T": 250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "b",
+        "T": 500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "b",
+        "T": 750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "b",
+        "T": 1000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "b",
+        "T": 1250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "b",
+        "T": 1500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "b",
+        "T": 1750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "b",
+        "T": 2000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "b",
+        "T": 2250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "b",
+        "T": 2500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "b",
+        "T": 2750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "b",
+        "T": 3000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "a",
+        "T": 250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "a",
+        "T": 500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "a",
+        "T": 750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "a",
+        "T": 1000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "a",
+        "T": 1250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "a",
+        "T": 1500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "a",
+        "T": 1750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "a",
+        "T": 2000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "a",
+        "T": 2250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "a",
+        "T": 2500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "a",
+        "T": 2750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "a",
+        "T": 3000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "b",
+        "T": 250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "b",
+        "T": 500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "b",
+        "T": 750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "b",
+        "T": 1000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "b",
+        "T": 1250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "b",
+        "T": 1500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "b",
+        "T": 1750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "b",
+        "T": 2000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "b",
+        "T": 2250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "b",
+        "T": 2500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "b",
+        "T": 2750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "b",
+        "T": 3000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "a",
+        "T": 250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "a",
+        "T": 500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "a",
+        "T": 750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "a",
+        "T": 1000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "a",
+        "T": 1250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "a",
+        "T": 1500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "a",
+        "T": 1750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "a",
+        "T": 2000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "a",
+        "T": 2250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "a",
+        "T": 2500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "a",
+        "T": 2750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "a",
+        "T": 3000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "b",
+        "T": 250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "b",
+        "T": 500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "b",
+        "T": 750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "b",
+        "T": 1000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "b",
+        "T": 1250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "b",
+        "T": 1500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "b",
+        "T": 1750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "b",
+        "T": 2000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "b",
+        "T": 2250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "b",
+        "T": 2500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "b",
+        "T": 2750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "b",
+        "T": 3000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "a",
+        "T": 250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "a",
+        "T": 500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "a",
+        "T": 750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "a",
+        "T": 1000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "a",
+        "T": 1250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "a",
+        "T": 1500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "a",
+        "T": 1750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "a",
+        "T": 2000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "a",
+        "T": 2250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "a",
+        "T": 2500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "a",
+        "T": 2750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "a",
+        "T": 3000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "b",
+        "T": 250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "b",
+        "T": 500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "b",
+        "T": 750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "b",
+        "T": 1000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "b",
+        "T": 1250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "b",
+        "T": 1500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "b",
+        "T": 1750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "b",
+        "T": 2000,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "b",
+        "T": 2250,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "b",
+        "T": 2500,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "b",
+        "T": 2750,
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "b",
+        "T": 3000,
+        "pass": true,
+        "mismatches": []
+      }
+    ],
+    "lineage": [
+      {
+        "fixture": "896066:0",
+        "replicate": "a",
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:0",
+        "replicate": "b",
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "a",
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896066:1",
+        "replicate": "b",
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "a",
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896238:2",
+        "replicate": "b",
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "a",
+        "pass": true,
+        "mismatches": []
+      },
+      {
+        "fixture": "896329:3",
+        "replicate": "b",
+        "pass": true,
+        "mismatches": []
+      }
+    ],
+    "reproducibility": [
+      {
+        "fixture": "896066:0",
+        "key": "T250",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:0",
+        "key": "T500",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:0",
+        "key": "T750",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:0",
+        "key": "T1000",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:0",
+        "key": "T1250",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:0",
+        "key": "T1500",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:0",
+        "key": "T1750",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:0",
+        "key": "T2000",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:0",
+        "key": "T2250",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:0",
+        "key": "T2500",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:0",
+        "key": "T2750",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:0",
+        "key": "T3000",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:0",
+        "key": "B",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:1",
+        "key": "T250",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:1",
+        "key": "T500",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:1",
+        "key": "T750",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:1",
+        "key": "T1000",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:1",
+        "key": "T1250",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:1",
+        "key": "T1500",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:1",
+        "key": "T1750",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:1",
+        "key": "T2000",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:1",
+        "key": "T2250",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:1",
+        "key": "T2500",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:1",
+        "key": "T2750",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:1",
+        "key": "T3000",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896066:1",
+        "key": "B",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896238:2",
+        "key": "T250",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896238:2",
+        "key": "T500",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896238:2",
+        "key": "T750",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896238:2",
+        "key": "T1000",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896238:2",
+        "key": "T1250",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896238:2",
+        "key": "T1500",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896238:2",
+        "key": "T1750",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896238:2",
+        "key": "T2000",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896238:2",
+        "key": "T2250",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896238:2",
+        "key": "T2500",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896238:2",
+        "key": "T2750",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896238:2",
+        "key": "T3000",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896238:2",
+        "key": "B",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896329:3",
+        "key": "T250",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896329:3",
+        "key": "T500",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896329:3",
+        "key": "T750",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896329:3",
+        "key": "T1000",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896329:3",
+        "key": "T1250",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896329:3",
+        "key": "T1500",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896329:3",
+        "key": "T1750",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896329:3",
+        "key": "T2000",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896329:3",
+        "key": "T2250",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896329:3",
+        "key": "T2500",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896329:3",
+        "key": "T2750",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896329:3",
+        "key": "T3000",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      },
+      {
+        "fixture": "896329:3",
+        "key": "B",
+        "pass": true,
+        "rawComponentsDiffering": [
+          "episodes",
+          "timeMemory"
+        ]
+      }
+    ]
+  },
+  "stop": null,
+  "validity": {
+    "seeds": true,
+    "blindness": true,
+    "pe": true,
+    "dp": true,
+    "lineage": true,
+    "reproducibility": true
+  },
+  "calibration": {
+    "250": {
+      "regime": 1,
+      "states": 76,
+      "candidates": 300,
+      "atCap": 300,
+      "capFraction": 1,
+      "rankable": 0,
+      "distinctHist": {
+        "1": 76
+      }
+    },
+    "500": {
+      "regime": 1,
+      "states": 76,
+      "candidates": 320,
+      "atCap": 320,
+      "capFraction": 1,
+      "rankable": 0,
+      "distinctHist": {
+        "1": 76
+      }
+    },
+    "750": {
+      "regime": 1,
+      "states": 76,
+      "candidates": 334,
+      "atCap": 334,
+      "capFraction": 1,
+      "rankable": 0,
+      "distinctHist": {
+        "1": 76
+      }
+    },
+    "1000": {
+      "regime": 1,
+      "states": 76,
+      "candidates": 342,
+      "atCap": 342,
+      "capFraction": 1,
+      "rankable": 0,
+      "distinctHist": {
+        "1": 76
+      }
+    },
+    "1250": {
+      "regime": 1,
+      "states": 76,
+      "candidates": 360,
+      "atCap": 360,
+      "capFraction": 1,
+      "rankable": 0,
+      "distinctHist": {
+        "1": 76
+      }
+    },
+    "1500": {
+      "regime": 1,
+      "states": 76,
+      "candidates": 372,
+      "atCap": 372,
+      "capFraction": 1,
+      "rankable": 0,
+      "distinctHist": {
+        "1": 76
+      }
+    },
+    "1750": {
+      "regime": 2,
+      "states": 76,
+      "candidates": 390,
+      "atCap": 390,
+      "capFraction": 1,
+      "rankable": 0,
+      "distinctHist": {
+        "1": 76
+      }
+    },
+    "2000": {
+      "regime": 2,
+      "states": 76,
+      "candidates": 407,
+      "atCap": 407,
+      "capFraction": 1,
+      "rankable": 0,
+      "distinctHist": {
+        "1": 76
+      }
+    },
+    "2250": {
+      "regime": 2,
+      "states": 76,
+      "candidates": 424,
+      "atCap": 424,
+      "capFraction": 1,
+      "rankable": 0,
+      "distinctHist": {
+        "1": 76
+      }
+    },
+    "2500": {
+      "regime": 2,
+      "states": 76,
+      "candidates": 435,
+      "atCap": 435,
+      "capFraction": 1,
+      "rankable": 0,
+      "distinctHist": {
+        "1": 76
+      }
+    },
+    "2750": {
+      "regime": 2,
+      "states": 76,
+      "candidates": 449,
+      "atCap": 449,
+      "capFraction": 1,
+      "rankable": 0,
+      "distinctHist": {
+        "1": 76
+      }
+    },
+    "3000": {
+      "regime": 2,
+      "states": 76,
+      "candidates": 466,
+      "atCap": 466,
+      "capFraction": 1,
+      "rankable": 0,
+      "distinctHist": {
+        "1": 76
+      }
+    }
+  },
+  "goNoGo": {
+    "go": false,
+    "rankable": 0
+  },
+  "decision": "NO-GO"
+}
