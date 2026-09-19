@@ -268,7 +268,20 @@ ok('I2', !fs.existsSync(path.join(ROOT, 'experiments/m40')), 'no experiments/m40
 ok('I3', env.evaluatedSeeds().length === 0, 'no configuration seed evaluated by this gate');
 let m39;
 try { m39 = execFileSync(process.execPath, [path.join(ROOT, 'experiments/m39/verify.js')], { cwd: ROOT, encoding: 'utf8', maxBuffer: 1 << 28 }); } catch (e) { m39 = String(e.stdout); }
-ok('I4', /RED RECORD VERIFIED — pilot stopped on X4 and X5/.test(m39), 'the M39-P1 RED record verifier still passes unchanged');
+// The M39-P1 verifier is historical and unchanged. Its own I4 ("since dacdccd only experiments/m39/ changed")
+// reports every later milestone by design, so it may fail on exactly that lineage check, and only when every
+// file it lists is M39-P1's own or an M40 formulation file. Every other M39-P1 check must still pass.
+const m39Fails = [...m39.matchAll(/^\s+\[FAIL\] (\S+)\s+(.*)$/gm)].map(m => [m[1], m[2]]);
+const M40_FILES = ['research/preregistrations/M40_FUTURESCORE_TEMPORAL_FORMULATION.md', 'research/preregistrations/m40_spec.js',
+  'research/preregistrations/verify_m40.js'];
+const lineageOnly = m39Fails.every(([id, msg]) => {
+  if (id !== 'I4') return false;
+  const listed = JSON.parse(msg.slice(msg.indexOf('[')));
+  return listed.every(f => f.startsWith('experiments/m39/') || M40_FILES.includes(f));
+});
+const m39Total = (m39.match(/M39-P1 RECORD: (\d+)\/(\d+) checks passed/) || []).slice(1).map(Number);
+ok('I4', lineageOnly && m39Total.length === 2 && m39Total[1] === 37 && m39Total[0] >= 36 && m39Fails.length <= 1,
+  `the M39-P1 RED record verifier passes ${m39Total[0]}/${m39Total[1]}; its only permitted failure is its own since-base lineage check (I4), listing only M39-P1 and M40 formulation files`);
 
 // ---- M: memo binding ---------------------------------------------------------------------------------------
 section('M  memo bound to the verified facts');
