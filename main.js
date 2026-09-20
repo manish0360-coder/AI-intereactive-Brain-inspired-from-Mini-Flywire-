@@ -1223,6 +1223,97 @@ function canReachGoal(startId, goalId, maxDepth = 4) {
 // nodes share no physical graph edge.
 // ======================================
 
+// ======================================
+// 🔭 FUTURESCORE V2.3 PROJECTION
+// ──────────────────────────────────────
+// FutureScore is non-positive; the decision
+// score wants a bounded non-negative bonus.
+//
+//     P(FS) = B * S / (S - FS)
+//
+// with B = 20 (the existing futureBonus
+// interface bound) and S = D, the largest
+// finite pairwise hop distance of the physical
+// graph. P is strictly increasing over finite
+// FS, lies in [0, B], and equals B only at
+// FS = 0 — no cap, so distinct FutureScores
+// can never collapse onto one bonus.
+//
+// -Infinity (goal unreachable) and undefined
+// (no goal) both contribute nothing.
+//
+// D >= 1 is a contract precondition, not a
+// case to handle: the production graph has
+// D = 4.
+// ======================================
+
+function projectFutureScore(fs, S) {
+
+    const B = 20;
+
+    if (fs === undefined || fs === null) return 0;
+    if (!Number.isFinite(fs))            return 0;   // -Infinity
+
+    return (B * S) / (S - fs);
+
+}
+
+
+// ======================================
+// 📐 PHYSICAL-GRAPH DIAMETER
+// ──────────────────────────────────────
+// The largest FINITE pairwise hop distance
+// over userData.neighbors — the projection's
+// scale S. Physical topology only: learned
+// transitions set edge COST, never topology,
+// so this deliberately does not reuse
+// goalDistance() below.
+//
+// Pure: reads the graph, holds no state, and
+// caches nothing, so it cannot drift between
+// evaluations.
+// ======================================
+
+function graphDiameter() {
+
+    let widest = 0;
+
+    for (const startId of neuronMap.keys()) {
+
+        // BFS from this node over the physical graph
+        const distance = new Map([[Number(startId), 0]]);
+        const queue = [Number(startId)];
+
+        while (queue.length > 0) {
+
+            const current = queue.shift();
+            const neuron = neuronMap.get(current);
+            const neighbors = (neuron && neuron.userData && neuron.userData.neighbors) || [];
+
+            for (const raw of neighbors) {
+
+                const next = Number(raw);
+
+                if (!distance.has(next)) {
+                    distance.set(next, distance.get(current) + 1);
+                    queue.push(next);
+                }
+
+            }
+
+        }
+
+        for (const hops of distance.values()) {
+            if (hops > widest) widest = hops;
+        }
+
+    }
+
+    return widest;
+
+}
+
+
 function goalDistance(startId, goalId, maxDepth = 8) {
 
     if (goalId == null) return -1;
@@ -1879,24 +1970,25 @@ function runPrediction(startKey) {
   const imaginedFuture = targetNeuronForFuture
       ? futureScore(
           targetNeuronForFuture,
-          goalNeuronId,
-          rewards,
-          penalties,
-          curiosityMap,
-          3
+          goalNeuronId
         )
-      : 0;
+      : undefined;
 
   // future planning bonus
-  // ── capped at 20 ──────────────────────────────────────────
-  // futureScore() DFS multiplies by 2 recursively, producing
-  // values like 64.80 for goal-adjacent nodes. That dominated
-  // the entire scoring formula (64.80 * 4 = 259 out of 248
-  // final score). Cap to 20 so it nudges without overriding
-  // the Q-value and reward signals.
+  // ── V2.3 projection ───────────────────────────────────────
+  // FutureScore is non-positive (a learned cost to reach the
+  // goal), so it is projected into the score's existing
+  // non-negative bonus range by
+  //
+  //     P(FS) = B * S / (S - FS)     B = 20, S = D
+  //
+  // The old Math.min(FS * 4, 20) cap is gone: it saturated
+  // every candidate at 20 (M40-P1), which is exactly the
+  // degeneracy this projection avoids — P is strictly
+  // increasing in FS and reaches B only at FS = 0.
   // ──────────────────────────────────────────────────────────
   const futureBonus =
-  Math.min(imaginedFuture * 4, 20);
+  projectFutureScore(imaginedFuture, graphDiameter());
   
   // slight penalty for dangerous paths
   const dangerPenalty =

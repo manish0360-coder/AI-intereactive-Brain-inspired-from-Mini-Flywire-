@@ -22,6 +22,25 @@ import {
 
 
 
+// ======================================
+// 📒 LEARNED TRAVERSAL EVIDENCE (READ-ONLY)
+// ──────────────────────────────────────
+// The canonical post-outcome boundary record
+// (FutureScore V2.2 / V2.3). FutureScore is a
+// READ-ONLY consumer: recordFor returns a COPY
+// of { a, s } and this module never writes,
+// so traversalRecord remains the sole owner
+// and main.js remains its sole writer.
+// ======================================
+
+import {
+
+    recordFor
+
+} from "./traversalRecord.js";
+
+
+
 
 // ======================================
 // LOOK-AHEAD FUTURE THINKING
@@ -168,181 +187,202 @@ export function lookAheadScore(
 
 
 // ======================================
-// FUTURE CHAIN SCORING
+// FUTURESCORE — GOAL-DIRECTED FUTURE PLANNING (V2.3)
+// ======================================
+// The frozen V2.3 contract. FutureScore is the agent's learned analogue of
+// goal-directed environmental cost structure:
+//
+//   FS_H(k|g) = max over simple paths from k of [ SUM -c_hat(e) + T(end) ]
+//
+// with learned edge cost from post-outcome traversal evidence only:
+//
+//   c_hat(e) = (a + 1) / (s + 1)       a = attempts, s = successes,  c_hat >= 1
+//
+// and a structural terminal T(v) = -d(v, g), the physical-graph hop distance.
+//
+// WHAT IT MAY NOT READ (V2.3 F34-F40): rewards, penalties, curiosity, Q-values,
+// the environment's hidden probabilities, any oracle quantity, decision-state
+// history, RNG, the clock, instrumentation. Those channels are gone from the
+// signature, not merely unused. Evaluation performs no mutation.
 // ======================================
 
-// calculates best future path score
+
+// planning horizon — a module constant, never a caller argument (V2.3 F15)
+const H = 3;
+
+
+// ======================================
+// LEARNED EDGE COST
+// ──────────────────────────────────────
+// Additive smoothing of the attempts-per-success
+// ratio (NOT a Bayesian posterior):
+//
+//   unseen   { a:0, s:0 } -> 1
+//   success  { n, n }     -> 1
+//   1 failure{ a:1, s:0 } -> 2
+//   n fails  { a:n, s:0 } -> n + 1
+//
+// Success can never raise the cost; failure
+// always raises it; the floor is 1.
+// ======================================
+
+function edgeCost(fromId, toId) {
+
+    const evidence = recordFor(fromId, toId);
+
+    return (evidence.a + 1) / (evidence.s + 1);
+
+}
+
+
+// ======================================
+// PHYSICAL-GRAPH HOP DISTANCE
+// ──────────────────────────────────────
+// Module-private BFS over userData.neighbors
+// ONLY. It deliberately does NOT reuse
+// main.js goalDistance(), which augments the
+// graph with learned `transitions` and is
+// depth-limited: learned evidence may set edge
+// COST, never graph TOPOLOGY.
+//
+// Not exported (the G9 successor pins this
+// module's surface to futureScore +
+// lookAheadScore).
+// ======================================
+
+function hopDistancesFrom(goalId) {
+
+    const distance = new Map([[Number(goalId), 0]]);
+    const queue = [Number(goalId)];
+
+    while (queue.length > 0) {
+
+        const current = queue.shift();
+        const neuron = findNeuronById(current);
+        const neighbors = (neuron && neuron.userData && neuron.userData.neighbors) || [];
+
+        for (const raw of neighbors) {
+
+            const next = Number(raw);
+
+            if (!distance.has(next)) {
+                distance.set(next, distance.get(current) + 1);
+                queue.push(next);
+            }
+
+        }
+
+    }
+
+    return distance;   // absent key = unreachable = infinite distance
+
+}
+
+
+// calculates the best goal-directed future path value
 export function futureScore(
 
-    neuron,          // current neuron
-    goalNeuronId,    // target goal
-    rewards,         // reward memory
-    penalties,       // bad memories
-    curiosityMap,    // exploration memory
-    depth = 3        // future thinking depth
+    neuron,          // candidate neuron the path starts from
+    goalNeuronId     // target goal
 
 ) {
 
-    // invalid neuron
-    if (!neuron) return 0;
+    // no goal → FutureScore is undefined (V2.3 F19)
+    if (goalNeuronId === null || goalNeuronId === undefined) return undefined;
+
+    // no candidate → nothing to evaluate
+    if (!neuron || !neuron.userData) return undefined;
 
 
+    const start = Number(neuron.userData.id);
+    const goal  = Number(goalNeuronId);
 
-    // remember visited neurons
-    const visited = new Set();
+
+    // the candidate IS the goal (V2.3 F20)
+    if (start === goal) return 0;
+
+
+    // structural terminal: -d(v, g) over the physical graph
+    const distance = hopDistancesFrom(goal);
+
+    function terminal(nodeId) {
+
+        return distance.has(nodeId)
+            ? -distance.get(nodeId)
+            : -Infinity;          // disconnected (V2.3 F19)
+
+    }
 
 
 
 
     // ======================================
-    // FUTURE SEARCH
+    // BOUNDED SIMPLE-PATH RECURSION
+    // ──────────────────────────────────────
+    //   F(v, h, P) = 0                      if v is the goal
+    //              = -d(v)                  if h = 0, or every neighbour is
+    //                                       already on the current path
+    //              = max over w not in P of
+    //                [ -c_hat(v,w) + F(w, h-1, P + {w}) ]
+    //
+    // P carries the nodes on the CURRENT path, seeded with the candidate, so a
+    // path can never revisit a node. Neighbours are visited in the graph's own
+    // deterministic order and the incumbent is replaced only on a STRICTLY
+    // greater value, so ties keep the earliest neighbour and the result is
+    // reproducible. No RNG, no clock, no mutation of anything outside this call.
     // ======================================
 
-    function dfs(
+    function explore(currentId, remaining, path) {
 
-        currentId,
-        d
+        if (currentId === goal) return 0;
 
-    ) {
 
-        // no future steps left
-        if (d <= 0) return 0;
+        const current = findNeuronById(currentId);
 
+        const neighbors =
+            (current && current.userData && current.userData.neighbors) || [];
 
 
-        // find neuron
-        const current =
-        findNeuronById(currentId);
+        // neighbours not already on this path
+        const open = [];
 
+        for (const raw of neighbors) {
 
+            const next = Number(raw);
 
+            if (!path.has(next)) open.push(next);
 
-        // invalid neuron
-        if (!current) return 0;
+        }
 
 
+        // horizon reached, or nowhere to go without repeating a node
+        if (remaining === 0 || open.length === 0) {
 
+            return terminal(currentId);
 
-        // best score found
-        let best = 0;
+        }
 
 
+        let best = -Infinity;
 
+        for (const next of open) {
 
-        // check all neighbors
-        current.userData.neighbors.forEach(nextId => {
+            path.add(next);
 
-            // avoid loops
-            if (visited.has(nextId)) return;
+            const value =
+                -edgeCost(currentId, next) +
+                explore(next, remaining - 1, path);
 
+            path.delete(next);
 
 
+            // strict comparison — the earliest neighbour wins a tie
+            if (value > best) best = value;
 
-            // mark visited
-            visited.add(nextId);
+        }
 
-
-
-
-            // ======================================
-            // MEMORY VALUES
-            // ======================================
-
-            // state-action key
-            const key =
-            currentId + "->" + nextId;
-
-
-
-
-            // learned reward
-            const reward =
-            rewards.get(key) || 0;
-
-
-
-
-            // learned penalty
-            const penalty =
-            penalties.get(key) || 0;
-
-
-
-
-            // curiosity bonus
-            const curiosity =
-            curiosityMap.get(key) || 0;
-
-
-
-
-            // future similarity score
-            const future =
-            lookAheadScore(
-
-                nextId,
-                goalNeuronId,
-                2
-
-            );
-
-
-
-
-            // ======================================
-            // COMBINE EVERYTHING
-            // ======================================
-
-            const total =
-
-                reward * 1.5 -
-
-                penalty * 2 +
-
-                curiosity * 0.4 +
-
-                future * 0.8;
-
-
-
-
-            // keep best path
-            if (total > best) {
-
-                best = total;
-
-            }
-
-
-
-
-            // go deeper into future
-            const deeper =
-            dfs(nextId, d - 1);
-
-
-
-
-            // deeper future bonus
-            if (deeper > best) {
-
-                best = deeper * 0.9;
-
-            }
-
-
-
-
-            // remove visited after branch ends
-            visited.delete(nextId);
-
-        });
-
-
-
-
-        // return best future chain
         return best;
+
     }
 
 
@@ -352,11 +392,6 @@ export function futureScore(
     // START FUTURE SEARCH
     // ======================================
 
-    return dfs(
-
-        neuron.userData.id,
-        depth
-
-    );
+    return explore(start, H, new Set([start]));
 
 }
