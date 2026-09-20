@@ -506,6 +506,31 @@ import {
 } from "./render/trustMemory.js";
 
 
+// ======================================
+// 📒 TRAVERSAL EVIDENCE BOUNDARY RECORD
+// ──────────────────────────────────────
+// The production-owned post-outcome record
+// required by the frozen FutureScore V2.2 /
+// V2.3 contracts. Separate from trustMemory
+// on purpose: trustMemory is written by
+// pre-outcome and episode-level writers and
+// is therefore inadmissible as traversal
+// evidence.
+//
+// WRITE-ONLY in this milestone — nothing
+// reads it, so agent behaviour is unchanged.
+// Aliased because motivationalState.js
+// already exports a recordOutcome.
+// ======================================
+
+import {
+
+    recordOutcome as recordTraversalOutcome,
+    clear as clearTraversalRecord,
+
+} from "./render/traversalRecord.js";
+
+
 // ================================================================
 // 🧩 SCHEMA MEMORY — HIERARCHICAL ABSTRACTION
 // ================================================================
@@ -4926,6 +4951,22 @@ if (next !== null && !_goalResetJustHappened && _m7cred) {
     _m7cred.recordTraversal(_m7From, _m7To, _m7Traversed);
 }
 
+// ---- TRAVERSAL EVIDENCE BOUNDARY WRITE -----------------------------------
+// The ONE authorised writer of the production boundary record
+// (FUTURESCORE_BOUNDARY_RECORD_DESIGN.md §4). Same event condition as the
+// environment draw above -- an outcome exists exactly when a traversal was
+// attempted -- and placed after the outcome is known, before agentCurrent
+// changes below. Unguarded by M7: with the harness off the outcome is a real
+// (always-successful) production traversal, which is the declared V2.2 D23
+// limitation, not a reason to skip the record.
+//
+// Consumes no RNG, reads no clock, calls no environment, and writes only its
+// own module-private map: trustMemory, the M7 stores, rewards and penalties
+// are untouched. Nothing reads the record in this milestone.
+if (next !== null && !_goalResetJustHappened) {
+    recordTraversalOutcome(_m7From, _m7To, _m7Traversed);
+}
+
 if (next !== null && !_goalResetJustHappened && _m7Traversed) {
   agentCurrent = next;
   // 👉 agent moves to next neuron
@@ -5218,6 +5259,10 @@ window.addEventListener("keydown", (e) => {
 
       // clear episodic memory too
       clearAllEpisodes();
+
+      // clear the traversal evidence boundary record; a reset is not an
+      // evidence writer, and the record is never persisted
+      clearTraversalRecord();
 
       agentCurrent = null;
       agentLast    = null;
