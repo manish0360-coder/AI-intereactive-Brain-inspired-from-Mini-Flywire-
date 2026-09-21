@@ -1,0 +1,15 @@
+{
+  "schema": "study2-driver-manifest/1",
+  "files": {
+    "experiments/study2/governance.mjs": "27ac739eaf0f8d062350db944d32d34a60f404b16de66844330ef1b0cd079962",
+    "experiments/study2/drive_study2.mjs": "555ee1d10df1e475eb88e36c8a61f43e3345cfdefaa5d9599d50dbda24e51d25",
+    "experiments/study2/run_child.mjs": "a1647aae20f15fdd4220372bd333ad528b178f00aa5d41004e04a20ff85f8c0f",
+    "experiments/study2/capture.mjs": "2f94d99c5ecd4868fa0e842677aa1733d3f7fdc6bbeea56614cd9d0982d38634",
+    "experiments/study2/hook_capture.mjs": "6a141c6b96735580e91073d279d2ce36f8d68bf53cfc1b3c8c988f74fe8df33f",
+    "experiments/study2/snapshot_reader.mjs": "cc08389bff76bd1a500f06d6c36b0576cdcc811b81732802f5ec07a1e970701c",
+    "experiments/study2/manifest.mjs": "da91b184eb3003723a3e8bad61b7a88e49f005e49cd8a77b3255bb8e8eeaf309",
+    "experiments/study2/analyze_study2.mjs": "fda572ca27c1f45976564e6b23448194f4d6dce3ed359a0d40504b7780dabc29",
+    "experiments/study2/taub.mjs": "d24adb7cef3dcf7ec0f42950d907941be8f9a691f684eef2f6a4e23220d92fe4"
+  },
+  "analysisSha256": "ac3499b55919e644f7c456b3af3f88688b5ac15f4a9e753e6b4fff65e63327b6"
+}

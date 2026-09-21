@@ -7,6 +7,18 @@ no production change.**
 **Gate:** [`verify_fs_study2_design_final.js`](verify_fs_study2_design_final.js)
 **Labels:** FACT / CALCULATION / INFERENCE / DESIGN DECISION / OPEN IMPLEMENTATION GATE / OPEN QUESTION.
 
+**Provenance (status reconciliation, M-STUDY2-DRIVER).**
+
+| Milestone | Commit |
+|---|---|
+| Design baseline (this design frozen) | `d1949f91601683ef2e955f8b766c2e656ffc8047` |
+| Implementation readiness + lineage closure | `5c785de1953adb48740a1254fe2a1b4a5b55c089` |
+| Readiness closure (accepted by the Research Director) | `cfadedd9a4726142486744f9c11dc735a03fedc0` |
+
+Only **status and provenance** text was updated after `d1949f9`; every scientific decision above and below is
+unchanged. Statements that were true at the design baseline are kept and marked *historical*; their **current
+status** is written next to them. The authoritative current status is the checklist in §Z.
+
 ---
 
 ## A. Scope
@@ -24,7 +36,12 @@ is validated or that OQ-1 is answered.
 | V2.2 boundary contract | `research/preregistrations/FUTURESCORE_V2_2_INPUT_CONTRACT.md` (commit `aa70e93`) |
 | Lineage | `research/preregistrations/FUTURESCORE_LINEAGE_NOTE_01.md`, `…_BEHAVIORAL_DISPOSITION_01.md` |
 
-**Lineage artifacts not yet under version control** (the scope lock of this milestone forbids committing them).
+**Current status — CLOSED (PASS).** The four lineage artifacts below are **now under version control**: they were
+committed at `5c785de` (implementation-readiness + lineage closure), and their committed content hashes to exactly
+the pinned SHA-256 values below (verified by `experiments/study2/verify_readiness.js` LIN.1–LIN.4 and
+`experiments/study2/verify_driver.js` Z.3). The pins are unchanged.
+
+*Historical (design baseline `d1949f9`):* **Lineage artifacts not yet under version control** (the scope lock of this milestone forbids committing them).
 They are pinned here by SHA-256 over LF-normalised content, and the gate verifies these hashes:
 
 | Artifact | SHA-256 |
@@ -34,8 +51,10 @@ They are pinned here by SHA-256 over LF-normalised content, and the gate verifie
 | `experiments/fsfeas/FEASIBILITY_RESULTS.md` (FS-OQ1-F2-FEAS PASS, feasibility only) | `1180e243e248e04345c7b4d143cd78fbe39be38013e218bd443ff50affd52125` |
 | `experiments/fsfeas/evidence/INTEGRITY.sha256` (covers the 7 feasibility evidence files) | `fd5fdba61c8578d5d143fd9d22016156c7093b1127fa320bcd130009a047ce72` |
 
-**OPEN QUESTION (governance).** These artifacts should be frozen under version control in their own milestone,
+*Historical (design baseline `d1949f9`):* **OPEN QUESTION (governance).** These artifacts should be frozen under version control in their own milestone,
 as Study 1's evidence was. Until then this hash table is their only tamper-evident record.
+**Current status: resolved** — frozen under version control at `5c785de`; the hash table remains as a second,
+tamper-evident record.
 
 ## C. Scientific question
 
@@ -152,15 +171,22 @@ call, inside the same `runPrediction` invocation, before the step-0 decision is 
 bound only for the FULL evaluation. Per-event witnesses must show the evaluation occurred between the event markers
 and before the new decision object existed. The candidate-set and `targetNeuronForFuture` checks are retained per
 event in the eventual Study-2 driver.
+**Current status: PASS** (readiness closure `cfadedd9`, `verify_readiness.js` G1: candidate-set checks A–G, FULL =
+live, GEO = −d, record and snapshot unchanged, and the three temporal witnesses, each 2748/2748 on the development
+replay). The per-event checks are carried into the Study-2 run child (`verify_driver.js` D8–D13).
 
 **OPEN IMPLEMENTATION GATE G-IMPL-2 (non-interference).** Adding the capture must not change the executed
 trajectory. Acceptance criterion: capture-on versus capture-off runs of the same fixture are identical on the
 full fingerprint (action-sequence hash, RNG draw counts, Q, environment counters, final record) — the method
 FS-OQ1-F2-FEAS already demonstrated.
+**Current status: PASS** (readiness closure `cfadedd9`, `verify_readiness.js` G2: capture ON and OFF identical on
+all 11 fingerprint fields).
 
 **OPEN IMPLEMENTATION GATE G-IMPL-3 (step index).** `t_e` must be the index of the `runAgent` step in which the
 event occurs, counted exactly. The M40 checkpoint convention counts completed ticks; the capture must use the
 same counting so that `t ≤ 1500` means the same thing.
+**Current status: PASS** (readiness closure `cfadedd9`, `verify_readiness.js` G3: event tick
+`τ = runAgent index − 5`, pinned by `setTick` observer evidence; phase II ⇔ `τ ≥ 1500`).
 
 **Considered and not adopted:** an M40-style checkpoint *census* that scores every decision state from a snapshot.
 It is also same-state, but it scores states the agent is not at, which the Director's ruling excludes.
@@ -225,8 +251,8 @@ stopping rules, or seed selection.
 | future trajectory / post-decision outcomes | **excluded** | scoring at `main.js:1970` precedes `env.attempt` (`5019`) and the evidence write (`5059`) of the same tick |
 | phase-II outcomes in primary scoring | **excluded** | an event at step `t ≤ 1500` sees evidence written through step `t − 1 ≤ 1499`, all phase I (`env.setTick`: phase II from tick 1500) |
 | future traversal events | **excluded** | same as the post-decision row |
-| evaluation-only labels, analysis metadata | **OPEN IMPLEMENTATION GATE G-IMPL-4** | the capture must write events to an append-only record and the analysis must compute `U*` out of process; to be proven by a static gate |
-| seed-specific oracle information | **OPEN IMPLEMENTATION GATE G-IMPL-4** | the config seed may select the configuration only; nothing oracle-derived may select, filter or order seeds |
+| evaluation-only labels, analysis metadata | **PASS** (readiness closure `cfadedd9`, `verify_readiness.js` G4) — *historical label at `d1949f9`: OPEN IMPLEMENTATION GATE G-IMPL-4* | the capture must write events to an append-only record and the analysis must compute `U*` out of process; to be proven by a static gate |
+| seed-specific oracle information | **PASS for all existing code** (readiness closure `cfadedd9`; Study-2 driver seed-selection and stopping paths: `verify_driver.js` D5–D7) — *historical label at `d1949f9`: OPEN IMPLEMENTATION GATE G-IMPL-4* | the config seed may select the configuration only; nothing oracle-derived may select, filter or order seeds |
 
 ## K. Primary pre-shift analysis
 
@@ -315,6 +341,8 @@ nothing here, so this arises only at degree-1 states; the count is reported.
 **Validation (not a dependency).** The project-owned implementation is to be cross-checked against SciPy
 `scipy.stats.kendalltau`, whose default `variant='b'` implements tau-b (source: `scipy/stats/_stats_py.py`,
 `def kendalltau(…, variant='b', …)`), in a **separate validation step**, never as a runtime dependency.
+**Current status: PASS** (readiness closure `cfadedd9`: 16/16 cases agree with SciPy 1.13.0; the §P conventions
+11/11; `experiments/study2/validation/`).
 
 ## Q. Statistical unit and aggregation
 
@@ -356,7 +384,7 @@ Pass-1 text implied but did not pin.
 
 | Item | Frozen value |
 |---|---|
-| code | `a066d47696b1502720f627855c8549f4d2898cd5` + the Study-2 capture/analysis harness (hash recorded at implementation) |
+| code | `a066d47696b1502720f627855c8549f4d2898cd5` + the Study-2 capture/analysis harness (hash recorded at implementation) — *current status:* the driver and analysis file hashes are computed in `experiments/study2/DRIVER_MANIFEST.json`; they are frozen when the Director registers the driver (§Z, Z9) |
 | graph | `connections.json` blob sha256 `52867c4bb1c15392…` (20 nodes, 39 edges, D = 4) |
 | environment | `experiments/m7/env.js` at the baseline; `RUN_TICKS = 3000`, `T_SHIFT = 1500`, `EPISODE_CAP = 150` |
 | agent | V2.3, arm `A1`, `pin = on`, `tickUnit = step`, `agentSeed = 20260819000` |
@@ -430,7 +458,8 @@ goal-reaching gains, or a global treatment effect.
 9. **Float-tie convention** (§P).
 10. **F-2 oracle variant** differs from the frozen oracle (§J) — F-2 numbers are not a prior.
 11. **jsdom/driver fidelity.**
-12. **Lineage artifacts not yet under version control** (§B).
+12. **Lineage artifacts not yet under version control** (§B). *Historical (`d1949f9`); current status: resolved —
+    version-controlled at `5c785de`, hashes match the pins.*
 
 ## Y. Build-vs-reuse decision
 
@@ -445,7 +474,24 @@ mechanism; both only validate it.
 
 ## Z. Final Study-2 gate checklist
 
-| # | Gate | Status |
+**Current status** (reconciled with the accepted readiness closure `cfadedd9`; design baseline `d1949f9`):
+
+| # | Gate | Status | Evidence |
+|---|---|---|---|
+| Z1 | Design frozen (this document) | **PASS / frozen** | frozen at `d1949f9`; only status/provenance text updated since |
+| Z2 | Seed range authorized and pre-registered | **OPEN — Director** | proposal: `FUTURESCORE_V2_3_STUDY2_REGISTRATION_PROPOSAL.md` (no seed generated) |
+| Z3 | Run count pre-registered | **OPEN — Director** | proposal: same document |
+| Z4 | G-IMPL-1 same-snapshot proof | **PASS** | `cfadedd9`, `verify_readiness.js` G1 (A–G, identities, temporal witnesses 2748/2748) |
+| Z5 | G-IMPL-2 capture non-interference | **PASS** | `cfadedd9`, `verify_readiness.js` G2 (11/11 fingerprint fields identical) |
+| Z6 | G-IMPL-3 exact step index | **PASS** | `cfadedd9`, `verify_readiness.js` G3 (`τ = runAgent index − 5`) |
+| Z7 | G-IMPL-4 oracle/metadata leakage static gate | **PASS for all currently existing code** | `cfadedd9`, `verify_readiness.js` G4; Study-2 driver seed selection and stopping: `verify_driver.js` D5–D7 |
+| Z8 | tau-b implementation cross-checked against SciPy (validation only) | **PASS** | `cfadedd9`, `verify_readiness.js` TB.1–TB.2 (16/16, 11/11) |
+| Z9 | analysis script hash recorded before seed generation | **OPEN** — until the Director registers the final driver | hashes computed in `experiments/study2/DRIVER_MANIFEST.json`; the driver refuses to run unless the registration pins that manifest |
+| Z10 | untracked lineage artifacts frozen under version control | **PASS / closed** | committed at `5c785de`; content hashes equal the §B pins |
+
+*Historical (design baseline `d1949f9`), retained for lineage:*
+
+| # | Gate | Status at `d1949f9` |
 |---|---|---|
 | Z1 | Design frozen (this document) | **frozen here** |
 | Z2 | Seed range authorized and pre-registered | **OPEN — Director** |

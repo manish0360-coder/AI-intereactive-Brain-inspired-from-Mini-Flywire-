@@ -1,6 +1,8 @@
-# Study 2 (OQ-1a) — implementation-readiness harness
+# Study 2 (OQ-1a) — readiness harness and final Study-2 driver
 
-Readiness only. **No Study-2 run, no scientific seeds, no oracle / tau-b / Delta on study data.**
+**No Study-2 run, no scientific seeds, no oracle / tau-b / Delta on study data.** The driver exists but has not
+been executed; it refuses to run without a Director registration (proposal:
+[`FUTURESCORE_V2_3_STUDY2_REGISTRATION_PROPOSAL.md`](../../research/preregistrations/FUTURESCORE_V2_3_STUDY2_REGISTRATION_PROPOSAL.md)).
 Design: [`research/preregistrations/FUTURESCORE_V2_3_STUDY2_OQ1_DESIGN_FINAL.md`](../../research/preregistrations/FUTURESCORE_V2_3_STUDY2_OQ1_DESIGN_FINAL.md).
 
 | File | Role |
@@ -10,7 +12,16 @@ Design: [`research/preregistrations/FUTURESCORE_V2_3_STUDY2_OQ1_DESIGN_FINAL.md`
 | `child.mjs`, `drive_readiness.mjs` | the permitted development replay (`896066:0`), capture ON and OFF |
 | `taub.mjs` | project-owned tau-b, primary scoring, Delta, exact bootstrap interval (§P, §Q, §W) |
 | `validation/` | SciPy / NetworkX used **only** as independent references |
-| `verify_readiness.js` | the readiness gate |
+| `verify_readiness.js` | the readiness gate (cfadedd9, unchanged) |
+| **Study-2 driver (M-STUDY2-DRIVER)** | |
+| `governance.mjs` | seed block / registration validation (typed registry), the bounded acceptance walk, goal balance — no oracle |
+| `drive_study2.mjs` | executes a registered block: plan first, every slot in order, integrity halt, slot-0 replay — never run at this commit |
+| `run_child.mjs`, `capture.mjs` | one run per process; the readiness capture logic plus persisted step-0 vectors and full provenance |
+| `analyze_study2.mjs` | post-run only: U* = −expectedCostToGoal, Delta, medians, exact bootstrap, R5 moderator, secondary post-shift |
+| `manifest.mjs`, `DRIVER_MANIFEST.json` | driver/analysis file hashes; the registration must pin their sha256 |
+| `registration.template.json` | the fields the Director fills in |
+| `shakedown.mjs`, `shakedown_evidence/` | the run child on development fixture 896066:0, compared with the readiness evidence |
+| `verify_driver.js` | the final pre-execution gate D1–D20 |
 
 **Definitions pinned by this milestone**
 - **Decision event:** one `runAgent` invocation whose real `runPrediction(agentCurrent)` produces the executed
@@ -25,4 +36,7 @@ candidate outside `K(e)`, and the executed action was always in `K(e)`. That is 
 guarantee; the per-event fields `nAugmented`, `executedInK` and `executedAugmented` must be recorded in Study 2 as **monitored diagnostics, not validity conditions** — OQ-1a does not show that the executed action is selected by FutureScore.
 
 Run: `node experiments/study2/drive_readiness.mjs`, `node experiments/study2/validation/validate.mjs`,
-`node experiments/study2/verify_readiness.js`.
+`node experiments/study2/verify_readiness.js`; driver gate: `node experiments/study2/shakedown.mjs`,
+`node experiments/study2/verify_driver.js`. Execution (only after authorization):
+`STUDY2_EXECUTION_AUTHORISED=1 node experiments/study2/drive_study2.mjs --execute --registration <file> --out <dir>`,
+then `node experiments/study2/analyze_study2.mjs <dir>`.

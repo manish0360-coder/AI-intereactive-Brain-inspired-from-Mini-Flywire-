@@ -1,0 +1,17 @@
+{
+  "schema": "study2-registration/1",
+  "authorization": null,
+  "seedBlock": null,
+  "runCount": null,
+  "agentSeed": 20260819000,
+  "arm": "A1",
+  "envMode": "on",
+  "creditMode": "on",
+  "pin": "on",
+  "tickUnit": "step",
+  "ticks": 3000,
+  "primaryWindowMaxTau": 1500,
+  "trajectoryUse": null,
+  "productionBaselineCommit": "a066d47696b1502720f627855c8549f4d2898cd5",
+  "driverManifestSha256": null
+}
