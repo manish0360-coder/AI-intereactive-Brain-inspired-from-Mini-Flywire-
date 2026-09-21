@@ -59,6 +59,11 @@ ok('PR3', /\*\*`K\(e\)` is the exact step-0 ranking candidate set:\*\*/.test(DOC
 ok('PR4', /Superseded wording, retained for lineage/.test(DOC) && /\*\*This was incorrect\.\*\*/.test(DOC), '§G: superseded wording retained, not erased');
 ok('PR5', /must \*\*equal\*\* the step-0 FutureScore candidate set/.test(DOC) && /`targetNeuronForFuture\(k\)` \(`main\.js:1968`\) must resolve to `k` itself/.test(DOC),
   'G-IMPL-1 now includes the candidate-set equivalence requirement');
+ok('PR7', !/actually determine the executed action/.test(DOC) && /the step-0 FutureScore candidate ranking being evaluated/.test(DOC.replace(/\*\*/g, ''))
+  && /OQ-1a does not show that the executed action is selected by FutureScore/.test(DOC.replace(/\*\*/g, '')) && /monitored diagnostics/.test(DOC.replace(/\*\*/g, '')),
+  'executed action is not claimed; executedInK etc. are monitored diagnostics, not validity conditions');
+ok('PR8', /Temporal alignment \(readiness closure\)/.test(DOC.replace(/\*\*/g, '')) && /before the step-0 decision is taken/.test(DOC.replace(/\*\*/g, '')),
+  'G-IMPL-1 specifies in-invocation evaluation before the step-0 decision');
 let dg = ''; try { dg = execFileSync(process.execPath, [path.join(ROOT, 'research/preregistrations/verify_fs_study2_design_final.js')], { cwd: ROOT, encoding: 'utf8' }); } catch (e) { dg = String(e.stdout || ''); }
 const dgFails = [...dg.matchAll(/\[FAIL\] (\S+)/g)].map((m) => m[1]);
 ok('PR6', dgFails.every((id) => ['G2', 'G3'].includes(id)),
@@ -93,8 +98,13 @@ ok('G1.7', count((e) => e.snapUnchanged) === E.length, `snapshot unchanged: ${co
 ok('G1.8', count((e) => e.goalCount === 1) === E.length, 'FULL and GEO evaluated against one goal and one snapshot per event');
 const imagined = E.reduce((a, e) => a + e.imaginedCalls, 0);
 ok('G1.9', imagined > 0 && !JSON.stringify(E).includes('"imaginedCandidates"'), `imagined-step calls excluded from every event record: ${imagined}`);
-ok('G1.X', count((e) => e.executedInK) === E.length && count((e) => e.executedAugmented) === 0,
-  `executed action in K(e) ${count((e) => e.executedInK)}/${E.length}; augmented (non-FS) executed ${count((e) => e.executedAugmented)} [monitored, replay-specific]`);
+ok('G1.T1', count((e) => e.shadowInInvocation) === E.length, `temporal: shadows evaluated inside the step-0 runPrediction invocation: ${count((e) => e.shadowInInvocation)}/${E.length}`);
+ok('G1.T2', count((e) => e.shadowBeforeDecision) === E.length, `temporal: shadows evaluated before the step-0 decision was taken: ${count((e) => e.shadowBeforeDecision)}/${E.length}`);
+ok('G1.T3', count((e) => e.snapUnboundAfter) === E.length, `snapshot unbound after every event (FULL cannot read it later): ${count((e) => e.snapUnboundAfter)}/${E.length}`);
+// executedInK is a MONITORED DIAGNOSTIC, not a validity condition (Director closure): the check is that it is
+// RECORDED for every event; its value is reported, never gated.
+ok('G1.X', E.every((e) => typeof e.executedInK === 'boolean' && typeof e.executedAugmented === 'boolean' && Number.isInteger(e.nAugmented)),
+  `diagnostics recorded on every event [reported, not gated]: executedInK ${count((e) => e.executedInK)}/${E.length}, executedAugmented ${count((e) => e.executedAugmented)}, events with augmentation ${count((e) => e.nAugmented > 0)}`);
 
 // ---- G2 ------------------------------------------------------------------------------------------------
 section('G2  G-IMPL-2 non-interference');
@@ -140,6 +150,9 @@ ok('G4.6', ord.every((n) => n > 0) && ord[0] < ord[1] && ord[1] < ord[2] && coun
 const dCode = codeOf(read('experiments/study2/drive_readiness.mjs'));
 ok('G4.7', !ORACLE.test(dCode) && /const RUNS = Object\.freeze\(\['', ''\]\)/.test(dCode) && /const SEED = 896066, INDEX = 0;/.test(cRaw),
   'readiness seed selection is literal (development fixture only) and oracle-free; the run list is a frozen literal');
+const RUNTIME = ['experiments/study2/child.mjs', 'experiments/study2/hook_capture.mjs', 'experiments/study2/snapshot_reader.mjs', 'experiments/study2/drive_readiness.mjs'];
+ok('G4.9', RUNTIME.every((f) => !/taub\.mjs|validation\/|reference_check/.test(read(f))) && ORACLE.test(codeOf(read('experiments/study2/validation/validate.mjs'))),
+  'oracle-using validation code exists only in validation/ and is imported by no capture/runtime file (it runs as a separate process)');
 ok('G4.8', /OPEN IMPLEMENTATION GATE G-IMPL-4/.test(DOC),
   'Study-2 scientific seed-selection and stopping code do not exist yet: they remain OPEN until the seed block is authorized');
 

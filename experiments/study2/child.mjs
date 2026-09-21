@@ -50,20 +50,38 @@ if (CAPTURE) {
   // Imagined successor states (chain steps 1..STEPS-1) are counted and EXCLUDED; they never enter an event.
   let open = false, calls0 = null, keys0 = null, sorted0 = null, final0 = null;
   let imaginedCalls = 0, imaginedKeys = 0, snap = null, snapHash = null, step = null, stepTick = null;
+  let inInvocationDepth = 0, decisionBefore = null;       // temporal-alignment witnesses
   globalThis.__S2_BEGIN__ = () => {
     if (open) throw new Error('S2: nested decision event');
     open = true; calls0 = []; keys0 = []; sorted0 = null; final0 = null; imaginedCalls = 0; imaginedKeys = 0;
     step = globalThis.__S2_STEP__; stepTick = lastTick;
+    inInvocationDepth = 1; decisionBefore = globalThis.lastReasoning;   // the PREVIOUS decision object
     snap = liveSnapshot(); snapHash = hashMap(snap);              // captured ONCE, before any scoring
   };
   globalThis.__S2_KEY__ = (chain, k) => { if (!open) return; if (chain === 0) keys0.push(Number(k)); else imaginedKeys++; };
-  globalThis.__S2_CALL__ = (id, g, v, chain) => { if (!open) return; if (chain === 0) calls0.push([Number(id), g, v]); else imaginedCalls++; };
+  // TEMPORAL ALIGNMENT (Director closure): the shadow FULL/GEO scores are computed HERE — synchronously inside
+  // the step-0 runPrediction invocation, immediately after the production futureScore returned, before
+  // runPrediction continues. The snapshot is bound only for the FULL call; GEO reads no evidence at all.
+  // The shadow instances carry no wrapper, so this callback cannot re-enter itself.
+  globalThis.__S2_CALL__ = (id, g, v, chain) => {
+    if (!open) return;
+    if (chain !== 0) { imaginedCalls++; return; }
+    const k = Number(id);
+    const n = search.findNeuronById(k);
+    globalThis.__S2_SNAPSHOT__ = snap;
+    const full = FULL.futureScore(n, g);
+    globalThis.__S2_SNAPSHOT__ = null;
+    const geo = GEO.futureScore(n, g);
+    // [5] evaluated between BEGIN and END; [6] the step-0 decision had NOT yet been taken
+    calls0.push([k, g, v, full, geo, inInvocationDepth === 1, globalThis.lastReasoning === decisionBefore]);
+  };
   globalThis.__S2_RANK__ = (chain, kind, keys) => {
     if (!open || chain !== 0) return;
     if (kind === 'sorted') sorted0 = keys.map(Number); else if (kind === 'final') final0 = keys.map(Number);
   };
   globalThis.__S2_END__ = () => {
-    open = false;
+    open = false; inInvocationDepth = 0;
+    const decisionTakenAfter = globalThis.lastReasoning !== decisionBefore;
     const executed = globalThis.lastReasoning ? Number(globalThis.lastReasoning.to) : null;   // set on step 0 only
     const liveUnchanged = hashMap(liveSnapshot()) === snapHash;   // nothing wrote evidence during scoring
     // ---- candidate-set identity (checks A-G) ----
@@ -81,25 +99,23 @@ if (CAPTURE) {
       F_orderDeterministic: keys0.length === fsIds.length && keys0.every((k, i) => k === fsIds[i]),
       G_targetEqualsCandidate: keys0.length === fsIds.length && keys0.every((k, i) => k === fsIds[i]),
     };
-    // ---- G-IMPL-1 identities on step-0 candidates only ----
-    globalThis.__S2_SNAPSHOT__ = snap;
+    // ---- G-IMPL-1 identities on step-0 candidates only (shadows were computed in-invocation) ----
     const raw = [];
     let fullEqLive = true, geoEqNegD = true;
     const goals = new Set(calls0.map((c) => c[1]));
-    for (const [k, g, v] of calls0) {
-      const n = search.findNeuronById(k);
-      const full = FULL.futureScore(n, g);
-      const geo = GEO.futureScore(n, g);
+    const shadowInInvocation = calls0.every((c) => c[5] === true);
+    const shadowBeforeDecision = calls0.every((c) => c[6] === true) && decisionTakenAfter;
+    for (const [k, g, v, full, geo] of calls0) {
       const d = distFrom(Number(g)).get(k);
       if (full !== v) fullEqLive = false;
       if (geo !== (d === undefined ? -Infinity : -d)) geoEqNegD = false;
       raw.push([k, v, full, geo]);
     }
-    globalThis.__S2_SNAPSHOT__ = null;
     const snapUnchanged = hashMap(snap) === snapHash;              // the snapshot itself was not mutated
     const augmented = (final0 || []).filter((k) => !fsSet.has(k)); // final-ranking entries FutureScore never scored
     events.push({ t: step, lastTick: stepTick, nCand: calls0.length, goalCount: goals.size,
-      fullEqLive, geoEqNegD, liveUnchanged, snapUnchanged, idCheck, missing, extra,
+      fullEqLive, geoEqNegD, liveUnchanged, snapUnchanged, shadowInInvocation, shadowBeforeDecision, snapUnboundAfter: globalThis.__S2_SNAPSHOT__ === null,
+      idCheck, missing, extra,
       imaginedCalls, imaginedKeys, nAugmented: augmented.length,
       executedInK: executed !== null && fsSet.has(executed), executedAugmented: executed !== null && augmented.includes(executed),
       rawHash: crypto.createHash('sha256').update(JSON.stringify(raw)).digest('hex') });

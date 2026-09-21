@@ -130,7 +130,15 @@ through the stale/replay branch without a `runPrediction` call are **not** decis
 **while the chain is at step 0**, i.e. at the real decision state. **Imagined successor states produced by steps
 1…STEPS−1 are excluded from the primary endpoint** and never enter an event record. `FS_FULL(k)` is the value
 computed there; `FS_GEO(k)` is computed for exactly the same `K(e)` at the same moment. The endpoint therefore
-evaluates only the ranking that can actually determine the executed action at that event.
+evaluates **the step-0 FutureScore candidate ranking being evaluated** at that event.
+
+**CLARIFICATION (readiness closure) — the executed action is not an OQ-1a validity condition.** OQ-1a evaluates the
+information in FutureScore's step-0 candidate ranking. The downstream action selection contains further machinery:
+after the FutureScore-scored ranking (`main.js:2490`), structure- and embedding-based candidates may be appended
+(`main.js:2540` onward) and the action is taken from a re-sorted `topChoices` (`main.js:2637`, `2713`). Therefore
+**OQ-1a does not show that the executed action is selected by FutureScore.** The per-event fields `nAugmented`,
+`executedInK` and `executedAugmented` are recorded as **monitored diagnostics** for transparency only; they are
+not validity conditions and do not enter the endpoint.
 
 **OPEN IMPLEMENTATION GATE G-IMPL-1 (same-snapshot and candidate-set proof).** The GEO score must be produced by the
 **same code** as FULL with only the evidence reader replaced, evaluated inside the same `runPrediction` invocation
@@ -139,6 +147,11 @@ before control leaves it. Acceptance criterion: the GEO evaluator's source diffe
 **Additionally (REPAIR):** for every event, the step-0 ranking candidate set (`sorted` at `main.js:2490`, step 0)
 must **equal** the step-0 FutureScore candidate set — same IDs, same cardinality, none missing, none extra, no
 duplicates, deterministic order — and `targetNeuronForFuture(k)` (`main.js:1968`) must resolve to `k` itself.
+**Temporal alignment (readiness closure):** FULL and GEO are evaluated **synchronously at each step-0 `futureScore`
+call, inside the same `runPrediction` invocation, before the step-0 decision is taken**, with the immutable snapshot
+bound only for the FULL evaluation. Per-event witnesses must show the evaluation occurred between the event markers
+and before the new decision object existed. The candidate-set and `targetNeuronForFuture` checks are retained per
+event in the eventual Study-2 driver.
 
 **OPEN IMPLEMENTATION GATE G-IMPL-2 (non-interference).** Adding the capture must not change the executed
 trajectory. Acceptance criterion: capture-on versus capture-off runs of the same fixture are identical on the

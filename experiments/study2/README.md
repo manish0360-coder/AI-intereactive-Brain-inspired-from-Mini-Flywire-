@@ -22,7 +22,7 @@ Design: [`research/preregistrations/FUTURESCORE_V2_3_STUDY2_OQ1_DESIGN_FINAL.md`
 
 **Monitored, replay-specific:** in the development replay the final (post-augmentation) ranking never contained a
 candidate outside `K(e)`, and the executed action was always in `K(e)`. That is an observation, not a structural
-guarantee; the per-event fields `nAugmented`, `executedInK` and `executedAugmented` must be recorded in Study 2.
+guarantee; the per-event fields `nAugmented`, `executedInK` and `executedAugmented` must be recorded in Study 2 as **monitored diagnostics, not validity conditions** — OQ-1a does not show that the executed action is selected by FutureScore.
 
 Run: `node experiments/study2/drive_readiness.mjs`, `node experiments/study2/validation/validate.mjs`,
 `node experiments/study2/verify_readiness.js`.
