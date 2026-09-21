@@ -52,10 +52,15 @@ average effect over all states.
 distribution visited by the V2.3 behaviour policy**, in the **pre-shift (current-evidence) regime**:
 
 ```
-θ = E_runs [ median_{decision events e in run r, t_e ≤ 1500} ( τb(FS_FULL(e), U*(e)) − τb(FS_GEO(e), U*(e)) ) ]
+Δ(e)  = τb(FS_FULL(e), U*(e)) − τb(FS_GEO(e), U*(e))
+Δ_r   = median over decision events e in run r with t_e ≤ 1500 of Δ(e)
+θ     = median over runs r of Δ_r                                   ← PRIMARY estimand
 ```
 
-reported through the hierarchical summary in §Q rather than as this single expectation.
+**REPAIR (M-STUDY2-IMPLEMENTATION-GATE).** The frozen text previously wrote the across-run step as an
+expectation, `E_runs[·]`, while §Q declared the **median** of `Δ_r` as the primary across-run summary. The primary
+estimand is now written to match §Q exactly: **`θ = median_r Δ_r`**. The mean of `Δ_r` across runs is retained
+as **secondary, descriptive** information only. Nothing else about the estimand changed.
 
 It is **not** a global average treatment effect over all possible states, and it is **not** a behavioural effect.
 
@@ -107,18 +112,33 @@ unchanged.
 write (10) of the same tick, so **decision-time evidence never contains the current tick's outcome**, and no
 post-action state can be mistaken for the decision state.
 
-**DESIGN DECISION — capture point.** A decision event is **one invocation of `runPrediction` from `main.js:3457`**.
-The UI call `runPrediction(clickedId)` at `main.js:5651` is **excluded**. Steps taken through the stale/replay
-branch without a `runPrediction` call are **not** decision events.
+**DESIGN DECISION — capture point (REPAIRED, Director ruling on G-IMPL-1).** A **decision event** is **one
+`runAgent` invocation whose real `runPrediction(agentCurrent)` call from `main.js:3457` produces the executed
+decision at chain step 0.** The UI call `runPrediction(clickedId)` at `main.js:5651` is **excluded**. Steps taken
+through the stale/replay branch without a `runPrediction` call are **not** decision events.
 
-**DESIGN DECISION — what is captured per event.** The set `K(e)` of candidates for which `futureScore` was actually
-evaluated at line 4 in that invocation, with `FS_FULL(k)` as computed there. `FS_GEO(k)` is computed for exactly
-the same `K(e)` at the same moment.
+**DESIGN DECISION — what is captured per event (REPAIRED).**
 
-**OPEN IMPLEMENTATION GATE G-IMPL-1 (same-snapshot proof).** The GEO score must be produced by the **same code** as
-FULL with only the evidence reader replaced, evaluated inside the same `runPrediction` invocation before control
-leaves it. Acceptance criterion: the GEO evaluator's source differs from `render/planning.js` **only** in the
-evidence-reader binding, proven by a source-diff check, and no GEO evaluation writes any state.
+> **Superseded wording, retained for lineage:** *"The set `K(e)` of candidates for which `futureScore` was actually
+> evaluated at line 4 in that invocation."* **This was incorrect.** FACT: `runPrediction` evaluates an imagined
+> chain — `for (let step = 0; step < STEPS; step++)` (`main.js:1621`), `STEPS = max(2, min(dynamicDepth, 6))`
+> (`main.js:1613`), advancing with `currentKey = nextKey` (`main.js:2850`) — and only **step 0** sets the executed
+> decision (`if (step === 0) { window.lastReasoning = … }`, `main.js:2764`). The superseded wording therefore
+> admitted candidates of **imagined successor states**.
+
+**`K(e)` is the exact step-0 ranking candidate set:** the candidates scored by `futureScore` at `main.js:1970`
+**while the chain is at step 0**, i.e. at the real decision state. **Imagined successor states produced by steps
+1…STEPS−1 are excluded from the primary endpoint** and never enter an event record. `FS_FULL(k)` is the value
+computed there; `FS_GEO(k)` is computed for exactly the same `K(e)` at the same moment. The endpoint therefore
+evaluates only the ranking that can actually determine the executed action at that event.
+
+**OPEN IMPLEMENTATION GATE G-IMPL-1 (same-snapshot and candidate-set proof).** The GEO score must be produced by the
+**same code** as FULL with only the evidence reader replaced, evaluated inside the same `runPrediction` invocation
+before control leaves it. Acceptance criterion: the GEO evaluator's source differs from `render/planning.js`
+**only** in the evidence-reader binding, proven by a source-diff check, and no GEO evaluation writes any state.
+**Additionally (REPAIR):** for every event, the step-0 ranking candidate set (`sorted` at `main.js:2490`, step 0)
+must **equal** the step-0 FutureScore candidate set — same IDs, same cardinality, none missing, none extra, no
+duplicates, deterministic order — and `targetNeuronForFuture(k)` (`main.js:1968`) must resolve to `k` itself.
 
 **OPEN IMPLEMENTATION GATE G-IMPL-2 (non-interference).** Adding the capture must not change the executed
 trajectory. Acceptance criterion: capture-on versus capture-off runs of the same fixture are identical on the
@@ -138,7 +158,7 @@ It is also same-state, but it scores states the agent is not at, which the Direc
 |---|---|---|---|
 | decision state `u` | captured | same capture | **yes** |
 | goal | `goalNeuronId` | same | **yes** |
-| candidate set `K(e)` | set evaluated at `main.js:1970` | same set | **yes** |
+| candidate set `K(e)` | step-0 set evaluated at `main.js:1970` (imagined steps excluded) | same set | **yes** |
 | graph / neighbours | physical graph | same | **yes** |
 | candidate admission | `canReachGoal(maxDepth=4)`, `main.js:1794` | not re-run; same `K(e)` | **yes** |
 | geometry `d(v,g)` | private BFS, `render/planning.js` | same function | **yes** |
@@ -293,7 +313,8 @@ nothing here, so this arises only at degree-1 states; the count is reported.
    as secondary.
 3. **Independent unit = the run**, i.e. one accepted configuration (`configSeed`, `configIndex`) with its goal.
    Events within a run share one trajectory and one evidence stream and are **not** independent.
-4. **Across runs** → the median of `Δ_r`, an **exact** enumerated bootstrap interval for that median when the run
+4. **Across runs** → the median of `Δ_r` (the primary estimand `θ`, §D), the interval defined in §W, and — as
+   originally frozen — an **exact** enumerated bootstrap interval for that median when the run
    count permits exact enumeration, the full per-run sign pattern, and the exact sign test.
 
 **No α and no significance threshold is set.** Results are classified against §V/§W as consistent with,
@@ -359,6 +380,22 @@ horizons, or behaviourally. Plausible structural reasons — the unscored decisi
 overlap, low-R5 configurations — are to be examined, not used to explain the result away.
 
 ## W. Positive-result interpretation
+
+**Interval rule (frozen before any result — REPAIR, M-STUDY2-IMPLEMENTATION-GATE).** "The interval" means the
+**two-sided 95% percentile interval of the exact nonparametric bootstrap distribution of `θ = median_r Δ_r`**,
+the same method Study 1 used:
+
+- the bootstrap distribution is the **complete** set of all `N = n^n` equally weighted resamples, with
+  replacement, of the `n` run-level values `Δ_r` — enumerated, never randomly sampled, so it consumes no RNG;
+- it may be computed by enumerating multiset count vectors weighted by their multinomial counts, which yields the
+  **identical** distribution and remains feasible when `n^n` is too large to list; the two computations must agree
+  exactly on every run count where both are feasible;
+- with the `N` resample medians sorted ascending (0-based), the **lower** bound is the value at position
+  `⌊0.025·N⌋` and the **upper** bound the value at position `⌈0.975·N⌉ − 1`;
+- the interval **excludes zero** iff `lower > 0` or `upper < 0`, strictly.
+
+No effect-size threshold is set. The 95% level is carried over from the existing Study-1 methodology; it was not
+chosen with reference to any expected result.
 
 If `Δ_r > 0` with a consistent sign majority and an interval excluding zero:
 **"Learned traversal evidence adds oracle-concordant ranking information beyond geometric goal distance, at the

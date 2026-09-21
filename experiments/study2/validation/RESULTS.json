@@ -1,0 +1,273 @@
+{
+  "tieEps": 1e-9,
+  "reference": {
+    "scipy": "1.13.0",
+    "networkx": "3.4.2",
+    "python": "3.10.7"
+  },
+  "seedsTouched": [
+    896066,
+    896238,
+    896329
+  ],
+  "TB": [
+    {
+      "id": "ordinary-identical",
+      "ours": 1,
+      "scipy": 1,
+      "agree": true
+    },
+    {
+      "id": "ordinary-reversed",
+      "ours": -1,
+      "scipy": -1,
+      "agree": true
+    },
+    {
+      "id": "ordinary-mixed",
+      "ours": 0.2,
+      "scipy": 0.19999999999999998,
+      "agree": true
+    },
+    {
+      "id": "ties-in-x",
+      "ours": 0.9128709291752769,
+      "scipy": 0.912870929175277,
+      "agree": true
+    },
+    {
+      "id": "ties-in-y",
+      "ours": 0.18257418583505536,
+      "scipy": 0.18257418583505539,
+      "agree": true
+    },
+    {
+      "id": "both-tied-pairs",
+      "ours": -1,
+      "scipy": -1,
+      "agree": true
+    },
+    {
+      "id": "all-tied-FULL",
+      "ours": "undefined",
+      "scipy": "nan",
+      "agree": true
+    },
+    {
+      "id": "all-tied-GEO-integers",
+      "ours": "undefined",
+      "scipy": "nan",
+      "agree": true
+    },
+    {
+      "id": "all-tied-oracle",
+      "ours": "undefined",
+      "scipy": "nan",
+      "agree": true
+    },
+    {
+      "id": "neg-infinity",
+      "ours": 1,
+      "scipy": 1,
+      "agree": true
+    },
+    {
+      "id": "mixed-finite-neg-infinity-ties",
+      "ours": 0.9128709291752769,
+      "scipy": 0.912870929175277,
+      "agree": true
+    },
+    {
+      "id": "smallest-m2",
+      "ours": -1,
+      "scipy": -1,
+      "agree": true
+    },
+    {
+      "id": "smallest-m2-tied",
+      "ours": "undefined",
+      "scipy": "nan",
+      "agree": true
+    },
+    {
+      "id": "realistic-geo-vs-oracle",
+      "ours": 0.8660254037844387,
+      "scipy": 0.8660254037844386,
+      "agree": true
+    },
+    {
+      "id": "realistic-full-vs-oracle",
+      "ours": 0.7857142857142857,
+      "scipy": 0.7857142857142856,
+      "agree": true
+    },
+    {
+      "id": "excluded-m1",
+      "ours": "excluded",
+      "scipy": "nan",
+      "agree": true
+    }
+  ],
+  "TC": [
+    {
+      "name": "undefined => 0 (all-tied FULL)",
+      "pass": true
+    },
+    {
+      "name": "undefined => 0 (all-tied GEO)",
+      "pass": true
+    },
+    {
+      "name": "m < 2 => excluded (null), not 0",
+      "pass": true
+    },
+    {
+      "name": "Delta keeps the geometry-tie event: FULL ordered, GEO all-tied",
+      "pass": true
+    },
+    {
+      "name": "numeric tie: values 1e-12 apart are tied",
+      "pass": true
+    },
+    {
+      "name": "numeric tie: values 1e-6 apart are NOT tied",
+      "pass": true
+    },
+    {
+      "name": "noisy vector with 1e-12 jitter == SciPy on the clean vector",
+      "pass": true
+    },
+    {
+      "name": "-Infinity pairs tie with each other",
+      "pass": true
+    },
+    {
+      "name": "-Infinity sorts below finite values",
+      "pass": true
+    },
+    {
+      "name": "NaN is rejected, never scored",
+      "pass": true
+    },
+    {
+      "name": "deterministic: repeated evaluation identical",
+      "pass": true
+    }
+  ],
+  "BS": [
+    {
+      "n": 1,
+      "countVector": [
+        0.4,
+        0.4
+      ],
+      "brute": [
+        0.4,
+        0.4
+      ],
+      "agree": true
+    },
+    {
+      "n": 2,
+      "countVector": [
+        -0.1,
+        0.3
+      ],
+      "brute": [
+        -0.1,
+        0.3
+      ],
+      "agree": true
+    },
+    {
+      "n": 3,
+      "countVector": [
+        -0.5,
+        0.2
+      ],
+      "brute": [
+        -0.5,
+        0.2
+      ],
+      "agree": true
+    },
+    {
+      "n": 4,
+      "countVector": [
+        -0.3,
+        0.3
+      ],
+      "brute": [
+        -0.3,
+        0.3
+      ],
+      "agree": true
+    },
+    {
+      "n": 5,
+      "countVector": [
+        -0.4,
+        0.5
+      ],
+      "brute": [
+        -0.4,
+        0.5
+      ],
+      "agree": true
+    },
+    {
+      "n": 6,
+      "countVector": [
+        -0.0202,
+        0.06485
+      ],
+      "brute": [
+        -0.0202,
+        0.06485
+      ],
+      "agree": true
+    },
+    {
+      "n": 7,
+      "countVector": [
+        -0.1,
+        0.3
+      ],
+      "brute": [
+        -0.1,
+        0.3
+      ],
+      "agree": true
+    }
+  ],
+  "S1regression": {
+    "lowerPP": -2.02,
+    "upperPP": 6.48,
+    "reproduces": true
+  },
+  "BSfeasibility": [
+    {
+      "n": 8,
+      "N": "16777216",
+      "seconds": 0.004
+    },
+    {
+      "n": 10,
+      "N": "10000000000",
+      "seconds": 0.074
+    },
+    {
+      "n": 12,
+      "N": "8916100448256",
+      "seconds": 0.554
+    }
+  ],
+  "OR": {
+    "cases": 32,
+    "nodeValues": 640,
+    "maxAbsDiffVsBellmanFord": 0,
+    "maxAbsDiffVsNetworkX": 0,
+    "goalCostZero": true,
+    "candidateOnwardBellmanConsistent": true
+  }
+}

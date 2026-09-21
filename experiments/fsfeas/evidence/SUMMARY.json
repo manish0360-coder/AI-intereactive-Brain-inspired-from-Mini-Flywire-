@@ -1,0 +1,554 @@
+[
+  {
+    "fixture": "896066:0",
+    "goal": 8,
+    "rows": [
+      {
+        "t": 250,
+        "phase": "pre",
+        "observed": 36,
+        "nonUnit": 8,
+        "aTotal": 157,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 6,
+        "dsFsNU": 19,
+        "dsDiffer": 18
+      },
+      {
+        "t": 500,
+        "phase": "pre",
+        "observed": 51,
+        "nonUnit": 12,
+        "aTotal": 311,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 8,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 750,
+        "phase": "pre",
+        "observed": 54,
+        "nonUnit": 16,
+        "aTotal": 477,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 9,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 1000,
+        "phase": "pre",
+        "observed": 54,
+        "nonUnit": 18,
+        "aTotal": 624,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 11,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 1250,
+        "phase": "pre",
+        "observed": 57,
+        "nonUnit": 18,
+        "aTotal": 779,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 11,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 1500,
+        "phase": "pre",
+        "observed": 62,
+        "nonUnit": 26,
+        "aTotal": 890,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 14,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 1750,
+        "phase": "post",
+        "observed": 63,
+        "nonUnit": 36,
+        "aTotal": 1043,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 17,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 2000,
+        "phase": "post",
+        "observed": 63,
+        "nonUnit": 38,
+        "aTotal": 1177,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 17,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 2250,
+        "phase": "post",
+        "observed": 63,
+        "nonUnit": 42,
+        "aTotal": 1296,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 17,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 2500,
+        "phase": "post",
+        "observed": 65,
+        "nonUnit": 48,
+        "aTotal": 1425,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 19,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 2750,
+        "phase": "post",
+        "observed": 65,
+        "nonUnit": 49,
+        "aTotal": 1551,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 19,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 3000,
+        "phase": "post",
+        "observed": 67,
+        "nonUnit": 53,
+        "aTotal": 1671,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 19,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      }
+    ]
+  },
+  {
+    "fixture": "896066:1",
+    "goal": 12,
+    "rows": [
+      {
+        "t": 250,
+        "phase": "pre",
+        "observed": 29,
+        "nonUnit": 8,
+        "aTotal": 183,
+        "dsEdgeObs": 16,
+        "dsEdgeNU": 7,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 500,
+        "phase": "pre",
+        "observed": 39,
+        "nonUnit": 11,
+        "aTotal": 348,
+        "dsEdgeObs": 17,
+        "dsEdgeNU": 9,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 750,
+        "phase": "pre",
+        "observed": 47,
+        "nonUnit": 15,
+        "aTotal": 522,
+        "dsEdgeObs": 17,
+        "dsEdgeNU": 10,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 1000,
+        "phase": "pre",
+        "observed": 52,
+        "nonUnit": 22,
+        "aTotal": 692,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 15,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 1250,
+        "phase": "pre",
+        "observed": 54,
+        "nonUnit": 25,
+        "aTotal": 842,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 16,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 1500,
+        "phase": "pre",
+        "observed": 58,
+        "nonUnit": 27,
+        "aTotal": 964,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 17,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 1750,
+        "phase": "post",
+        "observed": 59,
+        "nonUnit": 34,
+        "aTotal": 1076,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 18,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 2000,
+        "phase": "post",
+        "observed": 62,
+        "nonUnit": 42,
+        "aTotal": 1169,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 19,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 2250,
+        "phase": "post",
+        "observed": 62,
+        "nonUnit": 48,
+        "aTotal": 1277,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 19,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 2500,
+        "phase": "post",
+        "observed": 63,
+        "nonUnit": 48,
+        "aTotal": 1395,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 19,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 2750,
+        "phase": "post",
+        "observed": 64,
+        "nonUnit": 50,
+        "aTotal": 1502,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 19,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 3000,
+        "phase": "post",
+        "observed": 64,
+        "nonUnit": 53,
+        "aTotal": 1599,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 19,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      }
+    ]
+  },
+  {
+    "fixture": "896238:2",
+    "goal": 16,
+    "rows": [
+      {
+        "t": 250,
+        "phase": "pre",
+        "observed": 43,
+        "nonUnit": 16,
+        "aTotal": 176,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 12,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 500,
+        "phase": "pre",
+        "observed": 49,
+        "nonUnit": 18,
+        "aTotal": 332,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 14,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 750,
+        "phase": "pre",
+        "observed": 53,
+        "nonUnit": 20,
+        "aTotal": 471,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 14,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 1000,
+        "phase": "pre",
+        "observed": 54,
+        "nonUnit": 22,
+        "aTotal": 618,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 14,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 1250,
+        "phase": "pre",
+        "observed": 56,
+        "nonUnit": 25,
+        "aTotal": 754,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 14,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 1500,
+        "phase": "pre",
+        "observed": 56,
+        "nonUnit": 26,
+        "aTotal": 901,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 15,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 1750,
+        "phase": "post",
+        "observed": 57,
+        "nonUnit": 36,
+        "aTotal": 1028,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 18,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 2000,
+        "phase": "post",
+        "observed": 58,
+        "nonUnit": 40,
+        "aTotal": 1175,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 18,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 2250,
+        "phase": "post",
+        "observed": 60,
+        "nonUnit": 44,
+        "aTotal": 1305,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 19,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 2500,
+        "phase": "post",
+        "observed": 60,
+        "nonUnit": 47,
+        "aTotal": 1444,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 19,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 2750,
+        "phase": "post",
+        "observed": 60,
+        "nonUnit": 48,
+        "aTotal": 1545,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 19,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 3000,
+        "phase": "post",
+        "observed": 60,
+        "nonUnit": 50,
+        "aTotal": 1628,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 19,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      }
+    ]
+  },
+  {
+    "fixture": "896329:3",
+    "goal": 19,
+    "rows": [
+      {
+        "t": 250,
+        "phase": "pre",
+        "observed": 37,
+        "nonUnit": 12,
+        "aTotal": 172,
+        "dsEdgeObs": 18,
+        "dsEdgeNU": 9,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 500,
+        "phase": "pre",
+        "observed": 46,
+        "nonUnit": 19,
+        "aTotal": 331,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 11,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 750,
+        "phase": "pre",
+        "observed": 53,
+        "nonUnit": 24,
+        "aTotal": 489,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 15,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 1000,
+        "phase": "pre",
+        "observed": 55,
+        "nonUnit": 26,
+        "aTotal": 619,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 16,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 1250,
+        "phase": "pre",
+        "observed": 57,
+        "nonUnit": 28,
+        "aTotal": 754,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 17,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 1500,
+        "phase": "pre",
+        "observed": 62,
+        "nonUnit": 31,
+        "aTotal": 886,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 17,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 1750,
+        "phase": "post",
+        "observed": 64,
+        "nonUnit": 38,
+        "aTotal": 1017,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 18,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 2000,
+        "phase": "post",
+        "observed": 65,
+        "nonUnit": 43,
+        "aTotal": 1158,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 19,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 2250,
+        "phase": "post",
+        "observed": 68,
+        "nonUnit": 49,
+        "aTotal": 1293,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 19,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 2500,
+        "phase": "post",
+        "observed": 68,
+        "nonUnit": 52,
+        "aTotal": 1424,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 19,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 2750,
+        "phase": "post",
+        "observed": 71,
+        "nonUnit": 56,
+        "aTotal": 1528,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 19,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      },
+      {
+        "t": 3000,
+        "phase": "post",
+        "observed": 72,
+        "nonUnit": 60,
+        "aTotal": 1637,
+        "dsEdgeObs": 19,
+        "dsEdgeNU": 19,
+        "dsFsNU": 19,
+        "dsDiffer": 19
+      }
+    ]
+  }
+]
