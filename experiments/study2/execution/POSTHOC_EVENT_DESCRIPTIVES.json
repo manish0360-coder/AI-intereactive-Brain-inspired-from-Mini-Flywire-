@@ -1,0 +1,481 @@
+{
+ "schema": "study2-posthoc-event-descriptives/1",
+ "preregistered": false,
+ "note": "post-hoc descriptive only; written after the frozen analysis; does not change any frozen result or classification",
+ "pooled": {
+  "primary": {
+   "events": 22141,
+   "scored": 21980,
+   "pos": 8961,
+   "neg": 6259,
+   "zero": 6760,
+   "identicalOrdering": 6642,
+   "sumDelta": 859.9244350138389,
+   "meanDelta": 0.039123040719464916,
+   "shareZero": 0.3075523202911738,
+   "shareIdenticalOrdering": 0.3021838034576888
+  },
+  "postShift": {
+   "events": 22079,
+   "scored": 21874,
+   "pos": 6703,
+   "neg": 13812,
+   "zero": 1359,
+   "identicalOrdering": 1343,
+   "sumDelta": -2046.766213908821,
+   "meanDelta": -0.09357073301219809,
+   "shareZero": 0.062128554448203345,
+   "shareIdenticalOrdering": 0.06139709243851148
+  }
+ },
+ "perRun": [
+  {
+   "slot": 0,
+   "goal": 8,
+   "primary": {
+    "events": 1383,
+    "scored": 1383,
+    "pos": 82,
+    "neg": 400,
+    "zero": 901,
+    "identicalOrdering": 895,
+    "sumDelta": -61.1722536960594,
+    "meanDelta": -0.04423156449461996,
+    "shareZero": 0.6514822848879248,
+    "shareIdenticalOrdering": 0.6471438900939985
+   },
+   "postShift": {
+    "events": 1392,
+    "scored": 1392,
+    "pos": 198,
+    "neg": 1154,
+    "zero": 40,
+    "identicalOrdering": 39,
+    "sumDelta": -221.34322417850868,
+    "meanDelta": -0.1590109369098482,
+    "shareZero": 0.028735632183908046,
+    "shareIdenticalOrdering": 0.028017241379310345
+   }
+  },
+  {
+   "slot": 1,
+   "goal": 12,
+   "primary": {
+    "events": 1389,
+    "scored": 1389,
+    "pos": 565,
+    "neg": 408,
+    "zero": 416,
+    "identicalOrdering": 416,
+    "sumDelta": 110.99720030384726,
+    "meanDelta": 0.07991159129146672,
+    "shareZero": 0.2994960403167747,
+    "shareIdenticalOrdering": 0.2994960403167747
+   },
+   "postShift": {
+    "events": 1387,
+    "scored": 1387,
+    "pos": 332,
+    "neg": 1027,
+    "zero": 28,
+    "identicalOrdering": 28,
+    "sumDelta": -230.51898203582792,
+    "meanDelta": -0.16619969865596823,
+    "shareZero": 0.020187454938716654,
+    "shareIdenticalOrdering": 0.020187454938716654
+   }
+  },
+  {
+   "slot": 2,
+   "goal": 16,
+   "primary": {
+    "events": 1382,
+    "scored": 1331,
+    "pos": 784,
+    "neg": 192,
+    "zero": 355,
+    "identicalOrdering": 354,
+    "sumDelta": 116.58498944935221,
+    "meanDelta": 0.0875920281362526,
+    "shareZero": 0.2667167543200601,
+    "shareIdenticalOrdering": 0.2659654395191585
+   },
+   "postShift": {
+    "events": 1391,
+    "scored": 1363,
+    "pos": 228,
+    "neg": 1011,
+    "zero": 124,
+    "identicalOrdering": 124,
+    "sumDelta": -134.182461579561,
+    "meanDelta": -0.09844641348463756,
+    "shareZero": 0.09097578870139399,
+    "shareIdenticalOrdering": 0.09097578870139399
+   }
+  },
+  {
+   "slot": 3,
+   "goal": 19,
+   "primary": {
+    "events": 1374,
+    "scored": 1374,
+    "pos": 687,
+    "neg": 291,
+    "zero": 396,
+    "identicalOrdering": 396,
+    "sumDelta": 70.57019873977623,
+    "meanDelta": 0.05136113445398561,
+    "shareZero": 0.28820960698689957,
+    "shareIdenticalOrdering": 0.28820960698689957
+   },
+   "postShift": {
+    "events": 1368,
+    "scored": 1368,
+    "pos": 272,
+    "neg": 997,
+    "zero": 99,
+    "identicalOrdering": 99,
+    "sumDelta": -171.02090722679495,
+    "meanDelta": -0.12501528306052262,
+    "shareZero": 0.07236842105263158,
+    "shareIdenticalOrdering": 0.07236842105263158
+   }
+  },
+  {
+   "slot": 4,
+   "goal": 8,
+   "primary": {
+    "events": 1373,
+    "scored": 1373,
+    "pos": 374,
+    "neg": 699,
+    "zero": 300,
+    "identicalOrdering": 291,
+    "sumDelta": -64.33026499077248,
+    "meanDelta": -0.04685379824528221,
+    "shareZero": 0.21849963583394028,
+    "shareIdenticalOrdering": 0.21194464675892208
+   },
+   "postShift": {
+    "events": 1385,
+    "scored": 1385,
+    "pos": 1125,
+    "neg": 204,
+    "zero": 56,
+    "identicalOrdering": 56,
+    "sumDelta": 125.36929281503654,
+    "meanDelta": 0.09051934499280617,
+    "shareZero": 0.04043321299638989,
+    "shareIdenticalOrdering": 0.04043321299638989
+   }
+  },
+  {
+   "slot": 5,
+   "goal": 12,
+   "primary": {
+    "events": 1371,
+    "scored": 1371,
+    "pos": 939,
+    "neg": 232,
+    "zero": 200,
+    "identicalOrdering": 200,
+    "sumDelta": 220.0243948195786,
+    "meanDelta": 0.16048460599531625,
+    "shareZero": 0.14587892049598833,
+    "shareIdenticalOrdering": 0.14587892049598833
+   },
+   "postShift": {
+    "events": 1375,
+    "scored": 1375,
+    "pos": 288,
+    "neg": 1066,
+    "zero": 21,
+    "identicalOrdering": 21,
+    "sumDelta": -335.8444785893863,
+    "meanDelta": -0.24425052988319004,
+    "shareZero": 0.015272727272727273,
+    "shareIdenticalOrdering": 0.015272727272727273
+   }
+  },
+  {
+   "slot": 6,
+   "goal": 16,
+   "primary": {
+    "events": 1397,
+    "scored": 1375,
+    "pos": 413,
+    "neg": 580,
+    "zero": 382,
+    "identicalOrdering": 375,
+    "sumDelta": -3.3042295798896366,
+    "meanDelta": -0.002403076058101554,
+    "shareZero": 0.2778181818181818,
+    "shareIdenticalOrdering": 0.2727272727272727
+   },
+   "postShift": {
+    "events": 1399,
+    "scored": 1343,
+    "pos": 255,
+    "neg": 1017,
+    "zero": 71,
+    "identicalOrdering": 71,
+    "sumDelta": -147.70164028310853,
+    "meanDelta": -0.10997888330834589,
+    "shareZero": 0.05286671630677588,
+    "shareIdenticalOrdering": 0.05286671630677588
+   }
+  },
+  {
+   "slot": 7,
+   "goal": 19,
+   "primary": {
+    "events": 1394,
+    "scored": 1394,
+    "pos": 789,
+    "neg": 263,
+    "zero": 342,
+    "identicalOrdering": 337,
+    "sumDelta": 162.81262555490687,
+    "meanDelta": 0.1167952837553134,
+    "shareZero": 0.24533715925394547,
+    "shareIdenticalOrdering": 0.2417503586800574
+   },
+   "postShift": {
+    "events": 1362,
+    "scored": 1362,
+    "pos": 437,
+    "neg": 815,
+    "zero": 110,
+    "identicalOrdering": 110,
+    "sumDelta": -134.0952136383574,
+    "meanDelta": -0.09845463556413905,
+    "shareZero": 0.08076358296622614,
+    "shareIdenticalOrdering": 0.08076358296622614
+   }
+  },
+  {
+   "slot": 8,
+   "goal": 8,
+   "primary": {
+    "events": 1393,
+    "scored": 1393,
+    "pos": 431,
+    "neg": 413,
+    "zero": 549,
+    "identicalOrdering": 544,
+    "sumDelta": -21.024999478315998,
+    "meanDelta": -0.01509332338716152,
+    "shareZero": 0.39411342426417806,
+    "shareIdenticalOrdering": 0.3905240488155061
+   },
+   "postShift": {
+    "events": 1369,
+    "scored": 1369,
+    "pos": 914,
+    "neg": 450,
+    "zero": 5,
+    "identicalOrdering": 5,
+    "sumDelta": 50.686810937100475,
+    "meanDelta": 0.037024697543535774,
+    "shareZero": 0.003652300949598247,
+    "shareIdenticalOrdering": 0.003652300949598247
+   }
+  },
+  {
+   "slot": 9,
+   "goal": 12,
+   "primary": {
+    "events": 1377,
+    "scored": 1377,
+    "pos": 337,
+    "neg": 661,
+    "zero": 379,
+    "identicalOrdering": 377,
+    "sumDelta": -96.05481323359746,
+    "meanDelta": -0.06975658186898871,
+    "shareZero": 0.27523602033405953,
+    "shareIdenticalOrdering": 0.2737835875090777
+   },
+   "postShift": {
+    "events": 1379,
+    "scored": 1379,
+    "pos": 62,
+    "neg": 1213,
+    "zero": 104,
+    "identicalOrdering": 89,
+    "sumDelta": -234.63587431104796,
+    "meanDelta": -0.1701492924663147,
+    "shareZero": 0.07541696881798404,
+    "shareIdenticalOrdering": 0.06453952139231327
+   }
+  },
+  {
+   "slot": 10,
+   "goal": 16,
+   "primary": {
+    "events": 1390,
+    "scored": 1366,
+    "pos": 727,
+    "neg": 155,
+    "zero": 484,
+    "identicalOrdering": 484,
+    "sumDelta": 119.29247454109375,
+    "meanDelta": 0.08732977638440245,
+    "shareZero": 0.35431918008784774,
+    "shareIdenticalOrdering": 0.35431918008784774
+   },
+   "postShift": {
+    "events": 1375,
+    "scored": 1272,
+    "pos": 174,
+    "neg": 765,
+    "zero": 333,
+    "identicalOrdering": 333,
+    "sumDelta": -117.44103488927747,
+    "meanDelta": -0.0923278576173565,
+    "shareZero": 0.2617924528301887,
+    "shareIdenticalOrdering": 0.2617924528301887
+   }
+  },
+  {
+   "slot": 11,
+   "goal": 19,
+   "primary": {
+    "events": 1398,
+    "scored": 1398,
+    "pos": 308,
+    "neg": 758,
+    "zero": 332,
+    "identicalOrdering": 311,
+    "sumDelta": -46.72467109062284,
+    "meanDelta": -0.03342251150974452,
+    "shareZero": 0.2374821173104435,
+    "shareIdenticalOrdering": 0.2224606580829757
+   },
+   "postShift": {
+    "events": 1381,
+    "scored": 1381,
+    "pos": 492,
+    "neg": 884,
+    "zero": 5,
+    "identicalOrdering": 5,
+    "sumDelta": -118.06993120460284,
+    "meanDelta": -0.08549596756307229,
+    "shareZero": 0.003620564808110065,
+    "shareIdenticalOrdering": 0.003620564808110065
+   }
+  },
+  {
+   "slot": 12,
+   "goal": 8,
+   "primary": {
+    "events": 1384,
+    "scored": 1384,
+    "pos": 468,
+    "neg": 480,
+    "zero": 436,
+    "identicalOrdering": 420,
+    "sumDelta": 60.38334107469268,
+    "meanDelta": 0.04362958170136754,
+    "shareZero": 0.315028901734104,
+    "shareIdenticalOrdering": 0.30346820809248554
+   },
+   "postShift": {
+    "events": 1360,
+    "scored": 1360,
+    "pos": 550,
+    "neg": 734,
+    "zero": 76,
+    "identicalOrdering": 76,
+    "sumDelta": -47.908224331096626,
+    "meanDelta": -0.03522663553757105,
+    "shareZero": 0.05588235294117647,
+    "shareIdenticalOrdering": 0.05588235294117647
+   }
+  },
+  {
+   "slot": 13,
+   "goal": 12,
+   "primary": {
+    "events": 1378,
+    "scored": 1378,
+    "pos": 383,
+    "neg": 395,
+    "zero": 600,
+    "identicalOrdering": 578,
+    "sumDelta": -10.412278901984758,
+    "meanDelta": -0.007556080480395325,
+    "shareZero": 0.43541364296081275,
+    "shareIdenticalOrdering": 0.41944847605224966
+   },
+   "postShift": {
+    "events": 1377,
+    "scored": 1377,
+    "pos": 604,
+    "neg": 581,
+    "zero": 192,
+    "identicalOrdering": 192,
+    "sumDelta": -82.36420912136496,
+    "meanDelta": -0.05981424046576976,
+    "shareZero": 0.1394335511982571,
+    "shareIdenticalOrdering": 0.1394335511982571
+   }
+  },
+  {
+   "slot": 14,
+   "goal": 16,
+   "primary": {
+    "events": 1386,
+    "scored": 1322,
+    "pos": 953,
+    "neg": 271,
+    "zero": 98,
+    "identicalOrdering": 98,
+    "sumDelta": 156.3616596386149,
+    "meanDelta": 0.1182765957932034,
+    "shareZero": 0.07413010590015129,
+    "shareIdenticalOrdering": 0.07413010590015129
+   },
+   "postShift": {
+    "events": 1387,
+    "scored": 1369,
+    "pos": 710,
+    "neg": 659,
+    "zero": 0,
+    "identicalOrdering": 0,
+    "sumDelta": -6.7229877537263745,
+    "meanDelta": -0.004910874911414445,
+    "shareZero": 0,
+    "shareIdenticalOrdering": 0
+   }
+  },
+  {
+   "slot": 15,
+   "goal": 19,
+   "primary": {
+    "events": 1372,
+    "scored": 1372,
+    "pos": 721,
+    "neg": 61,
+    "zero": 590,
+    "identicalOrdering": 566,
+    "sumDelta": 145.9210618632302,
+    "meanDelta": 0.10635645908398703,
+    "shareZero": 0.43002915451895046,
+    "shareIdenticalOrdering": 0.41253644314868804
+   },
+   "postShift": {
+    "events": 1392,
+    "scored": 1392,
+    "pos": 62,
+    "neg": 1235,
+    "zero": 95,
+    "identicalOrdering": 95,
+    "sumDelta": -240.9731485182773,
+    "meanDelta": -0.17311289405048658,
+    "shareZero": 0.06824712643678162,
+    "shareIdenticalOrdering": 0.06824712643678162
+   }
+  }
+ ]
+}

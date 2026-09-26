@@ -1,0 +1,565 @@
+{
+ "schema": "study2-historical-gate-sweep/1",
+ "recorded": "2026-09-26",
+ "before": "d846fbd with this milestone stashed (pre-existing untracked files present)",
+ "after": "the committed milestone state (first local commit 938220a, replaced before push by the final milestone commit, which adds only this record and gate checks H6-H8)",
+ "note": "fail IDs are scraped from each verifier output; crashed = exited without a report. Unchanged verdicts are pre-existing and not caused by this milestone.",
+ "changed": [
+  "experiments/m33/verify.js",
+  "experiments/m34/verify.js",
+  "experiments/m38/verify.js",
+  "experiments/study2/verify_driver.js",
+  "research/preregistrations/verify_m33.js"
+ ],
+ "gates": {
+  "experiments/c1/verify_collection.js": {
+   "before": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   },
+   "after": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   }
+  },
+  "experiments/d2/verify.js": {
+   "before": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   },
+   "after": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   }
+  },
+  "experiments/m18/verify_registry.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "experiments/m18_1/verify_binding.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "IN-1",
+     "VF-1",
+     "VF-2",
+     "VF-3"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "IN-1",
+     "VF-1",
+     "VF-2",
+     "VF-3"
+    ]
+   }
+  },
+  "experiments/m19/verify_formulation.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "experiments/m19_1/verify_clarification.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "experiments/m19_2/verify_stress_spec.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "experiments/m19_3/verify_execution.js": {
+   "before": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   },
+   "after": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   }
+  },
+  "experiments/m33/verify.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I3"
+    ]
+   }
+  },
+  "experiments/m33/verify_r1.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "experiments/m34/verify.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "P1",
+     "P2"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   }
+  },
+  "experiments/m35/readiness.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "experiments/m38/verify.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "G1",
+     "G2"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "G1",
+     "G2",
+     "H1"
+    ]
+   }
+  },
+  "experiments/m39/verify.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I3",
+     "I4"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I3",
+     "I4"
+    ]
+   }
+  },
+  "experiments/study2/verify_driver.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "D18.2",
+     "D2.4",
+     "S.1",
+     "Z.1"
+    ]
+   }
+  },
+  "experiments/study2/verify_readiness.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "research/preregistrations/verify_fs_study2_design_final.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "G2",
+     "G3"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "G2",
+     "G3"
+    ]
+   }
+  },
+  "research/preregistrations/verify_m21.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "M21"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "M21"
+    ]
+   }
+  },
+  "research/preregistrations/verify_m30.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "research/preregistrations/verify_m31.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "research/preregistrations/verify_m32.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "research/preregistrations/verify_m33.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   }
+  },
+  "research/preregistrations/verify_m33_r1.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "research/preregistrations/verify_m34.js": {
+   "before": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   },
+   "after": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   }
+  },
+  "research/preregistrations/verify_m37.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I1",
+     "I2",
+     "I4"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I1",
+     "I2",
+     "I4"
+    ]
+   }
+  },
+  "research/preregistrations/verify_m38_p0.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I1",
+     "I2",
+     "I4"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I1",
+     "I2",
+     "I4"
+    ]
+   }
+  },
+  "research/preregistrations/verify_m39.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I1",
+     "I2",
+     "S1",
+     "S3",
+     "S5",
+     "S7"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I1",
+     "I2",
+     "S1",
+     "S3",
+     "S5",
+     "S7"
+    ]
+   }
+  },
+  "research/preregistrations/verify_m40.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I1",
+     "I2",
+     "I4",
+     "R4",
+     "T5",
+     "T6"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I1",
+     "I2",
+     "I4",
+     "R4",
+     "T5",
+     "T6"
+    ]
+   }
+  },
+  "experiments/futurescore/verify.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "T5"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "T5"
+    ]
+   }
+  },
+  "experiments/futurescore/verify_lineage.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "L3b",
+     "L4a",
+     "L4b",
+     "L4e",
+     "L4f",
+     "L8c"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "L3b",
+     "L4a",
+     "L4b",
+     "L4e",
+     "L4f",
+     "L8c"
+    ]
+   }
+  },
+  "experiments/boundary/verify.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "A1",
+     "A2",
+     "A3",
+     "B4.2",
+     "B5.1",
+     "G5"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "A1",
+     "A2",
+     "A3",
+     "B4.2",
+     "B5.1",
+     "G5"
+    ]
+   }
+  },
+  "experiments/phase1_0/verify_G9_successor.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "research/preregistrations/verify_fs_v22.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "research/preregistrations/verify_fs_v23.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "G5"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "G5"
+    ]
+   }
+  },
+  "research/preregistrations/verify_fs_boundary_design.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "G3",
+     "G4"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "G3",
+     "G4"
+    ]
+   }
+  }
+ }
+}

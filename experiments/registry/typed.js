@@ -14,8 +14,9 @@
 //      true or false for a foreign seed, so a refusal cannot be read as "not held
 //      out", "available" or "consumed".
 //   3. Configuration-seed decisions DELEGATE to the newest registry chain link,
-//      experiments/registry/consumed_after_c1.js, which spreads consumed.js unchanged
-//      and adds C1's own block (M34). Historical configuration semantics are therefore
+//      experiments/registry/consumed_after_study2.js, which spreads consumed_after_c1.js
+//      unchanged (itself consumed.js plus C1's block, M34) and adds the FutureScore V2.3
+//      Study-2 block 890000-892999. Historical configuration semantics are therefore
 //      the historical functions themselves, not a re-implementation.
 //   4. Trajectory seeds are consumed per (source, study), enumerated, never ranged.
 //
@@ -30,7 +31,7 @@
 //   and C1 / UQ-B are frozen. Raw use is restricted to the enumerated historical
 //   call sites by experiments/m33/verify.js; new code must import this module.
 // ==========================================================
-import * as CONFIG_REGISTRY from './consumed_after_c1.js';
+import * as CONFIG_REGISTRY from './consumed_after_study2.js';
 
 export const NAMESPACE = Object.freeze({ CONFIG: 'config', TRAJECTORY: 'trajectory' });
 const NAMESPACES = new Set(Object.values(NAMESPACE));

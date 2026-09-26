@@ -1,0 +1,546 @@
+[
+ {
+  "slot": 0,
+  "acceptedSeed": 890030,
+  "goal": 8,
+  "exitCode": 0,
+  "status": "completed",
+  "summary": {
+   "status": "completed",
+   "capture": true,
+   "slot": 0,
+   "eventCount": 2775,
+   "fingerprint": {
+    "writesHash": "24be400bb6ef339a0fbc7929d5ec97a5e27871fd3893ba408e7894ec5fada223",
+    "nWrites": 2775,
+    "cogDraws": 97680,
+    "visDraws": 3020,
+    "qEntries": 245,
+    "qSum": 820.437267479,
+    "envCounters": {
+     "attempts": 1689,
+     "successes": 897,
+     "slips": 792,
+     "envDraws": 1689
+    },
+    "attempts": 2006,
+    "successes": 1214,
+    "slips": 792,
+    "finalRecordHash": "c9baa3384c53cb9f0b825a8590b548434c42abc069d3ea98c374b34311e2ff0d"
+   },
+   "integrityFailures": [],
+   "artifact": "run_000_capture_attempt1.json",
+   "artifactSha256": "175759aa47779db111bb21429607c8ceb33396aba53536a4c6d4c3f6535ff503"
+  }
+ },
+ {
+  "slot": 1,
+  "acceptedSeed": 890116,
+  "goal": 12,
+  "exitCode": 0,
+  "status": "completed",
+  "summary": {
+   "status": "completed",
+   "capture": true,
+   "slot": 1,
+   "eventCount": 2776,
+   "fingerprint": {
+    "writesHash": "71829f4cb4bf4906f65a68621e8b1a0b2c2a99f4204a5732316b82b702639228",
+    "nWrites": 2776,
+    "cogDraws": 88123,
+    "visDraws": 3020,
+    "qEntries": 217,
+    "qSum": 724.648627071,
+    "envCounters": {
+     "attempts": 1784,
+     "successes": 995,
+     "slips": 789,
+     "envDraws": 1784
+    },
+    "attempts": 2245,
+    "successes": 1456,
+    "slips": 789,
+    "finalRecordHash": "10b9107051c5bb104601f94d4ed036c96fc22feef683a98053b78a34493cfa8d"
+   },
+   "integrityFailures": [],
+   "artifact": "run_001_capture_attempt1.json",
+   "artifactSha256": "fe90ed27ab4da4b0aeaf5dad56544cd10d25d7815942f2448b33702fd2fe1a46"
+  }
+ },
+ {
+  "slot": 2,
+  "acceptedSeed": 890166,
+  "goal": 16,
+  "exitCode": 0,
+  "status": "completed",
+  "summary": {
+   "status": "completed",
+   "capture": true,
+   "slot": 2,
+   "eventCount": 2773,
+   "fingerprint": {
+    "writesHash": "08467b765c0773636cffb5612f6a82fec1610d6799c9954941dad36d81035661",
+    "nWrites": 2773,
+    "cogDraws": 84575,
+    "visDraws": 3020,
+    "qEntries": 214,
+    "qSum": 961.752451782,
+    "envCounters": {
+     "attempts": 1842,
+     "successes": 1056,
+     "slips": 786,
+     "envDraws": 1842
+    },
+    "attempts": 2311,
+    "successes": 1525,
+    "slips": 786,
+    "finalRecordHash": "67c3e3957b5ec7939271bea967a08c438e6745466ed16e3320abee238931c5a3"
+   },
+   "integrityFailures": [],
+   "artifact": "run_002_capture_attempt1.json",
+   "artifactSha256": "072cd7f53c20c63e15c9cc7b69b72577c4578d21a87b86c27204ea2b7187691b"
+  }
+ },
+ {
+  "slot": 3,
+  "acceptedSeed": 890177,
+  "goal": 19,
+  "exitCode": 0,
+  "status": "completed",
+  "summary": {
+   "status": "completed",
+   "capture": true,
+   "slot": 3,
+   "eventCount": 2742,
+   "fingerprint": {
+    "writesHash": "cf7e342e6abd3ded06819c99bc6dba8a1d93908a6913f50a6a928806b697bd10",
+    "nWrites": 2742,
+    "cogDraws": 88894,
+    "visDraws": 3020,
+    "qEntries": 260,
+    "qSum": 1042.765980472,
+    "envCounters": {
+     "attempts": 1785,
+     "successes": 1042,
+     "slips": 743,
+     "envDraws": 1785
+    },
+    "attempts": 2280,
+    "successes": 1537,
+    "slips": 743,
+    "finalRecordHash": "97a60eec1460a053dacfc5807721aacc3523513fe4f2c2ccd973d12efae859f1"
+   },
+   "integrityFailures": [],
+   "artifact": "run_003_capture_attempt1.json",
+   "artifactSha256": "888f8bfa70bee48fd5b0caf4a042bf5fad7cdc533ee2c67c89aaa50633b7f90d"
+  }
+ },
+ {
+  "slot": 4,
+  "acceptedSeed": 890239,
+  "goal": 8,
+  "exitCode": 0,
+  "status": "completed",
+  "summary": {
+   "status": "completed",
+   "capture": true,
+   "slot": 4,
+   "eventCount": 2758,
+   "fingerprint": {
+    "writesHash": "edd171fb35008a90599500f1850f33c6b1be8f0821b7a5cf7ae810b4226d7433",
+    "nWrites": 2758,
+    "cogDraws": 91717,
+    "visDraws": 3020,
+    "qEntries": 207,
+    "qSum": 832.158563957,
+    "envCounters": {
+     "attempts": 1799,
+     "successes": 1041,
+     "slips": 758,
+     "envDraws": 1799
+    },
+    "attempts": 2165,
+    "successes": 1407,
+    "slips": 758,
+    "finalRecordHash": "a6e7f9ad5b3281673801a8709b0172fd71ceabf3e971a2a3791f3e4b4f89ea85"
+   },
+   "integrityFailures": [],
+   "artifact": "run_004_capture_attempt1.json",
+   "artifactSha256": "f3a9e9abdad2e867a2038b0867d6e633066925a749ca0f36abd870bddc5eedb7"
+  }
+ },
+ {
+  "slot": 5,
+  "acceptedSeed": 890258,
+  "goal": 12,
+  "exitCode": 0,
+  "status": "completed",
+  "summary": {
+   "status": "completed",
+   "capture": true,
+   "slot": 5,
+   "eventCount": 2746,
+   "fingerprint": {
+    "writesHash": "69b8a8ee990cc6e5383e2839f90b85f2936ab39cb334b7c5025bbe4d883d9b45",
+    "nWrites": 2746,
+    "cogDraws": 92765,
+    "visDraws": 3020,
+    "qEntries": 210,
+    "qSum": 809.812498492,
+    "envCounters": {
+     "attempts": 1534,
+     "successes": 886,
+     "slips": 648,
+     "envDraws": 1534
+    },
+    "attempts": 2209,
+    "successes": 1561,
+    "slips": 648,
+    "finalRecordHash": "9a978f342c09d62c9646aac0b9ff793bdd0a19f951cd782ead6efe8ae8553fa4"
+   },
+   "integrityFailures": [],
+   "artifact": "run_005_capture_attempt1.json",
+   "artifactSha256": "a8dfa6f55cddc22f62ec14faefbc99ffa7675e2ef7369af06906b1c689b9b373"
+  }
+ },
+ {
+  "slot": 6,
+  "acceptedSeed": 890312,
+  "goal": 16,
+  "exitCode": 0,
+  "status": "completed",
+  "summary": {
+   "status": "completed",
+   "capture": true,
+   "slot": 6,
+   "eventCount": 2796,
+   "fingerprint": {
+    "writesHash": "f4ad0549f549b347390d8a65af951db221e67c61ce7ba79b41b5223998d3c5c1",
+    "nWrites": 2796,
+    "cogDraws": 87162,
+    "visDraws": 3020,
+    "qEntries": 214,
+    "qSum": 925.399658617,
+    "envCounters": {
+     "attempts": 1902,
+     "successes": 1071,
+     "slips": 831,
+     "envDraws": 1902
+    },
+    "attempts": 2330,
+    "successes": 1499,
+    "slips": 831,
+    "finalRecordHash": "696560374d5f754f41b1256a144c34da52a94cf62de011030a83d46603830a46"
+   },
+   "integrityFailures": [],
+   "artifact": "run_006_capture_attempt1.json",
+   "artifactSha256": "68be4190be433d3cb6b325285d7776c17194b45da8444a4f0a023977b64d78db"
+  }
+ },
+ {
+  "slot": 7,
+  "acceptedSeed": 890326,
+  "goal": 19,
+  "exitCode": 0,
+  "status": "completed",
+  "summary": {
+   "status": "completed",
+   "capture": true,
+   "slot": 7,
+   "eventCount": 2756,
+   "fingerprint": {
+    "writesHash": "e1c9b695ab8bb77210d8a8af52dba3ea500893e47790d4031c34e2fc71ab998d",
+    "nWrites": 2756,
+    "cogDraws": 90372,
+    "visDraws": 3020,
+    "qEntries": 229,
+    "qSum": 788.39395156,
+    "envCounters": {
+     "attempts": 1543,
+     "successes": 840,
+     "slips": 703,
+     "envDraws": 1543
+    },
+    "attempts": 2251,
+    "successes": 1548,
+    "slips": 703,
+    "finalRecordHash": "1ef37d9f3a310e87e429de0f8f248b8203e18bce64e0abf2a22a67d97d17767d"
+   },
+   "integrityFailures": [],
+   "artifact": "run_007_capture_attempt1.json",
+   "artifactSha256": "6bce94d5047aaa11e7e8ae08389f09098dbf2484659bb3d979af0c7805c30657"
+  }
+ },
+ {
+  "slot": 8,
+  "acceptedSeed": 890435,
+  "goal": 8,
+  "exitCode": 0,
+  "status": "completed",
+  "summary": {
+   "status": "completed",
+   "capture": true,
+   "slot": 8,
+   "eventCount": 2762,
+   "fingerprint": {
+    "writesHash": "b6a2dbcffa714cd064818d39097985bb934ef1f106830a8379e20a93cc26ab79",
+    "nWrites": 2762,
+    "cogDraws": 92080,
+    "visDraws": 3020,
+    "qEntries": 228,
+    "qSum": 887.222879294,
+    "envCounters": {
+     "attempts": 1808,
+     "successes": 992,
+     "slips": 816,
+     "envDraws": 1808
+    },
+    "attempts": 2300,
+    "successes": 1484,
+    "slips": 816,
+    "finalRecordHash": "23d56d63779aaac58d990bcdd521c4129f523f6e9ade3a03b025c6a7a5738731"
+   },
+   "integrityFailures": [],
+   "artifact": "run_008_capture_attempt1.json",
+   "artifactSha256": "fce13feb629578381af98651288f8c8e2d12710d1369f2006a24631ee8f11e4c"
+  }
+ },
+ {
+  "slot": 9,
+  "acceptedSeed": 890456,
+  "goal": 12,
+  "exitCode": 0,
+  "status": "completed",
+  "summary": {
+   "status": "completed",
+   "capture": true,
+   "slot": 9,
+   "eventCount": 2756,
+   "fingerprint": {
+    "writesHash": "b31b856aaeda911c59ff5973de3c2d182ea4a133a9299d2e5704d587ad0b3071",
+    "nWrites": 2756,
+    "cogDraws": 93121,
+    "visDraws": 3020,
+    "qEntries": 223,
+    "qSum": 912.429125682,
+    "envCounters": {
+     "attempts": 1360,
+     "successes": 825,
+     "slips": 535,
+     "envDraws": 1360
+    },
+    "attempts": 2019,
+    "successes": 1484,
+    "slips": 535,
+    "finalRecordHash": "c6f7cdcc02912431d28e49e1e892e8fd2e42818bb3c36337ae6ced375496f969"
+   },
+   "integrityFailures": [],
+   "artifact": "run_009_capture_attempt1.json",
+   "artifactSha256": "19334ed8659c2fa04065d0366b85d67309581f28a1834ac16f5e80b1c8872674"
+  }
+ },
+ {
+  "slot": 10,
+  "acceptedSeed": 890476,
+  "goal": 16,
+  "exitCode": 0,
+  "status": "completed",
+  "summary": {
+   "status": "completed",
+   "capture": true,
+   "slot": 10,
+   "eventCount": 2765,
+   "fingerprint": {
+    "writesHash": "16a564fa2c6946eed33a9280998852621adaf5a877bb41125c107984becad0c9",
+    "nWrites": 2765,
+    "cogDraws": 81665,
+    "visDraws": 3020,
+    "qEntries": 219,
+    "qSum": 729.128586715,
+    "envCounters": {
+     "attempts": 1845,
+     "successes": 992,
+     "slips": 853,
+     "envDraws": 1845
+    },
+    "attempts": 2092,
+    "successes": 1239,
+    "slips": 853,
+    "finalRecordHash": "f2a5f79e3244b60a7a2cae4990026d9760971dc3e46319d17c418670df063faf"
+   },
+   "integrityFailures": [],
+   "artifact": "run_010_capture_attempt1.json",
+   "artifactSha256": "2ef63190c9d5ad48b424d407f3a910a49b652004a86fae789f72311fb098f0d9"
+  }
+ },
+ {
+  "slot": 11,
+  "acceptedSeed": 890519,
+  "goal": 19,
+  "exitCode": 0,
+  "status": "completed",
+  "summary": {
+   "status": "completed",
+   "capture": true,
+   "slot": 11,
+   "eventCount": 2779,
+   "fingerprint": {
+    "writesHash": "cb096411d711cf3d33bcf29d6cac6880fba3a9489c3a53bddfca752c7978ac9c",
+    "nWrites": 2779,
+    "cogDraws": 90885,
+    "visDraws": 3020,
+    "qEntries": 233,
+    "qSum": 771.909257388,
+    "envCounters": {
+     "attempts": 1830,
+     "successes": 942,
+     "slips": 888,
+     "envDraws": 1830
+    },
+    "attempts": 2185,
+    "successes": 1297,
+    "slips": 888,
+    "finalRecordHash": "0c0f45f7be13713f8f7e3c3a459f528f17e8f5b244f93ebda794df32091b8b30"
+   },
+   "integrityFailures": [],
+   "artifact": "run_011_capture_attempt1.json",
+   "artifactSha256": "48a7590d1fa94e47fb42de3581cc1c5bd2e087ece0ed878b054cad58bd44cc3f"
+  }
+ },
+ {
+  "slot": 12,
+  "acceptedSeed": 890554,
+  "goal": 8,
+  "exitCode": 0,
+  "status": "completed",
+  "summary": {
+   "status": "completed",
+   "capture": true,
+   "slot": 12,
+   "eventCount": 2744,
+   "fingerprint": {
+    "writesHash": "8821863b64715a5b94d8d992a896c55bbfb9d984e46551004f38c2fbf8a7006b",
+    "nWrites": 2744,
+    "cogDraws": 97488,
+    "visDraws": 3020,
+    "qEntries": 236,
+    "qSum": 797.037674955,
+    "envCounters": {
+     "attempts": 1340,
+     "successes": 767,
+     "slips": 573,
+     "envDraws": 1340
+    },
+    "attempts": 2109,
+    "successes": 1536,
+    "slips": 573,
+    "finalRecordHash": "793ab7a5cc232c2eb8891c4977427dad9d21fb4ce11aed7f9be48059a9e96d75"
+   },
+   "integrityFailures": [],
+   "artifact": "run_012_capture_attempt1.json",
+   "artifactSha256": "f5d47f308614308d6cb55b75f792de338dd322ae8e1b79fb9db03aee1454eb20"
+  }
+ },
+ {
+  "slot": 13,
+  "acceptedSeed": 890629,
+  "goal": 12,
+  "exitCode": 0,
+  "status": "completed",
+  "summary": {
+   "status": "completed",
+   "capture": true,
+   "slot": 13,
+   "eventCount": 2755,
+   "fingerprint": {
+    "writesHash": "3742fcd3775399ca0bedfb4a8d38ac2ccaabf1997fe59509df08f62b71036d2a",
+    "nWrites": 2755,
+    "cogDraws": 89885,
+    "visDraws": 3020,
+    "qEntries": 222,
+    "qSum": 844.118148894,
+    "envCounters": {
+     "attempts": 1471,
+     "successes": 893,
+     "slips": 578,
+     "envDraws": 1471
+    },
+    "attempts": 2074,
+    "successes": 1496,
+    "slips": 578,
+    "finalRecordHash": "644b77f8bb907e3ac09cadd9997e48afad57178b569a0c3bb9d6ba4798606b66"
+   },
+   "integrityFailures": [],
+   "artifact": "run_013_capture_attempt1.json",
+   "artifactSha256": "2f78bb867a2f6f7d56e3a6350e3fada060e79dccbb182e15d513a9461bb35fb6"
+  }
+ },
+ {
+  "slot": 14,
+  "acceptedSeed": 890640,
+  "goal": 16,
+  "exitCode": 0,
+  "status": "completed",
+  "summary": {
+   "status": "completed",
+   "capture": true,
+   "slot": 14,
+   "eventCount": 2773,
+   "fingerprint": {
+    "writesHash": "22b6e0c9126f3bf86511c2d3ef4722191126ad149038ecb1b3244eebe09b8ff5",
+    "nWrites": 2773,
+    "cogDraws": 83011,
+    "visDraws": 3020,
+    "qEntries": 206,
+    "qSum": 837.218153499,
+    "envCounters": {
+     "attempts": 2117,
+     "successes": 1222,
+     "slips": 895,
+     "envDraws": 2117
+    },
+    "attempts": 2305,
+    "successes": 1410,
+    "slips": 895,
+    "finalRecordHash": "2690d1a01c67fee7aa21158a80fa1a29ec225a2cc43050030deee493ca411452"
+   },
+   "integrityFailures": [],
+   "artifact": "run_014_capture_attempt1.json",
+   "artifactSha256": "c0f76d4da93e84ce92a80276fd29c94a38632d5518b5636dcd609aa069ad9893"
+  }
+ },
+ {
+  "slot": 15,
+  "acceptedSeed": 890643,
+  "goal": 19,
+  "exitCode": 0,
+  "status": "completed",
+  "summary": {
+   "status": "completed",
+   "capture": true,
+   "slot": 15,
+   "eventCount": 2764,
+   "fingerprint": {
+    "writesHash": "972adc8adf77545b63a1cb5f993a19ef64ad49b6fa11ffb002ac7ef0a645aa0a",
+    "nWrites": 2764,
+    "cogDraws": 90385,
+    "visDraws": 3020,
+    "qEntries": 254,
+    "qSum": 958.629758532,
+    "envCounters": {
+     "attempts": 1446,
+     "successes": 881,
+     "slips": 565,
+     "envDraws": 1446
+    },
+    "attempts": 2067,
+    "successes": 1502,
+    "slips": 565,
+    "finalRecordHash": "78628fff5e4310c8bfb1f73042556dbc09658b6e7a6846008caa270bbd6eb961"
+   },
+   "integrityFailures": [],
+   "artifact": "run_015_capture_attempt1.json",
+   "artifactSha256": "47226b9aa0c9235f349f8337d94c83bd604a81c0642444950e6a38cfdc9b7318"
+  }
+ }
+]

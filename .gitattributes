@@ -156,3 +156,10 @@ experiments/m31/data/*.json -text
 
 # M32 trajectory-seed governance formulation.
 research/preregistrations/M32_TRAJECTORY_SEED_GOVERNANCE.md -text
+
+# FutureScore V2.3 Study 2 execution evidence - the same byte-integrity guarantee.
+# experiments/study2/execution/INTEGRITY.sha256 hashes the exact bytes of PLAN.json, LEDGER.json, REPLAY.json
+# and the run artifacts, and every run artifact pins the hash of PLAN.json's exact bytes. Demonstrated, not
+# assumed: a git stash round-trip under core.autocrlf=true rewrote PLAN, LEDGER and REPLAY to CRLF and broke
+# 3 of the 20 integrity entries (restored byte-exact from a verified backup before commit).
+experiments/study2/execution/* -text

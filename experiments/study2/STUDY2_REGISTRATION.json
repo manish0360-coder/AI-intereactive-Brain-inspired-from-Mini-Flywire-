@@ -1,0 +1,17 @@
+{
+  "schema": "study2-registration/1",
+  "authorization": "Research Director, Study 2 execution authorization of 2026-09-26: seed block 890000-892999; fixed run count 16 (4 accepted runs per goal 8, 12, 16, 19); primary window t <= 1500; agentSeed 20260819000 as registered; driver manifest 727193a8556493b589cbd50bf15377e25ed3667e21efa64e404b89ce10875687; every slot exactly once; replay is verification only and a failed replay or in-run integrity failure HALTS the block (no replacement, no new seed, no extension)",
+  "seedBlock": { "lo": 890000, "hi": 892999 },
+  "runCount": 16,
+  "agentSeed": 20260819000,
+  "arm": "A1",
+  "envMode": "on",
+  "creditMode": "on",
+  "pin": "on",
+  "tickUnit": "step",
+  "ticks": 3000,
+  "primaryWindowMaxTau": 1500,
+  "trajectoryUse": { "study": "M7-substrate", "category": "registered" },
+  "productionBaselineCommit": "a066d47696b1502720f627855c8549f4d2898cd5",
+  "driverManifestSha256": "727193a8556493b589cbd50bf15377e25ed3667e21efa64e404b89ce10875687"
+}

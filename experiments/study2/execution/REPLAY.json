@@ -1,0 +1,21 @@
+{
+ "first": {
+  "slot": 0,
+  "fields": [
+   "writesHash",
+   "nWrites",
+   "cogDraws",
+   "visDraws",
+   "qEntries",
+   "qSum",
+   "envCounters",
+   "attempts",
+   "successes",
+   "slips",
+   "finalRecordHash"
+  ],
+  "differing": [],
+  "offExitCode": 0
+ },
+ "reexecution": null
+}

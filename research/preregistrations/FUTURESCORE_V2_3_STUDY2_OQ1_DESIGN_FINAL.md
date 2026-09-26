@@ -14,6 +14,8 @@ no production change.**
 | Design baseline (this design frozen) | `d1949f91601683ef2e955f8b766c2e656ffc8047` |
 | Implementation readiness + lineage closure | `5c785de1953adb48740a1254fe2a1b4a5b55c089` |
 | Readiness closure (accepted by the Research Director) | `cfadedd9a4726142486744f9c11dc735a03fedc0` |
+| Study-2 driver (registered by the Research Director, 2026-09-26) | `d846fbdbee10332f85ce75bbbce619e3aa5bcddf`, manifest `727193a8…` |
+| Study-2 execution and results | the milestone that adds `FUTURESCORE_V2_3_STUDY2_RESULTS.md` |
 
 Only **status and provenance** text was updated after `d1949f9`; every scientific decision above and below is
 unchanged. Statements that were true at the design baseline are kept and marked *historical*; their **current
@@ -479,14 +481,14 @@ mechanism; both only validate it.
 | # | Gate | Status | Evidence |
 |---|---|---|---|
 | Z1 | Design frozen (this document) | **PASS / frozen** | frozen at `d1949f9`; only status/provenance text updated since |
-| Z2 | Seed range authorized and pre-registered | **OPEN — Director** | proposal: `FUTURESCORE_V2_3_STUDY2_REGISTRATION_PROPOSAL.md` (no seed generated) |
-| Z3 | Run count pre-registered | **OPEN — Director** | proposal: same document |
+| Z2 | Seed range authorized and pre-registered | **PASS** — authorized 2026-09-26: 890000–892999 | `experiments/study2/STUDY2_REGISTRATION.json` (sha256 `81f9c035…`), pinned by `PLAN.json` before the first run |
+| Z3 | Run count pre-registered | **PASS** — authorized 2026-09-26: 16 (4 per goal) | same registration |
 | Z4 | G-IMPL-1 same-snapshot proof | **PASS** | `cfadedd9`, `verify_readiness.js` G1 (A–G, identities, temporal witnesses 2748/2748) |
 | Z5 | G-IMPL-2 capture non-interference | **PASS** | `cfadedd9`, `verify_readiness.js` G2 (11/11 fingerprint fields identical) |
 | Z6 | G-IMPL-3 exact step index | **PASS** | `cfadedd9`, `verify_readiness.js` G3 (`τ = runAgent index − 5`) |
 | Z7 | G-IMPL-4 oracle/metadata leakage static gate | **PASS for all currently existing code** | `cfadedd9`, `verify_readiness.js` G4; Study-2 driver seed selection and stopping: `verify_driver.js` D5–D7 |
 | Z8 | tau-b implementation cross-checked against SciPy (validation only) | **PASS** | `cfadedd9`, `verify_readiness.js` TB.1–TB.2 (16/16, 11/11) |
-| Z9 | analysis script hash recorded before seed generation | **OPEN** — until the Director registers the final driver | hashes computed in `experiments/study2/DRIVER_MANIFEST.json`; the driver refuses to run unless the registration pins that manifest |
+| Z9 | analysis script hash recorded before seed generation | **PASS** — driver manifest `727193a8…` registered 2026-09-26 | analysis script sha256 `ac3499b5…` recorded in every run artifact and in `ANALYSIS.json` |
 | Z10 | untracked lineage artifacts frozen under version control | **PASS / closed** | committed at `5c785de`; content hashes equal the §B pins |
 
 *Historical (design baseline `d1949f9`), retained for lineage:*

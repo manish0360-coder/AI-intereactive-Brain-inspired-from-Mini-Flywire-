@@ -1,8 +1,9 @@
 # Study 2 (OQ-1a) — readiness harness and final Study-2 driver
 
-**No Study-2 run, no scientific seeds, no oracle / tau-b / Delta on study data.** The driver exists but has not
-been executed; it refuses to run without a Director registration (proposal:
-[`FUTURESCORE_V2_3_STUDY2_REGISTRATION_PROPOSAL.md`](../../research/preregistrations/FUTURESCORE_V2_3_STUDY2_REGISTRATION_PROPOSAL.md)).
+**Study 2 was executed once, as registered, on 2026-09-26** (registration `STUDY2_REGISTRATION.json`, evidence
+`execution/`, results [`FUTURESCORE_V2_3_STUDY2_RESULTS.md`](../../research/preregistrations/FUTURESCORE_V2_3_STUDY2_RESULTS.md),
+gate `verify_study2_execution.js`). The block 890000–892999 is now consumed in the seed registry; the driver will
+refuse to run it again.
 Design: [`research/preregistrations/FUTURESCORE_V2_3_STUDY2_OQ1_DESIGN_FINAL.md`](../../research/preregistrations/FUTURESCORE_V2_3_STUDY2_OQ1_DESIGN_FINAL.md).
 
 | File | Role |
@@ -21,7 +22,13 @@ Design: [`research/preregistrations/FUTURESCORE_V2_3_STUDY2_OQ1_DESIGN_FINAL.md`
 | `manifest.mjs`, `DRIVER_MANIFEST.json` | driver/analysis file hashes; the registration must pin their sha256 |
 | `registration.template.json` | the fields the Director fills in |
 | `shakedown.mjs`, `shakedown_evidence/` | the run child on development fixture 896066:0, compared with the readiness evidence |
-| `verify_driver.js` | the final pre-execution gate D1–D20 |
+| `verify_driver.js` | the final pre-execution gate D1–D20 (d846fbd; some scope checks flip after execution by design) |
+| **Study-2 execution (2026-09-26)** | |
+| `STUDY2_REGISTRATION.json` | the Director registration the driver ran from |
+| `execution/` | `PLAN.json`, `LEDGER.json`, `REPLAY.json`, 16 run artifacts + 1 replay artifact, `INTEGRITY.sha256`, `ANALYSIS.json` (frozen analysis), `POSTHOC_EVENT_DESCRIPTIVES.json` (not pre-registered) |
+| `describe_events.mjs` | post-hoc event descriptives (NOT pre-registered; changes no frozen result) |
+| `verify_study2_execution.js` | the execution gate: integrity, analysis reproduction, interpretation bounds, registry, historical flips |
+| `historical_gate_sweep.json` | 35 historical gates run before and after this milestone; exactly 5 change verdict, each named in the gate |
 
 **Definitions pinned by this milestone**
 - **Decision event:** one `runAgent` invocation whose real `runPrediction(agentCurrent)` produces the executed

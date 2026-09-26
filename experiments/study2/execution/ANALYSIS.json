@@ -1,0 +1,540 @@
+{
+ "schema": "study2-analysis/1",
+ "analysisScriptSha256": "ac3499b55919e644f7c456b3af3f88688b5ac15f4a9e753e6b4fff65e63327b6",
+ "planSha256": "f099b01fdb36e5771641fd949787c5aed4ac9777222f74a909895e3b21f69552",
+ "runs": {
+  "planned": 16,
+  "completed": 16,
+  "crashed": []
+ },
+ "primary": {
+  "window": "tau <= 1500",
+  "oracle": "U* = -expectedCostToGoal(pPhase1, goal)",
+  "n": 16,
+  "theta": 0,
+  "meanOfRuns": 0.03621565866978648,
+  "interval": {
+   "lower": 0,
+   "upper": 0.04030156339052704,
+   "excludesZero": false,
+   "N": "18446744073709551616",
+   "distinctMedians": 45
+  },
+  "signPattern": "00++-+0+00+-00++",
+  "signTest": {
+   "pos": 7,
+   "neg": 2,
+   "zero": 7,
+   "n": 9,
+   "pTwoSided": 0.1796875
+  }
+ },
+ "sensitivityUndefinedExcluded": {
+  "runsWithEvents": 16,
+  "runsWithoutEvents": 0,
+  "n": 16,
+  "theta": 0,
+  "meanOfRuns": 0.033980077832095154,
+  "interval": {
+   "lower": 0,
+   "upper": 0.03774737829774105,
+   "excludesZero": false,
+   "N": "18446744073709551616",
+   "distinctMedians": 45
+  },
+  "signPattern": "00++-+0+00+-00++",
+  "signTest": {
+   "pos": 7,
+   "neg": 2,
+   "zero": 7,
+   "n": 9,
+   "pTwoSided": 0.1796875
+  }
+ },
+ "r5Moderator": {
+  "table": [
+   {
+    "slot": 0,
+    "goal": 8,
+    "r5Differing": 5,
+    "deltaR": 0
+   },
+   {
+    "slot": 1,
+    "goal": 12,
+    "r5Differing": 12,
+    "deltaR": 0
+   },
+   {
+    "slot": 2,
+    "goal": 16,
+    "r5Differing": 8,
+    "deltaR": 0.03085696165954277
+   },
+   {
+    "slot": 3,
+    "goal": 19,
+    "r5Differing": 10,
+    "deltaR": 0.004360078154484248
+   },
+   {
+    "slot": 4,
+    "goal": 8,
+    "r5Differing": 7,
+    "deltaR": -0.029240676741553506
+   },
+   {
+    "slot": 5,
+    "goal": 12,
+    "r5Differing": 6,
+    "deltaR": 0.18350341907227385
+   },
+   {
+    "slot": 6,
+    "goal": 16,
+    "r5Differing": 9,
+    "deltaR": 0
+   },
+   {
+    "slot": 7,
+    "goal": 19,
+    "r5Differing": 5,
+    "deltaR": 0.075653538887
+   },
+   {
+    "slot": 8,
+    "goal": 8,
+    "r5Differing": 8,
+    "deltaR": 0
+   },
+   {
+    "slot": 9,
+    "goal": 12,
+    "r5Differing": 8,
+    "deltaR": 0
+   },
+   {
+    "slot": 10,
+    "goal": 16,
+    "r5Differing": 6,
+    "deltaR": 0.04030156339052704
+   },
+   {
+    "slot": 11,
+    "goal": 19,
+    "r5Differing": 6,
+    "deltaR": -0.022203054930693078
+   },
+   {
+    "slot": 12,
+    "goal": 8,
+    "r5Differing": 6,
+    "deltaR": 0
+   },
+   {
+    "slot": 13,
+    "goal": 12,
+    "r5Differing": 9,
+    "deltaR": 0
+   },
+   {
+    "slot": 14,
+    "goal": 16,
+    "r5Differing": 10,
+    "deltaR": 0.18350341907227385
+   },
+   {
+    "slot": 15,
+    "goal": 19,
+    "r5Differing": 7,
+    "deltaR": 0.11271529015272852
+   }
+  ],
+  "spearmanR5vsDeltaR": -0.0295856137370636,
+  "note": "descriptive only; no threshold, no subgroup test, no exclusion"
+ },
+ "secondaryPostShift": {
+  "window": "tau > 1500",
+  "oracle": "U* = -expectedCostToGoal(pPhase2, goal)",
+  "note": "secondary and exploratory; never pooled with, and never used to change, the primary result",
+  "n": 16,
+  "theta": -0.10083295210094567,
+  "meanOfRuns": -0.07617982404928651,
+  "interval": {
+   "lower": -0.1309099253076535,
+   "upper": -0.021425345188757494,
+   "excludesZero": true,
+   "N": "18446744073709551616",
+   "distinctMedians": 136
+  },
+  "signPattern": "----+---+----0+-",
+  "signTest": {
+   "pos": 3,
+   "neg": 12,
+   "zero": 1,
+   "n": 15,
+   "pTwoSided": 0.03515625
+  }
+ },
+ "perRun": [
+  {
+   "slot": 0,
+   "goal": 8,
+   "r5Differing": 5,
+   "primary": {
+    "nEvents": 1383,
+    "excludedMlt2": 0,
+    "undefinedFULL": 0,
+    "undefinedGEO": 34,
+    "deltaR": 0,
+    "meanDeltaR": -0.04423156449461996
+   },
+   "sensitivity": {
+    "nEvents": 1349,
+    "deltaR": 0
+   },
+   "postShift": {
+    "nEvents": 1392,
+    "excludedMlt2": 0,
+    "deltaR": -0.14440134117087472
+   }
+  },
+  {
+   "slot": 1,
+   "goal": 12,
+   "r5Differing": 12,
+   "primary": {
+    "nEvents": 1389,
+    "excludedMlt2": 0,
+    "undefinedFULL": 3,
+    "undefinedGEO": 55,
+    "deltaR": 0,
+    "meanDeltaR": 0.07991159129146672
+   },
+   "sensitivity": {
+    "nEvents": 1334,
+    "deltaR": 0
+   },
+   "postShift": {
+    "nEvents": 1387,
+    "excludedMlt2": 0,
+    "deltaR": -0.10436425574542674
+   }
+  },
+  {
+   "slot": 2,
+   "goal": 16,
+   "r5Differing": 8,
+   "primary": {
+    "nEvents": 1382,
+    "excludedMlt2": 51,
+    "undefinedFULL": 1,
+    "undefinedGEO": 92,
+    "deltaR": 0.03085696165954277,
+    "meanDeltaR": 0.0875920281362526
+   },
+   "sensitivity": {
+    "nEvents": 1239,
+    "deltaR": 0.03085696165954277
+   },
+   "postShift": {
+    "nEvents": 1391,
+    "excludedMlt2": 28,
+    "deltaR": -0.1309099253076535
+   }
+  },
+  {
+   "slot": 3,
+   "goal": 19,
+   "r5Differing": 10,
+   "primary": {
+    "nEvents": 1374,
+    "excludedMlt2": 0,
+    "undefinedFULL": 9,
+    "undefinedGEO": 9,
+    "deltaR": 0.004360078154484248,
+    "meanDeltaR": 0.05136113445398561
+   },
+   "sensitivity": {
+    "nEvents": 1365,
+    "deltaR": 0.008720156308968496
+   },
+   "postShift": {
+    "nEvents": 1368,
+    "excludedMlt2": 0,
+    "deltaR": -0.09879523916145372
+   }
+  },
+  {
+   "slot": 4,
+   "goal": 8,
+   "r5Differing": 7,
+   "primary": {
+    "nEvents": 1373,
+    "excludedMlt2": 0,
+    "undefinedFULL": 0,
+    "undefinedGEO": 19,
+    "deltaR": -0.029240676741553506,
+    "meanDeltaR": -0.04685379824528221
+   },
+   "sensitivity": {
+    "nEvents": 1354,
+    "deltaR": -0.029240676741553506
+   },
+   "postShift": {
+    "nEvents": 1385,
+    "excludedMlt2": 0,
+    "deltaR": 0.08217305808780206
+   }
+  },
+  {
+   "slot": 5,
+   "goal": 12,
+   "r5Differing": 6,
+   "primary": {
+    "nEvents": 1371,
+    "excludedMlt2": 0,
+    "undefinedFULL": 4,
+    "undefinedGEO": 45,
+    "deltaR": 0.18350341907227385,
+    "meanDeltaR": 0.16048460599531625
+   },
+   "sensitivity": {
+    "nEvents": 1326,
+    "deltaR": 0.18350341907227385
+   },
+   "postShift": {
+    "nEvents": 1375,
+    "excludedMlt2": 0,
+    "deltaR": -0.2461829819586655
+   }
+  },
+  {
+   "slot": 6,
+   "goal": 16,
+   "r5Differing": 9,
+   "primary": {
+    "nEvents": 1397,
+    "excludedMlt2": 22,
+    "undefinedFULL": 9,
+    "undefinedGEO": 56,
+    "deltaR": 0,
+    "meanDeltaR": -0.002403076058101554
+   },
+   "sensitivity": {
+    "nEvents": 1318,
+    "deltaR": 0
+   },
+   "postShift": {
+    "nEvents": 1399,
+    "excludedMlt2": 56,
+    "deltaR": -0.10543528692727244
+   }
+  },
+  {
+   "slot": 7,
+   "goal": 19,
+   "r5Differing": 5,
+   "primary": {
+    "nEvents": 1394,
+    "excludedMlt2": 0,
+    "undefinedFULL": 0,
+    "undefinedGEO": 78,
+    "deltaR": 0.075653538887,
+    "meanDeltaR": 0.1167952837553134
+   },
+   "sensitivity": {
+    "nEvents": 1316,
+    "deltaR": 0.03774737829774105
+   },
+   "postShift": {
+    "nEvents": 1362,
+    "excludedMlt2": 0,
+    "deltaR": -0.04751003411887156
+   }
+  },
+  {
+   "slot": 8,
+   "goal": 8,
+   "r5Differing": 8,
+   "primary": {
+    "nEvents": 1393,
+    "excludedMlt2": 0,
+    "undefinedFULL": 33,
+    "undefinedGEO": 62,
+    "deltaR": 0,
+    "meanDeltaR": -0.01509332338716152
+   },
+   "sensitivity": {
+    "nEvents": 1331,
+    "deltaR": 0
+   },
+   "postShift": {
+    "nEvents": 1369,
+    "excludedMlt2": 0,
+    "deltaR": 0.07435792630203741
+   }
+  },
+  {
+   "slot": 9,
+   "goal": 12,
+   "r5Differing": 8,
+   "primary": {
+    "nEvents": 1377,
+    "excludedMlt2": 0,
+    "undefinedFULL": 34,
+    "undefinedGEO": 47,
+    "deltaR": 0,
+    "meanDeltaR": -0.06975658186898871
+   },
+   "sensitivity": {
+    "nEvents": 1330,
+    "deltaR": 0
+   },
+   "postShift": {
+    "nEvents": 1379,
+    "excludedMlt2": 0,
+    "deltaR": -0.143774116555207
+   }
+  },
+  {
+   "slot": 10,
+   "goal": 16,
+   "r5Differing": 6,
+   "primary": {
+    "nEvents": 1390,
+    "excludedMlt2": 24,
+    "undefinedFULL": 22,
+    "undefinedGEO": 80,
+    "deltaR": 0.04030156339052704,
+    "meanDeltaR": 0.08732977638440245
+   },
+   "sensitivity": {
+    "nEvents": 1286,
+    "deltaR": 0.03807835242224056
+   },
+   "postShift": {
+    "nEvents": 1375,
+    "excludedMlt2": 103,
+    "deltaR": -0.08453110989912915
+   }
+  },
+  {
+   "slot": 11,
+   "goal": 19,
+   "r5Differing": 6,
+   "primary": {
+    "nEvents": 1398,
+    "excludedMlt2": 0,
+    "undefinedFULL": 8,
+    "undefinedGEO": 15,
+    "deltaR": -0.022203054930693078,
+    "meanDeltaR": -0.03342251150974452
+   },
+   "sensitivity": {
+    "nEvents": 1383,
+    "deltaR": -0.022203054930693078
+   },
+   "postShift": {
+    "nEvents": 1381,
+    "excludedMlt2": 0,
+    "deltaR": -0.10287066504043763
+   }
+  },
+  {
+   "slot": 12,
+   "goal": 8,
+   "r5Differing": 6,
+   "primary": {
+    "nEvents": 1384,
+    "excludedMlt2": 0,
+    "undefinedFULL": 1,
+    "undefinedGEO": 34,
+    "deltaR": 0,
+    "meanDeltaR": 0.04362958170136754
+   },
+   "sensitivity": {
+    "nEvents": 1350,
+    "deltaR": 0
+   },
+   "postShift": {
+    "nEvents": 1360,
+    "excludedMlt2": 0,
+    "deltaR": -0.021425345188757494
+   }
+  },
+  {
+   "slot": 13,
+   "goal": 12,
+   "r5Differing": 9,
+   "primary": {
+    "nEvents": 1378,
+    "excludedMlt2": 0,
+    "undefinedFULL": 19,
+    "undefinedGEO": 41,
+    "deltaR": 0,
+    "meanDeltaR": -0.007556080480395325
+   },
+   "sensitivity": {
+    "nEvents": 1337,
+    "deltaR": 0
+   },
+   "postShift": {
+    "nEvents": 1377,
+    "excludedMlt2": 0,
+    "deltaR": 0
+   }
+  },
+  {
+   "slot": 14,
+   "goal": 16,
+   "r5Differing": 10,
+   "primary": {
+    "nEvents": 1386,
+    "excludedMlt2": 64,
+    "undefinedFULL": 0,
+    "undefinedGEO": 69,
+    "deltaR": 0.18350341907227385,
+    "meanDeltaR": 0.1182765957932034
+   },
+   "sensitivity": {
+    "nEvents": 1253,
+    "deltaR": 0.18350341907227385
+   },
+   "postShift": {
+    "nEvents": 1387,
+    "excludedMlt2": 18,
+    "deltaR": 0.007103186560817321
+   }
+  },
+  {
+   "slot": 15,
+   "goal": 19,
+   "r5Differing": 7,
+   "primary": {
+    "nEvents": 1372,
+    "excludedMlt2": 0,
+    "undefinedFULL": 1,
+    "undefinedGEO": 1,
+    "deltaR": 0.11271529015272852,
+    "meanDeltaR": 0.10635645908398703
+   },
+   "sensitivity": {
+    "nEvents": 1371,
+    "deltaR": 0.11271529015272852
+   },
+   "postShift": {
+    "nEvents": 1392,
+    "excludedMlt2": 0,
+    "deltaR": -0.15231105466549155
+   }
+  }
+ ],
+ "monitoredDiagnostics": {
+  "events": 44220,
+  "executedInK": 44220,
+  "executedAugmented": 0,
+  "eventsWithAugmentation": 0,
+  "note": "monitored diagnostics, not validity conditions (§G)"
+ }
+}
