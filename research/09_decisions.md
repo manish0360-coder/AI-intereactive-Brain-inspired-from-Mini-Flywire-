@@ -7,6 +7,40 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-012 — ecosystem architecture: Handbook v1.1 governs repository responsibilities and promotion routing
+
+**Date:** 2026-09-28 · **Authority:** Director ruling of 2026-09-28 (I1 — four-repository architecture
+alignment) · **Status:** in force
+**Scope:** **GOVERNANCE ONLY.** This decision authorises no experiment, creates no observable, specifies
+no protocol, generates or inspects no seed, and modifies no frozen artifact. Every pre-registration,
+gate, result, erratum and decision D-001 … D-011 is unchanged and unreopened.
+
+### 1. Decision
+
+**MiniFlyWire adopts the ecosystem constitution — *The Engineering Constitution and Architecture
+Handbook* v1.1 (SHA-256 `ad670d24eaab6acb2cca301223dfb58d9216b6ee89e87fd569638af3a00eafd0`) — as the
+authority for repository responsibilities and promotion routing.**
+
+The four platform-architecture documents in `research/spec/` (`REPOSITORY_RESPONSIBILITY_MATRIX.md`,
+`PROMOTION_WORKFLOW.md`, `TRACEABILITY_spec_to_noetica_AND_boundary.md`,
+`TRACEABILITY_spec_to_velith.md`, frozen in `0a19b37`) are **HISTORICAL**. Their responsibility and
+routing content is superseded, clause by clause, by the separate erratum
+[`spec/PLATFORM_ARCHITECTURE_ERRATUM_01.md`](spec/PLATFORM_ARCHITECTURE_ERRATUM_01.md) (SPEC-ERR-01).
+Their bytes are not modified.
+
+### 2. Consequences
+
+- The ecosystem is MiniFlyWire → Noetica → Velith → Mini Prometheus. MiniFlyWire is the research
+  laboratory: it discovers, validates (G0, G1) and specifies mechanisms. It imports no repository and is
+  imported by none (Handbook Law 4).
+- A validated cognitive primitive is promoted into **Noetica** only, by the Handbook §11.3 process
+  (certification against the §5.5 gate, Primitive Registry entry, re-implementation by Noetica, decision
+  record). It never moves as code.
+- **No mechanism is currently routable:** none has passed G1.
+- The Computational Specification and `CANDIDATE_ADMISSION_SPEC.md` are unchanged.
+
+---
+
 ## D-011 — discriminator completeness, required prospectively of every frozen hypothesis
 
 **Date:** 2026-09-09 · **Authority:** Director ruling of 2026-09-09, following the terminal UQ-A
