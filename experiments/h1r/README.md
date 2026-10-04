@@ -2,6 +2,8 @@
 
 H1-R tests the **M7 design as frozen**: [`M7_PREREGISTRATION.md`](../../research/cognitive-audit/M7_PREREGISTRATION.md), SHA-256 `2f12e309…f6b9`, plus errata 01–10.
 
+**Frozen H1-R protocol:** [`H1R_PREREGISTRATION_v1.0.md`](../../research/preregistrations/H1R_PREREGISTRATION_v1.0.md) (frozen 2026-10-04; bound to `e8e904a`).
+
 The M7 instrument build is **B2 = `707cb1e`**. The B2 characterization of 2026-10-04 showed that B2 departs from the frozen text in several ways. This directory makes the runtime conform **without editing any production file**:
 
 1. `build_tree.mjs` materialises the B2 blobs. It uses `git cat-file`, so there is no checkout and no line-ending conversion, and it checks every blob id.

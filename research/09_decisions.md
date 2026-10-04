@@ -7,6 +7,95 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-018 — H1-R pre-registration v1.0 frozen
+
+**Date:** 2026-10-04 · **Authority:** Director ruling "FINAL FREEZE AUTHORIZATION — H1-R" (2026-10-04) · **Status:** in force
+**Scope:** freezes the H1-R scientific protocol.
+- It authorises no run, generates and inspects no seed, configuration or outcome, and changes no code.
+- The frozen M7 pre-registration (SHA-256 `2f12e309…f6b9`) and its errata are not modified. H1-R supersessions apply to H1-R only.
+
+### 1. Decision
+[`preregistrations/H1R_PREREGISTRATION_v1.0.md`](preregistrations/H1R_PREREGISTRATION_v1.0.md) is frozen, SHA-256 `c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836` ([integrity record](preregistrations/H1R_PREREGISTRATION_v1.0.sha256)). It is bound to instrument commit `e8e904a` on B2 `707cb1e`.
+
+It resolves pre-registration decisions D-2 … D-11:
+- **Pilot material:** a stream from 886000 (bound 889999) × seeds 20260819004–008. The single F-11 extension reuses the seeds.
+- **Crossed configuration × seed analysis:** min F′ with ν = min(C−1, S−1), Holm across the six primary tests, the matching 99% CI, a row-removal rule and deterministic undefined-statistic rules.
+- **Metric definitions** and the tick index τ = i − 5.
+- **Measurement-layer requirements.**
+- **Validity failures** handled as crashes.
+- **The blocking gate battery.**
+- **A5** retained.
+- **The exploratory PE factorial** waived.
+- **Governance records.**
+- **A mechanical H1 / H1-STRICT / NOT SUPPORTED verdict function.**
+
+### 2. Consequences
+- The obsolete "≈ 1 × 10⁻⁶ per run" configuration-generator figure is withdrawn. `R3_REPORT.md` is corrected, and v1.0 Appendix B.1 gives the exact enumerations and the model-based probabilities, each with its sample space.
+- The three M7 governing documents (`M7_SCIENTIFIC_SPEC_DRAFT.md`, `M7_GATE_SEMANTICS_AUDIT.md`, `M7_CHARACTERIZATION_FINDINGS.md`) are committed byte-exact (`-text`) at the SHA-256 values listed in v1.0 §17.
+- Next: the measurement-layer milestone (v1.0 §9), verified on diagnostic material with blinded reporting, and only then Stage 1.
+
+---
+
+## D-017 — H1-R R3: configuration-scoped environment stream
+
+**Date:** 2026-10-04 · **Authority:** Director ruling "R3 IMPLEMENTATION — CONFIGURATION-SCOPED ENVIRONMENT RANDOMIZATION" · **Status:** in force
+**Scope:** H1-R runtime only. With the H1-R runtime absent, behaviour is identical to B2.
+
+**Decision.** For H1-R runs that carry a design position, the environment stream seed is (0x60800000 + slot·4096·0x6d2b79f5) mod 2³². This removes the shared environment sequence across a seed's configurations (D-3B) while keeping one stream per (configuration, seed) for all arms.
+- Erratum: [`preregistrations/H1R_ERRATUM_R3_ENVIRONMENT_SEED.md`](preregistrations/H1R_ERRATUM_R3_ENVIRONMENT_SEED.md), which supersedes the M7 §5.1 environment-stream row for H1-R.
+- Implemented and verified in commit `e8e904a` (`experiments/h1r/evidence_r3/`).
+
+---
+
+## D-016 — H1-R R2: goal-entry reliability draw (D-1) and reward measurement (D-5, part 1)
+
+**Date:** 2026-10-04 · **Authority:** Director ruling "Implement only R2: D-1 Goal-Entry Reliability Draw + D-5 Measurement Integrity" · **Status:** in force
+**Scope:** H1-R runtime and driver only.
+
+**Decision.**
+- Goal-entering attempts draw from the environment stream and are credited like every other edge (M7 §3.3, §6.1).
+- Observational probes record the per-tick `rewardSignal`. `run_h1r.mjs` is the one-run-per-process driver.
+- Commit `19d0786` (`experiments/h1r/evidence_d1d5/R2_REPORT.md`).
+
+---
+
+## D-015 — H1-R R1: realised-outcome learning order
+
+**Date:** 2026-10-04 · **Authority:** Director ruling "R1 AUTHORIZED" · **Status:** in force
+**Scope:** H1-R runtime only.
+
+**Decision.**
+- The decision's single environment draw precedes the self-learning section, which then reads the realised transition. A slip is a no-learning tick.
+- This supersedes two M7-ERR-05 §3.1 sentences for H1-R (H1R-S1).
+- Commit `742f239` (`experiments/h1r/evidence_r1/R1_REPORT.md`).
+
+---
+
+## D-014 — H1-R conformance correction
+
+**Date:** 2026-10-04 · **Authority:** Director ruling on the H1-R conformance correction · **Status:** in force, except the Q-KEY edits, which D-015 superseded
+**Scope:** H1-R runtime only.
+
+**Decision.**
+- The `0f47d7b` `canReachGoal` backtracking fix is applied, guarded (CRG).
+- N2 is clarified as traversal-only trust success (M7 §6.1).
+- The Q-KEY stash/apply edits were later removed by R1.
+- Record: `experiments/h1r/evidence_r2/CORRECTION_REPORT.md`.
+
+---
+
+## D-013 — H1-R conformance authorisation
+
+**Date:** 2026-10-04 · **Authority:** Director ruling following the 2026-10-04 B2 characterisation · **Status:** in force
+**Scope:** H1-R only. No production file is modified.
+
+**Decision.**
+- H1-R tests the M7 design **as frozen**, on the B2 build (`707cb1e`) made to conform to it by a guarded source transform under `experiments/h1r/`.
+- The conformance edits are: edge-only movement (N1), traversal-only trust credit (N2), RANDOM and FROZEN wiring (A3, A4), the flat goal reward with G15 → G15′ (GOAL), and clearing reasoning at reset (P4).
+- Record: `experiments/h1r/evidence_final/`. Committed with R1 in `742f239`.
+
+---
+
 ## D-012 — ecosystem architecture: Handbook v1.1 governs repository responsibilities and promotion routing
 
 **Date:** 2026-09-28 · **Authority:** Director ruling of 2026-09-28 (I1 — four-repository architecture

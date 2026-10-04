@@ -1,0 +1,25 @@
+# H1-R PRE-REGISTRATION v1.0 — INTEGRITY RECORD
+#
+# Artifact : research/preregistrations/H1R_PREREGISTRATION_v1.0.md
+# Version  : 1.0 (frozen)
+# Frozen   : 2026-10-04, under the Research Director ruling "FINAL FREEZE AUTHORIZATION — H1-R"
+# Algorithm: SHA-256 over the exact bytes of the file (LF line endings; -text in .gitattributes)
+# Size     : 38014 bytes, 547 lines
+#
+# BUILD THIS PRE-REGISTRATION IS BOUND TO
+#   instrument : e8e904a2f213e45dc0fb326f36cf72809f5862cf (H1-R R3)
+#   B2         : 707cb1e5205a7e9979f81092ee1ebfa0fe28922e
+#   predecessor: research/cognitive-audit/M7_PREREGISTRATION.md, SHA-256 2f12e309...f6b9
+#
+# STATE AT FREEZE
+#   measurement layer part 2, fork driver, analyze.js, orchestrator, registry records: NOT implemented (v1.0 §9)
+#   Stage 1 / Stage 2 runs: NONE executed; no pilot or held-out configuration generated
+#
+# VERIFY WITH
+#   cd research/preregistrations && sha256sum -c H1R_PREREGISTRATION_v1.0.sha256
+#   node research/preregistrations/h1r_v1_checks/verify_freeze.mjs
+#
+# A mismatch means the pre-registration changed after freeze. That is a PROTOCOL DEVIATION and must be
+# reported with its direction and likely effect on results, never silently reconciled.
+#
+c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836  H1R_PREREGISTRATION_v1.0.md

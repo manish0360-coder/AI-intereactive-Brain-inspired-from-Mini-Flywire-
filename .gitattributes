@@ -163,3 +163,13 @@ research/preregistrations/M32_TRAJECTORY_SEED_GOVERNANCE.md -text
 # assumed: a git stash round-trip under core.autocrlf=true rewrote PLAN, LEDGER and REPLAY to CRLF and broke
 # 3 of the 20 integrity entries (restored byte-exact from a verified backup before commit).
 experiments/study2/execution/* -text
+
+# H1-R pre-registration v1.0 (frozen 2026-10-04) and its integrity record - identity is a SHA-256
+# over exact bytes (H1R_PREREGISTRATION_v1.0.sha256), so end-of-line conversion must not touch them.
+research/preregistrations/H1R_PREREGISTRATION_v1.0.md -text
+research/preregistrations/H1R_PREREGISTRATION_v1.0.sha256 -text
+
+# M7 governing documents cited by SHA-256 in H1-R v1.0 section 17 - the same byte-integrity guarantee.
+research/cognitive-audit/M7_SCIENTIFIC_SPEC_DRAFT.md -text
+research/cognitive-audit/M7_GATE_SEMANTICS_AUDIT.md -text
+research/cognitive-audit/M7_CHARACTERIZATION_FINDINGS.md -text
