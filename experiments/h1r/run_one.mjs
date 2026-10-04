@@ -2,7 +2,8 @@
 // H1-R — one agent run per OS process (frozen §5.4), driven through the UNCHANGED
 // experiments/m7/run.js of the given tree.
 //   argv[2] = JSON { tree, configSeed, configIndex, agentSeed, arm, h1r: 'on'|'off',
-//                    trustMode, record: bool, ticks }
+//                    trustMode, record: bool, ticks, envBlock: 'pilot'|'heldout', envIndex }
+//   envBlock/envIndex (H1R on only): the run's design position for the R3 environment stream.
 // Prints '@@H1R@@' + JSON. With record=false only the fingerprint is reported.
 // ==========================================================
 import fs from 'node:fs';
@@ -11,6 +12,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { installH1R } from './runtime.mjs';
 import { installMeasure } from './measure.mjs';
+import { blockCodeOf } from './env_seed.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const IN = JSON.parse(process.argv[2]);
@@ -18,13 +20,17 @@ const TREE_URL = pathToFileURL(IN.tree).href;
 const env = await import(TREE_URL + '/experiments/m7/env.js');
 const trust = await import(TREE_URL + '/render/trustMemory.js');
 const { Q } = await import(TREE_URL + '/render/qlearning.js');
-const H = IN.h1r === 'on' ? await installH1R({ tree: IN.tree, trustMode: IN.trustMode || 'traversal' }) : null;
+const envPosition = (IN.h1r === 'on' && IN.envBlock !== undefined)
+  ? { agentSeed: IN.agentSeed ?? 20260819000, blockCode: blockCodeOf(IN.envBlock), acceptedConfigIndex: IN.envIndex } : null;
+const H = IN.h1r === 'on' ? await installH1R({ tree: IN.tree, trustMode: IN.trustMode || 'traversal', envPosition }) : null;
 const MEAS = IN.measure ? installMeasure() : null;   // D-5 measurement layer (observational)
-// Independent mirror of the environment stream (instrumentation/rng.js initRng: environment = makeRng(seed ^ 0x5EED)).
+// Independent mirror of the environment stream: the R3 derived seed when the run carries a design position,
+// else B2's instrumentation/rng.js initRng derivation (environment = makeRng(seed ^ 0x5EED)).
 // A separate generator instance owned by this recorder: it never touches the agent's named streams. Used to
 // check every drawn attempt exactly: outcome == (u_k < p_e), with u_k the k-th environment draw of the run.
 const { makeRng } = await import(TREE_URL + '/instrumentation/rng.js');
-const ENV_MIRROR = makeRng(((IN.agentSeed ?? 20260819000) ^ 0x5EED) >>> 0);
+const ENV_MIRROR_SEED = H && H.envStream ? H.envStream.envSeed : ((IN.agentSeed ?? 20260819000) ^ 0x5EED) >>> 0;
+const ENV_MIRROR = makeRng(ENV_MIRROR_SEED);
 const h1rOn = () => !!(globalThis.__H1R__ && globalThis.__H1R__.on);
 
 const N = (x) => (x === null || x === undefined) ? null : Number(x);
@@ -258,7 +264,10 @@ const rec = await runOnce({ configSeed: IN.configSeed, configIndex: IN.configInd
   arm: IN.arm, envMode: 'on', creditMode: 'on', pin: 'on', tickUnit: 'step', ticks: IN.ticks || 3000,
   crashAtTick: null, warmStore: false });
 const out = { configSeed: IN.configSeed, configIndex: IN.configIndex, arm: IN.arm, h1r: IN.h1r, trustMode: IN.trustMode || null,
-  record: !!IN.record, fp: rec.fingerprint, cog: rec.artifacts.cogDraws, completed: rec.outcome.completed, crashed: rec.outcome.crashed };
+  record: !!IN.record, fp: rec.fingerprint, cog: rec.artifacts.cogDraws, completed: rec.outcome.completed, crashed: rec.outcome.crashed,
+  // R3: the stream actually registered (runtime log), the mirror's seed, and the per-run draw consumption
+  envStream: H ? H.envStream : null, envSeedLog: H ? H.envSeedLog : null, envMirrorSeed: ENV_MIRROR_SEED,
+  envDraws: rec.artifacts.envCounters.envDraws, vis: rec.artifacts.visDraws, acceptedSeed: rec.provenance.acceptedSeed };
 
 if (IN.record) {
   closeTick();

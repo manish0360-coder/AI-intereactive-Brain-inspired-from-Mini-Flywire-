@@ -34,6 +34,10 @@
 //                         Learning rules, reward constants, Q equation and parameters unchanged.
 //   R2        §3.3/§6.1   goal-entering attempts use the same environment draw as every other edge
 //                         (D-1); observational measurement probes for the per-tick reward (D-5)
+//   R3        §5.1        configuration-scoped environment stream (Director ruling R3, 2026-10-04):
+//                         when the runtime carries a design position, initRng registers the
+//                         "environment" stream from env_seed.mjs's derived seed instead of
+//                         agentSeed XOR 0x5EED; cognitive and visual are untouched
 // ==========================================================
 
 export const B2_COMMIT = '707cb1e5205a7e9979f81092ee1ebfa0fe28922e';
@@ -240,12 +244,33 @@ function transformEM(text) {
   return L.join('\n');
 }
 
+// ---------------- instrumentation/rng.js ----------------
+// R3 — CONFIGURATION-SCOPED ENVIRONMENT STREAM (Director ruling R3, 2026-10-04; erratum to frozen §5.1).
+// B2 seeds the environment stream with agentSeed XOR 0x5EED, so every configuration and arm of one agent
+// seed consumes the same uniform sequence. Under H1R, when the runtime carries a design position
+// (agentSeed, block, accepted index), the stream is seeded with the env_seed.mjs derivation instead:
+// one disjoint 4096-draw segment per (configuration position, agent seed), with no arm term. The runtime
+// refuses if initRng is called with a different agent seed. The call draws nothing and changes only the
+// seed of this one stream; the B2 expression is kept verbatim as the other branch.
+function transformRng(text) {
+  const F = 'instrumentation/rng.js';
+  const L = text.split('\n');
+  const B2 = '    streams.set("environment", makeRng((seed ^ 0x5EED) >>> 0));';
+  const [i] = one(F, 'R3-ENV-SEED', L, l => l === B2);
+  const fn = L.findIndex(l => l === 'export function initRng(seed) {');
+  if (fn < 0 || fn > i || L[fn + 1] !== '    streams.set("cognitive", makeRng(seed));' || L[fn + 2] !== '    streams.set("visual", makeRng((seed ^ 0x9e3779b9) >>> 0));')
+    refuse(F, 'R3-ENV-SEED', 'initRng stream registrations not found in the expected shape');
+  L[i] = `    streams.set("environment", makeRng((${G} && Number.isInteger(globalThis.__H1R__.envSeed)) ? globalThis.__H1R__.applyEnvSeed(seed) : (seed ^ 0x5EED) >>> 0)); // H1R R3-ENV-SEED: configuration-scoped environment stream (Director ruling R3)`;
+  return L.join('\n');
+}
+
 export const TRANSFORMS = Object.freeze({
   'main.js': transformMain,
   'render/qlearning.js': transformQ,
   'render/episodeManager.js': transformEM,
+  'instrumentation/rng.js': transformRng,
 });
 
 export const EDIT_TAGS = Object.freeze(['N1-MASK', 'N1-MASK-SEM', 'A3', 'N1-GUARD', 'GOAL', 'A4-Q-decay', 'A4-T-decay', 'A4-T-credit',
   'N2-note', 'P4-goal', 'P4-cap', 'CRG-1', 'CRG-2', 'CRG-3', 'R1-VIEW', 'R1-RESTORE', 'R1-DRAW',
-  'R2-GOAL-FLAG', 'R2-GOAL-CREDIT', 'M-STEP', 'M-REWARD', 'A4-Q', 'N1-SEAL', 'N2']);
+  'R2-GOAL-FLAG', 'R2-GOAL-CREDIT', 'M-STEP', 'M-REWARD', 'A4-Q', 'N1-SEAL', 'N2', 'R3-ENV-SEED']);

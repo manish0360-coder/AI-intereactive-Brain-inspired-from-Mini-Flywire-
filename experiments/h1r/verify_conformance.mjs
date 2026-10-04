@@ -3,6 +3,7 @@
 // ==========================================================
 // Material: ONLY the historical G15 configuration material (900030–900499, accepted per the
 // unchanged predicate) and agent seed 20260819000. No new seed is generated.
+// R3: every H1R-on run carries a design position for its environment stream (see POS below).
 // BLINDING: only gate / mechanism quantities are reported — no per-arm outcome metric
 // (goal-reach counts, returns, steps-to-goal, chosen-edge slip rates).
 //
@@ -14,6 +15,8 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { buildTree } from './build_tree.mjs';
+import { ENV_STREAM, envSlot, envSeedFor, overlapProof, segmentsOverlap, domainSlots } from './env_seed.mjs';
+import { installH1R } from './runtime.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const EVID = path.join(HERE, process.env.H1R_EVIDENCE || 'evidence');
@@ -77,6 +80,19 @@ const MUT_MEAS = mutant('-mutant-measure', (s) => {
   const [line] = L.splice(p, 1); L.splice(q + 1, 0, line);
   return L.join('\n');
 });
+// R3 anti-vacuity mutant: the R3-ENV-SEED edit reverted to the B2 line in instrumentation/rng.js, so the
+// environment stream is agentSeed XOR 0x5EED again although the runtime carries a design position.
+const B2_ENV_LINE = '    streams.set("environment", makeRng((seed ^ 0x5EED) >>> 0));';
+const MUT_R3 = C.dir + '-mutant-r3';
+if (!fs.existsSync(MUT_R3)) {
+  fs.cpSync(C.dir, MUT_R3, { recursive: true });
+  const f = path.join(MUT_R3, 'instrumentation', 'rng.js');
+  const L = fs.readFileSync(f, 'utf8').split('\n');
+  const i = L.findIndex(l => l.includes('// H1R R3-ENV-SEED'));
+  if (i < 0) throw new Error('mutant-r3: R3-ENV-SEED edit not found');
+  L[i] = B2_ENV_LINE;
+  fs.writeFileSync(f, L.join('\n'));
+}
 console.log('conformed tree:', shown(C.dir), C.reused ? '(reused)' : '(built)');
 console.log('pristine tree :', shown(P.dir));
 
@@ -95,20 +111,28 @@ else {
 }
 if (SAMPLES.length !== 41) throw new Error(`expected the 41 historical G15 configurations, got ${SAMPLES.length}`);
 const SUB = SAMPLES.slice(0, 3);
+// R3 design positions for the verification material. The 41 diagnostic configurations form no design block,
+// so each gets its own position on agent seed 20260819000 that no design run can occupy:
+//   p < 32   -> held-out block, index p (20260819000 is never a held-out-block seed: those are 100–119)
+//   p >= 32  -> pilot block, index p − 22 = 10..18 (the pilot and the F-11 extension use indices 0..9)
+const POS = (p) => p < 32 ? { envBlock: 'heldout', envIndex: p } : { envBlock: 'pilot', envIndex: p - 22 };
+const POS_OF = new Map(SAMPLES.map((s, p) => [`${s.configSeed}/${s.configIndex}`, POS(p)]));
+const posFor = (s) => POS_OF.get(`${s.configSeed}/${s.configIndex}`);
+const expectedEnvSeed = (pos) => envSeedFor({ agentSeed: AGENT_SEED, blockCode: pos.envBlock === 'heldout' ? 1 : 0, acceptedConfigIndex: pos.envIndex });
 
 // ---------------- runner ----------------
 const RUN_H1R = path.join(HERE, 'run_h1r.mjs');
 function run(job) {
   return new Promise((res) => {
     if (job.driver) {   // the experiment driver itself, digest-only (no reward value leaves the process)
-      const arg = JSON.stringify({ agentSeed: AGENT_SEED, configSeed: job.configSeed, configIndex: job.configIndex, arm: job.arm, tree: job.tree, digestOnly: true });
+      const arg = JSON.stringify({ agentSeed: AGENT_SEED, configSeed: job.configSeed, configIndex: job.configIndex, arm: job.arm, block: job.block, tree: job.tree, digestOnly: true });
       return execFile(process.execPath, [RUN_H1R, arg], { cwd: HERE, maxBuffer: 1 << 28 }, (e, out, err) => {
         const i = out ? out.indexOf('@@H1RRUN@@') : -1;
         if (i < 0) return res({ ...job, tree: shown(job.tree), error: shown(String(err || (e && e.message) || 'no output')).slice(-3000) });
         const d = JSON.parse(out.slice(i + 10));
-        res({ set: job.set, configSeed: job.configSeed, configIndex: job.configIndex, arm: job.arm, tree: shown(job.tree),
+        res({ set: job.set, configSeed: job.configSeed, configIndex: job.configIndex, arm: job.arm, block: job.block, tree: shown(job.tree),
               fp: d.fingerprint, completed: d.outcome.completed, crashed: d.outcome.crashed, validity: d.validity, measurement: d.measurement,
-              h1rProvenance: d.provenance.h1r });
+              h1rProvenance: d.provenance.h1r, rngSeeds: d.provenance.rngSeeds });
       });
     }
     const arg = JSON.stringify({ agentSeed: AGENT_SEED, ...job });
@@ -132,18 +156,23 @@ const J = [];
 for (const s of SUB) for (const arm of ARMS) {
   J.push({ set: 'parityPristine', tree: P.dir, h1r: 'off', arm, ...s });
   J.push({ set: 'parityConformedOff', tree: C.dir, h1r: 'off', arm, ...s });
-  J.push({ set: 'onNoRecord', tree: C.dir, h1r: 'on', arm, ...s });
-  J.push({ set: 'onNoRecord2', tree: C.dir, h1r: 'on', arm, ...s });
-  J.push({ set: 'onMeasureOnly', tree: C.dir, h1r: 'on', measure: true, arm, ...s });          // D-5 neutrality
+  J.push({ set: 'onNoRecord', tree: C.dir, h1r: 'on', arm, ...s, ...posFor(s) });
+  J.push({ set: 'onNoRecord2', tree: C.dir, h1r: 'on', arm, ...s, ...posFor(s) });
+  J.push({ set: 'onMeasureOnly', tree: C.dir, h1r: 'on', measure: true, arm, ...s, ...posFor(s) });          // D-5 neutrality
 }
-for (const s of SAMPLES) for (const arm of ARMS) J.push({ set: 'main', tree: C.dir, h1r: 'on', record: true, measure: true, arm, ...s });
+for (const s of SAMPLES) for (const arm of ARMS) J.push({ set: 'main', tree: C.dir, h1r: 'on', record: true, measure: true, arm, ...s, ...posFor(s) });
 for (const s of SUB) for (const arm of ['A1', 'A3', 'A4']) J.push({ set: 'antiOff', tree: C.dir, h1r: 'off', record: true, measure: true, arm, ...s });
-for (const s of SUB) J.push({ set: 'mutantGoalDraw', tree: MUT_GOALDRAW, h1r: 'on', record: true, measure: true, arm: 'A1', ...s });
-for (const s of SUB) J.push({ set: 'mutantMeasure', tree: MUT_MEAS, h1r: 'on', record: true, measure: true, arm: 'A1', ...s });
-for (const s of SUB) for (const arm of ['A1', 'A7']) J.push({ set: 'driver', driver: true, tree: C.dir, arm, ...s });
-for (const s of SUB) J.push({ set: 'mutantGoal', tree: MUT, h1r: 'on', record: true, arm: 'A1', ...s });
-for (const s of SUB) J.push({ set: 'mutantR1', tree: MUT_R1, h1r: 'on', record: true, arm: 'A1', ...s });
-for (const s of SAMPLES) J.push({ set: 'diagAttemptGated', tree: C.dir, h1r: 'on', record: true, trustMode: 'attemptGated', arm: 'A1', ...s });
+for (const s of SUB) J.push({ set: 'mutantGoalDraw', tree: MUT_GOALDRAW, h1r: 'on', record: true, measure: true, arm: 'A1', ...s, ...posFor(s) });
+for (const s of SUB) J.push({ set: 'mutantMeasure', tree: MUT_MEAS, h1r: 'on', record: true, measure: true, arm: 'A1', ...s, ...posFor(s) });
+// the experiment driver derives its position itself: (block, configIndex); the recorder reference runs the same position
+for (const s of SUB) for (const arm of ['A1', 'A7']) {
+  J.push({ set: 'driver', driver: true, tree: C.dir, arm, block: 'heldout', ...s });
+  J.push({ set: 'driverRef', tree: C.dir, h1r: 'on', measure: true, arm, ...s, envBlock: 'heldout', envIndex: s.configIndex });
+}
+for (const s of SUB) J.push({ set: 'mutantGoal', tree: MUT, h1r: 'on', record: true, arm: 'A1', ...s, ...posFor(s) });
+for (const s of SUB) J.push({ set: 'mutantR1', tree: MUT_R1, h1r: 'on', record: true, arm: 'A1', ...s, ...posFor(s) });
+for (const s of SUB) J.push({ set: 'mutantR3', tree: MUT_R3, h1r: 'on', record: true, arm: 'A1', ...s, ...posFor(s) });
+for (const s of SAMPLES) J.push({ set: 'diagAttemptGated', tree: C.dir, h1r: 'on', record: true, trustMode: 'attemptGated', arm: 'A1', ...s, ...posFor(s) });
 let R;
 if (process.env.H1R_EVAL_ONLY) {   // re-evaluate the gates on the saved runs of this evidence directory (no execution)
   R = JSON.parse(fs.readFileSync(path.join(EVID, 'runs.json'), 'utf8'));
@@ -237,7 +266,7 @@ gate('X0', 'every run completed without error or crash', errs.length === 0 && R.
       sum(main.map(x => x.r1.drawCheck.unattributed)) === 0 && dc('goal', c => c.checked) + dc('other', c => c.checked) === r(x => x.env.draws),
       `goal-entering ${dc('goal', c => c.checked)} checked, ${dc('goal', c => c.mismatch)} mismatches | other ${dc('other', c => c.checked)} checked, ${dc('other', c => c.mismatch)} mismatches | unattributed draws ${sum(main.map(x => x.r1.drawCheck.unattributed))}; checked = draws ${r(x => x.env.draws)}`);
     const zz = (cls) => { const q = zOf(main, cls); return `n ${q.n}, z ${q.z.toFixed(2)}`; };
-    G.push({ id: 'R2b-INFO', name: 'diagnostic splits of the non-goal calibration (pooled over runs that share one environment stream per agent seed)', status: 'INFO',
+    G.push({ id: 'R2b-INFO', name: 'diagnostic splits of the non-goal calibration (pooled over all runs; under R3 the 7 arms of a configuration share its stream)', status: 'INFO',
       evidence: `retry-after-slip ${zz('otherRetry')} | other attempts ${zz('otherFresh')} | Phase I ${zz('otherP1')} | Phase II ${zz('otherP2')}` }); }
   { const a7 = main.filter(x => x.arm === 'A7'), z7 = zOf(a7, 'goal'); const ENVSRC = fs.readFileSync(path.join(C.dir, 'experiments', 'm7', 'env.js'), 'utf8');
     const attemptUsesPFor = /export function attempt\(fromId, toId\) \{[^}]*const p = pFor\(fromId, toId\);/.test(ENVSRC);
@@ -471,11 +500,169 @@ function erf(x) { const s = Math.sign(x); x = Math.abs(x); const t = 1 / (1 + 0.
   gate('M-AV', 'anti-vacuity: a probe at the wrong site is caught (M2), and in the B2 order the probe follows the reward to unrealised ticks',
     mm(mut, m => m.valueMismatch) > 0 && mm(off, m => m.eventsOnUnrealised) > 0 && mm(off, m => m.valueMismatch) === 0,
     `mutant value mismatches ${mm(mut, m => m.valueMismatch)} | B2 order: events on unrealised ticks ${mm(off, m => m.eventsOnUnrealised)}, value mismatches ${mm(off, m => m.valueMismatch)}`);
-  const drv = by('driver');
-  const agree = drv.filter(d => { const x = main.find(z => key(z) === key(d)); return x && x.fp === d.fp && x.measurement.digest === d.measurement.digest && x.measurement.eventCount === d.measurement.eventCount; }).length;
-  gate('M5', 'the experiment driver (run_h1r.mjs) reproduces the verified run and its reward record, and reports every validity condition true',
-    drv.length === SUB.length * 2 && agree === drv.length && drv.every(d => d.validity && d.validity.valid),
-    `${agree}/${drv.length} driver runs identical in fingerprint and reward-record digest to the recorder-verified runs; valid ${drv.filter(d => d.validity && d.validity.valid).length}/${drv.length}`); }
+  const drv = by('driver'), ref = by('driverRef');
+  const agree = drv.filter(d => { const x = ref.find(z => key(z) === key(d)); return x && x.fp === d.fp && x.measurement.digest === d.measurement.digest && x.measurement.eventCount === d.measurement.eventCount; }).length;
+  gate('M5', 'the experiment driver (run_h1r.mjs) reproduces the recorder run at the same design position and its reward record, and reports every validity condition true',
+    drv.length === SUB.length * 2 && ref.length === drv.length && agree === drv.length && drv.every(d => d.validity && d.validity.valid),
+    `${agree}/${drv.length} driver runs identical in fingerprint and reward-record digest to the recorder runs at the same position; valid ${drv.filter(d => d.validity && d.validity.valid).length}/${drv.length}`); }
+
+// R3 — CONFIGURATION-SCOPED ENVIRONMENT STREAM (Director ruling R3). Arithmetic, unit and run-level evidence.
+{ const L = ENV_STREAM.L, RES = ENV_STREAM.reserve, M32 = 1n << 32n;
+  const positioned = R.filter(r => !r.error && r.h1r === 'on' && r.envStream);
+  // R3-F: the module's derivation equals the ruling's formula, computed independently here, on every domain slot
+  { let ok = 0, n = 0; const D = domainSlots();
+    for (const d of D) { n++; const slot = (d.agentSeed - 20260819000) * 64 + d.blockCode * 32 + d.acceptedConfigIndex;
+      const f = Number((0x60800000n + BigInt(slot) * 4096n * 0x6d2b79f5n) % M32);
+      if (slot === d.slot && envSeedFor(d) === f) ok++; }
+    const refusals = [{ agentSeed: 20260819010, blockCode: 0, acceptedConfigIndex: 0 }, { agentSeed: 20260819120, blockCode: 0, acceptedConfigIndex: 0 },
+      { agentSeed: AGENT_SEED, blockCode: 2, acceptedConfigIndex: 0 }, { agentSeed: AGENT_SEED, blockCode: 0, acceptedConfigIndex: 32 },
+      { agentSeed: AGENT_SEED, blockCode: 0, acceptedConfigIndex: -1 }, { agentSeed: AGENT_SEED, blockCode: 0, acceptedConfigIndex: 1.5 }]
+      .filter(p => { try { envSlot(p); return false; } catch { return true; } }).length;
+    gate('R3-F', 'derivation: envSeed = (0x60800000 + slot·4096·0x6d2b79f5) mod 2^32, slot = (agentSeed − 20260819000)·64 + blockCode·32 + index, on every slot of the verified domain; positions outside it are refused',
+      ok === n && n === 1920 && refusals === 6, `${ok}/${n} domain slots (seeds 20260819000–009 and 100–119, both blocks, index 0–31) equal the independently computed formula; out-of-domain positions refused ${refusals}/6`); }
+  // R3a: same (configuration, agent seed) -> the same environment stream in every arm
+  { let cfgOk = 0, runsOk = 0, runsN = 0;
+    for (const s of SAMPLES) { const exp = expectedEnvSeed(posFor(s));
+      const rs = main.filter(r => r.configSeed === s.configSeed && r.configIndex === s.configIndex);
+      const good = rs.filter(r => r.envSeedLog && r.envSeedLog.length === 1 && r.envSeedLog[0].envSeed === exp && r.envSeedLog[0].agentSeed === AGENT_SEED &&
+        r.envMirrorSeed === exp && r.r1.drawCheck.goal.mismatch === 0 && r.r1.drawCheck.other.mismatch === 0 && r.r1.drawCheck.unattributed === 0 &&
+        r.r1.drawCheck.goal.checked + r.r1.drawCheck.other.checked === r.envDraws).length;
+      runsN += rs.length; runsOk += good; if (rs.length === 7 && good === 7 && new Set(rs.map(r => r.arm)).size === 7) cfgOk++; }
+    const cross = SUB.every(s => ['onNoRecord', 'onNoRecord2', 'onMeasureOnly'].every(set => by(set).filter(r => r.configSeed === s.configSeed && r.configIndex === s.configIndex)
+      .every(r => r.envSeedLog && r.envSeedLog.length === 1 && r.envSeedLog[0].envSeed === expectedEnvSeed(posFor(s)))));
+    gate('R3a', 'pairing: within a (configuration, agent seed) every arm registers the same derived environment seed and consumes exactly that stream (every draw checked against its mirror)',
+      cfgOk === SAMPLES.length && runsOk === runsN && runsN === SAMPLES.length * 7 && cross,
+      `${cfgOk}/${SAMPLES.length} configurations with all 7 arms on one stream; ${runsOk}/${runsN} runs: initRng registered the expected seed once, every draw = the mirrored stream (0 mismatches, 0 unattributed); repeat/measure sets on the same seed: ${cross}`); }
+  // R3b: different configurations -> distinct, non-overlapping streams
+  { const seeds = SAMPLES.map(s => expectedEnvSeed(posFor(s)));
+    let pairs = 0, overl = 0;
+    for (let i = 0; i < seeds.length; i++) for (let j = i + 1; j < seeds.length; j++) { pairs++; if (segmentsOverlap(seeds[i], L, seeds[j], L)) overl++; }
+    const off = by('antiOff'), offSeeds = new Set(off.map(r => r.envMirrorSeed));
+    gate('R3b', 'different configurations receive distinct, non-overlapping environment segments (anti-vacuity: B2, H1R off, shares one stream across configurations)',
+      new Set(seeds).size === SAMPLES.length && overl === 0 && offSeeds.size === 1 && new Set(off.map(r => `${r.configSeed}/${r.configIndex}`)).size === SUB.length,
+      `${new Set(seeds).size} distinct seeds for ${SAMPLES.length} configurations; ${overl}/${pairs} segment pairs overlap (L = ${L} draws) | H1R off: ${new Set(off.map(r => `${r.configSeed}/${r.configIndex}`)).size} configurations, ${offSeeds.size} environment stream`); }
+  // R3c: full planned overlap proof (exact arithmetic over the whole verified domain)
+  const armsC = await import(pathToFileURL(path.join(C.dir, 'experiments', 'm7', 'arms.js')).href);
+  const armsP = await import(pathToFileURL(path.join(P.dir, 'experiments', 'm7', 'arms.js')).href);
+  const { makeRng } = await import(pathToFileURL(path.join(P.dir, 'instrumentation', 'rng.js')).href);
+  const sigmaReplica = (seed) => {   // arms.js makeSigma with a draw counter (checked against the real one)
+    const r = makeRng((seed ^ 0xBEEF) >>> 0); let draws = 0; const rnd = () => { draws++; return r(); }; const n = 39;
+    for (let t = 0; t < 10000; t++) { const a = [...Array(n).keys()];
+      for (let i = n - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+      if (a.every((v, i) => v !== i)) return { perm: a, draws }; }
+    return null; };
+  const D = domainSlots(), seedsD = [...new Set(D.map(d => d.agentSeed))];
+  const sig = seedsD.map(s => ({ s, rep: sigmaReplica(s), real: armsC.makeSigma(s), prist: armsP.makeSigma(s) }));
+  const sigmaExact = sig.every(x => x.rep && JSON.stringify(x.rep.perm) === JSON.stringify(x.real) && JSON.stringify(x.real) === JSON.stringify(x.prist));
+  const sigmaMax = Math.max(...sig.map(x => x.rep ? x.rep.draws : Infinity));
+  const cogMax = Math.max(...R.filter(r => !r.error && Number.isInteger(r.cog)).map(r => r.cog));
+  const visMax = Math.max(...R.filter(r => !r.error && Number.isInteger(r.vis)).map(r => r.vis));
+  const agentStreams = seedsD.flatMap(s => [{ id: `${s}:cognitive`, seed: s >>> 0, budget: RES.cognitive },
+    { id: `${s}:visual`, seed: (s ^ 0x9e3779b9) >>> 0, budget: RES.visual }, { id: `${s}:sigma`, seed: (s ^ 0xBEEF) >>> 0, budget: RES.sigma }]);
+  const proof = overlapProof(agentStreams);
+  gate('R3c', 'full planned overlap proof: the 1,920 environment segments of the verified domain are pairwise disjoint and touch no cognitive, visual or sigma stream of any domain seed (reserves above every measured consumption)',
+    proof.envIdentity === D.length && proof.zeroSeeds === 0 && proof.contacts === 0 && sigmaExact && sigmaMax <= RES.sigma && cogMax <= RES.cognitive && visMax <= RES.visual,
+    `segments ${proof.domainSlots} (L = ${L}), exactly slot·L draws after B: ${proof.envIdentity}; zero seeds ${proof.zeroSeeds}; contacts with ${proof.others} agent streams ${proof.contacts}; nearest: ${proof.worstOther.id} at ${proof.worstOther.marginDraws} draws | ` +
+    `reserves: cognitive ${RES.cognitive} (max measured ${cogMax}), visual ${RES.visual} (max ${visMax}), sigma ${RES.sigma} (max exact ${sigmaMax}, replica = arms.makeSigma for ${sig.length} seeds: ${sigmaExact})`);
+  // configuration generators (makeConfig's private makeRng(configSeed)): exact consumption, then the per-run condition
+  const envP = await import(pathToFileURL(path.join(P.dir, 'experiments', 'm7', 'env.js')).href);
+  const cfgReplicaOk = SAMPLES.every(s => { const cfg = envP.makeConfig(s.configSeed, s.configIndex);
+    const r = makeRng(s.configSeed >>> 0); let draws = 0; const rnd = () => { draws++; return r(); };
+    const a = [...Array(39).keys()]; for (let i = 38; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+    for (let i = 0; i < 78; i++) rnd();
+    const emb = [...cfg.embedding.keys()].map(() => { const v = [...Array(32)].map(() => rnd() * 2 - 1); const m = Math.sqrt(v.reduce((x, y) => x + y * y, 0)) || 1; return v.map(x => x / m); });
+    return JSON.stringify(a.slice(0, 13).sort((x, y) => x - y)) === JSON.stringify(cfg.unreliableSet) && JSON.stringify(emb) === JSON.stringify([...cfg.embedding.values()]) && draws === 756; });
+  const sameRun = positioned.filter(r => Number.isInteger(r.acceptedSeed) && !segmentsOverlap(r.envSeedLog?.[0]?.envSeed ?? r.envStream.envSeed, L, r.acceptedSeed, RES.config)).length;
+  const drvOwn = by('driver').filter(d => d.validity && d.validity.envSegmentDisjointFromConfig).length;
+  gate('R3c2', "no run's environment segment shares a state with its own configuration's generator (exact consumption 756 draws, reserve 1024; checked per run, a validity condition of run_h1r.mjs)",
+    cfgReplicaOk && 756 <= RES.config && sameRun === positioned.length && positioned.length > 0 && drvOwn === by('driver').length,
+    `makeConfig replica (38 shuffle + 78 reliability + 640 embedding draws) reproduces all ${SAMPLES.length} configurations: ${cfgReplicaOk}; positioned runs clear of their own generator ${sameRun}/${positioned.length}; driver flag ${drvOwn}/${by('driver').length}`);
+  { const configs = [];
+    for (let c = 893000; c <= 894999; c++) configs.push({ id: `config:${c}`, seed: c, budget: RES.config });
+    for (let c = 900000; c <= 909999; c++) configs.push({ id: `config:${c}`, seed: c, budget: RES.config });
+    const cp = overlapProof(configs), bySlot = new Map(D.map(d => [d.slot, d]));
+    const planned = (d) => (d.blockCode === 0 && d.agentSeed <= 20260819009 && d.acceptedConfigIndex < 10) || (d.blockCode === 1 && d.agentSeed >= 20260819100 && d.acceptedConfigIndex < 30);
+    const list = cp.hits.map(h => ({ ...h, pos: bySlot.get(h.slot) }));
+    G.push({ id: 'R3c-INFO', name: 'configuration-generator segments (candidate seeds 893000–894999 and 900000–909999) that touch a domain environment segment; only the configuration actually run at that position matters (R3c2)', status: 'INFO',
+      evidence: `${cp.contacts} contacts over ${cp.others} generators x ${cp.domainSlots} segments; at planned positions (pilot seeds x pilot index 0–9, confirmatory seeds x held-out index 0–29): ` +
+        list.filter(h => planned(h.pos)).map(h => `${h.id}@${h.pos.agentSeed}/${h.pos.blockCode ? 'heldout' : 'pilot'}/${h.pos.acceptedConfigIndex}`).join(', ') }); }
+  // R3d: H1R OFF is B2 exactly (static); G1' and run_existing_gates.mjs give the dynamic proof
+  { const cr = fs.readFileSync(path.join(C.dir, 'instrumentation', 'rng.js'), 'utf8').split('\n'), pr = fs.readFileSync(path.join(P.dir, 'instrumentation', 'rng.js'), 'utf8').split('\n');
+    const diff = cr.map((l, i) => l === pr[i] ? -1 : i).filter(i => i >= 0);
+    const line = diff.length === 1 ? cr[diff[0]] : '';
+    gate('R3d', 'OFF is B2: rng.js differs from B2 in exactly the R3 line, whose fall-back branch is the B2 expression verbatim and whose condition requires the H1R switch and a design position',
+      cr.length === pr.length && diff.length === 1 && pr[diff[0]] === B2_ENV_LINE && line.includes(': (seed ^ 0x5EED) >>> 0)); // H1R R3-ENV-SEED') &&
+      line.startsWith('    streams.set("environment", makeRng((globalThis.__H1R__ && globalThis.__H1R__.on && Number.isInteger(globalThis.__H1R__.envSeed)) ? globalThis.__H1R__.applyEnvSeed(seed)') && G.find(g => g.id === "G1'").status === 'PASS',
+      `changed lines ${diff.length} (rng.js:${diff.map(i => i + 1).join(',')}); fall-back verbatim: ${line.includes(': (seed ^ 0x5EED) >>> 0))')}; G1' ${G.find(g => g.id === "G1'").status}`); }
+  // R3e: cognitive, visual and sigma streams unchanged (unit level, in this process, on the conformed rng.js)
+  { const RNG = await import(pathToFileURL(path.join(C.dir, 'instrumentation', 'rng.js')).href);
+    const saved = globalThis.__H1R__;
+    const seq = (stream, n) => Array.from({ length: n }, () => RNG.rng(stream));
+    const ref = (seed, n) => { const r = makeRng(seed); return Array.from({ length: n }, () => r()); };
+    const eq = (a, b) => a.length === b.length && a.every((x, i) => x === b[i]);
+    const pos = { agentSeed: AGENT_SEED, blockCode: 1, acceptedConfigIndex: 5 };
+    const Hu = await installH1R({ tree: C.dir, envPosition: pos });
+    RNG.initRng(AGENT_SEED);
+    const onCog = eq(seq('cognitive', 100000), ref(AGENT_SEED, 100000)), onVis = eq(seq('visual', RES.visual), ref((AGENT_SEED ^ 0x9e3779b9) >>> 0, RES.visual));
+    const onEnv = eq(seq('environment', L), ref(envSeedFor(pos), L)), logged = Hu.envSeedLog.length === 1;
+    let refusedOther = false; try { RNG.initRng(20260819001); } catch (e) { refusedOther = /does not match/.test(e.message); }
+    delete globalThis.__H1R__;
+    RNG.initRng(AGENT_SEED);
+    const offEnv = eq(seq('environment', L), ref((AGENT_SEED ^ 0x5EED) >>> 0, L)), offCog = eq(seq('cognitive', 1000), ref(AGENT_SEED, 1000));
+    globalThis.__H1R__ = { on: true, envSeed: null };            // H1R on, no design position: B2 stream
+    RNG.initRng(AGENT_SEED);
+    const noPosEnv = eq(seq('environment', L), ref((AGENT_SEED ^ 0x5EED) >>> 0, L));
+    if (saved === undefined) delete globalThis.__H1R__; else globalThis.__H1R__ = saved;
+    const cogRecovered = positioned.every(r => Number.isInteger(r.cog) && r.cog >= 0 && Number.isInteger(r.vis) && r.vis >= 0);
+    gate('R3e', 'cognitive, visual and sigma streams unchanged: under R3 initRng(seed) still gives cognitive = makeRng(seed) and visual = makeRng(seed ^ 0x9e3779b9); only environment changes; sigma identical to B2',
+      onCog && onVis && onEnv && logged && refusedOther && offEnv && offCog && noPosEnv && sigmaExact && cogRecovered,
+      `with a position: cognitive (100,000 draws) ${onCog}, visual (${RES.visual}) ${onVis}, environment = makeRng(derived) (${L}) ${onEnv}, logged once ${logged}, other agent seed refused ${refusedOther} | ` +
+      `no runtime: environment = B2 ${offEnv}, cognitive ${offCog} | H1R on without a position: environment = B2 ${noPosEnv} | sigma = B2 for ${sig.length} seeds ${sigmaExact} | ` +
+      `every positioned run's cognitive and visual draws recovered from the agent-seed streams: ${cogRecovered} (${positioned.length} runs)`); }
+  // R3h: environment draws never exceed the 4096-draw segment
+  { const RUN_TICKS = envP.RUN_TICKS, maxEnv = Math.max(...R.filter(r => !r.error && Number.isInteger(r.envDraws)).map(r => r.envDraws));
+    const maxPerTick = Math.max(...main.map(x => x.r1.env.maxPerTick));
+    gate('R3h', 'environment draws per run never exceed L = 4096 (bound: at most one draw per tick x RUN_TICKS)',
+      maxEnv <= L && RUN_TICKS * maxPerTick <= L && by('driver').every(d => d.validity.envDrawsWithinReserve),
+      `max environment draws in any run ${maxEnv}; structural bound RUN_TICKS ${RUN_TICKS} x max draws per tick ${maxPerTick} = ${RUN_TICKS * maxPerTick} <= ${L}; driver flag ${by('driver').filter(d => d.validity.envDrawsWithinReserve).length}/${by('driver').length}`); }
+  // R3j: no new random draw (static: the edit and both modules draw nothing; dynamic: R1e)
+  { const strip = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
+    // code only: comments and string/template literals removed (a message that names a function is not a call)
+    const code = (s) => strip(s).replace(/`(?:\\[\s\S]|[^`\\])*`/g, '``').replace(/'(?:\\.|[^'\\\n])*'/g, "''").replace(/"(?:\\.|[^"\\\n])*"/g, '""');
+    const rx = /Math\.random|liveRng|makeRng|initRng|makeSigma|randomBytes|randomUUID|getRandomValues|randomInt/;
+    const specs = (s) => [...strip(s).matchAll(/(?:\bfrom\s*|\bimport\s*\(\s*)(['"`])([^'"`]+)\1/g)].map(m => m[2]);
+    const cr = fs.readFileSync(path.join(C.dir, 'instrumentation', 'rng.js'), 'utf8'), pr = fs.readFileSync(path.join(P.dir, 'instrumentation', 'rng.js'), 'utf8');
+    const calls = (s) => (strip(s).match(/makeRng\(/g) || []).length;
+    const mods = ['env_seed.mjs', 'runtime.mjs'].map(f => { const s = fs.readFileSync(path.join(HERE, f), 'utf8');
+      return { f, refs: rx.test(code(s)), imports: specs(s), badImport: specs(s).some(x => /rng\.js|crypto/.test(x)) }; });
+    // probe self-test: it must flag a real generator call and must not flag a message string
+    const selfTest = rx.test(code('const r = makeRng(1); r();')) && !rx.test(code("throw new Error(`initRng(${s}) refused`); const m = 'makeRng';"));
+    const modsClean = mods.every(m => !m.refs && !m.badImport);
+    gate('R3j', 'no new random draw: the R3 line keeps one makeRng construction and no draw; env_seed.mjs and runtime.mjs neither call nor import a generator; one environment draw per edge attempt (R1e)',
+      calls(cr) === calls(pr) && modsClean && selfTest && G.find(g => g.id === 'R1e').status === 'PASS',
+      `makeRng( constructions in rng.js: conformed ${calls(cr)}, B2 ${calls(pr)}; generator calls in code: ${mods.map(m => `${m.f} ${m.refs ? 'FOUND' : 'none'}`).join(', ')}; ` +
+      `imports: ${mods.map(m => `${m.f} [${m.imports.join(', ') || 'none'}]`).join('; ')}; probe self-test ${selfTest}; R1e ${G.find(g => g.id === 'R1e').status}`); }
+  // R3-DRV: the experiment driver records the stream it used
+  { const drv = by('driver');
+    const ok = drv.filter(d => { const exp = envSeedFor({ agentSeed: AGENT_SEED, blockCode: 1, acceptedConfigIndex: d.configIndex });
+      return d.validity.envStreamScoped && d.rngSeeds.environment === exp && d.h1rProvenance.envStream.envSeed === exp && d.h1rProvenance.envStream.block === 'heldout' &&
+        d.h1rProvenance.envStream.runJsAssertedEnvironmentSeed === ((AGENT_SEED ^ 0x5EED) >>> 0); }).length;
+    gate('R3-DRV', 'the driver derives the stream from (agent seed, block, configIndex), registers it once, and records the seed actually used (run.js asserted value kept apart)',
+      ok === drv.length && drv.length === SUB.length * 2, `${ok}/${drv.length}`); }
+  // R3-CAL (correctly specified calibration): within one arm the 41 configurations use 41 disjoint streams
+  { const zOf = (runs, cls) => { const n = sum(runs.map(x => x.r1.calib[cls].n)), s = sum(runs.map(x => x.r1.calib[cls].succ)), p = sum(runs.map(x => x.r1.calib[cls].sumP)), v = sum(runs.map(x => x.r1.calib[cls].sumPQ));
+      return { n, z: v > 0 ? (s - p) / Math.sqrt(v) : NaN }; };
+    const per = ARMS.map(a => { const rs = main.filter(r => r.arm === a); return { a, g: zOf(rs, 'goal'), o: zOf(rs, 'other') }; });
+    gate('R3-CAL', 'calibration with independent units: per arm, pooled over its 41 configuration-scoped streams, goal-entering and other outcomes follow p_e (pre-declared |z| < 4 for each of the 14 arm x class tests)',
+      per.every(x => Math.abs(x.g.z) < 4 && Math.abs(x.o.z) < 4 && x.g.n > 0 && x.o.n > 0),
+      per.map(x => `${x.a} goal z ${x.g.z.toFixed(2)}, other z ${x.o.z.toFixed(2)}`).join(' | ')); }
+  // R3-AV: the probes detect an unscoped stream
+  { const mut = by('mutantR3');
+    const mm = sum(mut.map(r => r.r1.drawCheck.goal.mismatch + r.r1.drawCheck.other.mismatch));
+    gate('R3-AV', 'anti-vacuity: with the R3 edit reverted, initRng never registers the derived seed and the derived-stream mirror disagrees with the outcomes',
+      mut.length === SUB.length && mut.every(r => r.envSeedLog && r.envSeedLog.length === 0) && mm > 0,
+      `mutant runs ${mut.length}: derived seed registered ${mut.filter(r => r.envSeedLog && r.envSeedLog.length > 0).length}; mirror mismatches ${mm}`); }
+}
 
 // H — DETERMINISM
 { const a = by('onNoRecord'), b = by('onNoRecord2');

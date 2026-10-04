@@ -5,7 +5,7 @@ H1-R tests the **M7 design as frozen**: [`M7_PREREGISTRATION.md`](../../research
 The M7 instrument build is **B2 = `707cb1e`**. The B2 characterization of 2026-10-04 showed that B2 departs from the frozen text in several ways. This directory makes the runtime conform **without editing any production file**:
 
 1. `build_tree.mjs` materialises the B2 blobs. It uses `git cat-file`, so there is no checkout and no line-ending conversion, and it checks every blob id.
-2. It applies `conformance_transform.mjs` to exactly three files.
+2. It applies `conformance_transform.mjs` to exactly four files (`main.js`, `render/qlearning.js`, `render/episodeManager.js`, `instrumentation/rng.js`).
 3. It writes the result, with `MANIFEST.json`, under `os.tmpdir()/mfw-h1r/`.
 
 ## Conformance edits
@@ -27,6 +27,7 @@ All edits are guarded by `globalThis.__H1R__ && globalThis.__H1R__.on`. With no 
 | R1 | §3.3, §3.4; Director ruling R1 (2026-10-04) | **Realised-outcome learning order:** decision → one environment draw → realised outcome → the existing learning rules. B2 ran its whole self-learning section (reward, emotion, prediction error, Q, curiosity, transitions, success episodes, goal reset, explore step) *before* the draw, on the intended move, while `agentLast` still held the previous tick's position. The section is written in post-move terms (`prev = agentLast // where we were before`, `current = next // where we moved now`; Q state `agentLast`, action `next`, next state `agentCurrent`). Under H1R it reads the realised transition, in four steps. **R1-DRAW-EARLY:** the decision's single `__M7_ENV__.attempt(u, v)` call moves ahead of the section, with the same arguments, exclusions and stream. **R1-VIEW:** `agentLast` is set to u. On a success `agentCurrent` is set to v; on a slip the realised node is u (`next` is set to u). **R1-RESTORE:** after the section the pre-move view is restored, so the E1′ traversal block performs the move and E2 credits the *intended* edge. **R1-DRAW:** the E1 site reuses the outcome instead of drawing again. B2's own `updateQ`, `recordAutonomousStep` and `recordAutonomousSuccess` calls then receive the realised transition unchanged. Reward constants, the Q equation and all parameters are unchanged. |
 | R2 (D-1) | §3.3, §6.1; Director ruling R2 (2026-10-04) | **Goal-entry reliability draw.** Goal-entering attempts use the same environment draw as every other edge. **R2-GOAL-DRAW:** the single early draw no longer excludes them (B2 never drew for them). **R2-GOAL-FLAG:** under H1R, `_goalResetJustHappened` means "the goal reset ran this tick", read from the runtime's reset counter rather than inferred from the intended node, so a slipped goal attempt follows the ordinary slip path. **R2-GOAL-CREDIT:** a realised goal entry is credited a += 1 and s += 1, like any traversal (§6.1), using the decision position R1 recorded, because the reset has already moved the agent. |
 | M (D-5) | §8.5 primary endpoint | **Measurement probes, observational only.** They are guarded by `globalThis.__H1R_MEASURE__`, not by the H1R switch. **M-STEP** counts one tick per `runAgent()` call. **M-REWARD** passes the final `rewardSignal` to `measure.mjs` immediately before its first consumer. Neither draws, assigns, nor branches the agent. |
+| R3-ENV-SEED | §5.1, superseded for H1-R by [erratum R3](../../research/preregistrations/H1R_ERRATUM_R3_ENVIRONMENT_SEED.md); Director ruling R3 (2026-10-04) | **Configuration-scoped environment stream.** In `instrumentation/rng.js` `initRng`, when the runtime carries a design position (agent seed, block, accepted configuration index), the `environment` stream is seeded with `env_seed.mjs`'s derivation instead of `agentSeed XOR 0x5EED`. The derivation is `(0x60800000 + slot·4096·0x6d2b79f5) mod 2³²` with `slot = (agentSeed − 20260819000)·64 + blockCode·32 + index`: one disjoint 4096-draw segment per position, with no arm term. The B2 expression stays verbatim as the fall-back branch. The cognitive and visual registrations are untouched. The runtime refuses an `initRng` seed other than the position's agent seed. |
 
 **What learning receives (existing rules on the realised transition):**
 - **Success u → v:** the full section runs on u → v. This includes the reward (`sim(u, v)`), PE (actual = v), Q(u, v) with S′ = v, and every store keyed u → v. Return moves are included.
@@ -39,12 +40,17 @@ All edits are guarded by `globalThis.__H1R__ && globalThis.__H1R__.on`. With no 
 
 - **`measure.mjs`** (`installMeasure()`) records one event, `[callIndex, rewardSignal]`, per `runAgent()` call that computed a `rewardSignal`. Under R1 that is exactly the realised moves and goal entries. Mapping call indices to the tick index τ and to windows is an analysis definition (pre-registration OPEN D-6) and is not done here.
 - **`run_h1r.mjs`** is the experiment driver, one run per process. It:
+  - requires `block` (`'pilot'` or `'heldout'`). With the agent seed and `configIndex` (the ERR-07 accepted index), this is the run's design position. It refuses a position outside the verified domain (`env_seed.mjs`);
   - builds or reuses the conformed tree;
-  - attaches the runtime (`trustMode: 'traversal'`) and the measurement;
+  - attaches the runtime (`trustMode: 'traversal'`, plus the design position) and the measurement;
   - runs the unchanged `experiments/m7/run.js` with the frozen settings;
-  - writes a record containing provenance (B2 commit, transform, runtime, measure and driver hashes), validity conditions and the reward record. With `digestOnly`, the reward record is replaced by a SHA-256 of it.
+  - writes a record containing:
+    - provenance: the B2 commit, the transform, runtime, measure, env-seed and driver hashes, and the environment stream actually registered;
+    - validity conditions, including the R3 conditions `envStreamScoped`, `envDrawsWithinReserve`, `cognitiveDrawsWithinReserve`, `visualDrawsWithinReserve` and `envSegmentDisjointFromConfig`;
+    - the reward record. With `digestOnly`, it is replaced by a SHA-256 of itself.
 
   The driver never aggregates rewards into returns, windows or comparisons.
+- **`env_seed.mjs`** (R3) holds the frozen derivation, its verified domain and the exact overlap arithmetic. It is pure arithmetic and draws nothing.
 
 R1 supersedes the sentence of ERR-05 §3.1 stating that Q-learning, prediction error and reward run "unchanged on both outcomes". It also retires the earlier Q-KEY stash/apply edits, because B2's original calls are correct once they run in the realised view.
 
@@ -63,12 +69,16 @@ node experiments/h1r/run_existing_gates.mjs
 ```
 
 - **Material:** only the historical G15 configurations (900030–900499, accepted per the unchanged predicate) with agent seed 20260819000. No new seed is generated.
+- **R3 positions:** the 41 configurations form no design block, so each gets its own position on agent seed 20260819000 that no design run can occupy:
+  - configuration *p* < 32 takes held-out index *p*;
+  - configuration *p* ≥ 32 takes pilot index *p* − 22, i.e. 10–18.
 - **Blinding:** only gate and mechanism quantities are reported. No per-arm outcome metric is computed.
 - **Evidence:** both scripts write to `experiments/h1r/$H1R_EVIDENCE` (default `evidence/`). `H1R_EVAL_ONLY=1` re-evaluates the gates on a directory's saved `runs.json` without executing any run.
 
 | Directory | Contents |
 |---|---|
-| `evidence_d1d5/` | Current evidence (R2: D-1 goal-entry draw and D-5 measurement) and `R2_REPORT.md` |
+| `evidence_r3/` | Current evidence (R3: configuration-scoped environment stream) and `R3_REPORT.md` |
+| `evidence_d1d5/` | The R2 round (D-1 goal-entry draw and D-5 measurement; B2 environment stream), with `R2_REPORT.md` |
 | `evidence_r1/` | The R1 round, with `R1_REPORT.md` |
 | `evidence_r2/` | The previous Q-KEY round, with its `CORRECTION_REPORT.md` |
 | `evidence_final/` | The first conformance round (`84b4197b`); the trap gate's "before" reference |
@@ -78,6 +88,9 @@ Tree paths in evidence are written relative to the OS temp directory, as `<tmp>/
 ## Known, reported limitations
 
 - **Resolved by R2 (D-1):** goal-entering moves used to take no environment draw, contrary to §3.3. They now draw like every other edge.
+- **Resolved by R3 (D-3B):** every configuration of one agent seed used to consume the same environment sequence. Each (configuration position, agent seed) now has its own segment.
+  - Within an agent seed, configurations still share its cognitive stream, boot embeddings and σ. This is inherent to the crossed design and is analysis decision D-3.
+  - The existing M7 and Phase-1.0 gate fixtures call `initRng` themselves with no design position, so under H1R they keep the B2 environment stream.
 - **Replay re-execution of the last successful move.** It remains a no-op self "move": no draw, no position change, no credit, no learning.
 - **Design premises not met by B2, and not by R1 either.**
   - §10.1 assumes Q absorbs `p_e` through slipped steps "at step cost". B2's reward rules have no step cost, and under R1 a slip is not a learning event.
