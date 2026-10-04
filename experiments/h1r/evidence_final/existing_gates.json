@@ -1,0 +1,1074 @@
+[
+ {
+  "script": "verify_M7.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 171,
+  "passes": 49,
+  "fails": [],
+  "verdicts": [
+   "49 passed, 0 failed"
+  ],
+  "tail": "  Not targeted this milestone: G7 SUPERSEDED, G8 (needs E6), |   G9 GREEN (own harness), G10 GREEN (own harness: verify_G10.js), |   G15 (needs reward analysis), G16 GREEN (own harness). |  | 49 passed, 0 failed | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_M7.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 172,
+  "passes": 49,
+  "fails": [],
+  "verdicts": [
+   "49 passed, 0 failed"
+  ],
+  "tail": "  Not targeted this milestone: G7 SUPERSEDED, G8 (needs E6), |   G9 GREEN (own harness), G10 GREEN (own harness: verify_G10.js), |   G15 (needs reward analysis), G16 GREEN (own harness). |  | 49 passed, 0 failed | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_M7.js",
+  "dir": "experiments/m7",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 173,
+  "passes": 49,
+  "fails": [],
+  "verdicts": [
+   "49 passed, 0 failed"
+  ],
+  "tail": "  Not targeted this milestone: G7 SUPERSEDED, G8 (needs E6), |   G9 GREEN (own harness), G10 GREEN (own harness: verify_G10.js), |   G15 (needs reward analysis), G16 GREEN (own harness). |  | 49 passed, 0 failed | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_arms.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 1,
+  "passes": 59,
+  "fails": [],
+  "verdicts": [
+   "59 passed, 0 failed"
+  ],
+  "tail": "PASS  A.10c OFF leaves learning, selection and the PE pathway untouched   observationally identical to the current M7-off build | PASS  A.10d OFF is not a member of the arm set |  | 59 passed, 0 failed | ARM SUBSTRATE GREEN. | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_arms.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 1,
+  "passes": 59,
+  "fails": [],
+  "verdicts": [
+   "59 passed, 0 failed"
+  ],
+  "tail": "PASS  A.10c OFF leaves learning, selection and the PE pathway untouched   observationally identical to the current M7-off build | PASS  A.10d OFF is not a member of the arm set |  | 59 passed, 0 failed | ARM SUBSTRATE GREEN. | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_arms.js",
+  "dir": "experiments/m7",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 1,
+  "passes": 59,
+  "fails": [],
+  "verdicts": [
+   "59 passed, 0 failed"
+  ],
+  "tail": "PASS  A.10c OFF leaves learning, selection and the PE pathway untouched   observationally identical to the current M7-off build | PASS  A.10d OFF is not a member of the arm set |  | 59 passed, 0 failed | ARM SUBSTRATE GREEN. | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_env.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 8,
+  "passes": 54,
+  "fails": [],
+  "verdicts": [
+   "54 passed, 0 failed"
+  ],
+  "tail": "PASS  E.8a trueP() returns null when no configuration is installed | PASS  E.8b env.js is harness-owned: not imported by any render/ module   enforced by G9 export-surface gate + static import audit |       env.js exports: EMBED_DIM, EPISODE_CAP, G11_OBSERVABLES, G11_THRESHOLD, GOALS, N_UNRELIABLE, P_RELIABLE, P_UNRELIABLE, R5_STATUS, RUN_TICKS, T_SHIFT, attempt, checkR5, decisionStates, disable, edgeIndexOf, evaluateConstraints, evaluatedSeedRange, evaluatedSeeds, exhaustiveMinCost, expectedCostToGoal, generateAccepted, generateAcceptedStream, getCounters, getPhase, graphInfo, hopOptimalPolic",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_env.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 8,
+  "passes": 54,
+  "fails": [],
+  "verdicts": [
+   "54 passed, 0 failed"
+  ],
+  "tail": "PASS  E.8a trueP() returns null when no configuration is installed | PASS  E.8b env.js is harness-owned: not imported by any render/ module   enforced by G9 export-surface gate + static import audit |       env.js exports: EMBED_DIM, EPISODE_CAP, G11_OBSERVABLES, G11_THRESHOLD, GOALS, N_UNRELIABLE, P_RELIABLE, P_UNRELIABLE, R5_STATUS, RUN_TICKS, T_SHIFT, attempt, checkR5, decisionStates, disable, edgeIndexOf, evaluateConstraints, evaluatedSeedRange, evaluatedSeeds, exhaustiveMinCost, expectedCostToGoal, generateAccepted, generateAcceptedStream, getCounters, getPhase, graphInfo, hopOptimalPolic",
+  "config": "off"
+ },
+ {
+  "script": "verify_env.js",
+  "dir": "experiments/m7",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 8,
+  "passes": 54,
+  "fails": [],
+  "verdicts": [
+   "54 passed, 0 failed"
+  ],
+  "tail": "PASS  E.8a trueP() returns null when no configuration is installed | PASS  E.8b env.js is harness-owned: not imported by any render/ module   enforced by G9 export-surface gate + static import audit |       env.js exports: EMBED_DIM, EPISODE_CAP, G11_OBSERVABLES, G11_THRESHOLD, GOALS, N_UNRELIABLE, P_RELIABLE, P_UNRELIABLE, R5_STATUS, RUN_TICKS, T_SHIFT, attempt, checkR5, decisionStates, disable, edgeIndexOf, evaluateConstraints, evaluatedSeedRange, evaluatedSeeds, exhaustiveMinCost, expectedCostToGoal, generateAccepted, generateAcceptedStream, getCounters, getPhase, graphInfo, hopOptimalPolic",
+  "config": "on"
+ },
+ {
+  "script": "verify_e1e2.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 17,
+  "passes": 32,
+  "fails": [],
+  "verdicts": [
+   "32 passed, 0 failed"
+  ],
+  "tail": "PASS  AV8 rejects M7-off using the corrected credit path   ENV=off must never populate M7 credit keys | PASS  AV8b M7-off and M7-on use DIFFERENT credit keyings   off keeps the historical non-edge keys; on writes only real edges |  | 32 passed, 0 failed | E1/E2 REALISED TRAVERSAL GREEN. | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_e1e2.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 17,
+  "passes": 32,
+  "fails": [],
+  "verdicts": [
+   "32 passed, 0 failed"
+  ],
+  "tail": "PASS  AV8 rejects M7-off using the corrected credit path   ENV=off must never populate M7 credit keys | PASS  AV8b M7-off and M7-on use DIFFERENT credit keyings   off keeps the historical non-edge keys; on writes only real edges |  | 32 passed, 0 failed | E1/E2 REALISED TRAVERSAL GREEN. | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_e1e2.js",
+  "dir": "experiments/m7",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 17,
+  "passes": 32,
+  "fails": [],
+  "verdicts": [
+   "32 passed, 0 failed"
+  ],
+  "tail": "PASS  AV8 rejects M7-off using the corrected credit path   ENV=off must never populate M7 credit keys | PASS  AV8b M7-off and M7-on use DIFFERENT credit keyings   off keeps the historical non-edge keys; on writes only real edges |  | 32 passed, 0 failed | E1/E2 REALISED TRAVERSAL GREEN. | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_e3e4.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 24,
+  "passes": 36,
+  "fails": [],
+  "verdicts": [
+   "36 passed, 0 failed"
+  ],
+  "tail": "PASS  I.5-5 rejects a main.js site that IGNORES the arm layer   HOOK=ignore: A2 requested, raw delivered, sequence collapses onto A1 | PASS  I.5-5b the ignored run is measurably different from the honoured one   proves I.3a is detecting real consumption |  | 36 passed, 0 failed | E3/E4 INTEGRATION GREEN. | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_e3e4.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 24,
+  "passes": 36,
+  "fails": [],
+  "verdicts": [
+   "36 passed, 0 failed"
+  ],
+  "tail": "PASS  I.5-5 rejects a main.js site that IGNORES the arm layer   HOOK=ignore: A2 requested, raw delivered, sequence collapses onto A1 | PASS  I.5-5b the ignored run is measurably different from the honoured one   proves I.3a is detecting real consumption |  | 36 passed, 0 failed | E3/E4 INTEGRATION GREEN. | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_e3e4.js",
+  "dir": "experiments/m7",
+  "mode": "on",
+  "exit": 1,
+  "seconds": 24,
+  "passes": 32,
+  "fails": [
+   "FAIL  I.3a A2 diverges from A1 (severed trust reaches the decision)   identical sequences would mean main.js ignored E3/E4",
+   "FAIL  I.3b A5 diverges from A1 (per-edge severing reaches the decision)",
+   "FAIL  I.3e A2 and A5 diverge from each other (the aggregate route matters)   isolates E4 from E3",
+   "FAIL  I.5-5b the ignored run is measurably different from the honoured one   proves I.3a is detecting real consumption"
+  ],
+  "verdicts": [
+   "32 passed, 4 failed"
+  ],
+  "tail": "PASS  I.5-4 rejects A7 that substitutes observed trust instead of p_e | PASS  I.5-5 rejects a main.js site that IGNORES the arm layer   HOOK=ignore: A2 requested, raw delivered, sequence collapses onto A1 | FAIL  I.5-5b the ignored run is measurably different from the honoured one   proves I.3a is detecting real consumption |  | 32 passed, 4 failed | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_e5.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 20,
+  "passes": 30,
+  "fails": [],
+  "verdicts": [
+   "30 passed, 0 failed"
+  ],
+  "tail": "PASS  8e the E5 pin is applied identically across arms (frozen §4.3)   not an arm switch — held identical | PASS  8f the E5 pin does not consume environment draws |  | 30 passed, 0 failed | E5 / G12 SUBSTRATE GREEN. | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_e5.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 20,
+  "passes": 30,
+  "fails": [],
+  "verdicts": [
+   "30 passed, 0 failed"
+  ],
+  "tail": "PASS  8e the E5 pin is applied identically across arms (frozen §4.3)   not an arm switch — held identical | PASS  8f the E5 pin does not consume environment draws |  | 30 passed, 0 failed | E5 / G12 SUBSTRATE GREEN. | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_e5.js",
+  "dir": "experiments/m7",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 21,
+  "passes": 30,
+  "fails": [],
+  "verdicts": [
+   "30 passed, 0 failed"
+  ],
+  "tail": "PASS  8e the E5 pin is applied identically across arms (frozen §4.3)   not an arm switch — held identical | PASS  8f the E5 pin does not consume environment draws |  | 30 passed, 0 failed | E5 / G12 SUBSTRATE GREEN. | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_cap.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 33,
+  "passes": 42,
+  "fails": [],
+  "verdicts": [
+   "42 passed, 0 failed"
+  ],
+  "tail": "============================================================== |   EPISODE CAP   GREEN   (frozen §3.7, 150 ticks) | ============================================================== |  | 42 passed, 0 failed | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_cap.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 33,
+  "passes": 42,
+  "fails": [],
+  "verdicts": [
+   "42 passed, 0 failed"
+  ],
+  "tail": "============================================================== |   EPISODE CAP   GREEN   (frozen §3.7, 150 ticks) | ============================================================== |  | 42 passed, 0 failed | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_cap.js",
+  "dir": "experiments/m7",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 33,
+  "passes": 42,
+  "fails": [],
+  "verdicts": [
+   "42 passed, 0 failed"
+  ],
+  "tail": "============================================================== |   EPISODE CAP   GREEN   (frozen §3.7, 150 ticks) | ============================================================== |  | 42 passed, 0 failed | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_goal.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 11,
+  "passes": 26,
+  "fails": [],
+  "verdicts": [
+   "26 passed, 0 failed"
+  ],
+  "tail": "  GOAL TRANSPORT   GREEN |   A transport · B isolation · C installation · D RNG · E boundary | ============================================================== |  | 26 passed, 0 failed | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_goal.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 11,
+  "passes": 26,
+  "fails": [],
+  "verdicts": [
+   "26 passed, 0 failed"
+  ],
+  "tail": "  GOAL TRANSPORT   GREEN |   A transport · B isolation · C installation · D RNG · E boundary | ============================================================== |  | 26 passed, 0 failed | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_goal.js",
+  "dir": "experiments/m7",
+  "mode": "on",
+  "exit": 1,
+  "seconds": 12,
+  "passes": 23,
+  "fails": [
+   "FAIL  B2 RNG draw counts are unchanged with injection disabled   cognitive 13453, visual 3020 — the pre-seam baseline figures",
+   "FAIL  B3 the run is bit-identical to the pre-seam baseline   qEntries 97, qSum 39.059919547, mqfTotal 581",
+   "FAIL  C2 pre-existing goal-directed behaviour becomes reachable   qSum 39.059919547 -> 305.499875084; goal-namespaced Q keys appear"
+  ],
+  "verdicts": [
+   "23 passed, 3 failed"
+  ],
+  "tail": "  GOAL TRANSPORT   RED |   A transport · B isolation · C installation · D RNG · E boundary | ============================================================== |  | 23 passed, 3 failed | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_determinism.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 117,
+  "passes": 29,
+  "fails": [],
+  "verdicts": [
+   "29 passed, 0 failed"
+  ],
+  "tail": "============================================================== |   3000-TICK DETERMINISM   GREEN   (Branch B) | ============================================================== |  | 29 passed, 0 failed | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_determinism.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 119,
+  "passes": 29,
+  "fails": [],
+  "verdicts": [
+   "29 passed, 0 failed"
+  ],
+  "tail": "============================================================== |   3000-TICK DETERMINISM   GREEN   (Branch B) | ============================================================== |  | 29 passed, 0 failed | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_determinism.js",
+  "dir": "experiments/m7",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 108,
+  "passes": 29,
+  "fails": [],
+  "verdicts": [
+   "29 passed, 0 failed"
+  ],
+  "tail": "============================================================== |   3000-TICK DETERMINISM   GREEN   (Branch B) | ============================================================== |  | 29 passed, 0 failed | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_G8.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 11,
+  "passes": 22,
+  "fails": [],
+  "verdicts": [
+   "22 passed, 0 failed"
+  ],
+  "tail": "  withdrawn: \"the two must differ\" (ERR-08 §3.3); 4.5% attribution (§3.4) |   preserved: the §9.2 exclusion is active, non-empty, correctly scoped (G8.6) | ============================================================== |  | 22 passed, 0 failed | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_G8.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 9,
+  "passes": 22,
+  "fails": [],
+  "verdicts": [
+   "22 passed, 0 failed"
+  ],
+  "tail": "  withdrawn: \"the two must differ\" (ERR-08 §3.3); 4.5% attribution (§3.4) |   preserved: the §9.2 exclusion is active, non-empty, correctly scoped (G8.6) | ============================================================== |  | 22 passed, 0 failed | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_G8.js",
+  "dir": "experiments/m7",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 10,
+  "passes": 22,
+  "fails": [],
+  "verdicts": [
+   "22 passed, 0 failed"
+  ],
+  "tail": "  withdrawn: \"the two must differ\" (ERR-08 §3.3); 4.5% attribution (§3.4) |   preserved: the §9.2 exclusion is active, non-empty, correctly scoped (G8.6) | ============================================================== |  | 22 passed, 0 failed | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_G10.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 18,
+  "passes": 38,
+  "fails": [],
+  "verdicts": [
+   "38 passed, 0 failed"
+  ],
+  "tail": "   error       : M7_RUN_CRASH fault injection at tick 10 |  |  | !! M7 RUN ABORTED: G10 VIOLATION: provenance is incomplete, replay refused. missing: agentSeed |  | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_G10.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 18,
+  "passes": 38,
+  "fails": [],
+  "verdicts": [
+   "38 passed, 0 failed"
+  ],
+  "tail": "   error       : M7_RUN_CRASH fault injection at tick 10 |  |  | !! M7 RUN ABORTED: G10 VIOLATION: provenance is incomplete, replay refused. missing: agentSeed |  | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_G10.js",
+  "dir": "experiments/m7",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 18,
+  "passes": 38,
+  "fails": [],
+  "verdicts": [
+   "38 passed, 0 failed"
+  ],
+  "tail": "   error       : M7_RUN_CRASH fault injection at tick 10 |  |  | !! M7 RUN ABORTED: G10 VIOLATION: provenance is incomplete, replay refused. missing: agentSeed |  | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_acceptance.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 31,
+  "passes": 26,
+  "fails": [],
+  "verdicts": [
+   "26 passed, 0 failed"
+  ],
+  "tail": "  B every accepted config clean   C five bypasses detected |   D R1-R5 each individually active   E acceptance non-vacuous | ============================================================== |  | 26 passed, 0 failed | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_acceptance.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 31,
+  "passes": 26,
+  "fails": [],
+  "verdicts": [
+   "26 passed, 0 failed"
+  ],
+  "tail": "  B every accepted config clean   C five bypasses detected |   D R1-R5 each individually active   E acceptance non-vacuous | ============================================================== |  | 26 passed, 0 failed | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_acceptance.js",
+  "dir": "experiments/m7",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 30,
+  "passes": 26,
+  "fails": [],
+  "verdicts": [
+   "26 passed, 0 failed"
+  ],
+  "tail": "  B every accepted config clean   C five bypasses detected |   D R1-R5 each individually active   E acceptance non-vacuous | ============================================================== |  | 26 passed, 0 failed | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_stepledger.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 38,
+  "passes": 29,
+  "fails": [],
+  "verdicts": [
+   "29 passed, 0 failed"
+  ],
+  "tail": "============================================================== |   STEP LEDGER   GREEN | ============================================================== |  | 29 passed, 0 failed | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_stepledger.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 38,
+  "passes": 29,
+  "fails": [],
+  "verdicts": [
+   "29 passed, 0 failed"
+  ],
+  "tail": "============================================================== |   STEP LEDGER   GREEN | ============================================================== |  | 29 passed, 0 failed | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_stepledger.js",
+  "dir": "experiments/m7",
+  "mode": "on",
+  "exit": 1,
+  "seconds": 33,
+  "passes": 28,
+  "fails": [
+   "FAIL  A3 arming the ledger CHANGES the outcome — so A1/A2 are not vacuous   armed 8cd7a14a9902 vs unarmed 8cd7a14a9902"
+  ],
+  "verdicts": [
+   "28 passed, 1 failed"
+  ],
+  "tail": "============================================================== |   STEP LEDGER   RED | ============================================================== |  | 28 passed, 1 failed | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_G15.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 531,
+  "passes": 24,
+  "fails": [],
+  "verdicts": [
+   "INFORMATION SUFFICIENCY : SATISFIED",
+   "GATE G15 : FAIL",
+   "24 passed, 0 failed"
+  ],
+  "tail": "============================================================== |  |   VERIFIER SELF-CHECK : GREEN   (the gate verdict is separate, above) |  | 24 passed, 0 failed | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_G15.js",
+  "dir": "experiments/m7",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 532,
+  "passes": 24,
+  "fails": [],
+  "verdicts": [
+   "INFORMATION SUFFICIENCY : SATISFIED",
+   "GATE G15 : FAIL",
+   "24 passed, 0 failed"
+  ],
+  "tail": "============================================================== |  |   VERIFIER SELF-CHECK : GREEN   (the gate verdict is separate, above) |  | 24 passed, 0 failed | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_G15.js",
+  "dir": "experiments/m7",
+  "mode": "on",
+  "exit": 1,
+  "seconds": 463,
+  "passes": 22,
+  "fails": [
+   "FAIL  C2 staleExecution / replay events are INCLUDED   0 replay-branch goal reaches counted in the denominators, none removed",
+   "FAIL  C3 non-canonical goal transitions are INCLUDED   0 of 9320 events have no canonical edge into the goal and are still counted"
+  ],
+  "verdicts": [
+   "INFORMATION SUFFICIENCY : SATISFIED",
+   "GATE G15 : FAIL",
+   "22 passed, 2 failed"
+  ],
+  "tail": "============================================================== |  |   VERIFIER SELF-CHECK : RED   (the gate verdict is separate, above) |  | 22 passed, 2 failed | ",
+  "config": "on"
+ },
+ {
+  "script": "parity_termarray.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 9,
+  "passes": 1,
+  "fails": [],
+  "verdicts": [],
+  "tail": "PARITY: 200000/200000 bit-identical  (mismatches: 0, worst |delta|: 0) | PASS — term-array refactor is arithmetic-identical to the original | ",
+  "config": "pristine"
+ },
+ {
+  "script": "parity_termarray.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 9,
+  "passes": 1,
+  "fails": [],
+  "verdicts": [],
+  "tail": "PARITY: 200000/200000 bit-identical  (mismatches: 0, worst |delta|: 0) | PASS — term-array refactor is arithmetic-identical to the original | ",
+  "config": "off"
+ },
+ {
+  "script": "parity_termarray.js",
+  "dir": "experiments/phase1_0",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 9,
+  "passes": 1,
+  "fails": [],
+  "verdicts": [],
+  "tail": "PARITY: 200000/200000 bit-identical  (mismatches: 0, worst |delta|: 0) | PASS — term-array refactor is arithmetic-identical to the original | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_S1.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 8,
+  "passes": 12,
+  "fails": [],
+  "verdicts": [
+   "12 passed, 0 failed"
+  ],
+  "tail": "      pre-fix : taught 74.94  punished 24.62  -> picks TAUGHT |       post-fix: taught 65.42  punished -10.89  -> picks TAUGHT | PASS  S1.5  repaired agent prefers the taught path over the punished one |  | 12 passed, 0 failed | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_S1.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 8,
+  "passes": 12,
+  "fails": [],
+  "verdicts": [
+   "12 passed, 0 failed"
+  ],
+  "tail": "      pre-fix : taught 74.95  punished 24.63  -> picks TAUGHT |       post-fix: taught 65.42  punished -10.89  -> picks TAUGHT | PASS  S1.5  repaired agent prefers the taught path over the punished one |  | 12 passed, 0 failed | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_S1.js",
+  "dir": "experiments/phase1_0",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 8,
+  "passes": 12,
+  "fails": [],
+  "verdicts": [
+   "12 passed, 0 failed"
+  ],
+  "tail": "      pre-fix : taught 74.94  punished 24.64  -> picks TAUGHT |       post-fix: taught 65.43  punished -10.90  -> picks TAUGHT | PASS  S1.5  repaired agent prefers the taught path over the punished one |  | 12 passed, 0 failed | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_S1b.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 1,
+  "passes": 3,
+  "fails": [
+   "FAIL  S1.7  arbitration breakdown identical across 20000 contexts (arbitrate() path unaffected)"
+  ],
+  "verdicts": [],
+  "tail": " | ── S1.8  exports unchanged (S5.1 no-new-export rule) ── |       original: calculateDecisionScore,lastArbitrationBreakdown,liveFutureBonus |       fixed   : calculateDecisionScore,lastArbitrationBreakdown,liveFutureBonus | PASS  S1.8  export surface identical | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_S1b.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 1,
+  "passes": 3,
+  "fails": [
+   "FAIL  S1.7  arbitration breakdown identical across 20000 contexts (arbitrate() path unaffected)"
+  ],
+  "verdicts": [],
+  "tail": " | ── S1.8  exports unchanged (S5.1 no-new-export rule) ── |       original: calculateDecisionScore,lastArbitrationBreakdown,liveFutureBonus |       fixed   : calculateDecisionScore,lastArbitrationBreakdown,liveFutureBonus | PASS  S1.8  export surface identical | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_S1b.js",
+  "dir": "experiments/phase1_0",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 1,
+  "passes": 3,
+  "fails": [
+   "FAIL  S1.7  arbitration breakdown identical across 20000 contexts (arbitrate() path unaffected)"
+  ],
+  "verdicts": [],
+  "tail": " | ── S1.8  exports unchanged (S5.1 no-new-export rule) ── |       original: calculateDecisionScore,lastArbitrationBreakdown,liveFutureBonus |       fixed   : calculateDecisionScore,lastArbitrationBreakdown,liveFutureBonus | PASS  S1.8  export surface identical | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_S1prime.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 1,
+  "passes": 7,
+  "fails": [],
+  "verdicts": [
+   "7 passed, 0 failed"
+  ],
+  "tail": "      original verdict  : would FAIL  (unsatisfiable with frozen §13.1 — see erratum M7-ERR-01 §2) |       This line is INFORMATIONAL. It is not an assertion of this gate. |       verify_S1b.js remains the authoritative record of the original gate. |  | 7 passed, 0 failed | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_S1prime.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 1,
+  "passes": 7,
+  "fails": [],
+  "verdicts": [
+   "7 passed, 0 failed"
+  ],
+  "tail": "      original verdict  : would FAIL  (unsatisfiable with frozen §13.1 — see erratum M7-ERR-01 §2) |       This line is INFORMATIONAL. It is not an assertion of this gate. |       verify_S1b.js remains the authoritative record of the original gate. |  | 7 passed, 0 failed | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_S1prime.js",
+  "dir": "experiments/phase1_0",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 1,
+  "passes": 7,
+  "fails": [],
+  "verdicts": [
+   "7 passed, 0 failed"
+  ],
+  "tail": "      original verdict  : would FAIL  (unsatisfiable with frozen §13.1 — see erratum M7-ERR-01 §2) |       This line is INFORMATIONAL. It is not an assertion of this gate. |       verify_S1b.js remains the authoritative record of the original gate. |  | 7 passed, 0 failed | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_S2.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 0,
+  "passes": 14,
+  "fails": [],
+  "verdicts": [
+   "14 passed, 0 failed"
+  ],
+  "tail": "      composite \"5#16->6\" 10 -> 9 |       legacy    \"5->6\"        10 -> 10 | PASS  S2.7  dampQ erodes the RL-learned value, not an unrelated namespace |  | 14 passed, 0 failed | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_S2.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 0,
+  "passes": 14,
+  "fails": [],
+  "verdicts": [
+   "14 passed, 0 failed"
+  ],
+  "tail": "      composite \"5#16->6\" 10 -> 9 |       legacy    \"5->6\"        10 -> 10 | PASS  S2.7  dampQ erodes the RL-learned value, not an unrelated namespace |  | 14 passed, 0 failed | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_S2.js",
+  "dir": "experiments/phase1_0",
+  "mode": "on",
+  "exit": 1,
+  "seconds": 0,
+  "passes": 13,
+  "fails": [
+   "FAIL  S2.4b every taught transition is readable by the scoring path   3/4"
+  ],
+  "verdicts": [
+   "13 passed, 1 failed"
+  ],
+  "tail": "      composite \"5#16->6\" 10 -> 9 |       legacy    \"5->6\"        10 -> 10 | PASS  S2.7  dampQ erodes the RL-learned value, not an unrelated namespace |  | 13 passed, 1 failed | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_S2_Q4.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 0,
+  "passes": 15,
+  "fails": [],
+  "verdicts": [
+   "15 passed, 0 failed"
+  ],
+  "tail": "PASS  Q4.14 getQ conflates \"learned under a goal\" with \"never learned\" (both 0)   getQ: composite=0 empty=0; required dynamics differ: 5.9870e-4 vs 1.0114e-4 | PASS  Q4.15 control is specific: getQ is NOT simply broken — it reads bare keys   getQ(1,2) on a bare key = 12 |       (unchanged) dampQ composite 9 , bare 10 |  | 15 passed, 0 failed | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_S2_Q4.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 0,
+  "passes": 15,
+  "fails": [],
+  "verdicts": [
+   "15 passed, 0 failed"
+  ],
+  "tail": "PASS  Q4.14 getQ conflates \"learned under a goal\" with \"never learned\" (both 0)   getQ: composite=0 empty=0; required dynamics differ: 5.9870e-4 vs 1.0114e-4 | PASS  Q4.15 control is specific: getQ is NOT simply broken — it reads bare keys   getQ(1,2) on a bare key = 12 |       (unchanged) dampQ composite 9 , bare 10 |  | 15 passed, 0 failed | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_S2_Q4.js",
+  "dir": "experiments/phase1_0",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 0,
+  "passes": 15,
+  "fails": [],
+  "verdicts": [
+   "15 passed, 0 failed"
+  ],
+  "tail": "PASS  Q4.14 getQ conflates \"learned under a goal\" with \"never learned\" (both 0)   getQ: composite=0 empty=0; required dynamics differ: 5.9870e-4 vs 1.0114e-4 | PASS  Q4.15 control is specific: getQ is NOT simply broken — it reads bare keys   getQ(1,2) on a bare key = 12 |       (unchanged) dampQ composite 9 , bare 10 |  | 15 passed, 0 failed | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_S4.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 0,
+  "passes": 12,
+  "fails": [],
+  "verdicts": [
+   "12 passed, 0 failed"
+  ],
+  "tail": " | ── S4.8  rng() keeps its throwing contract (harness unaffected) ── | PASS  S4.8  rng() still throws on an unknown/uninitialised stream |  | 12 passed, 0 failed | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_S4.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 0,
+  "passes": 12,
+  "fails": [],
+  "verdicts": [
+   "12 passed, 0 failed"
+  ],
+  "tail": " | ── S4.8  rng() keeps its throwing contract (harness unaffected) ── | PASS  S4.8  rng() still throws on an unknown/uninitialised stream |  | 12 passed, 0 failed | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_S4.js",
+  "dir": "experiments/phase1_0",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 0,
+  "passes": 12,
+  "fails": [],
+  "verdicts": [
+   "12 passed, 0 failed"
+  ],
+  "tail": " | ── S4.8  rng() keeps its throwing contract (harness unaffected) ── | PASS  S4.8  rng() still throws on an unknown/uninitialised stream |  | 12 passed, 0 failed | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_S6.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 0,
+  "passes": 18,
+  "fails": [],
+  "verdicts": [
+   "18 passed, 0 failed"
+  ],
+  "tail": "PASS  M6.9e the same 40 sweeps via peek destroy nothing   10 -> 10 |       => calibration via get() would truncate exactly one tail of the |          distribution under study, in a direction known in advance. |  | 18 passed, 0 failed | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_S6.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 0,
+  "passes": 18,
+  "fails": [],
+  "verdicts": [
+   "18 passed, 0 failed"
+  ],
+  "tail": "PASS  M6.9e the same 40 sweeps via peek destroy nothing   10 -> 10 |       => calibration via get() would truncate exactly one tail of the |          distribution under study, in a direction known in advance. |  | 18 passed, 0 failed | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_S6.js",
+  "dir": "experiments/phase1_0",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 0,
+  "passes": 18,
+  "fails": [],
+  "verdicts": [
+   "18 passed, 0 failed"
+  ],
+  "tail": "PASS  M6.9e the same 40 sweeps via peek destroy nothing   10 -> 10 |       => calibration via get() would truncate exactly one tail of the |          distribution under study, in a direction known in advance. |  | 18 passed, 0 failed | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_G9.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 0,
+  "passes": 11,
+  "fails": [],
+  "verdicts": [
+   "11 passed, 0 failed"
+  ],
+  "tail": "PASS  G9.6d rejects a REMOVED render/ module   - planning.js | PASS  G9.6e accepts the true unmutated surface   control - must PASS |  | 11 passed, 0 failed | G9 GREEN - no cognitive export surface changed. | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_G9.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 0,
+  "passes": 11,
+  "fails": [],
+  "verdicts": [
+   "11 passed, 0 failed"
+  ],
+  "tail": "PASS  G9.6d rejects a REMOVED render/ module   - planning.js | PASS  G9.6e accepts the true unmutated surface   control - must PASS |  | 11 passed, 0 failed | G9 GREEN - no cognitive export surface changed. | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_G9.js",
+  "dir": "experiments/phase1_0",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 0,
+  "passes": 11,
+  "fails": [],
+  "verdicts": [
+   "11 passed, 0 failed"
+  ],
+  "tail": "PASS  G9.6d rejects a REMOVED render/ module   - planning.js | PASS  G9.6e accepts the true unmutated surface   control - must PASS |  | 11 passed, 0 failed | G9 GREEN - no cognitive export surface changed. | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_G16.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 14,
+  "passes": 28,
+  "fails": [],
+  "verdicts": [
+   "PASS  G16.5a  verify_S1.js green against the rectified build   12 passed, 0 failed, exit 0",
+   "PASS  G16.5c  verify_S1prime.js green (S1.7 superseding criterion)   7 passed, 0 failed, exit 0",
+   "28 passed, 0 failed"
+  ],
+  "tail": "      superseded by: verify_S1prime.js (erratum M7-ERR-02) | PASS  G16.5c  verify_S1prime.js green (S1.7 superseding criterion)   7 passed, 0 failed, exit 0 |  | 28 passed, 0 failed | G16 GREEN — trust rectification verified against the frozen pre-registration. | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_G16.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 14,
+  "passes": 28,
+  "fails": [],
+  "verdicts": [
+   "PASS  G16.5a  verify_S1.js green against the rectified build   12 passed, 0 failed, exit 0",
+   "PASS  G16.5c  verify_S1prime.js green (S1.7 superseding criterion)   7 passed, 0 failed, exit 0",
+   "28 passed, 0 failed"
+  ],
+  "tail": "      superseded by: verify_S1prime.js (erratum M7-ERR-02) | PASS  G16.5c  verify_S1prime.js green (S1.7 superseding criterion)   7 passed, 0 failed, exit 0 |  | 28 passed, 0 failed | G16 GREEN — trust rectification verified against the frozen pre-registration. | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_G16.js",
+  "dir": "experiments/phase1_0",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 14,
+  "passes": 28,
+  "fails": [],
+  "verdicts": [
+   "PASS  G16.5a  verify_S1.js green against the rectified build   12 passed, 0 failed, exit 0",
+   "PASS  G16.5c  verify_S1prime.js green (S1.7 superseding criterion)   7 passed, 0 failed, exit 0",
+   "28 passed, 0 failed"
+  ],
+  "tail": "      superseded by: verify_S1prime.js (erratum M7-ERR-02) | PASS  G16.5c  verify_S1prime.js green (S1.7 superseding criterion)   7 passed, 0 failed, exit 0 |  | 28 passed, 0 failed | G16 GREEN — trust rectification verified against the frozen pre-registration. | ",
+  "config": "on"
+ },
+ {
+  "script": "verify_S3prime.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 10,
+  "passes": 2,
+  "fails": [],
+  "verdicts": [
+   "2 passed, 0 failed"
+  ],
+  "tail": "      original verdict  : would FAIL  (non-discriminating — see erratum §4.2) |       This line is INFORMATIONAL. It is not an assertion of this gate. |       verify_S3.js remains the authoritative record of the original gate. |  | 2 passed, 0 failed | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_S3prime.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 10,
+  "passes": 2,
+  "fails": [],
+  "verdicts": [
+   "2 passed, 0 failed"
+  ],
+  "tail": "      original verdict  : would FAIL  (non-discriminating — see erratum §4.2) |       This line is INFORMATIONAL. It is not an assertion of this gate. |       verify_S3.js remains the authoritative record of the original gate. |  | 2 passed, 0 failed | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_S3prime.js",
+  "dir": "experiments/phase1_0",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 10,
+  "passes": 2,
+  "fails": [],
+  "verdicts": [
+   "2 passed, 0 failed"
+  ],
+  "tail": "      original verdict  : would PASS  (non-discriminating — see erratum §4.2) |       This line is INFORMATIONAL. It is not an assertion of this gate. |       verify_S3.js remains the authoritative record of the original gate. |  | 2 passed, 0 failed | ",
+  "config": "on"
+ }
+]

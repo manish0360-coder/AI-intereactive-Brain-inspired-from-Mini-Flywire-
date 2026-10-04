@@ -1,0 +1,113 @@
+conformed tree: <tmp>\mfw-h1r\conformed-707cb1e-33e4569595fd (reused)
+pristine tree : <tmp>\mfw-h1r\b2-707cb1e
+running 424 single-process runs with 5 workers ...
+  25/424 runs
+  50/424 runs
+  75/424 runs
+  100/424 runs
+  125/424 runs
+  150/424 runs
+  175/424 runs
+  200/424 runs
+  225/424 runs
+  250/424 runs
+  275/424 runs
+  300/424 runs
+  325/424 runs
+  350/424 runs
+  375/424 runs
+  400/424 runs
+  424/424 runs
+PASS     X0      every run completed without error or crash
+         424 runs, 0 errors, 0 incomplete/crashed
+PASS     G1'     transformed tree is inert without the H1R runtime (fingerprint = B2, all 7 arms)
+         21/21 (config, arm) pairs identical in fingerprint and cognitive draws
+PASS     A1      no non-edge (draw-free) movement
+         NONEDGE 0 | edge attempts 761728 | self no-op re-executions 37939 (no position change, no draw, no credit)
+PASS     A2      no non-edge pair enters transition memory
+         main writes non-edge 0/469874; episode writes non-edge 0/670419; end-of-run non-edge entries 0
+PASS     A3      no non-edge pair enters episode learning or replay (Q via episodes, rewards, momentum, trust credit)
+         non-edge episode pairs 0/670419; replay 0
+PASS     A4      no non-edge key in the trust store
+         max non-edge trust keys over all snapshots and runs: 0
+PASS     A5      every goal reach is a graph-edge move from an adjacent node
+         canonical 57595/57595 goal reaches (pooled over all arms)
+PASS     A6      backup move guard never needed (mask + P4 complete)
+         guard firings 0
+PASS     A7      every main-path TD Q update is filed under Q(S, A) of the actual transition (S = position the action was chosen from, A = executed action)
+         applied 761398 (incl. FROZEN, where updateQ then blocks), real-edge keys 761398, non-edge 0; S/A mismatches 0; stash overwritten 0; self no-op ticks skipped 34847
+PASS     A7b     every applied update bootstraps from the realised next state S' (A on success, S on a slip, the goal on a goal reach)
+         inconsistent 0; moved 395396, stayed 308407, goal 57595
+PASS     A7c     explore-step and success-episode Q learning credit only realised transitions
+         explore pairs unrealised 0/438988; success-episode pairs unrealised 0/205748
+CONFLICT A7d     every executed edge action produces a Q update (coverage)
+         57925/819323 executed edge actions (7.07%) produce no Q update: the learning block's self-loop gate reads the lagged previous position (agentLast), so a move back to the previous node is skipped. Per arm: A1 6.37%, A2 4.68%, A3 14.77%, A4 4.74%, A5 6.08%, A6 6.59%, A7 6.30%
+PASS     A7-AV   anti-vacuity: with conformance off the probes detect lagged non-edge Q keys and unrealised episode credit
+         H1R off: non-edge Q writes 11442/26172, explore unrealised 8268/13017, success unrealised 4029/8643
+PASS     A-AV    anti-vacuity: the same probes detect non-edge movement and pairs when conformance is off
+         H1R off: NONEDGE 4446, non-edge episode pairs 5454, max non-edge trust keys 44
+PASS     B1      successes <= attempts for every key at every 100-tick snapshot and at run end
+         keys with s>a: max 0 over 7872 snapshots
+PASS     B2      trust within [0, 1]
+         range [0.0625, 0.9963]
+PASS     B3      every trust write is a traversal outcome (store = attempts/successes reconstructed from moves, decay mirrored)
+         reconstruction mismatches 0; episode credits offered 168741, applied 0
+PASS     B-AV    anti-vacuity: with conformance off the probe detects s>a
+         H1R off: max keys with s>a 63
+INFO     B-DIAG  diagnostic: the attempt-gated N2 variant (reconciliation text) against the s<=a invariant
+         runs with any s>a: 41/41; max keys with s>a 34; max trust 1.8940
+PASS     C1      RANDOM is wired: the runtime saw arm A3 and made uniform decisions in every run
+         uniform decisions 113251 over 41 runs; arms seen A3
+PASS     C2      RANDOM behaves differently from BELIEF (fingerprint) on every configuration
+         41/41
+PASS     C3      RANDOM choices are uniform over graph neighbours (pooled chi-square p > 0.001) while BELIEF is not (p < 1e-6)
+         A3: chi2=56.9 df=58 p=5.17e-1 n=113251 non-neighbour picks 0; argmax share 0.259 vs 0.259 expected if uniform | A1: chi2=22031.3 df=58 p=0.00e+0; argmax share 0.903
+INFO     C-INFO  decision ticks that commit no action (no admissible candidate), share of decision ticks
+         A1 0.58%, A2 0.68%, A3 0.21%, A4 1.00%, A5 0.77%, A6 0.74%, A7 0.72%
+PASS     C-AV    anti-vacuity: without the H1R runtime A3 is byte-identical to A1 (the historical defect)
+         3 configurations
+PASS     D1      FROZEN: Q table unchanged from tick 0 to tick 3000
+         changed keys 0, max |delta| 0, entries at end 0
+PASS     D2      FROZEN: trust store (attempts and successes) unchanged from tick 0 to tick 3000
+         attempt keys changed 0, success keys changed 0
+PASS     D3      FROZEN still executes its policy (decisions made, trust read at E3)
+         decisions 113306, E3 reads 1714801 (passthrough 1714801)
+PASS     D-AV    anti-vacuity: BELIEF changes Q and trust over the same interval
+         A1 Q keys changed 3559, trust attempt keys changed 2527
+PASS     E1      zero post-reset actions from pre-reset reasoning
+         stale post-reset moves 0, stale post-reset goal reaches 0; resets 58444
+PASS     E2      zero stale goal reaches of any kind
+         stale goal reaches 0
+PASS     E-AV    anti-vacuity: with conformance off, stale post-reset goal reaches are detected
+         H1R off: 387 stale post-reset goal reaches
+PASS     F1      every goal reach reaches the (corrected) Q update with reward exactly +12
+         goal events 57595 (pooled over all arms), applied goal Q updates 57595, reward != 12: 0
+PASS     F2      eligibility rate is identically 1 in every run (no input through which p_e or history could act)
+         287 runs, all with eligibility rate exactly 1
+PASS     F-AV    anti-vacuity: legacy rule (conformance off) and a mutant with the GOAL edit reverted both pay != 12
+         H1R off: 2262 goal rewards != 12; mutant: 336
+PASS     G15'-S  structural: the goal branch pays 12 whenever H1R is on — the eligibility operand cannot be false
+         GOAL edit at main.js:3930 inside the goal branch opened at :3928; next statement 'rewardSignal = 12;'
+PASS     G15'    G15' = structural + dynamic (F1, F2) + anti-vacuity (F-AV)
+         see G15'-S, F1, F2, F-AV
+PASS     S1      Q-KEY: both main-path updateQ sites stash; one apply after the outcome; explore and success learning use the actual step
+         stash sites 2, apply 1, explore moved 1, success window 1, unguarded updateQ({ call sites 0
+PASS     S2      CRG: exactly the three 0f47d7b backtracking releases, guarded, inside canReachGoal
+         guarded releases 3
+FAIL     S3      N2: the episode success writer is suppressed only under M7 credit; trust math untouched
+         one guarded writer; qlearning.js carries only the FROZEN choke point
+PASS     S4      N1/A3/A4/P4/GOAL edits present exactly once each
+         all present
+PASS     S5      conformed canReachGoal: 0 false negatives, 0 false positives, 0 trap states over 20 x 4 (H1R on); B2 defect reproduced with H1R off
+         on: FN 0, FP 0, traps 0 | off (B2): FN 9, FP 0, traps 3/goal 16
+PASS     T1      no decision trap: per arm, per goal, no-commit share of decision ticks <= 5%
+         AFTER (goal 8/12/16/19, %): A1 0.5/0.6/0.7/0.3 | A2 0.5/0.9/0.8/0.3 | A3 0.3/0.3/0.1/0.1 | A4 1.1/1.2/1.0/0.7 | A5 0.8/1.1/0.9/0.3 | A6 0.8/1.0/0.8/0.4 | A7 0.4/0.9/1.0/0.4 || BEFORE (84b4197b tree): A1 0.4/1.7/41.9/0.7 | A2 0.5/1.7/44.6/0.4 | A3 0.4/0.4/74.9/0.1 | A4 1.1/2.9/47.0/0.8 | A5 0.6/2.0/40.2/0.4 | A6 1.1/1.8/44.9/0.6 | A7 0.9/1.7/46.3/0.6
+FAIL     P1      all seven arms are pairwise behaviourally distinct on every configuration (21 pairs x 41)
+         857/861 distinct; identical: A2/A5@900177/2, A2/A5@900211/0, A2/A5@900211/1, A2/A5@900211/2
+PASS     H1      conformed runs are deterministic (two independent processes, identical fingerprint)
+         21/21
+PASS     H2      the verification recorder is observationally neutral (record vs no-record fingerprint)
+         21/21
+
+40 PASS, 2 FAIL, 1 CONFLICT, 2 INFO — 836 s
+exit=1
