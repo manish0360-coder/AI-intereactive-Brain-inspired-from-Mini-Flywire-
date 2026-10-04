@@ -7,6 +7,114 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-021 — H1R-P1: independent-falsification checkpoints (Gemini)
+
+**Date:** 2026-10-04 · **Authority:** Director ruling "H1-R S6 / I1 / P1 FREEZE — DOCS ONLY" (2026-10-04), accepting the read-only H1R-S6 decision audit · **Status:** in force
+**Scope:** a process requirement for H1-R. No hypothesis, metric, window, exclusion, arm, reward, topology, RNG, or verdict rule changes.
+
+### 1. Decision
+Gemini, the programme's independent adversarial reviewer (relayed by the user), performs three independent-falsification checkpoints:
+- **(a) Red-team of H1R-S6 before the measurement commit.** Gemini receives the H1R-S6 template, the G16′ definition and the N1–N7 outputs (D-019). It attempts to construct a probe that changes behaviour yet passes the gates. Any successful counterexample strengthens the gates before the measurement commit.
+- **(b) An independent §12–§14 implementation before Stage 1.** Gemini implements the §12 test, Holm, the 99% CI, the §13 power procedure and the §14 verdict from the H1-R v1.0 text alone, without seeing `analyze.js`. Both implementations run on a pre-registered synthetic fixture set and must agree exactly on every decision and within 10⁻⁹ on every real-valued output.
+- **(c) Blind replication of the F-11 decision and of the final verdict.** Gemini computes each from the frozen run records independently, and both results are lodged before comparison.
+
+### 2. Disagreement rule
+Any disagreement halts the study until the cause is found and corrected, and is reported. It is never settled by choosing one result.
+
+---
+
+## D-020 — H1R-I1: implementation pins for H1-R v1.0
+
+**Date:** 2026-10-04 · **Authority:** Director ruling "H1-R S6 / I1 / P1 FREEZE — DOCS ONLY" (2026-10-04) · **Status:** in force
+**Scope:** implementation interpretations of [H1-R v1.0](preregistrations/H1R_PREREGISTRATION_v1.0.md), fixed before any Stage-1 data.
+- No hypothesis, metric, window, exclusion, arm, reward, topology, RNG, or verdict rule changes.
+- The v1.0 bytes are unchanged (SHA-256 `c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836`).
+
+Line numbers refer to the tree conformed by transform `cf30e20a71d59a67ba6163c55b94399d5d74f3b4609c6e3ea37e27080d5bfd5a`. The pins bind to the quoted code, not to the line numbers.
+
+### 1. Pins
+1. **argmax₁** = `bestChoice`: the first element of `choices.sort((a, b) => b.weight - a.weight)` (`const sorted = …` at main.js:2362; `const bestChoice = sorted[0];` at main.js:2367), at step 0, over the candidate-loop entries only. Graph-neighbour candidates appended afterwards are not part of it. **argmax₀** = the earliest-inserted candidate with the maximal shadow weight (the same stable sort applied to the shadow weights, in the same insertion order).
+2. **Trust snapshot.**
+   - Taken at the first statement of `runAgentLoop` (main.js:5069), at the entry where the measurement counter shows **1,505 completed `runAgent()` calls** (call indices 0–1504: the 5 calls before tick 0, plus τ 0–1499).
+   - At that point `env.setTick(1500)` has already run (it does not touch the trust store) and none of loop 300's pre-work has run (that pre-work includes `decayTrust`).
+   - The final snapshot is taken immediately after `runOnce` returns, with 3,005 calls completed.
+3. **`measurementClean`** is true iff every measurement record is clean:
+   - reward record: multi, orphan and non-finite counts all 0;
+   - per-tick records: exactly `calls` entries, flags mutually exclusive;
+   - per-attempt records: count equal to `envDraws`, all values finite;
+   - reset events: equal to the runtime counters;
+   - score/shadow records: one per step-0 candidate, all finite, with recomputed argmax₁ equal to `bestChoice`;
+   - both trust snapshots present and finite;
+   - floor counter finite and ≥ 0;
+   - fork switch, if armed, applied exactly once at its call.
+
+   The flag's scope is the v1.0 §9 measurement layer. This is not a new exclusion.
+4. **Box–Muller** (v1.0 §13 power procedure):
+   - **pairing:** one deviate per pair, z = √(−2 ln u₁)·cos(2πu₂), consuming u₁ then u₂; the sine partner is discarded;
+   - **u₁ = 0:** u₁ is redrawn until it is non-zero, then u₂ is drawn;
+   - **reset:** `makeRng(770001)` is re-initialised at the start of each (window, S). Iterations then draw a₁…a₃₀, b₁…b_S, and e row-major (c outer, s inner);
+   - **loop order:** W1 then W3, S ascending.
+5. **Fisher–Yates**, the B2 convention (`env.js` `shuffledIndices`, `arms.js` `makeSigma`): for i = n−1 down to 1, j = ⌊u·(i+1)⌋, swap a[i] and a[j].
+6. **Permutation null** (descriptive):
+   - K_τ is ordered by (from, to), ascending numerically;
+   - the p-value is two-sided, (1 + #{|ρ*| ≥ |ρ|}) / 10,001.
+
+---
+
+## D-019 — H1R-S6: G16.4a evaluated on the probe-stripped `render/scoring.js` (H1-R conformed tree only)
+
+**Date:** 2026-10-04 · **Authority:** Director ruling "H1-R S6 / I1 / P1 FREEZE — DOCS ONLY" (2026-10-04), accepting the modified H1R-S6 from the read-only decision audit · **Status:** in force
+**Scope:** H1-R only, on the H1-R-materialised tree.
+- No hypothesis, metric, window, exclusion, arm, reward, topology, RNG, or verdict rule changes.
+- The v1.0 bytes are unchanged.
+- The repository's `render/scoring.js` and `verify_G16.js` are not modified, and this decision implements no probe.
+
+### 1. Why
+- H1-R v1.0 §9 item 5 requires an observational pre-clamp probe in `render/scoring.js`.
+- Frozen G16 is blocking (v1.0 §11). In `verify_G16.js`, G16.4a2 requires the live file to have the same line count as the reference arm `experiments/phase1_0/baseline/scoring_prerect.js`. G16.4a3 requires exactly one differing line, the rectification.
+- Any additional line fails G16.4a2 and G16.4a3, and `verify_G16.js` (lines 278–280) then reports G16.4a4–a6 as false.
+
+### 2. The single permitted line
+Exactly one line in the H1-R-materialised `render/scoring.js`, tagged `// H1R M-SCORE`, placed immediately before the line `    return Math.max(-400, Math.min(400, finalWeight));`. It reads exactly, with four-space indentation and no trailing whitespace:
+
+```
+    if (globalThis.__H1R_MEASURE__) globalThis.__H1R_MEASURE__.score(finalWeight, trustBonus * 1.5); // H1R M-SCORE
+```
+
+### 3. G16′ (the H1-R stripped-file conformance gate; blocking)
+G16′ passes iff all five hold:
+1. The conformed `render/scoring.js` contains exactly one line containing `// H1R M-SCORE`.
+2. That line equals the template above, byte for byte.
+3. It immediately precedes the line `    return Math.max(-400, Math.min(400, finalWeight));`.
+4. With that one line removed, the file is byte-identical to B2's `render/scoring.js`, SHA-256 `4a13316698b52a2132d969c838d79f9d3ccc97a853bc5e3fa947fd43fac566d5`.
+5. G16.4a1–a6, evaluated on the stripped text against `experiments/phase1_0/baseline/scoring_prerect.js`, all pass.
+
+### 4. Classification of the historical gate
+- In the historical `verify_G16.js` run on the H1-R conformed tree, **G16.4a2–a6 are classified failures under H1R-S6.**
+- **All other G16 assertions remain binding.**
+- OFF ≡ pristine for the existing gate scripts is assessed with G16.4a2–a6 excepted, and G16′ is required instead.
+- On the pristine B2 tree, `verify_G16.js` is unaffected.
+
+### 5. N1–N7 (blocking measurement-neutrality requirements)
+- **N1 Text.** Exactly one line in `render/scoring.js` carries the tag `// H1R M-SCORE`. It sits immediately before `return Math.max(-400, Math.min(400, finalWeight));` and equals the pinned template character for character. With that line removed, the file is byte-identical to B2's.
+- **N2 Form.** The template reads two locals and calls one sink. It assigns nothing; references no RNG, `Date.now`, I/O, `import` or `export`; and keeps the S4 and G9 checks clean.
+- **N3 Inert when absent.** G1′ shows 21/21 runs with the same fingerprint and draw counts. All 25 existing gate scripts give OFF ≡ pristine, except G16.4a2–a6, which are classified under H1R-S6 and replaced by G16′.
+- **N4 Neutral when present:**
+  - (a) Unit: at least 10,000 random input sets, with identical RNG state, give the same return value, the same `lastArbitrationBreakdown` and the same RNG position afterwards, with and without the sink.
+  - (b) Run: fingerprints and cognitive, visual and environment draw counts are identical with and without the measurement layer, across all 7 arms and at least 3 configurations.
+- **N5 Total sink.** `score()` only appends two numbers. It never throws, never mutates anything and never calls agent code (checked statically).
+- **N6 Fidelity.** For every recorded call, clamp(recorded F) equals the value the call returned, and the recorded term equals 12·(T − 0.5), where T is the E3-delivered value captured independently at `__M7_ARMS__`.
+- **N7 Anti-vacuity.** The gates must catch:
+  - a probe placed after the clamp (by a unit input that forces |F| > 400);
+  - a probe that assigns (N2);
+  - a probe that draws a random number (N4);
+  - a second tagged line (N1).
+
+### 6. Scientific statement
+No hypothesis, metric, window, exclusion, arm, reward, topology, RNG, or verdict rule changes. The frozen pre-clamp shadow metric of v1.0 §8 is unchanged. H1R-S6 only permits the one line that lets that metric be observed, and re-scopes G16.4a's textual check to the probe-stripped file.
+
+---
+
 ## D-018 — H1-R pre-registration v1.0 frozen
 
 **Date:** 2026-10-04 · **Authority:** Director ruling "FINAL FREEZE AUTHORIZATION — H1-R" (2026-10-04) · **Status:** in force
