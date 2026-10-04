@@ -7,6 +7,32 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-022 — H1R-S6 repair: D-019 §5 amended (N5′, N6a, N6b, N7 additions)
+
+**Date:** 2026-10-05 · **Authority:** Research Director decision "S6 repair is now accepted" (2026-10-05), following the H1R-P1(a) red-team and its repair audit · **Status:** in force
+**Scope:** measurement-validity repair only.
+- No hypothesis, metric, window, exclusion, arm, reward, topology, RNG, or verdict rule changes.
+- H1-R v1.0 is unchanged (SHA-256 `c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836`).
+- D-020 and D-021 are unchanged, and no code is changed.
+
+### 1. Finding
+- The H1R-P1(a) red-team (Gemini) found that the frozen N6 check, clamp(recorded F) = returned value, cannot establish pre-clamp fidelity. The clamp is many-to-one: with F = 500, a recorded 9999 also clamps to 400.
+- The repair audit found that the value reaching the sink can also be rewritten by how the sink is bound (a getter or Proxy) before any sink code runs.
+- Gemini independently red-teamed the repair and returned SUFFICIENT.
+
+### 2. Decision
+D-019 §5 is amended. The text now in force is in D-019 §5.
+- **N5** is replaced by **N5′ (pinned sink and binding)**.
+- **N6** is replaced by **N6a (exact pre-clamp fidelity, `Object.is`)** and **N6b (clamp consistency, secondary)**.
+- **N7** gains four cases: a transformed value only when |F| > 400; Proxy or accessor rewriting; arm-conditioned corruption; run-conditioned corruption.
+- N1–N4, the template, G16′, the G16.4a2–a6 classification and D-019 §1–§4 and §6 are unchanged.
+
+### 3. Superseded wording (kept for traceability; no longer in force)
+> - **N5 Total sink.** `score()` only appends two numbers. It never throws, never mutates anything and never calls agent code (checked statically).
+> - **N6 Fidelity.** For every recorded call, clamp(recorded F) equals the value the call returned, and the recorded term equals 12·(T − 0.5), where T is the E3-delivered value captured independently at `__M7_ARMS__`.
+
+---
+
 ## D-021 — H1R-P1: independent-falsification checkpoints (Gemini)
 
 **Date:** 2026-10-04 · **Authority:** Director ruling "H1-R S6 / I1 / P1 FREEZE — DOCS ONLY" (2026-10-04), accepting the read-only H1R-S6 decision audit · **Status:** in force
@@ -63,7 +89,7 @@ Line numbers refer to the tree conformed by transform `cf30e20a71d59a67ba6163c55
 
 ## D-019 — H1R-S6: G16.4a evaluated on the probe-stripped `render/scoring.js` (H1-R conformed tree only)
 
-**Date:** 2026-10-04 · **Authority:** Director ruling "H1-R S6 / I1 / P1 FREEZE — DOCS ONLY" (2026-10-04), accepting the modified H1R-S6 from the read-only decision audit · **Status:** in force
+**Date:** 2026-10-04 · **Authority:** Director ruling "H1-R S6 / I1 / P1 FREEZE — DOCS ONLY" (2026-10-04), accepting the modified H1R-S6 from the read-only decision audit · **Status:** in force; §5 amended by D-022 (2026-10-05)
 **Scope:** H1-R only, on the H1-R-materialised tree.
 - No hypothesis, metric, window, exclusion, arm, reward, topology, RNG, or verdict rule changes.
 - The v1.0 bytes are unchanged.
@@ -95,20 +121,33 @@ G16′ passes iff all five hold:
 - OFF ≡ pristine for the existing gate scripts is assessed with G16.4a2–a6 excepted, and G16′ is required instead.
 - On the pristine B2 tree, `verify_G16.js` is unaffected.
 
-### 5. N1–N7 (blocking measurement-neutrality requirements)
+### 5. N1–N7 (blocking measurement-neutrality requirements; N5, N6 and N7 as amended by D-022)
 - **N1 Text.** Exactly one line in `render/scoring.js` carries the tag `// H1R M-SCORE`. It sits immediately before `return Math.max(-400, Math.min(400, finalWeight));` and equals the pinned template character for character. With that line removed, the file is byte-identical to B2's.
 - **N2 Form.** The template reads two locals and calls one sink. It assigns nothing; references no RNG, `Date.now`, I/O, `import` or `export`; and keeps the S4 and G9 checks clean.
 - **N3 Inert when absent.** G1′ shows 21/21 runs with the same fingerprint and draw counts. All 25 existing gate scripts give OFF ≡ pristine, except G16.4a2–a6, which are classified under H1R-S6 and replaced by G16′.
 - **N4 Neutral when present:**
   - (a) Unit: at least 10,000 random input sets, with identical RNG state, give the same return value, the same `lastArbitrationBreakdown` and the same RNG position afterwards, with and without the sink.
   - (b) Run: fingerprints and cognitive, visual and environment draw counts are identical with and without the measurement layer, across all 7 arms and at least 3 configurations.
-- **N5 Total sink.** `score()` only appends two numbers. It never throws, never mutates anything and never calls agent code (checked statically).
-- **N6 Fidelity.** For every recorded call, clamp(recorded F) equals the value the call returned, and the recorded term equals 12·(T − 0.5), where T is the E3-delivered value captured independently at `__M7_ARMS__`.
+- **N5′ Pinned sink and binding.**
+  - `globalThis.__H1R_MEASURE__` is an own data property of `globalThis`, non-writable and non-configurable.
+  - Its value is a frozen ordinary object for which `util.types.isProxy` is false.
+  - Its `score` is an own, non-writable data property whose value is the pinned function, byte-exact `score(f, t) { S.push(f, t); }`, where `S` is an array private to the measurement module and read only by its record function.
+  - The module imports only Node built-ins and reads no global.
+  - Checked statically (byte-exact source) and at installation (descriptors, `isProxy`, function identity).
+- **N6a Exact pre-clamp fidelity.**
+  - For every probe execution, the recorded pair is `Object.is`-equal to the values of `finalWeight` and `trustBonus * 1.5` at the probe line. This follows for every call from N1 and N5′.
+  - It is verified end to end by a unit oracle: a test-only copy of B2's `render/scoring.js` in which only the return line is replaced by `    return finalWeight;`, hash-recorded and never loaded in runs.
+  - On at least 10,000 random input sets, including inputs with |F| > 400 at both bounds, it must give values `Object.is`-equal to the recorded F.
+- **N6b Consistency (secondary).** For every recorded call, `Object.is(clamp(recorded F), the value the call returned)`. The recorded term equals 12·(T − 0.5), with T captured independently at `__M7_ARMS__`.
 - **N7 Anti-vacuity.** The gates must catch:
   - a probe placed after the clamp (by a unit input that forces |F| > 400);
   - a probe that assigns (N2);
   - a probe that draws a random number (N4);
-  - a second tagged line (N1).
+  - a second tagged line (N1);
+  - a sink that records a transformed value only when |F| > 400 (by the N6a oracle);
+  - a Proxy or accessor binding that rewrites arguments (by N5′);
+  - a sink conditioned on the arm (by N5′'s source pin);
+  - a sink conditioned on run identity (by N5′'s source pin).
 
 ### 6. Scientific statement
 No hypothesis, metric, window, exclusion, arm, reward, topology, RNG, or verdict rule changes. The frozen pre-clamp shadow metric of v1.0 §8 is unchanged. H1R-S6 only permits the one line that lets that metric be observed, and re-scopes G16.4a's textual check to the probe-stripped file.
