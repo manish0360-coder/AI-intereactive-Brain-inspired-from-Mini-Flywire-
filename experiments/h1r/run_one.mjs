@@ -10,6 +10,7 @@ import { register } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { installH1R } from './runtime.mjs';
+import { installMeasure } from './measure.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const IN = JSON.parse(process.argv[2]);
@@ -18,6 +19,13 @@ const env = await import(TREE_URL + '/experiments/m7/env.js');
 const trust = await import(TREE_URL + '/render/trustMemory.js');
 const { Q } = await import(TREE_URL + '/render/qlearning.js');
 const H = IN.h1r === 'on' ? await installH1R({ tree: IN.tree, trustMode: IN.trustMode || 'traversal' }) : null;
+const MEAS = IN.measure ? installMeasure() : null;   // D-5 measurement layer (observational)
+// Independent mirror of the environment stream (instrumentation/rng.js initRng: environment = makeRng(seed ^ 0x5EED)).
+// A separate generator instance owned by this recorder: it never touches the agent's named streams. Used to
+// check every drawn attempt exactly: outcome == (u_k < p_e), with u_k the k-th environment draw of the run.
+const { makeRng } = await import(TREE_URL + '/instrumentation/rng.js');
+const ENV_MIRROR = makeRng(((IN.agentSeed ?? 20260819000) ^ 0x5EED) >>> 0);
+const h1rOn = () => !!(globalThis.__H1R__ && globalThis.__H1R__.on);
 
 const N = (x) => (x === null || x === undefined) ? null : Number(x);
 const ADJ = new Set();
@@ -30,7 +38,8 @@ const frozenTrust = () => !!(globalThis.__H1R__ && globalThis.__H1R__.on && glob
 
 const S = {
   tick: -1, prevRef: undefined, replayThis: false, noCommitDecisionTicks: 0, replayTicks: 0, awaitFresh: false, preResetRef: undefined, goalId: null, transitionsRef: null,
-  moves: {}, goals: { n: 0, canonical: 0, stale: 0, stalePostReset: 0 }, stalePostResetMoves: 0,
+  moves: {}, goals: { n: 0, canonical: 0, stale: 0, stalePostReset: 0, staleReattempt: 0, staleOther: 0 }, stalePostResetMoves: 0,
+  prevSlip: null, tickSummary: new Map(),
   q: { goalN: 0, goalNot12: 0, edgeKeys: 0, nonEdgeKeys: 0, nonEdgeAligned: 0 },
   tr: { n: 0, nonEdge: 0 }, pipe: {}, epTr: { n: 0, nonEdge: 0 }, epCredit: { offered: 0, applied: 0, nonEdgeApplied: 0 },
   e2a: new Map(), e2s: new Map(),
@@ -45,9 +54,19 @@ const S = {
     q: { n: 0, onUnrealised: 0, onSlip: 0, onSlipPositive: 0, mismatch: 0, missing: 0, duplicate: 0, nonEdge: 0,
          rewardByKind: { move: {}, goal: {}, slip: {}, other: {} } },
     ret: { n: 0, covered: 0 }, tr: { n: 0, unrealised: 0 }, explore: { n: 0, unrealised: 0 }, success: { n: 0, unrealised: 0 },
-    env: { ticks: 0, mismatch: 0, maxPerTick: 0, draws: 0, expected: 0, goalEntryDraws: 0 } },
+    env: { ticks: 0, mismatch: 0, maxPerTick: 0, draws: 0, expected: 0, goalEntryDraws: 0 },
+    // R2 / D-1: every edge-attempt decision, split into goal-entering and other, with the hidden p_e of
+    // the attempted edge at that tick (env.trueP, a harness-only accessor that draws nothing)
+    goalAttempts: { n: 0, slips: 0, successes: 0 },
+    // exact per-attempt draw check against the mirrored environment stream
+    drawCheck: { goal: { checked: 0, mismatch: 0 }, other: { checked: 0, mismatch: 0 }, unattributed: 0 },
+    calib: { goal: { n: 0, succ: 0, sumP: 0, sumPQ: 0 }, other: { n: 0, succ: 0, sumP: 0, sumPQ: 0 },
+             // diagnostic splits of the non-goal class: an immediate retry of the edge that slipped on the previous
+             // tick vs any other attempt; Phase I vs Phase II (call index < 1505: 5 pre-boot calls + 1500 ticks)
+             otherRetry: { n: 0, succ: 0, sumP: 0, sumPQ: 0 }, otherFresh: { n: 0, succ: 0, sumP: 0, sumPQ: 0 },
+             otherP1: { n: 0, succ: 0, sumP: 0, sumPQ: 0 }, otherP2: { n: 0, succ: 0, sumP: 0, sumPQ: 0 } } },
 };
-const newTick = () => ({ learn: [], q: [], tr: [], min: [], goal: null, move: null });
+const newTick = () => ({ learn: [], q: [], tr: [], min: [], goal: null, move: null, p: null, index: null });
 // Resolve one finished tick. The realised transition comes from the hooks (both orders): a goal reach
 // (goal hook; the goal move never draws), else the E1 site (move hook: from, intended, traversed).
 function finishTick(T, drawsThisTick) {
@@ -80,13 +99,37 @@ function finishTick(T, drawsThisTick) {
   // other learning stores
   for (const p of T.tr) { r.tr.n++; if (!realised || N(p.prev) !== from || N(p.current) !== to) r.tr.unrealised++; }
   for (const p of T.min) { r.explore.n++; if (kind !== 'move' || N(p.from) !== from || N(p.to) !== to) r.explore.unrealised++; }
-  // environment draws: exactly one for an edge attempt that is not a goal entry; none otherwise
-  const expected = (kind === 'move' || kind === 'slip') ? 1 : 0;
+  // environment draws: exactly one per edge attempt. A goal entry draws under H1R (R2 / D-1) and never in
+  // the B2 order; anything else (self no-op, no decision) draws nothing.
+  const goalDraws = h1rOn() ? 1 : 0;
+  const expected = (kind === 'move' || kind === 'slip') ? 1 : kind === 'goal' ? goalDraws : 0;
   r.env.ticks++; r.env.draws += drawsThisTick; r.env.expected += expected;
   if (drawsThisTick !== expected) r.env.mismatch++;
   if (kind === 'goal' && drawsThisTick > 0) r.env.goalEntryDraws++;
   r.env.maxPerTick = Math.max(r.env.maxPerTick, drawsThisTick);
   if (kind === 'move') S.lastMove = { from, to };
+  // exact draw check: each environment draw of this tick is the next value of the mirrored stream
+  for (let d = 0; d < drawsThisTick; d++) {
+    const u = ENV_MIRROR();
+    if (d === 0 && (kind === 'move' || kind === 'slip' || kind === 'goal') && typeof T.p === 'number') {
+      const c = r.drawCheck[to === N(S.goalId) ? 'goal' : 'other'];
+      c.checked++; if ((u < T.p) !== (kind !== 'slip')) c.mismatch++;
+    } else r.drawCheck.unattributed++;
+  }
+  // reliability calibration of the realised outcomes, pooled over the run (environment property only)
+  if ((kind === 'move' || kind === 'slip' || kind === 'goal') && typeof T.p === 'number') {
+    const toGoal = to === N(S.goalId), c = toGoal ? r.calib.goal : r.calib.other, ok = kind !== 'slip';
+    const add = (b) => { b.n++; if (ok) b.succ++; b.sumP += T.p; b.sumPQ += T.p * (1 - T.p); };
+    add(c);
+    if (!toGoal) {
+      const retry = S.prevSlip && N(S.prevSlip.from) === from && N(S.prevSlip.to) === to;
+      add(retry ? r.calib.otherRetry : r.calib.otherFresh);
+      add(T.index < 1505 ? r.calib.otherP1 : r.calib.otherP2);
+    }
+    if (toGoal) { r.goalAttempts.n++; if (ok) r.goalAttempts.successes++; else r.goalAttempts.slips++; }
+  }
+  S.prevSlip = kind === 'slip' ? { from, to } : null;
+  if (MEAS) S.tickSummary.set(T.index, { learn: T.learn.length, reward: T.q.length ? T.q[0].reward : undefined, realised });
 }
 function closeTick() {
   if (!S.T) return;
@@ -116,7 +159,7 @@ if (IN.record) {
     step() {
       if (S.tick >= 0) { if (S.replayThis) S.replayTicks++; else if (globalThis.lastReasoning === S.prevRef) S.noCommitDecisionTicks++; }
       closeTick(); S.T = newTick(); if (globalThis.__H1R__) globalThis.__H1R__.r1 = null;
-      S.tick++; S.prevRef = globalThis.lastReasoning; S.replayThis = false;
+      S.tick++; S.T.index = S.tick; S.prevRef = globalThis.lastReasoning; S.replayThis = false;
       if (S.tick === 0) { S.q0 = qSnap(); S.t0 = tSnap(); }
       if (S.tick % 100 === 0) trustCheck();
     },
@@ -137,16 +180,29 @@ if (IN.record) {
   });
   globalThis.__R__ = {
     goal(aCur, nxt) {
-      S.goals.n++; if (isEdge(aCur, nxt)) S.goals.canonical++; if (!fresh()) S.goals.stale++;
+      S.goals.n++; if (isEdge(aCur, nxt)) S.goals.canonical++;
+      if (!fresh()) {
+        S.goals.stale++;
+        // a replay-branch tick re-executing the goal attempt that slipped on the previous tick (F2b,
+        // frozen §9.2 territory) versus any other stale goal reach
+        const re = S.replayThis && S.prevSlip && N(S.prevSlip.from) === N(aCur) && N(S.prevSlip.to) === N(nxt);
+        if (re) S.goals.staleReattempt++; else S.goals.staleOther++;
+      }
       if (S.awaitFresh && globalThis.lastReasoning === S.preResetRef) S.goals.stalePostReset++;
       S.realized.add(aCur + '->' + nxt);
-      if (S.T) S.T.goal = { from: aCur, to: nxt };
+      if (S.T) { S.T.goal = { from: aCur, to: nxt }; S.T.p = env.trueP(aCur, nxt); }
+      // R2 / D-1: under H1R a realised goal entry is credited like any traversal (a += 1, s += 1)
+      if (h1rOn() && !frozenTrust() && isEdge(aCur, nxt)) {
+        const k = aCur + '->' + nxt;
+        S.e2a.set(k, (S.e2a.get(k) || 0) + 1); S.e2s.set(k, (S.e2s.get(k) || 0) + 1);
+      }
     },
     learn(aLast, nxt, aCur) { if (S.T) S.T.learn.push({ last: aLast, next: nxt, cur: aCur }); },
     explore() { /* offered pair; the learned pair is recorded by pipe('min') */ },
     move(from, to, traversed, gReset) {
       if (S.T) S.T.move = { from, to, traversed, gReset };
       if (to === null || to === undefined || gReset) return;
+      if (S.T && isEdge(from, to)) S.T.p = env.trueP(from, to);
       if (S.awaitFresh) { if (globalThis.lastReasoning === S.preResetRef) S.stalePostResetMoves++; else S.awaitFresh = false; }
       const self = N(from) === N(to), edge = isEdge(from, to);
       inc(S.moves, self ? 'selfNoop' : edge ? (traversed ? 'edgeSuccess' : 'edgeSlip') : 'NONEDGE');
@@ -228,5 +284,24 @@ if (IN.record) {
       uniformDecisions: H.counters.uniformDecisions, armsSeen: [...H.counters.armsSeen] } : null,
     r1: S.r1, r1stats: H ? H.r1stats : null, envCounters: env.getCounters(),
   });
+}
+// D-5: reconcile the measurement record with the recorder's own per-tick observation (the learning-section
+// entry and the reward the main TD update used). Counts and a digest only: no reward value leaves this process.
+if (MEAS) {
+  const m = MEAS.record();
+  const meas = { calls: m.calls, eventCount: m.eventCount, multi: m.multi, orphan: m.orphan, nonFinite: m.nonFinite, digest: MEAS.digest() };
+  if (IN.record) {
+    let presence = 0, value = 0, onUnrealised = 0, compared = 0;
+    const seen = new Set();
+    for (const [i, v] of m.events) {
+      seen.add(i); const t = S.tickSummary.get(i);
+      if (!t || t.learn !== 1) { presence++; continue; }
+      if (!t.realised) onUnrealised++;
+      compared++; if (t.reward !== v) value++;
+    }
+    for (const [i, t] of S.tickSummary) if (t.learn > 0 && !seen.has(i)) presence++;
+    Object.assign(meas, { compared, presenceMismatch: presence, valueMismatch: value, eventsOnUnrealised: onUnrealised, ticksSeen: S.tick + 1 });
+  }
+  out.measurement = meas;
 }
 process.stdout.write('@@H1R@@' + JSON.stringify(out));

@@ -25,11 +25,26 @@ All edits are guarded by `globalThis.__H1R__ && globalThis.__H1R__.on`. With no 
 | P4 | §3.7 | At both episode-reset sites (goal, 150-tick cap), the pre-reset `lastReasoning` is cleared. A post-reset tick with no fresh decision commits no action. |
 | CRG | HEAD `0f47d7b` (Director-authorised correctness fix) | `canReachGoal` releases a node on every DFS exit path (backtracking). These are exactly the three `visited.delete(currentId)` lines of `0f47d7b`, whose base blob `113fa47` is B2's `main.js`. There are no decision traps left; without this, N1 made state 3 / goal 16 undecidable. |
 | R1 | §3.3, §3.4; Director ruling R1 (2026-10-04) | **Realised-outcome learning order:** decision → one environment draw → realised outcome → the existing learning rules. B2 ran its whole self-learning section (reward, emotion, prediction error, Q, curiosity, transitions, success episodes, goal reset, explore step) *before* the draw, on the intended move, while `agentLast` still held the previous tick's position. The section is written in post-move terms (`prev = agentLast // where we were before`, `current = next // where we moved now`; Q state `agentLast`, action `next`, next state `agentCurrent`). Under H1R it reads the realised transition, in four steps. **R1-DRAW-EARLY:** the decision's single `__M7_ENV__.attempt(u, v)` call moves ahead of the section, with the same arguments, exclusions and stream. **R1-VIEW:** `agentLast` is set to u. On a success `agentCurrent` is set to v; on a slip the realised node is u (`next` is set to u). **R1-RESTORE:** after the section the pre-move view is restored, so the E1′ traversal block performs the move and E2 credits the *intended* edge. **R1-DRAW:** the E1 site reuses the outcome instead of drawing again. B2's own `updateQ`, `recordAutonomousStep` and `recordAutonomousSuccess` calls then receive the realised transition unchanged. Reward constants, the Q equation and all parameters are unchanged. |
+| R2 (D-1) | §3.3, §6.1; Director ruling R2 (2026-10-04) | **Goal-entry reliability draw.** Goal-entering attempts use the same environment draw as every other edge. **R2-GOAL-DRAW:** the single early draw no longer excludes them (B2 never drew for them). **R2-GOAL-FLAG:** under H1R, `_goalResetJustHappened` means "the goal reset ran this tick", read from the runtime's reset counter rather than inferred from the intended node, so a slipped goal attempt follows the ordinary slip path. **R2-GOAL-CREDIT:** a realised goal entry is credited a += 1 and s += 1, like any traversal (§6.1), using the decision position R1 recorded, because the reset has already moved the agent. |
+| M (D-5) | §8.5 primary endpoint | **Measurement probes, observational only.** They are guarded by `globalThis.__H1R_MEASURE__`, not by the H1R switch. **M-STEP** counts one tick per `runAgent()` call. **M-REWARD** passes the final `rewardSignal` to `measure.mjs` immediately before its first consumer. Neither draws, assigns, nor branches the agent. |
 
 **What learning receives (existing rules on the realised transition):**
 - **Success u → v:** the full section runs on u → v. This includes the reward (`sim(u, v)`), PE (actual = v), Q(u, v) with S′ = v, and every store keyed u → v. Return moves are included.
 - **Slip:** the realised transition is u → u. The section's own entry guard ("prevents corrupt self-loop learning") excludes self-transitions, so there is no reward, no PE and no Q update: the slip costs only the elapsed tick (§3.4; ERR-05 E1′). The intended edge u → v receives the trust attempt and no success (§3.3, §6.1).
-- **Goal entry:** this move takes no environment draw (pre-existing; R1 adds no draw). It is realised, learns as a success with the flat +12 and S′ = goal, and then the existing reset runs.
+- **Goal entry (since R2):** draws like every other edge.
+  - On success it is realised: it learns as a success with the flat +12 and S′ = goal, the existing reset runs, and the edge is credited a += 1, s += 1.
+  - On a slip it is an ordinary slip: no reset, no reward, no learning, and the attempt is credited a += 1.
+
+## Measurement and the experiment driver (D-5)
+
+- **`measure.mjs`** (`installMeasure()`) records one event, `[callIndex, rewardSignal]`, per `runAgent()` call that computed a `rewardSignal`. Under R1 that is exactly the realised moves and goal entries. Mapping call indices to the tick index τ and to windows is an analysis definition (pre-registration OPEN D-6) and is not done here.
+- **`run_h1r.mjs`** is the experiment driver, one run per process. It:
+  - builds or reuses the conformed tree;
+  - attaches the runtime (`trustMode: 'traversal'`) and the measurement;
+  - runs the unchanged `experiments/m7/run.js` with the frozen settings;
+  - writes a record containing provenance (B2 commit, transform, runtime, measure and driver hashes), validity conditions and the reward record. With `digestOnly`, the reward record is replaced by a SHA-256 of it.
+
+  The driver never aggregates rewards into returns, windows or comparisons.
 
 R1 supersedes the sentence of ERR-05 §3.1 stating that Q-learning, prediction error and reward run "unchanged on both outcomes". It also retires the earlier Q-KEY stash/apply edits, because B2's original calls are correct once they run in the realised view.
 
@@ -53,7 +68,8 @@ node experiments/h1r/run_existing_gates.mjs
 
 | Directory | Contents |
 |---|---|
-| `evidence_r1/` | Current evidence (R1 transform) and `R1_REPORT.md` |
+| `evidence_d1d5/` | Current evidence (R2: D-1 goal-entry draw and D-5 measurement) and `R2_REPORT.md` |
+| `evidence_r1/` | The R1 round, with `R1_REPORT.md` |
 | `evidence_r2/` | The previous Q-KEY round, with its `CORRECTION_REPORT.md` |
 | `evidence_final/` | The first conformance round (`84b4197b`); the trap gate's "before" reference |
 
@@ -61,7 +77,7 @@ Tree paths in evidence are written relative to the OS temp directory, as `<tmp>/
 
 ## Known, reported limitations
 
-- **Goal-entering moves never draw from the environment.** This is pre-existing (`_goalResetJustHappened`), whereas §3.3 implies a slip draw on every edge attempt. R1 forbids adding draws, so it is preserved.
+- **Resolved by R2 (D-1):** goal-entering moves used to take no environment draw, contrary to §3.3. They now draw like every other edge.
 - **Replay re-execution of the last successful move.** It remains a no-op self "move": no draw, no position change, no credit, no learning.
 - **Design premises not met by B2, and not by R1 either.**
   - §10.1 assumes Q absorbs `p_e` through slipped steps "at step cost". B2's reward rules have no step cost, and under R1 a slip is not a learning event.

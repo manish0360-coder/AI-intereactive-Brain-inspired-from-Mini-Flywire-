@@ -53,6 +53,30 @@ if (!fs.existsSync(MUT_R1)) {
   L[i] = '';
   fs.writeFileSync(f, L.join('\n'));
 }
+// R2 anti-vacuity mutants. Each removes exactly one R2 element from the conformed tree.
+//   mutant-goaldraw  the goal exclusion is restored in the early draw (D-1 reverted): goal entries never draw
+//   mutant-measure   the M-REWARD probe sits before the reward chain (D-5 at the wrong site)
+function mutant(suffix, edit) {
+  const dir = C.dir + suffix;
+  if (!fs.existsSync(dir)) {
+    fs.cpSync(C.dir, dir, { recursive: true });
+    const f = path.join(dir, 'main.js');
+    fs.writeFileSync(f, edit(fs.readFileSync(f, 'utf8')));
+  }
+  return dir;
+}
+const MUT_GOALDRAW = mutant('-mutant-goaldraw', (s) => {
+  const a = '_h1rTrav = (next !== null && globalThis.__M7_ENV__) ?';
+  if (s.split(a).length !== 2) throw new Error('mutant-goaldraw: early draw not found');
+  return s.replace(a, '_h1rTrav = (next !== null && !(goalNeuronId !== null && Number(next) === Number(goalNeuronId)) && globalThis.__M7_ENV__) ?');
+});
+const MUT_MEAS = mutant('-mutant-measure', (s) => {
+  const L = s.split('\n');
+  const p = L.findIndex(l => l.includes('// H1R M-REWARD')), q = L.findIndex(l => l === '  let rewardSignal = 0;');
+  if (p < 0 || q < 0 || q > p) throw new Error('mutant-measure: anchors not found');
+  const [line] = L.splice(p, 1); L.splice(q + 1, 0, line);
+  return L.join('\n');
+});
 console.log('conformed tree:', shown(C.dir), C.reused ? '(reused)' : '(built)');
 console.log('pristine tree :', shown(P.dir));
 
@@ -73,8 +97,20 @@ if (SAMPLES.length !== 41) throw new Error(`expected the 41 historical G15 confi
 const SUB = SAMPLES.slice(0, 3);
 
 // ---------------- runner ----------------
+const RUN_H1R = path.join(HERE, 'run_h1r.mjs');
 function run(job) {
   return new Promise((res) => {
+    if (job.driver) {   // the experiment driver itself, digest-only (no reward value leaves the process)
+      const arg = JSON.stringify({ agentSeed: AGENT_SEED, configSeed: job.configSeed, configIndex: job.configIndex, arm: job.arm, tree: job.tree, digestOnly: true });
+      return execFile(process.execPath, [RUN_H1R, arg], { cwd: HERE, maxBuffer: 1 << 28 }, (e, out, err) => {
+        const i = out ? out.indexOf('@@H1RRUN@@') : -1;
+        if (i < 0) return res({ ...job, tree: shown(job.tree), error: shown(String(err || (e && e.message) || 'no output')).slice(-3000) });
+        const d = JSON.parse(out.slice(i + 10));
+        res({ set: job.set, configSeed: job.configSeed, configIndex: job.configIndex, arm: job.arm, tree: shown(job.tree),
+              fp: d.fingerprint, completed: d.outcome.completed, crashed: d.outcome.crashed, validity: d.validity, measurement: d.measurement,
+              h1rProvenance: d.provenance.h1r });
+      });
+    }
     const arg = JSON.stringify({ agentSeed: AGENT_SEED, ...job });
     execFile(process.execPath, [RUN_ONE, arg], { cwd: path.join(job.tree, 'experiments', 'm7'), maxBuffer: 1 << 28 },
       (e, out, err) => {
@@ -98,9 +134,13 @@ for (const s of SUB) for (const arm of ARMS) {
   J.push({ set: 'parityConformedOff', tree: C.dir, h1r: 'off', arm, ...s });
   J.push({ set: 'onNoRecord', tree: C.dir, h1r: 'on', arm, ...s });
   J.push({ set: 'onNoRecord2', tree: C.dir, h1r: 'on', arm, ...s });
+  J.push({ set: 'onMeasureOnly', tree: C.dir, h1r: 'on', measure: true, arm, ...s });          // D-5 neutrality
 }
-for (const s of SAMPLES) for (const arm of ARMS) J.push({ set: 'main', tree: C.dir, h1r: 'on', record: true, arm, ...s });
-for (const s of SUB) for (const arm of ['A1', 'A3', 'A4']) J.push({ set: 'antiOff', tree: C.dir, h1r: 'off', record: true, arm, ...s });
+for (const s of SAMPLES) for (const arm of ARMS) J.push({ set: 'main', tree: C.dir, h1r: 'on', record: true, measure: true, arm, ...s });
+for (const s of SUB) for (const arm of ['A1', 'A3', 'A4']) J.push({ set: 'antiOff', tree: C.dir, h1r: 'off', record: true, measure: true, arm, ...s });
+for (const s of SUB) J.push({ set: 'mutantGoalDraw', tree: MUT_GOALDRAW, h1r: 'on', record: true, measure: true, arm: 'A1', ...s });
+for (const s of SUB) J.push({ set: 'mutantMeasure', tree: MUT_MEAS, h1r: 'on', record: true, measure: true, arm: 'A1', ...s });
+for (const s of SUB) for (const arm of ['A1', 'A7']) J.push({ set: 'driver', driver: true, tree: C.dir, arm, ...s });
 for (const s of SUB) J.push({ set: 'mutantGoal', tree: MUT, h1r: 'on', record: true, arm: 'A1', ...s });
 for (const s of SUB) J.push({ set: 'mutantR1', tree: MUT_R1, h1r: 'on', record: true, arm: 'A1', ...s });
 for (const s of SAMPLES) J.push({ set: 'diagAttemptGated', tree: C.dir, h1r: 'on', record: true, trustMode: 'attemptGated', arm: 'A1', ...s });
@@ -175,11 +215,46 @@ gate('X0', 'every run completed without error or crash', errs.length === 0 && R.
     `return moves covered ${r(x => x.ret.covered)}/${r(x => x.ret.n)} (per arm: ${ARMS.map(a => { const rs = main.filter(x => x.arm === a); return `${a} ${rr(rs, x => x.ret.covered)}/${rr(rs, x => x.ret.n)}`; }).join(', ')})`);
   gate('R1d', 'a slip receives no reward and no update (it costs only the elapsed tick)', r(x => x.q.onSlip) === 0 && r(x => x.learn.onUnrealised) === 0 && kinds('slip') > 0,
     `slip ticks ${kinds('slip')}; Q updates on slip ticks ${r(x => x.q.onSlip)} (positive reward ${r(x => x.q.onSlipPositive)}); self no-op ticks ${kinds('self')}; non-edge ${kinds('nonedge')}`);
-  gate('R1e', 'exactly one environment draw per edge-attempt decision, none otherwise (goal entries included), from the environment stream counter',
+  gate('R1e', 'exactly one environment draw per edge-attempt decision (goal entries included, R2), none otherwise, from the environment stream counter',
     r(x => x.env.mismatch) === 0 && main.every(x => x.r1.env.maxPerTick <= 1) && r(x => x.env.draws) === r(x => x.env.expected) &&
-    sum(main.map(x => x.envCounters.envDraws)) === r(x => x.env.draws) && r(x => x.env.goalEntryDraws) === 0,
-    `draws ${r(x => x.env.draws)} = edge-attempt decisions ${r(x => x.env.expected)} (moves ${kinds('move')} + slips ${kinds('slip')}); per-tick mismatches ${r(x => x.env.mismatch)}; max per tick ${Math.max(...main.map(x => x.r1.env.maxPerTick))}; ` +
-    `env stream counter ${sum(main.map(x => x.envCounters.envDraws))}; goal-entry draws ${r(x => x.env.goalEntryDraws)}`);
+    sum(main.map(x => x.envCounters.envDraws)) === r(x => x.env.draws) && r(x => x.env.goalEntryDraws) === kinds('goal'),
+    `draws ${r(x => x.env.draws)} = edge-attempt decisions ${r(x => x.env.expected)} (moves ${kinds('move')} + slips ${kinds('slip')} + goal entries ${kinds('goal')}); per-tick mismatches ${r(x => x.env.mismatch)}; max per tick ${Math.max(...main.map(x => x.r1.env.maxPerTick))}; ` +
+    `env stream counter ${sum(main.map(x => x.envCounters.envDraws))}; goal entries that drew ${r(x => x.env.goalEntryDraws)}`);
+  // ---- R2 / D-1: goal-entry reliability draw ----
+  const ga = (runs, f) => sum(runs.map(x => f(x.r1.goalAttempts)));
+  const zOf = (runs, cls) => { const n = rr(runs, x => x.calib[cls].n), s = rr(runs, x => x.calib[cls].succ), p = rr(runs, x => x.calib[cls].sumP), v = rr(runs, x => x.calib[cls].sumPQ);
+    return { n, z: v > 0 ? (s - p) / Math.sqrt(v) : NaN }; };
+  const zg = zOf(main, 'goal'), zo = zOf(main, 'other');
+  gate('R2a', 'every goal-entering attempt draws exactly once, through the same early-draw call as every other edge; it can slip',
+    ga(main, g => g.n) > 0 && ga(main, g => g.slips) > 0 && r(x => x.env.goalEntryDraws) === kinds('goal') && r(x => x.env.mismatch) === 0,
+    `goal-entering attempts ${ga(main, g => g.n)}: realised ${ga(main, g => g.successes)}, slipped ${ga(main, g => g.slips)}; realised goal entries that drew ${r(x => x.env.goalEntryDraws)}/${kinds('goal')}; per-tick draw mismatches ${r(x => x.env.mismatch)}`);
+  gate('R2b', 'goal-entering and other edge outcomes both follow p_e (pooled calibration over all runs, pre-declared |z| < 4 for each class)',
+    Math.abs(zg.z) < 4 && Math.abs(zo.z) < 4 && zg.n > 0 && zo.n > 0,
+    `goal-entering attempts n ${zg.n}, z ${zg.z.toFixed(2)} | other edge attempts n ${zo.n}, z ${zo.z.toFixed(2)} (z = (successes - sum p) / sqrt(sum p(1-p)))`);
+  { const dc = (k, f) => sum(main.map(x => f(x.r1.drawCheck[k])));
+    gate('R2x', 'exact mechanism check: every drawn attempt, goal-entering or not, has outcome == (u_k < p_e), u_k the k-th draw of the independently mirrored environment stream',
+      dc('goal', c => c.checked) > 0 && dc('other', c => c.checked) > 0 && dc('goal', c => c.mismatch) === 0 && dc('other', c => c.mismatch) === 0 &&
+      sum(main.map(x => x.r1.drawCheck.unattributed)) === 0 && dc('goal', c => c.checked) + dc('other', c => c.checked) === r(x => x.env.draws),
+      `goal-entering ${dc('goal', c => c.checked)} checked, ${dc('goal', c => c.mismatch)} mismatches | other ${dc('other', c => c.checked)} checked, ${dc('other', c => c.mismatch)} mismatches | unattributed draws ${sum(main.map(x => x.r1.drawCheck.unattributed))}; checked = draws ${r(x => x.env.draws)}`);
+    const zz = (cls) => { const q = zOf(main, cls); return `n ${q.n}, z ${q.z.toFixed(2)}`; };
+    G.push({ id: 'R2b-INFO', name: 'diagnostic splits of the non-goal calibration (pooled over runs that share one environment stream per agent seed)', status: 'INFO',
+      evidence: `retry-after-slip ${zz('otherRetry')} | other attempts ${zz('otherFresh')} | Phase I ${zz('otherP1')} | Phase II ${zz('otherP2')}` }); }
+  { const a7 = main.filter(x => x.arm === 'A7'), z7 = zOf(a7, 'goal'); const ENVSRC = fs.readFileSync(path.join(C.dir, 'experiments', 'm7', 'env.js'), 'utf8');
+    const attemptUsesPFor = /export function attempt\(fromId, toId\) \{[^}]*const p = pFor\(fromId, toId\);/.test(ENVSRC);
+    const trueUsesPFor = /export function trueP\(fromId, toId\) \{ return ACTIVE \? pFor\(fromId, toId\) : null; \}/.test(ENVSRC);
+    gate('R2c', 'ORACLE and environment share one reliability process: both read env.pFor; ORACLE delivers it exactly; A7 goal-entering outcomes follow it',
+      attemptUsesPFor && trueUsesPFor && Math.abs(z7.z) < 4 && z7.n > 0,
+      `env.attempt -> pFor: ${attemptUsesPFor}; env.trueP -> pFor: ${trueUsesPFor}; A7 goal-entering attempts n ${z7.n}, z ${z7.z.toFixed(2)} (ORACLE delivery exactness: G5 in verify_M7 and e3e4 I.2-A7)`); }
+  gate('R2d', 'a slipped goal attempt is an ordinary slip (no reset, no reward, no learning) and every goal reset is a realised goal entry',
+    main.every(x => x.h1rCounters.resets.goal === x.r1.ticks.goal) && r(x => x.q.onSlip) === 0 && r(x => x.learn.onUnrealised) === 0,
+    `goal resets ${sum(main.map(x => x.h1rCounters.resets.goal))} = realised goal entries ${kinds('goal')}; slip ticks (goal slips included) with learning or Q ${r(x => x.learn.onUnrealised) + r(x => x.q.onSlip)}`);
+  gate('R2e', 'trust credit treats goal-entering attempts like every traversal (store = independent reconstruction incl. goal attempts and successes)',
+    main.filter(x => x.arm !== 'A4').every(x => x.trustChecks.reconMismatchMax === 0) && main.filter(x => x.arm !== 'A4').every(x => x.trustChecks.maxSgtA === 0),
+    `reconstruction mismatches ${sum(main.map(x => x.trustChecks.reconMismatchMax))}; keys with s>a ${Math.max(...main.map(x => x.trustChecks.maxSgtA))} (see B1-B3)`);
+  { const mg = by('mutantGoalDraw'), zm = zOf(mg, 'goal'), off = by('antiOff'), zoff = zOf(off, 'goal');
+    gate('R2-AV', 'anti-vacuity: with the goal draw reverted (mutant) and in the B2 order, goal-entering attempts never slip and fail calibration',
+      ga(mg, g => g.slips) === 0 && zm.z > 4 && ga(off, g => g.slips) === 0 && zoff.z > 4,
+      `mutant: goal slips ${ga(mg, g => g.slips)}, z ${zm.z.toFixed(2)} | B2 order: goal slips ${ga(off, g => g.slips)}, z ${zoff.z.toFixed(2)}`); }
   const tally = (k) => { const o = {}; for (const x of main) for (const [rw, n] of Object.entries(x.r1.q.rewardByKind[k])) o[rw] = (o[rw] || 0) + n; return JSON.stringify(o); };
   G.push({ id: 'R1-INFO', name: 'reward carried by main TD Q updates, by realised outcome (existing rules; pooled over all arms)', status: 'INFO',
     evidence: `move ${tally('move')} | goal ${tally('goal')} | slip ${tally('slip')} | other ${tally('other')}` });
@@ -251,7 +326,13 @@ function erf(x) { const s = Math.sign(x); x = Math.abs(x); const t = 1 / (1 + 0.
 // E — P4
 { gate('E1', 'zero post-reset actions from pre-reset reasoning', main.every(r => r.stalePostResetMoves === 0 && r.goals.stalePostReset === 0),
     `stale post-reset moves ${sum(main.map(r => r.stalePostResetMoves))}, stale post-reset goal reaches ${sum(main.map(r => r.goals.stalePostReset))}; resets ${sum(main.map(r => r.h1rCounters.resets.goal + r.h1rCounters.resets.cap))}`);
-  gate('E2', 'zero stale goal reaches of any kind', main.every(r => r.goals.stale === 0), `stale goal reaches ${sum(main.map(r => r.goals.stale))}`);
+  // E2 (re-specified for R2): before R2 a goal entry could never slip, so a stale goal reach could only come
+  // from stale reasoning. A goal attempt can now slip, and the frozen replay branch (F2b, staleExecution,
+  // frozen §9.2) then re-executes it on a later tick. That one class is identified exactly (replay tick,
+  // same edge, slipped on the immediately preceding tick) and reported; every other stale goal reach fails.
+  gate('E2', 'zero stale goal reaches other than replay-branch re-executions of a goal attempt that slipped on the previous tick',
+    main.every(r => r.goals.staleOther === 0) && sum(main.map(r => r.goals.stale)) === sum(main.map(r => r.goals.staleReattempt + r.goals.staleOther)),
+    `stale goal reaches ${sum(main.map(r => r.goals.stale))}: replay re-executions after a slip ${sum(main.map(r => r.goals.staleReattempt))}, other ${sum(main.map(r => r.goals.staleOther))}`);
   const off = by('antiOff');
   gate('E-AV', 'anti-vacuity: with conformance off, stale post-reset goal reaches are detected', sum(off.map(r => r.goals.stalePostReset)) > 0,
     `H1R off: ${sum(off.map(r => r.goals.stalePostReset))} stale post-reset goal reaches`); }
@@ -325,7 +406,14 @@ function erf(x) { const s = Math.sign(x); x = Math.abs(x); const t = 1 / (1 + 0.
   const off = evalDomain(false), on = evalDomain(true);
   gate('S5', 'conformed canReachGoal: 0 false negatives, 0 false positives, 0 trap states over 20 x 4 (H1R on); B2 defect reproduced with H1R off',
     on.fn === 0 && on.fp === 0 && on.traps.length === 0 && off.fn > 0 && off.traps.includes('3/goal 16'),
-    `on: FN ${on.fn}, FP ${on.fp}, traps ${on.traps.length} | off (B2): FN ${off.fn}, FP ${off.fp}, traps ${off.traps.join(', ') || 'none'}`); }
+    `on: FN ${on.fn}, FP ${on.fp}, traps ${on.traps.length} | off (B2): FN ${off.fn}, FP ${off.fp}, traps ${off.traps.join(', ') || 'none'}`);
+  // R2 static: the early draw has no goal exclusion; the goal flag, the goal credit and both probes exist once.
+  const early = ML.find(l => l.includes('// H1R R1-DRAW-EARLY')) || '';
+  gate('S6', 'R2: the single early draw covers goal-entering attempts; R2-GOAL-FLAG and R2-GOAL-CREDIT once each; measurement probes once each',
+    early.includes('_h1rTrav = (next !== null && globalThis.__M7_ENV__) ?') && !early.includes('goalNeuronId') &&
+    cnt(M, /H1R R2-GOAL-FLAG/g) === 1 && cnt(M, /H1R R2-GOAL-CREDIT/g) === 1 && cnt(M, /H1R M-STEP/g) === 1 && cnt(M, /H1R M-REWARD/g) === 1 &&
+    cnt(M, /__M7_ENV__\.attempt\(/g) === 1,
+    `early draw goal-exclusion present: ${early.includes('goalNeuronId')}; R2-GOAL-FLAG ${cnt(M, /H1R R2-GOAL-FLAG/g)}, R2-GOAL-CREDIT ${cnt(M, /H1R R2-GOAL-CREDIT/g)}, M-STEP ${cnt(M, /H1R M-STEP/g)}, M-REWARD ${cnt(M, /H1R M-REWARD/g)}; draw call sites ${cnt(M, /__M7_ENV__\.attempt\(/g)}`); }
 
 // T — TRAP DYNAMICS (pre-declared: for every arm, every goal's no-commit share of decision ticks <= 5%)
 { const GOALS = [8, 12, 16, 19];
@@ -358,6 +446,36 @@ function erf(x) { const s = Math.sign(x); x = Math.abs(x); const t = 1 / (1 + 0.
     const b = main.find(r => r.arm === x && r.configSeed === s.configSeed && r.configIndex === s.configIndex); tot5++; if (a && b && a.fp !== b.fp) { ok5++; per[x]++; } } }
   gate('P3', 'every manipulated arm (A2..A7) differs from BELIEF on every configuration (6 x 41)', ok5 === tot5,
     `${ok5}/${tot5} distinct (${Object.entries(per).map(([a, n]) => `${a} ${n}/${SAMPLES.length}`).join(', ')})`); }
+
+// M — MEASUREMENT (D-5). Counts and digests only: no reward value is read here.
+{ const mm = (runs, f) => sum(runs.map(x => f(x.measurement)));
+  const r1sum = (a, b) => sum(main.map(x => x.r1[a][b]));
+  gate('M1', 'the measurement records exactly one reward event per realised move or goal entry and none on any other tick',
+    main.every(x => x.measurement && x.measurement.calls === x.ticksSeen) && mm(main, m => m.presenceMismatch) === 0 && mm(main, m => m.eventsOnUnrealised) === 0 &&
+    mm(main, m => m.multi + m.orphan + m.nonFinite) === 0 && mm(main, m => m.eventCount) === r1sum('learn', 'n'),
+    `events ${mm(main, m => m.eventCount)} = learning passes ${r1sum('learn', 'n')}; presence mismatches ${mm(main, m => m.presenceMismatch)}; on unrealised ticks ${mm(main, m => m.eventsOnUnrealised)}; duplicates/orphans/non-finite ${mm(main, m => m.multi + m.orphan + m.nonFinite)}; calls = agent steps in every run`);
+  gate('M2', 'every recorded value equals the rewardSignal the agent used in its main TD update on that tick',
+    mm(main, m => m.compared) > 0 && mm(main, m => m.valueMismatch) === 0,
+    `compared ${mm(main, m => m.compared)}, value mismatches ${mm(main, m => m.valueMismatch)}`);
+  const a = by('onNoRecord'), b = by('onMeasureOnly');
+  const same = a.filter(x => { const y = b.find(z => key(z) === key(x)); return y && y.fp === x.fp && y.cog === x.cog; }).length;
+  gate('M3', 'the measurement is observationally neutral: fingerprint (incl. all RNG draw counts) identical with and without it, all 7 arms',
+    same === a.length && a.length === SUB.length * 7, `${same}/${a.length} (config, arm) pairs identical`);
+  const MSRC = fs.readFileSync(path.join(HERE, 'measure.mjs'), 'utf8').replace(/\/\/.*$/gm, '');
+  const rngFree = !/Math\.random|liveRng|makeRng|initRng|randomBytes|randomUUID|getRandomValues/.test(MSRC);
+  const ML2 = fs.readFileSync(path.join(C.dir, 'main.js'), 'utf8').split('\n').filter(l => l.includes('__H1R_MEASURE__'));
+  const probesPure = ML2.length === 2 && ML2.every(l => /^\s*if \(globalThis\.__H1R_MEASURE__\) globalThis\.__H1R_MEASURE__\.(step\(\)|reward\(rewardSignal\)); \/\/ H1R M-/.test(l));
+  gate('M4', 'no additional stochastic operation and no agent-visible effect: the module draws nothing; the two probes are call-only statements',
+    rngFree && probesPure, `measure.mjs RNG references: ${rngFree ? 'none' : 'FOUND'}; probes in main.js: ${ML2.length}, call-only: ${probesPure}`);
+  const mut = by('mutantMeasure'), off = by('antiOff');
+  gate('M-AV', 'anti-vacuity: a probe at the wrong site is caught (M2), and in the B2 order the probe follows the reward to unrealised ticks',
+    mm(mut, m => m.valueMismatch) > 0 && mm(off, m => m.eventsOnUnrealised) > 0 && mm(off, m => m.valueMismatch) === 0,
+    `mutant value mismatches ${mm(mut, m => m.valueMismatch)} | B2 order: events on unrealised ticks ${mm(off, m => m.eventsOnUnrealised)}, value mismatches ${mm(off, m => m.valueMismatch)}`);
+  const drv = by('driver');
+  const agree = drv.filter(d => { const x = main.find(z => key(z) === key(d)); return x && x.fp === d.fp && x.measurement.digest === d.measurement.digest && x.measurement.eventCount === d.measurement.eventCount; }).length;
+  gate('M5', 'the experiment driver (run_h1r.mjs) reproduces the verified run and its reward record, and reports every validity condition true',
+    drv.length === SUB.length * 2 && agree === drv.length && drv.every(d => d.validity && d.validity.valid),
+    `${agree}/${drv.length} driver runs identical in fingerprint and reward-record digest to the recorder-verified runs; valid ${drv.filter(d => d.validity && d.validity.valid).length}/${drv.length}`); }
 
 // H — DETERMINISM
 { const a = by('onNoRecord'), b = by('onNoRecord2');

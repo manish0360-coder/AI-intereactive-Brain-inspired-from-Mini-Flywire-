@@ -32,6 +32,8 @@
 //                         which then reads the realised transition (from = the decision position,
 //                         to = the realised node); the E1' traversal block still performs the move.
 //                         Learning rules, reward constants, Q equation and parameters unchanged.
+//   R2        §3.3/§6.1   goal-entering attempts use the same environment draw as every other edge
+//                         (D-1); observational measurement probes for the per-tick reward (D-5)
 // ==========================================================
 
 export const B2_COMMIT = '707cb1e5205a7e9979f81092ee1ebfa0fe28922e';
@@ -130,7 +132,8 @@ function transformMain(text) {
   //   R1-DRAW-EARLY  the decision's one environment draw is taken immediately before the section:
   //                  the same call `__M7_ENV__.attempt(u, v)` with the same arguments the E1 site
   //                  uses (u = agentCurrent, to which agentLast is synced before E1; v = next), the
-  //                  same exclusions (no decision; goal-entering move), the same stream.
+  //                  same stream; no draw without a decision. (R1 also excluded goal-entering moves,
+  //                  as B2 did; R2-GOAL-DRAW below removes that exclusion.)
   //   R1-VIEW        the section reads the REALISED transition: from = u (agentLast = u);
   //                  success -> to = v (agentCurrent = v); slip -> the realised node is u (next = u),
   //                  i.e. a realised self-transition, which the section's existing entry guard
@@ -150,7 +153,7 @@ function transformMain(text) {
     if (!L.slice(i - 6, i).some(l => l.includes('SAFE SELF LEARNING'))) refuse(F, 'R1-VIEW', 'SAFE SELF LEARNING header not found above the guard');
     L.splice(i, 0,
       `let _h1rTrav = true, _h1rU = agentCurrent, _h1rV = next, _h1rGoalResets = 0; // H1R R1 state`,
-      `if (${G}) { _h1rTrav = (next !== null && !(goalNeuronId !== null && Number(next) === Number(goalNeuronId)) && globalThis.__M7_ENV__) ? globalThis.__M7_ENV__.attempt(agentCurrent, next) : true; _h1rGoalResets = globalThis.__H1R__.counters.resets.goal; globalThis.__H1R__.noteR1(agentCurrent, next, _h1rTrav); } // H1R R1-DRAW-EARLY: the one environment draw of this decision, before learning`,
+      `if (${G}) { _h1rTrav = (next !== null && globalThis.__M7_ENV__) ? globalThis.__M7_ENV__.attempt(agentCurrent, next) : true; _h1rGoalResets = globalThis.__H1R__.counters.resets.goal; globalThis.__H1R__.noteR1(agentCurrent, next, _h1rTrav); } // H1R R1-DRAW-EARLY: the one environment draw of this decision, before learning (R2-GOAL-DRAW: goal-entering attempts included)`,
       `if (${G}) { agentLast = agentCurrent; if (!_h1rTrav) next = agentCurrent; else if (next !== null) agentCurrent = next; } // H1R R1-VIEW: the section below reads the realised transition`);
   }
   {
@@ -163,6 +166,45 @@ function transformMain(text) {
     const [d] = one(F, 'R1-DRAW', L, l => l === '    (next !== null && !_goalResetJustHappened && _m7env)');
     if (L[d - 1] !== 'const _m7Traversed =' || L[d + 1] !== '        ? _m7env.attempt(_m7From, _m7To)' || L[d + 2] !== '        : true;') refuse(F, 'R1-DRAW', 'E1 draw expression not found in the expected shape');
     L[d] = `    (${G}) ? _h1rTrav : (next !== null && !_goalResetJustHappened && _m7env) // H1R R1-DRAW: reuse the outcome drawn before learning`;
+  }
+
+  // R2 / D-1 — GOAL-ENTRY RELIABILITY DRAW (Director ruling R2, 2026-10-04; frozen §3.3, §6.1).
+  // B2 never drew for a goal-entering move: it took `next === goal` to mean "the goal reset already
+  // happened", so the move always arrived, received no trust credit, and its edge was effectively
+  // reliable whatever p_e said. Under H1R:
+  //   R2-GOAL-DRAW    R1-DRAW-EARLY above no longer excludes goal-entering attempts: they draw through
+  //                   the same call, from the same stream, exactly once, like every other edge attempt.
+  //   R2-GOAL-FLAG    `_goalResetJustHappened` means what B2's own comment says it means — the goal
+  //                   reset ran on this tick — read from the runtime's reset counter instead of being
+  //                   inferred from the intended node. A slipped goal-entering attempt therefore follows
+  //                   the ordinary slip path: no move, no reset, and E2 credits the attempt.
+  //   R2-GOAL-CREDIT  a realised goal entry is credited a += 1, s += 1 like any traversal (frozen §6.1:
+  //                   recordAttempt on every traversal attempt, recordSuccess iff it succeeded). The
+  //                   reset has already moved the agent, so the decision position recorded by R1 is used.
+  {
+    const [f] = one(F, 'R2-GOAL-FLAG', L, l => l === 'const _goalResetJustHappened =');
+    if (L[f + 1] !== '    goalNeuronId !== null &&' || L[f + 2] !== '    Number(next) === Number(goalNeuronId);') refuse(F, 'R2-GOAL-FLAG', 'goal-reset expression not found in the expected shape');
+    L[f] = `const _goalResetJustHappened = (${G}) ? (globalThis.__H1R__.counters.resets.goal !== _h1rGoalResets) : // H1R R2-GOAL-FLAG: the goal reset ran this tick`;
+  }
+  {
+    const [r] = one(F, 'R2-GOAL-CREDIT', L, l => l === '    _m7cred.recordTraversal(_m7From, _m7To, _m7Traversed);');
+    let k = r + 1; while (k < r + 4 && L[k] !== '}') k++;
+    if (L[k] !== '}' || L[r - 1] !== '    // E2: credit the ACTUAL attempted edge, with the realised outcome.' || !L[r - 2].includes('// H1R A4-T'))
+      refuse(F, 'R2-GOAL-CREDIT', 'E2 credit block not found in the expected shape');
+    L.splice(k + 1, 0, `if (${G} && _goalResetJustHappened && _m7cred && !globalThis.__H1R__.trustFrozen()) { _m7cred.recordTraversal(_h1rU, _h1rV, true); globalThis.__H1R__.noteAttempt(_h1rU, _h1rV); } // H1R R2-GOAL-CREDIT: a realised goal entry is credited like any traversal (frozen §6.1)`);
+  }
+
+  // R2 / D-5 — MEASUREMENT PROBES (observational only). Guarded by `globalThis.__H1R_MEASURE__`, not by
+  // the H1R switch, so the same probes can observe the B2 order too. They call into the measurement
+  // module, read one value, assign nothing in the agent, branch on nothing, draw nothing.
+  //   M-STEP    one measurement tick per runAgent() call, immediately after the E6 telemetry step.
+  //   M-REWARD  the final rewardSignal of this tick, immediately before its first consumer
+  //             (updateLocalEmotion); every assignment to rewardSignal precedes this line.
+  {
+    const [t] = one(F, 'M-STEP', L, l => l === '  if (globalThis.__M7_TEL__) globalThis.__M7_TEL__.step();');
+    L.splice(t + 1, 0, `  if (globalThis.__H1R_MEASURE__) globalThis.__H1R_MEASURE__.step(); // H1R M-STEP: measurement tick (observational)`);
+    const [u] = one(F, 'M-REWARD', L, l => l === 'updateLocalEmotion({');
+    L.splice(u, 0, `if (globalThis.__H1R_MEASURE__) globalThis.__H1R_MEASURE__.reward(rewardSignal); // H1R M-REWARD: final rewardSignal of this tick (observational)`);
   }
 
   // P4 — clear the pre-reset reasoning at both episode-reset sites.
@@ -205,4 +247,5 @@ export const TRANSFORMS = Object.freeze({
 });
 
 export const EDIT_TAGS = Object.freeze(['N1-MASK', 'N1-MASK-SEM', 'A3', 'N1-GUARD', 'GOAL', 'A4-Q-decay', 'A4-T-decay', 'A4-T-credit',
-  'N2-note', 'P4-goal', 'P4-cap', 'CRG-1', 'CRG-2', 'CRG-3', 'R1-VIEW', 'R1-RESTORE', 'R1-DRAW', 'A4-Q', 'N1-SEAL', 'N2']);
+  'N2-note', 'P4-goal', 'P4-cap', 'CRG-1', 'CRG-2', 'CRG-3', 'R1-VIEW', 'R1-RESTORE', 'R1-DRAW',
+  'R2-GOAL-FLAG', 'R2-GOAL-CREDIT', 'M-STEP', 'M-REWARD', 'A4-Q', 'N1-SEAL', 'N2']);
