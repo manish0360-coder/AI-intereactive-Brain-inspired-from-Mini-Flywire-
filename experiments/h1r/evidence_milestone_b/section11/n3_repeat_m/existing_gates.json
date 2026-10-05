@@ -1,0 +1,86 @@
+[
+ {
+  "script": "verify_S1.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 8,
+  "passes": 12,
+  "fails": [],
+  "verdicts": [
+   "12 passed, 0 failed"
+  ],
+  "assertions": [
+   "PASS  S1.1  every penalty/cost has d<0 and every boost/bonus has d>0",
+   "PASS  S1.2a hunger now INCREASES a reward-8 candidate   was -1.9921 -> now 1.9921",
+   "PASS  S1.2b boredom increases a curiosity candidate (unchanged)   0.1200 -> 0.1200",
+   "PASS  S1.3a  every NON-flipped term derivative bit-unchanged   25 terms checked",
+   "PASS  S1.3b  single-path flipped terms: |coefficient| preserved, sign inverted",
+   "PASS  S1.3c  stressState = -0.400 direct + 0.175 via dynamicFocus = -0.225   measured -0.225000",
+   "PASS  S1.3d  fatigueState unchanged at -0.125 (-0.35 direct +0.225 via dynamicFocus)   measured -0.125000",
+   "PASS  S1.3e  curiosityState |coef| preserved (mean over 200k drift draws)   -0.8000 -> 0.8000",
+   "PASS  S1.3f  driveRewardBoost |coef| preserved, sign inverted   -1.9921 -> 1.9921",
+   "PASS  S1.4a  clamp rate not worse than pre-fix",
+   "PASS  S1.4b  softmax degeneracy unchanged (F5 not made worse)",
+   "PASS  S1.5  repaired agent prefers the taught path over the punished one"
+  ],
+  "tail": "      pre-fix : taught 74.94  punished 24.63  -> picks TAUGHT |       post-fix: taught 65.43  punished -10.89  -> picks TAUGHT | PASS  S1.5  repaired agent prefers the taught path over the punished one |  | 12 passed, 0 failed | ",
+  "config": "pristine"
+ },
+ {
+  "script": "verify_S1.js",
+  "dir": "experiments/phase1_0",
+  "mode": "off",
+  "exit": 0,
+  "seconds": 8,
+  "passes": 12,
+  "fails": [],
+  "verdicts": [
+   "12 passed, 0 failed"
+  ],
+  "assertions": [
+   "PASS  S1.1  every penalty/cost has d<0 and every boost/bonus has d>0",
+   "PASS  S1.2a hunger now INCREASES a reward-8 candidate   was -1.9921 -> now 1.9921",
+   "PASS  S1.2b boredom increases a curiosity candidate (unchanged)   0.1200 -> 0.1200",
+   "PASS  S1.3a  every NON-flipped term derivative bit-unchanged   25 terms checked",
+   "PASS  S1.3b  single-path flipped terms: |coefficient| preserved, sign inverted",
+   "PASS  S1.3c  stressState = -0.400 direct + 0.175 via dynamicFocus = -0.225   measured -0.225000",
+   "PASS  S1.3d  fatigueState unchanged at -0.125 (-0.35 direct +0.225 via dynamicFocus)   measured -0.125000",
+   "PASS  S1.3e  curiosityState |coef| preserved (mean over 200k drift draws)   -0.8000 -> 0.8000",
+   "PASS  S1.3f  driveRewardBoost |coef| preserved, sign inverted   -1.9921 -> 1.9921",
+   "PASS  S1.4a  clamp rate not worse than pre-fix",
+   "PASS  S1.4b  softmax degeneracy unchanged (F5 not made worse)",
+   "PASS  S1.5  repaired agent prefers the taught path over the punished one"
+  ],
+  "tail": "      pre-fix : taught 74.94  punished 24.62  -> picks TAUGHT |       post-fix: taught 65.43  punished -10.89  -> picks TAUGHT | PASS  S1.5  repaired agent prefers the taught path over the punished one |  | 12 passed, 0 failed | ",
+  "config": "off"
+ },
+ {
+  "script": "verify_S1.js",
+  "dir": "experiments/phase1_0",
+  "mode": "on",
+  "exit": 0,
+  "seconds": 8,
+  "passes": 12,
+  "fails": [],
+  "verdicts": [
+   "12 passed, 0 failed"
+  ],
+  "assertions": [
+   "PASS  S1.1  every penalty/cost has d<0 and every boost/bonus has d>0",
+   "PASS  S1.2a hunger now INCREASES a reward-8 candidate   was -1.9921 -> now 1.9921",
+   "PASS  S1.2b boredom increases a curiosity candidate (unchanged)   0.1200 -> 0.1200",
+   "PASS  S1.3a  every NON-flipped term derivative bit-unchanged   25 terms checked",
+   "PASS  S1.3b  single-path flipped terms: |coefficient| preserved, sign inverted",
+   "PASS  S1.3c  stressState = -0.400 direct + 0.175 via dynamicFocus = -0.225   measured -0.225000",
+   "PASS  S1.3d  fatigueState unchanged at -0.125 (-0.35 direct +0.225 via dynamicFocus)   measured -0.125000",
+   "PASS  S1.3e  curiosityState |coef| preserved (mean over 200k drift draws)   -0.8000 -> 0.8000",
+   "PASS  S1.3f  driveRewardBoost |coef| preserved, sign inverted   -1.9921 -> 1.9921",
+   "PASS  S1.4a  clamp rate not worse than pre-fix",
+   "PASS  S1.4b  softmax degeneracy unchanged (F5 not made worse)",
+   "PASS  S1.5  repaired agent prefers the taught path over the punished one"
+  ],
+  "tail": "      pre-fix : taught 74.94  punished 24.63  -> picks TAUGHT |       post-fix: taught 65.42  punished -10.90  -> picks TAUGHT | PASS  S1.5  repaired agent prefers the taught path over the punished one |  | 12 passed, 0 failed | ",
+  "config": "on"
+ }
+]

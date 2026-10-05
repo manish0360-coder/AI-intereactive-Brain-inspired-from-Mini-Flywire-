@@ -1,0 +1,25 @@
+PASS  I1  v1.0 bytes match the integrity record (working copy, and HEAD blob when committed)
+      record c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836; working c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836; HEAD blob c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836
+PASS  A1  all 26 frozen decision anchors are present verbatim
+      all present
+PASS  A2  no OPEN / RECOMMENDATION / TBD marker and no reference to the abandoned 893000 block
+      none
+PASS  B1  build-identity table: 11 files equal their committed blobs at e8e904a
+      11 matched
+PASS  B2  conformed-file table equals evidence_r3/conformance_gates.json (4 files)
+      all 4 match
+PASS  B3  M7 pre-registration digest validates
+      2f12e309d7409e95f3d1bca34135110e518865fd01d96e5eeaee347b6e33f6b9
+PASS  B4  the three M7 governing documents match their recorded SHA-256 (working copy, v1.0 table, HEAD blob when committed)
+      all 3 match
+PASS  B5  .gitattributes marks the frozen files -text
+      5 entries
+PASS  G1  decision log has entries D-013 … D-018 and D-018 cites the v1.0 SHA-256
+      hash cited: true
+PASS  G2  R3 report no longer asserts the per-run ~1e-6 probability and points to v1.0
+      checked
+PASS  S1  R3 constants, pilot slots (5 seeds x 10 indices) and confirmatory positions agree with v1.0 and lie in the verified domain
+      constants true; pilot slots 256..521; listed true; confirmatory in domain true
+
+11 PASS, 0 FAIL
+exit 0

@@ -87,6 +87,44 @@ R1 supersedes the sentence of ERR-05 §3.1 stating that Q-learning, prediction e
 - **`orchestrate.mjs`** runs the pipeline PLAN → registry pre-check → SCHEDULE → EXECUTE → RECORD / NO-RECORD → structural validation → identity/provenance validation → validity classification → pair construction → study input → `analyze.js`. It computes no metric. A stage runs only with `H1R_STAGE_AUTHORISED=<stage>` and a registry that records H1-R's use; `node experiments/h1r/orchestrate.mjs precheck <stage>` reports the read-only pre-check and `identity` the instrument hashes.
 - **Rulings it applies (D-026):** a base run whose process leaves no record is a crash and is never re-run; a fork is valid iff all 11 flags are true, with one pre-registered retry; raw records live in the git-ignored `data/` (SHA-256 of the uncompressed bytes, repository-relative manifest paths); derived artifacts go to `stage_records/`.
 
+## Registry, build identity and CLI gate (Milestone B; D-027)
+
+- **Registry (v1.0 §7.6, first two actions).** `experiments/registry/consumed_after_h1r.js` records the H1-R pilot configuration block 886000–889999 (`H1R_BLOCKS`, use `pilot`; nothing evaluated yet). `typed.js` delegates to it and records (H1-R, pilot, not executed) for the pilot agent seeds 20260819004–008. Nothing at or above the held-out floor is recorded. The confirmatory seeds and the held-out stream are recorded only before Stage 2, once S* is fixed. `node experiments/h1r/orchestrate.mjs precheck stage1` is now executable as far as the registry is concerned; a stage still needs the Director's `H1R_STAGE_AUTHORISED=<stage>`. `precheck stage2` still refuses.
+- **Build identity (v1.0 §1.2).** `BUILD_IDENTITY.json` records, before any Stage-1 run:
+  - the SHA-256 and git blob id of the pre-registration, the analysis instrument, the orchestrator, the instrument files, the registry and the verifiers;
+  - the `instrumentIdentity` object that the orchestrator stamps into every plan, manifest and run record.
+
+  `build_identity.mjs` derives it from git blobs only, so it holds no clock and no host path. Its binding commit is the commit that adds it, whose parent is `baseCommit`. `node experiments/h1r/build_identity.mjs --check` re-derives it from HEAD.
+- **Line endings.** `orchestrate.mjs` and the 7 instrument files are hashed from working-tree bytes at run time, so they are `-text`, like `analyze.js`. `fresh_clone_check.mjs` clones the repository with `core.autocrlf=true` and checks that every `-text` file keeps its committed bytes.
+- **CLI gate.** `verify_cli.mjs` (C1–C15) drives `orchestrate.mjs` as a child process:
+  - **In the repository:** only the read-only commands run there (`identity`, `precheck`, usage errors, unauthorised stage commands).
+  - **In sandboxes:** authorised stage commands run only in throwaway sandboxes under the temporary directory, on test doubles (`cli_gate/`). No agent runs there, no M7 configuration is generated, and every record is invalid by construction.
+- **Historical gates.** `evidence_milestone_b/historical_gate_sweep.json` records every registry-related historical gate before and after the milestone. `verify_milestone_b.mjs` names each changed verdict and its reason. Of 38 gates, two change:
+  - `verify_study2_execution.js` R1, R4 and H5. 889999, the Study-2 block's neighbour, is now the last H1-R pilot seed; the chain gained a link; M34's error now names the new link.
+  - `pilot_registry_status.mjs`, the v1.0 B.3 query. The pilot block is now consumed and 004–008 are recorded for H1-R.
+- **N3 and D-028.** N3 compares `verify_determinism.js` C1 on its ID, position, verdict and exit code, but not on its count of distinct fingerprints. That count comes from 8 concurrent runs with the determinism repair suppressed, so it depends on the wall clock, and nothing else reads it.
+  - The rest of the line, D4 and every other assertion stay as before.
+  - `verify_d028.mjs` derives 12 cases from the existing §11 evidence and checks 11 over-broad versions of the exemption against them.
+- **O23 of `verify_orchestrator.mjs`** asserts the pre-Milestone-B registry (no H1-R record, no stage executable), so it now fails by design: its in-memory registry adds the 004–008 records that are now committed, and that construction throws a duplicate-record refusal.
+  - The same gate also holds a CLI probe that sets `H1R_STAGE_AUTHORISED=stage1` and relied on the registry refusing. With this registry that probe would start Stage 1. It is unreachable only because O23 throws first, and `verify_milestone_b.mjs` H-P asserts that.
+  - **Do not edit O23 without removing that probe.**
+
+```bash
+node experiments/h1r/verify_milestone_b.mjs
+```
+
+```bash
+node experiments/h1r/verify_cli.mjs
+```
+
+```bash
+node experiments/h1r/verify_d028.mjs
+```
+
+```bash
+node experiments/h1r/fresh_clone_check.mjs
+```
+
 ## Verification
 
 ```bash
@@ -125,6 +163,7 @@ node experiments/h1r/verify_ms1_unit.mjs
 
 | Directory | Contents |
 |---|---|
+| `evidence_milestone_b/` | Milestone B: the historical-gate sweep, the fresh-clone check, the CLI gate (C1–C15), the §11 battery (`section11/`), the analysis and orchestrator batteries (`analysis/`, `orchestrator/`), the D-028 gate (`d028_gates.json`), the closure re-runs (`closure/`) and the Milestone B gate log |
 | `evidence_milestone_a/` | The §11 battery rerun for Milestone A (conformance, MS-1 unit, existing gates with the N3 repetitions, equivalence, freeze) |
 | `evidence_orchestrator/` | Gates O1–O26 of `verify_orchestrator.mjs` on the diagnostic material, with its manifests |
 | `evidence_analysis/` | The `verify_analysis.mjs` battery (unit oracles U1–U21, fixtures, mutants), the fixture output and the interpretation register |

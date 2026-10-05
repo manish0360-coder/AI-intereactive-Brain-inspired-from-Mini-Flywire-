@@ -7,6 +7,74 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-028 — H1-R N3: `verify_determinism.js` C1 compared without its fingerprint-count detail (named interpretation of OFF ≡ pristine)
+
+**Date:** 2026-10-06 · **Authority:** Research Director "D-028 / final Milestone-B closure" (2026-10-06), after the read-only C1/N3 semantic investigation · **Status:** in force; implemented in `experiments/h1r/verify_existing_equivalence.mjs`, gated by `experiments/h1r/verify_d028.mjs`
+**Scope:** the N3 equivalence check only (D-019 §5 N3, "OFF ≡ pristine").
+- This is a named interpretation of the frozen relation "OFF ≡ pristine". H1-R v1.0 is unchanged (SHA-256 `c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836`), as are D-019 … D-027.
+- It does not change the hypothesis, pre-registration, arms, environment, reward, seeds, estimand, analysis, validity flags, metrics, Stage 1 or Stage 2.
+
+### 1. Ruling
+For N3, and only for the assertion with ID `C1` produced by `experiments/m7/verify_determinism.js`, the relation compares:
+1. the assertion ID;
+2. the assertion's order/position;
+3. its PASS/FAIL verdict;
+4. the process exit code.
+
+It does not require exact equality of C1's diagnostic detail giving the number of distinct fingerprints. Only that count is ignored; every other part of the line, every other C1 field, D4, every other assertion and every other gate script remain binding.
+
+### 2. Basis (the read-only investigation)
+- C1 runs 8 concurrent repair-suppressed runs (`verify_determinism.js:129`). Their trajectories depend on the wall-clock replay cooldown (`render/episodeManager.js:512`).
+- It computes N, the number of distinct fingerprints (`:130`). Its verdict is N > 1.
+- N reaches nothing downstream except N3's exact-text comparison:
+  - no H1-R analysis input;
+  - no run-validity flag;
+  - no provenance or registry state;
+  - no Stage-authorization code;
+  - no final scientific verdict.
+
+---
+
+## D-027 — H1-R Milestone B: registry linkage for the pilot, pre-Stage-1 build identity, line-ending protection, CLI gate
+
+**Date:** 2026-10-05 · **Authority:** Research Director "Milestone B authorization" (2026-10-05), after Milestone A (`bf0833f`) · **Status:** in force; implemented in Milestone B
+**Scope:** governance and engineering only, before any Stage-1 data.
+- H1-R v1.0 is unchanged (SHA-256 `c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836`), as are D-020 … D-026. No estimand, formula, window, verdict rule, validity rule or pre-registration text changes.
+- `analyze.js` (`dae6012c1ac48a96ccd9835b24e7aadce9243d95e147a5d8d2b3f833fb0a414d`) and `orchestrate.mjs` (`6162f8c21dab3b95b826c349a2794a70c51cf5a7f6e285a44d0b52efd398032b`) are unchanged.
+- Stage 1 and Stage 2 are not run. No confirmatory or held-out allocation is consumed, and no experimental seed is generated.
+
+### 1. Authorized scope (one milestone)
+1. **Registry.** Perform the first two v1.0 §7.6 registry actions:
+   - record the H1-R pilot configuration block 886000–889999 (new chain link `consumed_after_h1r.js`);
+   - record the (H1-R, pilot) trajectory records for 20260819004–008 (`typed.js`).
+
+   Historical verifier flips caused by this are classified as FACT and named. They are not hidden, and historical evidence is not altered.
+2. **Build identity.** A committed, deterministic, byte-stable pre-Stage-1 build-identity record. It covers the pre-registration, `analyze.js`, `orchestrate.mjs`, the instrument files, the relevant verifiers and commit identity, and holds no timestamp or host path.
+3. **Line endings.** Minimal `.gitattributes -text` for `orchestrate.mjs` and the H1-R instrument files, then a fresh-clone test with `core.autocrlf=true` over the committed SHA-256 of every protected file.
+4. **CLI gate.** A direct gate on the CLI `runCommand` through the actual CLI command path. It covers:
+   - valid dispatch, unknown commands and argument validation;
+   - determinism;
+   - no Stage 1 or Stage 2 execution, and no registry consumption;
+   - no filesystem mutation outside the test area;
+   - failure propagation.
+
+   The CLI is not redesigned.
+5. **Battery.** The full §11 battery once at the end, with F2, G15′ and P1 non-blocking. It also verifies:
+   - analysis and orchestrator determinism;
+   - schema;
+   - protected hashes and registry integrity;
+   - that no stage ran and no seed was generated;
+   - that the working tree is clean.
+
+### 2. Boundaries kept from the authorization
+- `analyze.js` changes only for a genuine Milestone-B compatibility requirement, and then only after stopping and reporting.
+- Raw H1-R records remain authoritative and outside Git.
+- A missing base record remains a crash: an invalid run, whose (configuration, seed) pair is dropped and never re-run.
+- A fork is valid iff all 11 flags are true.
+- No trajectory is invented.
+
+---
+
 ## D-026 — H1-R orchestrator rulings: no-record policy, fork-crash definition, I-23 option A, storage; Milestone A
 
 **Date:** 2026-10-05 · **Authority:** Research Director "Final orchestrator rulings + Milestone A authorization" (2026-10-05), on the read-only orchestrator/registry design report · **Status:** in force; implemented in `experiments/h1r/orchestrate.mjs` and `experiments/h1r/analyze.js` (Milestone A)

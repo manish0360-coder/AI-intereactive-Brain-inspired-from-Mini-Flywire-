@@ -1,0 +1,330 @@
+{
+ "schema": "h1r.build-identity/1",
+ "study": "H1-R",
+ "statement": "Pre-Stage-1 build identity (H1-R v1.0 §1.2). SHA-256 and git blob id over committed blob content. The binding commit is the commit that adds this record; its parent is baseCommit. instrumentIdentity is the object orchestrate.mjs stamps into every plan, manifest and run record; a Stage-1 or Stage-2 artifact whose instrument identity differs from it is a protocol deviation.",
+ "baseCommit": "bf0833f466ad7c626c9a719efa3a91d6b6367b16",
+ "b2Commit": "707cb1e5205a7e9979f81092ee1ebfa0fe28922e",
+ "instrumentCommit": "e8e904a2f213e45dc0fb326f36cf72809f5862cf",
+ "preregistrationSha256": "c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836",
+ "instrumentIdentity": {
+  "b2Commit": "707cb1e5205a7e9979f81092ee1ebfa0fe28922e",
+  "trustMode": "traversal",
+  "transformSha256": "02ccbf382ad7da5dd0a97e010081f025971263b2ad1af507c80d070fc0116346",
+  "runtimeSha256": "de06d8e4de73be82ad0b55f40d5192232e15dbeef2a3288bf4a4dd39b8540dd2",
+  "measureSha256": "41590aad2762614cdfe160112c02a01e660894e53d8a6c38044f994a9527eaaa",
+  "measureInstallSha256": "29cc6dc687372db3fe51da9cdacf28a2bc5a6c9cc0201997d3997bbcaf93ce40",
+  "shadowSha256": "43532dee22fb73c50261610b3b43cc1aa232a6826b2b929c14fa7d2d3fea9a77",
+  "envSeedSha256": "80caf09aae290bc77c9f370dfcaaa531490a2841df801505a31bb7faecdc136e",
+  "driverSha256": "9b1a79a39aabb64539df38ea43f4e425735e76460314393b93d8e622970679e6",
+  "analyzeSha256": "dae6012c1ac48a96ccd9835b24e7aadce9243d95e147a5d8d2b3f833fb0a414d",
+  "orchestratorSha256": "6162f8c21dab3b95b826c349a2794a70c51cf5a7f6e285a44d0b52efd398032b"
+ },
+ "files": {
+  "protocol": [
+   {
+    "path": "research/preregistrations/H1R_PREREGISTRATION_v1.0.md",
+    "sha256": "c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836",
+    "gitBlob": "3ca595d913727291a891e847f0b69319b8d9e1f1",
+    "text": "unset",
+    "runtimeHashed": false
+   },
+   {
+    "path": "research/preregistrations/H1R_PREREGISTRATION_v1.0.sha256",
+    "sha256": "ca37bc382bea2dc4ce839daedd644dfe9c5dad625dc9a5e8b9344b37759b41a6",
+    "gitBlob": "1f6f60823ea81e156b298e15b35654abf746824c",
+    "text": "unset",
+    "runtimeHashed": false
+   },
+   {
+    "path": "research/preregistrations/H1R_ERRATUM_R3_ENVIRONMENT_SEED.md",
+    "sha256": "bf3bd47306853300df9518c1c043638bbdda1864bd51802b092837f0a6761888",
+    "gitBlob": "9a2684658fd81823e2010b40665c6b8defeeffcb",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "research/preregistrations/h1r_d021b/GEMINI_PACKAGE.md",
+    "sha256": "65500ddef1a7f35070854447309b5065021e6e7d0437511a64092b26e6e944c4",
+    "gitBlob": "efd2dc912f618dc4af5eab30119605f84034815c",
+    "text": "unset",
+    "runtimeHashed": false
+   }
+  ],
+  "analysis": [
+   {
+    "path": "experiments/h1r/analyze.js",
+    "sha256": "dae6012c1ac48a96ccd9835b24e7aadce9243d95e147a5d8d2b3f833fb0a414d",
+    "gitBlob": "4f70c15a82010fece2a7c7b1456f473c18af6d51",
+    "text": "unset",
+    "runtimeHashed": true
+   }
+  ],
+  "orchestrator": [
+   {
+    "path": "experiments/h1r/orchestrate.mjs",
+    "sha256": "6162f8c21dab3b95b826c349a2794a70c51cf5a7f6e285a44d0b52efd398032b",
+    "gitBlob": "a262d09cea93e7b7540d45aee128b4c04e11f2ac",
+    "text": "unset",
+    "runtimeHashed": true
+   }
+  ],
+  "instrument": [
+   {
+    "path": "experiments/h1r/conformance_transform.mjs",
+    "sha256": "02ccbf382ad7da5dd0a97e010081f025971263b2ad1af507c80d070fc0116346",
+    "gitBlob": "12aab08c952632ad1bcda2bbe7a30385976181b8",
+    "text": "unset",
+    "runtimeHashed": true
+   },
+   {
+    "path": "experiments/h1r/runtime.mjs",
+    "sha256": "de06d8e4de73be82ad0b55f40d5192232e15dbeef2a3288bf4a4dd39b8540dd2",
+    "gitBlob": "b09204590cc9e796f8bdbfcf629d4cbc9e4fd3b4",
+    "text": "unset",
+    "runtimeHashed": true
+   },
+   {
+    "path": "experiments/h1r/measure.mjs",
+    "sha256": "41590aad2762614cdfe160112c02a01e660894e53d8a6c38044f994a9527eaaa",
+    "gitBlob": "25b6463d4da372aff34bbe960f5ed863a3b53db1",
+    "text": "unset",
+    "runtimeHashed": true
+   },
+   {
+    "path": "experiments/h1r/measure_install.mjs",
+    "sha256": "29cc6dc687372db3fe51da9cdacf28a2bc5a6c9cc0201997d3997bbcaf93ce40",
+    "gitBlob": "4fa5d554701ddaac193efbd50c1bb81cc57d9e9c",
+    "text": "unset",
+    "runtimeHashed": true
+   },
+   {
+    "path": "experiments/h1r/shadow.mjs",
+    "sha256": "43532dee22fb73c50261610b3b43cc1aa232a6826b2b929c14fa7d2d3fea9a77",
+    "gitBlob": "e889a0a2a6badf21ba53d3315f502f5e5dba9ef7",
+    "text": "unset",
+    "runtimeHashed": true
+   },
+   {
+    "path": "experiments/h1r/env_seed.mjs",
+    "sha256": "80caf09aae290bc77c9f370dfcaaa531490a2841df801505a31bb7faecdc136e",
+    "gitBlob": "96e861d9bbbcb0025a039e42685cf66c2a516ffa",
+    "text": "unset",
+    "runtimeHashed": true
+   },
+   {
+    "path": "experiments/h1r/run_h1r.mjs",
+    "sha256": "9b1a79a39aabb64539df38ea43f4e425735e76460314393b93d8e622970679e6",
+    "gitBlob": "02b145e50ba7b64e94b87decb8cbbe7b15b0984b",
+    "text": "unset",
+    "runtimeHashed": true
+   },
+   {
+    "path": "experiments/h1r/build_tree.mjs",
+    "sha256": "33d5f3d84f2609799f796c5cebede586f6eb5138a4c025a56ac2dace8f160402",
+    "gitBlob": "1a5b209ec94a004f87f0d2aa3c98c44cd3dbdd2e",
+    "text": "unspecified",
+    "runtimeHashed": false
+   }
+  ],
+  "registry": [
+   {
+    "path": "experiments/registry/typed.js",
+    "sha256": "305812a3fec9200754b4ce0d1af005f91c15da89cd53748318abcf4f5ce7dcb2",
+    "gitBlob": "3958211bb753f5a0a14e4f4fb014edefa804308a",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/registry/consumed_after_h1r.js",
+    "sha256": "7902c0064f826b09dece28929f8c2035e5add7cc20a2ca76774b09fe44d3f82f",
+    "gitBlob": "12fb00aa20fd6352a25ab985e483f2bd692f1421",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/registry/consumed_after_study2.js",
+    "sha256": "c723d37f4ca694417bd198fd4ca8990ed384be0eeb2af84268fe8d3247f896ca",
+    "gitBlob": "842888e859b98ca7494db4ddf5dbb8da83323ac2",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/registry/consumed_after_c1.js",
+    "sha256": "26152dae3b6711129468dcd870bbf514d522fd2835d9fcc39674d65b00d1acda",
+    "gitBlob": "48a2f75518240ba103173d2270f4f7c3ec64cf7f",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/registry/consumed.js",
+    "sha256": "568ba071b014acc648b4519ff0610e52adcba7cf378f92c1a76200132ab3b010",
+    "gitBlob": "c1d969d84af5c6af66cee85da8a65d49e58ee423",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/uqb/protocol.js",
+    "sha256": "a035180b512517a63cc600f3200a5e257a59542b90fa8216df6640b2f9ff2652",
+    "gitBlob": "ec186557bd8eb46b93c56dee39ee08140aa80f42",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/uqa/protocol.js",
+    "sha256": "9ff0693cf04fcb5eb8824f8a2e4e8c71257373a6dd9299c21d0ffad983613cfd",
+    "gitBlob": "cf414176a5d6331662f989847a279769562954d1",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/q1/protocol.js",
+    "sha256": "640c498e6eaca98c704afa95983c5c831cba2ae059c6457d630dd789bf5b81ed",
+    "gitBlob": "c94bcde6c0c41d09cd362fce20578dd2ab5fba75",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/q1/instrument.js",
+    "sha256": "36d8dca0a5b1a628bd9d8406b6f84f99a544870dbb7532f057dc3c3e2f21a3bb",
+    "gitBlob": "e993e9790ee78ad78e9f67bbf58a186d74f64b63",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/m8/protocol.js",
+    "sha256": "34faa814266974730c459269aba8472669158e9b778d4cf071a721b5e39ebeef",
+    "gitBlob": "657d5e1071a5e380aae9232a2a12de1ccbe99d9c",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/m8/instrument.js",
+    "sha256": "64dd248cb82e0977b3583a6175a4ce209f5a770413adb1c367132afd4d74f266",
+    "gitBlob": "958bce1100a704a1671be34be4fdb879226f325c",
+    "text": "unspecified",
+    "runtimeHashed": false
+   }
+  ],
+  "verifiers": [
+   {
+    "path": "experiments/h1r/verify_conformance.mjs",
+    "sha256": "501073b9a380bc491672822efe4176e8aab4492f2521af163b1f915d4289c5ef",
+    "gitBlob": "823ea24a48067bb1522317947da778fa673a73f6",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/h1r/verify_ms1_unit.mjs",
+    "sha256": "3de3c934be8eda096edf86b813eb155052e5363999971de931a7b9cd907c5281",
+    "gitBlob": "921144c2135fa5eee120ec628b05582e9c75a42c",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/h1r/run_existing_gates.mjs",
+    "sha256": "edd88d5aa9cf1cd1a5edb44e4ee1df18d083204f18c90591b76a79b569db92c7",
+    "gitBlob": "49b8adef4811649b8097c0f3039a590588a74dd5",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/h1r/verify_existing_equivalence.mjs",
+    "sha256": "ff1c6b01fd49282b57116759f9352652735da164b4919ead176c084c50a4cb84",
+    "gitBlob": "a7634d5de16f83d2db701b7f3e479100f61edbe4",
+    "text": "unset",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/h1r/verify_hook.mjs",
+    "sha256": "10c5fd18b89c22451111c72baa2215c411a5ebd634587aa34c8a40b8cc2bce4f",
+    "gitBlob": "c29244cf0d14f031c6a5b522cfc7197dbb8bf5c4",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/h1r/run_one.mjs",
+    "sha256": "a687129d8482e9c13aedc326bde8260d504f400df851f0a92f8dd68931158f7b",
+    "gitBlob": "e7ecbf4b954c8f071336cdcf152ad115034c0e5e",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/h1r/verify_analysis.mjs",
+    "sha256": "1b0d9f3c87104b46d0bfac9f2c915ecc4296d106bd3fb5d61b8de41f816f1cf4",
+    "gitBlob": "8cfb5ade5462decdbd1dc1de82f3ce3acf3f132e",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/h1r/verify_orchestrator.mjs",
+    "sha256": "fb7045b1a8316dfd6eeea09876938a6c2474835e4a98af3f56d44e10dbf405d0",
+    "gitBlob": "ea262f5356a6ab0e2f3a2c62979769b0b50f76ab",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/h1r/verify_cli.mjs",
+    "sha256": "34ee34ef690f01af66b335a3774afb0ef454c5c55b902a4b963576d68b03a731",
+    "gitBlob": "570b93533af2cd989b686caf86f8179c7087b15b",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/h1r/cli_gate/build_tree.double.mjs",
+    "sha256": "8949f65d47cc75013f9fa74177b909bc5e02e39da548e1230e59d240082a1685",
+    "gitBlob": "217f181cc2801521c72a59c9b2ee34e02654416f",
+    "text": "unset",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/h1r/cli_gate/run_h1r.double.mjs",
+    "sha256": "f3a5f10c53c758dd6660c43e435faa9000f5109da9b05f4d14e8b4436d8f6897",
+    "gitBlob": "4b808816340bafdb674375c122cc9e7c140a4b77",
+    "text": "unset",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/h1r/cli_gate/env.double.js",
+    "sha256": "0f12564dd6e25903b79c52b0716abf49220de2cf300d7af1d484b914455c4127",
+    "gitBlob": "7eea9c71f32765146823ce1dd37ebca5aa98a42f",
+    "text": "unset",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/h1r/verify_milestone_b.mjs",
+    "sha256": "c82aef1046020e11a02dd4e5aabeb25d92ad4925c2b5b5e6a540f49c6ca33ed8",
+    "gitBlob": "269932cf4f6d8b4fa7f2312d2948aacd21091167",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/h1r/build_identity.mjs",
+    "sha256": "56a2fd8add8fa44cc43365680a6d6b8a0b4ac4c1976707ee1d9674124cd2b137",
+    "gitBlob": "fc1f8ea724c69f0f875ff429c903f61c2272ef49",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/h1r/fresh_clone_check.mjs",
+    "sha256": "a97fda3dc3b36cf5b1c5bf89147bcf8f12a0842a1b021bb1e02aafa5056fb65e",
+    "gitBlob": "05c8d82d94533c8b35c6812a24c82867255a5a89",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/h1r/verify_d028.mjs",
+    "sha256": "0ac406e8c5409bf1a99ffd424a44bce254d48793d147441da924774d29d01aa3",
+    "gitBlob": "a1606c442876c25868b9f6979e490bfbdf61e5c2",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "research/preregistrations/h1r_v1_checks/verify_freeze.mjs",
+    "sha256": "9e6e2866f8807ef5ee76c88e0cc43deeade3d5f517efdc1feffe82cb8e9f5e65",
+    "gitBlob": "2db7325b6181ad8a3e5bedaad08066e5e215dc6a",
+    "text": "unspecified",
+    "runtimeHashed": false
+   }
+  ]
+ }
+}

@@ -1,0 +1,4 @@
+pristine experiments/phase1_0/verify_S1.js: exit 0, 12 PASS, 0 FAIL (8s)
+off      experiments/phase1_0/verify_S1.js: exit 0, 12 PASS, 0 FAIL (8s)
+on       experiments/phase1_0/verify_S1.js: exit 0, 12 PASS, 0 FAIL (8s)
+exit 0

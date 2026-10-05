@@ -186,3 +186,23 @@ research/preregistrations/h1r_d021b/** -text
 # core.autocrlf=true rewrites LF to CRLF in 7 of these 9 files (demonstrated): analyze.js then hashes d53ca627... instead.
 experiments/h1r/analyze.js -text
 experiments/h1r/evidence_analysis/** -text
+
+# H1-R Milestone B - pre-Stage-1 build identity (v1.0 §1.2) - the same byte-integrity guarantee. orchestrate.mjs stamps
+# the SHA-256 of the working-tree bytes of analyze.js (-text above), itself and the 7 instrument files below into every
+# plan, manifest and run record, and BUILD_IDENTITY.json records the committed values. Without `-text`, a checkout with
+# core.autocrlf=true rewrites LF to CRLF in all 8 of these files (demonstrated: evidence_milestone_b/fresh_clone.json),
+# so the stamped hashes would differ from the build identity. The record, the CLI-gate test doubles (their bytes enter
+# the CLI gate's evidence) and this milestone's evidence are protected for the same reason.
+experiments/h1r/orchestrate.mjs -text
+experiments/h1r/conformance_transform.mjs -text
+experiments/h1r/runtime.mjs -text
+experiments/h1r/measure.mjs -text
+experiments/h1r/measure_install.mjs -text
+experiments/h1r/shadow.mjs -text
+experiments/h1r/env_seed.mjs -text
+experiments/h1r/run_h1r.mjs -text
+experiments/h1r/BUILD_IDENTITY.json -text
+experiments/h1r/cli_gate/** -text
+experiments/h1r/evidence_milestone_b/** -text
+# D-028: verify_d028.mjs and verify_milestone_b.mjs (D2) hash the working-tree bytes of the N3 implementation.
+experiments/h1r/verify_existing_equivalence.mjs -text

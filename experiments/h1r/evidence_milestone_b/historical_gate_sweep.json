@@ -1,0 +1,655 @@
+{
+ "schema": "h1r.milestone-b.historical-gate-sweep/1",
+ "before": "bf0833f466ad7c626c9a719efa3a91d6b6367b16",
+ "after": "the final milestone code (local commit 0439874, before its last evidence files were added); after-sweeps of the earlier local commits d02cd75 and 350b2f1 gave identical verdicts",
+ "note": "Every registry-related historical gate: the 35 gates of experiments/study2/historical_gate_sweep.json, its execution gate verify_study2_execution.js, and the H1-R v1.0 freeze checks verify_freeze.mjs and pilot_registry_status.mjs (an informational query, compared by its output lines). Each ran as a separate process from the repository root, in the same working tree (the pre-existing untracked files present), once before and once after the milestone; no gate changed the working tree. fails = the check ids a gate reports as FAIL; crashed = exited non-zero without a report (the Study 2 definition). The before-state equals the Study 2 after-state for all 35 of its gates. A verdict that did not change is pre-existing and not caused by this milestone. verify_orchestrator.mjs (O23) is reported separately: evidence_milestone_b/orchestrator/.",
+ "gateCount": 38,
+ "info": [
+  "research/preregistrations/h1r_v1_checks/pilot_registry_status.mjs"
+ ],
+ "changed": [
+  "experiments/study2/verify_study2_execution.js",
+  "research/preregistrations/h1r_v1_checks/pilot_registry_status.mjs"
+ ],
+ "flips": {
+  "experiments/study2/verify_study2_execution.js": "R1, R4 and H5 flip (S3 already failed: MN-4). R1: the typed layer now also refuses 889999, the lower neighbour of the Study-2 block, because 889999 is the last seed of the adjacent H1-R pilot block 886000-889999; all 3000 Study-2 seeds are still refused. R4: consumed_after_study2.js is now imported by its successor consumed_after_h1r.js, and typed.js imports the new link (the M34 chain convention, one link on). H5: the M34 gate still cannot run for the reason MN-2 records (it materialises typed.js with only the chain files it knew); its ERR_MODULE_NOT_FOUND now names consumed_after_h1r.js instead of the consumed_after_study2.js that H5 matches.",
+  "research/preregistrations/h1r_v1_checks/pilot_registry_status.mjs": "Its output is the v1.0 Appendix B.3 registry state at freeze. It now reports the state v1.0 §7.6 requires before generation: block 886000-889999 consumed, and 20260819004-008 REPRODUCTION for (H1-R, pilot). Seeds 000-003 refused, 009 AVAILABLE, 885999 free, 890000 consumed, 900500 held out and 100-119 AVAILABLE are unchanged."
+ },
+ "gates": {
+  "experiments/c1/verify_collection.js": {
+   "before": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   },
+   "after": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   }
+  },
+  "experiments/d2/verify.js": {
+   "before": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   },
+   "after": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   }
+  },
+  "experiments/m18/verify_registry.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "experiments/m18_1/verify_binding.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "IN-1",
+     "VF-1",
+     "VF-2",
+     "VF-3"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "IN-1",
+     "VF-1",
+     "VF-2",
+     "VF-3"
+    ]
+   }
+  },
+  "experiments/m19/verify_formulation.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "experiments/m19_1/verify_clarification.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "experiments/m19_2/verify_stress_spec.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "experiments/m19_3/verify_execution.js": {
+   "before": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   },
+   "after": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   }
+  },
+  "experiments/m33/verify.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I3"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I3"
+    ]
+   }
+  },
+  "experiments/m33/verify_r1.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "experiments/m34/verify.js": {
+   "before": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   },
+   "after": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   }
+  },
+  "experiments/m35/readiness.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "experiments/m38/verify.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "G1",
+     "G2",
+     "H1"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "G1",
+     "G2",
+     "H1"
+    ]
+   }
+  },
+  "experiments/m39/verify.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I3",
+     "I4"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I3",
+     "I4"
+    ]
+   }
+  },
+  "experiments/study2/verify_driver.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "D18.2",
+     "D2.4",
+     "S.1",
+     "Z.1"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "D18.2",
+     "D2.4",
+     "S.1",
+     "Z.1"
+    ]
+   }
+  },
+  "experiments/study2/verify_readiness.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "research/preregistrations/verify_fs_study2_design_final.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "G2",
+     "G3"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "G2",
+     "G3"
+    ]
+   }
+  },
+  "research/preregistrations/verify_m21.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "M21"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "M21"
+    ]
+   }
+  },
+  "research/preregistrations/verify_m30.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "research/preregistrations/verify_m31.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "research/preregistrations/verify_m32.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "research/preregistrations/verify_m33.js": {
+   "before": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   },
+   "after": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   }
+  },
+  "research/preregistrations/verify_m33_r1.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "research/preregistrations/verify_m34.js": {
+   "before": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   },
+   "after": {
+    "exit": 1,
+    "crashed": true,
+    "fails": []
+   }
+  },
+  "research/preregistrations/verify_m37.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I1",
+     "I2",
+     "I4"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I1",
+     "I2",
+     "I4"
+    ]
+   }
+  },
+  "research/preregistrations/verify_m38_p0.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I1",
+     "I2",
+     "I4"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I1",
+     "I2",
+     "I4"
+    ]
+   }
+  },
+  "research/preregistrations/verify_m39.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I1",
+     "I2",
+     "S1",
+     "S3",
+     "S5",
+     "S7"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I1",
+     "I2",
+     "S1",
+     "S3",
+     "S5",
+     "S7"
+    ]
+   }
+  },
+  "research/preregistrations/verify_m40.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I1",
+     "I2",
+     "I4",
+     "R4",
+     "T5",
+     "T6"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "I1",
+     "I2",
+     "I4",
+     "R4",
+     "T5",
+     "T6"
+    ]
+   }
+  },
+  "experiments/futurescore/verify.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "T5"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "T5"
+    ]
+   }
+  },
+  "experiments/futurescore/verify_lineage.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "L3b",
+     "L4a",
+     "L4b",
+     "L4e",
+     "L4f",
+     "L8c"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "L3b",
+     "L4a",
+     "L4b",
+     "L4e",
+     "L4f",
+     "L8c"
+    ]
+   }
+  },
+  "experiments/boundary/verify.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "A1",
+     "A2",
+     "A3",
+     "B4.2",
+     "B5.1",
+     "G5"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "A1",
+     "A2",
+     "A3",
+     "B4.2",
+     "B5.1",
+     "G5"
+    ]
+   }
+  },
+  "experiments/phase1_0/verify_G9_successor.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "research/preregistrations/verify_fs_v22.js": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "research/preregistrations/verify_fs_v23.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "G5"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "G5"
+    ]
+   }
+  },
+  "research/preregistrations/verify_fs_boundary_design.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "G3",
+     "G4"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "G3",
+     "G4"
+    ]
+   }
+  },
+  "experiments/study2/verify_study2_execution.js": {
+   "before": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "S3"
+    ]
+   },
+   "after": {
+    "exit": 1,
+    "crashed": false,
+    "fails": [
+     "H5",
+     "R1",
+     "R4",
+     "S3"
+    ]
+   }
+  },
+  "research/preregistrations/h1r_v1_checks/verify_freeze.mjs": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "fails": []
+   }
+  },
+  "research/preregistrations/h1r_v1_checks/pilot_registry_status.mjs": {
+   "before": {
+    "exit": 0,
+    "crashed": false,
+    "output": [
+     "H1-R v1.0 Appendix B.3 — registry status",
+     "pilot configuration block 886000-889999: every seed neither held out nor consumed = true",
+     "config 885999: heldOut=false consumed=false",
+     "config 886000: heldOut=false consumed=false",
+     "config 889999: heldOut=false consumed=false",
+     "config 890000: heldOut=false consumed=true",
+     "config 900500: heldOut=true consumed=false",
+     "trajectory 20260819000 (H1-R, pilot): CONSUMED_BY_OTHER_STUDY",
+     "trajectory 20260819001 (H1-R, pilot): CONSUMED_BY_OTHER_STUDY",
+     "trajectory 20260819002 (H1-R, pilot): CONSUMED_BY_OTHER_STUDY",
+     "trajectory 20260819003 (H1-R, pilot): CONSUMED_BY_OTHER_STUDY",
+     "trajectory 20260819004 (H1-R, pilot): AVAILABLE",
+     "trajectory 20260819005 (H1-R, pilot): AVAILABLE",
+     "trajectory 20260819006 (H1-R, pilot): AVAILABLE",
+     "trajectory 20260819007 (H1-R, pilot): AVAILABLE",
+     "trajectory 20260819008 (H1-R, pilot): AVAILABLE",
+     "trajectory 20260819009 (H1-R, pilot): AVAILABLE",
+     "trajectory 20260819100-119 (H1-R, registered): AVAILABLE (20 seeds)"
+    ]
+   },
+   "after": {
+    "exit": 0,
+    "crashed": false,
+    "output": [
+     "H1-R v1.0 Appendix B.3 — registry status",
+     "pilot configuration block 886000-889999: every seed neither held out nor consumed = false",
+     "config 885999: heldOut=false consumed=false",
+     "config 886000: heldOut=false consumed=true",
+     "config 889999: heldOut=false consumed=true",
+     "config 890000: heldOut=false consumed=true",
+     "config 900500: heldOut=true consumed=false",
+     "trajectory 20260819000 (H1-R, pilot): CONSUMED_BY_OTHER_STUDY",
+     "trajectory 20260819001 (H1-R, pilot): CONSUMED_BY_OTHER_STUDY",
+     "trajectory 20260819002 (H1-R, pilot): CONSUMED_BY_OTHER_STUDY",
+     "trajectory 20260819003 (H1-R, pilot): CONSUMED_BY_OTHER_STUDY",
+     "trajectory 20260819004 (H1-R, pilot): REPRODUCTION",
+     "trajectory 20260819005 (H1-R, pilot): REPRODUCTION",
+     "trajectory 20260819006 (H1-R, pilot): REPRODUCTION",
+     "trajectory 20260819007 (H1-R, pilot): REPRODUCTION",
+     "trajectory 20260819008 (H1-R, pilot): REPRODUCTION",
+     "trajectory 20260819009 (H1-R, pilot): AVAILABLE",
+     "trajectory 20260819100-119 (H1-R, registered): AVAILABLE (20 seeds)"
+    ]
+   }
+  }
+ }
+}

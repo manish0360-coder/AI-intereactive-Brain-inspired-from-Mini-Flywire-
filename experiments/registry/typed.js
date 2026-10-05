@@ -14,10 +14,11 @@
 //      true or false for a foreign seed, so a refusal cannot be read as "not held
 //      out", "available" or "consumed".
 //   3. Configuration-seed decisions DELEGATE to the newest registry chain link,
-//      experiments/registry/consumed_after_study2.js, which spreads consumed_after_c1.js
-//      unchanged (itself consumed.js plus C1's block, M34) and adds the FutureScore V2.3
-//      Study-2 block 890000-892999. Historical configuration semantics are therefore
-//      the historical functions themselves, not a re-implementation.
+//      experiments/registry/consumed_after_h1r.js, which spreads consumed_after_study2.js
+//      unchanged and adds the H1-R pilot block 886000-889999 (v1.0 §7.6). That link spreads
+//      consumed_after_c1.js unchanged (itself consumed.js plus C1's block, M34) and adds the
+//      FutureScore V2.3 Study-2 block 890000-892999. Historical configuration semantics are
+//      therefore the historical functions themselves, not a re-implementation.
 //   4. Trajectory seeds are consumed per (source, study), enumerated, never ranged.
 //
 // WHAT THIS MODULE IS NOT
@@ -31,7 +32,7 @@
 //   and C1 / UQ-B are frozen. Raw use is restricted to the enumerated historical
 //   call sites by experiments/m33/verify.js; new code must import this module.
 // ==========================================================
-import * as CONFIG_REGISTRY from './consumed_after_study2.js';
+import * as CONFIG_REGISTRY from './consumed_after_h1r.js';
 
 export const NAMESPACE = Object.freeze({ CONFIG: 'config', TRAJECTORY: 'trajectory' });
 const NAMESPACES = new Set(Object.values(NAMESPACE));
@@ -435,8 +436,12 @@ export function createTrajectoryRegistry({ records, heldOut, authorizations = []
 // ---- committed trajectory records ---------------------------------------------
 // The retrospective typing M32 §13 and §17.11 specify. Nothing new is consumed.
 // Values and studies are read from committed source and data, cited per record.
+// The H1-R records that follow them are prospective: H1-R v1.0 §7.6 requires them
+// before any generation, and they are recorded unexecuted.
 const M31_WHY = 'M31 development trajectory seed; executed values read from ' +
                 'experiments/m31/data/m31_observations.json';
+const H1R_PILOT_WHY = 'H1-R pilot agent seed for Stage 1 and the single extension (v1.0 §7.2, §7.3), ' +
+                      'recorded before any H1-R run; 20260819009 is not used';
 export const TRAJECTORY_RECORDS = Object.freeze([
     { namespace: NAMESPACE.TRAJECTORY, value: 20260819000, study: 'M7-substrate',
       status: CATEGORY.REGISTERED, executed: true,
@@ -453,6 +458,15 @@ export const TRAJECTORY_RECORDS = Object.freeze([
         authorization: 'Director ruling of 2026-09-11, M31 authorized (commit 0453c14)',
         artifact: 'experiments/m31/data/m31_observations.json',
         why: M31_WHY })),
+    // H1-R v1.0 §7.6: (H1-R, pilot) for 20260819004-008. The confirmatory seeds are recorded
+    // as (H1-R, registered) only before Stage 2, once the Stage-1 decision fixes S*.
+    ...[20260819004, 20260819005, 20260819006, 20260819007, 20260819008].map(value => ({
+        namespace: NAMESPACE.TRAJECTORY, value, study: 'H1-R',
+        status: CATEGORY.PILOT, executed: false,
+        authorization: 'H1R_PREREGISTRATION_v1.0.md §7.6 (SHA-256 c52e7337…a836); Director ' +
+                       'authorization of H1-R Milestone B, 2026-10-05',
+        artifact: 'research/preregistrations/H1R_PREREGISTRATION_v1.0.md §7.2',
+        why: H1R_PILOT_WHY })),
 ]);
 
 // No held-out trajectory region is reserved: M32 §17.10 — the mechanism exists, no

@@ -6,7 +6,9 @@
 //   N3   OFF ≡ pristine: for every script, the same exit code and the same assertions — IDs, order, verdicts, and the
 //        exact text of every line whose text is reproducible between independent pristine runs — except
 //        verify_G16.js G16.4a2–a6, which are classified failures under H1R-S6 (D-019 §4); every other G16 assertion
-//        stays binding (see the N3 block for why exact text of non-reproducible lines cannot be required)
+//        stays binding (see the N3 block for why exact text of non-reproducible lines cannot be required); and,
+//        by D-028, verify_determinism.js C1 is compared without its fingerprint count (ID, order, verdict, exit code
+//        and the rest of the line stay binding)
 //   N3-REFL / N3-AV  the relation is reflexive on independent pristine runs and detects real differences
 //   S6′  on the pristine B2 tree verify_G16.js is unaffected (G16.4a1–a6 pass)
 //   ON   with conformance ON, the failing assertions are exactly the classified set: v1.0 §11 (e1e2 G1f/AV8b,
@@ -58,20 +60,35 @@ for (const s of scripts) {
   const runs = [get(cur, s, 'pristine'), ...REPEATS.map(r => get(r.rows, s, 'pristine')).filter(Boolean)].map(r => r.assertions);
   nondet[s] = new Set(runs[0].map((l, i) => i).filter(i => new Set(runs.map(a => a[i])).size > 1));
 }
-// equivalence of two runs of one script (`except`: assertion IDs exempt from comparison, for H1R-S6 only)
-function equivalent(s, p, o, except = []) {
+// D-028 (Director ruling 2026-10-06; a named interpretation of D-019 §5 N3). For verify_determinism.js C1 only, the
+// number of distinct fingerprints is not compared. It counts 8 concurrent runs with the determinism repair suppressed,
+// so it depends on the wall clock, and it reaches nothing but this comparison. Binding: the ID, the position, the
+// verdict, the exit code and every other character of the line. The count is masked only in a line that matches C1's
+// exact template, and only when each run has exactly one C1 line; any other line, of any script, is compared in full.
+const D028 = Object.freeze({ script: 'verify_determinism.js', id: 'C1',
+  template: /^(?:PASS|FAIL)  C1 ANTI-VACUITY: without the repair the SAME test still fails   \d+ distinct fingerprints from 8 identical runs — so A1\/B1 are detecting a real property, not an inert test$/ });
+const d028Masked = (s, line) => (s === D028.script && idOf(line) === D028.id && D028.template.test(line)
+  ? line.replace(/   \d+ distinct fingerprints from /, '   <N> distinct fingerprints from ') : null);
+const d028Equal = (s, a, b) => { const x = d028Masked(s, a); return x !== null && x === d028Masked(s, b); };
+// equivalence of two runs of one script (`except`: assertion IDs exempt from comparison, for H1R-S6 only;
+// `applied`: collects the lines that differ only by the D-028 count)
+function equivalent(s, p, o, except = [], applied = null) {
   const why = [];
   const P = p.assertions.filter(l => !except.includes(idOf(l))), O = o.assertions.filter(l => !except.includes(idOf(l)));
   const idxP = p.assertions.map((l, i) => i).filter(i => !except.includes(idOf(p.assertions[i])));
   if (except.length === 0 && p.exit !== o.exit) why.push(`exit ${p.exit}/${o.exit}`);
+  const oneC1 = [P, O].every(a => a.filter(l => idOf(l) === D028.id).length === 1);
   if (P.length !== O.length) why.push(`assertions ${P.length}/${O.length}`);
   else P.forEach((l, k) => {
     if (idOf(l) !== idOf(O[k]) || isFail(l) !== isFail(O[k])) why.push(`#${idxP[k]} ${idOf(l)}: id/verdict`);
-    else if (l !== O[k] && !nondet[s].has(idxP[k])) why.push(`#${idxP[k]} ${idOf(l)}: text`);
+    else if (l !== O[k] && !nondet[s].has(idxP[k])) {
+      if (oneC1 && d028Equal(s, l, O[k])) { if (applied) applied.push(`#${idxP[k]} ${idOf(l)}`); }
+      else why.push(`#${idxP[k]} ${idOf(l)}: text`);
+    }
   });
   return why;
 }
-{ const bad = [], detail = {};
+{ const bad = [], detail = {}, d028Applied = [];
   const pairs = [{ name: 'main', rows: cur }, ...REPEATS];
   let compared = 0;
   for (const s of scripts) for (const run of pairs) {
@@ -86,14 +103,16 @@ function equivalent(s, p, o, except = []) {
       if (pS6.length !== 5 || oS6.length !== 5 || oS6.map(idOf).join() !== S6.join() || pS6.some(isFail)) bad.push(`${run.name} ${s}: G16.4a2–a6 not reported as expected`);
       continue;
     }
-    const why = equivalent(s, p, o);
+    const app = [], why = equivalent(s, p, o, [], app);
+    if (app.length) d028Applied.push(`${run.name} ${s}: ${app.join(', ')}`);
     if (why.length) bad.push(`${run.name} ${s}: ${why.join(', ')}`);
   }
   const total = scripts.reduce((n, s) => n + get(cur, s, 'off').assertions.length, 0);
   const nd = Object.entries(nondet).filter(([, v]) => v.size).map(([s, v]) => `${s} ${[...v].map(i => idOf(get(cur, s, 'pristine').assertions[i])).join('/')}`);
-  gate('N3', 'OFF ≡ pristine: every existing gate script gives, with the H1R runtime absent, the same exit code and the same assertions (IDs, order, verdicts, and exact text wherever the text is reproducible between independent pristine runs), except verify_G16.js G16.4a2–a6 (classified under H1R-S6)',
+  gate('N3', 'OFF ≡ pristine: every existing gate script gives, with the H1R runtime absent, the same exit code and the same assertions (IDs, order, verdicts, and exact text wherever the text is reproducible between independent pristine runs), except verify_G16.js G16.4a2–a6 (classified under H1R-S6); verify_determinism.js C1 is compared without its fingerprint count (D-028)',
     bad.length === 0, `${compared} (script, run) pairs over ${1 + REPEATS.length} runs (${REPEATS.map(r => r.name).join(', ')}); ${total} assertion lines in the main run; ` +
-    `differences: ${bad.length ? bad.join(' | ') : 'none'}; text not reproducible between pristine runs (verdict and ID still compared): ${nd.join('; ') || 'none'}; G16: ${JSON.stringify(detail)}`);
+    `differences: ${bad.length ? bad.join(' | ') : 'none'}; text not reproducible between pristine runs (verdict and ID still compared): ${nd.join('; ') || 'none'}; ` +
+    `D-028 (C1 count only): ${d028Applied.join(' | ') || 'none'}; G16: ${JSON.stringify(detail)}`);
   // reflexivity: the relation holds between independent pristine runs of the unmodified B2 tree
   const refl = [];
   for (const r of REPEATS) for (const s of scripts) { const a = get(cur, s, 'pristine'), b = get(r.rows, s, 'pristine'); if (a && b) { const w = equivalent(s, a, b); if (w.length) refl.push(`${r.name} ${s}: ${w.join(', ')}`); } }

@@ -1,0 +1,54 @@
+{
+ "generatedBy": "experiments/h1r/verify_existing_equivalence.mjs",
+ "reference": "evidence_r3/existing_gates.json",
+ "gates": [
+  {
+   "id": "E0",
+   "name": "all 25 existing gate scripts ran in all three configurations, each with assertion lines recorded",
+   "status": "PASS",
+   "evidence": "25 scripts; assertions recorded: 75/75"
+  },
+  {
+   "id": "N3",
+   "name": "OFF ≡ pristine: every existing gate script gives, with the H1R runtime absent, the same exit code and the same assertions (IDs, order, verdicts, and exact text wherever the text is reproducible between independent pristine runs), except verify_G16.js G16.4a2–a6 (classified under H1R-S6)",
+   "status": "FAIL",
+   "evidence": "45 (script, run) pairs over 15 runs (n3_repeat_a, n3_repeat_b, n3_repeat_c, n3_repeat_d, n3_repeat_e, n3_repeat_f, n3_repeat_g, n3_repeat_h, n3_repeat_i, n3_repeat_j, n3_repeat_k, n3_repeat_l, n3_repeat_m, n3_repeat_n); 620 assertion lines in the main run; differences: main verify_determinism.js: #4 C1: text; text not reproducible between pristine runs (verdict and ID still compared): verify_determinism.js D4; verify_S1.js S1.3e; verify_S1prime.js S1.7′(2)/S1.7′(4); verify_S2.js S2.1/S2.3; verify_G16.js G16.3'(3)/G16.3'(4); G16: {\"main\":{\"pristineS6\":[\"PASS G16.4a2\",\"PASS G16.4a3\",\"PASS G16.4a4\",\"PASS G16.4a5\",\"PASS G16.4a6\"],\"offS6\":[\"FAIL G16.4a2\",\"FAIL G16.4a3\",\"FAIL G16.4a4\",\"FAIL G16.4a5\",\"FAIL G16.4a6\"],\"otherDifferences\":[],\"exit\":[0,1]},\"n3_repeat_a\":{\"pristineS6\":[\"PASS G16.4a2\",\"PASS G16.4a3\",\"PASS G16.4a4\",\"PASS G16.4a5\",\"PASS G16.4a6\"],\"offS6\":[\"FAIL G16.4a2\",\"FAIL G16.4a3\",\"FAIL G16.4a4\",\"FAIL G16.4a5\",\"FAIL G16.4a6\"],\"otherDifferences\":[],\"exit\":[0,1]},\"n3_repeat_b\":{\"pristineS6\":[\"PASS G16.4a2\",\"PASS G16.4a3\",\"PASS G16.4a4\",\"PASS G16.4a5\",\"PASS G16.4a6\"],\"offS6\":[\"FAIL G16.4a2\",\"FAIL G16.4a3\",\"FAIL G16.4a4\",\"FAIL G16.4a5\",\"FAIL G16.4a6\"],\"otherDifferences\":[],\"exit\":[0,1]}}"
+  },
+  {
+   "id": "N3-REFL",
+   "name": "the equivalence relation is reflexive on the unmodified B2 tree: independent pristine runs are equivalent to each other",
+   "status": "PASS",
+   "evidence": "14 repetitions of verify_determinism.js, verify_S1prime.js, verify_S2.js, verify_G16.js, verify_S1.js; failures: none"
+  },
+  {
+   "id": "N3-AV",
+   "name": "anti-vacuity: the relation detects a changed verdict (verify_S2 ON: S2.4b), the S6 lines when they are not exempted (verify_G16 OFF), and a changed reproducible detail text",
+   "status": "PASS",
+   "evidence": "S2 pristine vs ON: exit 0/1, #4 S2.4b: id/verdict; G16 pristine vs OFF without the exemption: exit 0/1, #18 G16.4a2: id/verdict, #19 G16.4a3: id/verdict, #20 G16.4a4: id/verdict, #21 G16.4a5: id/verdict, #22 G16.4a6: id/verdict; S1prime with one reproducible line altered: #0 S1.7′(1): text"
+  },
+  {
+   "id": "N3-HIST",
+   "name": "the R1–R3 form of the check (exit code, PASS count, FAIL lines), scripts other than verify_G16.js",
+   "status": "INFO",
+   "evidence": "24/24 identical"
+  },
+  {
+   "id": "G16'-P",
+   "name": "on the pristine B2 tree verify_G16.js is unaffected: G16.4a1–a6 all pass",
+   "status": "PASS",
+   "evidence": "PASS  G16.4a1 frozen pre-change reference arm exis | PASS  G16.4a2 file length unchanged (pure substitu | PASS  G16.4a3 EXACTLY ONE line differs from the pr | PASS  G16.4a4 removed line is exactly the Math.max | PASS  G16.4a5 added line is the symmetric form, wr | PASS  G16.4a6 indentation preserved (no incidental"
+  },
+  {
+   "id": "ON",
+   "name": "conformance ON: the failing assertions are exactly the classified set (v1.0 §11, H1R-S4, H1R-S6) and equal the R3 round's ON failures plus G16.4a2–a6; no new failure",
+   "status": "PASS",
+   "evidence": "603 PASS / 17 FAIL; failing: e1e2 AV8b/G1f; cap B1/B3/B4/H7; goal B2/B3; G8 G8.4c; stepledger A3; S1b S1.7; S2 S2.4b; G16 G16.4a2/G16.4a3/G16.4a4/G16.4a5/G16.4a6"
+  },
+  {
+   "id": "N2-S4G9",
+   "name": "verify_S4.js and verify_G9.js are clean on the conformed tree (OFF and ON): exit 0, no failing assertion",
+   "status": "PASS",
+   "evidence": "verify_S4.js off: exit 0, 12 assertions, 0 FAIL; verify_S4.js on: exit 0, 12 assertions, 0 FAIL; verify_G9.js off: exit 0, 11 assertions, 0 FAIL; verify_G9.js on: exit 0, 11 assertions, 0 FAIL"
+  }
+ ]
+}

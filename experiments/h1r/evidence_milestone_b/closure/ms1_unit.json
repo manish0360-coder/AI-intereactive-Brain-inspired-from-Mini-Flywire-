@@ -1,0 +1,404 @@
+{
+ "generatedBy": "experiments/h1r/verify_ms1_unit.mjs",
+ "conformedTree": "<tmp>\\mfw-h1r\\conformed-707cb1e-02ccbf382ad7",
+ "transformSha256": "02ccbf382ad7da5dd0a97e010081f025971263b2ad1af507c80d070fc0116346",
+ "b2ScoringSha256": "4a13316698b52a2132d969c838d79f9d3ccc97a853bc5e3fa947fd43fac566d5",
+ "oracle": {
+  "path": "<tmp>\\mfw-h1r\\n6a-oracle-7cca1635bd8b",
+  "sha256": "7cca1635bd8b87657c0c654266c9a71d32119deceb72212ed2339c752b769a2a",
+  "linesChanged": [
+   451
+  ]
+ },
+ "inputSets": 12000,
+ "measureSha256": "41590aad2762614cdfe160112c02a01e660894e53d8a6c38044f994a9527eaaa",
+ "gates": [
+  {
+   "id": "U0",
+   "name": "every unit scenario ran to completion",
+   "status": "PASS",
+   "evidence": "10 scenarios"
+  },
+  {
+   "id": "N1",
+   "name": "text: exactly one `// H1R M-SCORE` line, equal to the pinned template, immediately before the clamp-return; with it removed the file is B2 byte for byte (SHA-256 4a133166…66d5)",
+   "status": "PASS",
+   "evidence": "{\"taggedLines\":1,\"template\":true,\"beforeReturn\":true,\"strippedSha256\":\"4a13316698b52a2132d969c838d79f9d3ccc97a853bc5e3fa947fd43fac566d5\",\"strippedEqualsB2\":true,\"ok\":true}"
+  },
+  {
+   "id": "N2",
+   "name": "form: the probe reads finalWeight and trustBonus, makes one call (the sink score), assigns nothing and names no other identifier (no RNG, Date.now, I/O, import, export)",
+   "status": "PASS",
+   "evidence": "[{\"other\":[],\"assigns\":false,\"calls\":1,\"sinkCalls\":1,\"readsBoth\":true,\"ok\":true}]"
+  },
+  {
+   "id": "N4a",
+   "name": "neutral when present: 12000 random input sets at identical RNG state give the same return value, lastArbitrationBreakdown and RNG position (cognitive, visual, environment) without and with the sink",
+   "status": "PASS",
+   "evidence": "{\"n\":12000,\"returnMismatch\":0,\"breakdownMismatch\":0,\"rngPositionMismatch\":0}"
+  },
+  {
+   "id": "N5'",
+   "name": "pinned sink and binding: static (byte-exact score, S private, Node built-ins only, no global) and at installation (own data property, non-writable, non-configurable, frozen non-Proxy ordinary object, score own non-writable, pinned source, function identity); overwrite/redefinition refused",
+   "status": "PASS",
+   "evidence": "static {\"ok\":true,\"problems\":[]}; installation {\"ok\":true,\"problems\":[]}; tamper {\"overwriteRefused\":true,\"redefineRefused\":true,\"scoreReplaceRefused\":true}"
+  },
+  {
+   "id": "N6a",
+   "name": "exact pre-clamp fidelity: every recorded F is Object.is-equal to the oracle (B2 scoring.js returning finalWeight) at the same RNG state, |F| > 400 at both bounds included",
+   "status": "PASS",
+   "evidence": "oracle <tmp>\\mfw-h1r\\n6a-oracle-7cca1635bd8b SHA-256 7cca1635bd8b87657c0c654266c9a71d32119deceb72212ed2339c752b769a2a (differs from B2 in 1 line: 451); {\"n\":12000,\"high\":2000,\"low\":2000,\"mismatch\":0,\"mismatchHigh\":0,\"mismatchLow\":0,\"mismatchInRange\":0}"
+  },
+  {
+   "id": "N6b-U",
+   "name": "clamp consistency and trust term (unit): Object.is(clamp(recorded F), returned) and recorded term = 12·(T − 0.5) for every call",
+   "status": "PASS",
+   "evidence": "{\"clampMismatch\":0,\"termMismatch\":0}"
+  },
+  {
+   "id": "N7a",
+   "name": "a probe placed after the clamp — caught by N1 and by N6a only on inputs with |F| > 400",
+   "status": "PASS",
+   "evidence": "N1 ok=false; N6a {\"n\":12000,\"high\":2000,\"low\":2000,\"mismatch\":4000,\"mismatchHigh\":2000,\"mismatchLow\":2000,\"mismatchInRange\":0}"
+  },
+  {
+   "id": "N7b",
+   "name": "a probe that assigns — caught by N2 (and N1, N4a)",
+   "status": "PASS",
+   "evidence": "N2 ok=false; N1 ok=false; N4a {\"n\":12000,\"returnMismatch\":8000,\"breakdownMismatch\":0,\"rngPositionMismatch\":0}"
+  },
+  {
+   "id": "N7c",
+   "name": "a probe that draws a random number — caught by N4a (RNG position) and N2",
+   "status": "PASS",
+   "evidence": "N2 ok=false; N4a {\"n\":12000,\"returnMismatch\":0,\"breakdownMismatch\":0,\"rngPositionMismatch\":12000}"
+  },
+  {
+   "id": "N7d",
+   "name": "a second tagged line — caught by N1 (and the score/candidate pairing)",
+   "status": "PASS",
+   "evidence": "N1 tagged lines 2; pairs 24000 for 12000 calls"
+  },
+  {
+   "id": "N7e",
+   "name": "a sink that transforms the value only when |F| > 400 — caught by the N6a oracle (only above 400) and by N5′ (static and installation)",
+   "status": "PASS",
+   "evidence": "N6a {\"n\":12000,\"high\":2000,\"low\":2000,\"mismatch\":4000,\"mismatchHigh\":2000,\"mismatchLow\":2000,\"mismatchInRange\":0}; N5′ static fails true; install refuses true"
+  },
+  {
+   "id": "N7f",
+   "name": "a Proxy or accessor binding that rewrites arguments — caught by N5′ at installation (and by N6a)",
+   "status": "PASS",
+   "evidence": "accessor: accessor property, not a data property; value is not an object, N6a mismatches 4000 | proxy: value is a Proxy; value is not frozen; score is not an own data property, N6a mismatches 4000"
+  },
+  {
+   "id": "N7g",
+   "name": "a sink conditioned on the arm — caught by N5′'s source pin (static and installation)",
+   "status": "PASS",
+   "evidence": "static [\"global references: globalThis, __H1R_ARM__\",\"pinned score line found 0 times\",\"another score definition\",\"S referenced outside its declaration, score() and record(): 3 lines\"]; install refuses true; (unbound demonstration: N6a mismatches 4000)"
+  },
+  {
+   "id": "N7h",
+   "name": "a sink conditioned on run identity — caught by N5′'s source pin (static and installation)",
+   "status": "PASS",
+   "evidence": "static [\"global references: process\",\"pinned score line found 0 times\",\"another score definition\",\"S referenced outside its declaration, score() and record(): 3 lines\"]; install refuses true; (unbound demonstration: N6a mismatches 4000)"
+  }
+ ],
+ "scenarios": {
+  "clean": {
+   "scenario": "clean",
+   "binding": {
+    "ok": true,
+    "problems": []
+   },
+   "tamper": {
+    "overwriteRefused": true,
+    "redefineRefused": true,
+    "scoreReplaceRefused": true
+   },
+   "n4a": {
+    "n": 12000,
+    "returnMismatch": 0,
+    "breakdownMismatch": 0,
+    "rngPositionMismatch": 0
+   },
+   "pairing": {
+    "calls": 12000,
+    "sinkPairs": 12000
+   },
+   "n6a": {
+    "n": 12000,
+    "high": 2000,
+    "low": 2000,
+    "mismatch": 0,
+    "mismatchHigh": 0,
+    "mismatchLow": 0,
+    "mismatchInRange": 0
+   },
+   "n6b": {
+    "clampMismatch": 0,
+    "termMismatch": 0
+   }
+  },
+  "afterClamp": {
+   "scenario": "afterClamp",
+   "binding": {
+    "ok": true,
+    "problems": []
+   },
+   "tamper": {
+    "overwriteRefused": true,
+    "redefineRefused": true,
+    "scoreReplaceRefused": true
+   },
+   "n4a": {
+    "n": 12000,
+    "returnMismatch": 0,
+    "breakdownMismatch": 0,
+    "rngPositionMismatch": 0
+   },
+   "pairing": {
+    "calls": 12000,
+    "sinkPairs": 12000
+   },
+   "n6a": {
+    "n": 12000,
+    "high": 2000,
+    "low": 2000,
+    "mismatch": 4000,
+    "mismatchHigh": 2000,
+    "mismatchLow": 2000,
+    "mismatchInRange": 0
+   },
+   "n6b": {
+    "clampMismatch": 0,
+    "termMismatch": 0
+   }
+  },
+  "assigns": {
+   "scenario": "assigns",
+   "binding": {
+    "ok": true,
+    "problems": []
+   },
+   "tamper": {
+    "overwriteRefused": true,
+    "redefineRefused": true,
+    "scoreReplaceRefused": true
+   },
+   "n4a": {
+    "n": 12000,
+    "returnMismatch": 8000,
+    "breakdownMismatch": 0,
+    "rngPositionMismatch": 0
+   },
+   "pairing": {
+    "calls": 12000,
+    "sinkPairs": 12000
+   },
+   "n6a": {
+    "n": 12000,
+    "high": 2000,
+    "low": 2000,
+    "mismatch": 12000,
+    "mismatchHigh": 2000,
+    "mismatchLow": 2000,
+    "mismatchInRange": 8000
+   },
+   "n6b": {
+    "clampMismatch": 0,
+    "termMismatch": 0
+   }
+  },
+  "draws": {
+   "scenario": "draws",
+   "binding": {
+    "ok": true,
+    "problems": []
+   },
+   "tamper": {
+    "overwriteRefused": true,
+    "redefineRefused": true,
+    "scoreReplaceRefused": true
+   },
+   "n4a": {
+    "n": 12000,
+    "returnMismatch": 0,
+    "breakdownMismatch": 0,
+    "rngPositionMismatch": 12000
+   },
+   "pairing": {
+    "calls": 12000,
+    "sinkPairs": 12000
+   },
+   "n6a": {
+    "n": 12000,
+    "high": 2000,
+    "low": 2000,
+    "mismatch": 0,
+    "mismatchHigh": 0,
+    "mismatchLow": 0,
+    "mismatchInRange": 0
+   },
+   "n6b": {
+    "clampMismatch": 0,
+    "termMismatch": 0
+   }
+  },
+  "second": {
+   "scenario": "second",
+   "binding": {
+    "ok": true,
+    "problems": []
+   },
+   "tamper": {
+    "overwriteRefused": true,
+    "redefineRefused": true,
+    "scoreReplaceRefused": true
+   },
+   "n4a": {
+    "n": 12000,
+    "returnMismatch": 0,
+    "breakdownMismatch": 0,
+    "rngPositionMismatch": 0
+   },
+   "pairing": {
+    "calls": 12000,
+    "sinkPairs": 24000
+   }
+  },
+  "sinkTransform": {
+   "scenario": "sinkTransform",
+   "binding": {
+    "ok": false,
+    "problems": [
+     "score source differs from the pinned function"
+    ]
+   },
+   "pairing": {
+    "calls": 12000,
+    "sinkPairs": 12000
+   },
+   "n6a": {
+    "n": 12000,
+    "high": 2000,
+    "low": 2000,
+    "mismatch": 4000,
+    "mismatchHigh": 2000,
+    "mismatchLow": 2000,
+    "mismatchInRange": 0
+   },
+   "n6b": {
+    "clampMismatch": 0,
+    "termMismatch": 0
+   }
+  },
+  "accessor": {
+   "scenario": "accessor",
+   "binding": {
+    "ok": false,
+    "problems": [
+     "accessor property, not a data property",
+     "value is not an object"
+    ]
+   },
+   "pairing": {
+    "calls": 12000,
+    "sinkPairs": 12000
+   },
+   "n6a": {
+    "n": 12000,
+    "high": 2000,
+    "low": 2000,
+    "mismatch": 4000,
+    "mismatchHigh": 2000,
+    "mismatchLow": 2000,
+    "mismatchInRange": 0
+   },
+   "n6b": {
+    "clampMismatch": 0,
+    "termMismatch": 0
+   }
+  },
+  "proxy": {
+   "scenario": "proxy",
+   "binding": {
+    "ok": false,
+    "problems": [
+     "value is a Proxy",
+     "value is not frozen",
+     "score is not an own data property"
+    ]
+   },
+   "pairing": {
+    "calls": 12000,
+    "sinkPairs": 12000
+   },
+   "n6a": {
+    "n": 12000,
+    "high": 2000,
+    "low": 2000,
+    "mismatch": 4000,
+    "mismatchHigh": 2000,
+    "mismatchLow": 2000,
+    "mismatchInRange": 0
+   },
+   "n6b": {
+    "clampMismatch": 0,
+    "termMismatch": 0
+   }
+  },
+  "sinkArm": {
+   "scenario": "sinkArm",
+   "binding": {
+    "ok": false,
+    "problems": [
+     "score source differs from the pinned function"
+    ]
+   },
+   "pairing": {
+    "calls": 12000,
+    "sinkPairs": 12000
+   },
+   "n6a": {
+    "n": 12000,
+    "high": 2000,
+    "low": 2000,
+    "mismatch": 4000,
+    "mismatchHigh": 2000,
+    "mismatchLow": 2000,
+    "mismatchInRange": 0
+   },
+   "n6b": {
+    "clampMismatch": 0,
+    "termMismatch": 0
+   }
+  },
+  "sinkRun": {
+   "scenario": "sinkRun",
+   "binding": {
+    "ok": false,
+    "problems": [
+     "score source differs from the pinned function"
+    ]
+   },
+   "pairing": {
+    "calls": 12000,
+    "sinkPairs": 12000
+   },
+   "n6a": {
+    "n": 12000,
+    "high": 2000,
+    "low": 2000,
+    "mismatch": 4000,
+    "mismatchHigh": 2000,
+    "mismatchLow": 2000,
+    "mismatchInRange": 0
+   },
+   "n6b": {
+    "clampMismatch": 0,
+    "termMismatch": 0
+   }
+  }
+ }
+}

@@ -1,0 +1,293 @@
+{
+ "schema": "h1r.d028-gates/1",
+ "generatedBy": "experiments/h1r/verify_d028.mjs",
+ "implementation": "experiments/h1r/verify_existing_equivalence.mjs",
+ "implementationSha256": "ff1c6b01fd49282b57116759f9352652735da164b4919ead176c084c50a4cb84",
+ "sourceEvidence": {
+  "dir": "experiments/h1r/evidence_milestone_b/section11",
+  "mainSha256": "4d3e78ebd8f6fe373d905561666b2c1bfe3432dde7a5587e66d4fdce3394edfe",
+  "repeats": {
+   "n3_repeat_a": "8fa7f8070f63644eb92afa1bfa01e4ff09be0458bd29f6f530f40a089edbdb98",
+   "n3_repeat_b": "8a177f1eeda33f66d0fbe9ba04a43c78e9751c86491b267657381c69d7ba47e4",
+   "n3_repeat_c": "165bd1e5a0cf195dea1046aa578bdbd0d6167af8199742c553caa996c2ce8b05",
+   "n3_repeat_d": "396e9b2e698c99fb0d505c5842deb3cfbfd88534028be3376b503e455cd1d494",
+   "n3_repeat_e": "418896b1b21e3c68d7a139afe5fae1658fcca6e98a39d6e41ec4c485caeaaf67",
+   "n3_repeat_f": "51d9019556f4fcae82fabbbb6217e0bc40e9b1987f6d2a26f137d1b6f253ab07",
+   "n3_repeat_g": "283a530ba0d2ce7c5f1f341abd45d14893c03eaaa7a8e10475852f70d51b81ce",
+   "n3_repeat_h": "ff95da0e9486573d4f30b32973eb28eca1d88f0d296c4aaa731ad5d839c1cb0f",
+   "n3_repeat_i": "1111b94977c8c29b34f71be79dd4de94ec6f5ee92b50dcce5dd54e6e4f678fc8",
+   "n3_repeat_j": "5c847ffef0ca9bca04bee247736318b489c8c1fbe87f02d5876a96a6f61328fd",
+   "n3_repeat_k": "91b641d66365dfd83124ba85372ababef3dbdd1dc07062be8f2c99ee6cab87ca",
+   "n3_repeat_l": "d7ef0756542fa3b3589d0648832e3e3cbe3dd62faeb05c4cedd2ab3783100b77",
+   "n3_repeat_m": "04b3f08c72e5b01937d6c6a4890b27e18bcb85bbe501b0fdb6582bff923abca2",
+   "n3_repeat_n": "43df96bc44182a4b7725f8a29c78c2f9e799288e0c67954b5b770d3e9b3a1f64",
+   "n3_repeat_o": "643bf05816faf9755dbbf271bf29c5896bea5b1d604fa01a599971908a878edf",
+   "n3_repeat_p": "99f199c81db1ac938b1993afcd4bf906ec593e8516c04049f32400a40975c3f9",
+   "n3_repeat_q": "fbdcde9ea21a94fd241c9fdb828afc4f4483a2ee21370aa0bd723d91c8450591",
+   "n3_repeat_r": "df2a28fb40c376a086ed1ccb53b5e46c679b4f449a5e0b9f7cbb1cb442327ce5",
+   "n3_repeat_s": "6201249a2ae4b8b220312e35e2e2d132c0d4cf5fb05832653f6566767621618d",
+   "n3_repeat_t": "d3b6b166f291fd011c6f231b58be09ad26254398b43bfadef037889b400815b8",
+   "n3_repeat_u": "1dfa04f718b4cffdfeb3773618c579a8c57f6b63cb61f8d4162876bc540f08cf",
+   "n3_repeat_v": "46381069f2231ce8635778c7fd1d38da02a73ad023889d0d0302214eefc8b44f",
+   "n3_repeat_w": "881e20bc21c0378f3fdb81b417c97ef742191a82ff3a3e8b3efb7e9350e1ce8d",
+   "n3_repeat_x": "04f1f21e8847b8942f0c21d7f4eea2a1c9d861226f62e40d2e5b00b2bf0bdd67"
+  }
+ },
+ "cases": [
+  {
+   "id": "base",
+   "letter": "A",
+   "change": "the Milestone-B evidence unchanged (C1 prints 7 in three OFF runs and 8 in every pristine run)",
+   "expected": "ACCEPT",
+   "control": "ACCEPT",
+   "differences": "none"
+  },
+  {
+   "id": "c1-count",
+   "letter": "A",
+   "change": "main OFF C1: only the count changes (to 2)",
+   "expected": "ACCEPT",
+   "control": "ACCEPT",
+   "differences": "none"
+  },
+  {
+   "id": "c1-id",
+   "letter": "B",
+   "change": "main OFF C1: only the ID changes (C1 to C9)",
+   "expected": "REJECT",
+   "control": "REJECT",
+   "differences": "main verify_determinism.js: #4 C1: id/verdict"
+  },
+  {
+   "id": "c1-verdict",
+   "letter": "C",
+   "change": "main OFF C1: the verdict changes (PASS to FAIL, count 1)",
+   "expected": "REJECT",
+   "control": "REJECT",
+   "differences": "main verify_determinism.js: #4 C1: id/verdict"
+  },
+  {
+   "id": "c1-order",
+   "letter": "D",
+   "change": "main OFF: C1 and the next assertion swap positions",
+   "expected": "REJECT",
+   "control": "REJECT",
+   "differences": "main verify_determinism.js: #4 C1: id/verdict, #5 C2: id/verdict"
+  },
+  {
+   "id": "exit",
+   "letter": "E",
+   "change": "main OFF verify_determinism.js: only the exit code changes (0 to 1)",
+   "expected": "REJECT",
+   "control": "REJECT",
+   "differences": "main verify_determinism.js: exit 0/1"
+  },
+  {
+   "id": "non-c1-detail",
+   "letter": "F",
+   "change": "main OFF A1 (reproducible): only its detail count changes (1 to 2 distinct fingerprint)",
+   "expected": "REJECT",
+   "control": "REJECT",
+   "differences": "main verify_determinism.js: #0 A1: text"
+  },
+  {
+   "id": "d4-reproducible",
+   "letter": "G",
+   "change": "every pristine D4 line made identical (so D4 is reproducible); OFF D4 lines unchanged",
+   "expected": "REJECT",
+   "control": "REJECT",
+   "differences": "main verify_determinism.js: #10 D4: text | n3_repeat_a verify_determinism.js: #10 D4: text | n3_repeat_b verify_determinism.js: #10 D4: text | n3_repeat_o verify_determinism.js: #10 D4: text | n3_repeat_p verify_determinism.js: #10 D4: text | n3_repeat_q verify_determinism.js: #10 D4: text | n3_repeat_r verify_determinism.js: #10 D4: text | n3_repeat_s verify_determinism.js: #10 D4: text | n3_repeat_t verify_determinism.js: #10 D4: text | n3_repeat_u verify_determinism.js: #10 D4: text | n3_repeat_v verify_determinism.js: #10 D4: text | n3_repeat_w verify_determinism.js: #10 D4: text | n3_repeat_x verify_determinism.js: #10 D4: text"
+  },
+  {
+   "id": "c1-other-text",
+   "letter": "H",
+   "change": "main OFF C1: \"from 8 identical runs\" becomes \"from 9 identical runs\" (C1 text outside the count)",
+   "expected": "REJECT",
+   "control": "REJECT",
+   "differences": "main verify_determinism.js: #4 C1: text"
+  },
+  {
+   "id": "c1-name-text",
+   "letter": "H",
+   "change": "main OFF C1: \"still fails\" becomes \"still failed\" (C1 text outside the count)",
+   "expected": "REJECT",
+   "control": "REJECT",
+   "differences": "main verify_determinism.js: #4 C1: text"
+  },
+  {
+   "id": "other-script-template",
+   "letter": "H",
+   "change": "verify_cap.js (which has its own C1): its C1 line replaced by verify_determinism's C1 template, count 8 in pristine and 7 in OFF",
+   "expected": "REJECT",
+   "control": "REJECT",
+   "differences": "main verify_cap.js: #9 C1: text"
+  },
+  {
+   "id": "duplicate-c1",
+   "letter": "H",
+   "change": "main verify_determinism.js: D1 replaced by a second C1-template line, count 8 in pristine and 5 in OFF",
+   "expected": "REJECT",
+   "control": "REJECT",
+   "differences": "main verify_determinism.js: #4 C1: text"
+  }
+ ],
+ "mutants": [
+  {
+   "id": "any-script",
+   "what": "the exemption applies to every script",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "other-script-template"
+   ]
+  },
+  {
+   "id": "whole-detail",
+   "what": "the whole C1 detail is masked, not only the count",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "c1-other-text"
+   ]
+  },
+  {
+   "id": "id-only",
+   "what": "any two C1 lines are equal",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "c1-other-text",
+    "c1-name-text"
+   ]
+  },
+  {
+   "id": "d4-too",
+   "what": "D4 is exempted as well",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "d4-reproducible"
+   ]
+  },
+  {
+   "id": "whole-script",
+   "what": "every line of verify_determinism.js is exempted",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "non-c1-detail",
+    "d4-reproducible",
+    "c1-other-text",
+    "c1-name-text"
+   ]
+  },
+  {
+   "id": "verdict-free",
+   "what": "the C1 verdict is masked and not compared",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "c1-verdict"
+   ]
+  },
+  {
+   "id": "exit-free",
+   "what": "the exit code of verify_determinism.js is not compared",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "exit"
+   ]
+  },
+  {
+   "id": "order-free",
+   "what": "the assertions of verify_determinism.js are compared as a set",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "c1-order"
+   ]
+  },
+  {
+   "id": "id-free",
+   "what": "the C1 ID is not enforced (the ID token is masked too)",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "c1-id",
+    "duplicate-c1"
+   ]
+  },
+  {
+   "id": "non-unique",
+   "what": "the exemption applies when a run has more than one C1 line",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "duplicate-c1"
+   ]
+  },
+  {
+   "id": "any-run-count",
+   "what": "the number of runs (8) is masked as well",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "c1-other-text"
+   ]
+  }
+ ],
+ "pass": 10,
+ "fail": 0,
+ "results": [
+  {
+   "id": "CTRL",
+   "title": "control: a byte-identical copy of the committed implementation gives the expected outcome in all 12 cases, and on the unchanged evidence every gate of verify_existing_equivalence passes",
+   "pass": true,
+   "detail": "base:ACCEPT c1-count:ACCEPT c1-id:REJECT c1-verdict:REJECT c1-order:REJECT exit:REJECT non-c1-detail:REJECT d4-reproducible:REJECT c1-other-text:REJECT c1-name-text:REJECT other-script-template:REJECT duplicate-c1:REJECT"
+  },
+  {
+   "id": "A",
+   "title": "a C1 count-only difference is accepted: the real evidence (D-028 applied exactly where the pristine and OFF C1 lines differ) and a synthetic count of 2",
+   "pass": true,
+   "detail": "applied: main verify_determinism.js: #4 C1 | n3_repeat_o verify_determinism.js: #4 C1 | n3_repeat_t verify_determinism.js: #4 C1"
+  },
+  {
+   "id": "B",
+   "title": "a C1 ID difference is rejected (id/verdict)",
+   "pass": true,
+   "detail": "main verify_determinism.js: #4 C1: id/verdict"
+  },
+  {
+   "id": "C",
+   "title": "a C1 verdict difference is rejected (id/verdict)",
+   "pass": true,
+   "detail": "main verify_determinism.js: #4 C1: id/verdict"
+  },
+  {
+   "id": "D",
+   "title": "a C1 order difference is rejected (id/verdict at both swapped positions)",
+   "pass": true,
+   "detail": "main verify_determinism.js: #4 C1: id/verdict, #5 C2: id/verdict"
+  },
+  {
+   "id": "E",
+   "title": "an exit-code difference is rejected",
+   "pass": true,
+   "detail": "main verify_determinism.js: exit 0/1"
+  },
+  {
+   "id": "F",
+   "title": "a non-C1 detail difference (A1, reproducible) is rejected",
+   "pass": true,
+   "detail": "main verify_determinism.js: #0 A1: text"
+  },
+  {
+   "id": "G",
+   "title": "D4 is unchanged: on the real evidence its text is the only non-reproducible verify_determinism.js line (verdict and ID still compared), and once every pristine D4 line is identical an OFF D4 difference is rejected",
+   "pass": true,
+   "detail": "non-reproducible: verify_determinism.js D4; d4-reproducible: main verify_determinism.js: #10 D4: text | n3_repeat_a verify_determinism.js: #10 D4: text | n3_repeat_b verify_determin"
+  },
+  {
+   "id": "H",
+   "title": "the exemption matches no other line: C1 text outside the count, the C1 template in another script, and a second C1 line are all rejected",
+   "pass": true,
+   "detail": "c1-other-text: main verify_determinism.js: #4 C1: text || c1-name-text: main verify_determinism.js: #4 C1: text || other-script-template: main verify_cap.js: #9 C1: text || duplicate-c1: main verify_determinism.js: #4 C1: text"
+  },
+  {
+   "id": "MUT",
+   "title": "anti-vacuity: each of 11 deliberately over-broad versions of the exemption gives a wrong N3 outcome on at least one case",
+   "pass": true,
+   "detail": "any-script:other-script-template whole-detail:c1-other-text id-only:c1-other-text+c1-name-text d4-too:d4-reproducible whole-script:non-c1-detail+d4-reproducible+c1-other-text+c1-name-text verdict-free:c1-verdict exit-free:exit order-free:c1-order id-free:c1-id+duplicate-c1 non-unique:duplicate-c1 any-run-count:c1-other-text"
+  }
+ ]
+}

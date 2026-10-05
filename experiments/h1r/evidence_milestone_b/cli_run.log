@@ -1,0 +1,33 @@
+PASS  C1   `identity` prints the in-process instrumentIdentity() (orchestrator 6162f8c2…, analyze.js dae6012c…), byte-identically on repetition; in a sandbox it differs only by the driver double
+        exit 0/0/0; orchestrator 6162f8c21dab; analyze dae6012c1ac4; sandbox identity as expected true
+PASS  C2   an absent, unknown or mis-cased command, and `precheck` without a valid stage, exit 2 with the usage text and no output, in the repository and in a sandbox; nothing is written
+        16 invocations; deviations []; sandbox untouched true
+PASS  C3   `precheck stage1` and `precheck extension` exit 0: the 5 pilot seeds 004–008 are recorded for H1-R (REPRODUCTION) and block 886000–889999 is recorded; `precheck stage2` exits 3: the 20 confirmatory seeds are AVAILABLE (not recorded) and block 900500 is not recorded; repeated output is byte-identical and equals the in-process pre-check
+        stage1 exit 0 executable true; extension exit 0; stage2 exit 3, decisions AVAILABLE, block recorded false, reasons 21
+PASS  C4   every stage command without the matching H1R_STAGE_AUTHORISED (unset, empty, another stage, other case) exits 3 with the refusal before any registry read or generation; nothing is written
+        30 invocations (repository: unset/empty only); deviations []; sandbox untouched true
+PASS  C5   with the pre-Milestone-B registry (bf0833f: no H1-R record), every authorised stage command exits 3 on the registry pre-check; no tree is built, no configuration is generated, nothing is written, the registry bytes are unchanged
+        5 authorised commands; deviations []; untouched true; generator calls 0
+PASS  C6   authorised `stage1` (sandbox, test doubles): exit 0; writes exactly stage1_manifest.json and stage1_probe.json with correct .sha256 sidecars; plans 5 × 5 × 7 base runs + 7 determinism re-runs on stream 886000 (ERR-07 positions); every run attempted once and classified invalid (doubles); the probe asks for the extension; the generator was asked only for positions inside 886000–889999; the registry is unchanged
+        exit 0; files 4; planned 182, invalid 182; attempts 182; ERR-07 chain true; probe EXTENSION_REQUIRED; generator positions 475 in [886000, 886012]
+PASS  C7   the same command in a second sandbox at a different absolute path writes byte-identical stage records and raw records; no derived artifact contains a host path
+        exit 0; stage records identical true; raw identical true; host-path free true; manifest da6f8550582b9e80
+PASS  C8   re-running `stage1` re-derives everything from the raw records without attempting any run again (ledger and raw records byte-unchanged) and rewrites byte-identical stage records
+        exit 0; unchanged true
+PASS  C9   authorised `extension`: exit 0; plans indices 5–9 of the same stream × seeds 004–008 (5 × 5 × 7 + 7 runs); writes extension_manifest.json, stage1_input.json and stage1_decision.json with sidecars; Stage 1 is not re-executed; the decision on all-invalid doubles is not PROCEED; generator positions stay inside 886000–889999
+        exit 0; extension planned 182, indices 5,6,7,8,9; decision VOID (extensionTaken true); generator max 886027
+PASS  C10  authorised `stage2`, `forks` and `analyze` while stage1_decision.json is not committed halt STAGE1_NOT_LODGED with exit 1 (failure propagates): no Stage-2 or fork run, no new stage record, no held-out position requested
+        deviations []; generator max 886027
+PASS  C11  with the decision committed and its outcome not PROCEED, `stage2`, `forks` and `analyze` halt NO_STAGE2 with exit 1; nothing of Stage 2 runs
+        deviations []
+PASS  C12  even with a committed PROCEED decision (a sandbox fixture), `stage2`, `forks` and `analyze` halt on the Stage-2 registry pre-check (confirmatory seeds and block 900500 not recorded) with exit 1, before any held-out position is generated
+        deviations []; generator max 886012
+PASS  C13  a crashed run (no record) is classified no-record and never re-run (D-026 §1); a malformed record halts MALFORMED with exit 1 and no manifest; no configuration accepted within 889999 halts PILOT_HARD_BOUND with exit 1 before any run, never evaluating a position above the bound
+        crash: exit 0, status no-record, noRecord 1, re-run attempted false; malformed: exit 1; bound: exit 1, positions 4000 in [886000, 889999]
+PASS  C15  anti-vacuity: each of 8 deliberate CLI defects is caught by the test of its named check, and the unmutated orchestrator passes every one of those tests
+        M1(C4):CAUGHT M2(C5):CAUGHT M3(C2):CAUGHT M4(C2):CAUGHT M5(C13):CAUGHT M6(C7):CAUGHT M7(C10):CAUGHT M8(C12):CAUGHT; control passes
+PASS  C14  isolation: the repository (every tracked, untracked and ignored file) and the real tree cache are byte-unchanged; the repository registry is unchanged; experiments/h1r/data holds only its .gitignore and no stage_records exist; all 32 authorised stage commands ran in sandboxes
+        repository files 953 (before 953), digest unchanged true; tree cache unchanged true; registry unchanged true; data only .gitignore true; authorised sandbox commands 32
+
+H1-R CLI GATE: 15/15 PASS, 0 FAIL
+exit 0

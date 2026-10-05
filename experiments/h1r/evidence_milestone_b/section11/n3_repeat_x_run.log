@@ -1,0 +1,4 @@
+on       experiments/m7/verify_determinism.js: exit 0, 29 PASS, 0 FAIL (67s)
+off      experiments/m7/verify_determinism.js: exit 0, 29 PASS, 0 FAIL (69s)
+pristine experiments/m7/verify_determinism.js: exit 0, 29 PASS, 0 FAIL (69s)
+exit 0
