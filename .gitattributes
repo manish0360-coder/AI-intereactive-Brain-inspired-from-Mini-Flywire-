@@ -173,3 +173,9 @@ research/preregistrations/H1R_PREREGISTRATION_v1.0.sha256 -text
 research/cognitive-audit/M7_SCIENTIFIC_SPEC_DRAFT.md -text
 research/cognitive-audit/M7_GATE_SEMANTICS_AUDIT.md -text
 research/cognitive-audit/M7_CHARACTERIZATION_FINDINGS.md -text
+
+# H1-R D-021(b) handoff package (sealed at fb6afec) - the same byte-integrity guarantee. GEMINI_PACKAGE.md is identified
+# by a SHA-256 over exact bytes (65500ddef1a7f35070854447309b5065021e6e7d0437511a64092b26e6e944c4), and fixtures,
+# manifest and builder are hash-recorded. Without `-text`, a checkout with core.autocrlf=true rewrites LF to CRLF in
+# 8 of the 26 files (demonstrated), so their digests fail and the builder's verbatim-quote check refuses.
+research/preregistrations/h1r_d021b/** -text
