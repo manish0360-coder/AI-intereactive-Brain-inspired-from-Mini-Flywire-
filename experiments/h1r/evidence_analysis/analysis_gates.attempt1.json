@@ -1,0 +1,422 @@
+{
+ "generatedBy": "experiments/h1r/verify_analysis.mjs",
+ "analyzeSha256": "8c5c65bc8a174abfb0d0201d98a8c4a9aab3c5ee13afc3f6f612e722e0c45b3c",
+ "outputSha256": "7e279a5794437b96b4ddf4952285506d7bbe3e7a9666fa5313a24ab26e17cc6b",
+ "seconds": 1154,
+ "gates": [
+  {
+   "id": "U1",
+   "name": "makeRng is bit-identical to B2 instrumentation/rng.js makeRng (seeds 770001–770004, 20,000 draws each)",
+   "status": "PASS",
+   "evidence": "mismatches 0"
+  },
+  {
+   "id": "U2",
+   "name": "two-sided t p-value: ν=1, ν=2 cancellation-free closed forms (relative ≤ 1e-13); ν=4 closed form (relative ≤ 1e-12 where p ≥ 0.01, absolute ≤ 1e-15) and the A&S finite series for ν = 3 … 30 (relative ≤ 1e-12 where p ≥ 0.01, absolute ≤ 5e-15, the series' own rounding); symmetric; p(0) = 1",
+   "status": "PASS",
+   "evidence": "max rel error ν1 5.42e-16, ν2 7.56e-16, ν4 4.73e-15, ν3–30 2.17e-14; max abs error ν4 2.22e-16, ν3–30 1.22e-15; asymmetries 0"
+  },
+  {
+   "id": "U3",
+   "name": "t_{ν,0.995}: closed forms for ν = 1, 2, 4 within 1e-13 relative; two-sided p at the critical value = 0.01 within 1e-15 for ν = 1 … 30",
+   "status": "PASS",
+   "evidence": "relative errors 1.79e-15, 8.95e-16, 1.93e-16; max |p − 0.01| 1.73e-17"
+  },
+  {
+   "id": "U4",
+   "name": "§12 crossed test: MS_C, MS_S, MS_CS, d̄, ν, p and the 99% CI equal an independent sums-of-squares computation (400 random arrays); degenerate case p = 1 / 0 with CI [d̄, d̄]; fewer than 2 rows or seeds → not computable",
+   "status": "PASS",
+   "evidence": "mismatching arrays 0; CI mismatches 0; degenerate cases true; non-computable (1×3, 3×1) true"
+  },
+  {
+   "id": "U5",
+   "name": "Holm: equals a direct transcription of the §12 formula on 3,000 vectors with ties and zeros; invariant to input order; all-null family stays null",
+   "status": "PASS",
+   "evidence": "mismatches 0; order-dependence 0"
+  },
+  {
+   "id": "U6",
+   "name": "two-way bootstrap: identical to an independent re-simulation (fresh makeRng(770002), configurations then seeds, ⌊u·n⌋, 50th/9,950th order statistics); constant data → [v, v]; IR-34c: undefined replicates counted and the CI null, never rescaled",
+   "status": "PASS",
+   "evidence": "CI [-0.17223914110048721, 0.3931620949010466] vs re-simulation [-0.17223914110048721, 0.3931620949010466]; IR-34c case: undefined 371, defined 9629, CI null/null; missing-cell case: undefined 2909"
+  },
+  {
+   "id": "U7",
+   "name": "Spearman with average ranks equals Pearson on independently computed mid-ranks (2,000 tied samples); fewer than 3 keys → null; IR-12: zero variance in either variable → null with the reason recorded, never 0",
+   "status": "PASS",
+   "evidence": "mismatches 0; <3 → fewerThan3Keys; zero variance x → zeroVariance, y → zeroVariance"
+  },
+  {
+   "id": "U8",
+   "name": "half-life equals an independent transcription of v1.0 §8 on 120 synthetic reward streams (HL = 0, recovery, right-censoring); IR-03b: thr = 0.5·R_W2 exactly, negative when R_W2 < 0, never clamped",
+   "status": "PASS",
+   "evidence": "mismatches 0; streams with a negative threshold 30"
+  },
+  {
+   "id": "U9",
+   "name": "Box–Muller: u₁ = 0 redrawn (twice), cos partner, consumes u₁ then u₂ (5,000 deviates re-derived); Fisher–Yates: i = n−1 … 1, j = ⌊u·(i+1)⌋ (2,000 arrays incl. n = 0, 1)",
+   "status": "PASS",
+   "evidence": "u₁=0 case true; deviate mismatches 0; permutation mismatches 0"
+  },
+  {
+   "id": "U10",
+   "name": "power: all σ̂ = 0 and μ̂ ≠ 0 → power 1 at every S, S* = 2; μ̂ = 0 → power 0, S* = 20 under-powered; power(W1, S = 3) and power(W1, S = 4), both strictly between 0 and 1, equal an independent re-simulation (fresh makeRng(770001) per (W, S); a, then b, then e row-major)",
+   "status": "PASS",
+   "evidence": "S* (σ̂ = 0, μ̂ = 3) 2; S* (μ̂ = 0) 20, under-powered true; power(W1, 3) 0.2943 vs 0.2943; power(W1, 4) 0.9223 vs 0.9223"
+  },
+  {
+   "id": "U11",
+   "name": "PR-4 (D-025 §1): B1 bin = min(4, ⌊10x⌋) on 11 edge values; link ③ monotonicity bins of M01 run m1 equal an independent derivation (x = max over the recorded step-0 candidates of |t|/12; flips from B2 arbitrate shadow weights), and the bins sum to decisionTicks and flips; E1/F1: ρ of bin index vs rate equals an O(n²) mid-rank oracle (500 cases); an empty bin → null (emptyBin); zero variance → null (IR-12)",
+   "status": "PASS",
+   "evidence": "bin mismatches none; m1 bins {\"decisions\":[47,156,302,444,185],\"flips\":[0,0,4,11,5]} vs oracle {\"decisions\":[47,156,302,444,185],\"flips\":[0,0,4,11,5]}; ρ mismatches 0; empty → emptyBin; flat → zeroVariance"
+  },
+  {
+   "id": "U12",
+   "name": "C-1: the F-11 decision table (8 cases: the extension runs first when the initial CI is non-computable or contains 0 in both windows; non-computable or both-containing after it → fires = true, VOID; extension unavailable → fires = false, HALT; the final array is never evaluated without the extension); PR-2: F-1 and F-3 fire on a null CI; PR-1: a non-computable CI pair fires F-4…F-9, an undefined P̄ or H̄ fires F-10 (P̄ ≤ 0 stays not assessable)",
+   "status": "PASS",
+   "evidence": "F-11 mismatches: none; criterion mismatches: none"
+  },
+  {
+   "id": "U13",
+   "name": "C-3 (G1): the bootstrap index grid keeps an empty configuration row and an empty seed column (sorted, complete); with an empty row (12 × 6) the CI equals an independent full-grid re-simulation; with an empty row and column (3 × 2) the undefined-replicate count equals the re-simulation's and the CI is null (IR-34c)",
+   "status": "PASS",
+   "evidence": "grid true; (a) [-0.20609642788740926, 0.4253321189866461] vs [-0.20609642788740926, 0.4253321189866461]; (b) undefined 2744 vs 2744, CI null"
+  },
+  {
+   "id": "U14",
+   "name": "PR-10: exact Pratt Wilcoxon (zeros ranked, excluded from T⁺/T⁻; two-sided exact sign-flip p) equals brute-force enumeration exactly on 300 vectors with zeros and ties, and an exact BigInt counting recursion on 6 vectors with n = 30…59; rank-biserial (T⁺ − T⁻)/(T⁺ + T⁻); all zero → p = 1, r = null; no data → p = null",
+   "status": "PASS",
+   "evidence": "mismatches 0 (vectors with zeros 160); large-n mismatches 0; all-zero p 1, r null"
+  },
+  {
+   "id": "U15",
+   "name": "PR-8: a goal→cap raw reset gap of 151 calls gives a 150-tick cap episode, cap→cap 150, first episode from τ = 0 (call 5), resets before τ = 0 ignored, run end censored at call 3004; KM median = smallest t with S(t) ≤ 0.5 equals a running-risk-set oracle (400 cases; S = 0.5 exactly → that t; no event → +∞); median of run medians with two-middle averaging and +∞",
+   "status": "PASS",
+   "evidence": "episodes [16,150,150,80,2604]; cap-first [95,150,2755]; KM mismatches 0; S = 0.5 case → 3; median-of-medians mismatches 0"
+  },
+  {
+   "id": "U16",
+   "name": "PR-5: one makeRng(770003) sequence over the runs in order, τ 1499 then τ 2999 inside each run; keys ordered by (from, to); each shuffle a fresh Fisher–Yates permutation of the key-ordered p vector; an undefined observed ρ runs no shuffles and draws nothing (p null); p = (1 + #{|ρ*| ≥ |ρ|})/10,001; 99th percentile = the 9,900th raw ρ* (independent re-simulation, order statistics distinguishable)",
+   "status": "PASS",
+   "evidence": "results equal true; sensitive true; run 2 τ1499 {\"rho\":null,\"p\":null,\"percentile99\":null,\"nShuffles\":0}"
+  },
+  {
+   "id": "U17",
+   "name": "PR-10.1: Satterthwaite ν_S = (MS_C + MS_S)²/(MS_C²/(C−1) + MS_S²/(S−1)) equals an independent sums-of-squares computation (200 arrays); the real-ν t p-value equals numerical integration of cos^(ν−1) (relative ≤ 1e-9 where p ≥ 1e-6, absolute ≤ 1e-12) and the integer-ν p within 1e-13; lnΓ at 1, 2, ½, 6, 3.5, 20 within 1e-13; degenerate denominator → null",
+   "status": "PASS",
+   "evidence": "max rel 9.45e-12, max abs 9.43e-14; integer-ν mismatches 0; lnΓ errors 0.0e+0,0.0e+0,3.9e-15,2.7e-15,1.1e-15,0.0e+0; ν_S mismatches 0; degenerate → degenerateDenominator"
+  },
+  {
+   "id": "U18",
+   "name": "PR-6: Brier(trust), Brier(global prequential base) and their difference for M01 m1 equal an independent pass (τ ∈ [0, 2999], prior (a, s), counts before the attempt); PR-7: link ① metrics of m1 (A1), m6 (A4: no store increments) and a constructed snapshot (keys with raw 0 excluded from the denominator) equal an independent computation (bin = min(9, ⌊10x⌋), entropy in bits); PR-8: m1 episode counts and KM median equal an independent episode builder",
+   "status": "PASS",
+   "evidence": "Brier true (n 1134 of 1137 attempts); link ① m1/m6/constructed true/true/true; constructed coverage 2/3; episodes 48 vs 48, KM 39"
+  },
+  {
+   "id": "U19",
+   "name": "PR-9: trajectory entropy of M01 m1 (slips as u → u) equals an independent count per window; PR-12: partial Spearman equals the correlation of rank-regression residuals (300 cases), fewer than 4 keys → null, zero variance → null, |r| = 1 in the denominator → null; undirected pooled ρ (raw₁ + raw₂ ≥ 5 inclusive) on a constructed graph and on m1 equals an independent computation; calibration-curve bins (min(9, ⌊10x⌋)) and means; PR-11: per-window event-stream identity (a difference before τ = 0 belongs to no window)",
+   "status": "PASS",
+   "evidence": "trajectory mismatches 0; partial mismatches 0; n=3 → fewerThan4Keys; zero variance → zeroVariance; collinear → undefinedDenominator; undirected constructed true (edges 4), m1 true; calibration true; window identity {\"W1\":true,\"W2\":true,\"W3\":false,\"W4\":true}"
+  },
+  {
+   "id": "U20",
+   "name": "RNG isolation: a bootstrap CI is unchanged by another bootstrap and by a permutation null computed before it (fresh makeRng(770002) per CI, I-3); the permutation null is unchanged by bootstraps (its own makeRng(770003))",
+   "status": "PASS",
+   "evidence": "bootstrap repeat equal true; permutation repeat equal true"
+  },
+  {
+   "id": "P1",
+   "name": "no hidden randomness or clock in analyze.js (no Math.random, Date, performance, hrtime, crypto randomness, timers, network) and no PENDING marker; random numbers only from makeRng, each analysis seed (770001 power, 770002 bootstrap, 770003 permutation, 770004 link-④ sample) created at exactly one site; one child process (git cat-file of the pinned B2 blob)",
+   "status": "FAIL",
+   "evidence": "banned constructs found: none; seeds each at one site false; child-process calls 0"
+  },
+  {
+   "id": "D1",
+   "name": "no protocol or package drift: v1.0 c52e7337…a836; GEMINI_PACKAGE.md 65500dde…; all 18 fixtures match FIXTURES.sha256.json; no tracked file modified",
+   "status": "PASS",
+   "evidence": "v1.0 c52e73378ad7…; package 65500ddef1a7…; fixtures true; tracked modifications 0"
+  },
+  {
+   "id": "D2",
+   "name": "the pre-registered generator regenerates all 18 fixtures byte for byte (fixture count 18)",
+   "status": "PASS",
+   "evidence": "{\"n\":19,\"same\":18,\"total\":18}"
+  },
+  {
+   "id": "R7a",
+   "name": "C-1 at study level (synthetic studies): initial F-11 non-computable → the extension runs → PROCEED with fires = false; non-computable after the extension → fires = true, VOID, no Stage 2; extension unavailable → fires = false, HALT, no Stage 2; CI containing 0 in both windows before and after the extension → fires = true, VOID",
+   "status": "PASS",
+   "evidence": "{\"emptyRow\":{\"outcome\":\"PROCEED\",\"fires\":false,\"ext\":true,\"unavailable\":false,\"verdict\":\"NOT SUPPORTED\"},\"emptyRowAndColumn\":{\"outcome\":\"PROCEED\",\"fires\":false,\"ext\":true,\"unavailable\":false,\"verdict\":\"NOT SUPPORTED\"},\"voidAfterExtension\":{\"outcome\":\"VOID\",\"fires\":true,\"ext\":true,\"unavailable\":false,\"verdict\":\"VOID\"},\"haltNoExtension\":{\"outcome\":\"HALT\",\"fires\":false,\"ext\":false,\"unavailable\":true,\"verdict\":\"HALT\"},\"voidContainsZero\":{\"outcome\":\"VOID\",\"fires\":true,\"ext\":true,\"unavailable\":false,\"verdict\":\"VOID\"}}"
+  },
+  {
+   "id": "R7b",
+   "name": "C-3 (G1) at study level: with an empty held-out configuration row the F-1 bootstrap CI equals an independent re-simulation over the complete grid (the empty row stays drawable); with an empty row and an empty seed column the undefined-replicate count equals the re-simulation's, the CI is null and F-1 fires (PR-2); the §12 family is non-computable and F-4 fires (PR-1)",
+   "status": "PASS",
+   "evidence": "empty row: [0.3998963413760066, 0.7318702694028617] vs [0.3998963413760066, 0.7318702694028617]; row and column: undefined 2445 vs 2445, F-1 true, F-4 true"
+  },
+  {
+   "id": "R1",
+   "name": "deterministic: two independent processes produce byte-identical output on all 18 fixtures",
+   "status": "PASS",
+   "evidence": "SHA-256 7e279a5794437b96b4ddf4952285506d7bbe3e7a9666fa5313a24ab26e17cc6b / 7e279a5794437b96b4ddf4952285506d7bbe3e7a9666fa5313a24ab26e17cc6b"
+  },
+  {
+   "id": "R2",
+   "name": "output contract h1r.d021b.output/1 (GEMINI_INSTRUCTIONS.md §10): every required key and type present for 17 study and 1 record fixtures; criterion fires and F-11 outcomes are booleans and labels; values are numbers, booleans, null or the encoded non-finite strings",
+   "status": "PASS",
+   "evidence": "no violations"
+  },
+  {
+   "id": "R2b",
+   "name": "no PENDING marker anywhere in the study or records output (D-024, D-025 close every pending point)",
+   "status": "PASS",
+   "evidence": "PENDING occurrences 0"
+  },
+  {
+   "id": "R3",
+   "name": "F-3 sample (S01): equals an independent re-derivation (makeRng(770004), Fisher–Yates of each run's t-sorted population, runs in (configuration, seed) order, first 10 kept)",
+   "status": "PASS",
+   "evidence": "1200 sampled decisions"
+  },
+  {
+   "id": "R4",
+   "name": "link ③ (M01 run m1): flips and PR-4 monotonicity bins equal an independent re-derivation (shadow weights from the B2 arbitrate, first-maximum argmax₁ and argmax₀ in insertion order, x = max |t|/12)",
+   "status": "PASS",
+   "evidence": "20 flips re-derived; analyze.js 20; bins {\"decisions\":[47,156,302,444,185],\"flips\":[0,0,4,11,5]}"
+  },
+  {
+   "id": "R5",
+   "name": "PR-4 mandatory output: every A1 run record carries link3.monotonicity = { decisions: [int × 5], flips: [int × 5] } (exactly these keys), the bins sum to decisionTicks and flips, and flips ≤ decisions per bin; non-A1 runs carry link3 = null",
+   "status": "PASS",
+   "evidence": "A1 runs 5; violations none"
+  },
+  {
+   "id": "R6",
+   "name": "PR-4 at study level (S01): pooled Σdecisions and Σflips per bin over the valid Stage-2 A1 cells, ρ of bin index vs rate, and the §12 bootstrap CI over the complete grid equal an independent re-derivation (mid-rank oracle Spearman; undefined replicates counted)",
+   "status": "PASS",
+   "evidence": "ρ 1 vs 1; CI [0.9, 1] vs [0.9, 1]; undefined 0 vs 0"
+  },
+  {
+   "id": "R8",
+   "name": "PR-5 on M01: per-run permutation p-values and 99th percentiles of the 5 A1 runs equal an independent re-derivation from the raw records (one makeRng(770003) over runs in (configIndex, seed) order, τ 1499 then 2999; keys by (from, to); mid-rank oracle Spearman)",
+   "status": "PASS",
+   "evidence": "snapshots tested 9; mismatches 0"
+  },
+  {
+   "id": "C1",
+   "name": "fixture coverage: branches reached by the 18 pre-registered fixtures (branches not reached are covered by U4, U6, U7, U8, U10–U15 and R7)",
+   "status": "INFO",
+   "evidence": "{\"F11 PROCEED\":14,\"F-3 samples dropped (fork crashed twice)\":14,\"verdict NOT SUPPORTED\":13,\"F11 PROCEED after extension\":1,\"S* = 20 under-powered\":2,\"verdict H1-STRICT\":2,\"F11 VOID after extension\":1,\"row rule removed configurations\":2,\"degenerate §12 test\":4,\"significant reversal (not confirmed)\":3,\"F-1 statistic undefined\":1,\"F-3 statistic undefined\":1,\"F-2 fires\":2,\"IR-34c null CI\":2,\"PR-4 study ρ null\":1,\"PR-4 study CI null\":1,\"F-10 fires\":1,\"F-10 not assessable (P̄ ≤ 0)\":1,\"S* = 2\":1,\"F11 HALT\":1,\"cap episode\":2,\"HL = 0\":1,\"ρ undefined: fewer than 3 keys\":1,\"IR-12 zero variance\":2} | not reached by fixtures: F11 initial non-computable, HL censored, IR-03b negative threshold, non-computable §12 array, KM median +∞, PR-4 run ρ empty bin"
+  },
+  {
+   "id": "M0",
+   "name": "mutation harness control: an unmutated copy of analyze.js in the mutant directory passes every unit check",
+   "status": "PASS",
+   "evidence": "control (unmutated copy): ALL PASS"
+  },
+  {
+   "id": "M1",
+   "name": "mutation anti-vacuity: each of 48 deliberate defects is caught by the unit checks (15 earlier: Holm, ν, CI level, order statistics, bootstrap seed, IR-34c, IR-12, IR-03b, Box–Muller ×2, power RNG reset, Fisher–Yates, degenerate p, MS_CS, Spearman ties; 33 for D-024/D-025)",
+   "status": "PASS",
+   "evidence": "holm:U5 nu:U4+U10 ciLevel:U4 orderStat:U6+U13 bootSeed:U6+U13 ir34c:U6+U13 ir12:U7+U11+U19 ir03b:U8 bmSine:U9+U10 bmRedraw:U9 powerReset:U10 fisherYates:U9+U16 degenerate:U4 msCS:U4 ranks:U7+U11+U14+U19 pr4Bin:U11 pr4Max:U11 pr4Empty:U11 c1Halt:U12 c1ExtFirst:U12 c1FinalNC:U12 pr2:U12 pr1CI:U12 pr1F10:U12 g3:U13 bootShared:U13+U20 prattZeros:U14 wilcoxonOneSided:U14 rbDenominator:U14 kmCapLag:U15 kmStrict:U15 medianLower:U15 permSeed:U16 permUndefinedDraws:U16 permPercentile:U16 permAbs:U16 permChained:U16 sattNu:U17 stirling:U17 brierBase:U18 link1A4:U18 trustBin:U18+U19 coverageDenominator:U18 trajectorySlip:U19 partialMin:U19 undirectedQualify:U19 calibrationMeanP:U19 windowIdentity:U19"
+  }
+ ],
+ "mutation": [
+  [
+   "control (unmutated copy)",
+   "ALL PASS"
+  ],
+  [
+   "holm",
+   "U5"
+  ],
+  [
+   "nu",
+   "U4+U10"
+  ],
+  [
+   "ciLevel",
+   "U4"
+  ],
+  [
+   "orderStat",
+   "U6+U13"
+  ],
+  [
+   "bootSeed",
+   "U6+U13"
+  ],
+  [
+   "ir34c",
+   "U6+U13"
+  ],
+  [
+   "ir12",
+   "U7+U11+U19"
+  ],
+  [
+   "ir03b",
+   "U8"
+  ],
+  [
+   "bmSine",
+   "U9+U10"
+  ],
+  [
+   "bmRedraw",
+   "U9"
+  ],
+  [
+   "powerReset",
+   "U10"
+  ],
+  [
+   "fisherYates",
+   "U9+U16"
+  ],
+  [
+   "degenerate",
+   "U4"
+  ],
+  [
+   "msCS",
+   "U4"
+  ],
+  [
+   "ranks",
+   "U7+U11+U14+U19"
+  ],
+  [
+   "pr4Bin",
+   "U11"
+  ],
+  [
+   "pr4Max",
+   "U11"
+  ],
+  [
+   "pr4Empty",
+   "U11"
+  ],
+  [
+   "c1Halt",
+   "U12"
+  ],
+  [
+   "c1ExtFirst",
+   "U12"
+  ],
+  [
+   "c1FinalNC",
+   "U12"
+  ],
+  [
+   "pr2",
+   "U12"
+  ],
+  [
+   "pr1CI",
+   "U12"
+  ],
+  [
+   "pr1F10",
+   "U12"
+  ],
+  [
+   "g3",
+   "U13"
+  ],
+  [
+   "bootShared",
+   "U13+U20"
+  ],
+  [
+   "prattZeros",
+   "U14"
+  ],
+  [
+   "wilcoxonOneSided",
+   "U14"
+  ],
+  [
+   "rbDenominator",
+   "U14"
+  ],
+  [
+   "kmCapLag",
+   "U15"
+  ],
+  [
+   "kmStrict",
+   "U15"
+  ],
+  [
+   "medianLower",
+   "U15"
+  ],
+  [
+   "permSeed",
+   "U16"
+  ],
+  [
+   "permUndefinedDraws",
+   "U16"
+  ],
+  [
+   "permPercentile",
+   "U16"
+  ],
+  [
+   "permAbs",
+   "U16"
+  ],
+  [
+   "permChained",
+   "U16"
+  ],
+  [
+   "sattNu",
+   "U17"
+  ],
+  [
+   "stirling",
+   "U17"
+  ],
+  [
+   "brierBase",
+   "U18"
+  ],
+  [
+   "link1A4",
+   "U18"
+  ],
+  [
+   "trustBin",
+   "U18+U19"
+  ],
+  [
+   "coverageDenominator",
+   "U18"
+  ],
+  [
+   "trajectorySlip",
+   "U19"
+  ],
+  [
+   "partialMin",
+   "U19"
+  ],
+  [
+   "undirectedQualify",
+   "U19"
+  ],
+  [
+   "calibrationMeanP",
+   "U19"
+  ],
+  [
+   "windowIdentity",
+   "U19"
+  ]
+ ]
+}

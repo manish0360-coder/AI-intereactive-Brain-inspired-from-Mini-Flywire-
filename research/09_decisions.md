@@ -7,9 +7,61 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-025 — H1-R final micro-rulings: PR-4, C-1 on HALT, PR-7.3 key set, PR-12 bins and undirected variant, PR-10.1 array, X-1, link ① arms
+
+**Date:** 2026-10-05 · **Authority:** Research Director "Final micro-ruling + implementation authorization" (2026-10-05), after the docs-only freeze `2fb3b60` · **Status:** in force; implemented in `experiments/h1r/analyze.js` together with D-024
+**Scope:** interpretations of H1-R v1.0 for cases its text does not settle, fixed before any Stage-1 data.
+- H1-R v1.0 is unchanged (SHA-256 `c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836`). D-020, D-023 and D-024 are unchanged; this entry closes what D-024 left open.
+- PR-4 is the only item in the mandatory output schema `h1r.d021b.output/1`. Apart from C-1, every ruling here is descriptive only (v1.0 §14).
+
+### 1. PR-4 — mandatory output contract
+- **A1:** Use the computable recorded trust-term quantity: x = |recorded trust term| / 12, equivalently |T - 0.5| for the recorded trust value.
+- **B1:** Five equal-width bins over [0,0.5], with the frozen edge-inclusive rule: bin = min(4, floor(10*x)).
+- **K1:** Use the recorded step-0 candidate entries.
+- **E1:** For each run/study, pool: total flips / total decisions by bin, then compute the Spearman rho of bin index versus flip rate.
+- **F1:** Use the frozen ordinary Spearman handling; empty/degenerate statistic => null. IR-12 zero-variance => null.
+- PR-4 remains descriptive but is mandatory because it is part of the output contract.
+- Do not introduce an alternative trust quantity or unrecorded edge-level data.
+
+### 2. C-1 — F-11 fires on HALT
+- If the predetermined extension is unavailable: fires = false; outcome = HALT.
+- If F-11 is actually evaluated and fires, including after the extension: fires = true; outcome = VOID.
+- If F-11 is non-computable after the required extension: fires = true; outcome = VOID.
+- No verdict is issued in either terminal case.
+
+### 3. PR-12 calibration bins
+Use the same trust-bin convention as PR-7.3: bin = min(9, floor(10*x)) for x in [0,1].
+
+### 4. PR-7.3 trust entropy key set
+- Use the >=1 raw-attempt keys as the denominator/key set.
+- The >=3 threshold is only the separate coverage statistic.
+- Compute entropy over the trust values of keys with >=1 raw attempt in the relevant phase.
+
+### 5. PR-12 undirected variant
+- Compute Spearman rho between pooled undirected trust = (s1+s2+1)/(a1+a2+2) and the corresponding configured p_e.
+- Qualifying undirected edge: raw1 + raw2 >= 5.
+- Compute per run at the defined snapshots.
+
+### 6. PR-10.1 array
+- Use the §12 analysed valid-cell array after the prescribed §12 row-removal rule.
+- Do not create a separate sensitivity-analysis array.
+- The Appendix-B.2 min-F' formula is applied to that analysed array.
+
+### 7. X-1
+- Apply descriptive CIs only to already-promised descriptive link statistics and already-defined descriptive contrasts/windows.
+- Do not create arbitrary new arm-pair families.
+
+### 8. PR-7.2 / PR-7.3 arms
+Apply the link-① descriptive metrics to all seven arms.
+
+### 9. Implementation authorization (recorded)
+One `analyze.js` milestone implementing D-024 and this entry: PR-4; PR-5 through PR-12; X-1 within the frozen scope; C-1 exactly; G1 full-grid bootstrap indexing replacing the unauthorized G3 behaviour; IR-03b, IR-12 and IR-34c preserved; every frozen verdict rule, estimand, window, arm, reward, RNG seed and exclusion preserved. The details the implementation had to fix in order to compute are listed in `analyze.js` as INFERENCES I-17 … I-29. They are not rulings.
+
+---
+
 ## D-024 — H1-R analysis interpretation rulings (IR-03b, IR-12, IR-34c, PR-1–PR-3, PR-5–PR-12, X-1, C-1–C-3)
 
-**Date:** 2026-10-05 · **Authority:** Research Director rulings of 2026-10-05: the "D-021(b) independent analysis implementation" freeze (IR-03b, IR-12, IR-34c); "PR-1 / PR-2 / PR-3"; and the "Consolidated H1-R ruling freeze" (every item below). Each follows a read-only ambiguity report on `analyze.js` · **Status:** in force; not yet implemented
+**Date:** 2026-10-05 · **Authority:** Research Director rulings of 2026-10-05: the "D-021(b) independent analysis implementation" freeze (IR-03b, IR-12, IR-34c); "PR-1 / PR-2 / PR-3"; and the "Consolidated H1-R ruling freeze" (every item below). Each follows a read-only ambiguity report on `analyze.js` · **Status:** in force; PR-4 ruled in D-025; implemented in `experiments/h1r/analyze.js` together with D-025
 **Scope:** interpretations of H1-R v1.0 for cases its text does not settle, fixed before any Stage-1 data.
 - H1-R v1.0 is unchanged (SHA-256 `c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836`). No rule that v1.0 states is changed: no hypothesis, metric definition, window, exclusion, arm, reward, topology, seed, RNG seed, estimand, threshold or stated verdict rule.
 - Verdict-relevant: PR-1, PR-2, C-1, C-2 and C-3. They settle non-computable cases and the bootstrap cell set for F-1, F-3 and F-11. Every other ruling here is descriptive only (v1.0 §14: "No other rule, window, metric or exclusion may enter the verdict").

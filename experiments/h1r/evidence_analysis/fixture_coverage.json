@@ -1,0 +1,36 @@
+{
+ "reached": {
+  "F11 PROCEED": 14,
+  "F-3 samples dropped (fork crashed twice)": 14,
+  "verdict NOT SUPPORTED": 13,
+  "F11 PROCEED after extension": 1,
+  "S* = 20 under-powered": 2,
+  "verdict H1-STRICT": 2,
+  "F11 VOID after extension": 1,
+  "row rule removed configurations": 2,
+  "degenerate §12 test": 4,
+  "significant reversal (not confirmed)": 3,
+  "F-1 statistic undefined": 1,
+  "F-3 statistic undefined": 1,
+  "F-2 fires": 2,
+  "IR-34c null CI": 2,
+  "PR-4 study ρ null": 1,
+  "PR-4 study CI null": 1,
+  "F-10 fires": 1,
+  "F-10 not assessable (P̄ ≤ 0)": 1,
+  "S* = 2": 1,
+  "F11 HALT": 1,
+  "cap episode": 2,
+  "HL = 0": 1,
+  "ρ undefined: fewer than 3 keys": 1,
+  "IR-12 zero variance": 2
+ },
+ "notReached": [
+  "F11 initial non-computable",
+  "HL censored",
+  "IR-03b negative threshold",
+  "non-computable §12 array",
+  "KM median +∞",
+  "PR-4 run ρ empty bin"
+ ]
+}
