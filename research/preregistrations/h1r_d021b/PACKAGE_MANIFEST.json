@@ -1,0 +1,198 @@
+{
+ "schema": "h1r.d021b.manifest/2",
+ "sourceCommit": "30e7693236309bbfb82b8117b74240fc8ab5d43a",
+ "packageCommit": "not recorded here: the commit that adds this directory is recorded outside this file",
+ "b2": "707cb1e5205a7e9979f81092ee1ebfa0fe28922e",
+ "ms1": "30e7693236309bbfb82b8117b74240fc8ab5d43a",
+ "package": {
+  "file": "GEMINI_PACKAGE.md",
+  "sha256": "65500ddef1a7f35070854447309b5065021e6e7d0437511a64092b26e6e944c4",
+  "bytes": 126979
+ },
+ "instructions": {
+  "file": "GEMINI_INSTRUCTIONS.md",
+  "sha256": "d34407c66d5b1c1560417f758718917058ba9e30deb956e5177768f909259653",
+  "verbatimQuotesChecked": 50
+ },
+ "sources": {
+  "H1R_PREREGISTRATION_v1.0.md": {
+   "blob": "3ca595d913727291a891e847f0b69319b8d9e1f1",
+   "sha256": "c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836"
+  },
+  "M7_PREREGISTRATION.md": {
+   "blob": "1ac709eec842d93869f6eb2e9ad9a22905b78f10",
+   "sha256": "2f12e309d7409e95f3d1bca34135110e518865fd01d96e5eeaee347b6e33f6b9",
+   "sectionsSha256": [
+    "db379aa869c092a6fe5f4205df2cbe35e0e3443ae41c4762827d9677bde9a337",
+    "7a8ff72e150c0f97ba2c8e2fcf897b8fe0d41cfe90e4408afd09a35b5509a248",
+    "061d49af1620407aa0b9280b3436283ba3ce6d2a4321b1d55d4afde6d3ec75b2"
+   ]
+  },
+  "09_decisions.md": {
+   "blob": "d0eefaa2e731e17f068723029330cbdd9469360a",
+   "D021sha256": "da2badb855b24e6cc74b6d0e907d70461cbefc53e4e3a82e143f88a37582f781",
+   "D020sha256": "fbd2b3109bf9968059fb15df849487d57195e665287a4933f7494bfb8b01134e"
+  },
+  "B2 instrumentation/rng.js": {
+   "blob": "7d0c4ff70649c38f33ec284723f01ccc6a8630f2",
+   "sha256": "8ec69622f2db7ae3a3b27aabb1ea34d5d4c7652a7ecd277f00d5df574a411598"
+  },
+  "B2 render/executiveController.js": {
+   "blob": "121441ce818d96684c7285b3e23d3d7058d01609",
+   "excerptLines": [
+    26,
+    278
+   ],
+   "excerptSha256": "53a07c145ba00d72e41232657a833f50968318222e838bacda777b0a7b22add9"
+  },
+  "B2 main.js": {
+   "blob": "113fa471f87f3c23bdfffa523ffe8d4d564f7172",
+   "excerpts": [
+    [
+     2053,
+     2055,
+     "9b75bd94d27901e440a18aa4ae90541776fc73d7806db7ed6246c8b8ceecef9d"
+    ],
+    [
+     2166,
+     2169,
+     "93e5a2c9a2fdedb126ba0cedb5e997c805270d5d1d1b3eca8b646e22e95397d1"
+    ],
+    [
+     2237,
+     2259,
+     "ec271599cce11cccce5753783fa6fbc322f9c4bc87e39f18e2b7afdd6fc7348a"
+    ],
+    [
+     2360,
+     2365,
+     "5be87440b15772159aa0bf75e101a2cc7c78230ec293aa7d330e279dad5030fa"
+    ],
+    [
+     2634,
+     2639,
+     "43951e0eb0bbd3cfcdea7467c7685bc6af036c1260b813330ad3dab6f16f6d1c"
+    ]
+   ]
+  },
+  "B2 render/scoring.js": {
+   "blob": "5df3d72766addc5fe6e48589bc789542746b3428",
+   "sha256": "4a13316698b52a2132d969c838d79f9d3ccc97a853bc5e3fa947fd43fac566d5",
+   "excerpts": [
+    [
+     183,
+     184,
+     "8d1e228b77207e4016edcb3dba54154e556f686474ddcc623292aa5b44c63fd3"
+    ],
+    [
+     358,
+     358,
+     "f34b81d52c0f6e95d6de1603db6a368835d042d92818d34a67d13e63ac2b3db8"
+    ],
+    [
+     386,
+     387,
+     "31f2d80ef4df469c5b56ebc3fa7287d3c83bfe094da75b41681785bbf51f5a94"
+    ],
+    [
+     408,
+     412,
+     "d15f6a3360233544dacd5a935e9dde19dd3fa19272b758acc5da0bba1a976c5f"
+    ],
+    [
+     451,
+     451,
+     "9b1b36fa8742fd3b0a751e6dd3c11deb9629b28de149ddd8c7bed4a05fc01934"
+    ]
+   ]
+  },
+  "B2 connections.json": {
+   "blob": "7180160561605df4153852b5aab16166ce08cde3",
+   "sha256": "52867c4bb1c15392fc07d7a2f89834b95356726d2e42a5f976012b3417805206"
+  },
+  "MS-1 measure.mjs": {
+   "blob": "25b6463d4da372aff34bbe960f5ed863a3b53db1",
+   "sha256": "41590aad2762614cdfe160112c02a01e660894e53d8a6c38044f994a9527eaaa"
+  },
+  "MS-1 conformance_transform.mjs": {
+   "blob": "12aab08c952632ad1bcda2bbe7a30385976181b8",
+   "probeLinesSha256": "65dfd8ef5ddb0e0220605f51ed5e1cad22be49ced621ebfa5dd87935a5c5e21d"
+  },
+  "MS-1 run_h1r.mjs": {
+   "blob": "02b145e50ba7b64e94b87decb8cbbe7b15b0984b",
+   "excerpts": [
+    [
+     70,
+     75,
+     "387e57f94f40a9cff15c325461fb66aa079cd2fd4dc19fe183d37a9bfbf291b2"
+    ],
+    [
+     152,
+     158,
+     "cf0591a669bc499c81ca848fefc9c938ba0295651b29578edfb5c4038b1441f2"
+    ]
+   ]
+  }
+ },
+ "appendices": {
+  "A": "a41b372c86be1c500670c83637c929a5d297990ea33bddc1936697f1c366a1a3",
+  "B": "458a5f38975b8af4415a6259cc0ef4d6fbdf88d3ae52ed8642079c04fb5ac147",
+  "C": "56d680d2b89d95d47d0b67d7927dc351c7485f4e1b32d6df91e0a62b322d63c0",
+  "D": "9a0d8798a35fd8ac48b7cb9c2fb60273e08d84b801bdd23d70724c94850bd3b0",
+  "E": "50a5cce7c93e75d30dc9818b7a62ec2da70f625146dc290fad5b341fa6bc16b3",
+  "F": "6be33dc97329735a7c2efeffbabd185ec537b95fb075b86ebc1a7e9759684385"
+ },
+ "fixtures": {
+  "S01.json": "0c07f475e550c59ca06f752f22869f2ad5ecd12b01df094a160fe921e69a5f62",
+  "S02.json": "922a7e57d0d2be0ac7981c9ad16ff6833f9138994eb3a95bc871383916a9ce40",
+  "S03.json": "c521cd5c7b245e37172de8b1faaff5beeb15acf72d17039388777864332f11e7",
+  "S04.json": "682989ea5154e31b2c5001d2445211997df64e405d6b37fd716d7bdea406a366",
+  "S05.json": "c31aa0f6c3afe73e6d135e7f492672b001915fb7dc48766b0a08efd49945067c",
+  "S06.json": "c9547a229f74757c817a870a9b60a50dbaaf16813199b169aba491b33de549d8",
+  "S07.json": "4cbe04b712e76382dc11f96724bd4073d9d16e58af6db1a296f3fd599be71af5",
+  "S08.json": "1d35915b08151866773295aaa91afc5e26fb60f5ad044413ec69f6c8b7e4b3e0",
+  "S09.json": "d5e3878a555ea15309bbf943f427e08daaf8c945331a76782fd8cafc49822031",
+  "S10.json": "0b6c8721dd59eedcecc6bc51393875cd065f139c767482630fbd348b533cd131",
+  "S11.json": "ba58757457ad33fb5e9facf8eb39bb1531471ade21b64457d9e50f943ed4ab57",
+  "S12.json": "c8ce4037058ee800cfc93a4838a8ddf6e69abd9e6d42afa88f6f433204fcd097",
+  "S13.json": "c886724315549c0a1eda1d56a6cc6b6061cf81114c6c203c6712314217f3b238",
+  "S14.json": "c6be190723c013e25720b8eeb80b044541b3cd41e980b249b488e640ada3860d",
+  "S15.json": "9eee25049bd242a5cbc9214d79daa4d953b6dcdbb484b6b47fbf0b8803a35060",
+  "S16.json": "6dd31e1754013e8c465ccc2f03e55ee3df42c1168e0659d12fcb30fa7c045b1c",
+  "S17.json": "cada8a3f9a85071eb78f748037ea1c5112a23258d0d16a7e773920f010186f29",
+  "M01.json": "bdc8a9c1de9feead469e3a1ae16a1333455eedba950e9ef8b93dbb06dbd38175"
+ },
+ "tools": {
+  "make_fixtures.mjs": "b9804133b120853b6509fdc8fca1dd920865ff9b03e68252f16bd051b59dcd72",
+  "compare_outputs.mjs": "4b984b21daf3accb25906860e1c4c76e9e666f11e5c555eaf41dbf3e4bae0324",
+  "build_package.mjs": "ce0a0a2ba0bce9f14a41cefcc09697de3676feddead23490fad6c58e51c2f737"
+ },
+ "analysisImplementationsIncluded": "none",
+ "handoff": [
+  "GEMINI_PACKAGE.md",
+  "fixtures/S01.json",
+  "fixtures/S02.json",
+  "fixtures/S03.json",
+  "fixtures/S04.json",
+  "fixtures/S05.json",
+  "fixtures/S06.json",
+  "fixtures/S07.json",
+  "fixtures/S08.json",
+  "fixtures/S09.json",
+  "fixtures/S10.json",
+  "fixtures/S11.json",
+  "fixtures/S12.json",
+  "fixtures/S13.json",
+  "fixtures/S14.json",
+  "fixtures/S15.json",
+  "fixtures/S16.json",
+  "fixtures/S17.json",
+  "fixtures/M01.json"
+ ],
+ "environmentMetadata": {
+  "generatedAt": "2026-10-05T03:49:51.803Z",
+  "node": "v24.15.0",
+  "platform": "win32 10.0.26200",
+  "arch": "x64"
+ }
+}
