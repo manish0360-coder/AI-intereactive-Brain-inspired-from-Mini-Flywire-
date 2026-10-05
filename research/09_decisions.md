@@ -7,6 +7,149 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-024 — H1-R analysis interpretation rulings (IR-03b, IR-12, IR-34c, PR-1–PR-3, PR-5–PR-12, X-1, C-1–C-3)
+
+**Date:** 2026-10-05 · **Authority:** Research Director rulings of 2026-10-05: the "D-021(b) independent analysis implementation" freeze (IR-03b, IR-12, IR-34c); "PR-1 / PR-2 / PR-3"; and the "Consolidated H1-R ruling freeze" (every item below). Each follows a read-only ambiguity report on `analyze.js` · **Status:** in force; not yet implemented
+**Scope:** interpretations of H1-R v1.0 for cases its text does not settle, fixed before any Stage-1 data.
+- H1-R v1.0 is unchanged (SHA-256 `c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836`). No rule that v1.0 states is changed: no hypothesis, metric definition, window, exclusion, arm, reward, topology, seed, RNG seed, estimand, threshold or stated verdict rule.
+- Verdict-relevant: PR-1, PR-2, C-1, C-2 and C-3. They settle non-computable cases and the bootstrap cell set for F-1, F-3 and F-11. Every other ruling here is descriptive only (v1.0 §14: "No other rule, window, metric or exclusion may enter the verdict").
+- `analyze.js` (uncommitted, SHA-256 `995e2fa6d47399122ca629178d871ff02c48dbdb66a5bfc72f8a4a654b36faa3`) does not yet implement these rulings. Implementing them is a separate milestone.
+- **Not ruled here:** PR-4, the link ③ monotonicity diagnostic. It is the only open item in the mandatory output schema `h1r.d021b.output/1`.
+- IDs such as 5.1-a name the alternatives in the read-only PR-5–PR-12 alternatives report of 2026-10-05 (not committed). The text of each ruling below stands on its own.
+
+### 1. Earlier frozen interpretations (consolidated wording; first wording in §15)
+- **IR-03b:** thr = 0.5 * R_W2 literally. No clamp.
+- **IR-12:** If Spearman/rank statistic has zero variance, return null/undefined.
+- **IR-34c:** Bootstrap replicates producing an undefined statistic are not silently discarded/rescaled. Record valid/invalid counts. If fewer than 10,000 valid replicates exist, the corresponding CI is null/not computable.
+
+### 2. PR-1, PR-2, PR-3
+- **PR-1:** A non-computable criterion is FAILED/FIRED rather than satisfied. F-11 follows C-1 below. A non-computable F-11 after the predetermined extension results in VOID, not HALT.
+- **PR-2** (frozen in the ruling "PR-1 / PR-2 / PR-3"; not restated in the consolidated freeze): For F-1 and F-3, if the required statistic exists but its bootstrap CI is null/non-computable under the frozen IR-34c rule, the criterion is treated conservatively as FIRED because the required exclusion of zero cannot be established. Do not replace the null CI with a numeric value.
+- **PR-3:** Outside §12 crossed test/bootstrap calculations, use every valid cell. Do not extend the §12 row-removal rule into other metrics.
+
+### 3. PR-5 — permutation null
+- **5.1-a:** For each A1 run, compute both τ=1499 and τ=2999. Within each run, process τ=1499 then τ=2999. Use one makeRng(770003) sequentially over runs.
+- **5.2-a:** If observed rho is undefined, do not run the 10,000 shuffles. Report permutation p-value as null.
+- **5.3-a:** 99th percentile is the 9,900th order statistic of raw rho* values. Do not use abs(rho*) for the percentile.
+- **5.4-a:** Report per-run permutation p-value and null 99th percentile only. No additional cross-run summary.
+
+### 4. PR-6 — Brier score
+- **6.1-a:** Use attempts with τ in [0,2999].
+- **6.2-a:** Use one global prequential base rate across all keys, cumulative through the whole run: (successes so far + 1) / (attempts so far + 2).
+- **6.3:** Report: Brier(trust); Brier(global base); Brier(trust) - Brier(global base). Do not introduce a skill-score metric.
+- **6.4-a:** Aggregate as mean of per-run scores.
+- **6.5-a:** Report whole-run Brier score.
+
+### 5. PR-7 — link ①
+- **7.1-b:** n_updates means actual trust-store increments, not merely attempts.
+- **7.1-c:** Also report whole-run n_updates.
+- Report for all seven arms.
+- **7.2:** At τ=1499 and τ=2999: numerator = raw attempts in that phase >=3; denominator = keys with raw attempts >=1 in that phase.
+- **7.3:** Trust entropy: same qualifying key set; snapshots at τ=1499 and τ=2999; 10 equal-width bins on [0,1]; bin = min(9, floor(10*x)); Shannon entropy in bits.
+
+### 6. PR-8 — steps-to-goal
+Use actual step/tick length, not raw reset-call gap.
+- **8.1-a:** tickUnit = step.
+- **8.2-b:** Correct reset observation lag so a cap episode is 150 ticks, not 151. First episode begins at τ=0. (Basis: the cap-boundary observation lag recorded in `experiments/h1r/evidence_r1/R1_REPORT.md`, row "cap H7".)
+- **8.3-a:** Kaplan–Meier median is the smallest t for which survival <= 0.5.
+- **8.4-a:** Whole-run per-run KM median.
+- **8.5-a:** Median of run medians uses ordinary two-middle averaging. If either middle value is +infinity, result is +infinity.
+- Report descriptively for all seven arms.
+
+### 7. PR-9 — trajectory entropy
+- **9-b:** Count all realised directed transitions in W: successful transitions; goal-entering transitions; slip transitions u -> u. Do not count reset teleports. Do not reconstruct/count unrecorded self-choice no-ops.
+- Compute per run per window, then mean per arm.
+- Use all four windows W1–W4.
+
+### 8. PR-10 — sensitivity analyses and rank-biserial
+- **10.1:** Use the committed Appendix-B.2 min-F' / Satterthwaite formulation on the analysed valid-cell array. Degenerate denominator => null. (The formulation is variant `satt` of `research/preregistrations/h1r_v1_checks/min_f_size_simulation.mjs`, committed with v1.0 at `a5965da`.)
+- **10.2:** Wilcoxon: Pratt; two-sided; exact conditional sign-flip distribution; use every valid cell under PR-3; direction follows sign(T+ - T-). Do not use Monte Carlo p-values.
+- **10.3:** Matched-pairs rank-biserial: r = (T+ - T-) / (T+ + T-), using Pratt ranking: zeros retained in ranking but excluded from T+ and T-. If every difference is zero, r = null.
+
+### 9. PR-11 — A5 ≡ A2 per window
+- Use identity of the saved reward-event streams restricted to each window.
+- Do NOT weaken this to equality of total reward.
+- Do NOT substitute attempt-stream identity.
+- Overall fingerprint remains a whole-run diagnostic only.
+
+### 10. PR-12 — calibration curve, partial rank correlation, undirected pooled variant
+- **Calibration:** Link-② qualifying keys; τ=1499; 10 equal-width trust bins; per-bin mean trust; per-bin mean configured p_e; pooled across A1 runs.
+- **Partial rank correlation:** control variable = raw per-phase attempt count; first-order partial Spearman; τ=1499 and τ=2999; zero variance or undefined denominator => null; fewer than 4 usable observations => null.
+- **Undirected pooled variant:** pooled trust = (s1+s2+1)/(a1+a2+2); qualify when raw1 + raw2 >= 5; compute per run and both snapshots.
+
+### 11. X-1 — descriptive CIs
+- Extend the existing §12 descriptive CI machinery only to already-promised descriptive link statistics and the already-defined contract contrasts/windows.
+- Include W2/W4 descriptive CIs where the protocol says descriptive metrics are reported with CIs.
+- Do not invent arbitrary new arm-pair families.
+
+### 12. C-1 — F-11
+- Initial non-computable F-11: Do the predetermined 5-configuration × 5-seed extension first.
+- If after the extension F-11 is still non-computable: fires = true; outcome = VOID; verdict = VOID; stage2 = null.
+- If the predetermined extension itself is unavailable: outcome = HALT.
+- No verdict is issued in either terminal case.
+
+### 13. C-2 — bootstrap cell set
+- Use R1: The §12 bootstrap recomputes each statistic on every available valid cell used by the corresponding point statistic.
+- Do NOT row-reduce the bootstrap to configurations having every seed valid.
+- This applies to the F-1/F-3/headline §12 bootstrap quantities.
+
+### 14. C-3 — bootstrap index grid
+- Use G1: Retain the complete C × S configuration/seed index universe.
+- Do NOT silently drop empty configuration rows. Do NOT silently drop empty seed columns.
+- Bootstrap index draws are therefore made against the frozen full grid.
+- If a bootstrap replicate produces no computable statistic, apply IR-34c.
+- The current G3 behavior (drop empty rows but keep empty columns) is not authorized and must later be removed.
+
+### 15. Wording as first frozen (kept verbatim for traceability)
+The consolidated freeze restates the rulings below. For F-11, its C-1 settles "halted/voided": VOID after the extension, HALT only when the extension is unavailable.
+
+From the ruling "D-021(b) independent analysis implementation" (2026-10-05):
+> **IR-03b — HALF-LIFE.** Use the frozen formula exactly as written: thr = 0.5 * R_W2. Do NOT clamp the threshold to zero or otherwise reinterpret it when R_W2 <= 0. The mathematically resulting threshold is the recorded value.
+>
+> **IR-12 — SPEARMAN ZERO VARIANCE.** If fewer than 3 qualifying keys exist, Spearman is undefined as already specified. Additionally, if the qualifying values have zero variance in either required variable, Spearman is undefined. Return null for that statistic and record the undefined condition. Do NOT substitute 0, epsilon, or another numerical value.
+>
+> **IR-34c — BOOTSTRAP UNDEFINED REPLICATES.** For the mandated 10,000 bootstrap replicates:
+> - Never convert an undefined/non-computable replicate into a numeric value.
+> - Never silently discard undefined replicates and rescale the percentile positions.
+> - Record the number of undefined replicates.
+> - If fewer than 10,000 valid replicates remain, the corresponding bootstrap CI is not computable and MUST be represented as null.
+> - Do not introduce any discretionary fallback.
+
+From the ruling "PR-1 / PR-2 / PR-3" (2026-10-05):
+> **PR-1 — NON-COMPUTABLE VERDICT CRITERIA.** For F-2 and F-4 through F-11: If the statistic/criterion required to evaluate the criterion is non-computable, the criterion is treated as FAILED/FIRED rather than satisfied. For F-11 specifically: if the required F-11 quantity is non-computable, the study is halted/voided and Stage 2 does not proceed. Do not convert non-computable into zero, success, or an arbitrary fallback.
+>
+> **PR-3 — VALID-CELL SCOPE.** Outside §12's crossed bootstrap/test calculations, use every cell that is valid under the already-frozen validity rules. Do not extend §12's available-cell bootstrap row rule into other metrics unless the frozen metric definition explicitly requires it. For F-2, preserve its frozen definition as pooled over all valid Stage-2 A1 runs. Do not silently drop additional configurations.
+
+---
+
+## D-023 — D-021 §1 amended: no implementation or execution by Gemini (governance only)
+
+**Date:** 2026-10-05 · **Authority:** Research Director ruling "PR-1 / PR-2 / PR-3" (2026-10-05: under the permanent role separation, D-021(b)/(c) require formal amendment) and the "Consolidated H1-R ruling freeze" (2026-10-05, approving this amendment) · **Status:** in force
+**Scope:** process only.
+- No hypothesis, metric, window, exclusion, arm, reward, topology, RNG, estimand, or verdict rule changes.
+- H1-R v1.0 is unchanged (SHA-256 `c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836`). It does not mention D-021 or Gemini.
+- D-020, D-022 and the D-021(b) package (`research/preregistrations/h1r_d021b/`, commits `fb6afec` and `7eca015`) are unchanged.
+
+### 1. Decision
+D-021 §1 is amended. The text now in force:
+- **Lead-in.** D-021 §1's lead-in now reads: Gemini performs checkpoint (a); checkpoints (b) and (c) are performed as amended here.
+- **(a)** Unchanged; completed (the H1R-P1(a) red-team, D-022).
+- **(b) Verification of `analyze.js` before Stage 1.** `analyze.js` is the sole implementation of §12–§14. Before its SHA-256 is recorded (v1.0 §1.2), it is verified using the pre-registered D-021(b) fixtures, independent-oracle unit checks, determinism reruns, mutation tests, and output schema validation (`h1r.d021b.output/1`).
+- **(c) Lodging.** The recorded `analyze.js` computes F-11 and the final verdict once from frozen run records; output and SHA-256 are lodged before reporting.
+- Gemini performs no implementation and no execution. Gemini remains responsible for independent scientific falsification/review.
+- D-021 §2 is unchanged. It applies to any defect found under (b) or (c).
+- The D-021(b) package's fixtures and output schema remain in force for (b). Its instructions to implement, relay, lodge and compare (`GEMINI_INSTRUCTIONS.md` "Your task", §6 and §11; `README.md` "Lodging protocol", steps 2–7) are not in force. No package file is changed.
+
+### 2. Consequence, recorded
+The two-implementation agreement check is withdrawn. A second implementation could catch a divergent reading of the text; the battery's oracles cannot, because they encode the same reading. That risk is now carried by explicit Director rulings on the identified ambiguities (D-024; PR-4 is still open).
+
+### 3. Superseded wording (kept for traceability; no longer in force)
+> Gemini, the programme's independent adversarial reviewer (relayed by the user), performs three independent-falsification checkpoints:
+> - **(b) An independent §12–§14 implementation before Stage 1.** Gemini implements the §12 test, Holm, the 99% CI, the §13 power procedure and the §14 verdict from the H1-R v1.0 text alone, without seeing `analyze.js`. Both implementations run on a pre-registered synthetic fixture set and must agree exactly on every decision and within 10⁻⁹ on every real-valued output.
+> - **(c) Blind replication of the F-11 decision and of the final verdict.** Gemini computes each from the frozen run records independently, and both results are lodged before comparison.
+
+---
+
 ## D-022 — H1R-S6 repair: D-019 §5 amended (N5′, N6a, N6b, N7 additions)
 
 **Date:** 2026-10-05 · **Authority:** Research Director decision "S6 repair is now accepted" (2026-10-05), following the H1R-P1(a) red-team and its repair audit · **Status:** in force
@@ -35,7 +178,7 @@ D-019 §5 is amended. The text now in force is in D-019 §5.
 
 ## D-021 — H1R-P1: independent-falsification checkpoints (Gemini)
 
-**Date:** 2026-10-04 · **Authority:** Director ruling "H1-R S6 / I1 / P1 FREEZE — DOCS ONLY" (2026-10-04), accepting the read-only H1R-S6 decision audit · **Status:** in force
+**Date:** 2026-10-04 · **Authority:** Director ruling "H1-R S6 / I1 / P1 FREEZE — DOCS ONLY" (2026-10-04), accepting the read-only H1R-S6 decision audit · **Status:** in force; §1 lead-in, §1(b) and §1(c) amended by D-023 (2026-10-05), whose §1 holds the text now in force
 **Scope:** a process requirement for H1-R. No hypothesis, metric, window, exclusion, arm, reward, topology, RNG, or verdict rule changes.
 
 ### 1. Decision
