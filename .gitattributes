@@ -179,3 +179,10 @@ research/cognitive-audit/M7_CHARACTERIZATION_FINDINGS.md -text
 # manifest and builder are hash-recorded. Without `-text`, a checkout with core.autocrlf=true rewrites LF to CRLF in
 # 8 of the 26 files (demonstrated), so their digests fail and the builder's verbatim-quote check refuses.
 research/preregistrations/h1r_d021b/** -text
+
+# H1-R analysis instrument (committed at 24e6e5f) and its verification evidence - the same byte-integrity guarantee.
+# analyze.js is Stage-1-binding by its SHA-256 (v1.0 §1.2: 8c5c65bc8a174abfb0d0201d98a8c4a9aab3c5ee13afc3f6f612e722e0c45b3c),
+# and the evidence records SHA-256 values of the output and of analyze.js. Without `-text`, a checkout with
+# core.autocrlf=true rewrites LF to CRLF in 7 of these 9 files (demonstrated): analyze.js then hashes d53ca627... instead.
+experiments/h1r/analyze.js -text
+experiments/h1r/evidence_analysis/** -text
