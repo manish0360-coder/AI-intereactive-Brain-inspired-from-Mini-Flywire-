@@ -7,6 +7,38 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-026 — H1-R orchestrator rulings: no-record policy, fork-crash definition, I-23 option A, storage; Milestone A
+
+**Date:** 2026-10-05 · **Authority:** Research Director "Final orchestrator rulings + Milestone A authorization" (2026-10-05), on the read-only orchestrator/registry design report · **Status:** in force; implemented in `experiments/h1r/orchestrate.mjs` and `experiments/h1r/analyze.js` (Milestone A)
+**Scope:** orchestration, storage and one records-level analysis correction, fixed before any Stage-1 data.
+- H1-R v1.0 is unchanged (SHA-256 `c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836`). No hypothesis, metric definition, window, exclusion, arm, reward, topology, seed, RNG seed, estimand or verdict rule changes.
+- §3 changes `analyze.js`: the SHA-256 `8c5c65bc8a174abfb0d0201d98a8c4a9aab3c5ee13afc3f6f612e722e0c45b3c` (`24e6e5f`) is therefore not the Stage-1-binding SHA. The new SHA is recorded with Milestone A and resealed before Stage 1.
+- The registry is not changed; no seed is generated; no stage runs.
+
+### 1. No-record policy
+A planned base run that produces no record because its process dies is a crash. Treat it as: completed = false → invalid run → corresponding (configuration, seed) pair is dropped. Do NOT automatically rerun a missing base run. The deterministic retry mechanism remains limited to the preregistered fork procedure.
+
+### 2. Fork-crash definition
+A fork measurement is valid iff ALL 11 validity flags are true. If any of the 11 flags is false, the fork is invalid/crashed for fork-analysis purposes. Do not define fork failure merely as process failure or outcome.crashed.
+
+### 3. I-23 — option A
+- I-23 is a real contradiction with frozen C-3/G1. The current records-level bootstrap grid cannot be allowed to derive its configuration/seed universe only from configurations/seeds having valid runs.
+- The records input must explicitly declare its frozen configuration universe and seed universe.
+- The records-level bootstrap must use that declared full universe, including empty configuration rows and empty seed columns.
+- Do NOT create an exception for records-level descriptive CIs.
+- After implementing I-23: rerun the complete analysis battery, all mutation tests, determinism, schema verification and the relevant G1/IR-34c checks; recompute and record the new analyze.js SHA; reseal the hash before Stage 1.
+
+### 4. Storage policy
+- Raw run records are authoritative and remain outside Git, in the project's local experiment-data area `experiments/h1r/data/`. The directory must be Git-ignored.
+- Manifest paths must be repository-relative, never machine-specific absolute paths.
+- Every authoritative raw record gets SHA-256. The hash identifies the uncompressed authoritative bytes. Lossless compression is allowed as a storage optimization only.
+- Derived study inputs, manifests, decision records and analysis outputs remain small and may be committed. Derived data must always be reconstructible from raw records.
+
+### 5. Milestone A (authorized)
+One logically complete engineering milestone: the I-23 `analyze.js` correction; the orchestrator (plan → registry pre-check → schedule → execute → record / no-record → structural validation → identity/provenance validation → validity classification → pair construction → study-input construction → frozen `analyze.js`), with no metric re-implemented outside `analyze.js`; a read-only registry pre-check; record collection; the validity/drop state machine; study-input construction; the Stage-1 analysis probe; the fork plan; the lazy records path; deterministic outputs and manifests; gates O1–O26; and the §11 battery rerun (`verify_conformance`, `verify_ms1_unit`, `run_existing_gates`, `verify_existing_equivalence`, `verify_analysis`, `verify_freeze`). No Stage 1 or Stage 2, no registry consumption, no new seeds, no experimental data collection.
+
+---
+
 ## D-025 — H1-R final micro-rulings: PR-4, C-1 on HALT, PR-7.3 key set, PR-12 bins and undirected variant, PR-10.1 array, X-1, link ① arms
 
 **Date:** 2026-10-05 · **Authority:** Research Director "Final micro-ruling + implementation authorization" (2026-10-05), after the docs-only freeze `2fb3b60` · **Status:** in force; implemented in `experiments/h1r/analyze.js` together with D-024

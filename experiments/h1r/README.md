@@ -81,7 +81,21 @@ R1 supersedes the sentence of ERR-05 §3.1 stating that Q-learning, prediction e
 
 `runtime.mjs` supplies `__H1R__`. Arm semantics come only from the frozen predicates in `experiments/m7/arms.js`, and adjacency from the tree's `connections.json`. `trustMode: 'attemptGated'` exists **for diagnosis only**; see `verify_conformance.mjs` gate B-DIAG.
 
+## Analysis and orchestration (v1.0 §9 items 8–9; D-023 … D-026)
+
+- **`analyze.js`** is the analysis instrument (§12–§15 and every §8 metric), with the Director's rulings D-024, D-025 and D-026 listed in its `RULINGS` and its implementation readings in `INFERENCES`. Its SHA-256 is Stage-1-binding (v1.0 §1.2). `node experiments/h1r/analyze.js <fixtureDir> <out.json>` analyses fixture files; the orchestrator calls the same functions directly.
+- **`orchestrate.mjs`** runs the pipeline PLAN → registry pre-check → SCHEDULE → EXECUTE → RECORD / NO-RECORD → structural validation → identity/provenance validation → validity classification → pair construction → study input → `analyze.js`. It computes no metric. A stage runs only with `H1R_STAGE_AUTHORISED=<stage>` and a registry that records H1-R's use; `node experiments/h1r/orchestrate.mjs precheck <stage>` reports the read-only pre-check and `identity` the instrument hashes.
+- **Rulings it applies (D-026):** a base run whose process leaves no record is a crash and is never re-run; a fork is valid iff all 11 flags are true, with one pre-registered retry; raw records live in the git-ignored `data/` (SHA-256 of the uncompressed bytes, repository-relative manifest paths); derived artifacts go to `stage_records/`.
+
 ## Verification
+
+```bash
+node experiments/h1r/verify_analysis.mjs
+```
+
+```bash
+node experiments/h1r/verify_orchestrator.mjs
+```
 
 ```bash
 node experiments/h1r/verify_conformance.mjs
@@ -111,7 +125,10 @@ node experiments/h1r/verify_ms1_unit.mjs
 
 | Directory | Contents |
 |---|---|
-| `evidence_ms1/` | Current evidence (MS-1: the measurement instrument) and `MS1_REPORT.md` |
+| `evidence_milestone_a/` | The §11 battery rerun for Milestone A (conformance, MS-1 unit, existing gates with the N3 repetitions, equivalence, freeze) |
+| `evidence_orchestrator/` | Gates O1–O26 of `verify_orchestrator.mjs` on the diagnostic material, with its manifests |
+| `evidence_analysis/` | The `verify_analysis.mjs` battery (unit oracles U1–U21, fixtures, mutants), the fixture output and the interpretation register |
+| `evidence_ms1/` | MS-1 evidence (the measurement instrument) and `MS1_REPORT.md` |
 | `evidence_r3/` | The R3 round (configuration-scoped environment stream), with `R3_REPORT.md`; the ON reference for `verify_existing_equivalence.mjs` |
 | `evidence_d1d5/` | The R2 round (D-1 goal-entry draw and D-5 measurement; B2 environment stream), with `R2_REPORT.md` |
 | `evidence_r1/` | The R1 round, with `R1_REPORT.md` |

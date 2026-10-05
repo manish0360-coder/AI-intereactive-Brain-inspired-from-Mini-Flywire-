@@ -1,0 +1,11 @@
+# H1-R raw run records are NOT committed (D-026 §4, following the M7/M8/Q1/UQ-A/UQ-B/C1 convention).
+#
+# raw/<stage>/<runId>.json   the authoritative bytes written by run_h1r.mjs, one file per run; identified by the
+#                            SHA-256 of the uncompressed bytes (a .json.gz copy is a lossless storage form only)
+# raw/<stage>/ATTEMPTS.jsonl the attempt ledger: a planned run attempted without a record is a crash (D-026 §1)
+#
+# What IS committed is small and sufficient to reproduce and validate them: the manifests (repository-relative paths,
+# SHA-256, size, status, validity), the Stage-1 decision, the fork plan, the study input and the analysis output, in
+# experiments/h1r/stage_records/ (written by experiments/h1r/orchestrate.mjs).
+*
+!.gitignore

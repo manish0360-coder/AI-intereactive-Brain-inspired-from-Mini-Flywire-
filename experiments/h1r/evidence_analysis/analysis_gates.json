@@ -1,8 +1,8 @@
 {
  "generatedBy": "experiments/h1r/verify_analysis.mjs",
- "analyzeSha256": "8c5c65bc8a174abfb0d0201d98a8c4a9aab3c5ee13afc3f6f612e722e0c45b3c",
- "outputSha256": "7e279a5794437b96b4ddf4952285506d7bbe3e7a9666fa5313a24ab26e17cc6b",
- "seconds": 1171,
+ "analyzeSha256": "dae6012c1ac48a96ccd9835b24e7aadce9243d95e147a5d8d2b3f833fb0a414d",
+ "outputSha256": "7b55a8f5a16e896ddd8e17411d8872df362de50db290285c4a061f8fb42401eb",
+ "seconds": 1206,
  "gates": [
   {
    "id": "U1",
@@ -125,6 +125,12 @@
    "evidence": "bootstrap repeat equal true; permutation repeat equal true"
   },
   {
+   "id": "U21",
+   "name": "I-23 option A (D-026 §3): with a declared 12 × 6 universe and an empty configuration row, the records-level CI equals an independent re-simulation over the COMPLETE grid and differs from the observed-grid one; with an empty row and an empty seed column the undefined-replicate count equals the full-grid oracle's and the CI is null (IR-34c); the declared universe (including the empty row and column) is reported; a run outside it refuses the document",
+   "status": "PASS",
+   "evidence": "(a) [3.96968400820209, 4.170049675391147] vs full grid [3.96968400820209, 4.170049675391147] (observed grid [3.9720035349571328, 4.172911377838319]); (b) undefined 431 vs 431, CI null; universe {\"configs\":[0,1,2,3],\"seeds\":[11,12,13],\"seedsDeclared\":true}; out-of-universe refused true"
+  },
+  {
    "id": "P1",
    "name": "no hidden randomness or clock in analyze.js (no Math.random, Date, performance, hrtime, crypto randomness, timers, network) and no PENDING marker; random numbers only from makeRng, each analysis seed (770001 power, 770002 bootstrap, 770003 permutation, 770004 link-④ sample) created at exactly one site; one child process (git cat-file of the pinned B2 blob)",
    "status": "PASS",
@@ -132,9 +138,9 @@
   },
   {
    "id": "D1",
-   "name": "no protocol or package drift: v1.0 c52e7337…a836; GEMINI_PACKAGE.md 65500dde…; all 18 fixtures match FIXTURES.sha256.json; no tracked file modified",
+   "name": "no protocol, package, instrument or registry drift: v1.0 c52e7337…a836; GEMINI_PACKAGE.md 65500dde…; all 18 fixtures match FIXTURES.sha256.json; no tracked modification under a protected path (pre-registrations and package, M7 documents, registry, B2 runtime, H1-R instrument)",
    "status": "PASS",
-   "evidence": "v1.0 c52e73378ad7…; package 65500ddef1a7…; fixtures true; tracked modifications 0"
+   "evidence": "v1.0 c52e73378ad7…; package 65500ddef1a7…; fixtures true; tracked modifications 4 (experiments/h1r/analyze.js, experiments/h1r/evidence_analysis/battery_run.log, experiments/h1r/verify_analysis.mjs, research/09_decisions.md); protected touched 0"
   },
   {
    "id": "D2",
@@ -158,7 +164,7 @@
    "id": "R1",
    "name": "deterministic: two independent processes produce byte-identical output on all 18 fixtures",
    "status": "PASS",
-   "evidence": "SHA-256 7e279a5794437b96b4ddf4952285506d7bbe3e7a9666fa5313a24ab26e17cc6b / 7e279a5794437b96b4ddf4952285506d7bbe3e7a9666fa5313a24ab26e17cc6b"
+   "evidence": "SHA-256 7b55a8f5a16e896ddd8e17411d8872df362de50db290285c4a061f8fb42401eb / 7b55a8f5a16e896ddd8e17411d8872df362de50db290285c4a061f8fb42401eb"
   },
   {
    "id": "R2",
@@ -216,9 +222,9 @@
   },
   {
    "id": "M1",
-   "name": "mutation anti-vacuity: each of 48 deliberate defects is caught by the unit checks (15 earlier: Holm, ν, CI level, order statistics, bootstrap seed, IR-34c, IR-12, IR-03b, Box–Muller ×2, power RNG reset, Fisher–Yates, degenerate p, MS_CS, Spearman ties; 33 for D-024/D-025)",
+   "name": "mutation anti-vacuity: each of 49 deliberate defects is caught by the unit checks (15 earlier: Holm, ν, CI level, order statistics, bootstrap seed, IR-34c, IR-12, IR-03b, Box–Muller ×2, power RNG reset, Fisher–Yates, degenerate p, MS_CS, Spearman ties; 33 for D-024/D-025; 1 for D-026)",
    "status": "PASS",
-   "evidence": "holm:U5 nu:U4+U10 ciLevel:U4 orderStat:U6+U13 bootSeed:U6+U13 ir34c:U6+U13 ir12:U7+U11+U19 ir03b:U8 bmSine:U9+U10 bmRedraw:U9 powerReset:U10 fisherYates:U9+U16 degenerate:U4 msCS:U4 ranks:U7+U11+U14+U19 pr4Bin:U11 pr4Max:U11 pr4Empty:U11 c1Halt:U12 c1ExtFirst:U12 c1FinalNC:U12 pr2:U12 pr1CI:U12 pr1F10:U12 g3:U13 bootShared:U13+U20 prattZeros:U14 wilcoxonOneSided:U14 rbDenominator:U14 kmCapLag:U15 kmStrict:U15 medianLower:U15 permSeed:U16 permUndefinedDraws:U16 permPercentile:U16 permAbs:U16 permChained:U16 sattNu:U17 stirling:U17 brierBase:U18 link1A4:U18 trustBin:U18+U19 coverageDenominator:U18 trajectorySlip:U19 partialMin:U19 undirectedQualify:U19 calibrationMeanP:U19 windowIdentity:U19"
+   "evidence": "holm:U5 nu:U4+U10 ciLevel:U4 orderStat:U6+U13+U21 bootSeed:U6+U13+U21 ir34c:U6+U13+U21 ir12:U7+U11+U19 ir03b:U8 bmSine:U9+U10 bmRedraw:U9 powerReset:U10 fisherYates:U9+U16 degenerate:U4 msCS:U4 ranks:U7+U11+U14+U19 pr4Bin:U11 pr4Max:U11 pr4Empty:U11 c1Halt:U12 c1ExtFirst:U12 c1FinalNC:U12 pr2:U12 pr1CI:U12 pr1F10:U12 g3:U13 bootShared:U13+U20+U21 prattZeros:U14 wilcoxonOneSided:U14 rbDenominator:U14 kmCapLag:U15 kmStrict:U15 medianLower:U15 permSeed:U16 permUndefinedDraws:U16 permPercentile:U16 permAbs:U16 permChained:U16 sattNu:U17 stirling:U17 brierBase:U18 link1A4:U18 trustBin:U18+U19 coverageDenominator:U18 trajectorySlip:U19+U21 partialMin:U19 undirectedQualify:U19 calibrationMeanP:U19 windowIdentity:U19 i23ObservedGrid:U21"
   }
  ],
  "mutation": [
@@ -240,15 +246,15 @@
   ],
   [
    "orderStat",
-   "U6+U13"
+   "U6+U13+U21"
   ],
   [
    "bootSeed",
-   "U6+U13"
+   "U6+U13+U21"
   ],
   [
    "ir34c",
-   "U6+U13"
+   "U6+U13+U21"
   ],
   [
    "ir12",
@@ -328,7 +334,7 @@
   ],
   [
    "bootShared",
-   "U13+U20"
+   "U13+U20+U21"
   ],
   [
    "prattZeros",
@@ -400,7 +406,7 @@
   ],
   [
    "trajectorySlip",
-   "U19"
+   "U19+U21"
   ],
   [
    "partialMin",
@@ -417,6 +423,10 @@
   [
    "windowIdentity",
    "U19"
+  ],
+  [
+   "i23ObservedGrid",
+   "U21"
   ]
  ]
 }

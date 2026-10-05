@@ -3,7 +3,7 @@
 // ==========================================================
 // Every unit check compares analyze.js against an INDEPENDENT oracle: a closed form, an exact algebraic identity, a
 // brute-force enumeration, or a re-implementation written differently in this file. No check uses a remembered
-// constant or an expected H1-R result. Rulings: D-024 and D-025 (research/09_decisions.md).
+// constant or an expected H1-R result. Rulings: D-024, D-025 and D-026 (research/09_decisions.md).
 //
 //   node experiments/h1r/verify_analysis.mjs                 full battery (writes experiments/h1r/$H1R_EVIDENCE/)
 //   node experiments/h1r/verify_analysis.mjs --unit <file>   unit checks only, against the given analyze.js (mutants)
@@ -392,6 +392,34 @@ export async function unitChecks(analyzePath) {
     ok('U20', 'RNG isolation: a bootstrap CI is unchanged by another bootstrap and by a permutation null computed before it (fresh makeRng(770002) per CI, I-3); the permutation null is unchanged by bootstraps (its own makeRng(770003))',
       JSON.stringify(b1) === JSON.stringify(b2) && JSON.stringify(p1) === JSON.stringify(p2), `bootstrap repeat equal ${JSON.stringify(b1) === JSON.stringify(b2)}; permutation repeat equal ${JSON.stringify(p1) === JSON.stringify(p2)}`);
   });
+
+  // U21 I-23 option A (D-026 §3): records-level bootstrap on the DECLARED universe, against an independent full-grid oracle
+  await guard('U21', 'I-23 declared records universe', () => {
+    const mkRun = (c, s) => { const k = c * 7 + s, attempts = []; let call = 5;
+      for (let i = 0; i < 20 + k % 7; i++) { attempts.push([call, 1 + (i + k) % 5, 1 + (i * 3 + k) % 7, (i + k) % 3 ? 1 : 0, 0, 0, 0]); call += 7; }
+      return { runId: `r${c}_${s}`, arm: 'A3', configIndex: c, seed: s, measurement: { events: [], attempts, resets: [], snapshots: [['tau1499', 1505, []], ['tau2999', 3005, []]] } }; };
+    const doc = (configs, seeds, present) => ({ schema: 'h1r.d021b.records/1', id: 'U21', configurations: configs.map(i => ({ index: i, goal: [8, 12, 16, 19][i % 4], edges: [] })), seeds,
+      runs: configs.flatMap(c => seeds.filter(s => present(c, s)).map(s => mkRun(c, s))), forkRuns: [] });
+    const entOf = (run) => { const cnt = {}; for (const [i, f, t, okk] of run.measurement.attempts) { if (i - 5 < 0 || i - 5 > 299) continue; const key = `${f}->${okk ? t : f}`; cnt[key] = (cnt[key] || 0) + 1; } return entO(Object.keys(cnt).sort().map(key => cnt[key])); };
+    const resim = (d, configs, seeds) => { const val = new Map(d.runs.map(r => [`${r.configIndex}|${r.seed}`, entOf(r)])), rng = mul(770002), vs = []; let und = 0;
+      for (let it = 0; it < 10000; it++) { const ci = configs.map(() => Math.floor(rng() * configs.length)), sj = seeds.map(() => Math.floor(rng() * seeds.length)), xs = [];
+        for (const i of ci) for (const j of sj) { const v = val.get(`${configs[i]}|${seeds[j]}`); if (v !== undefined && v !== null) xs.push(v); }
+        if (!xs.length) und++; else vs.push(xs.reduce((a, b) => a + b, 0) / xs.length); }
+      vs.sort((a, b) => a - b); return { lower: und ? null : vs[49], upper: und ? null : vs[9949], und }; };
+    const close = (a, b) => (a === null && b === null) || (typeof a === 'number' && typeof b === 'number' && Math.abs(a - b) <= 1e-12);
+    // (a) 12 × 6 declared universe with an empty configuration row (7): a numeric CI over the FULL grid
+    const cA = [...Array(12).keys()], sA = [11, 12, 13, 14, 15, 16], dA = doc(cA, sA, (c) => c !== 7), oA = A.analyzeRecords(dA), gA = oA.descriptive.trajectoryEntropyByArm.A3.W1.ci;
+    const eA = resim(dA, cA, sA), eObs = resim(dA, cA.filter(c => c !== 7), sA);
+    // (b) 4 × 3 declared universe with an empty row (1) AND an empty seed column (13): replicates without any cell → IR-34c
+    const cB = [0, 1, 2, 3], sB = [11, 12, 13], dB = doc(cB, sB, (c, s) => c !== 1 && s !== 13), oB = A.analyzeRecords(dB), gB = oB.descriptive.trajectoryEntropyByArm.A3.W1.ci, eB = resim(dB, cB, sB);
+    let refused = false; try { A.analyzeRecords({ ...dB, seeds: [12, 13] }); } catch (e) { refused = /outside the declared universe/.test(e.message); }   // seed 11 has runs but is not declared
+    const uni = oB.descriptive.bootstrapUniverse;
+    ok('U21', 'I-23 option A (D-026 §3): with a declared 12 × 6 universe and an empty configuration row, the records-level CI equals an independent re-simulation over the COMPLETE grid and differs from the observed-grid one; with an empty row and an empty seed column the undefined-replicate count equals the full-grid oracle\'s and the CI is null (IR-34c); the declared universe (including the empty row and column) is reported; a run outside it refuses the document',
+      close(gA.lower, eA.lower) && close(gA.upper, eA.upper) && eA.und === 0 && gA.nUndefinedIterations === 0 && (eObs.lower !== eA.lower || eObs.upper !== eA.upper)
+        && gB.lower === null && gB.nUndefinedIterations === eB.und && eB.und > 0 && gB.nDefinedIterations + gB.nUndefinedIterations === 10000
+        && JSON.stringify(uni) === JSON.stringify({ configs: cB, seeds: sB, seedsDeclared: true }) && refused,
+      `(a) [${gA.lower}, ${gA.upper}] vs full grid [${eA.lower}, ${eA.upper}] (observed grid [${eObs.lower}, ${eObs.upper}]); (b) undefined ${gB.nUndefinedIterations} vs ${eB.und}, CI ${gB.lower}; universe ${JSON.stringify(uni)}; out-of-universe refused ${refused}`);
+  });
   return R;
 }
 
@@ -443,10 +471,14 @@ async function main() {
     const pk = sha(fs.readFileSync(path.join(PKG, 'GEMINI_PACKAGE.md')));
     const man = JSON.parse(fs.readFileSync(path.join(FX, 'FIXTURES.sha256.json'), 'utf8'));
     const fxOk = Object.entries(man).every(([f, h]) => sha(fs.readFileSync(path.join(FX, f), 'utf8')) === h);
-    const tracked = execFileSync('git', ['-C', REPO, 'status', '--porcelain', '--untracked-files=no']).toString('utf8').trim();
-    ok('D1', 'no protocol or package drift: v1.0 c52e7337…a836; GEMINI_PACKAGE.md 65500dde…; all 18 fixtures match FIXTURES.sha256.json; no tracked file modified',
-      v1 === 'c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836' && pk === '65500ddef1a7f35070854447309b5065021e6e7d0437511a64092b26e6e944c4' && fxOk && tracked === '',
-      `v1.0 ${v1.slice(0, 12)}…; package ${pk.slice(0, 12)}…; fixtures ${fxOk}; tracked modifications ${tracked ? tracked.split('\n').length : 0}`); }
+    // tracked modifications may exist (the milestone under verification); none may touch a protected path
+    const tracked = execFileSync('git', ['-C', REPO, 'status', '--porcelain', '--untracked-files=no']).toString('utf8').split('\n').filter(Boolean).map(l => l.slice(3));
+    const PROTECTED = [/^research\/preregistrations\//, /^research\/cognitive-audit\//, /^experiments\/registry\//, /^experiments\/m7\//, /^render\//, /^instrumentation\//, /^main\.js$/, /^\.gitattributes$/,
+      /^experiments\/h1r\/(run_h1r|measure|measure_install|runtime|shadow|env_seed|build_tree|conformance_transform|run_one)\.mjs$/];
+    const touched = tracked.filter(p => PROTECTED.some(r => r.test(p)));
+    ok('D1', 'no protocol, package, instrument or registry drift: v1.0 c52e7337…a836; GEMINI_PACKAGE.md 65500dde…; all 18 fixtures match FIXTURES.sha256.json; no tracked modification under a protected path (pre-registrations and package, M7 documents, registry, B2 runtime, H1-R instrument)',
+      v1 === 'c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836' && pk === '65500ddef1a7f35070854447309b5065021e6e7d0437511a64092b26e6e944c4' && fxOk && touched.length === 0,
+      `v1.0 ${v1.slice(0, 12)}…; package ${pk.slice(0, 12)}…; fixtures ${fxOk}; tracked modifications ${tracked.length} (${tracked.join(', ') || 'none'}); protected touched ${touched.length}`); }
   // fixture regeneration (the pre-registered generator reproduces the committed fixtures)
   { const out = execFileSync(process.execPath, ['--input-type=module', '-e', `
       import fs from 'node:fs'; import crypto from 'node:crypto'; const cap = new Map(); const BS = String.fromCharCode(92);
@@ -565,7 +597,7 @@ async function main() {
   await Promise.all(Array.from({ length: Math.max(1, Math.min(6, os.cpus().length - 2)) }, worker));
   const control = results[0], mres = results.slice(1);
   ok('M0', 'mutation harness control: an unmutated copy of analyze.js in the mutant directory passes every unit check', control[1] === 'ALL PASS', `${control[0]}: ${control[1]}`);
-  ok('M1', `mutation anti-vacuity: each of ${MUTANTS.length} deliberate defects is caught by the unit checks (15 earlier: Holm, ν, CI level, order statistics, bootstrap seed, IR-34c, IR-12, IR-03b, Box–Muller ×2, power RNG reset, Fisher–Yates, degenerate p, MS_CS, Spearman ties; ${MUTANTS.length - 15} for D-024/D-025)`,
+  ok('M1', `mutation anti-vacuity: each of ${MUTANTS.length} deliberate defects is caught by the unit checks (15 earlier: Holm, ν, CI level, order statistics, bootstrap seed, IR-34c, IR-12, IR-03b, Box–Muller ×2, power RNG reset, Fisher–Yates, degenerate p, MS_CS, Spearman ties; ${MUTANTS.length - 16} for D-024/D-025; 1 for D-026)`,
     mres.every(([, c]) => c !== 'NOT CAUGHT' && c !== 'ANCHOR MISSING' && c !== 'THREW'), mres.map(([i, c]) => `${i}:${c}`).join(' '));
   const summary = { generatedBy: 'experiments/h1r/verify_analysis.mjs', analyzeSha256: sha(fs.readFileSync(AN)), outputSha256: sha(o1), seconds: Math.round((Date.now() - t0) / 1000), gates: G, mutation: results };
   fs.writeFileSync(path.join(EVID, 'analysis_gates.json'), JSON.stringify(summary, null, 1));
@@ -625,6 +657,8 @@ const MUTANTS = [
   ['undirectedQualify', 'if ((e1 ? e1[3] : 0) + (e2 ? e2[3] : 0) < 5) continue;', 'if ((e1 ? e1[3] : 0) + (e2 ? e2[3] : 0) <= 5) continue;'],
   ['calibrationMeanP', 'st[b] += k.trust; sp[b] += k.p;', 'st[b] += k.trust; sp[b] += k.trust;'],
   ['windowIdentity', 'return Object.fromEntries(WINDOWS.map(W => [W, same(inWin(eventsA5, W), inWin(eventsA2, W))]));', 'return Object.fromEntries(WINDOWS.map(W => [W, same(eventsA5, eventsA2)]));'],
+  // D-026 §3 (I-23 option A)
+  ['i23ObservedGrid', 'return { configs: configs.sort((a, b) => a - b), seeds: seeds.sort((a, b) => a - b), seedsDeclared: declared };', 'return { configs: [...new Set(fx.runs.map(r => r.configIndex))].sort((a, b) => a - b), seeds: [...new Set(fx.runs.map(r => r.seed))].sort((a, b) => a - b), seedsDeclared: declared };'],
 ];
 
 function schemaCheck(doc) {

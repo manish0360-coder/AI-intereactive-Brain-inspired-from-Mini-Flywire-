@@ -7,7 +7,7 @@ This document answers the 36 questions of the D-021(b) interpretation register (
 | Label | Meaning |
 |---|---|
 | **TEXT** | Settled by H1-R v1.0, an inherited M7 clause or D-020 |
-| **RULING** | Settled by the Director's frozen rulings recorded in `research/09_decisions.md`: D-024 (IR-03b, IR-12, IR-34c, PR-1–PR-3, PR-5–PR-12, X-1, C-1–C-3) and D-025 (PR-4 and the closing micro-rulings) |
+| **RULING** | Settled by the Director's frozen rulings recorded in `research/09_decisions.md`: D-024 (IR-03b, IR-12, IR-34c, PR-1–PR-3, PR-5–PR-12, X-1, C-1–C-3), D-025 (PR-4 and the closing micro-rulings) and D-026 §3 (I-23 option A) |
 | **INFERENCE** | The only reading the text and rulings admit, or a detail that must be fixed to compute at all (listed as I-n in `analyze.js`) |
 
 Nothing is pending. Under D-023 there is no second implementation; this register documents the readings `analyze.js` implements.
@@ -183,7 +183,7 @@ w₀ = applied ? clamp(F − t)·0.60 + arbitrate({…, confidenceScore − t, �
 
 **IR-34**
 - (a) **I-3.**
-- (b) **I-4**, with **RULING C-3**: the index grid is the complete configuration × seed grid (G1).
+- (b) **I-4**, with **RULING C-3**: the index grid is the complete configuration × seed grid (G1). For the records-level CIs the universe is the records document's declared one, every listed configuration × the declared seeds (**RULING D-026 §3**, I-23 option A; **I-30** for the fixture schema without a seed list).
 - (c) **RULING IR-34c.**
 
 **IR-35** **RULING PR-10** (D-024 §8, D-025 §6) with **INFERENCES I-25, I-27**.

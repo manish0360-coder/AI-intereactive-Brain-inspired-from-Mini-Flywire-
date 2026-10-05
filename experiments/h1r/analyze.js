@@ -1,11 +1,12 @@
 // ==========================================================
-// H1-R — analyze.js: the pre-registered analysis instrument (H1-R v1.0 §6, §8, §10, §12–§15; D-020; D-023; D-024; D-025)
+// H1-R — analyze.js: the pre-registered analysis instrument (H1-R v1.0 §6, §8, §10, §12–§15; D-020; D-023 … D-026)
 // ==========================================================
 // Authority: H1-R v1.0 (SHA-256 c52e7337…a836), the inherited M7 clauses, D-020 (implementation pins), and the
 // Research Director's frozen interpretation rulings, recorded in research/09_decisions.md:
 //   D-024  IR-03b, IR-12, IR-34c; PR-1, PR-2, PR-3; PR-5 … PR-12; X-1; C-1, C-2, C-3;
 //   D-025  PR-4 (A1, B1, K1, E1, F1) and the closing micro-rulings (C-1 HALT, PR-7.3 / PR-12 bins, PR-12 undirected
-//          variant, PR-10.1 array, X-1 scope, link ① arms).
+//          variant, PR-10.1 array, X-1 scope, link ① arms);
+//   D-026  I-23 option A (records-level bootstrap on the declared configuration × seed universe).
 // Each ruling is listed in RULINGS below. Readings adopted where the text and the rulings admit only one reading, or
 // where a detail must be fixed to compute at all, are listed in INFERENCES (I-1 …). Nothing is left pending.
 //
@@ -52,6 +53,7 @@ export const RULINGS = Object.freeze({
   'C-1': 'D-024 §12, D-025 §2: a non-computable initial F-11 takes the predetermined extension first; non-computable or firing after it → fires = true, VOID; extension unavailable → fires = false, HALT.',
   'C-2': 'D-024 §13: the §12 bootstrap recomputes on every available valid cell used by the point statistic (R1).',
   'C-3': 'D-024 §14: the bootstrap index universe is the complete C × S grid (G1); empty rows and columns are kept.',
+  'I-23A': 'D-026 §3: records-level bootstrap CIs use the declared universe — every configuration of the records document × its declared seeds — including empty configuration rows and empty seed columns; no exception for descriptive CIs.',
 });
 export const INFERENCES = Object.freeze({
   'I-1': 'Link ③ counts (decision ticks, replay ticks, flips, monotonicity bins) are over τ ∈ [0, 2999], matching the 3000 of FR\'s denominator; calls 0–4 belong to no window.',
@@ -76,13 +78,14 @@ export const INFERENCES = Object.freeze({
   'I-20': 'Link ①: actual trust-store increments follow the arm semantics (B2 arms.js: allowsTrustUpdate is false only in A4; v1.0 §3: every drawn attempt credits a in every other arm). The whole-run n_updates counts every recorded attempt (calls 0–4 included).',
   'I-21': 'Steps-to-goal: a goal reset recorded at call g ends its episode at g (the goal step) and the next starts at g + 1; a cap reset recorded at call c fires before call c\'s step, so its episode ends at c − 1 and the next starts at c (R1_REPORT, cap H7). Resets before τ = 0 are ignored. An episode censored at t is at risk at t.',
   'I-22': 'Per-arm means and medians are over the runs of that arm in the records document; runs whose value is undefined are excluded and counted.',
-  'I-23': 'Records-level CIs (X-1): the §12 two-way bootstrap over that arm\'s (configIndex × seed) grid of the runs in the records document (C-3), fresh makeRng(770002), for the ruled aggregates only (mean Brier, median of run KM medians, mean trajectory entropy).',
+  'I-23': 'Records-level CIs (X-1): the §12 two-way bootstrap over the declared universe of the records document (C-3, D-026 §3: every listed configuration × the declared seeds; a cell without a run of that arm is missing), fresh makeRng(770002), for the ruled aggregates only (mean Brier, median of run KM medians, mean trajectory entropy).',
   'I-24': 'Study-level descriptive link CIs (X-1) cover the link statistics the study input carries: mean ρ_run at τ = 2999, FR filtered and unfiltered, the per-window flip rates (filtered and unfiltered) and the PR-4 monotonicity ρ; W2 and W4 get the §12 CI of each contract contrast.',
   'I-25': '"Disagreement in sign" compares sign(T⁺ − T⁻) of each Wilcoxon variant with the sign of the primary d̄ (Math.sign; zero is its own sign).',
   'I-26': 'PR-11: the study input schema carries no reward-event streams, so the per-window A5 ≡ A2 identity is computed from run records (records.descriptive) and reported as null at study level, with the reason.',
   'I-27': 'Configuration means (Wilcoxon, rank-biserial) are over each configuration\'s valid seeds, seed means over each seed\'s valid configurations (PR-3); a configuration or seed without a valid cell contributes nothing.',
   'I-28': 'Monotonicity: a decision tick\'s x is the maximum of |t|/12 over its recorded step-0 candidate entries; a decision tick without candidate entries, or with a non-finite trust term, refuses the record.',
   'I-29': 'Link ① entropy and coverage, and the trust values of PR-12, use the snapshot\'s store (a, s): trust = (s + 1)/(a + 2) (v1.0 §8); a trust value outside [0, 1] refuses the record.',
+  'I-30': 'The seed universe of a records document is its declared `seeds` list (the orchestrator always declares it). A document of the frozen fixture schema F.2, which has no `seeds` field, uses the set of seeds of all its runs (any arm) instead; a run outside the universe refuses the document.',
 });
 const enc = (x) => (typeof x === 'number' && !Number.isFinite(x)) ? (Number.isNaN(x) ? 'NaN' : x > 0 ? 'Infinity' : '-Infinity') : x;
 
@@ -703,6 +706,17 @@ export function permutationNull(runs, keysOf) {
   }
   return out;
 }
+/** C-3 / I-23 option A (D-026 §3; I-30): the declared configuration and seed universe of a records document. */
+export function recordsUniverse(fx) {
+  const configs = fx.configurations.map(c => c.index);
+  if (!configs.every(Number.isSafeInteger) || new Set(configs).size !== configs.length) throw new Error('records: configuration indices must be distinct integers');
+  const declared = fx.seeds !== undefined;
+  if (declared && (!Array.isArray(fx.seeds) || !fx.seeds.every(Number.isSafeInteger) || new Set(fx.seeds).size !== fx.seeds.length)) throw new Error('records: declared seeds must be distinct integers');
+  const seeds = declared ? fx.seeds.slice() : [...new Set(fx.runs.map(r => r.seed))];   // I-30: the frozen fixture schema F.2 declares no seed list
+  const cs = new Set(configs), ss = new Set(seeds);
+  for (const r of fx.runs) if (!cs.has(r.configIndex) || !ss.has(r.seed)) throw new Error(`${r.runId}: (configuration ${r.configIndex}, seed ${r.seed}) lies outside the declared universe`);
+  return { configs: configs.sort((a, b) => a - b), seeds: seeds.sort((a, b) => a - b), seedsDeclared: declared };
+}
 export function analyzeRecords(fx) {
   if (fx.schema !== 'h1r.d021b.records/1') throw new Error(`records schema ${fx.schema}`);
   const cfgOf = new Map(fx.configurations.map(c => [c.index, c])), runs = {}, forks = {};
@@ -717,10 +731,13 @@ export function analyzeRecords(fx) {
   // PR-5: one makeRng(770003) sequence over the A1 runs
   permutationNull(a1, keysOf).forEach((p, i) => { runs[a1[i].runId].descriptive.permutationNull = p; });
   // per-arm aggregates and their §12 bootstrap CIs over the arm's (configIndex × seed) grid (I-22, I-23)
-  const armGrid = (arm, valueOf) => { const rs = ordered.filter(r => r.arm === arm), cfgs = [...new Set(rs.map(r => r.configIndex))].sort((a, b) => a - b), seeds = [...new Set(rs.map(r => r.seed))].sort((a, b) => a - b), cell = new Map();
+  // C-3 / I-23 option A (D-026 §3): the records-level bootstrap index universe is DECLARED, never derived from the runs
+  // present: every configuration of fx.configurations × the declared seed universe fx.seeds, empty rows and columns kept.
+  const U = recordsUniverse(fx);
+  const armGrid = (arm, valueOf) => { const rs = ordered.filter(r => r.arm === arm), cell = new Map();
     for (const r of rs) { const k = pairKey(r.configIndex, r.seed); if (cell.has(k)) throw new Error(`two ${arm} runs for cell ${k}`); cell.set(k, valueOf(r)); }
-    return { rs, ci: (stat) => twoWayBootstrap(cfgs, seeds, (c, s) => cell.get(pairKey(c, s)), stat) }; };
-  const desc = {};
+    return { rs, ci: (stat) => twoWayBootstrap(U.configs, U.seeds, (c, s) => cell.get(pairKey(c, s)), stat) }; };
+  const desc = { bootstrapUniverse: { configs: U.configs, seeds: U.seeds, seedsDeclared: U.seedsDeclared } };
   { const g = armGrid('A1', (r) => runs[r.runId].descriptive.brier), vals = g.rs.map(r => runs[r.runId].descriptive.brier), def = vals.filter(v => v.nAttempts > 0);
     const field = (f) => (cells) => { const d = cells.filter(v => v.nAttempts > 0); return d.length ? mean(d.map(v => v[f])) : null; };
     desc.brierByArm = { A1: { nRuns: def.length, nUndefined: vals.length - def.length, trust: field('trust')(vals), base: field('base')(vals), difference: field('difference')(vals),
@@ -752,18 +769,23 @@ export function analyzeDir(dir) {
   return { study, records };
 }
 const sha = (b) => crypto.createHash('sha256').update(b).digest('hex');
+/** The output document (schema h1r.d021b.output/1) — the one assembly used by the CLI and by the orchestrator. */
+export function outputDocument(study, records) {
+  const pkg = path.join(REPO, 'research', 'preregistrations', 'h1r_d021b', 'GEMINI_PACKAGE.md');
+  return { schema: OUTPUT_SCHEMA,
+    implementation: { name: 'experiments/h1r/analyze.js', author: 'Claude (repository implementation agent)', runtime: `node ${process.version}`,
+      sourceSha256: sha(fs.readFileSync(fileURLToPath(import.meta.url))), packageSha256: fs.existsSync(pkg) ? sha(fs.readFileSync(pkg)) : null,
+      rulings: RULINGS, inferences: INFERENCES },
+    study, records };
+}
+/** Serialisation of the output document: compact JSON, non-finite numbers encoded as strings. */
+export function serializeOutput(doc) { return JSON.stringify(doc, (k, v) => enc(v)); }
 const invoked = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (invoked) {
   const [dir, outFile] = process.argv.slice(2);
   if (!dir || !outFile) { console.error('usage: node experiments/h1r/analyze.js <fixtureDir> <output.json>'); process.exit(2); }
   const { study, records } = analyzeDir(dir);
-  const pkg = path.join(REPO, 'research', 'preregistrations', 'h1r_d021b', 'GEMINI_PACKAGE.md');
-  const doc = { schema: OUTPUT_SCHEMA,
-    implementation: { name: 'experiments/h1r/analyze.js', author: 'Claude (repository implementation agent)', runtime: `node ${process.version}`,
-      sourceSha256: sha(fs.readFileSync(fileURLToPath(import.meta.url))), packageSha256: fs.existsSync(pkg) ? sha(fs.readFileSync(pkg)) : null,
-      rulings: RULINGS, inferences: INFERENCES },
-    study, records };
-  const text = JSON.stringify(doc, (k, v) => enc(v));
+  const text = serializeOutput(outputDocument(study, records));
   fs.writeFileSync(outFile, text);
   console.log(`wrote ${outFile}: ${Object.keys(study).length} study fixtures, ${Object.keys(records).length} record fixtures, SHA-256 ${sha(text)}`);
 }

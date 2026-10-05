@@ -1,0 +1,13 @@
+pristine experiments/phase1_0/verify_S1prime.js: exit 0, 7 PASS, 0 FAIL (0s)
+off      experiments/phase1_0/verify_S1prime.js: exit 0, 7 PASS, 0 FAIL (0s)
+on       experiments/phase1_0/verify_S1prime.js: exit 0, 7 PASS, 0 FAIL (0s)
+pristine experiments/phase1_0/verify_S2.js: exit 0, 14 PASS, 0 FAIL (0s)
+off      experiments/phase1_0/verify_S2.js: exit 0, 14 PASS, 0 FAIL (0s)
+on       experiments/phase1_0/verify_S2.js: exit 1, 13 PASS, 1 FAIL (0s)
+pristine experiments/phase1_0/verify_G16.js: exit 0, 28 PASS, 0 FAIL (8s)
+off      experiments/phase1_0/verify_G16.js: exit 1, 23 PASS, 5 FAIL (9s)
+on       experiments/phase1_0/verify_G16.js: exit 1, 23 PASS, 5 FAIL (27s)
+on       experiments/m7/verify_determinism.js: exit 0, 29 PASS, 0 FAIL (65s)
+pristine experiments/m7/verify_determinism.js: exit 0, 29 PASS, 0 FAIL (67s)
+off      experiments/m7/verify_determinism.js: exit 0, 29 PASS, 0 FAIL (67s)
+exit 0
