@@ -38,6 +38,12 @@
 //                         when the runtime carries a design position, initRng registers the
 //                         "environment" stream from env_seed.mjs's derived seed instead of
 //                         agentSeed XOR 0x5EED; cognitive and visual are untouched
+//   MS-1      §8, §9      measurement instrument (Director authorisation MS-1, 2026-10-05; D-019 as amended
+//                         by D-022; D-020): observational probes M-SCORE (render/scoring.js, the single
+//                         H1R-S6 line), M-CANDIDATE, M-BEST, M-DECISION, M-REPLAY (main.js), M-FLOOR
+//                         (render/behavior.js), guarded by `globalThis.__H1R_MEASURE__`; and two runtime
+//                         hooks guarded by the H1R switch: M-LOOP (runAgentLoop entry: trust snapshot) and
+//                         M-FORK (start of runAgent: the fork driver's mid-run arm switch; inert unless armed)
 // ==========================================================
 
 export const B2_COMMIT = '707cb1e5205a7e9979f81092ee1ebfa0fe28922e';
@@ -211,6 +217,41 @@ function transformMain(text) {
     L.splice(u, 0, `if (globalThis.__H1R_MEASURE__) globalThis.__H1R_MEASURE__.reward(rewardSignal); // H1R M-REWARD: final rewardSignal of this tick (observational)`);
   }
 
+  // MS-1 — MEASUREMENT INSTRUMENT (Director authorisation MS-1; v1.0 §8 link ③, §9 items 1, 5, 7; D-020).
+  // Observational probes (guarded by the measurement global; call-only statements that read locals):
+  //   M-CANDIDATE  one record per candidate-loop entry, every prediction step, right after its choices.push:
+  //                the value calculateDecisionScore returned, the blended weight, whether the arbitration
+  //                blend applied, and the arbitration inputs the shadow weight needs (step 0)
+  //   M-BEST       bestChoice of the weight sort of that step (argmax₁ at step 0, D-020 pin 1)
+  //   M-DECISION   the step-0 selection write (a decision tick)
+  //   M-REPLAY     the replay (else) branch of runAgent, next to the E6 telemetry flag
+  // Runtime hooks (guarded by the H1R switch; they draw nothing and assign nothing in the agent):
+  //   M-LOOP       first statement of runAgentLoop: the runtime takes the τ = 1499 trust snapshot at the entry
+  //                where 1,505 runAgent() calls are complete (D-020 pin 2)
+  //   M-FORK       first statement of runAgent: the fork driver's arm switch, applied immediately before its
+  //                call (v1.0 §8 link ④); without an armed fork it returns at once
+  {
+    const [c] = one(F, 'M-CANDIDATE', L, l => l === '  choices.push({');
+    if (L[c + 1] !== '    key: k,' || L[c + 2] !== '    weight: arbitratedScore' || L[c + 3] !== '  });') refuse(F, 'M-CANDIDATE', 'candidate push not found in the expected shape');
+    if (!L.slice(c - 20, c).some(l => l === '  const candidateArb = lastArbitrationBreakdown;')) refuse(F, 'M-CANDIDATE', 'arbitration blend not found above the candidate push');
+    L.splice(c + 4, 0, `  if (globalThis.__H1R_MEASURE__) globalThis.__H1R_MEASURE__.candidate(step, k, finalWeight, arbitratedScore, !!(candidateArb && executiveWeights), candidateArb, uncertaintyScoreValue, executiveWeights, k === currentKey); // H1R M-CANDIDATE (observational)`);
+    const [b] = one(F, 'M-BEST', L, l => l === 'const bestChoice = sorted[0];');
+    if (!L.slice(b - 6, b).some(l => l === 'const sorted = choices.sort((a, b) => b.weight - a.weight);')) refuse(F, 'M-BEST', 'weight sort not found above bestChoice');
+    L.splice(b + 1, 0, `if (globalThis.__H1R_MEASURE__) globalThis.__H1R_MEASURE__.best(step, bestChoice ? bestChoice.key : null); // H1R M-BEST: argmax of this step's weight sort (observational)`);
+    const [w] = one(F, 'M-DECISION', L, l => l === '  window.lastReasoning = {');
+    if (L[w - 1] !== 'if (step === 0) {' || L[w + 1] !== '    from: currentKey,' || L[w + 2] !== '    to: nextKey' || L[w + 3] !== '  };' || L[w + 4] !== '}')
+      refuse(F, 'M-DECISION', 'step-0 selection write not found in the expected shape');
+    L.splice(w + 4, 0, `  if (globalThis.__H1R_MEASURE__) globalThis.__H1R_MEASURE__.decision(nextKey); // H1R M-DECISION: step-0 selection write (observational)`);
+    const [r] = one(F, 'M-REPLAY', L, l => l === '      if (globalThis.__M7_TEL__) globalThis.__M7_TEL__.replayBranch();');
+    L.splice(r + 1, 0, `      if (globalThis.__H1R_MEASURE__) globalThis.__H1R_MEASURE__.replay(); // H1R M-REPLAY: replay branch taken (observational)`);
+    const [p] = one(F, 'M-LOOP', L, l => l === 'function runAgentLoop() {');
+    if (L[p + 1].trim() !== '' || !L[p + 2].startsWith('  if (!agentRunning) return;')) refuse(F, 'M-LOOP', 'first statement of runAgentLoop not found in the expected shape');
+    L.splice(p + 1, 0, `  if (${G}) globalThis.__H1R__.loopEntry(); // H1R M-LOOP: runAgentLoop entry (trust snapshot at 1,505 completed calls; records only)`);
+    const [s] = one(F, 'M-FORK', L, l => l === '  if (globalThis.__M7_TEL__) globalThis.__M7_TEL__.step();');
+    if (!L.slice(s - 8, s).includes('function runAgent() {') || !L[s + 1].includes('// H1R M-STEP')) refuse(F, 'M-FORK', 'start of runAgent not found in the expected shape');
+    L.splice(s, 0, `  if (${G}) globalThis.__H1R__.beforeCall(); // H1R M-FORK: fork driver arm switch, immediately before this call (inert unless a fork is armed)`);
+  }
+
   // P4 — clear the pre-reset reasoning at both episode-reset sites.
   {
     const [g] = one(F, 'P4-goal', L, l => l === '    agentCurrent = allIds[Math.floor(liveRng() * allIds.length)];');
@@ -264,13 +305,43 @@ function transformRng(text) {
   return L.join('\n');
 }
 
+// ---------------- render/scoring.js ----------------
+// MS-1 / H1R-S6 (D-019 §2, §5 N1): exactly one line, the pinned template, immediately before the clamp-return.
+// Removing it gives B2's scoring.js byte for byte (G16′).
+export const SCORE_PROBE = '    if (globalThis.__H1R_MEASURE__) globalThis.__H1R_MEASURE__.score(finalWeight, trustBonus * 1.5); // H1R M-SCORE';
+export const SCORE_RETURN = '    return Math.max(-400, Math.min(400, finalWeight));';
+function transformScoring(text) {
+  const F = 'render/scoring.js';
+  const L = text.split('\n');
+  const [i] = one(F, 'M-SCORE', L, l => l === SCORE_RETURN);
+  if (L.some(l => l.includes('// H1R M-SCORE'))) refuse(F, 'M-SCORE', 'tag already present');
+  L.splice(i, 0, SCORE_PROBE);
+  return L.join('\n');
+}
+
+// ---------------- render/behavior.js ----------------
+// MS-1 / v1.0 §9 item 6, §15: the A5 floor-binding counter. One call-only line inside the branch in which the
+// aggregate floor raises confidenceState (updateBehavior), after the assignment.
+function transformBehavior(text) {
+  const F = 'render/behavior.js';
+  const L = text.split('\n');
+  const [i] = one(F, 'M-FLOOR', L, l => l === '            confidenceState = trustFloor;');
+  if (L[i - 1] !== '        if (confidenceState < trustFloor) {' || L[i + 1] !== '        }' || L[i - 2] !== '        const trustFloor  = aggregateTrust * TRUST_SCALE;' ||
+      L[i - 4] !== '    if (aggregateTrust !== null && aggregateTrust > 0) {') refuse(F, 'M-FLOOR', 'aggregate floor not found in the expected shape');
+  L.splice(i + 1, 0, '            if (globalThis.__H1R_MEASURE__) globalThis.__H1R_MEASURE__.floor(); // H1R M-FLOOR: the aggregate floor raised confidenceState (observational)');
+  return L.join('\n');
+}
+
 export const TRANSFORMS = Object.freeze({
   'main.js': transformMain,
   'render/qlearning.js': transformQ,
   'render/episodeManager.js': transformEM,
   'instrumentation/rng.js': transformRng,
+  'render/scoring.js': transformScoring,
+  'render/behavior.js': transformBehavior,
 });
 
 export const EDIT_TAGS = Object.freeze(['N1-MASK', 'N1-MASK-SEM', 'A3', 'N1-GUARD', 'GOAL', 'A4-Q-decay', 'A4-T-decay', 'A4-T-credit',
   'N2-note', 'P4-goal', 'P4-cap', 'CRG-1', 'CRG-2', 'CRG-3', 'R1-VIEW', 'R1-RESTORE', 'R1-DRAW',
-  'R2-GOAL-FLAG', 'R2-GOAL-CREDIT', 'M-STEP', 'M-REWARD', 'A4-Q', 'N1-SEAL', 'N2', 'R3-ENV-SEED']);
+  'R2-GOAL-FLAG', 'R2-GOAL-CREDIT', 'M-STEP', 'M-REWARD', 'M-CANDIDATE', 'M-BEST', 'M-DECISION', 'M-REPLAY', 'M-LOOP', 'M-FORK',
+  'A4-Q', 'N1-SEAL', 'N2', 'R3-ENV-SEED', 'M-SCORE', 'M-FLOOR']);

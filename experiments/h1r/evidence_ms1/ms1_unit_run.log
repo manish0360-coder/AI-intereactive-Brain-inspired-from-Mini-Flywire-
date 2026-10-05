@@ -1,0 +1,32 @@
+PASS  U0     every unit scenario ran to completion
+      10 scenarios
+PASS  N1     text: exactly one `// H1R M-SCORE` line, equal to the pinned template, immediately before the clamp-return; with it removed the file is B2 byte for byte (SHA-256 4a133166…66d5)
+      {"taggedLines":1,"template":true,"beforeReturn":true,"strippedSha256":"4a13316698b52a2132d969c838d79f9d3ccc97a853bc5e3fa947fd43fac566d5","strippedEqualsB2":true,"ok":true}
+PASS  N2     form: the probe reads finalWeight and trustBonus, makes one call (the sink score), assigns nothing and names no other identifier (no RNG, Date.now, I/O, import, export)
+      [{"other":[],"assigns":false,"calls":1,"sinkCalls":1,"readsBoth":true,"ok":true}]
+PASS  N4a    neutral when present: 12000 random input sets at identical RNG state give the same return value, lastArbitrationBreakdown and RNG position (cognitive, visual, environment) without and with the sink
+      {"n":12000,"returnMismatch":0,"breakdownMismatch":0,"rngPositionMismatch":0}
+PASS  N5'    pinned sink and binding: static (byte-exact score, S private, Node built-ins only, no global) and at installation (own data property, non-writable, non-configurable, frozen non-Proxy ordinary object, score own non-writable, pinned source, function identity); overwrite/redefinition refused
+      static {"ok":true,"problems":[]}; installation {"ok":true,"problems":[]}; tamper {"overwriteRefused":true,"redefineRefused":true,"scoreReplaceRefused":true}
+PASS  N6a    exact pre-clamp fidelity: every recorded F is Object.is-equal to the oracle (B2 scoring.js returning finalWeight) at the same RNG state, |F| > 400 at both bounds included
+      oracle <tmp>\mfw-h1r\n6a-oracle-7cca1635bd8b SHA-256 7cca1635bd8b87657c0c654266c9a71d32119deceb72212ed2339c752b769a2a (differs from B2 in 1 line: 451); {"n":12000,"high":2000,"low":2000,"mismatch":0,"mismatchHigh":0,"mismatchLow":0,"mismatchInRange":0}
+PASS  N6b-U  clamp consistency and trust term (unit): Object.is(clamp(recorded F), returned) and recorded term = 12·(T − 0.5) for every call
+      {"clampMismatch":0,"termMismatch":0}
+PASS  N7a    a probe placed after the clamp — caught by N1 and by N6a only on inputs with |F| > 400
+      N1 ok=false; N6a {"n":12000,"high":2000,"low":2000,"mismatch":4000,"mismatchHigh":2000,"mismatchLow":2000,"mismatchInRange":0}
+PASS  N7b    a probe that assigns — caught by N2 (and N1, N4a)
+      N2 ok=false; N1 ok=false; N4a {"n":12000,"returnMismatch":8000,"breakdownMismatch":0,"rngPositionMismatch":0}
+PASS  N7c    a probe that draws a random number — caught by N4a (RNG position) and N2
+      N2 ok=false; N4a {"n":12000,"returnMismatch":0,"breakdownMismatch":0,"rngPositionMismatch":12000}
+PASS  N7d    a second tagged line — caught by N1 (and the score/candidate pairing)
+      N1 tagged lines 2; pairs 24000 for 12000 calls
+PASS  N7e    a sink that transforms the value only when |F| > 400 — caught by the N6a oracle (only above 400) and by N5′ (static and installation)
+      N6a {"n":12000,"high":2000,"low":2000,"mismatch":4000,"mismatchHigh":2000,"mismatchLow":2000,"mismatchInRange":0}; N5′ static fails true; install refuses true
+PASS  N7f    a Proxy or accessor binding that rewrites arguments — caught by N5′ at installation (and by N6a)
+      accessor: accessor property, not a data property; value is not an object, N6a mismatches 4000 | proxy: value is a Proxy; value is not frozen; score is not an own data property, N6a mismatches 4000
+PASS  N7g    a sink conditioned on the arm — caught by N5′'s source pin (static and installation)
+      static ["global references: globalThis, __H1R_ARM__","pinned score line found 0 times","another score definition","S referenced outside its declaration, score() and record(): 3 lines"]; install refuses true; (unbound demonstration: N6a mismatches 4000)
+PASS  N7h    a sink conditioned on run identity — caught by N5′'s source pin (static and installation)
+      static ["global references: process","pinned score line found 0 times","another score definition","S referenced outside its declaration, score() and record(): 3 lines"]; install refuses true; (unbound demonstration: N6a mismatches 4000)
+
+15 PASS, 0 FAIL

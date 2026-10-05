@@ -7,7 +7,7 @@ H1-R tests the **M7 design as frozen**: [`M7_PREREGISTRATION.md`](../../research
 The M7 instrument build is **B2 = `707cb1e`**. The B2 characterization of 2026-10-04 showed that B2 departs from the frozen text in several ways. This directory makes the runtime conform **without editing any production file**:
 
 1. `build_tree.mjs` materialises the B2 blobs. It uses `git cat-file`, so there is no checkout and no line-ending conversion, and it checks every blob id.
-2. It applies `conformance_transform.mjs` to exactly four files (`main.js`, `render/qlearning.js`, `render/episodeManager.js`, `instrumentation/rng.js`).
+2. It applies `conformance_transform.mjs` to exactly six files (`main.js`, `render/qlearning.js`, `render/episodeManager.js`, `instrumentation/rng.js`, and, for the MS-1 measurement instrument, `render/scoring.js` and `render/behavior.js`).
 3. It writes the result, with `MANIFEST.json`, under `os.tmpdir()/mfw-h1r/`.
 
 ## Conformance edits
@@ -29,6 +29,7 @@ All edits are guarded by `globalThis.__H1R__ && globalThis.__H1R__.on`. With no 
 | R1 | §3.3, §3.4; Director ruling R1 (2026-10-04) | **Realised-outcome learning order:** decision → one environment draw → realised outcome → the existing learning rules. B2 ran its whole self-learning section (reward, emotion, prediction error, Q, curiosity, transitions, success episodes, goal reset, explore step) *before* the draw, on the intended move, while `agentLast` still held the previous tick's position. The section is written in post-move terms (`prev = agentLast // where we were before`, `current = next // where we moved now`; Q state `agentLast`, action `next`, next state `agentCurrent`). Under H1R it reads the realised transition, in four steps. **R1-DRAW-EARLY:** the decision's single `__M7_ENV__.attempt(u, v)` call moves ahead of the section, with the same arguments, exclusions and stream. **R1-VIEW:** `agentLast` is set to u. On a success `agentCurrent` is set to v; on a slip the realised node is u (`next` is set to u). **R1-RESTORE:** after the section the pre-move view is restored, so the E1′ traversal block performs the move and E2 credits the *intended* edge. **R1-DRAW:** the E1 site reuses the outcome instead of drawing again. B2's own `updateQ`, `recordAutonomousStep` and `recordAutonomousSuccess` calls then receive the realised transition unchanged. Reward constants, the Q equation and all parameters are unchanged. |
 | R2 (D-1) | §3.3, §6.1; Director ruling R2 (2026-10-04) | **Goal-entry reliability draw.** Goal-entering attempts use the same environment draw as every other edge. **R2-GOAL-DRAW:** the single early draw no longer excludes them (B2 never drew for them). **R2-GOAL-FLAG:** under H1R, `_goalResetJustHappened` means "the goal reset ran this tick", read from the runtime's reset counter rather than inferred from the intended node, so a slipped goal attempt follows the ordinary slip path. **R2-GOAL-CREDIT:** a realised goal entry is credited a += 1 and s += 1, like any traversal (§6.1), using the decision position R1 recorded, because the reset has already moved the agent. |
 | M (D-5) | §8.5 primary endpoint | **Measurement probes, observational only.** They are guarded by `globalThis.__H1R_MEASURE__`, not by the H1R switch. **M-STEP** counts one tick per `runAgent()` call. **M-REWARD** passes the final `rewardSignal` to `measure.mjs` immediately before its first consumer. Neither draws, assigns, nor branches the agent. |
+| MS-1 | v1.0 §8, §9 items 1–7; D-019 (as amended by D-022), D-020; Director authorisation MS-1 (2026-10-05) | **Measurement instrument, observational only.**<br>**Probes** are guarded by `globalThis.__H1R_MEASURE__`. Each is one call-only statement that reads locals:<br>• **M-SCORE** is the single H1R-S6 line in `render/scoring.js`, immediately before the clamp-return: `score(finalWeight, trustBonus * 1.5)`. Removing it gives B2's file byte for byte (G16′).<br>• **M-CANDIDATE** follows each candidate-loop push. It records the returned score, the blended weight, and the arbitration inputs the shadow needs.<br>• **M-BEST** records `bestChoice` of each step's weight sort.<br>• **M-DECISION** records the step-0 selection write.<br>• **M-REPLAY** records the replay branch, next to the E6 flag.<br>• **M-FLOOR** records each A5 aggregate-floor raise in `updateBehavior`.<br>**Runtime hooks** are guarded by the H1R switch:<br>• **M-LOOP** is the first statement of `runAgentLoop`. The runtime takes the τ = 1499 trust snapshot there, at the entry with 1,505 completed calls.<br>• **M-FORK** is the first statement of `runAgent`. It applies an armed fork switch immediately before its call, and is inert otherwise. |
 | R3-ENV-SEED | §5.1, superseded for H1-R by [erratum R3](../../research/preregistrations/H1R_ERRATUM_R3_ENVIRONMENT_SEED.md); Director ruling R3 (2026-10-04) | **Configuration-scoped environment stream.** In `instrumentation/rng.js` `initRng`, when the runtime carries a design position (agent seed, block, accepted configuration index), the `environment` stream is seeded with `env_seed.mjs`'s derivation instead of `agentSeed XOR 0x5EED`. The derivation is `(0x60800000 + slot·4096·0x6d2b79f5) mod 2³²` with `slot = (agentSeed − 20260819000)·64 + blockCode·32 + index`: one disjoint 4096-draw segment per position, with no arm term. The B2 expression stays verbatim as the fall-back branch. The cognitive and visual registrations are untouched. The runtime refuses an `initRng` seed other than the position's agent seed. |
 
 **What learning receives (existing rules on the realised transition):**
@@ -38,20 +39,40 @@ All edits are guarded by `globalThis.__H1R__ && globalThis.__H1R__.on`. With no 
   - On success it is realised: it learns as a success with the flat +12 and S′ = goal, the existing reset runs, and the edge is credited a += 1, s += 1.
   - On a slip it is an ordinary slip: no reset, no reward, no learning, and the attempt is credited a += 1.
 
-## Measurement and the experiment driver (D-5)
+## Measurement and the experiment driver (D-5, MS-1)
 
-- **`measure.mjs`** (`installMeasure()`) records one event, `[callIndex, rewardSignal]`, per `runAgent()` call that computed a `rewardSignal`. Under R1 that is exactly the realised moves and goal entries. Mapping call indices to the tick index τ and to windows is an analysis definition (pre-registration OPEN D-6) and is not done here.
+- **`measure.mjs`** (`createMeasure()`) is the measurement sink. It reads no global and imports only `node:crypto`. Its `score` is the pinned function `score(f, t) { S.push(f, t); }` (D-019 §5 N5′), and `S` is read only by `record()`. It records:
+  - one reward event, `[callIndex, rewardSignal]`, per `runAgent()` call that computed a `rewardSignal`. Under R1 that is exactly the realised moves and goal entries;
+  - per-tick decision and replay flags (no-commit = neither);
+  - per-attempt records;
+  - goal and cap resets;
+  - both trust snapshots;
+  - A5 floor raises;
+  - the pre-clamp score pair (F, t) of every scoring call, and the candidate records;
+  - the fork switch.
+
+  τ = call index − 5 (v1.0 §6).
+- **`measure_install.mjs`** binds the sink as `globalThis.__H1R_MEASURE__`: an own, non-writable, non-configurable data property holding the frozen object. `installMeasure()` refuses to return unless the N5′ installation checks pass: descriptors, frozen, not a Proxy, pinned `score` source and function identity. `verifySinkSource()` is the static N5′ check.
+- **`shadow.mjs`** joins each score pair with its candidate record and recomputes argmax₁ (D-020 pin 1). It computes the pre-clamp shadow weight of v1.0 §8: T replaced by 0.5 in F and in `arbitrate`'s confidence score, the clamp re-applied, and the 60/40 blend as in `main.js`. It also counts the N6b clamp-consistency failures, non-finite F, and calls on which the ±400 clamp binds. It is pure, apart from calling the run tree's pure `arbitrate`.
+- **`runtime.mjs`**, through `attachMeasure(M)`, forwards to the sink:
+  - one per-attempt record per environment draw: edge, outcome, goal-entering flag, and the raw trust-store attempts and successes of the key just before the attempt;
+  - every reset;
+  - the snapshots. The τ = 1499 snapshot is taken at `runAgentLoop` entry 301, which is run.js loop l = 300 after `pressSpace`'s entry, with 1,505 calls complete. The final snapshot is taken after `runOnce`. Each entry is `[key, a, s, raw attempts within the phase]`.
+
+  `armFork({ call })` arms the fork switch. Immediately before that `runAgent()` call, the frozen `arms.configure()` switches the arm to A2. A1 and A2 differ only in the E3 and E4 deliveries (gate FORK-E).
 - **`run_h1r.mjs`** is the experiment driver, one run per process. It:
   - requires `block` (`'pilot'` or `'heldout'`). With the agent seed and `configIndex` (the ERR-07 accepted index), this is the run's design position. It refuses a position outside the verified domain (`env_seed.mjs`);
   - builds or reuses the conformed tree;
-  - attaches the runtime (`trustMode: 'traversal'`, plus the design position) and the measurement;
+  - attaches the runtime (`trustMode: 'traversal'`, plus the design position) and the measurement (N5′ checked at installation);
+  - in fork mode (`"fork": { "call": t + 5 | null, "to": "A2" }`, arm A1 only), arms the switch (v1.0 §8 link ④);
   - runs the unchanged `experiments/m7/run.js` with the frozen settings;
   - writes a record containing:
-    - provenance: the B2 commit, the transform, runtime, measure, env-seed and driver hashes, and the environment stream actually registered;
-    - validity conditions, including the R3 conditions `envStreamScoped`, `envDrawsWithinReserve`, `cognitiveDrawsWithinReserve`, `visualDrawsWithinReserve` and `envSegmentDisjointFromConfig`;
-    - the reward record. With `digestOnly`, it is replaced by a SHA-256 of itself.
+    - provenance: the B2 commit, the transform, runtime, measure, measure-install, shadow, env-seed and driver hashes, the environment stream actually registered, and the fork;
+    - the 11 validity conditions (v1.0 §10). `measurementClean` is exactly D-020 pin 3: reward record, per-tick, per-attempt, resets, score/shadow, snapshots, floor and fork. The R3 conditions are `envStreamScoped`, `envDrawsWithinReserve`, `cognitiveDrawsWithinReserve`, `visualDrawsWithinReserve` and `envSegmentDisjointFromConfig`;
+    - instrument integrity: sink binding at the end of the run, N6b, argmax, reconstruction, snapshot placement, the non-finite F count and the clamp-binding count;
+    - the measurement records: reward events, per-tick flags, attempts, resets, snapshots, floor calls, decisions, and the step-0 candidate groups with (F, t). With `digestOnly`, they are replaced by counts and SHA-256 digests (`prefixAt` adds digests of the calls before given calls).
 
-  The driver never aggregates rewards into returns, windows or comparisons.
+  The driver never aggregates rewards into returns, windows or comparisons, and computes no flip, calibration or advantage statistic. Those belong to `analyze.js`, which is not part of MS-1.
 - **`env_seed.mjs`** (R3) holds the frozen derivation, its verified domain and the exact overlap arithmetic. It is pure arithmetic and draws nothing.
 
 R1 supersedes the sentence of ERR-05 §3.1 stating that Q-learning, prediction error and reward run "unchanged on both outcomes". It also retires the earlier Q-KEY stash/apply edits, because B2's original calls are correct once they run in the realised view.
@@ -70,6 +91,17 @@ node experiments/h1r/verify_conformance.mjs
 node experiments/h1r/run_existing_gates.mjs
 ```
 
+```bash
+node experiments/h1r/verify_existing_equivalence.mjs
+```
+
+```bash
+node experiments/h1r/verify_ms1_unit.mjs
+```
+
+- **What each script checks:**
+  - `verify_existing_equivalence.mjs` reads the output of `run_existing_gates.mjs`. It checks OFF ≡ pristine assertion by assertion (N3; G16.4a2–a6 classified under H1R-S6), that the ON failures are exactly the classified set, and that S4 and G9 are clean.
+  - `verify_ms1_unit.mjs` holds the unit gates N1, N2, N4a, N5′, N6a, N6b-U and N7a–h. The N6a oracle, a test-only B2 `scoring.js` returning `finalWeight`, is written under `<tmp>/mfw-h1r/n6a-oracle-*`, hash-recorded, and never loaded by a run.
 - **Material:** only the historical G15 configurations (900030–900499, accepted per the unchanged predicate) with agent seed 20260819000. No new seed is generated.
 - **R3 positions:** the 41 configurations form no design block, so each gets its own position on agent seed 20260819000 that no design run can occupy:
   - configuration *p* < 32 takes held-out index *p*;
@@ -79,7 +111,8 @@ node experiments/h1r/run_existing_gates.mjs
 
 | Directory | Contents |
 |---|---|
-| `evidence_r3/` | Current evidence (R3: configuration-scoped environment stream) and `R3_REPORT.md` |
+| `evidence_ms1/` | Current evidence (MS-1: the measurement instrument) and `MS1_REPORT.md` |
+| `evidence_r3/` | The R3 round (configuration-scoped environment stream), with `R3_REPORT.md`; the ON reference for `verify_existing_equivalence.mjs` |
 | `evidence_d1d5/` | The R2 round (D-1 goal-entry draw and D-5 measurement; B2 environment stream), with `R2_REPORT.md` |
 | `evidence_r1/` | The R1 round, with `R1_REPORT.md` |
 | `evidence_r2/` | The previous Q-KEY round, with its `CORRECTION_REPORT.md` |

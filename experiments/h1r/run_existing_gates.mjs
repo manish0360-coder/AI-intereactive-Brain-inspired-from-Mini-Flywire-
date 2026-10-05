@@ -37,7 +37,9 @@ function runGate(tree, dir, script, mode) {
         const fails = lines.filter(l => /^\s*(\[FAIL\]|FAIL\s)/.test(l)).map(l => l.trim().slice(0, 220));
         const passes = lines.filter(l => /^\s*(\[PASS\]|PASS\s)/.test(l)).length;
         const verdicts = lines.filter(l => /(GATE G\d+\s*:|RESULT:|passed, .*failed|VERDICT|INFORMATION SUFFICIENCY)/.test(l)).map(l => l.trim().slice(0, 200));
-        res({ script, dir, mode, exit: e ? (e.code ?? 'error') : 0, seconds: Math.round((Date.now() - t) / 1000), passes, fails, verdicts,
+        // MS-1: every assertion line, so OFF ≡ pristine can be compared assertion by assertion (verify_existing_equivalence.mjs)
+        const assertions = lines.filter(l => /^\s*(\[PASS\]|PASS\s|\[FAIL\]|FAIL\s)/.test(l)).map(l => l.trim().slice(0, 300));
+        res({ script, dir, mode, exit: e ? (e.code ?? 'error') : 0, seconds: Math.round((Date.now() - t) / 1000), passes, fails, verdicts, assertions,
               tail: lines.slice(-6).join(' | ').slice(0, 600) });
       });
   });

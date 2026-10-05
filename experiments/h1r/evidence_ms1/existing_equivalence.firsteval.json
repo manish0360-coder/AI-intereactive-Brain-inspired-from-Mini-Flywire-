@@ -1,0 +1,36 @@
+{
+ "generatedBy": "experiments/h1r/verify_existing_equivalence.mjs",
+ "reference": "evidence_r3/existing_gates.json",
+ "gates": [
+  {
+   "id": "E0",
+   "name": "all 25 existing gate scripts ran in all three configurations, each with assertion lines recorded",
+   "status": "PASS",
+   "evidence": "25 scripts; assertions recorded: 75/75"
+  },
+  {
+   "id": "N3",
+   "name": "OFF ≡ pristine: every existing gate script gives the same exit code and the same assertion lines with the H1R runtime absent, except verify_G16.js G16.4a2–a6 (classified under H1R-S6); every other G16 assertion identical",
+   "status": "FAIL",
+   "evidence": "25 scripts, 620 assertion lines compared; differences outside G16.4a2–a6: verify_determinism.js: exit 0/0, assertions 29/29 | verify_S1prime.js: exit 0/0, assertions 7/7 | verify_S2.js: exit 0/0, assertions 14/14 | verify_G16.js: a G16 assertion other than G16.4a2–a6 differs; G16: {\"pristineS6\":[\"PASS G16.4a2\",\"PASS G16.4a3\",\"PASS G16.4a4\",\"PASS G16.4a5\",\"PASS G16.4a6\"],\"offS6\":[\"FAIL G16.4a2\",\"FAIL G16.4a3\",\"FAIL G16.4a4\",\"FAIL G16.4a5\",\"FAIL G16.4a6\"],\"otherAssertionsIdentical\":false,\"otherAssertions\":23,\"exit\":[0,1]}"
+  },
+  {
+   "id": "G16'-P",
+   "name": "on the pristine B2 tree verify_G16.js is unaffected: G16.4a1–a6 all pass",
+   "status": "PASS",
+   "evidence": "PASS  G16.4a1 frozen pre-change reference arm exis | PASS  G16.4a2 file length unchanged (pure substitu | PASS  G16.4a3 EXACTLY ONE line differs from the pr | PASS  G16.4a4 removed line is exactly the Math.max | PASS  G16.4a5 added line is the symmetric form, wr | PASS  G16.4a6 indentation preserved (no incidental"
+  },
+  {
+   "id": "ON",
+   "name": "conformance ON: the failing assertions are exactly the classified set (v1.0 §11, H1R-S4, H1R-S6) and equal the R3 round's ON failures plus G16.4a2–a6; no new failure",
+   "status": "PASS",
+   "evidence": "603 PASS / 17 FAIL; failing: e1e2 AV8b/G1f; cap B1/B3/B4/H7; goal B2/B3; G8 G8.4c; stepledger A3; S1b S1.7; S2 S2.4b; G16 G16.4a2/G16.4a3/G16.4a4/G16.4a5/G16.4a6"
+  },
+  {
+   "id": "N2-S4G9",
+   "name": "verify_S4.js and verify_G9.js are clean on the conformed tree (OFF and ON): exit 0, no failing assertion",
+   "status": "PASS",
+   "evidence": "verify_S4.js off: exit 0, 12 assertions, 0 FAIL; verify_S4.js on: exit 0, 12 assertions, 0 FAIL; verify_G9.js off: exit 0, 11 assertions, 0 FAIL; verify_G9.js on: exit 0, 11 assertions, 0 FAIL"
+  }
+ ]
+}

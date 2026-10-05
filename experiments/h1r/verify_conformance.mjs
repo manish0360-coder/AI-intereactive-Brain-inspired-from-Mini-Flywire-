@@ -1,5 +1,5 @@
 // ==========================================================
-// H1-R — M7 CONFORMANCE VERIFICATION (gates A–H)
+// H1-R — M7 CONFORMANCE VERIFICATION (gates A–H, M, R3, and the MS-1 measurement-instrument gates MS/FORK/G16′)
 // ==========================================================
 // Material: ONLY the historical G15 configuration material (900030–900499, accepted per the
 // unchanged predicate) and agent seed 20260819000. No new seed is generated.
@@ -17,6 +17,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { buildTree } from './build_tree.mjs';
 import { ENV_STREAM, envSlot, envSeedFor, overlapProof, segmentsOverlap, domainSlots } from './env_seed.mjs';
 import { installH1R } from './runtime.mjs';
+import { checkN1, checkN2, B2_SCORING_SHA256 } from './verify_ms1_unit.mjs';
+import { SCORE_PROBE } from './conformance_transform.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const EVID = path.join(HERE, process.env.H1R_EVIDENCE || 'evidence');
@@ -125,14 +127,15 @@ const RUN_H1R = path.join(HERE, 'run_h1r.mjs');
 function run(job) {
   return new Promise((res) => {
     if (job.driver) {   // the experiment driver itself, digest-only (no reward value leaves the process)
-      const arg = JSON.stringify({ agentSeed: AGENT_SEED, configSeed: job.configSeed, configIndex: job.configIndex, arm: job.arm, block: job.block, tree: job.tree, digestOnly: true });
+      const arg = JSON.stringify({ agentSeed: AGENT_SEED, configSeed: job.configSeed, configIndex: job.configIndex, arm: job.arm, block: job.block, tree: job.tree, digestOnly: true,
+        prefixAt: job.prefixAt, ...(job.fork !== undefined ? { fork: job.fork } : {}) });
       return execFile(process.execPath, [RUN_H1R, arg], { cwd: HERE, maxBuffer: 1 << 28 }, (e, out, err) => {
         const i = out ? out.indexOf('@@H1RRUN@@') : -1;
         if (i < 0) return res({ ...job, tree: shown(job.tree), error: shown(String(err || (e && e.message) || 'no output')).slice(-3000) });
         const d = JSON.parse(out.slice(i + 10));
-        res({ set: job.set, configSeed: job.configSeed, configIndex: job.configIndex, arm: job.arm, block: job.block, tree: shown(job.tree),
+        res({ set: job.set, configSeed: job.configSeed, configIndex: job.configIndex, arm: job.arm, block: job.block, tree: shown(job.tree), fork: job.fork,
               fp: d.fingerprint, completed: d.outcome.completed, crashed: d.outcome.crashed, validity: d.validity, measurement: d.measurement,
-              h1rProvenance: d.provenance.h1r, rngSeeds: d.provenance.rngSeeds });
+              integrity: { ...d.integrity, sinkProblems: undefined }, h1rProvenance: d.provenance.h1r, rngSeeds: d.provenance.rngSeeds });
       });
     }
     const arg = JSON.stringify({ agentSeed: AGENT_SEED, ...job });
@@ -165,9 +168,18 @@ for (const s of SUB) for (const arm of ['A1', 'A3', 'A4']) J.push({ set: 'antiOf
 for (const s of SUB) J.push({ set: 'mutantGoalDraw', tree: MUT_GOALDRAW, h1r: 'on', record: true, measure: true, arm: 'A1', ...s, ...posFor(s) });
 for (const s of SUB) J.push({ set: 'mutantMeasure', tree: MUT_MEAS, h1r: 'on', record: true, measure: true, arm: 'A1', ...s, ...posFor(s) });
 // the experiment driver derives its position itself: (block, configIndex); the recorder reference runs the same position
+// MS-1 fork gates (v1.0 §9 item 7): the driver's A1 runs are the originals; switch calls 0 (= A2), 705, 1505, 2985
+const FORK_CALLS = [705, 1505, 2985];
+const PREFIX_AT = [...new Set(FORK_CALLS.flatMap(c => [c, Math.min(c + 25, 3005)]))];
 for (const s of SUB) for (const arm of ['A1', 'A7']) {
-  J.push({ set: 'driver', driver: true, tree: C.dir, arm, block: 'heldout', ...s });
+  J.push({ set: 'driver', driver: true, tree: C.dir, arm, block: 'heldout', prefixAt: PREFIX_AT, ...s });
   J.push({ set: 'driverRef', tree: C.dir, h1r: 'on', measure: true, arm, ...s, envBlock: 'heldout', envIndex: s.configIndex });
+}
+for (const s of SUB) {
+  J.push({ set: 'forkBaseA2', driver: true, tree: C.dir, arm: 'A2', block: 'heldout', prefixAt: PREFIX_AT, ...s });
+  J.push({ set: 'forkNoSwitch', driver: true, tree: C.dir, arm: 'A1', block: 'heldout', prefixAt: PREFIX_AT, fork: { call: null, to: 'A2' }, ...s });
+  J.push({ set: 'forkAt0', driver: true, tree: C.dir, arm: 'A1', block: 'heldout', prefixAt: PREFIX_AT, fork: { call: 0, to: 'A2' }, ...s });
+  for (const c of FORK_CALLS) J.push({ set: 'forkMid', driver: true, tree: C.dir, arm: 'A1', block: 'heldout', prefixAt: PREFIX_AT, fork: { call: c, to: 'A2' }, ...s });
 }
 for (const s of SUB) J.push({ set: 'mutantGoal', tree: MUT, h1r: 'on', record: true, arm: 'A1', ...s, ...posFor(s) });
 for (const s of SUB) J.push({ set: 'mutantR1', tree: MUT_R1, h1r: 'on', record: true, arm: 'A1', ...s, ...posFor(s) });
@@ -490,12 +502,23 @@ function erf(x) { const s = Math.sign(x); x = Math.abs(x); const t = 1 / (1 + 0.
   const same = a.filter(x => { const y = b.find(z => key(z) === key(x)); return y && y.fp === x.fp && y.cog === x.cog; }).length;
   gate('M3', 'the measurement is observationally neutral: fingerprint (incl. all RNG draw counts) identical with and without it, all 7 arms',
     same === a.length && a.length === SUB.length * 7, `${same}/${a.length} (config, arm) pairs identical`);
-  const MSRC = fs.readFileSync(path.join(HERE, 'measure.mjs'), 'utf8').replace(/\/\/.*$/gm, '');
-  const rngFree = !/Math\.random|liveRng|makeRng|initRng|randomBytes|randomUUID|getRandomValues/.test(MSRC);
-  const ML2 = fs.readFileSync(path.join(C.dir, 'main.js'), 'utf8').split('\n').filter(l => l.includes('__H1R_MEASURE__'));
-  const probesPure = ML2.length === 2 && ML2.every(l => /^\s*if \(globalThis\.__H1R_MEASURE__\) globalThis\.__H1R_MEASURE__\.(step\(\)|reward\(rewardSignal\)); \/\/ H1R M-/.test(l));
-  gate('M4', 'no additional stochastic operation and no agent-visible effect: the module draws nothing; the two probes are call-only statements',
-    rngFree && probesPure, `measure.mjs RNG references: ${rngFree ? 'none' : 'FOUND'}; probes in main.js: ${ML2.length}, call-only: ${probesPure}`);
+  // MS-1: the measurement modules draw nothing; every probe is one call-only statement whose arguments read locals
+  // (no assignment, no call); the two runtime hooks are exact, argument-free calls
+  const mods = ['measure.mjs', 'measure_install.mjs', 'shadow.mjs'].map(f => [f, fs.readFileSync(path.join(HERE, f), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '')]);
+  const rngFree = mods.every(([, s]) => !/Math\.random|liveRng|makeRng|initRng|randomBytes|randomUUID|getRandomValues|randomInt/.test(s));
+  const probeFile = (rel) => fs.readFileSync(path.join(C.dir, ...rel.split('/')), 'utf8').split('\n').filter(l => l.includes('__H1R_MEASURE__'));
+  const EXPECT = { 'main.js': ['step', 'reward', 'candidate', 'best', 'decision', 'replay'], 'render/behavior.js': ['floor'], 'render/scoring.js': ['score'] };
+  const callOnly = (l) => { const m = l.match(/^\s*if \(globalThis\.__H1R_MEASURE__\) globalThis\.__H1R_MEASURE__\.([a-z]+)\((.*)\); \/\/ H1R M-[A-Z]+/);
+    if (!m) return null; const args = m[2].replace(/===|!==/g, ' ');
+    return /(^|[^=!<>])=(?!=)|\+\+|--|[+\-*/%&|^]=/.test(args) || /[A-Za-z0-9_$\]]\s*\(/.test(args) ? null : m[1]; };
+  const probes = Object.fromEntries(Object.keys(EXPECT).map(f => [f, probeFile(f).map(callOnly)]));
+  const probesPure = Object.entries(EXPECT).every(([f, ms]) => probes[f].length === ms.length && ms.every(x => probes[f].includes(x)) && !probes[f].includes(null));
+  const ML3 = fs.readFileSync(path.join(C.dir, 'main.js'), 'utf8').split('\n');
+  const hooks = ML3.filter(l => /\/\/ H1R M-(LOOP|FORK)/.test(l)).map(l => l.slice(0, l.indexOf(';') + 1).trim());
+  const hooksExact = hooks.length === 2 && hooks.includes('if (globalThis.__H1R__ && globalThis.__H1R__.on) globalThis.__H1R__.loopEntry();') &&
+    hooks.includes('if (globalThis.__H1R__ && globalThis.__H1R__.on) globalThis.__H1R__.beforeCall();');
+  gate('M4', 'no additional stochastic operation and no agent-visible effect: the measurement modules draw nothing; every probe is a call-only statement (main.js 6, behavior.js 1, scoring.js 1); the M-LOOP and M-FORK hooks are exact argument-free runtime calls',
+    rngFree && probesPure && hooksExact, `RNG references in ${mods.map(([f]) => f).join(', ')}: ${rngFree ? 'none' : 'FOUND'}; probes ${JSON.stringify(probes)}; runtime hooks exact: ${hooksExact}`);
   const mut = by('mutantMeasure'), off = by('antiOff');
   gate('M-AV', 'anti-vacuity: a probe at the wrong site is caught (M2), and in the B2 order the probe follows the reward to unrealised ticks',
     mm(mut, m => m.valueMismatch) > 0 && mm(off, m => m.eventsOnUnrealised) > 0 && mm(off, m => m.valueMismatch) === 0,
@@ -505,6 +528,120 @@ function erf(x) { const s = Math.sign(x); x = Math.abs(x); const t = 1 / (1 + 0.
   gate('M5', 'the experiment driver (run_h1r.mjs) reproduces the recorder run at the same design position and its reward record, and reports every validity condition true',
     drv.length === SUB.length * 2 && ref.length === drv.length && agree === drv.length && drv.every(d => d.validity && d.validity.valid),
     `${agree}/${drv.length} driver runs identical in fingerprint and reward-record digest to the recorder runs at the same position; valid ${drv.filter(d => d.validity && d.validity.valid).length}/${drv.length}`); }
+
+// MS — MEASUREMENT INSTRUMENT (Director authorisation MS-1; v1.0 §9 items 1–7; D-019 §5 as amended by D-022; D-020).
+// Mechanism quantities only: mismatch counts, record counts, digests. No reward value, return or window is read.
+{ const meas = (runs) => runs.filter(r => r.measurement);
+  const ms = (runs, f) => sum(runs.map(r => f(r.measurement.ms1)));
+  const shd = (runs, f) => sum(runs.map(r => f(r.measurement.shadow)));
+  const sc = (runs, f) => sum(runs.map(r => f(r.measurement.score)));
+  // G16′ (D-019 §3): N1 on the conformed file, and G16.4a1–a6 of the historical verify_G16.js evaluated on the stripped text
+  { const conf = fs.readFileSync(path.join(C.dir, 'render', 'scoring.js'), 'utf8'), b2 = fs.readFileSync(path.join(P.dir, 'render', 'scoring.js'), 'utf8');
+    const n1 = checkN1(conf, b2);
+    const STRIP = C.dir + '-g16strip';
+    if (!fs.existsSync(STRIP)) {
+      fs.cpSync(C.dir, STRIP, { recursive: true });
+      fs.writeFileSync(path.join(STRIP, 'render', 'scoring.js'), conf.split('\n').filter(l => l !== SCORE_PROBE).join('\n'));
+    }
+    const strippedOk = fs.readFileSync(path.join(STRIP, 'render', 'scoring.js'), 'utf8') === b2;
+    const g16 = await new Promise((res) => { const env = { ...process.env }; delete env.NODE_OPTIONS; delete env.H1R; delete env.H1R_TREE;
+      execFile(process.execPath, ['verify_G16.js'], { cwd: path.join(STRIP, 'experiments', 'phase1_0'), env, maxBuffer: 1 << 26 }, (e, out, err) => res(String(out || '') + String(err || ''))); });
+    const a = ['G16.4a1', 'G16.4a2', 'G16.4a3', 'G16.4a4', 'G16.4a5', 'G16.4a6'].map(id => {
+      const l = g16.split(/\r?\n/).find(x => new RegExp(`^(PASS|FAIL)\\s+${id.replace('.', '\\.')}\\b`).test(x)); return [id, l ? l.slice(0, 4) : 'MISSING']; });
+    gate("G16'", "G16′: the conformed render/scoring.js has exactly one `// H1R M-SCORE` line, equal to the template, immediately before the clamp-return; stripped, it is B2's file (SHA-256 4a133166…66d5); G16.4a1–a6 pass on the stripped text",
+      n1.ok && strippedOk && n1.strippedSha256 === B2_SCORING_SHA256 && a.every(([, s]) => s === 'PASS'),
+      `N1 ${JSON.stringify(n1)}; stripped file = B2 ${strippedOk}; verify_G16.js on the stripped text: ${a.map(([i, s]) => `${i} ${s}`).join(', ')}`);
+    const n2 = checkN2(conf);
+    gate('MS-N2', 'N2 (static): the score probe reads finalWeight and trustBonus, calls one sink, assigns nothing, names no other identifier (S4/G9: verify_existing_equivalence.mjs N2-S4G9)',
+      n2.ok, JSON.stringify(n2.per)); }
+  // N4b: run-level neutrality of the whole measurement layer (probes, sink, runtime forwarding, snapshots)
+  { const a = by('onNoRecord'), b = by('onMeasureOnly');
+    const same = a.filter(x => { const y = b.find(z => key(z) === key(x)); return y && y.fp === x.fp && y.cog === x.cog && y.vis === x.vis && y.envDraws === x.envDraws; }).length;
+    gate('MS-N4b', 'N4(b): with and without the measurement layer, fingerprints and cognitive, visual and environment draw counts are identical (7 arms x 3 configurations)',
+      same === a.length && a.length === SUB.length * 7 && b.every(r => r.measurement && r.measurement.counts.attempts === r.envDraws),
+      `${same}/${a.length} (config, arm) pairs identical in fingerprint and in cognitive, visual and environment draw counts; per-attempt forwarding active in ${b.filter(r => r.measurement && r.measurement.counts.attempts > 0).length}/${b.length}`); }
+  // N5′ at every installation: the binding is still the pinned one when each run ends
+  { const all = meas(R.filter(r => !r.error));
+    gate("MS-N5'", "N5′ in every measured run: installation checks passed (installMeasure refuses otherwise) and the binding is unchanged at run end (descriptors, frozen, not a Proxy, pinned score, function identity)",
+      all.length > 0 && all.every(r => r.measurement.sinkBindingAtEnd === true || (r.integrity && r.integrity.sinkBindingAtEnd === true)),
+      `${all.filter(r => r.measurement.sinkBindingAtEnd === true || (r.integrity && r.integrity.sinkBindingAtEnd === true)).length}/${all.length} measured runs (recorder and driver)`); }
+  // N6b: run-level clamp consistency and trust term against the E3 delivery captured at __M7_ARMS__
+  { const runs = main;
+    gate('MS-N6b', 'N6b: for every recorded scoring call Object.is(clamp(F), returned), and the recorded term = 12·(T − 0.5) with T the E3 delivery captured independently at __M7_ARMS__ (all 287 diagnostic runs)',
+      sc(runs, s => s.n6bClampMismatch) === 0 && ms(runs, m => m.n6b.termMismatch) === 0 && runs.every(r => r.measurement.ms1.n6b.pairs === r.measurement.ms1.n6b.e3Deliveries && r.measurement.ms1.n6b.pairs > 0),
+      `scoring calls ${sc(runs, s => s.calls)}; clamp mismatches ${sc(runs, s => s.n6bClampMismatch)}; term mismatches ${ms(runs, m => m.n6b.termMismatch)}; pairs = E3 deliveries in ${runs.filter(r => r.measurement.ms1.n6b.pairs === r.measurement.ms1.n6b.e3Deliveries).length}/${runs.length} runs`); }
+  // recorder reconciliation: every record against the recorder's independent observation
+  { const runs = main;
+    gate('MS-REC1', 'per-tick records: decision flags = step-0 selection writes seen by the recorder, replay flags = the E6 replay branch, flags mutually exclusive, one record per call',
+      ms(runs, m => m.ticks.decisionMismatch + m.ticks.replayMismatch + m.ticks.both) === 0 && runs.every(r => r.measurement.ms1.ticks.calls === r.ticksSeen && r.measurement.ms1.ticks.maxDecisionsPerCall <= 1),
+      `calls ${ms(runs, m => m.ticks.calls)}: decision ${ms(runs, m => m.ticks.decision)}, replay ${ms(runs, m => m.ticks.replay)}, no-commit ${ms(runs, m => m.ticks.noCommit)}; mismatches decision ${ms(runs, m => m.ticks.decisionMismatch)}, replay ${ms(runs, m => m.ticks.replayMismatch)}, both ${ms(runs, m => m.ticks.both)}`);
+    gate('MS-REC2', 'per-attempt records: one per environment draw (= envDraws), each equal to the recorder\'s attempt (call, edge, outcome, goal-entering flag) with prior raw trust (a, s) Object.is-equal to the store read at the attempt',
+      ms(runs, m => m.attempts.mismatch + m.attempts.priorMismatch + m.attempts.goalFlagMismatch) === 0 && runs.every(r => r.measurement.ms1.attempts.measured === r.envDraws && r.measurement.ms1.attempts.recorded === r.envDraws),
+      `attempts ${ms(runs, m => m.attempts.measured)} = envDraws ${sum(runs.map(r => r.envDraws))} (goal-entering ${ms(runs, m => m.attempts.goalEntering)}); mismatches ${ms(runs, m => m.attempts.mismatch)}, prior ${ms(runs, m => m.attempts.priorMismatch)}, goal flag ${ms(runs, m => m.attempts.goalFlagMismatch)}`);
+    gate('MS-REC3', 'reset events: equal, call by call, to the recorder\'s reset hooks, and in number to the runtime counters (goal, cap)',
+      ms(runs, m => m.resets.mismatch) === 0 && runs.every(r => { const x = r.measurement.ms1.resets; return x.goal === x.runtimeGoal && x.cap === x.runtimeCap && x.measured === x.recorded; }),
+      `resets ${ms(runs, m => m.resets.measured)} (goal ${ms(runs, m => m.resets.goal)}, cap ${ms(runs, m => m.resets.cap)}); mismatches ${ms(runs, m => m.resets.mismatch)}`);
+    gate('MS-FLOOR', 'A5 floor-binding counter: every M-FLOOR record equals the recorder\'s recomputation of the branch condition (aggregate > 0 and confidenceState < 10 · aggregate), call by call; ABLATION (E4 null) never raises',
+      ms(runs, m => m.floors.mismatch) === 0 && ms(runs.filter(r => r.arm === 'A2'), m => m.floors.measured) === 0 && ms(runs.filter(r => r.arm === 'A5'), m => m.floors.measured) > 0,
+      `raises ${ms(runs, m => m.floors.measured)} (per arm: ${ARMS.map(a => `${a} ${ms(runs.filter(r => r.arm === a), m => m.floors.measured)}`).join(', ')}); mismatches ${ms(runs, m => m.floors.mismatch)}`); }
+  // trust snapshots: placement (D-020 pin 2) and content
+  { const runs = main, S1 = (r) => r.measurement.ms1.snapshots;
+    gate('MS-SNAP', 'snapshot placement: τ = 1499 snapshot at the runAgentLoop entry with 1,505 completed calls (entry 301 = pressSpace\'s entry + run.js loop l = 300; env phase already 2), before any of that loop\'s pre-work; final snapshot at 3,005 calls; both equal to the recorder\'s store and raw per-phase attempt counts',
+      runs.every(r => { const x = S1(r); return x.count === 2 && x.tau1499Calls === 1505 && x.tau2999Calls === 3005 && x.loopEntry === 301 && x.runtimeLoopIndex === 301 && x.loopEntries === 601 &&
+        x.phase === 2 && x.tau1499StoreMismatch === 0 && x.tau2999StoreMismatch === 0 && x.tau1499RawMismatch === 0 && x.tau2999RawMismatch === 0; }),
+      `${runs.filter(r => S1(r).count === 2 && S1(r).loopEntry === 301 && S1(r).phase === 2).length}/${runs.length} placed; store mismatches ${sum(runs.map(r => (S1(r).tau1499StoreMismatch || 0) + (S1(r).tau2999StoreMismatch || 0)))}; raw-count mismatches ${sum(runs.map(r => (S1(r).tau1499RawMismatch || 0) + (S1(r).tau2999RawMismatch || 0)))}`);
+    const moved = runs.filter(r => S1(r).stepStoreDiffersFromLoop > 0).length;
+    gate('MS-SNAP-AV', 'anti-vacuity: the placement matters — in some runs the store at M-STEP of call 1505 (after loop 300\'s pre-work, which includes decayTrust) differs from the loop-entry snapshot',
+      moved > 0, `${moved}/${runs.length} runs in which the store at M-STEP of call 1505 differs from the loop-entry snapshot (A4, whose store is frozen: ${runs.filter(r => r.arm === 'A4' && S1(r).stepStoreDiffersFromLoop > 0).length})`); }
+  // shadow (v1.0 §8 link ③; D-020 pin 1)
+  { const runs = main;
+    gate('MS-SHADOW', 'candidate records: one score pair per candidate record; recomputed argmax of every step\'s weight sort = bestChoice (step 0 = argmax₁); the A1 weight reconstructed from the record equals the agent\'s weight (Object.is); at most one step-0 sort per call',
+      runs.every(r => r.measurement.shadow.pairingOk && r.measurement.shadow.step0GroupsPerCallMax <= 1) && shd(runs, s => s.groupFaults + s.argmaxMismatch + s.step0ArgmaxMismatch + s.reconstructionMismatch + s.nonFiniteStep0) === 0,
+      `sorts ${shd(runs, s => s.groups)} (step 0: ${shd(runs, s => s.step0Groups)}, candidates ${shd(runs, s => s.step0Candidates)}); argmax mismatches ${shd(runs, s => s.argmaxMismatch)} (step 0: ${shd(runs, s => s.step0ArgmaxMismatch)}); reconstruction mismatches ${shd(runs, s => s.reconstructionMismatch)}; group faults ${shd(runs, s => s.groupFaults)}; non-finite step-0 values ${shd(runs, s => s.nonFiniteStep0)}`);
+    const fl = (a) => shd(runs.filter(r => r.arm === a), s => s.flips);
+    gate('MS-SHADOW0', 'the shadow is exact where T = 0.5 by construction: 0 flips in every ABLATION (A2) and AGGREGATE-ONLY (A5) run',
+      fl('A2') === 0 && fl('A5') === 0 && runs.filter(r => r.arm === 'A2' || r.arm === 'A5').length === SAMPLES.length * 2, `A2 ${fl('A2')}, A5 ${fl('A5')} flips over ${SAMPLES.length} configurations each`);
+    gate('MS-SHADOW-AV', 'anti-vacuity: the shadow detects flips where the delivered T differs from 0.5', ['A1', 'A3', 'A6', 'A7'].some(a => fl(a) > 0),
+      `flip counts (diagnostic material; counts only): ${ARMS.map(a => `${a} ${fl(a)}`).join(', ')}`); }
+  // clamp binding and non-finite finalWeight (reported; a non-finite step-0 value would make measurementClean false)
+  { const runs = main;
+    G.push({ id: 'MS-INFO', name: 'scoring calls: non-finite pre-clamp finalWeight, and calls on which the ±400 clamp binds (pooled over the 287 diagnostic runs; per arm)', status: 'INFO',
+      evidence: `calls ${sc(runs, s => s.calls)}; non-finite F ${sc(runs, s => s.nonFiniteF)}, non-finite trust term ${sc(runs, s => s.nonFiniteT)}; clamp binds ${sc(runs, s => s.clampBinding)} (F > 400: ${sc(runs, s => s.clampBindingHigh)}, F < −400: ${sc(runs, s => s.clampBindingLow)}); per arm ${ARMS.map(a => `${a} ${sc(runs.filter(r => r.arm === a), s => s.clampBinding)}`).join(', ')}` }); }
+  // the driver: measurementClean (D-020 pin 3) and instrument integrity on every driver run
+  { const drv = R.filter(r => !r.error && r.integrity);
+    gate('MS-CLEAN', 'every driver run (incl. forks) is valid with measurementClean true (D-020 pin 3) and its instrument integrity holds: sink binding at end, N6b, argmax, reconstruction, snapshot at entry 301 in phase 2, no draw fault',
+      drv.length === SUB.length * 2 + SUB.length * (3 + FORK_CALLS.length) && drv.every(d => d.validity.valid && d.validity.measurementClean && d.integrity.sinkBindingAtEnd && d.integrity.n6bClampMismatch === 0 &&
+        d.integrity.argmaxMismatchAllSteps === 0 && d.integrity.reconstructionMismatch === 0 && d.integrity.snapshotLoopIndex === 301 && d.integrity.snapshotPhase === 2 && d.integrity.drawFaults === 0),
+      `${drv.filter(d => d.validity.valid && d.validity.measurementClean).length}/${drv.length} valid and clean; clean components false: ${JSON.stringify(drv.flatMap(d => Object.entries(d.integrity.clean).filter(([, v]) => !v).map(([k]) => k)))}`); }
+  // fork gates (v1.0 §9 item 7)
+  { const base = by('driver').filter(r => r.arm === 'A1'), a2 = by('forkBaseA2'), cfg = (r) => `${r.configSeed}/${r.configIndex}`;
+    const find = (rs, r) => rs.find(x => cfg(x) === cfg(r));
+    const ns = by('forkNoSwitch'), z = by('forkAt0'), mid = by('forkMid');
+    gate('FORK-1', 'a no-switch fork (hook armed, never switching) reproduces the original A1 run: fingerprint, reward record and every measurement record identical; no switch recorded',
+      ns.length === SUB.length && ns.every(r => { const b = find(base, r); return b && r.fp === b.fp && r.measurement.digest === b.measurement.digest && r.measurement.digests.full === b.measurement.digests.full && r.measurement.forks.length === 0 && r.validity.valid; }),
+      `${ns.filter(r => { const b = find(base, r); return b && r.fp === b.fp && r.measurement.digests.full === b.measurement.digests.full; }).length}/${ns.length}`);
+    gate('FORK-2', 'a switch at call 0 reproduces the A2 run: fingerprint, reward record and every measurement record identical to the ABLATION run at the same position; the switch is recorded once at call 0',
+      z.length === SUB.length && z.every(r => { const b = find(a2, r); return b && r.fp === b.fp && r.measurement.digest === b.measurement.digest && r.measurement.digests.full === b.measurement.digests.full &&
+        JSON.stringify(r.measurement.forks) === JSON.stringify([[0, 'A2']]) && r.validity.valid; }),
+      `${z.filter(r => { const b = find(a2, r); return b && r.fp === b.fp && r.measurement.digests.full === b.measurement.digests.full; }).length}/${z.length}`);
+    gate('FORK-3', 'a fork equals the original before its switch: for switches at calls 705, 1505 and 2985, every measurement record of the calls before the switch is identical to the original A1 run (prefix digest); the switch is recorded once at its call',
+      mid.length === SUB.length * FORK_CALLS.length && mid.every(r => { const b = find(base, r), c = r.fork.call; return b && r.measurement.digests.prefix[c] === b.measurement.digests.prefix[c] &&
+        JSON.stringify(r.measurement.forks) === JSON.stringify([[c, 'A2']]) && r.validity.valid; }),
+      `${mid.filter(r => { const b = find(base, r); return b && r.measurement.digests.prefix[r.fork.call] === b.measurement.digests.prefix[r.fork.call]; }).length}/${mid.length} prefixes identical`);
+    const acts = SUB.filter(s => mid.filter(r => cfg(r) === `${s.configSeed}/${s.configIndex}`).some(r => { const b = find(base, r), c2 = Math.min(r.fork.call + 25, 3005);
+      return b && r.measurement.digests.prefix[c2] !== b.measurement.digests.prefix[c2]; })).length;
+    gate('FORK-AV', 'anti-vacuity: the switch acts — for every configuration some fork differs from the original within 25 calls of its switch, and the A1 and A2 originals differ',
+      acts === SUB.length && base.every(b => { const x = find(a2, b); return x && x.fp !== b.fp; }),
+      `configurations with a fork differing within 25 calls: ${acts}/${SUB.length}; per fork: ${mid.map(r => { const b = find(base, r), c2 = Math.min(r.fork.call + 25, 3005); return `${r.fork.call}:${b && r.measurement.digests.prefix[c2] !== b.measurement.digests.prefix[c2] ? 'differs' : 'same'}`; }).join(' ')}`);
+    // the switch changes the E3/E4 deliveries only: A1 and A2 agree on every other arm predicate (frozen arms.js)
+    const armsM = await import(pathToFileURL(path.join(C.dir, 'experiments', 'm7', 'arms.js')).href);
+    const preds = (arm) => { armsM.reset(); armsM.configure({ arm, agentSeed: AGENT_SEED }); const p = [armsM.allowsQUpdate(), armsM.allowsTrustUpdate(), armsM.usesUniformActionSelection(), armsM.pinsPredictionErrorPathway(),
+      armsM.bayesianTrustFor(1, 2, 0.8), armsM.aggregateTrustFor(0.7)]; armsM.reset(); return p; };
+    const p1 = preds('A1'), p2 = preds('A2');
+    gate('FORK-E', 'the fork switch (arms.configure to A2) changes only the E3 and E4 deliveries: A1 and A2 agree on every other frozen arm predicate',
+      p1.slice(0, 4).join() === p2.slice(0, 4).join() && p1[4] === 0.8 && p2[4] === 0.5 && p1[5] === 0.7 && p2[5] === null,
+      `A1 ${JSON.stringify(p1)} | A2 ${JSON.stringify(p2)} (Q update, trust update, uniform selection, PE pin, E3(raw 0.8), E4(raw 0.7))`); }
+}
 
 // R3 — CONFIGURATION-SCOPED ENVIRONMENT STREAM (Director ruling R3). Arithmetic, unit and run-level evidence.
 { const L = ENV_STREAM.L, RES = ENV_STREAM.reserve, M32 = 1n << 32n;

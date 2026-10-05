@@ -55,6 +55,19 @@ function patchMain(L) {
   a = a.filter(i => L[i + 1] === '  window.lastReasoning = {');
   must(a.length === 1, 'selection anchor ' + a.length);
   L.splice(a[0], 0, R + 'sel(step, currentKey, nextKey, (topChoices[0] ? topChoices[0].key : null), (exploreChoice ? exploreChoice.key : null), startNeuron.userData.neighbors);');
+
+  // MS-1: runAgentLoop entry (independent of the M-LOOP probe; placed as the function's first statement)
+  a = idx(L, l => l === 'function runAgentLoop() {');
+  must(a.length === 1, 'runAgentLoop anchor ' + a.length);
+  L.splice(a[0] + 1, 0, R + 'loop();');
+  return L;
+}
+
+// MS-1: the inputs of updateBehavior's aggregate-floor branch, immediately before it (the recorder recomputes it)
+function patchBehavior(L) {
+  const a = idx(L, l => l === '    if (aggregateTrust !== null && aggregateTrust > 0) {');
+  must(a.length === 1, 'aggregate floor anchor ' + a.length);
+  L.splice(a[0], 0, R + 'floorCheck(aggregateTrust, confidenceState);');
   return L;
 }
 
@@ -81,5 +94,6 @@ export async function load(url, ctx, next) {
   if (!r.source || !root || !u.startsWith(root)) return r;
   if (u === root + '/main.js') return { ...r, source: patchMain(src(r).split('\n')).join('\n') };
   if (u === root + '/render/episodeManager.js') return { ...r, source: patchEM(src(r).split('\n')).join('\n') };
+  if (u === root + '/render/behavior.js') return { ...r, source: patchBehavior(src(r).split('\n')).join('\n') };
   return r;
 }

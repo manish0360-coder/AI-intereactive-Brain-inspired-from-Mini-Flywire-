@@ -4,14 +4,19 @@
 //   argv[2] = JSON { tree, configSeed, configIndex, agentSeed, arm, h1r: 'on'|'off',
 //                    trustMode, record: bool, ticks, envBlock: 'pilot'|'heldout', envIndex }
 //   envBlock/envIndex (H1R on only): the run's design position for the R3 environment stream.
+//   measure: true attaches the measurement layer (measure_install.mjs, N5′ checked at installation).
 // Prints '@@H1R@@' + JSON. With record=false only the fingerprint is reported.
+// MS-1: with record and measure, every measurement record is reconciled against this recorder's own independent
+// observation (per-tick flags, per-attempt records with prior trust, resets, floor raises, both trust snapshots,
+// E3 deliveries for N6b), and the shadow integrity checks run (shadow.mjs). Counts only leave the process.
 // ==========================================================
 import fs from 'node:fs';
 import { register } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { installH1R } from './runtime.mjs';
-import { installMeasure } from './measure.mjs';
+import { installMeasure, verifySinkBinding } from './measure_install.mjs';
+import { analyzeShadow } from './shadow.mjs';
 import { blockCodeOf } from './env_seed.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -23,7 +28,9 @@ const { Q } = await import(TREE_URL + '/render/qlearning.js');
 const envPosition = (IN.h1r === 'on' && IN.envBlock !== undefined)
   ? { agentSeed: IN.agentSeed ?? 20260819000, blockCode: blockCodeOf(IN.envBlock), acceptedConfigIndex: IN.envIndex } : null;
 const H = IN.h1r === 'on' ? await installH1R({ tree: IN.tree, trustMode: IN.trustMode || 'traversal', envPosition }) : null;
-const MEAS = IN.measure ? installMeasure() : null;   // D-5 measurement layer (observational)
+const MEAS = IN.measure ? installMeasure() : null;   // D-5 measurement layer (observational); N5′ checked here
+const PINNED_SCORE = MEAS ? MEAS.score : null;
+if (MEAS && H) await H.attachMeasure(MEAS);          // MS-1: per-attempt, reset and snapshot forwarding
 // Independent mirror of the environment stream: the R3 derived seed when the run carries a design position,
 // else B2's instrumentation/rng.js initRng derivation (environment = makeRng(seed ^ 0x5EED)).
 // A separate generator instance owned by this recorder: it never touches the agent's named streams. Used to
@@ -55,6 +62,8 @@ const S = {
   realized: new Set(),
   // R1: every learning write of a tick is resolved against that tick's realised transition
   T: null, lastMove: null, envDrawsSeen: 0,
+  // MS-1 reconciliation: the recorder's own per-tick, per-attempt, reset, floor, loop-entry and E3 observations
+  ms1: { sel: [], rep: [], e3: [], attempts: [], resets: [], floors: [], loopEntries: 0, snapLoop: null, snapStep: null },
   r1: { ticks: { move: 0, slip: 0, goal: 0, self: 0, none: 0, nonedge: 0 },
     learn: { n: 0, onUnrealised: 0, mismatch: 0, missing: 0, duplicate: 0 },
     q: { n: 0, onUnrealised: 0, onSlip: 0, onSlipPositive: 0, mismatch: 0, missing: 0, duplicate: 0, nonEdge: 0,
@@ -72,7 +81,12 @@ const S = {
              otherRetry: { n: 0, succ: 0, sumP: 0, sumPQ: 0 }, otherFresh: { n: 0, succ: 0, sumP: 0, sumPQ: 0 },
              otherP1: { n: 0, succ: 0, sumP: 0, sumPQ: 0 }, otherP2: { n: 0, succ: 0, sumP: 0, sumPQ: 0 } } },
 };
-const newTick = () => ({ learn: [], q: [], tr: [], min: [], goal: null, move: null, p: null, index: null });
+const newTick = () => ({ learn: [], q: [], tr: [], min: [], goal: null, move: null, p: null, index: null, prior: null });
+// raw store values of a directed key, read at the hook (no write)
+const priorOf = (a, b) => { const k = a + '->' + b; return [trust.pathAttempts.get(k) || 0, trust.pathSuccesses.get(k) || 0]; };
+// the trust store as [[key, a, s]], every key of either map
+const storeList = () => [...new Set([...trust.pathAttempts.keys(), ...trust.pathSuccesses.keys()].map(String))]
+  .map(k => [k, trust.pathAttempts.get(k) || 0, trust.pathSuccesses.get(k) || 0]);
 // Resolve one finished tick. The realised transition comes from the hooks (both orders): a goal reach
 // (goal hook; the goal move never draws), else the E1 site (move hook: from, intended, traversed).
 function finishTick(T, drawsThisTick) {
@@ -135,6 +149,9 @@ function finishTick(T, drawsThisTick) {
     if (toGoal) { r.goalAttempts.n++; if (ok) r.goalAttempts.successes++; else r.goalAttempts.slips++; }
   }
   S.prevSlip = kind === 'slip' ? { from, to } : null;
+  // MS-1: the recorder's per-attempt record (one per drawn edge attempt), prior raw trust read at the hook
+  if (drawsThisTick === 1 && (kind === 'move' || kind === 'slip' || kind === 'goal'))
+    S.ms1.attempts.push([T.index, from, to, kind !== 'slip' ? 1 : 0, to === N(S.goalId) ? 1 : 0, T.prior ? T.prior[0] : null, T.prior ? T.prior[1] : null]);
   if (MEAS) S.tickSummary.set(T.index, { learn: T.learn.length, reward: T.q.length ? T.q[0].reward : undefined, realised });
 }
 function closeTick() {
@@ -167,9 +184,10 @@ if (IN.record) {
       closeTick(); S.T = newTick(); if (globalThis.__H1R__) globalThis.__H1R__.r1 = null;
       S.tick++; S.T.index = S.tick; S.prevRef = globalThis.lastReasoning; S.replayThis = false;
       if (S.tick === 0) { S.q0 = qSnap(); S.t0 = tSnap(); }
+      if (S.tick === 1505) S.ms1.snapStep = storeList();   // MS-1 anti-vacuity: the store at M-STEP of call 1505 (after loop pre-work)
       if (S.tick % 100 === 0) trustCheck();
     },
-    replayBranch() { S.replayThis = true; },
+    replayBranch() { S.replayThis = true; S.ms1.rep[S.tick] = (S.ms1.rep[S.tick] || 0) + 1; },
   };
   let armsObj;
   Object.defineProperty(globalThis, '__M7_ARMS__', {
@@ -177,7 +195,7 @@ if (IN.record) {
     get() { return armsObj; },
     set(v) {
       armsObj = {
-        bayesianTrustFor(f, t, raw) { const d = v.bayesianTrustFor(f, t, raw); S.e3.n++;
+        bayesianTrustFor(f, t, raw) { const d = v.bayesianTrustFor(f, t, raw); S.e3.n++; S.ms1.e3.push(d);
           if (d === raw) S.e3.pass++; else if (d === 0.5) S.e3.half++; else S.e3.other++; return d; },
         aggregateTrustFor(raw) { const d = v.aggregateTrustFor(raw); S.e4.n++;
           if (d === null && raw !== null) S.e4.nul++; else S.e4.pass++; return d; },
@@ -196,7 +214,7 @@ if (IN.record) {
       }
       if (S.awaitFresh && globalThis.lastReasoning === S.preResetRef) S.goals.stalePostReset++;
       S.realized.add(aCur + '->' + nxt);
-      if (S.T) { S.T.goal = { from: aCur, to: nxt }; S.T.p = env.trueP(aCur, nxt); }
+      if (S.T) { S.T.goal = { from: aCur, to: nxt }; S.T.p = env.trueP(aCur, nxt); S.T.prior = priorOf(aCur, nxt); }
       // R2 / D-1: under H1R a realised goal entry is credited like any traversal (a += 1, s += 1)
       if (h1rOn() && !frozenTrust() && isEdge(aCur, nxt)) {
         const k = aCur + '->' + nxt;
@@ -208,7 +226,7 @@ if (IN.record) {
     move(from, to, traversed, gReset) {
       if (S.T) S.T.move = { from, to, traversed, gReset };
       if (to === null || to === undefined || gReset) return;
-      if (S.T && isEdge(from, to)) S.T.p = env.trueP(from, to);
+      if (S.T && isEdge(from, to)) { S.T.p = env.trueP(from, to); S.T.prior = priorOf(from, to); }
       if (S.awaitFresh) { if (globalThis.lastReasoning === S.preResetRef) S.stalePostResetMoves++; else S.awaitFresh = false; }
       const self = N(from) === N(to), edge = isEdge(from, to);
       inc(S.moves, self ? 'selfNoop' : edge ? (traversed ? 'edgeSuccess' : 'edgeSlip') : 'NONEDGE');
@@ -224,13 +242,18 @@ if (IN.record) {
       if (S.T) S.T.q.push({ s: aLast, a: nxt, sp: aCur, reward });
     },
     tr(prev, current, transitions) { S.transitionsRef = transitions; S.tr.n++; if (!isEdge(prev, current)) S.tr.nonEdge++; if (S.T) S.T.tr.push({ prev, current }); },
-    reset() { S.preResetRef = globalThis.lastReasoning; S.awaitFresh = true; S.realized = new Set(); S.lastMove = null; },
+    reset(kind) { S.preResetRef = globalThis.lastReasoning; S.awaitFresh = true; S.realized = new Set(); S.lastMove = null; S.ms1.resets.push([S.tick, kind]); },
+    // MS-1: the A5 aggregate floor, recomputed from the inputs of updateBehavior's branch (TRUST_SCALE 10, B2)
+    floorCheck(aggregateTrust, confidenceState) { if (aggregateTrust !== null && aggregateTrust > 0 && confidenceState < aggregateTrust * 10) S.ms1.floors.push(S.tick); },
+    // MS-1: runAgentLoop entry; at the entry with 1,505 completed calls, the store, the phase and the entry index
+    loop() { S.ms1.loopEntries++; if (S.tick + 1 === 1505) S.ms1.snapLoop = { entry: S.ms1.loopEntries - 1, phase: env.getPhase(), store: storeList() }; },
     decay(rate) {
       if (frozenTrust()) return;
       for (const m of [S.e2a, S.e2s]) for (const [k, v] of [...m]) { const d = v * rate; if (d < 0.01) m.delete(k); else m.set(k, d); }
     },
     sel(step, cur, nextKey, top, explore, nb) {
       if (step !== 0) return;
+      S.ms1.sel[S.tick] = (S.ms1.sel[S.tick] || 0) + 1;
       S.sel.n++;
       if (N(nextKey) === N(top)) S.sel.chosenArgmax++;
       if (explore !== null && N(nextKey) === N(explore)) S.sel.chosenExplore++;
@@ -263,6 +286,7 @@ S.goalId = env.generateAccepted(IN.configSeed, IN.configIndex).cfg.goal;
 const rec = await runOnce({ configSeed: IN.configSeed, configIndex: IN.configIndex, agentSeed: IN.agentSeed,
   arm: IN.arm, envMode: 'on', creditMode: 'on', pin: 'on', tickUnit: 'step', ticks: IN.ticks || 3000,
   crashAtTick: null, warmStore: false });
+if (MEAS && H) H.finalSnapshot();                     // MS-1: as run_h1r.mjs, immediately after runOnce
 const out = { configSeed: IN.configSeed, configIndex: IN.configIndex, arm: IN.arm, h1r: IN.h1r, trustMode: IN.trustMode || null,
   record: !!IN.record, fp: rec.fingerprint, cog: rec.artifacts.cogDraws, completed: rec.outcome.completed, crashed: rec.outcome.crashed,
   // R3: the stream actually registered (runtime log), the mirror's seed, and the per-run draw consumption
@@ -310,7 +334,65 @@ if (MEAS) {
     }
     for (const [i, t] of S.tickSummary) if (t.learn > 0 && !seen.has(i)) presence++;
     Object.assign(meas, { compared, presenceMismatch: presence, valueMismatch: value, eventsOnUnrealised: onUnrealised, ticksSeen: S.tick + 1 });
+    meas.ms1 = reconcileMs1(m);
   }
+  meas.sinkBindingAtEnd = verifySinkBinding(globalThis, PINNED_SCORE).ok;
+  const { arbitrate } = await import(TREE_URL + '/render/executiveController.js');
+  const sh = analyzeShadow(m, arbitrate);
+  meas.shadow = { pairingOk: sh.pairingOk, groups: sh.groups, groupFaults: sh.groupFaults, argmaxMismatch: sh.argmaxMismatch, step0Groups: sh.step0Groups,
+    step0Candidates: sh.step0Candidates, step0ArgmaxMismatch: sh.step0ArgmaxMismatch, step0GroupsPerCallMax: sh.step0GroupsPerCallMax,
+    reconstructionMismatch: sh.reconstructionMismatch, flips: sh.flips, nonFiniteStep0: sh.nonFiniteStep0 };
+  meas.score = { calls: sh.scoreCalls, candidateRecords: sh.candidateRecords, nonFiniteF: sh.nonFiniteF, nonFiniteT: sh.nonFiniteT,
+    clampBinding: sh.clampBinding, clampBindingHigh: sh.clampBindingHigh, clampBindingLow: sh.clampBindingLow, n6bClampMismatch: sh.n6bClampMismatch };
+  meas.counts = { decisions: m.decisions.length, replays: m.replays.length, attempts: m.attempts.length, resets: m.resets.length, floors: m.floors.length,
+    snapshots: m.snapshots.map(x => [x[0], x[1], x[2].length]), forks: m.forks.length };
   out.measurement = meas;
 }
 process.stdout.write('@@H1R@@' + JSON.stringify(out));
+
+// MS-1: every measurement record against the recorder's independent observation (counts only)
+function reconcileMs1(m) {
+  const r = {};
+  // per-tick flags: decision = a step-0 selection write (the recorder's sel hook), replay = the E6 replay flag
+  { const n = m.calls, dec = new Array(n).fill(0), rep = new Array(n).fill(0);
+    for (const [c] of m.decisions) dec[c]++; for (const c of m.replays) rep[c]++;
+    let dm = 0, rm = 0, both = 0, D = 0, Rr = 0, Nn = 0;
+    for (let i = 0; i < n; i++) { if (dec[i] !== (S.ms1.sel[i] || 0)) dm++; if (rep[i] !== (S.ms1.rep[i] || 0)) rm++;
+      if (dec[i] && rep[i]) both++; else if (dec[i]) D++; else if (rep[i]) Rr++; else Nn++; }
+    r.ticks = { calls: n, decisionMismatch: dm, replayMismatch: rm, both, decision: D, replay: Rr, noCommit: Nn, maxDecisionsPerCall: Math.max(0, ...dec) }; }
+  // per-attempt: call, edge, outcome, goal-entering flag and prior raw trust, record by record
+  { const a = m.attempts, b = S.ms1.attempts; let mism = 0, prior = 0, goal = 0;
+    for (let k = 0; k < Math.max(a.length, b.length); k++) { const x = a[k], y = b[k];
+      if (!x || !y || x[0] !== y[0] || x[1] !== N(y[1]) || x[2] !== N(y[2]) || x[3] !== y[3]) { mism++; continue; }
+      if (x[4] !== y[4]) goal++; if (!Object.is(x[5], y[5]) || !Object.is(x[6], y[6])) prior++; }
+    r.attempts = { measured: a.length, recorded: b.length, envDraws: env.getCounters().envDraws, mismatch: mism, goalFlagMismatch: goal, priorMismatch: prior,
+      goalEntering: a.filter(x => x[4] === 1).length }; }
+  // resets: measurement (runtime forwarding) = recorder's reset hook = runtime counters
+  { const a = m.resets, b = S.ms1.resets; let mism = 0;
+    for (let k = 0; k < Math.max(a.length, b.length); k++) if (!a[k] || !b[k] || a[k][0] !== b[k][0] || a[k][1] !== b[k][1]) mism++;
+    r.resets = { measured: a.length, recorded: b.length, mismatch: mism, runtimeGoal: H ? H.counters.resets.goal : null, runtimeCap: H ? H.counters.resets.cap : null,
+      goal: a.filter(x => x[1] === 'goal').length, cap: a.filter(x => x[1] === 'cap').length }; }
+  // floor raises: M-FLOOR records = the recorder's recomputation of the branch condition, call by call
+  { const a = m.floors, b = S.ms1.floors; let mism = 0;
+    for (let k = 0; k < Math.max(a.length, b.length); k++) if (a[k] !== b[k]) mism++;
+    r.floors = { measured: a.length, recorded: b.length, mismatch: mism }; }
+  // trust snapshots: placement (entry index, phase, 1,505 calls) and content (store a, s; raw per-phase attempts)
+  { const byKey = (rows) => new Map(rows.map(e => [String(e[0]), e]));
+    const diff = (snapRows, store) => { const x = byKey(snapRows), y = byKey(store); let d = 0;
+      for (const k of new Set([...x.keys(), ...y.keys()])) { const p = x.get(k), q = y.get(k);
+        if (!Object.is(p ? p[1] : 0, q ? q[1] : 0) || !Object.is(p ? p[2] : 0, q ? q[2] : 0)) d++; } return d; };
+    const rawOf = (lo, hi) => { const mm = new Map(); for (const a of S.ms1.attempts) { const tau = a[0] - 5; if (tau >= lo && tau <= hi) { const k = a[1] + '->' + a[2]; mm.set(k, (mm.get(k) || 0) + 1); } } return mm; };
+    const rawDiff = (snapRows, mm) => { const x = byKey(snapRows); let d = 0;
+      for (const k of new Set([...x.keys(), ...mm.keys()])) { const p = x.get(k); if ((p ? p[3] : 0) !== (mm.get(k) || 0)) d++; } return d; };
+    const s1 = m.snapshots.find(x => x[0] === 'tau1499'), s2 = m.snapshots.find(x => x[0] === 'tau2999'), L = S.ms1.snapLoop;
+    r.snapshots = { count: m.snapshots.length, tau1499Calls: s1 ? s1[1] : null, tau2999Calls: s2 ? s2[1] : null,
+      loopEntry: L ? L.entry : null, phase: L ? L.phase : null, runtimeLoopIndex: H ? H.instrument.snapshotLoop : null, loopEntries: S.ms1.loopEntries,
+      tau1499StoreMismatch: s1 && L ? diff(s1[2], L.store) : null, tau2999StoreMismatch: s2 ? diff(s2[2], storeList()) : null,
+      tau1499RawMismatch: s1 ? rawDiff(s1[2], rawOf(0, 1499)) : null, tau2999RawMismatch: s2 ? rawDiff(s2[2], rawOf(1500, 2999)) : null,
+      stepStoreDiffersFromLoop: L && S.ms1.snapStep ? diff(L.store.map(e => [...e, 0]), S.ms1.snapStep) : null }; }
+  // N6b: k-th score pair against the k-th E3 delivery: t = 12·(T − 0.5) exactly (clamp consistency: shadow.mjs)
+  { let term = 0; const n = Math.min(m.score.length / 2, S.ms1.e3.length);
+    for (let k = 0; k < n; k++) if (!Object.is(m.score[2 * k + 1], 12 * (S.ms1.e3[k] - 0.5))) term++;
+    r.n6b = { pairs: m.score.length / 2, e3Deliveries: S.ms1.e3.length, termMismatch: term }; }
+  return r;
+}
