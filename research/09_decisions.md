@@ -7,6 +7,42 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-032 — H1-R final study closure: closed as a VOID study (documentation only)
+
+**Date:** 2026-10-06 · **Authority:** Research Director "H1-R final study closure" ruling (2026-10-06), after the lodging commits `e16ef7e` and `d4e9011` · **Status:** in force; no executable effect
+**Scope:** governance record only.
+- It changes no scientific design, pre-registration (v1.0 `c52e7337…a836`), analysis (`analyze.js` `dae6012c…`), orchestrator (`orchestrate.mjs` `6162f8c2…`), instrument, registry, seed, raw record or stage configuration.
+- It reports no scientific effect estimate.
+
+### 1. Ruling
+H1-R is formally **CLOSED as a VOID study**. No further H1-R experimental execution is authorized.
+
+### 2. Record (FACT)
+- **Stage 1 completed.** The frozen pilot ran once under the Director's authorization: indices 0–4 × seeds 20260819004–008 × arms A1–A7, plus 7 determinism re-runs, 182 jobs.
+  - Its mechanical integrity check passed 16/16.
+  - Dataset digest `efb48b05d16996facdae5f1e5e1053020b0799589c7c382f51c6d2cfd6db555c`; manifest `39337cc7bf9446b22fd826943a2bf3537fec9b3f3653098cd90a04bb1bb104da`; lodged in `e16ef7e`.
+- **The preregistered extension was required and completed.** The frozen routing action after Stage 1 was `EXTENSION_REQUIRED` (v1.0 §13). The one extension ran once under the Director's authorization: indices 5–9 × the same seeds × the same arms, plus 7 determinism re-runs, 182 jobs.
+  - Its mechanical integrity check passed 17/17, and the original Stage-1 records were untouched.
+  - Dataset digest `031fbf1fc89e937d6a28ceed21c12c2dd0f3d5ecda1b45710f7c2b22f47a11aa`; manifest `8a341a7718e9c777e4b228aa26da3fa0ac9912ad1461e81083dc5891e31ce375`; lodged in `d4e9011`.
+- **The extension data were preserved.** Each raw dataset has a second, byte-identical copy that was verified by two independent hash passes.
+  - Both copies are on the machine's one physical disk. No independent storage was available. This limit stays open.
+- **Controlled routing returned VOID.** One controlled read of the lodged Stage-1 decision record, limited to four routing fields, returned `outcome: VOID`, `extensionTaken: true`, `extensionUnavailable: false`, `Sstar: null`.
+  - Which VOID condition applied, and every F-11, power and `summary` field, remain unread.
+- **Stage 2 was therefore not reachable under the frozen protocol.** The orchestrator's Stage-2 command refuses a lodged outcome other than `PROCEED`.
+  - **Stage 2 was not executed.** No Stage-2 or fork data exist. The held-out block 900500 and seeds 20260819100–119 were not consumed, and no new seed was generated.
+- **Registry:** unchanged. The five H1-R trajectory records still say `executed: false`. Their retirement or any other administrative cleanup is a separate question, not decided here.
+
+### 3. What this record does not claim
+- No scientific effect estimate is reported.
+- No claim is made that H1 was supported or rejected.
+- Stage 1 and the extension are not treated as confirmatory evidence. v1.0 §13 states that Stage 1 is never reported as evidence for or against H1.
+
+### 4. Disclosures that stand
+- D-031 (the controlled-unblinding deviation) remains disclosed as written. The later routing read was limited to the four routing fields above.
+- The derived `stage_records/stage1_input.json` and its sidecar are untracked. The raw records stay in the git-ignored `experiments/h1r/data/`.
+
+---
+
 ## D-031 — H1-R Stage 1: controlled-unblinding protocol-deviation note (documentation only)
 
 **Date:** 2026-10-06 · **Authority:** Research Director "Stage-1 final preservation before extension" ruling (2026-10-06), after the Stage-1 lodging commit `e16ef7e` · **Status:** record of a deviation; no executable effect
