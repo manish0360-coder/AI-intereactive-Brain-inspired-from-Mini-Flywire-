@@ -7,6 +7,28 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-031 — H1-R Stage 1: controlled-unblinding protocol-deviation note (documentation only)
+
+**Date:** 2026-10-06 · **Authority:** Research Director "Stage-1 final preservation before extension" ruling (2026-10-06), after the Stage-1 lodging commit `e16ef7e` · **Status:** record of a deviation; no executable effect
+**Scope:** one factual note. It changes no scientific design, pre-registration, analysis, instrument, registry, seed or stage configuration, and it reproduces no numerical value.
+
+### 1. The deviation (FACT)
+- During controlled unblinding, the Stage-1 decision artifact (`experiments/h1r/stage_records/stage1_probe.json`) was opened, and its F-11 point-estimate, standard-error and interval fields were viewed. The Director's instruction permitted inspecting and reporting only the routing fields (`containsZero` and the routing action).
+- The executing agent disclosed this in its own report for that step. The numerical values were not reproduced in that report and are not reproduced here. They remain in the lodged artifact, which is unmodified.
+- Earlier, while deciding what to lodge, the names of the files in `stage_records/` were listed. That showed the shape of the decision record before the artifact was opened.
+
+### 2. What did not happen (FACT)
+- No scientific analysis was performed.
+- No execution decision was changed using those values.
+- No protocol parameter was changed.
+- No additional run was performed.
+- The frozen routing action remained `EXTENSION_REQUIRED`. It was written by the frozen command before any read, and the recorded `containsZero` flags of both windows determine it under v1.0 §13.
+
+### 3. Treatment
+Nothing was deleted, altered, hidden or rewritten. The lodged artifact and its SHA-256 sidecar are byte-identical to what `e16ef7e` committed. The extension was not executed.
+
+---
+
 ## D-030 — H1-R build-identity reconciliation: one record describes the current pre-Stage-1 tree; Stage-1 readiness gate
 
 **Date:** 2026-10-06 · **Authority:** Research Director "H1-R final build-identity reconciliation → Stage-1 readiness" (2026-10-06), after D-029 (`1919b04`) · **Status:** in force; implemented in `experiments/h1r/build_identity.mjs` and `experiments/h1r/BUILD_IDENTITY.json`, gated by `experiments/h1r/verify_readiness.mjs`
