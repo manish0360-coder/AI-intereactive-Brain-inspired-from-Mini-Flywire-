@@ -6,7 +6,9 @@
 // in-memory record) kept that probe from starting a real Stage 1. D-029 replaces it with o23RegistryIntegrity(O, typed):
 // read-only, in process, no process at all. This gate proves the property without relying on any registry behaviour.
 //   G  repository facts, read with git before anything runs: the change is confined to O23; the instrument, the
-//      registry and the build identity are unchanged since Milestone B (6fc5a9e)
+//      registry and the build identity are unchanged since Milestone B (6fc5a9e). D-030: G1, G3 and G4 read the
+//      D-029 commit (1919b04) rather than the working tree, so they keep their meaning after D-030 re-binds the
+//      build-identity record; G2 still reads the working tree; verify_readiness.mjs gates every change after 1919b04
 //   S  static: O23's code contains no process, CLI, authorisation, environment or execution path, and the whole gate
 //      file starts no orchestrator process
 //   T  dynamic, test doubles: every child-process API is trapped and the orchestrator and registry modules are wrapped
@@ -31,7 +33,9 @@ if (process.env.H1R_STAGE_AUTHORISED !== undefined) { console.error('verify_o23:
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '..', '..');
 const MILESTONE_B = '6fc5a9eb7a3e27696b78b439765fa6fd81d73836';
-const VO = 'experiments/h1r/verify_orchestrator.mjs';
+const D029 = '1919b04d6fd4fcae4a5a2728e9926219e782c59e';
+const RECORD = 'experiments/h1r/BUILD_IDENTITY.json';
+const VO ='experiments/h1r/verify_orchestrator.mjs';
 const EVID = path.join(HERE, process.env.H1R_EVIDENCE || 'evidence_o23');
 const sha = (s) => crypto.createHash('sha256').update(s).digest('hex');
 const lf = (b) => b.toString('utf8').replace(/\r\n/g, '\n');
@@ -41,29 +45,30 @@ const ok = (id, title, pass, detail) => { results.push({ id, title, pass: !!pass
 
 // ================= G: repository facts (git, before any trap is installed) =================
 const git = (...a) => execFileSync('git', ['-C', REPO, ...a], { encoding: 'utf8', maxBuffer: 1 << 28 });
-const changed = [...new Set([...git('diff', '--name-only', MILESTONE_B).split('\n'), ...git('diff', '--name-only', '--cached', MILESTONE_B).split('\n'),
-  ...git('ls-files', '-o', '--exclude-standard', '--', 'experiments/h1r', 'experiments/registry').split('\n').filter(f => f.startsWith('experiments/h1r/verify_o23') || f.startsWith('experiments/h1r/evidence_o23/'))])].filter(Boolean).sort();
+const changed = git('diff', '--name-only', MILESTONE_B, D029).split('\n').filter(Boolean).sort();
 const ALLOWED = new Set([VO, 'experiments/h1r/verify_o23.mjs', 'experiments/h1r/README.md', 'research/09_decisions.md']);
 const outside = changed.filter(f => !ALLOWED.has(f) && !f.startsWith('experiments/h1r/evidence_o23/'));
-ok('G1', 'scope: since Milestone B (6fc5a9e) only O23, its safety gate and evidence, the README and the decision log change', outside.length === 0 && changed.includes(VO),
+ok('G1', 'scope: the D-029 commit (1919b04) changes, since Milestone B (6fc5a9e), only O23, its safety gate and evidence, the README and the decision log', outside.length === 0 && changed.includes(VO),
   `changed: ${changed.filter(f => !f.startsWith('experiments/h1r/evidence_o23/')).join(', ')}; outside: ${outside.join(', ') || 'none'}`);
 const FROZEN = ['experiments/h1r/analyze.js', 'experiments/h1r/orchestrate.mjs', 'experiments/h1r/runtime.mjs', 'experiments/h1r/measure.mjs', 'experiments/h1r/measure_install.mjs',
   'experiments/h1r/shadow.mjs', 'experiments/h1r/env_seed.mjs', 'experiments/h1r/run_h1r.mjs', 'experiments/h1r/conformance_transform.mjs', 'experiments/h1r/build_tree.mjs',
-  'experiments/h1r/BUILD_IDENTITY.json', 'experiments/h1r/data', 'experiments/registry', 'research/preregistrations', 'experiments/m7', '.gitattributes',
+  'experiments/h1r/data', 'experiments/registry', 'research/preregistrations', 'experiments/m7', '.gitattributes',
   'experiments/h1r/evidence_milestone_b', 'experiments/h1r/evidence_milestone_a', 'experiments/h1r/evidence_orchestrator', 'experiments/h1r/evidence_analysis', 'experiments/h1r/evidence_ms1'];
 const frozenDiff = git('diff', '--name-only', MILESTONE_B, '--', ...FROZEN).trim();
-ok('G2', 'unchanged since Milestone B: analyze.js, orchestrate.mjs, every instrument file, the build-identity record, the data directory, the registry, the pre-registrations, the M7 substrate, .gitattributes and every earlier evidence directory',
+ok('G2', 'unchanged since Milestone B, in the working tree: analyze.js, orchestrate.mjs, every instrument file, the data directory, the registry, the pre-registrations, the M7 substrate, .gitattributes and every earlier evidence directory',
   frozenDiff === '', frozenDiff || 'none changed');
-const REC = JSON.parse(fs.readFileSync(path.join(HERE, 'BUILD_IDENTITY.json'), 'utf8'));
-const entries = Object.values(REC.files).flat();
-const differs = entries.filter(e => git('hash-object', '--', e.path).trim() !== e.gitBlob).map(e => e.path);
-ok('G3', 'build identity: every file the Milestone-B record lists still has its recorded blob except verify_orchestrator.mjs, the one verifier D-029 changes (the record itself is unchanged; it stays bound to 6fc5a9e)',
-  same(differs, [VO]), `differing: ${differs.join(', ') || 'none'}; listed ${entries.length}`);
+const REC = JSON.parse(fs.readFileSync(path.join(HERE, 'BUILD_IDENTITY.json'), 'utf8'));       // the current record (T4)
+const REC_B = JSON.parse(git('cat-file', 'blob', `${MILESTONE_B}:${RECORD}`));                  // the Milestone-B record
+const recordAtD029 = git('diff', '--name-only', MILESTONE_B, D029, '--', RECORD).trim() === '';
+const entries = Object.values(REC_B.files).flat();
+const differs = entries.filter(e => git('rev-parse', `${D029}:${e.path}`).trim() !== e.gitBlob).map(e => e.path);
+ok('G3', 'build identity at D-029: the commit leaves the Milestone-B record unchanged, and every file that record lists has its recorded blob in that commit except verify_orchestrator.mjs, the one verifier D-029 changes (D-030 then re-binds the record)',
+  recordAtD029 && same(differs, [VO]), `record unchanged at 1919b04 ${recordAtD029}; differing: ${differs.join(', ') || 'none'}; listed ${entries.length}`);
 // the change to verify_orchestrator.mjs: removed = exactly the old import line and the old O23 block; added = no process path
 const oldSrc = git('cat-file', 'blob', `${MILESTONE_B}:${VO}`).replace(/\r\n/g, '\n').split('\n');
 const oStart = oldSrc.findIndex(l => l.startsWith("  await guard('O23',")), oEnd = oldSrc.findIndex((l, i) => i > oStart && l === '  });');
 const OLD_REMOVED = ["import { execFileSync, spawn } from 'node:child_process';", ...oldSrc.slice(oStart, oEnd + 1)].sort();
-const diff = git('diff', '-U0', MILESTONE_B, '--', VO).split('\n').filter(l => /^[+-]/.test(l) && !/^(\+\+\+|---)/.test(l));
+const diff = git('diff', '-U0', MILESTONE_B, D029, '--', VO).split('\n').filter(l => /^[+-]/.test(l) && !/^(\+\+\+|---)/.test(l));
 const removed = diff.filter(l => l.startsWith('-')).map(l => l.slice(1)).sort(), added = diff.filter(l => l.startsWith('+')).map(l => l.slice(1));
 const PROC = /\b(spawn|spawnSync|exec|execSync|execFile|execFileSync|fork|Worker|worker_threads|child_process)\b|H1R_STAGE_AUTHORISED|process\.(env|argv|chdir|exit)|\bORCH\b|orchestrate\.mjs|runCommand|stageFlow|executeJobs|driverRunner|buildTree|treeEnvironment|planStream|forkFlow/;
 const stripComments = (t) => t.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[ \t])\/\/.*$/gm, '$1');
@@ -151,7 +156,7 @@ const noThrowTyped = { ...TYPED, createTrajectoryRegistry: ({ records, ...rest }
 const noThrow = await runO23(VOM.o23RegistryIntegrity, { typed: noThrowTyped });
 ok('T3', 'with the duplicate-record exception removed (the factory silently de-duplicates), O23 still passes and still starts nothing: the safety property does not depend on that exception',
   noThrow.pass === true && clean(noThrow), `pass ${noThrow.pass}; attempts ${noThrow.attempts.length}`);
-ok('T4', 'the instrument identity the orchestrator stamps is unchanged: in-process instrumentIdentity() equals the Milestone-B build-identity record', same(ORCH_MOD.instrumentIdentity(), REC.instrumentIdentity),
+ok('T4', 'the instrument identity the orchestrator stamps is unchanged: in-process instrumentIdentity() equals the current build-identity record\'s and the Milestone-B record\'s', same(ORCH_MOD.instrumentIdentity(), REC.instrumentIdentity) && same(REC.instrumentIdentity, REC_B.instrumentIdentity),
   `orchestrator ${REC.instrumentIdentity.orchestratorSha256.slice(0, 12)}, analyze ${REC.instrumentIdentity.analyzeSha256.slice(0, 12)}`);
 
 // ================= M: mutants of verify_orchestrator.mjs =================
@@ -214,7 +219,7 @@ ok('X', 'nothing ran: no real O23 run attempted a process; experiments/h1r/data 
 
 const pass = results.filter(r => r.pass).length, fail = results.length - pass;
 fs.mkdirSync(EVID, { recursive: true });
-fs.writeFileSync(path.join(EVID, 'o23_gates.json'), JSON.stringify({ schema: 'h1r.o23-gates/1', generatedBy: 'experiments/h1r/verify_o23.mjs', milestoneB: MILESTONE_B,
+fs.writeFileSync(path.join(EVID, 'o23_gates.json'), JSON.stringify({ schema: 'h1r.o23-gates/1', generatedBy: 'experiments/h1r/verify_o23.mjs', milestoneB: MILESTONE_B, d029: D029,
   verifyOrchestratorSha256: sha(VO_SRC), mutants: mutantResults, pass, fail, results }, null, 1) + '\n');
 console.log(`\nO23 SAFETY GATE: ${pass}/${results.length} PASS, ${fail} FAIL`);
 process.exitCode = fail ? 1 : 0;

@@ -1,0 +1,146 @@
+{
+ "schema": "h1r.o23-gates/1",
+ "generatedBy": "experiments/h1r/verify_o23.mjs",
+ "milestoneB": "6fc5a9eb7a3e27696b78b439765fa6fd81d73836",
+ "d029": "1919b04d6fd4fcae4a5a2728e9926219e782c59e",
+ "verifyOrchestratorSha256": "49c49807d9b7efde262b8579e848141717468e11e83363ad6ac6d10b5be0acf4",
+ "mutants": [
+  {
+   "id": "restore-old-probe",
+   "what": "the Milestone-A O23 probes (verbatim from 6fc5a9e) back in the O23 guard, with their import",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "S1"
+   ]
+  },
+  {
+   "id": "probe-in-function",
+   "what": "an authorised execFileSync stage1 probe inside o23RegistryIntegrity",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "S1",
+    "T-trap"
+   ]
+  },
+  {
+   "id": "probe-via-spawn",
+   "what": "an authorised spawn stage1 probe inside o23RegistryIntegrity",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "S1",
+    "T-trap"
+   ]
+  },
+  {
+   "id": "env-authorisation",
+   "what": "O23 sets H1R_STAGE_AUTHORISED=stage1 in its own environment",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "S1",
+    "T-env"
+   ]
+  },
+  {
+   "id": "programmatic-stage",
+   "what": "O23 calls the orchestrator's stage flow in process",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "S1",
+    "T-guard",
+    "T-integrity"
+   ]
+  },
+  {
+   "id": "drop-stage2-check",
+   "what": "O23 no longer requires Stage 2 to be non-executable",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "T-integrity"
+   ]
+  },
+  {
+   "id": "drop-stage1-check",
+   "what": "O23 no longer requires the Stage-1 records and block",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "T-integrity"
+   ]
+  }
+ ],
+ "pass": 12,
+ "fail": 0,
+ "results": [
+  {
+   "id": "G1",
+   "title": "scope: the D-029 commit (1919b04) changes, since Milestone B (6fc5a9e), only O23, its safety gate and evidence, the README and the decision log",
+   "pass": true,
+   "detail": "changed: experiments/h1r/README.md, experiments/h1r/verify_o23.mjs, experiments/h1r/verify_orchestrator.mjs, research/09_decisions.md; outside: none"
+  },
+  {
+   "id": "G2",
+   "title": "unchanged since Milestone B, in the working tree: analyze.js, orchestrate.mjs, every instrument file, the data directory, the registry, the pre-registrations, the M7 substrate, .gitattributes and every earlier evidence directory",
+   "pass": true,
+   "detail": "none changed"
+  },
+  {
+   "id": "G3",
+   "title": "build identity at D-029: the commit leaves the Milestone-B record unchanged, and every file that record lists has its recorded blob in that commit except verify_orchestrator.mjs, the one verifier D-029 changes (D-030 then re-binds the record)",
+   "pass": true,
+   "detail": "record unchanged at 1919b04 true; differing: experiments/h1r/verify_orchestrator.mjs; listed 42"
+  },
+  {
+   "id": "G4",
+   "title": "verify_orchestrator.mjs vs Milestone B: every removed line comes from the old O23 block or the old child-process import, and both old CLI probes (one with H1R_STAGE_AUTHORISED=stage1) and that import are among them; no added line (comments aside) holds a process, CLI, authorisation or execution path",
+   "pass": true,
+   "detail": "removed 19 of the 20 old lines (kept as shared context: [\"  });\"]); added 35; old probes removed 2/2"
+  },
+  {
+   "id": "S1",
+   "title": "static: O23 (o23RegistryIntegrity and its guard) holds no process, CLI, authorisation, environment, dynamic import or execution path and touches only O.PROTOCOL/productionRegistry/registryPrecheck and the typed registry; the whole gate file has no authorisation and no orchestrator process (its two spawns are the analyze.js CLI and the --fast self-spawn)",
+   "pass": true,
+   "detail": "clean"
+  },
+  {
+   "id": "T0",
+   "title": "importing verify_orchestrator.mjs starts nothing (its battery runs only when it is the main script)",
+   "pass": true,
+   "detail": "trapped attempts 0"
+  },
+  {
+   "id": "T1",
+   "title": "on the real registry, where the Stage-1 pre-check SUCCEEDS, O23 passes, starts no process, sets no authorisation and reads only the registry members (orchestrator: PROTOCOL, productionRegistry, registryPrecheck)",
+   "pass": true,
+   "detail": "Stage-1 pre-check executable true; pass true; attempts 0; used PROTOCOL,productionRegistry,registryPrecheck | TRAJECTORY_RECORDS,createTrajectoryRegistry,trajectorySeed; stage1 executable true (REPRODUCTION; block recorded true); extension true; stage2 false (AVAILABLE; block 900500 recorded false); seeds 000–003 CONSUMED_BY_OTHER_STUDY; H1-R records 20260819004,20260819005,20260819006,20260819007,20260819008, pilot and unexecuted true; committed records true, without the block false, without H1-R's records false"
+  },
+  {
+   "id": "T2",
+   "title": "registry doubles: when Stage 2 also becomes executable (all pre-checks succeed), or Stage 1 loses its records or its block, O23 reports FAIL; in every case it starts no process and reads only registry members",
+   "pass": true,
+   "detail": "confirmatory-recorded: pass false, attempts 0; pilot-unrecorded: pass false, attempts 0; pilot-block-unrecorded: pass false, attempts 0"
+  },
+  {
+   "id": "T3",
+   "title": "with the duplicate-record exception removed (the factory silently de-duplicates), O23 still passes and still starts nothing: the safety property does not depend on that exception",
+   "pass": true,
+   "detail": "pass true; attempts 0"
+  },
+  {
+   "id": "T4",
+   "title": "the instrument identity the orchestrator stamps is unchanged: in-process instrumentIdentity() equals the current build-identity record's and the Milestone-B record's",
+   "pass": true,
+   "detail": "orchestrator 6162f8c21dab, analyze dae6012c1ac4"
+  },
+  {
+   "id": "M",
+   "title": "anti-vacuity: each of 7 mutants of O23 is caught (the old probe restored, an authorised probe by execFileSync or spawn, an authorisation in the environment, an in-process stage call, two weakened integrity checks); the unmutated copy passes everything; no mutant reached its stub",
+   "pass": true,
+   "detail": "restore-old-probe:S1 probe-in-function:S1+T-trap probe-via-spawn:S1+T-trap env-authorisation:S1+T-env programmatic-stage:S1+T-guard+T-integrity drop-stage2-check:T-integrity drop-stage1-check:T-integrity; control passes"
+  },
+  {
+   "id": "X",
+   "title": "nothing ran: no real O23 run attempted a process; experiments/h1r/data still holds only its .gitignore; no stage_records; every registry module byte-unchanged; no authorisation in the environment",
+   "pass": true,
+   "detail": "attempts by the real O23 runs 0; data .gitignore; registry modules 5 unchanged true"
+  }
+ ]
+}

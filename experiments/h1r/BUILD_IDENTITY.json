@@ -1,8 +1,12 @@
 {
- "schema": "h1r.build-identity/1",
+ "schema": "h1r.build-identity/2",
  "study": "H1-R",
- "statement": "Pre-Stage-1 build identity (H1-R v1.0 §1.2). SHA-256 and git blob id over committed blob content. The binding commit is the commit that adds this record; its parent is baseCommit. instrumentIdentity is the object orchestrate.mjs stamps into every plan, manifest and run record; a Stage-1 or Stage-2 artifact whose instrument identity differs from it is a protocol deviation.",
- "baseCommit": "bf0833f466ad7c626c9a719efa3a91d6b6367b16",
+ "statement": "Pre-Stage-1 build identity (H1-R v1.0 §1.2). SHA-256 and git blob id over committed blob content. The binding commit is the commit that last writes this record; its parent is baseCommit. It supersedes the Milestone-B record named in supersedes (D-030) and has the same instrumentIdentity. instrumentIdentity is the object orchestrate.mjs stamps into every plan, manifest and run record; a Stage-1 or Stage-2 artifact whose instrument identity differs from it is a protocol deviation.",
+ "baseCommit": "1919b04d6fd4fcae4a5a2728e9926219e782c59e",
+ "supersedes": {
+  "commit": "6fc5a9eb7a3e27696b78b439765fa6fd81d73836",
+  "sha256": "9647827a253addfda448da4a75068b478e88c2c1c793ce6fede01e4c43ddae1e"
+ },
  "b2Commit": "707cb1e5205a7e9979f81092ee1ebfa0fe28922e",
  "instrumentCommit": "e8e904a2f213e45dc0fb326f36cf72809f5862cf",
  "preregistrationSha256": "c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836",
@@ -257,8 +261,8 @@
    },
    {
     "path": "experiments/h1r/verify_orchestrator.mjs",
-    "sha256": "fb7045b1a8316dfd6eeea09876938a6c2474835e4a98af3f56d44e10dbf405d0",
-    "gitBlob": "ea262f5356a6ab0e2f3a2c62979769b0b50f76ab",
+    "sha256": "49c49807d9b7efde262b8579e848141717468e11e83363ad6ac6d10b5be0acf4",
+    "gitBlob": "55bfd3752ac1b66fd8da0ef658909d5c4c8c5f9c",
     "text": "unspecified",
     "runtimeHashed": false
    },
@@ -299,8 +303,8 @@
    },
    {
     "path": "experiments/h1r/build_identity.mjs",
-    "sha256": "56a2fd8add8fa44cc43365680a6d6b8a0b4ac4c1976707ee1d9674124cd2b137",
-    "gitBlob": "fc1f8ea724c69f0f875ff429c903f61c2272ef49",
+    "sha256": "5926c5f735964c75bfafd013b9d1c9b75d6badbb75f66543861aa2f5634f3022",
+    "gitBlob": "f99272df86b31c6554abc5fe81899d21aa465706",
     "text": "unspecified",
     "runtimeHashed": false
    },
@@ -322,6 +326,20 @@
     "path": "research/preregistrations/h1r_v1_checks/verify_freeze.mjs",
     "sha256": "9e6e2866f8807ef5ee76c88e0cc43deeade3d5f517efdc1feffe82cb8e9f5e65",
     "gitBlob": "2db7325b6181ad8a3e5bedaad08066e5e215dc6a",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/h1r/verify_o23.mjs",
+    "sha256": "54daac0497c34fda4165d09c658d7576dbb3f0dc68f1c809eda65665a566eceb",
+    "gitBlob": "4927502a0a36219aeea8b8eb645569d9594c4d24",
+    "text": "unspecified",
+    "runtimeHashed": false
+   },
+   {
+    "path": "experiments/h1r/verify_readiness.mjs",
+    "sha256": "4422c7765c83707f476bfb8fe132fb8e8c8a67c4659436b7e4678fce8b95f276",
+    "gitBlob": "bd9fd4bee5b86686a415c3ad3439046fffe6bd63",
     "text": "unspecified",
     "runtimeHashed": false
    }

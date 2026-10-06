@@ -1,0 +1,163 @@
+{
+ "schema": "h1r.readiness/1",
+ "generatedBy": "experiments/h1r/verify_readiness.mjs",
+ "record": "experiments/h1r/BUILD_IDENTITY.json",
+ "recordSha256": "4236eb886a55dbfcf33a88565ab127f752fa0bacdab48ac0d0ef51a2001a1fac",
+ "baseCommit": "1919b04d6fd4fcae4a5a2728e9926219e782c59e",
+ "supersedes": {
+  "commit": "6fc5a9eb7a3e27696b78b439765fa6fd81d73836",
+  "sha256": "9647827a253addfda448da4a75068b478e88c2c1c793ce6fede01e4c43ddae1e"
+ },
+ "instrumentIdentity": {
+  "b2Commit": "707cb1e5205a7e9979f81092ee1ebfa0fe28922e",
+  "trustMode": "traversal",
+  "transformSha256": "02ccbf382ad7da5dd0a97e010081f025971263b2ad1af507c80d070fc0116346",
+  "runtimeSha256": "de06d8e4de73be82ad0b55f40d5192232e15dbeef2a3288bf4a4dd39b8540dd2",
+  "measureSha256": "41590aad2762614cdfe160112c02a01e660894e53d8a6c38044f994a9527eaaa",
+  "measureInstallSha256": "29cc6dc687372db3fe51da9cdacf28a2bc5a6c9cc0201997d3997bbcaf93ce40",
+  "shadowSha256": "43532dee22fb73c50261610b3b43cc1aa232a6826b2b929c14fa7d2d3fea9a77",
+  "envSeedSha256": "80caf09aae290bc77c9f370dfcaaa531490a2841df801505a31bb7faecdc136e",
+  "driverSha256": "9b1a79a39aabb64539df38ea43f4e425735e76460314393b93d8e622970679e6",
+  "analyzeSha256": "dae6012c1ac48a96ccd9835b24e7aadce9243d95e147a5d8d2b3f833fb0a414d",
+  "orchestratorSha256": "6162f8c21dab3b95b826c349a2794a70c51cf5a7f6e285a44d0b52efd398032b"
+ },
+ "mutants": [
+  {
+   "id": "old-mismatch",
+   "what": "the record's verify_orchestrator.mjs entry restored to its Milestone-B value (the exact pre-D-030 mismatch)",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "identity-check"
+   ]
+  },
+  {
+   "id": "milestone-b-record",
+   "what": "the Milestone-B record restored in place of the current one",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "identity-check"
+   ]
+  },
+  {
+   "id": "instrument-byte",
+   "what": "one byte appended to runtime.mjs (an instrument file)",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "identity-check",
+    "stamp≠record"
+   ]
+  },
+  {
+   "id": "analyze-byte",
+   "what": "one byte appended to analyze.js",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "identity-check",
+    "stamp≠record"
+   ]
+  },
+  {
+   "id": "record-instrument-hash",
+   "what": "the record's instrumentIdentity.runtimeSha256 changed by one hex digit",
+   "outcome": "CAUGHT",
+   "caughtBy": [
+    "identity-check",
+    "stamp≠record"
+   ]
+  }
+ ],
+ "pass": 15,
+ "fail": 0,
+ "results": [
+  {
+   "id": "I1",
+   "title": "the record committed at HEAD equals a fresh derivation from HEAD byte for byte (build_identity.mjs --check), equals the working-tree record, and carries no host path, carriage return or timestamp",
+   "pass": true,
+   "detail": "4236eb886a55dbfcf33a88565ab127f752fa0bacdab48ac0d0ef51a2001a1fac  experiments/h1r/BUILD_IDENTITY.json; --check equal"
+  },
+  {
+   "id": "I2",
+   "title": "binding: exactly two commits have written the record, Milestone B and the binding commit; the binding commit's parent is the record's baseCommit (1919b04, D-029); every listed file has its recorded blob in the binding commit",
+   "pass": true,
+   "detail": "writers 2 (earlier 6fc5a9e); binding parent 1919b04 = baseCommit 1919b04; blobs true"
+  },
+  {
+   "id": "I3",
+   "title": "supersession and history: the record names the Milestone-B record (6fc5a9e, 9647827a…), which is the commit that added the record, whose bytes still hash to the named value; the unchanged Milestone-B derivation still reproduces that record byte for byte from 6fc5a9e's blobs",
+   "pass": true,
+   "detail": "supersedes 6fc5a9e 9647827a253addfd; Milestone-B record 9647827a253addfd; added by 6fc5a9e; historical derivation reproduces it true"
+  },
+  {
+   "id": "I4",
+   "title": "delta against the Milestone-B record: only schema, statement, baseCommit, supersedes and the verifier group differ; the protocol, analysis, orchestrator, instrument and registry groups, the instrument identity and the pre-registration hash are identical; in the verifier group only verify_orchestrator.mjs (now its D-029 blob) and build_identity.mjs change, and verify_o23.mjs and verify_readiness.mjs are appended",
+   "pass": true,
+   "detail": "fields baseCommit,files,schema,statement,supersedes; scientific groups identical true; verifiers changed build_identity.mjs,verify_orchestrator.mjs; added verify_o23.mjs,verify_readiness.mjs; removed 0"
+  },
+  {
+   "id": "I5",
+   "title": "instrument identity: the record's instrumentIdentity equals the one the orchestrator stamps (in process) and the Milestone-B record's; it pins v1.0 c52e7337…a836, analyze.js dae6012c… and orchestrate.mjs 6162f8c2…",
+   "pass": true,
+   "detail": "transform 02ccbf382ad7, runtime de06d8e4de73, measure 41590aad2762, driver 9b1a79a39aab, analyze dae6012c1ac4, orchestrator 6162f8c21dab"
+  },
+  {
+   "id": "I6",
+   "title": "the 9 files hashed at run time are -text and their working-tree bytes equal the record",
+   "pass": true,
+   "detail": "all equal"
+  },
+  {
+   "id": "F1",
+   "title": "scope: since 1919b04 only the build identity (record and derivation), the O23 gate's anchoring, this gate and its evidence, the README and the decision log change",
+   "pass": true,
+   "detail": "changed: experiments/h1r/BUILD_IDENTITY.json, experiments/h1r/README.md, experiments/h1r/build_identity.mjs, experiments/h1r/verify_o23.mjs, experiments/h1r/verify_readiness.mjs, research/09_decisions.md; outside: none"
+  },
+  {
+   "id": "F2",
+   "title": "scientific immutability: the 27 files of the pre-registration, analysis, orchestrator, instrument and registry groups, .gitattributes and data/.gitignore are byte-identical at 6fc5a9e, 1919b04, HEAD and in the working tree; the pre-registration, analyze.js and orchestrate.mjs keep their pinned hashes",
+   "pass": true,
+   "detail": "differing commits: none; working tree: clean; pins true"
+  },
+  {
+   "id": "R1",
+   "title": "o23RegistryIntegrity on the production registry: Stage 1 and the extension executable as far as the registry is concerned, Stage 2 not, 000–003 refused, 004–008 recorded pilot and unexecuted",
+   "pass": true,
+   "detail": "stage1 executable true (REPRODUCTION; block recorded true); extension true; stage2 false (AVAILABLE; block 900500 recorded false); seeds 000–003 CONSUMED_BY_OTHER_STUDY; H1-R records 20260819004,20260819005,20260819006,20260819007,20260819008, pilot and unexecuted true; committed records true, without the block false, without H1-R's records false"
+  },
+  {
+   "id": "A1",
+   "title": "anti-vacuity: each of 5 mutants is rejected by the comparison --check runs (record vs. derivation), on the clone's index; the three instrument mutants are also rejected by the orchestrator's stamp; the unmodified clone passes --check (exit 0) and the comparison",
+   "pass": true,
+   "detail": "old-mismatch:identity-check milestone-b-record:identity-check instrument-byte:identity-check+stamp≠record analyze-byte:identity-check+stamp≠record record-instrument-hash:identity-check+stamp≠record; control passes (CLI exit 0)"
+  },
+  {
+   "id": "E1",
+   "title": "verify_o23.mjs on this code: 12/12, every mutant caught, on the current verify_orchestrator.mjs",
+   "pass": true,
+   "detail": "12 PASS, 0 FAIL; mutants 7/7"
+  },
+  {
+   "id": "E2",
+   "title": "verify_orchestrator.mjs on this code: 30/30, on orchestrate.mjs 6162f8c2… and analyze.js dae6012c…",
+   "pass": true,
+   "detail": "30/30 PASS; 30 PASS, 0 FAIL — 827 s | exit 0"
+  },
+  {
+   "id": "E3",
+   "title": "verify_freeze.mjs on this code: 11 PASS, 0 FAIL",
+   "pass": true,
+   "detail": "11 PASS, 0 FAIL, exit 0"
+  },
+  {
+   "id": "E4",
+   "title": "fresh clone under core.autocrlf=true: every -text file byte-equal to its committed blob, every -text record entry equal, the clone's instrument identity equal to the record; its protected files are HEAD's",
+   "pass": true,
+   "detail": "220/220 equal; record 16/16; identity true; consistent with HEAD true"
+  },
+  {
+   "id": "X1",
+   "title": "nothing ran: experiments/h1r/data holds only its .gitignore; no stage_records, now or in history; H1-R records only 004–008, none executed; no authorisation in the environment",
+   "pass": true,
+   "detail": "data .gitignore; stage_records none; history 0; H1-R records 004,005,006,007,008 executed 0"
+  }
+ ]
+}

@@ -94,7 +94,11 @@ R1 supersedes the sentence of ERR-05 §3.1 stating that Q-learning, prediction e
   - the SHA-256 and git blob id of the pre-registration, the analysis instrument, the orchestrator, the instrument files, the registry and the verifiers;
   - the `instrumentIdentity` object that the orchestrator stamps into every plan, manifest and run record.
 
-  `build_identity.mjs` derives it from git blobs only, so it holds no clock and no host path. Its binding commit is the commit that adds it, whose parent is `baseCommit`. `node experiments/h1r/build_identity.mjs --check` re-derives it from HEAD.
+  `build_identity.mjs` derives it from git blobs only, so it holds no clock and no host path. Its binding commit is the commit that last writes it, whose parent is `baseCommit`. `node experiments/h1r/build_identity.mjs --check` re-derives it from HEAD.
+- **Which tree the build identity describes (D-030).** One record, `BUILD_IDENTITY.json`, describes the current pre-Stage-1 tree: schema `h1r.build-identity/2`, `baseCommit` `1919b04` (D-029), and the verifier group also lists `verify_o23.mjs` and `verify_readiness.mjs`.
+  - It supersedes the record Milestone B added at `6fc5a9e` (SHA-256 `9647827a…`, schema `/1`), which `supersedes` names. D-029 had changed one verifier that record listed, so it stopped equalling a derivation from HEAD. D-030 re-derived it.
+  - The `instrumentIdentity` is identical in both records. Every protocol, analysis, orchestrator, instrument and registry entry is identical.
+  - `derive()` still defaults to the Milestone-B profile, which reproduces the superseded record byte for byte; `--write`, `--check` and `checkAt()` use the current profile. `verify_readiness.mjs` checks both.
 - **Line endings.** `orchestrate.mjs` and the 7 instrument files are hashed from working-tree bytes at run time, so they are `-text`, like `analyze.js`. `fresh_clone_check.mjs` clones the repository with `core.autocrlf=true` and checks that every `-text` file keeps its committed bytes.
 - **CLI gate.** `verify_cli.mjs` (C1–C15) drives `orchestrate.mjs` as a child process:
   - **In the repository:** only the read-only commands run there (`identity`, `precheck`, usage errors, unauthorised stage commands).
@@ -112,8 +116,9 @@ R1 supersedes the sentence of ERR-05 §3.1 stating that Q-learning, prediction e
     - a static scan;
     - a child-process trap with member guards and registry doubles;
     - 7 mutants, including the old probe restored.
-  - **Milestone B's own gate**, `verify_milestone_b.mjs`, is bound to `6fc5a9e`. At later commits its since-base checks S1 and S2, and its check H-P of O23's old source, no longer hold.
-  - **`build_identity.mjs --check`** at later commits reports one difference: the record lists `6fc5a9e`'s `verify_orchestrator.mjs`. The instrument identity is unchanged.
+  - **Milestone B's own gate**, `verify_milestone_b.mjs`, is bound to `6fc5a9e`, where it passed 36/36. At D-029 its since-base checks S1 and S2, and its check H-P of O23's old source, no longer held (33/36).
+  - **`build_identity.mjs --check`** reported one difference at D-029: the record listed `6fc5a9e`'s `verify_orchestrator.mjs`. **D-030** re-derived and re-bound the record, so `--check` now exits 0.
+  - **Milestone B's gate after D-030** is 30/36. B1, B3 and A3 also no longer hold, because they bind to the record as `6fc5a9e` added it, and that record is now superseded. The gate file is unchanged, and its other 30 checks pass. See D-030 §4.
 
 ```bash
 node experiments/h1r/verify_milestone_b.mjs
@@ -129,6 +134,14 @@ node experiments/h1r/verify_d028.mjs
 
 ```bash
 node experiments/h1r/verify_o23.mjs
+```
+
+```bash
+node experiments/h1r/build_identity.mjs --check
+```
+
+```bash
+node experiments/h1r/verify_readiness.mjs
 ```
 
 ```bash
@@ -173,6 +186,7 @@ node experiments/h1r/verify_ms1_unit.mjs
 
 | Directory | Contents |
 |---|---|
+| `evidence_readiness/` | D-030: the Stage-1 readiness gate (`readiness.json`), and on the same code the O23 safety gate (`o23_gates.json`), the orchestrator battery (`orchestrator/`), the freeze check, the fresh-clone check and the Milestone B gate at this commit |
 | `evidence_o23/` | D-029: the O23 safety gate (`o23_gates.json`), the orchestrator battery with the new O23 (`orchestrator/`), the Milestone B gate at this commit, the fresh-clone check and the freeze check |
 | `evidence_milestone_b/` | Milestone B: the historical-gate sweep, the fresh-clone check, the CLI gate (C1–C15), the §11 battery (`section11/`), the analysis and orchestrator batteries (`analysis/`, `orchestrator/`), the D-028 gate (`d028_gates.json`), the closure re-runs (`closure/`) and the Milestone B gate log |
 | `evidence_milestone_a/` | The §11 battery rerun for Milestone A (conformance, MS-1 unit, existing gates with the N3 repetitions, equivalence, freeze) |

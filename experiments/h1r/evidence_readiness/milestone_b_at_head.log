@@ -1,0 +1,83 @@
+
+R   registry: the H1-R link and the (H1-R, pilot) trajectory records (v1.0 §7.6)
+   [PASS] R1   the new link lists exactly the H1-R pilot block 886000–889999 (H1R_BLOCKS, use pilot) ahead of its predecessor's ranges, inherited unchanged and in order; held-out floor inherited; the block's evaluation claim is "recorded before generation" (0 evaluated, 0 accepted, 0 runs); every earlier evaluation claim passes through unchanged
+   [PASS] R2   exhaustive 0..1,000,000: the new link differs from its predecessor on exactly the 4000 seeds of 886000–889999; isHeldOut is unchanged everywhere (nothing held out is recorded)
+          differences 4000, outside the block 0, held-out differences 0; floor 900500; 900500 held out true, consumed false
+   [PASS] R3   typed.js delegates to the new link (its only import); its exports and the source of every exported function are unchanged since the base commit; the typed layer refuses 886000–889999 and still holds 900500 out
+          import import * as CONFIG_REGISTRY from './consumed_after_h1r.js';; functions unchanged true
+   [PASS] R4   TRAJECTORY_RECORDS = the base commit's records unchanged, then exactly five (H1-R, pilot, executed false) records for 20260819004–008 citing v1.0; no held-out trajectory region and no authorization added
+          records 6 → 11
+   [PASS] R5   decisions: 004–008 (H1-R, pilot) REPRODUCTION; 009 AVAILABLE (unused, §7.2); 000–003 refused CONSUMED_BY_OTHER_STUDY; 100–119 (H1-R, registered) AVAILABLE (not recorded); 004 as registered refused CATEGORY_TRANSITION; 004 for another study refused
+          {"pilot":["REPRODUCTION"],"unused009":"AVAILABLE","m31":["CONSUMED_BY_OTHER_STUDY"],"confirmatory":["AVAILABLE"],"transition":"CATEGORY_TRANSITION","otherStudy":"CONSUMED_BY_OTHER_STUDY"}
+   [PASS] R6   only typed.js imports the new link; the link imports only its predecessor; consumed.js, consumed_after_c1.js and consumed_after_study2.js are byte-unchanged; the link is otherwise named only by the orchestrator's pre-check (by path, committed at the base) and the H1-R gates
+          importers experiments/registry/typed.js; mentions 5
+   [PASS] R7   the orchestrator's read-only pre-check: Stage 1 and the extension are executable as far as the registry is concerned (Director authorisation still required); Stage 2 is not (confirmatory seeds and block 900500 unrecorded)
+          stage1 true, extension true, stage2 false (21 reasons)
+
+H   historical gates: every changed verdict is named, with its reason (FACT)
+   [PASS] H1   recorded sweep of 38 historical gates (before = the base commit, after = the milestone): exactly the 2 named gates change verdict; every other verdict is unchanged
+          changed experiments/study2/verify_study2_execution.js, research/preregistrations/h1r_v1_checks/pilot_registry_status.mjs
+   [PASS] H2   experiments/study2/verify_study2_execution.js: re-run now equals the recorded after-state — R1, R4 and H5 flip (S3 already failed: MN-4). R1: the typed layer now also refuses 889999, the lower neighbour of the Study-2 block, because 889999 is the last seed of the adjacent H1-R pilot block 886000-889999; all 3000 Study-2 seeds are still refused. R4: consumed_after_study2.js is now imported by its successor consumed_after_h1r.js, and typed.js imports the new link (the M34 chain convention, one link on). H5: the M34 gate still cannot run for the reason MN-2 records (it materialises typed.js with only the chain files it knew); its ERR_MODULE_NOT_FOUND now names consumed_after_h1r.js instead of the consumed_after_study2.js that H5 matches.
+          exit 1, crashed false, fails H5,R1,R4,S3
+   [PASS] H3   research/preregistrations/h1r_v1_checks/pilot_registry_status.mjs: re-run now equals the recorded after-state — Its output is the v1.0 Appendix B.3 registry state at freeze. It now reports the state v1.0 §7.6 requires before generation: block 886000-889999 consumed, and 20260819004-008 REPRODUCTION for (H1-R, pilot). Seeds 000-003 refused, 009 AVAILABLE, 885999 free, 890000 consumed, 900500 held out and 100-119 AVAILABLE are unchanged.
+          exit 0; output equal
+   [PASS] H-C1 cause of the R1 flip: the typed layer still refuses all 3000 Study-2 seeds; 889999 is now refused only because it is the last seed of the H1-R pilot block (it was free at the base commit); 893000 is still free
+   [PASS] H-C2 cause of the H5 flip: the M34 gate still stops with ERR_MODULE_NOT_FOUND (MN-2), now for consumed_after_h1r.js, the link its materialised typed.js imports
+          exit 1
+   [PASS] H-O  verify_orchestrator.mjs (unchanged) after the milestone: every gate passes except O23, which asserts the pre-Milestone-B registry (no H1-R record, no stage executable); its in-memory registry adds 004–008, which are now committed, so it throws a duplicate-record refusal
+          failing O23; O23: threw: REGISTRY_INTEGRITY: duplicate record for 20260819004|H1-R
+   [FAIL] H-P  O23's authorised CLI probe (which, with this registry, would start Stage 1) is unreachable: it is the only authorised call in the gate, it follows the in-memory registry construction, and that construction now throws (duplicate 004–008 records)
+          construction at -1, probe at -1, throws true
+
+B   pre-Stage-1 build identity (v1.0 §1.2)
+   [FAIL] B1   the record equals a fresh derivation from the git blobs of its binding commit, byte for byte; it carries no host path, no carriage return and no timestamp
+          4236eb886a55dbfcf33a88565ab127f752fa0bacdab48ac0d0ef51a2001a1fac  experiments/h1r/BUILD_IDENTITY.json
+   [PASS] B2   it pins v1.0 c52e7337…a836, orchestrate.mjs 6162f8c2… and analyze.js dae6012c…, and its instrumentIdentity equals both the in-process instrumentIdentity() and `orchestrate.mjs identity`
+   [FAIL] B3   commit identity: exactly one commit adds the record; its parent is the record's baseCommit; every listed file's blob in that commit equals the recorded blob id
+          binding commit 6fc5a9eb7a3e; parent bf0833f466ad; blobs false
+   [PASS] B4   the 9 files hashed at run time (analyze.js, orchestrate.mjs, the 7 instrument files) are -text and their working-tree bytes equal the record
+          all equal
+
+A   .gitattributes -text and the fresh clone under core.autocrlf=true
+   [PASS] A1   .gitattributes only gains lines: the 12 new rules are orchestrate.mjs, the 7 instrument files, the build-identity record, the CLI-gate doubles, this milestone's evidence and (D-028) the N3 implementation, plus comments
+          removed 0; rules 12
+   [PASS] A2   git check-attr: text is unset for all 95 protected H1-R files
+          all unset
+   [FAIL] A3   fresh clone with core.autocrlf=true: every -text file is byte-equal to its committed blob, every -text record entry equals the record, and the clone's `identity` equals the record; at the base commit the same checkout converts exactly the 8 run-time-hashed files that lacked -text
+          218/218 equal; record 16/16; base converted 8; consistent with HEAD false
+
+S   scope
+warning: in the working copy of 'experiments/h1r/README.md', LF will be replaced by CRLF the next time Git touches it
+   [FAIL] S1   every change since the base commit is a Milestone-B file (registry link and records, build identity, gates, doubles, evidence, README, decision log, .gitattributes, the D-028 N3 change and its gate)
+          outside: experiments/h1r/evidence_o23/freeze_run.log, experiments/h1r/evidence_o23/fresh_clone.json, experiments/h1r/evidence_o23/milestone_b_at_head.log, experiments/h1r/evidence_o23/o23_gates.json, experiments/h1r/evidence_o23/o23_run.log, experiments/h1r/evidence_o23/orchestrator/diagnostic_fork_manifest.json, experiments/h1r/evidence_o23/orchestrator/diagnostic_manifest.json, experiments/h1r/evidence_o23/orchestrator/orchestrator_gates.json, experiments/h1r/evidence_o23/orchestrator/orchestrator_run.log, experiments/h1r/verify_o23.mjs, experiments/h1r/verify_orchestrator.mjs, experiments/h1r/verify_readiness.mjs (108 changed)
+   [FAIL] S2   byte-unchanged since the base commit: analyze.js, orchestrate.mjs, every instrument file, every earlier H1-R gate except verify_existing_equivalence.mjs (D-028, section D), the pre-registrations and the sealed package, the M7 documents and substrate, the production tree, the earlier registry links, Study 2 and every earlier evidence directory
+          experiments/h1r/verify_orchestrator.mjs
+
+D   D-028: the N3 C1-count interpretation, its anti-vacuity gate, and the re-evaluated §11 evidence
+   [PASS] D1   verify_existing_equivalence.mjs differs from the base commit only by D-028: exactly the 8 expected lines are replaced (header note, the text comparison, equivalent()'s signature and comment, the N3 loop and the N3 report), around the named D028 constant
+          removed 8, added 27
+   [PASS] D2   verify_d028.mjs ran on these exact bytes of the implementation and on this §11 evidence: CTRL and A–H pass and all 11 over-broad exemptions are caught
+          10/10; mutants any-script:other-script-template whole-detail:c1-other-text id-only:c1-other-text+c1-name-text d4-too:d4-reproducible whole-script:non-c1-detail+d4-reproducible+c1-other-text+c1-name-text verdict-free:c1-verdict exit-free:exit order-free:c1-order id-free:c1-id+duplicate-c1 non-unique:duplicate-c1 any-run-count:c1-other-text
+   [PASS] D3   the §11 equivalence re-evaluated under D-028 on the unchanged Milestone-B evidence passes (N3: no difference; D-028 applied to the three C1 lines that differ); the first and second evaluations are kept and failed only on N3, only on C1's text
+          E0:PASS N3:PASS N3-REFL:PASS N3-AV:PASS N3-HIST:INFO G16'-P:PASS ON:PASS N2-S4G9:PASS
+   [PASS] D4   the decision log records D-028 (newest first) as a named interpretation of D-019 §5 N3
+   [PASS] D5   §11 battery bound to this build: conformance (FAIL exactly F2, G15′, P1, the non-blocking set), MS-1 unit, analysis and orchestrator evidence carry the transform, measure, analyze.js and orchestrator hashes of the record; MS-1 unit 15/0 and freeze 11/0 re-run at closure
+          conformance FAIL F2,G15',P1; analysis FAIL 0
+
+X   no stage, no new seed, nothing held out
+   [PASS] X1   no stage ran: experiments/h1r/data holds only its .gitignore (no raw record, tracked or ignored), experiments/h1r/stage_records does not exist and no commit since the base touched it
+          data .gitignore; stage_records false
+   [PASS] X2   the CLI gate (C1–C15) passed: every authorised stage command ran in a sandbox on test doubles; the repository was byte-unchanged; Stage 2 halted on the registry before any held-out position
+          15/15; authorised sandbox commands 32
+   [PASS] X3   no new seed and nothing held out: the only values recorded are v1.0's pilot block and pilot seeds (frozen 2026-10-04); no confirmatory seed, no held-out block and no held-out floor change is recorded
+
+M   anti-vacuity: mutated inputs must be rejected by the named check
+   [PASS] M1   R1 rejects a shortened block, an extra consumed range at the confirmatory stream, a changed held-out floor, a confirmatory H1-R block, and a dropped inherited range
+   [PASS] M2   R4 rejects an extra seed 009, a registered status, executed true, an edited historical record, a missing pilot seed and a misspelt study
+   [PASS] M3   R5 rejects a recorded confirmatory seed, an unrecorded pilot seed and a recorded seed 009
+   [PASS] M4   B1 rejects a record whose analyze.js hash differs from its blobs, a CRLF record, a timestamped record and a record with a host path
+   [PASS] M5   H1 rejects a sweep in which an unnamed gate changed and a sweep that drops a named flip's reason
+
+==============================================================================
+  MILESTONE B VERIFY: 30/36 checks passed — FAIL
+exit 1

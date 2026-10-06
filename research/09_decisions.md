@@ -7,6 +7,49 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-030 — H1-R build-identity reconciliation: one record describes the current pre-Stage-1 tree; Stage-1 readiness gate
+
+**Date:** 2026-10-06 · **Authority:** Research Director "H1-R final build-identity reconciliation → Stage-1 readiness" (2026-10-06), after D-029 (`1919b04`) · **Status:** in force; implemented in `experiments/h1r/build_identity.mjs` and `experiments/h1r/BUILD_IDENTITY.json`, gated by `experiments/h1r/verify_readiness.mjs`
+**Scope:** build-identity bookkeeping and one readiness gate.
+- It changes no scientific design, pre-registration (v1.0 `c52e7337…a836`), analysis (`analyze.js` `dae6012c…`), orchestrator (`orchestrate.mjs` `6162f8c2…`), instrument file, runtime, arm, reward, trust, RNG, environment, registry, seed or stage configuration.
+- Milestone B (`6fc5a9e`) is not reopened. No Stage 1 or Stage 2 ran.
+
+### 1. Diagnosis (FACT)
+- **The one mismatch:** `build_identity.mjs --check` at `1919b04` reported a difference in exactly one of the 42 listed entries, `experiments/h1r/verify_orchestrator.mjs`.
+  - Stored: SHA-256 `fb7045b1…`, blob `ea262f53…`. Current: SHA-256 `49c49807…`, blob `55bfd375…`.
+  - The cause is D-029's deliberate change to that verifier.
+- **No scientific entry differs.** The `instrumentIdentity` object, the pre-registration hash and every protocol, analysis, orchestrator, instrument and registry entry are identical to the record's.
+- **What the record is for:** v1.0 §1.2 records the instrument hashes "before the first Stage-1 run". Its own statement calls it the pre-Stage-1 build identity, and the README says `--check` re-derives it from HEAD. It therefore describes the current pre-Stage-1 tree. Its verifier entries are provenance, not instrument identity.
+
+### 2. Ruling as implemented
+- **One record, current tree.** `BUILD_IDENTITY.json` was re-derived mechanically from git blobs (`build_identity.mjs --write`), not edited.
+  - Schema `h1r.build-identity/2`; `baseCommit` `1919b04`; `supersedes` names the Milestone-B record (`6fc5a9e`, SHA-256 `9647827a…`).
+  - The verifier group gains `verify_o23.mjs` and `verify_readiness.mjs`. The `verify_orchestrator.mjs` and `build_identity.mjs` entries take their current blobs.
+  - Everything else is identical. No second record exists, and no earlier commit is rewritten.
+- **History stays reproducible.** `derive()` still defaults to the Milestone-B profile, which reproduces the superseded record byte for byte from `6fc5a9e`'s blobs. `--write`, `--check` and `checkAt()` use the current profile.
+- **`verify_o23.mjs` re-anchored.** Its repository-fact checks G1, G3 and G4 now read the D-029 commit (`1919b04`), not the working tree, so they keep their meaning after the record is re-bound.
+  - G2 still reads the working tree, minus the record.
+  - T4 compares the instrument identity with both the current and the Milestone-B record.
+  - No check was weakened: `verify_readiness.mjs` F1 gates every change after `1919b04`.
+
+### 3. Verification (on the local candidate whose code this commit contains unchanged)
+- `verify_readiness.mjs`: 15/15. It covers the identity check, the binding and supersession, the delta against the Milestone-B record, the scientific-immutability check (27 files byte-identical at `6fc5a9e`, `1919b04`, HEAD and in the working tree), the production registry, and the evidence.
+- Anti-vacuity: 5 mutants, all rejected by the comparison `--check` runs, in a throwaway clone. They are the old `verify_orchestrator.mjs` mismatch, the Milestone-B record, one byte in an instrument file, one byte in `analyze.js`, and one changed instrument hash in the record. The unmodified clone passes `--check`.
+- `verify_o23.mjs` 12/12 (7/7 mutants), `verify_orchestrator.mjs` 30/30, `verify_freeze.mjs` 11/0, fresh clone under `core.autocrlf=true` 220/220 with identity 16/16.
+
+### 4. Consequence for Milestone B's gate (classified from its source)
+`verify_milestone_b.mjs` is byte-unchanged and stays bound to `6fc5a9e`, where it passed 36/36. At this commit it scores 30/36. The six failing checks each bind to a past state:
+- **H-P, S1, S2:** classified in D-029 (the check of O23's old source, and the two since-base scope checks).
+- **B1, B3, A3:** new. They bind to the record as `6fc5a9e` added it.
+  - B1 compares the current record with a derivation from the adding commit.
+  - B3 requires the adding commit's parent to equal the record's `baseCommit`.
+  - A3 compares HEAD's blobs with the `6fc5a9e` fresh-clone evidence. Its one inconsistent file is `BUILD_IDENTITY.json` itself.
+  - They cannot hold once that record is superseded, which is the point of D-030. The earlier expectation of exactly three failures did not account for this.
+- The other 30 checks pass, among them B2 and B4 (the instrument identity and the working-tree hashes equal the record), the registry checks and the §11 evidence checks.
+- No check was weakened or deleted, and the gate's own evidence is untouched.
+
+---
+
 ## D-029 — H1-R O23 safety hardening: the orchestrator gate's registry check can no longer start Stage 1
 
 **Date:** 2026-10-06 · **Authority:** Research Director "O23 safety hardening — final pre-Stage-1 milestone" (2026-10-06), after Milestone B (`6fc5a9e`) · **Status:** in force; implemented in `experiments/h1r/verify_orchestrator.mjs` (`o23RegistryIntegrity`), gated by `experiments/h1r/verify_o23.mjs`
