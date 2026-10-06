@@ -105,9 +105,15 @@ R1 supersedes the sentence of ERR-05 §3.1 stating that Q-learning, prediction e
 - **N3 and D-028.** N3 compares `verify_determinism.js` C1 on its ID, position, verdict and exit code, but not on its count of distinct fingerprints. That count comes from 8 concurrent runs with the determinism repair suppressed, so it depends on the wall clock, and nothing else reads it.
   - The rest of the line, D4 and every other assertion stay as before.
   - `verify_d028.mjs` derives 12 cases from the existing §11 evidence and checks 11 over-broad versions of the exemption against them.
-- **O23 of `verify_orchestrator.mjs`** asserts the pre-Milestone-B registry (no H1-R record, no stage executable), so it now fails by design: its in-memory registry adds the 004–008 records that are now committed, and that construction throws a duplicate-record refusal.
-  - The same gate also holds a CLI probe that sets `H1R_STAGE_AUTHORISED=stage1` and relied on the registry refusing. With this registry that probe would start Stage 1. It is unreachable only because O23 throws first, and `verify_milestone_b.mjs` H-P asserts that.
-  - **Do not edit O23 without removing that probe.**
+- **O23 of `verify_orchestrator.mjs`.**
+  - **At Milestone B (`6fc5a9e`):** O23 still asserted the pre-Milestone-B registry, so it failed by design: its in-memory registry duplicated the committed 004–008 records and threw. It also held a CLI probe with `H1R_STAGE_AUTHORISED=stage1` that relied on the registry refusing; with this registry that probe would have started Stage 1, and only the throw kept it unreachable.
+  - **D-029 replaced it.** O23 is now `o23RegistryIntegrity`: read-only and in process, it starts no process and checks the post-registration registry (Stage 1 and the extension executable, Stage 2 not, 004–008 recorded unexecuted).
+  - **`verify_o23.mjs`** proves that it cannot start Stage 1 even when the pre-check succeeds:
+    - a static scan;
+    - a child-process trap with member guards and registry doubles;
+    - 7 mutants, including the old probe restored.
+  - **Milestone B's own gate**, `verify_milestone_b.mjs`, is bound to `6fc5a9e`. At later commits its since-base checks S1 and S2, and its check H-P of O23's old source, no longer hold.
+  - **`build_identity.mjs --check`** at later commits reports one difference: the record lists `6fc5a9e`'s `verify_orchestrator.mjs`. The instrument identity is unchanged.
 
 ```bash
 node experiments/h1r/verify_milestone_b.mjs
@@ -119,6 +125,10 @@ node experiments/h1r/verify_cli.mjs
 
 ```bash
 node experiments/h1r/verify_d028.mjs
+```
+
+```bash
+node experiments/h1r/verify_o23.mjs
 ```
 
 ```bash
@@ -163,6 +173,7 @@ node experiments/h1r/verify_ms1_unit.mjs
 
 | Directory | Contents |
 |---|---|
+| `evidence_o23/` | D-029: the O23 safety gate (`o23_gates.json`), the orchestrator battery with the new O23 (`orchestrator/`), the Milestone B gate at this commit, the fresh-clone check and the freeze check |
 | `evidence_milestone_b/` | Milestone B: the historical-gate sweep, the fresh-clone check, the CLI gate (C1–C15), the §11 battery (`section11/`), the analysis and orchestrator batteries (`analysis/`, `orchestrator/`), the D-028 gate (`d028_gates.json`), the closure re-runs (`closure/`) and the Milestone B gate log |
 | `evidence_milestone_a/` | The §11 battery rerun for Milestone A (conformance, MS-1 unit, existing gates with the N3 repetitions, equivalence, freeze) |
 | `evidence_orchestrator/` | Gates O1–O26 of `verify_orchestrator.mjs` on the diagnostic material, with its manifests |

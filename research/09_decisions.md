@@ -7,6 +7,34 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-029 — H1-R O23 safety hardening: the orchestrator gate's registry check can no longer start Stage 1
+
+**Date:** 2026-10-06 · **Authority:** Research Director "O23 safety hardening — final pre-Stage-1 milestone" (2026-10-06), after Milestone B (`6fc5a9e`) · **Status:** in force; implemented in `experiments/h1r/verify_orchestrator.mjs` (`o23RegistryIntegrity`), gated by `experiments/h1r/verify_o23.mjs`
+**Scope:** one verifier check.
+- It changes no scientific design, pre-registration (v1.0 `c52e7337…a836`), analysis, runtime, arm, reward, trust, RNG, environment, registry allocation, seed or stage configuration.
+- `analyze.js`, `orchestrate.mjs`, the instrument files and the Milestone-B build-identity record are unchanged. Milestone B is not reopened.
+
+### 1. History (classified)
+- **At `bf0833f` (Milestone A):** O23 asserted the pre-registration registry (no H1-R record, no stage executable) and PASSED.
+  - It also ran `orchestrate.mjs stage1` twice: once with an empty authorisation, and once with `H1R_STAGE_AUTHORISED=stage1`, relying on the registry pre-check to refuse.
+- **At `6fc5a9e` (Milestone B):** the registry records H1-R's pilot use, so that authorised probe would have started a real Stage 1.
+  - It was unreachable only because O23 threw first. Its in-memory registry duplicated the now-committed 004–008 records.
+  - O23 FAILED by design, as classified in Milestone B.
+
+### 2. Ruling as implemented
+- **What O23 is now:** `o23RegistryIntegrity(O, typed)`. It is read-only and in process, and starts no process. It reads only `O.PROTOCOL`, `O.productionRegistry`, `O.registryPrecheck` and the typed registry.
+- **What it asserts, under the post-registration registry:**
+  - Stage 1 and the extension are executable as far as the registry is concerned;
+  - Stage 2 is not (confirmatory seeds and block 900500 unrecorded);
+  - seeds 000–003 are refused;
+  - H1-R records exactly 004–008, pilot and unexecuted;
+  - without those records, or without the pilot block, Stage 1 is not executable.
+- **Removed:** both CLI probes and `execFileSync`. The CLI's authorisation and registry refusals stay gated by `verify_cli.mjs`, in sandboxes on test doubles (C4, C5).
+- **Consequence for Milestone B's gate:** the since-base checks of `verify_milestone_b.mjs` (S1, S2) and its check of O23's old source (H-P) no longer hold at later commits. That gate stays bound to its own commit, `6fc5a9e`, where it passed 36/36.
+- **Consequence for the build-identity record:** `build_identity.mjs --check` at later commits reports a difference. The record, bound to `6fc5a9e`, lists that commit's hash of `verify_orchestrator.mjs`. Every other listed file, and the instrument identity the orchestrator stamps, are unchanged (`verify_o23.mjs` G3, T4).
+
+---
+
 ## D-028 — H1-R N3: `verify_determinism.js` C1 compared without its fingerprint-count detail (named interpretation of OFF ≡ pristine)
 
 **Date:** 2026-10-06 · **Authority:** Research Director "D-028 / final Milestone-B closure" (2026-10-06), after the read-only C1/N3 semantic investigation · **Status:** in force; implemented in `experiments/h1r/verify_existing_equivalence.mjs`, gated by `experiments/h1r/verify_d028.mjs`

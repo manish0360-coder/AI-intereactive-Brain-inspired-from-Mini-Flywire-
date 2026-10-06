@@ -1,0 +1,63 @@
+PASS  OE    end-to-end on the diagnostic material (3 G15 configurations × seed 20260819000 × 7 arms, plus the 7 determinism re-runs and the pre-registered forks): plan → execute (one OS process per run) → validate → classify → determinism comparison → fork sample → forks with the one retry → study block → lazy records document → analyze.js, with no halt
+      planned 28, valid 28, invalid 0, no-record 0; determinism re-runs 7; fork sample 26, fork attempts 26 (valid 26); records analysed 21 runs, 26 forks
+PASS  O1    schema: a foreign run schema, a foreign measurement schema, a missing step0, a digest-only record, a missing validity flag, an inconsistent `valid` and non-JSON bytes each halt (MALFORMED); the unmodified record classifies valid
+      {"schema":true,"step0Missing":true,"digestOnly":true,"flagMissing":true,"validInconsistent":true,"measureSchema":true,"notJson":true}; control valid
+PASS  O2    identity: a record whose arm, configuration index, agent seed, goal, accepted seed, stream start seed, block, R3 environment seed or fork differs from its planned job halts (IDENTITY)
+      {"arm":true,"configIndex":true,"agentSeed":true,"goal":true,"acceptedSeed":true,"configSeed":true,"block":true,"envSeed":true,"fork":true}
+PASS  O3    hashes: a record produced by a different transform, runtime, measurement layer, sink installer, shadow, env-seed module, driver or B2 commit halts (INSTRUMENT: a changed instrument is a protocol deviation, not an exclusion)
+      {"transformSha256":true,"runtimeSha256":true,"measureSha256":true,"measureInstallSha256":true,"shadowSha256":true,"envSeedSha256":true,"driverSha256":true,"b2Commit":true}
+PASS  O4    duplicates: a plan with a repeated (configuration, seed, arm) halts; a record in a stage directory that no planned job owns halts (UNPLANNED_RECORD); a record duplicated under another job's path halts (IDENTITY)
+      plan true; unplanned true; misplaced true
+PASS  O5    missing record (D-026 §1): a base run whose process dies, and one that exits without writing, are crashes (status no-record, invalid) and drop their (configuration, seed) pairs; a second execution never re-runs them (0 runner calls); a planned run that was never attempted halts (NOT_EXECUTED), it is not a crash
+      statuses no-record/no-record; dropped pairs [0,2]; re-execution calls 0; first execution calls 28/28; never-attempted true
+PASS  O6    validity mapping: a record with one of the 11 flags false (and valid false) classifies invalid with its flags kept; VALIDITY_FLAGS equals v1.0 §10's 11 names in order and the driver's validity keys
+      status invalid; v1.0 names 11; driver keys 11; equal true/true
+PASS  O8    complete grid (C-3/G1, D-026 §3): with every run of one configuration invalid, the study input still declares all configurations and all 20 registered seeds, writes a cell row for every planned run, and the records document's declared universe still contains the empty configuration row
+      declared configs [1,2,0]; seeds 20; cell rows 21; records universe [0,1,2]×1
+PASS  O10f  Stage-1 probe: for S03 (VOID after the extension) and S17 (HALT, extension unavailable) the probe signals the extension and the final Stage-1 block equals the full analysis's exactly
+      {"S03":{"steps":["EXTENSION_REQUIRED","VOID"],"equal":true},"S17":{"steps":["EXTENSION_REQUIRED"],"equal":true}}
+PASS  O11   fork plan: the orchestrator's pre-registered sample (analyze.js makeRng(770004) and Fisher–Yates, valid pairs in (configuration, seed) order however supplied) equals the F-3 sample analyze.js reports for S01
+      1200 sampled decisions; equal true
+PASS  O12   fork differences (D-026 §2): an attempt with any of the 11 flags false is crashed even though its record exists and its outcome is not a crash, so the re-run's difference is used (= Σ r over τ ∈ [t, t+20) in the base minus the fork, recomputed from the raw events); with no valid attempt the difference is null
+      attempt statuses invalid/valid; difference 0.8000000000000007 vs 0.8000000000000007; no valid attempt → null
+PASS  O14   counts: the manifest's planned/valid/invalid/no-record counts equal a recount of the classified runs; the dropped pairs the orchestrator derives from S04's cells equal analyze.js's Stage-2 droppedPairs
+      manifest {"planned":28,"valid":28,"invalid":0,"noRecord":0}; S04 dropped 4 vs analyze.js 4
+PASS  O17   raw-record integrity: a record is re-verified against its manifest SHA-256 on every lazy read, and a one-byte change halts (RAW_RECORD_CHANGED)
+      verified read true; modified copy true
+PASS  O18   schedule independence: executing the plan in reverse order one at a time, or interleaved six at a time, and classifying from differently ordered job lists gives byte-identical manifests
+      manifest SHA-256 232356d37f43a7e7 / 232356d37f43a7e7
+PASS  O24   determinism comparator (v1.0 §13): every arm of the determinism cell (configuration index ≡ 0 mod 5, first seed) is compared with its base run and matches; one changed fingerprint halts (DETERMINISM)
+      re-runs compared 7; mismatch true
+PASS  O25   pilot hard bound (v1.0 §7.1): the stream positions follow ERR-07 (index i starts after acceptedSeed(i−1)); an index not accepted at or below 889999 halts (PILOT_HARD_BOUND), and no candidate above the bound is ever evaluated
+      positions [[889990,889993],[889994,889997]]; third index true; highest candidate evaluated 889999
+PASS  O17b  the shared diagnostic records were not modified by any fast gate
+      56 files
+PASS  O7    cell construction: every study-input cell row (configuration, seed, arm, valid, R_W1–W4, R_all, half-life, censored, fingerprint, floor raises), A1 link row and monotonicity row equals a separate mapping of analyze.js runMetrics over the same raw records (the orchestrator computes no metric)
+      cells 21 (true); link rows 3 (true); monotonicity rows 3
+PASS  O9    dropped-pair isolation: nulling every metric of every dropped pair and removing their A1 link, population and monotonicity rows leaves analyze.js's whole study output byte-identical (S04, S05)
+      {"S04":{"drops":5,"equal":true},"S05":{"drops":8,"equal":true}}
+PASS  O10   Stage-1 probe (v1.0 §13; C-1): on S01 and S13 (PROCEED) the probe on Stage-1 data alone reproduces analyze.js's full Stage-1 block (F-11, power, S*, dropped pairs) exactly; together with O10f this covers PROCEED, VOID after the extension and HALT
+      {"S01":{"action":"PROCEED","Sstar":4,"equal":true},"S13":{"action":"PROCEED","Sstar":20,"equal":true}}
+PASS  O13   per-window A5 ≡ A2 (PR-11): analyze.js's per-window identity of the A5 and A2 reward-event streams equals an independent window-by-window comparison of the raw events for every valid diagnostic pair; identical fingerprints imply identity in all 4 windows; positive control: an A2 run and its determinism re-run are identical in all 4 windows
+      pairs 3; mismatches 0; fingerprint-identical pairs 0; control {"W1":true,"W2":true,"W3":true,"W4":true}
+PASS  O15   provenance: every manifest entry carries identity, role, stage, a repository-relative path (no drive, no backslash, no absolute path), the SHA-256 and size of the raw bytes, status and validity; the manifest carries every instrument hash, analyze.js's and the orchestrator's SHA-256; a decision record carries its study input's SHA-256
+      entries 28; relative true; hashes and sizes true; instrument keys 11/11
+PASS  O16   determinism: re-deriving the manifest, the study input and the records analysis from the same raw records twice, with the job and entry lists in opposite orders, gives byte-identical artifacts
+      232356d37f43/232356d37f43 e50bcb060e98/e50bcb060e98 20bd41687166/20bd41687166
+PASS  O19   RNG and purity: no clock, Math.random, crypto randomness, timers or network in the orchestrator; its only random numbers are analyze.js's makeRng(770004) at one site (the pre-registered fork sample); no host-specific path in its source
+      banned none; makeRng sites 1 (770004 true); host paths false
+PASS  O21   lazy/eager: analyze.js's records analysis of M01 with every measurement loaded lazily from its own raw file (verified against its SHA-256 on each read) equals the analysis of the in-memory document
+      2d086980576e6ea3 / 2d086980576e6ea3
+PASS  O22   real-record compatibility: analyze.js processes every real diagnostic record (base, determinism and fork runs) without refusal; every cap episode after the first is exactly 150 ticks after the I-21 lag correction (the raw goal→cap gap is 151 calls), confirming I-21 on the real runtime; every snapshot trust is in [0, 1]; PR-4 bins sum to the decision ticks
+      records 54; refusals 0; cap episodes after the first 263, of 150 ticks 263; raw goal→cap gaps of 151 calls 77; trust outside [0,1] 0; bin-sum mismatches 0
+PASS  O23   registry integrity after the H1-R registry actions (D-029; read-only, in process, starts no process): Stage 1 and the extension are executable as far as the registry is concerned; Stage 2 is not (confirmatory seeds and block 900500 unrecorded); seeds 000–003 are refused; H1-R records exactly the pilot seeds 004–008, unexecuted; without those records, or without the pilot block, Stage 1 is not executable
+      stage1 executable true (REPRODUCTION; block recorded true); extension true; stage2 false (AVAILABLE; block 900500 recorded false); seeds 000–003 CONSUMED_BY_OTHER_STUDY; H1-R records 20260819004,20260819005,20260819006,20260819007,20260819008, pilot and unexecuted true; committed records true, without the block false, without H1-R's records false
+PASS  O20   CLI/programmatic equivalence: the output document assembled in-process from analyzeStudy/analyzeRecords on all 18 fixtures is byte-identical to `node analyze.js <fixtures> <out>`
+      7b55a8f5a16e896d / 7b55a8f5a16e896d
+PASS  O26a  mutation harness control: an unmutated copy of the orchestrator in the mutant directory passes every fast gate
+      control (unmutated copy): ALL PASS
+PASS  O26   anti-vacuity: each of 19 deliberate orchestrator defects is caught by the fast gates
+      rerunCrashed:O5 noRecordValid:O5 identityArm:O2+O4 envSeedSkip:O2 instrumentSkip:O3 unplannedSkip:O4 validConjunction:O1 pairAnyArm:O5+O14 dropEmptyConfig:O8 recordsUniverseObserved:O8 forkSeed:O11 forkPairOrder:O11 forkCrashOutcomeOnly:O12 shaUnverified:O17 probeExtensionFlag:O10f hardBoundIgnored:O25 streamRestart:O25 determinismSkip:O24 noLedger:O5
+
+30 PASS, 0 FAIL — 467 s
+exit 0

@@ -11,7 +11,7 @@
 //   node experiments/h1r/verify_orchestrator.mjs                     full battery (writes experiments/h1r/$H1R_EVIDENCE/)
 //   node experiments/h1r/verify_orchestrator.mjs --fast <orch> <ctx>  fast gates against the given orchestrator (mutants)
 // ==========================================================
-import { execFileSync, spawn } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -219,6 +219,36 @@ export async function fastChecks(orchPath, ctx) {
   return G;
 }
 
+// ---------------- O23: registry integrity (D-029) ----------------
+// Read-only and in process. It reads the committed registry through the orchestrator's own pre-check and starts no
+// process. History: until D-029, O23 asserted the pre-registration registry (no H1-R record, no stage executable;
+// PASS at bf0833f). It also ran the CLI with H1R_STAGE_AUTHORISED=stage1 and relied on the registry refusing. Once
+// Milestone B recorded H1-R's pilot use, that probe would have started a real Stage 1. It was unreachable only because
+// O23 threw first, on a duplicate in-memory record (FAIL at 6fc5a9e). The CLI's authorisation and registry refusals
+// are gated in sandboxes by verify_cli.mjs (C4, C5); verify_o23.mjs proves that this check cannot start a process.
+export async function o23RegistryIntegrity(O, typed) {
+  const P = O.PROTOCOL, prod = await O.productionRegistry();
+  const pilot = { lo: P.pilot.streamStart, hi: P.pilot.hardBound }, held = { lo: P.confirmatory.streamStart, hi: null };
+  const pre = (stage, seeds, configBlock, registry) => O.registryPrecheck({ stage, seeds, configBlock, registry });
+  const s1 = pre('stage1', P.pilot.seeds, pilot, prod), ext = pre('extension', P.pilot.seeds, pilot, prod), s2 = pre('stage2', P.confirmatory.seeds, held, prod);
+  const old = pre('stage1', [20260819000, 20260819001, 20260819002, 20260819003], pilot, prod);
+  const h1r = typed.TRAJECTORY_RECORDS.filter(r => r.study === P.study);
+  const recordsOk = JSON.stringify(h1r.map(r => r.value)) === JSON.stringify(P.pilot.seeds) && h1r.every(r => r.namespace === 'trajectory' && r.status === 'pilot' && r.executed === false);
+  // the pre-check depends on both registry actions: without H1-R's records, or without its block, Stage 1 is not executable
+  const regOf = (records, blockOk) => { const mem = typed.createTrajectoryRegistry({ records, heldOut: [], authorizations: [] });
+    return { trajectoryDecision: (v, use) => mem.checkUse(typed.trajectorySeed(v), use).decision, configBlockRecorded: () => blockOk }; };
+  const yes = pre('stage1', P.pilot.seeds, pilot, regOf([...typed.TRAJECTORY_RECORDS], true));
+  const noBlock = pre('stage1', P.pilot.seeds, pilot, regOf([...typed.TRAJECTORY_RECORDS], false));
+  const noRecords = pre('stage1', P.pilot.seeds, pilot, regOf(typed.TRAJECTORY_RECORDS.filter(r => r.study !== P.study), true));
+  const pass = s1.executable && s1.items.length === 5 && s1.items.every(i => i.decision === 'REPRODUCTION') && s1.configBlock.recordedForH1R === true && ext.executable
+    && !s2.executable && s2.items.length === 20 && s2.items.every(i => i.decision === 'AVAILABLE') && s2.configBlock.recordedForH1R === false
+    && old.items.length === 4 && old.items.every(i => i.refusal === 'CONSUMED_BY_OTHER_STUDY') && recordsOk
+    && yes.executable && !noBlock.executable && !noRecords.executable && noRecords.items.every(i => i.decision === 'AVAILABLE');
+  const dec = (x) => [...new Set(x.items.map(i => i.decision || i.refusal))].join('/');
+  return { pass, evidence: `stage1 executable ${s1.executable} (${dec(s1)}; block recorded ${s1.configBlock.recordedForH1R}); extension ${ext.executable}; stage2 ${s2.executable} (${dec(s2)}; block 900500 recorded ${s2.configBlock.recordedForH1R}); ` +
+    `seeds 000–003 ${dec(old)}; H1-R records ${h1r.map(r => r.value).join(',')}, pilot and unexecuted ${recordsOk}; committed records ${yes.executable}, without the block ${noBlock.executable}, without H1-R's records ${noRecords.executable}` };
+}
+
 // ---------------- full battery ----------------
 async function main() {
   const EVID = path.join(HERE, process.env.H1R_EVIDENCE || 'evidence_orchestrator');
@@ -359,24 +389,10 @@ async function main() {
       refusals === 0 && capAfterFirst > 0 && cap150 === capAfterFirst && trustBad === 0 && binsBad === 0,
       `records ${n}; refusals ${refusals}; cap episodes after the first ${capAfterFirst}, of 150 ticks ${cap150}; raw goal→cap gaps of 151 calls ${goalToCapRaw151}; trust outside [0,1] ${trustBad}; bin-sum mismatches ${binsBad}`);
   });
-  await guard('O23', 'registry pre-check', async () => {
-    const prod = await O.productionRegistry(), P = O.PROTOCOL;
-    const s1 = O.registryPrecheck({ stage: 'stage1', seeds: P.pilot.seeds, configBlock: { lo: P.pilot.streamStart, hi: P.pilot.hardBound }, registry: prod });
-    const s2 = O.registryPrecheck({ stage: 'stage2', seeds: P.confirmatory.seeds, configBlock: { lo: P.confirmatory.streamStart, hi: null }, registry: prod });
-    const old = O.registryPrecheck({ stage: 'stage1', seeds: [20260819000, 20260819001, 20260819002, 20260819003], configBlock: { lo: P.pilot.streamStart, hi: P.pilot.hardBound }, registry: prod });
-    const typed = await import(pathToFileURL(path.join(REPO, 'experiments', 'registry', 'typed.js')).href);
-    const recs = P.pilot.seeds.map(v => ({ namespace: 'trajectory', value: v, study: 'H1-R', status: 'pilot', executed: false, authorization: 'verification only (in memory)', artifact: 'none', why: 'O23 in-memory registry' }));
-    const mem = typed.createTrajectoryRegistry({ records: [...typed.TRAJECTORY_RECORDS, ...recs], heldOut: [], authorizations: [] });
-    const reg = (blockOk) => ({ trajectoryDecision: (v, use) => mem.checkUse(typed.trajectorySeed(v), use).decision, configBlockRecorded: () => blockOk });
-    const yes = O.registryPrecheck({ stage: 'stage1', seeds: P.pilot.seeds, configBlock: { lo: P.pilot.streamStart, hi: P.pilot.hardBound }, registry: reg(true) });
-    const noBlock = O.registryPrecheck({ stage: 'stage1', seeds: P.pilot.seeds, configBlock: { lo: P.pilot.streamStart, hi: P.pilot.hardBound }, registry: reg(false) });
-    const linkAbsent = !fs.existsSync(path.join(REPO, 'experiments', 'registry', 'consumed_after_h1r.js'));
-    const cliRefuse = (() => { try { execFileSync(process.execPath, [ORCH, 'stage1'], { stdio: 'pipe', env: { ...process.env, H1R_STAGE_AUTHORISED: '' } }); return false; } catch (e) { return e.status === 3; } })();
-    const cliRegistry = (() => { try { execFileSync(process.execPath, [ORCH, 'stage1'], { stdio: 'pipe', env: { ...process.env, H1R_STAGE_AUTHORISED: 'stage1' } }); return false; } catch (e) { return e.status === 3 && /registry pre-check/.test(String(e.stderr)); } })();
-    ok('O23', 'registry pre-check (read-only): today every pilot seed 004–008 and confirmatory seed 100–119 is AVAILABLE but not recorded for H1-R and no H1-R block exists, so no stage is executable; seeds 000–003 are refused (CONSUMED_BY_OTHER_STUDY); an in-memory registry recording H1-R\'s pilot seeds and block is executable, and without the block is not; the CLI refuses without the Director\'s authorisation and, authorised, refuses on the registry',
-      !s1.executable && s1.items.every(i => i.decision === 'AVAILABLE') && !s2.executable && s2.items.every(i => i.decision === 'AVAILABLE') && old.items.every(i => i.refusal === 'CONSUMED_BY_OTHER_STUDY')
-        && yes.executable && yes.items.every(i => i.decision === 'REPRODUCTION') && !noBlock.executable && linkAbsent && cliRefuse && cliRegistry,
-      `stage1 executable ${s1.executable} (${[...new Set(s1.items.map(i => i.decision))]}); stage2 ${s2.executable}; seeds 000–003 ${[...new Set(old.items.map(i => i.refusal))]}; in-memory H1-R registry ${yes.executable}, without block ${noBlock.executable}; H1-R link absent ${linkAbsent}; CLI refusals ${cliRefuse}/${cliRegistry}`);
+  await guard('O23', 'registry integrity', async () => {
+    const r = await o23RegistryIntegrity(O, await import(pathToFileURL(path.join(REPO, 'experiments', 'registry', 'typed.js')).href));
+    ok('O23', 'registry integrity after the H1-R registry actions (D-029; read-only, in process, starts no process): Stage 1 and the extension are executable as far as the registry is concerned; Stage 2 is not (confirmatory seeds and block 900500 unrecorded); seeds 000–003 are refused; H1-R records exactly the pilot seeds 004–008, unexecuted; without those records, or without the pilot block, Stage 1 is not executable',
+      r.pass, r.evidence);
   });
   await guard('O20', 'CLI/programmatic equivalence', async () => {
     const study = {}; for (const f of fs.readdirSync(FXDIR).filter(f => /^S\d+\.json$/.test(f)).sort()) { const fx = fixture(f); study[fx.id] = A.analyzeStudy(fx); }
