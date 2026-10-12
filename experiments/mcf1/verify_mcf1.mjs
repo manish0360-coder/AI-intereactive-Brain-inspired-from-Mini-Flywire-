@@ -1,27 +1,35 @@
 // ==========================================================
-// MCF-1 harness — verification gates (development seeds only; no official stage, no confirmatory seed)
+// MCF-1 harness — verification gates (development seeds and synthetic records only)
 // ==========================================================
 //   node experiments/mcf1/verify_mcf1.mjs
-// Exit code 0 iff every gate passed AND every mutant was caught.  Each mutant corrupts one input or
-// implementation and must make its gate fail; a mutant that is not caught means the gate is vacuous.
+// Exit code 0 iff every gate passed AND every mutant was caught.  Each mutant corrupts one safeguard and the
+// gate that protects it must then fail; a mutant that is not caught means the gate is vacuous.
 //
-// Pinned values below were measured earlier in scratch work on the exploratory development block
-// (cold census / fidelity pass).  They are regression pins, not new science.
+// R1 mutants are SOURCE mutants: the harness modules are copied to a temporary directory, one uniquely-anchored
+// edit is applied, the imports are rewritten to absolute URLs, and the SAME gate function is run against the
+// mutated module graph.  An anchor that is missing or not unique aborts the run (no silent no-op mutants).
+//
+// Boundaries kept by this verifier: it never scans or executes the candidate confirmatory block (every admission
+// scan goes through scanSafe), consumes no official seed, creates no registry entry or freeze record, and runs
+// no official stage.  Synthetic raw seeds lie inside the exploratory development domain.
+//
+// Pinned values below were measured earlier on the exploratory development block (cold census / fidelity pass)
+// and in the M-MCF1-HARNESS milestone.  They are regression pins, not new science.
 // ==========================================================
 import { execFileSync, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import * as CFG from './config.mjs';
 import * as INV from './inventory.mjs';
 import * as ADM from './admission.mjs';
 import * as EPI from './episodes.mjs';
 import * as VAL from './validity.mjs';
-import * as ORC from './orchestrate.mjs';
+import * as FRM from './frame.mjs';
 import * as ANA from './analyze.mjs';
+import * as ORC from './orchestrate.mjs';
 import { createTrajectoryRegistry, TRAJECTORY_RECORDS, TRAJECTORY_HELD_OUT, TRAJECTORY_AUTHORIZATIONS, trajectory, trajectorySeed } from '../registry/typed.js';
-import { ENV_STREAM, domainSlots } from '../h1r/env_seed.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)), REPO = path.resolve(HERE, '..', '..');
 let failed = 0, passed = 0, mutantsCaught = 0, mutantsMissed = 0;
@@ -30,8 +38,16 @@ const mutant = (gate, name, caught, detail = '') => { if (caught) mutantsCaught+
 const git = (...a) => execFileSync('git', ['-C', REPO, ...a], { encoding: 'utf8' });
 const near = (a, b, t = 1e-9) => Math.abs(a - b) <= t;
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
-const TMP = fs.mkdtempSync(path.join(fs.realpathSync.native(os.tmpdir()), 'mcf1-verify-'));
+const TMPREAL = fs.realpathSync.native(os.tmpdir());
+const TMP = fs.mkdtempSync(path.join(TMPREAL, 'mcf1-verify-'));
 const D0 = 1_100_000_000;
+
+/** every admission scan in this verifier goes through here: the candidate confirmatory block is never scanned */
+const scanSafe = (args) => {
+  const lo = CFG.BLOCK.start, hi = CFG.BLOCK.start + CFG.BLOCK.scanLength;
+  if (args.start < hi && args.start + args.length > lo) throw new Error('verifier refuses to scan the candidate confirmatory block');
+  return ADM.admitScan(args);
+};
 
 // ---------------- G0: runtime identity ----------------
 console.log('\n== G0 runtime identity and repository base ==');
@@ -52,7 +68,7 @@ const inv1 = INV.buildInventory(), inv2 = INV.buildInventory();
   const cls = Object.fromEntries(inv1.classes.map(c => [c.id, c.spanCount]));
   const union = new Set([...TRAJECTORY_RECORDS.map(r => r.value), ...INV.h1rDomainSeeds()]);
   check('G1', 'H1-R class = 4 streams x (recorded U verified domain)', cls.H1R_RECORDS_AND_DOMAIN === 4 * union.size, `${cls.H1R_RECORDS_AND_DOMAIN} = 4 x ${union.size}`);
-  check('G1', 'R3 class = one segment per environment slot', cls.R3_ENV_SLOTS === domainSlots().length && cls.R3_ENV_SLOTS === 1920, String(cls.R3_ENV_SLOTS));
+  check('G1', 'R3 class = one segment per environment slot', cls.R3_ENV_SLOTS === 1920, String(cls.R3_ENV_SLOTS));
   check('G1', 'development class = 3 used streams x 2,400 seeds', cls[CFG.DEV_BLOCK.id] === 3 * CFG.DEV_BLOCK.count, String(cls[CFG.DEV_BLOCK.id]));
   check('G1', 'examined classes = (cognitive + environment) x seeds', CFG.EXPOSURE.every(e => cls[e.id] === 2 * e.count), CFG.EXPOSURE.map(e => `${e.id}:${cls[e.id]}`).join(' '));
   const snap = INV.registrySnapshot();
@@ -67,31 +83,34 @@ const inv1 = INV.buildInventory(), inv2 = INV.buildInventory();
   mutant('G1', 'inventory without the R3 class has a different hash and span count', noR3.sha256 !== inv1.sha256 && noR3.classes.length === inv1.classes.length - 1);
 }
 
-// ---------------- G2: admission ----------------
+// ---------------- G2: admission (no scan of the candidate block) ----------------
 console.log('\n== G2 deterministic admission ==');
-const a1 = ADM.admitScan({ start: CFG.BLOCK.start, length: CFG.BLOCK.scanLength, inventory: inv1, category: 'registered' });
 {
-  const a2 = ADM.admitScan({ start: CFG.BLOCK.start, length: CFG.BLOCK.scanLength, inventory: inv2, category: 'registered' });
-  check('G2', 'scan is deterministic (identical list hash on a rebuilt inventory)', a1.summary.admittedSha256 === a2.summary.admittedSha256);
-  // known answer: the position-only feasibility check done before this milestone (candidate block, NOT authorised)
-  check('G2', 'known answer: 4,000 scanned -> 3,851 admitted / 149 rejected', a1.summary.admitted === 3851 && a1.summary.rejected === 149, `${a1.summary.admitted}/${a1.summary.rejected}`);
-  check('G2', 'known answer: first reasons = R3 slots 24, H1-R spans 125; no lag-0, registry or intra-run rejection',
-    a1.summary.rejectedByFirstReason.R3_ENV_SLOTS === 24 && a1.summary.rejectedByFirstReason.H1R_RECORDS_AND_DOMAIN === 125 && a1.summary.lag0Coincidences === 0 && a1.summary.registryRefusals === 0 && a1.summary.intraRunConflicts === 0);
-  check('G2', 'no overlap with the exploratory development or examined exposure', a1.summary.seedsOverlappingByClass[CFG.DEV_BLOCK.id] === 0 && CFG.EXPOSURE.every(e => a1.summary.seedsOverlappingByClass[e.id] === 0));
-  const a3 = ADM.admitScan({ start: CFG.BLOCK.start, length: CFG.BLOCK.scanLength, inventory: INV.buildInventory({ exclude: ['R3_ENV_SLOTS'] }), category: 'registered' });
-  mutant('G2', 'admission against an inventory without R3 admits a different list', a3.summary.admittedSha256 !== a1.summary.admittedSha256 && a3.summary.admitted > a1.summary.admitted);
-  let refused = 0; for (const [s, l] of [[CFG.M32 - 5, 10], [-1, 5], [10, 0]]) { try { ADM.admitScan({ start: s, length: l, inventory: inv1 }); } catch (e) { refused++; } }
+  // the candidate scan was MEASURED in M-MCF1-HARNESS (9aaf22e); R1 forbids scanning it again, so it is recorded here, not recomputed
+  const RECORDED = { provenance: 'measured in M-MCF1-HARNESS (9aaf22e); not re-scanned in R1', start: 1_500_000_000, length: 4000, admitted: 3851, rejected: 149, firstReasonR3: 24, firstReasonH1R: 125 };
+  check('G2', 'candidate block configuration equals the recorded scan (start, length), labelled CANDIDATE_NOT_AUTHORIZED, and the record is arithmetically consistent',
+    CFG.BLOCK.start === RECORDED.start && CFG.BLOCK.scanLength === RECORDED.length && CFG.BLOCK.status === 'CANDIDATE_NOT_AUTHORIZED' && RECORDED.admitted + RECORDED.rejected === RECORDED.length && RECORDED.firstReasonR3 + RECORDED.firstReasonH1R === RECORDED.rejected);
+  const S = { start: 1_600_000_000, length: 1000, category: 'registered' };      // a NON-candidate block: structural properties of the scan
+  const a1 = scanSafe({ ...S, inventory: inv1 }), a2 = scanSafe({ ...S, inventory: inv2 });
+  check('G2', 'scan is deterministic (identical list hash on a rebuilt inventory)', a1.summary.admittedSha256 === a2.summary.admittedSha256 && a1.sha256 === a2.sha256);
+  check('G2', 'full rejection accounting: admitted + rejected = scanned, every rejection has a first reason, first-reason counts sum to the rejections',
+    a1.summary.admitted + a1.summary.rejected === S.length && a1.rejected.every(r => r.reasons.length >= 1) && Object.values(a1.summary.rejectedByFirstReason).reduce((x, y) => x + y, 0) === a1.summary.rejected,
+    `${a1.summary.admitted}/${a1.summary.rejected} ${JSON.stringify(a1.summary.rejectedByFirstReason)}`);
+  const cand = Object.entries(a1.summary.rejectedByFirstReason).filter(([id]) => id === 'R3_ENV_SLOTS' || id === 'H1R_RECORDS_AND_DOMAIN').sort((x, y) => y[1] - x[1])[0];
+  const drop = cand ? cand[0] : null;
+  const a3 = drop ? scanSafe({ ...S, inventory: INV.buildInventory({ exclude: [drop] }) }) : null;
+  mutant('G2', `admission against an inventory without ${drop} admits a different list`, !!a3 && a3.summary.admittedSha256 !== a1.summary.admittedSha256 && a3.summary.admitted > a1.summary.admitted, a3 ? `${a1.summary.admitted} -> ${a3.summary.admitted}` : 'no R3/H1-R rejection in the sample');
+  let refused = 0; for (const [s, l] of [[CFG.M32 - 5, 10], [-1, 5], [10, 0]]) { try { scanSafe({ start: s, length: l, inventory: inv1 }); } catch (e) { refused++; } }
   check('G2', 'scans that would alias modulo 2^32 or are empty are refused', refused === 3);
-  const ex = ADM.admitScan({ start: D0, length: 50, inventory: inv1, category: 'registered' });
+  const ex = scanSafe({ start: D0, length: 50, inventory: inv1, category: 'registered' });
   check('G2', 'with the full inventory every exploratory seed is rejected (lag-0 identity)', ex.summary.admitted === 0 && ex.summary.rejectedByFirstReason.lag0 === 50);
+  let guarded = false; try { scanSafe({ start: CFG.BLOCK.start, length: 1, inventory: inv1 }); } catch (e) { guarded = /candidate confirmatory block/.test(e.message); }
+  check('G2', 'the verifier itself cannot scan the candidate block (scanSafe self-test)', guarded);
 }
 
 // ---------------- G3: translation collisions ----------------
 console.log('\n== G3 consecutive-integer blocks collide wholesale ==');
 {
-  // measured on the full inventory: over the first 400 seeds of each block, EVERY seed's visual span intersects an
-  // examined offline-exposure span at 1.3e9 and at 1.4e9 (consecutive raw seeds are translates on the cycle);
-  // 1.5e9 intersects no examined class.  The streams do not collide at lag 0, so the registry cannot see this.
   const N = 100, blockHits = (start, cls) => {
     const idx = inv1.classes.find(c => c.id === cls).index; let n = 0, viaVisual = 0;
     for (let k = 0; k < N; k++) {
@@ -105,14 +124,13 @@ console.log('\n== G3 consecutive-integer blocks collide wholesale ==');
     const h = blockHits(start, OFFLINE);
     check('G3', `block at ${start}: all ${N} seeds collide with the examined offline exposure, through the visual stream`, h.n === N && h.viaVisual === N, `${h.n}/${N} (visual ${h.viaVisual})`);
   }
-  check('G3', `block at ${CFG.BLOCK.start}: no seed collides with an examined class or the development block`,
-    [OFFLINE, 'EXAMINED_1P2E9', CFG.DEV_BLOCK.id].every(c => blockHits(CFG.BLOCK.start, c).n === 0));
+  check('G3', 'control block at 1,600,000,000 (not the candidate): no seed collides with an examined class or the development block',
+    [OFFLINE, 'EXAMINED_1P2E9', CFG.DEV_BLOCK.id].every(c => blockHits(1_600_000_000, c).n === 0));
   const lag0AtM = INV.derivedSeeds(1_300_000_000);
-  check('G3', 'the collision is NOT a lag-0 identity (no derived seed equals a reserved one), so the registry check cannot see it',
-    !INV.STREAMS.some(n => inv1.derived.has(lag0AtM[n])));
+  check('G3', 'the collision is NOT a lag-0 identity (no derived seed equals a reserved one), so the registry check cannot see it', !INV.STREAMS.some(n => inv1.derived.has(lag0AtM[n])));
   const noOffline = INV.buildInventory({ exclude: [OFFLINE] });
-  const withClass = ADM.admitScan({ start: 1_300_000_000, length: 50, inventory: inv1, category: 'registered' });
-  const without = ADM.admitScan({ start: 1_300_000_000, length: 50, inventory: noOffline, category: 'registered' });
+  const withClass = scanSafe({ start: 1_300_000_000, length: 50, inventory: inv1, category: 'registered' });
+  const without = scanSafe({ start: 1_300_000_000, length: 50, inventory: noOffline, category: 'registered' });
   check('G3', 'full inventory admits none of the first 50 seeds of the 1.3e9 block', withClass.summary.admitted === 0, `${withClass.summary.admitted}/50`);
   mutant('G3', 'an inventory without the examined offline class would admit the colliding block', without.summary.admitted >= 45, `${without.summary.admitted}/50 admitted`);
 }
@@ -120,14 +138,12 @@ console.log('\n== G3 consecutive-integer blocks collide wholesale ==');
 // ---------------- G4: registry semantics ----------------
 console.log('\n== G4 registry clause semantics ==');
 {
-  // The registry is exercised through admitScan's injectable `registry` parameter on IN-MEMORY registries only:
-  // nothing is recorded, registered or consumed.  The probe is a seed that the live registry and every span clause admit.
-  const scan = ADM.admitScan({ start: 1_700_000_000, length: 100, inventory: inv1, category: 'registered' });
+  const scan = scanSafe({ start: 1_700_000_000, length: 100, inventory: inv1, category: 'registered' });
   const probe = scan.admitted[0];
-  check('G4', 'a probe seed outside the candidate block is admitted by the live registry (AVAILABLE)', Number.isSafeInteger(probe) && probe >= 1_700_000_000 && probe < CFG.BLOCK.start + 10 ** 9, String(probe));
+  check('G4', 'a probe seed outside the candidate block is admitted by the live registry (AVAILABLE)', Number.isSafeInteger(probe) && probe >= 1_700_000_000, String(probe));
   const rec = (value, study, status) => ({ namespace: 'trajectory', value, study, status, executed: false, authorization: 'in-memory verification only', artifact: 'none', why: 'registry clause semantics' });
   const mk = ({ records = [], heldOut = [] }) => createTrajectoryRegistry({ records: [...TRAJECTORY_RECORDS, ...records], heldOut: [...TRAJECTORY_HELD_OUT, ...heldOut], authorizations: TRAJECTORY_AUTHORIZATIONS });
-  const one = (registry, category = 'registered') => ADM.admitScan({ start: probe, length: 1, inventory: inv1, category, registry });
+  const one = (registry, category = 'registered') => scanSafe({ start: probe, length: 1, inventory: inv1, category, registry });
   const reasonOf = (r) => (r.rejected[0] ? r.rejected[0].reasons[0] : null);
   check('G4', 'live registry: AVAILABLE -> admitted', one(trajectory).admitted.length === 1);
   const reg = one(mk({ records: [rec(probe, CFG.STUDY, 'registered')] }));
@@ -139,11 +155,10 @@ console.log('\n== G4 registry clause semantics ==');
   const held = one(mk({ heldOut: [{ lo: probe, hi: probe, authorization: 'in-memory verification only', why: 'registry clause semantics' }] }));
   mutant('G4', 'a held-out seed is refused (HELD_OUT)', held.admitted.length === 0 && reasonOf(held) === 'registry:HELD_OUT', reasonOf(held));
   check('G4', 'the injected-registry summary hash differs from the live one only because the registry differs', reg.summary.registrySha256 !== one(trajectory).summary.registrySha256 && one(trajectory).summary.registrySha256 === INV.registrySnapshot().sha256);
-  // facts about the live registry that the span inventory has to cover
   const refuses = (v) => { try { trajectory.checkUse(trajectorySeed(v), { study: CFG.STUDY, category: 'registered' }); return 'AVAILABLE'; } catch (e) { return e.code; } };
   check('G4', 'H1-R pilot seed 20260819004 is refused for MCF-1 by the registry', refuses(20260819004) === 'CONSUMED_BY_OTHER_STUDY');
   check('G4', 'documented gap: reserved but unrecorded Stage-2 seed 20260819100 is AVAILABLE to the registry', refuses(20260819100) === 'AVAILABLE');
-  check('G4', 'a raw seed >= 2^32 cannot be scanned (it would alias another seed modulo 2^32)', (() => { try { ADM.admitScan({ start: 20260819100, length: 1, inventory: inv1 }); return false; } catch (e) { return /2\^32/.test(e.message); } })());
+  check('G4', 'a raw seed >= 2^32 cannot be scanned (it would alias another seed modulo 2^32)', (() => { try { scanSafe({ start: 20260819100, length: 1, inventory: inv1 }); return false; } catch (e) { return /2\^32/.test(e.message); } })());
 }
 
 // ---------------- G5: registered contents ----------------
@@ -162,8 +177,8 @@ console.log('\n== G5 memory contents ==');
   check('G5', 'unknown content is refused', threw);
 }
 
-// ---------------- G7: validity truth table (pure) ----------------
-console.log('\n== G7 pattern rule against brute force ==');
+// ---------------- G7: pair rule / identity class against brute force ----------------
+console.log('\n== G7 pair rule against brute force ==');
 {
   const E = [6, 9, 11, 13], PB = { 6: 0.9185, 13: 0.9151 };
   const P = (e, tw, pr, pu) => (e === 9 ? (tw === 9 ? pr : pu) : e === 11 ? (tw === 11 ? pr : pu) : PB[e]);
@@ -182,11 +197,11 @@ console.log('\n== G7 pattern rule against brute force ==');
     if (ok && !within) soundOk = false; if (!ok && within) leftOut.push(`(${x9},${x11})`);
   }
   check('G7', 'identity class equals brute-force identity over all 64 executed triples', classOk && identityCount === 10, `${identityCount}/64 hold`);
-  check('G7', 'pair rule is SOUND: every accepted pair has contrast support within {0,1}', soundOk);
-  check('G7', 'pair rule is conservative only where the contrast is identically 0', leftOut.every(s => ['(6,13)', '(13,6)'].includes(s)) || leftOut.length === 0, leftOut.join(' ') || 'none');
-  const badPair = (x9, x11) => (x9 === 9 && x11 === 11) || x9 === x11 || (x9 === 11 && x11 === 9);                 // wrongly accepts the reversed pair
-  mutant('G7', 'a classifier that accepts the reversed pair (11,9) violates the support', E.some(x9 => E.some(x11 => badPair(x9, x11) && !VAL.classifyPair(x9, x11).supportOK && (() => { const sup = new Set(); for (const xC of E) for (const v of brute(xC, x9, x11).sup) sup.add(v); return [...sup].some(v => v < 0); })())));
-  const badIdent = (xC, x9, x11) => [xC, x9, x11].every(e => [6, 9, 11].includes(e));                              // wrongly widens the class
+  check('G7', 'the pair classes follow/equal are exactly those whose first-edge contrast has support within {0,1} (descriptive label only after R1)', soundOk);
+  check('G7', 'the other classes are labelled non-regular only where the contrast is not confined to {0,1}, or is identically 0', leftOut.every(s => ['(6,13)', '(13,6)'].includes(s)) || leftOut.length === 0, leftOut.join(' ') || 'none');
+  const badPair = (x9, x11) => (x9 === 9 && x11 === 11) || x9 === x11 || (x9 === 11 && x11 === 9);
+  mutant('G7', 'a classifier that labels the reversed pair (11,9) regular violates the support', E.some(x9 => E.some(x11 => badPair(x9, x11) && !VAL.classifyPair(x9, x11).supportOK && (() => { const sup = new Set(); for (const xC of E) for (const v of brute(xC, x9, x11).sup) sup.add(v); return [...sup].some(v => v < 0); })())));
+  const badIdent = (xC, x9, x11) => [xC, x9, x11].every(e => [6, 9, 11].includes(e));
   mutant('G7', 'a widened identity class disagrees with brute force', E.some(a => E.some(b => E.some(c => badIdent(a, b, c) !== brute(a, b, c).holds))));
 }
 
@@ -202,8 +217,8 @@ const Oc = await ORC.stageO({ vManifest: Vs.manifest, expectedVSha256: Vs.manife
 console.log('\n== G6 Stage Q / V against pinned known answers ==');
 {
   check('G6', 'development admission of 100 exploratory seeds: all admitted', admDev.summary.admitted === 100);
-  check('G6', 'qualification: 3 qualified (offsets 0, 60, 92), 5 replay-at-call-0, 92 other start node',
-    same(Q.qualified.map(x => x - D0), [0, 60, 92]) && Q.summary.rejectedByReason.REPLAY_AT_CALL0 === 5 && Q.summary.rejectedByReason.START_NODE === 92 && !Q.summary.rejectedByReason.RUN, JSON.stringify(Q.summary.rejectedByReason));
+  check('G6', 'qualification: 3 qualified (offsets 0, 60, 92), 5 replay-at-call-0, 92 other start node, no halt',
+    same(Q.qualified.map(x => x - D0), [0, 60, 92]) && Q.summary.rejectedByReason.REPLAY_AT_CALL0 === 5 && Q.summary.rejectedByReason.START_NODE === 92 && !Q.summary.rejectedByReason.RUN && !Q.halted, JSON.stringify(Q.summary.rejectedByReason));
   check('G6', 'runtime identity holds on every Stage-Q record', Q.summary.runtimeIdentity.ok);
   const rec = (raw, k) => Vs.records.find(r => r.label === `V|${raw}|${k}`);
   const PIN = { 0: { F: { 6: 3.000529952276683, 9: 4.200064592815189, 11: 4.201431519867485, 13: 3.000148751737269 }, exec: 11, cog: 653, pattern: [11, 9, 11] },
@@ -218,12 +233,13 @@ console.log('\n== G6 Stage Q / V against pinned known answers ==');
   }
   check('G6', 'every Stage-V record is a decision-stop with no attempt and 0 environment draws', Vs.records.every(r => r.attempts.length === 0 && r.artifacts.envCounters.envDraws === 0 && r.outcome.abortedBySentinel));
   check('G6', 'validity manifest: 3 valid, 0 invalid, no halts, hash self-consistent', Vs.manifest.counts.valid === 3 && Vs.manifest.counts.invalid === 0 && !Vs.halted && VAL.manifestIntact(Vs.manifest));
-  // twin invariance is checked on every run pair
   const twinOk = Q.qualified.every(raw => ['C', 'M9', 'M11'].every(c => VAL.fingerprintPre(rec(raw, `${c}|T9`)) === VAL.fingerprintPre(rec(raw, `${c}|T11`))));
   check('G6', 'twin invariance with memory present on all qualified seeds', twinOk);
   const e0 = Vs.manifest.entries.find(x => x.raw === D0);
   const fpMut = { ...rec(D0, 'M9|T9'), step0: rec(D0, 'M9|T9').step0.map((c, i) => (i === 0 ? { ...c, F: c.F + 1e-6 } : c)) };
   mutant('G6', 'a perturbed candidate score changes the fingerprint (V5/V9 would see it)', VAL.fingerprintPre(fpMut) !== e0.fingerprints['M9|T9']);
+  check('G6', 'R1 entry fields present on real records: failures map, pair class, signed-score inputs and the inferred exploration indicator',
+    Vs.manifest.entries.every(e => e.failures && typeof e.failures === 'object' && ['follow', 'equal', 'reversed', 'mixed'].includes(e.pairClass) && e.exploration && e.exploration.indicator === 'inferred'));
 }
 
 // ---------------- G8: legality and the illegal-action counter ----------------
@@ -231,7 +247,6 @@ console.log('\n== G8 legality predicate and the blockedIllegal capture ==');
 {
   const src = fs.readFileSync(path.join(ctx.treeDir, 'main.js'), 'utf8');
   check('G8', 'conformed tree carries N1-MASK, N1-MASK-SEM and N1-GUARD with the counter', src.includes('H1R N1-MASK:') && src.includes('H1R N1-MASK-SEM:') && src.includes('H1R N1-GUARD') && src.includes('blockedIllegal++'));
-  // the runtime is installed in a child process so that nothing it patches reaches this verifier
   const probeSrc = `import { installH1R } from ${JSON.stringify(new URL('../h1r/runtime.mjs', import.meta.url).href)};
     const H = await installH1R({ tree: ${JSON.stringify(ctx.treeDir)}, trustMode: 'traversal', envPosition: null });
     process.stdout.write(JSON.stringify({ l109: H.legalMove(10, 9), l1012: H.legalMove(10, 12), l1010: H.legalMove(10, 10), e1012: H.isEdge(10, 12), e109: H.isEdge(10, 9), e1010: H.isEdge(10, 10), blocked: H.counters.blockedIllegal }));`;
@@ -247,7 +262,8 @@ console.log('\n== G8 legality predicate and the blockedIllegal capture ==');
   const base = VAL.validateSeedO({ raw: D0, vEntry: e, runs: runsO });
   check('G8', 'baseline Stage-O validation of the pinned seed is valid', base.valid && base.hardSeed.length === 0 && base.haltStage.length === 0);
   const m1 = JSON.parse(JSON.stringify(runsO)); m1['M9|T9'].h1r.blockedIllegal = 1;
-  mutant('G8', 'blockedIllegal = 1 invalidates the seed (V4b)', VAL.validateSeedO({ raw: D0, vEntry: e, runs: m1 }).hardSeed.includes('V4b'));
+  const r1 = VAL.validateSeedO({ raw: D0, vEntry: e, runs: m1 });
+  mutant('G8', 'blockedIllegal = 1 invalidates the seed (V4b) and the failing run is attributed', r1.hardSeed.includes('V4b') && same(r1.failures.V4b, ['M9|T9']));
   const m2 = JSON.parse(JSON.stringify(runsO)); m2['C|T9'].legality.executedLegalMove = false;
   mutant('G8', 'an illegal executed action invalidates the seed (V4b)', VAL.validateSeedO({ raw: D0, vEntry: e, runs: m2 }).hardSeed.includes('V4b'));
   const m3 = JSON.parse(JSON.stringify(runsO)); m3['M11|T11'].h1r.drawFaults = 1;
@@ -263,12 +279,11 @@ console.log('\n== G9 first-attempt stop points ==');
   check('G9', 'exactly one environment draw and one attempt per run', Oh.records.every(r => r.attempts.length === 1 && r.artifacts.envCounters.envDraws === 1 && r.h1r.envDrawsSeen === 1));
   check('G9', 'Stage-O pre-attempt fingerprints equal Stage V (determinism, V9)', Q.qualified.every(raw => ['C', 'M9', 'M11'].every(c => ['T9', 'T11'].every(t => VAL.fingerprintPre(Oh.records.find(r => r.label === `O|attempt-hook|${raw}|${c}|${t}`)) === Vs.manifest.entries.find(x => x.raw === raw).fingerprints[`${c}|${t}`]))));
   check('G9', 'instrument mapping holds (realised ok = 1{u1 < p}) for every run (V12)', Oh.manifest.counts.byRule.V12 === undefined);
-  const stopHook = Oh.records[0].probes.some(p => p.phase === 'after-attempt'), stopCall2 = Oc.records[0].probes.some(p => p.phase === 'call2-start');
-  check('G9', 'each stop point recorded its own probe', stopHook && stopCall2);
-  // mutant: a Stage-V entry whose fingerprint was altered must halt the stage (V9)
+  check('G9', 'each stop point recorded its own probe', Oh.records[0].probes.some(p => p.phase === 'after-attempt') && Oc.records[0].probes.some(p => p.phase === 'call2-start'));
   const e = JSON.parse(JSON.stringify(Vs.manifest.entries.find(x => x.raw === D0))); e.fingerprints['M9|T9'] = 'x'.repeat(64);
   const runsO = Object.fromEntries(['C|T9', 'C|T11', 'M9|T9', 'M9|T11', 'M11|T9', 'M11|T11'].map(k => [k, Oh.records.find(r => r.label === `O|attempt-hook|${D0}|${k}`)]));
-  mutant('G9', 'a fingerprint mismatch halts the stage (V9)', VAL.validateSeedO({ raw: D0, vEntry: e, runs: runsO }).haltStage.includes('V9'));
+  const v9 = VAL.validateSeedO({ raw: D0, vEntry: e, runs: runsO });
+  mutant('G9', 'a fingerprint mismatch halts the stage (V9) and is not a seed exclusion', v9.haltStage.includes('V9') && !v9.hardSeed.includes('V9') && same(v9.haltDetail.V9, ['M9|T9']));
   const m = JSON.parse(JSON.stringify(runsO)); m['M9|T9'].attempts[0][3] = 1 - m['M9|T9'].attempts[0][3];
   mutant('G9', 'an outcome flag that disagrees with 1{u1<p} halts the stage (V12)', VAL.validateSeedO({ raw: D0, vEntry: Vs.manifest.entries.find(x => x.raw === D0), runs: m }).haltStage.includes('V12'));
 }
@@ -286,89 +301,486 @@ console.log('\n== G10 gating and outcome blindness ==');
   const fields = new Set(); const walk = (o) => { if (o && typeof o === 'object') for (const [k, v] of Object.entries(o)) { fields.add(k); walk(v); } }; walk(Vs.manifest.entries);
   check('G10', 'the Stage-V manifest carries no outcome, draw or contrast field', !['ok', 'u1', 'outcomes', 'attempts', 'D', 'dR'].some(k => fields.has(k)), [...fields].filter(k => ['ok', 'u1', 'outcomes', 'attempts', 'dR'].includes(k)).join(','));
   check('G10', 'the driver forbids an attempt in decision-only stages (source guard present)', fs.readFileSync(path.join(HERE, 'driver.mjs'), 'utf8').includes('an environment attempt was reached in a decision-only stage'));
-  // spawn a decision-only driver on a seed outside the development domain: must refuse before loading anything
-  const res = spawnSync(process.execPath, [path.join(HERE, 'driver.mjs'), JSON.stringify({ mode: 'V', stopAt: 'decision', policy: 'development', tree: ctx.treeDir, label: 'x', agentSeed: CFG.BLOCK.start, content: 'C', twin: 'T9', configSeed: 100000, configIndex: 1 })], { encoding: 'utf8' });
-  check('G10', 'the driver refuses a candidate-block seed in development mode', res.status !== 0 && /MCF-1 driver refused: the candidate confirmatory block is not authorised/.test(res.stderr), res.status === 0 ? 'driver did not refuse' : 'refused before loading any runtime');
+  const res = spawnSync(process.execPath, [path.join(HERE, 'driver.mjs'), JSON.stringify({ mode: 'V', stopAt: 'decision', policy: 'development', tree: ctx.treeDir, label: 'x', agentSeed: CFG.DEVELOPMENT_DOMAIN.hi + 1, content: 'C', twin: 'T9', configSeed: 100000, configIndex: 1 })], { encoding: 'utf8' });
+  check('G10', 'the driver refuses a seed outside the exploratory development domain before loading any runtime', res.status !== 0 && /MCF-1 driver refused: development runs are confined to the exploratory development domain/.test(res.stderr));
 }
 
-// ---------------- G11: analysis ----------------
-console.log('\n== G11 census analysis ==');
+// ---------------- G11: analysis on the real development frame ----------------
+console.log('\n== G11 census analysis on the real development frame ==');
+const anaDev = ANA.analyzeFrame({ vManifest: Vs.manifest, oManifest: Oh.manifest, admissionSummary: admDev.summary, qualificationSummary: Q.summary, admittedList: admDev.admitted });
 {
-  // synthetic frame with hand-computed answers
-  const mkEntry = (raw, xC, x9, x11) => ({ raw, valid: true, hard: [], diagnostics: [], pattern: { xC, x9, x11 }, pair: x9 === 9 && x11 === 11 ? 'follow' : 'equal', steering: x9 === 9 && x11 === 11, identityClass: VAL.inIdentityClass(xC, x9, x11), fingerprints: {} });
-  const entries = [mkEntry(1, 9, 9, 11), mkEntry(2, 11, 9, 11), mkEntry(3, 9, 9, 9), mkEntry(4, 6, 6, 6)];
-  const vm = VAL.buildManifest({ stage: 'V', inputs: { synthetic: true }, entries, halts: [] });
-  const Yfun = (c, t, e) => (e === (t === 'T9' ? 9 : 11) ? 1 : 0);              // success iff the executed edge is the reliable one (a stand-in outcome rule with CRN u in the gap)
-  const outcomesFor = (p) => Object.fromEntries(['C', 'M9', 'M11'].flatMap(c => ['T9', 'T11'].map(t => { const e = c === 'C' ? p.xC : c === 'M9' ? p.x9 : p.x11; return [`${c}|${t}`, { edge: e, ok: Yfun(c, t, e) }]; })));
-  const oEntries = entries.map(e => ({ raw: e.raw, valid: true, hardSeed: [], haltStage: [], missing: [], outcomes: outcomesFor(e.pattern) }));
-  const om = VAL.buildManifest({ stage: 'O', inputs: { validityManifestSha256: vm.sha256 }, entries: oEntries, halts: [] });
-  const an = ANA.analyzeFrame({ vManifest: vm, oManifest: om });
-  // expected by hand: T = (1,1,0,0) -> 0.5 ; sigma = (1,1,0.5,0)... see below
-  const T = 2 / 4, sigma = (1 + 1 + 0.5 + 0) / 4, cold = (0.5 + 0.5 + 0.5 + 0) / 4;
-  check('G11', 'T_frame, sigma bar and net shift equal the hand computation', near(an.steering.T_frame.value, T) && near(an.steering.sigmaBar, sigma) && near(an.steering.coldRate, cold) && near(an.steering.netShift, sigma - cold), JSON.stringify({ T: an.steering.T_frame.value, sigma: an.steering.sigmaBar, net: an.steering.netShift }));
-  // D^R: seeds 1,2 follow -> twin9: Y(M9,T9)-Y(M11,T9) = 1-0 ; twin11: Y(M11,T11)-Y(M9,T11) = 1-0 -> D=1 ; seeds 3,4: 0
-  check('G11', 'first-edge contrast K = 2 of 4, binary, decomposition identity holds for every seed', an.firstEdgeOutcome.firstEdgeContrast_GOODminusBAD.k === 2 && an.firstEdgeOutcome.firstEdgeContrast_GOODminusBAD.allBinary && an.firstEdgeOutcome.decomposition.identityFailsForSeeds === 0, JSON.stringify(an.firstEdgeOutcome.decomposition));
-  check('G11', 'no inference is produced (no p-value, interval or test fields)', an.inference.performed === false && !JSON.stringify(an).match(/pValue|confidenceInterval|significan(t|ce)\":true/));
-  const antv = ANA.analyzeFrame({ vManifest: vm, oManifest: null });
-  check('G11', 'steering is computed from the validity manifest alone (identical with outcomes absent)', same(antv.steering, an.steering) && antv.firstEdgeOutcome.status === 'NOT_RUN');
-  const tam = JSON.parse(JSON.stringify(vm)); tam.entries[0].pattern.x9 = 11;
-  mutant('G11', 'analysis refuses a tampered validity manifest', (() => { try { ANA.analyzeFrame({ vManifest: tam }); return false; } catch (e) { return /not intact/.test(e.message); } })());
-  const wrongO = VAL.buildManifest({ stage: 'O', inputs: { validityManifestSha256: 'a'.repeat(64) }, entries: oEntries, halts: [] });
-  mutant('G11', 'analysis refuses an outcome manifest built against a different validity manifest', (() => { try { ANA.analyzeFrame({ vManifest: vm, oManifest: wrongO }); return false; } catch (e) { return /not produced against this validity manifest/.test(e.message); } })());
-  const real = ANA.analyzeFrame({ vManifest: Vs.manifest, oManifest: Oh.manifest });
-  check('G11', 'development frame: T_frame 2/3, net shift 1/3, first-edge contrast K=1 of 3', real.steering.T_frame.k === 2 && real.steering.T_frame.n === 3 && near(real.steering.netShift, 1 / 3) && real.firstEdgeOutcome.firstEdgeContrast_GOODminusBAD.k === 1 && real.firstEdgeOutcome.n === 3);
+  const m = anaDev.metrics;
+  check('G11', 'development frame (3 complete seeds): T_frame sum 2 of 3, followRate 2/3, net shift 1/3, first-edge contrast sum 1 of 3, all on one frame',
+    anaDev.frame.size === 3 && m.T_frame.sum === 2 && m.T_frame.n === 3 && near(m.T_frame.value, 2 / 3) && near(m.followRate.value, 2 / 3) && near(m.netShift.value, 1 / 3) && anaDev.firstEdgeOutcome.firstEdgeContrast_GOODminusBAD.sum === 1 && anaDev.firstEdgeOutcome.firstEdgeContrast_GOODminusBAD.n === 3);
+  check('G11', 'a 3-seed frame is below the 100-seed minimum: interpretation refused, primary value withheld, no permitted claim',
+    anaDev.interpretation.allowed === false && anaDev.primaryDescriptive.value === null && anaDev.claims.permitted.length === 0 && /below the minimum of 100/.test(anaDev.interpretation.reason));
+  check('G11', 'no inference is produced (no p-value, interval or test fields)', anaDev.inference.performed === false && anaDev.practicalThreshold === 'none' && !JSON.stringify(anaDev).match(/pValue|confidenceInterval|"significance":true/));
+  check('G11', 'the analysis verifies: hash, frame hash and every metric carries the frame hash and denominator', ANA.verifyAnalysis(anaDev) === true);
+  check('G11', 'frame reconciliation on real stages: 3 valid at V - 0 excluded at O = 3 complete clusters',
+    anaDev.reconciliation.stageV.valid === 3 && anaDev.reconciliation.stageO.invalid === 0 && anaDev.reconciliation.completeClusterFrame === 3 && anaDev.reconciliation.consistent === true);
+  const pre = ANA.analyzeFrame({ vManifest: Vs.manifest });
+  check('G11', 'with the outcome stage absent the analysis is a labelled pre-outcome snapshot with its own frame hash and the same steering numbers',
+    pre.frame.kind === 'pre-outcome' && pre.frame.sha256 !== anaDev.frame.sha256 && pre.firstEdgeOutcome.status === 'NOT_RUN' && pre.interpretation.allowed === false && same(pre.metrics.T_frame.sum, anaDev.metrics.T_frame.sum));
 }
 
 // ---------------- G12: official-stage refusal ----------------
 console.log('\n== G12 official-stage refusal ==');
 {
-  const refusal = (f, a) => { try { CFG.assertOfficialAllowed(f, a); return false; } catch (e) { return /refused/.test(e.message); } };
+  const refusal = (f, a, o) => { try { CFG.assertOfficialAllowed(f, a, o); return false; } catch (e) { return /refused/.test(e.message); } };
   check('G12', 'no freeze record -> refused', refusal(null, {}));
   check('G12', 'frozen:false -> refused', refusal({ schema: 'mcf1.freeze/1', frozen: false }, {}));
   const approvals = Object.fromEntries(CFG.REQUIRED_FOR_OFFICIAL.map(k => [k, { value: 'x', status: 'APPROVED' }]));
   const H = { preregistrationSha256: 'a'.repeat(64), configSha256: 'b'.repeat(64), inventorySha256: 'c'.repeat(64), admittedSha256: 'd'.repeat(64), treeDigest: 'e'.repeat(64) };
   const good = { schema: 'mcf1.freeze/1', frozen: true, approvals, ...H };
-  check('G12', 'a complete synthetic record with matching actual hashes is accepted (positive control: the gate is not vacuous)', (() => { try { return CFG.assertOfficialAllowed(good, H) === true; } catch (e) { return false; } })());
-  mutant('G12', 'a complete record WITHOUT the actual hashes is refused', refusal(good, {}));
-  mutant('G12', 'a hash mismatch is refused', refusal(good, { ...H, inventorySha256: 'f'.repeat(64) }));
-  mutant('G12', 'an unapproved decision is refused', refusal({ ...good, approvals: { ...approvals, practicalThreshold: { value: null, status: 'UNDECIDED' } } }, H));
-  check('G12', 'the shipped config is unfrozen and every required decision is not APPROVED', CFG.FROZEN === false && CFG.REQUIRED_FOR_OFFICIAL.some(k => CFG.APPROVALS[k].status !== 'APPROVED'));
+  check('G12', 'a complete synthetic record with matching actual hashes is REFUSED by default (no authorised record is pinned)', refusal(good, H));
+  check('G12', 'positive control: with the record hash injected as the pin the same record is accepted, so the structural checks are not vacuous', (() => { try { return CFG.assertOfficialAllowed(good, H, { pinnedFreezeSha256: CFG.hashObject(good) }) === true; } catch (e) { return false; } })());
+  const pinned = (rec) => ({ pinnedFreezeSha256: CFG.hashObject(rec) });
+  mutant('G12', 'a complete record WITHOUT the actual hashes is refused even when pinned', refusal(good, {}, pinned(good)));
+  mutant('G12', 'a hash mismatch is refused even when pinned', refusal(good, { ...H, inventorySha256: 'f'.repeat(64) }, pinned(good)));
+  const unap = { ...good, approvals: { ...approvals, practicalThreshold: { value: null, status: 'UNDECIDED' } } };
+  mutant('G12', 'an unapproved decision is refused even when pinned', refusal(unap, H, pinned(unap)));
+  const to = { ...good, testOnly: true };
+  mutant('G12', 'a testOnly record is refused even when pinned and complete', refusal(to, H, pinned(to)));
+  check('G12', 'the shipped config is unfrozen, nothing in it carries the APPROVED status, and the pinned authorisation is null',
+    CFG.FROZEN === false && CFG.OFFICIAL_AUTHORIZATION.freezeRecordSha256 === null && Object.values(CFG.APPROVALS).every(a => a.status !== 'APPROVED') && CFG.REQUIRED_FOR_OFFICIAL.every(k => k in CFG.APPROVALS));
   const cli = spawnSync(process.execPath, [path.join(HERE, 'orchestrate.mjs'), 'inventory', '--mode', 'official', '--out', path.join(TMP, 'official')], { encoding: 'utf8' });
   check('G12', 'the CLI refuses official mode (exit != 0, refusal text)', cli.status !== 0 && /official stage refused/.test(cli.stderr), (cli.stderr || '').trim().split('\n')[0]);
   check('G12', 'seed policy: candidate block and out-of-domain seeds refused for development; official refused without a record',
-    !CFG.seedPolicy('development', CFG.BLOCK.start).ok && !CFG.seedPolicy('development', CFG.DEVELOPMENT_DOMAIN.hi + 1).ok && CFG.seedPolicy('development', D0).ok && !CFG.seedPolicy('official', D0).ok);
+    !CFG.seedPolicy('development', CFG.BLOCK.start).ok && !CFG.seedPolicy('development', CFG.BLOCK.start + CFG.BLOCK.scanLength - 1).ok && !CFG.seedPolicy('development', CFG.DEVELOPMENT_DOMAIN.hi + 1).ok && CFG.seedPolicy('development', D0).ok && !CFG.seedPolicy('official', D0).ok && !CFG.seedPolicy('official', CFG.BLOCK.start).ok);
   check('G12', 'no official output directory was created', !fs.existsSync(path.join(TMP, 'official')));
 }
 
 // ---------------- G13: hygiene ----------------
 console.log('\n== G13 repository hygiene ==');
 {
-  const tracked = git('status', '--porcelain', '--untracked-files=no').trim().split('\n').filter(Boolean);
-  check('G13', 'no tracked file is modified', tracked.length === 0, tracked.slice(0, 3).join(' | '));
+  const tracked = git('status', '--porcelain', '--untracked-files=no').split('\n').filter(Boolean);     // no trim: the first column of a line may be a space
+  const trackedOutside = tracked.map(l => l.slice(3)).filter(f => !f.startsWith('experiments/mcf1/'));
+  check('G13', 'no tracked file outside experiments/mcf1 is modified', trackedOutside.length === 0, trackedOutside.slice(0, 3).join(' | '));
   const harnessFiles = fs.readdirSync(HERE, { withFileTypes: true }).filter(d => d.isFile()).map(d => d.name);
-  check('G13', 'the harness directory holds only the expected files', harnessFiles.every(f => /^(admission|analyze|config|driver|episodes|inventory|orchestrate|validity|verify_mcf1)\.mjs$|^README\.md$|^\.gitignore$/.test(f)), harnessFiles.join(' '));
+  check('G13', 'the harness directory holds only the expected files', harnessFiles.every(f => /^(admission|analyze|config|driver|episodes|frame|inventory|orchestrate|validity|verify_mcf1)\.mjs$|^README\.md$|^\.gitignore$/.test(f)), harnessFiles.join(' '));
   const PATTERNS = [new RegExp('[A-Za-z]:[\\\\/]+Us' + 'ers'), new RegExp('/c/Us' + 'ers/'), new RegExp('Man' + 'ish', 'i'), new RegExp('App' + 'Data'), new RegExp('MAN' + 'ISH~1')];
   const files = fs.readdirSync(HERE).filter(f => /\.(mjs|md)$|^\.gitignore$/.test(f));
   const leaks = []; for (const f of files) { const t = fs.readFileSync(path.join(HERE, f), 'utf8'); for (const p of PATTERNS) if (p.test(t)) leaks.push(`${f}:${p}`); }
   check('G13', 'no local path or account name in any harness file', leaks.length === 0, leaks.join(' '));
   mutant('G13', 'the path scanner detects an injected local path', PATTERNS.some(p => p.test('C:' + '\\Us' + 'ers\\someone\\x')));
-  const banned = []; for (const f of ['orchestrate.mjs', 'analyze.mjs', 'validity.mjs', 'admission.mjs', 'inventory.mjs', 'config.mjs', 'episodes.mjs']) { const t = fs.readFileSync(path.join(HERE, f), 'utf8').replace(/\/\/.*$/gm, ''); if (/Date\.now\(|Math\.random\(|new Date\(/.test(t)) banned.push(f); }
-  check('G13', 'no clock or Math.random in analysis, orchestration, validity, admission, inventory, config', banned.length === 0, banned.join(','));
+  const banned = []; for (const f of ['orchestrate.mjs', 'analyze.mjs', 'frame.mjs', 'validity.mjs', 'admission.mjs', 'inventory.mjs', 'config.mjs', 'episodes.mjs']) { const t = fs.readFileSync(path.join(HERE, f), 'utf8').replace(/\/\/.*$/gm, ''); if (/Date\.now\(|Math\.random\(|new Date\(/.test(t)) banned.push(f); }
+  check('G13', 'no clock or Math.random in analysis, frame, orchestration, validity, admission, inventory, config', banned.length === 0, banned.join(','));
   const touched = git('diff', '--name-only', 'HEAD').split('\n').filter(Boolean);
   check('G13', 'H1-R and registry files are untouched', !touched.some(f => /^experiments\/(h1r|registry)\//.test(f)));
+  const regFiles = fs.existsSync(path.join(HERE, 'data')) ? fs.readdirSync(path.join(HERE, 'data')).filter(f => f !== '.gitignore') : [];
+  check('G13', 'no registry entry, freeze record or output artifact exists in the harness data directory', regFiles.length === 0, regFiles.join(' '));
 }
 
-// ---------------- G14 summary of the end-to-end dry run ----------------
-console.log('\n== G14 end-to-end development dry run ==');
+// ==========================================================
+// R1 gates: synthetic records through the REAL validators, with source mutants
+// ==========================================================
+console.log('\n== R1 gates (synthetic complete-cluster records; source-mutated module copies) ==');
+const EXPECTED = ctx.expectedIdentity;
+const SR = (k) => D0 + 1000 + k;                                   // synthetic raw seeds inside the exploratory development domain (arithmetic only)
+const CONTENTS = ['C', 'M9', 'M11'], TWINS = ['T9', 'T11'];
+const FA = 'f'.repeat(64);
+
+function synthRun({ raw, content, twin, x, best, stage, ok }) {
+  const isO = stage === 'O';
+  return {
+    label: `${stage}|${raw}|${content}|${twin}`, mode: stage, stopAt: isO ? 'attempt-hook' : 'decision', outcome: { abortedBySentinel: true, error: null },
+    calls: 1, startNode: 10, chosen: x, brainHash: EPI.REGISTERED_BRAIN_HASHES[content], installedP: {},
+    step0: [6, 9, 11, 13].map(k => ({ key: k, returned: k === best ? 4.2 : 3, w: 2, applied: 1, arb: [], unc: 0.75, selfLoop: 0, F: k === best ? 4.2 : 3, trustTerm: 0 })),
+    decisions: [[0, x]], bests: [[0, 0, best, 4]], replays: [], attempts: isO ? [[0, 10, x, ok]] : [],
+    legality: { candidatesAreEdges: [true, true, true, true], executedIsEdge: true, executedLegalMove: true },
+    h1r: { on: true, blockedIllegal: 0, drawFaults: 0, envDrawsSeen: isO ? 1 : 0, edgeAttempts: 0, noDecision: 0, slips: 0, realised: 0 },
+    artifacts: { cogDraws: 653, visDraws: 3020, envCounters: { attempts: 0, successes: 0, slips: 0, envDraws: isO ? 1 : 0 } },
+    executedEdgeP: isO ? (ok ? 1 : 0) : null,                      // p in {0,1}: ok = 1{u1 < p} holds for every u1 in [0,1)
+    tree: { name: 'synthetic', manifestSha256: EXPECTED.manifestSha256, b2Commit: EXPECTED.b2Commit, transformSha256: 'x' },
+    probes: [
+      { phase: 'call0-start', calls: 1, episodes: content === 'C' ? [] : [{ id: `syn_${content}`, nodes: CFG.FRAME.routes[content === 'M9' ? 9 : 11].slice(), hasActiveGoal: false }], embeddingSha: 'e'.repeat(64) },
+      { phase: 'at-decision', calls: 1, Q: { size: 0, sum: 0 }, transitions: { outer: 0, entries: 0 }, rewards: 0, penalties: 0, confidenceMap: 0, pathAttempts: 0, pathSuccesses: 0 },
+    ],
+  };
+}
+const defaultOk = (c, t, x) => (x === (t === 'T9' ? 9 : 11) ? 1 : 0);        // stand-in outcome rule: success iff the executed edge is the reliable one
+function makeCohort(B, specs, { tweaks = [], haltCount } = {}) {
+  const vRuns = new Map(), oRuns = new Map(), vAll = [], oAll = [];
+  const T = new Map(tweaks.map(t => [`${t.stage}|${t.raw}|${t.key}`, t.fn]));
+  for (const s of specs) {
+    const vr = {}, or = {};
+    for (const c of CONTENTS) for (const t of TWINS) {
+      const k = `${c}|${t}`, x = s.pattern[c === 'C' ? 'xC' : c === 'M9' ? 'x9' : 'x11'], best = s.best ? s.best[c] : x, ok = defaultOk(c, t, x);
+      for (const stage of ['V', 'O']) {
+        const r = synthRun({ raw: s.raw, content: c, twin: t, x, best, stage, ok });
+        const fn = T.get(`${stage}|${s.raw}|${k}`); if (fn) fn(r);
+        (stage === 'V' ? vr : or)[k] = r; (stage === 'V' ? vAll : oAll).push(r);
+      }
+    }
+    vRuns.set(s.raw, vr); oRuns.set(s.raw, or);
+  }
+  const raws = specs.map(s => s.raw);
+  const vOut = B.ORC.assembleV({ qualified: raws, runsBySeed: vRuns, allRecs: vAll, expectedIdentity: EXPECTED, sources: {}, admittedSet: new Set(raws), registryOf: () => 'AVAILABLE', policy: 'development' });
+  const oArgs = { vManifest: vOut.manifest, runsBySeed: oRuns, allRecs: oAll, expectedIdentity: EXPECTED, sources: {}, stopAt: 'attempt-hook' };
+  if (haltCount !== undefined) oArgs.haltCount = haltCount;
+  return { vOut, oOut: B.ORC.assembleO(oArgs), raws };
+}
+const P = (xC, x9, x11) => ({ xC, x9, x11 });
+// hand-computed S(x9,x11) = 1/2 (1{x9=9} - 1{x9=11} + 1{x11=11} - 1{x11=9}), indexed [x9][x11]; independent of the implementation
+const S_TABLE = { 6: { 6: 0, 9: -0.5, 11: 0.5, 13: 0 }, 9: { 6: 0.5, 9: 0, 11: 1, 13: 0.5 }, 11: { 6: -0.5, 9: -1, 11: 0, 13: -0.5 }, 13: { 6: 0, 9: -0.5, 11: 0.5, 13: 0 } };
+const COHORT12 = [P(9, 9, 11), P(11, 9, 11), P(9, 9, 9), P(11, 11, 11), P(9, 11, 9), P(9, 9, 6), P(6, 6, 6), P(13, 13, 13), P(9, 9, 11), P(11, 9, 11), P(9, 9, 11), P(6, 9, 11)].map((p, i) => ({ raw: SR(i), pattern: p }));
+const sumS = (specs) => specs.reduce((a, s) => a + S_TABLE[s.pattern.x9][s.pattern.x11], 0);
+const spec100 = (n = 100) => {
+  const mix = [[60, P(9, 9, 11)], [20, P(6, 9, 11)], [10, P(9, 9, 9)], [10, P(9, 11, 9)]], out = [];
+  for (const [k, p] of mix) for (let i = 0; i < k; i++) out.push({ raw: SR(10_000 + out.length), pattern: p });
+  return out.slice(0, n);
+};
+const res = (r) => (typeof r === 'boolean' ? { ok: r } : r);
+
+const TESTS = new Map();
+const def = (id, gate, desc, fn) => TESTS.set(id, { id, gate, desc, fn });
+
+def('g15.ledger', 'G15', 'ledger values: T_frame primary, min frame 100, no threshold, halt count 1, candidate block 1.5e9/4000 CANDIDATE_NOT_AUTHORIZED, budgets 4096/16384/64, complete-cluster frame, V6 diagnostic; nothing APPROVED, FROZEN false, no pinned authorisation', (B) => {
+  const A = B.CFG.APPROVALS;
+  return A.primaryDescriptive.value === 'T_frame' && A.minimumValidFrame.value === 100 && A.practicalThreshold.value === 'none' && A.instrumentHaltCount.value === 1
+    && A.seedBlock.value === 1_500_000_000 && A.scanLength.value === 4000 && A.seedBlock.status === 'CANDIDATE_NOT_AUTHORIZED' && A.scanLength.status === 'CANDIDATE_NOT_AUTHORIZED' && B.CFG.BLOCK.status === 'CANDIDATE_NOT_AUTHORIZED'
+    && B.CFG.BUDGETS.cognitive === 4096 && B.CFG.BUDGETS.visual === 16384 && B.CFG.BUDGETS.environment === 64
+    && A.completeClusterFrame.value === 'complete-cluster' && A.v6Handling.value === 'diagnostic' && A.samplingDesign.value === 'C'
+    && B.CFG.FROZEN === false && B.CFG.OFFICIAL_AUTHORIZATION.freezeRecordSha256 === null && Object.values(A).every(a => a.status !== 'APPROVED') && B.CFG.REQUIRED_FOR_OFFICIAL.every(k => k in A);
+});
+def('g16.table', 'G16', 'primary score S_s equals the hand-computed value for all 16 (x9,x11) pairs (negative, zero, positive and off-pattern)', (B) =>
+  [6, 9, 11, 13].every(x9 => [6, 9, 11, 13].every(x11 => B.ANA.SCORES.steering({ xC: 9, x9, x11 }) === S_TABLE[x9][x11])));
+def('g16.mean', 'G16', 'T_frame = arithmetic mean of S_s over the frame: 8 hand-computed seeds incl. reversed, mixed and distractor patterns give sum 2, n 8, T_frame 0.25, followRate 3/8', (B) => {
+  const pats = [P(9, 9, 11), P(11, 9, 11), P(9, 9, 11), P(9, 9, 9), P(9, 11, 9), P(9, 9, 6), P(9, 11, 6), P(13, 13, 13)];
+  const m = B.ANA.computeMetrics(pats.map((p, i) => ({ raw: i, pattern: p, exploration: null, diagnostics: [], pairClass: 'x' })), { size: 8, sha256: FA }).metrics;
+  return m.T_frame.sum === 2 && m.T_frame.n === 8 && m.T_frame.value === 0.25 && m.followRate.value === 3 / 8 && m.T_frame.frameN === 8 && m.T_frame.frameSha256 === FA;
+});
+def('g16.equiv', 'G16', 'documented equivalence: S_s equals the previous follow indicator on every follow/equal pair (all 16 pair-regular triples with xC free) and differs on reversed (-1 vs 0) and mixed', (B) => {
+  let eq = true, diff = false;
+  for (const xC of [6, 9, 11, 13]) for (const x9 of [6, 9, 11, 13]) for (const x11 of [6, 9, 11, 13]) {
+    const p = P(xC, x9, x11), cls = B.VAL.classifyPair(x9, x11).cls, S = B.ANA.SCORES.steering(p), F = B.ANA.SCORES.follow(p);
+    if ((cls === 'follow' || cls === 'equal') && S !== F) eq = false;
+    if (cls === 'reversed' && S === -1 && F === 0) diff = true;
+  }
+  return eq && diff;
+});
+def('g17.secondary', 'G17', 'secondary scores against a hand table (sigma, cold, net, non-specific) and the identities net = (S + N)/2 and N = 0 on the identity class over all 64 triples', (B) => {
+  const H17 = [[9, 9, 11, 1, 0.5, 0.5, 0], [11, 9, 11, 1, 0.5, 0.5, 0], [9, 9, 9, 0.5, 0.5, 0, 0], [11, 11, 11, 0.5, 0.5, 0, 0], [6, 9, 11, 1, 0, 1, 1], [9, 6, 6, 0, 0.5, -0.5, -1], [6, 6, 6, 0, 0, 0, 0], [9, 11, 9, 0, 0.5, -0.5, 0], [13, 9, 9, 0.5, 0, 0.5, 1]];
+  const tableOk = H17.every(([xC, x9, x11, s, c, n, N]) => { const p = P(xC, x9, x11), S = B.ANA.SCORES; return S.sigma(p) === s && S.cold(p) === c && S.net(p) === n && S.nonSpecific(p) === N; });
+  let ident = true, classZero = true;
+  for (const xC of [6, 9, 11, 13]) for (const x9 of [6, 9, 11, 13]) for (const x11 of [6, 9, 11, 13]) {
+    const p = P(xC, x9, x11), S = B.ANA.SCORES;
+    if (Math.abs(S.net(p) - (S.steering(p) + S.nonSpecific(p)) / 2) > 1e-12) ident = false;
+    if (B.VAL.inIdentityClass(xC, x9, x11) && S.nonSpecific(p) !== 0) classZero = false;
+  }
+  return tableOk && ident && classZero;
+});
+def('g18.selector', 'G18', 'the primary selector changes the computed metric and its label: on a 100-seed frame T_frame sum 70, netShift sum 45; a non-ledger selection is flagged and never interpretable; unknown names are refused', (B) => {
+  const { vOut, oOut } = makeCohort(B, spec100());
+  const a = B.ANA.analyzeFrame({ vManifest: vOut.manifest, oManifest: oOut.manifest });
+  const b = B.ANA.analyzeFrame({ vManifest: vOut.manifest, oManifest: oOut.manifest, primary: 'netShift' });
+  let unknown = false; try { B.ANA.analyzeFrame({ vManifest: vOut.manifest, oManifest: oOut.manifest, primary: 'nope' }); } catch (e) { unknown = /unknown primary/.test(e.message); }
+  return a.primaryDescriptive.name === 'T_frame' && a.primaryDescriptive.sum === 70 && near(a.primaryDescriptive.value, 0.7) && a.primaryDescriptive.status === 'LEDGER_PRIMARY' && a.interpretation.allowed === true
+    && b.primaryDescriptive.name === 'netShift' && b.primaryDescriptive.sum === 45 && b.primaryDescriptive.status === 'NON_LEDGER_SELECTION_TEST_ONLY' && b.interpretation.allowed === false && b.primaryDescriptive.value === null && unknown;
+});
+def('g19.cluster', 'G19', 'one failed member of the six-run cluster excludes the WHOLE seed from every metric (V3 on one Stage-V run, attributed to that run only)', (B) => {
+  const raw = SR(0);
+  const { vOut, oOut } = makeCohort(B, COHORT12, { tweaks: [{ stage: 'V', raw, key: 'M11|T11', fn: (r) => { r.legality.candidatesAreEdges = [true, true, true, false]; } }] });
+  const e = vOut.manifest.entries.find(x => x.raw === raw), rest = COHORT12.filter(s => s.raw !== raw);
+  if (e.valid || !same(e.hard, ['V3']) || !same(e.failures.V3, ['M11|T11']) || vOut.halted) return { ok: false, detail: 'entry not excluded as expected' };
+  const a = B.ANA.analyzeFrame({ vManifest: vOut.manifest, oManifest: oOut.manifest });
+  return a.frame.size === 11 && !a.frame.seeds.includes(raw) && a.metrics.T_frame.sum === sumS(rest) && a.metrics.T_frame.n === 11 && a.reconciliation.stageV.valid === 11
+    && a.exclusions.rows.some(r => r.stage === 'V' && r.rule === 'V3' && r.content === 'M11' && r.twin === 'T11' && r.seeds === 1) && B.ANA.verifyAnalysis(a) === true;
+});
+def('g19.stageO', 'G19', 'a Stage-O-only invalidation removes that seed from EVERY metric; V-only, O and complete-cluster counts reconcile (12 valid at V - 1 at O = 11)', (B) => {
+  const raw = SR(1);
+  const { vOut, oOut } = makeCohort(B, COHORT12, { haltCount: 2, tweaks: [{ stage: 'O', raw, key: 'C|T11', fn: (r) => { r.h1r.blockedIllegal = 1; } }] });
+  if (vOut.manifest.counts.valid !== 12 || oOut.halted || oOut.manifest.counts.invalid !== 1) return { ok: false, detail: 'stage outcome not as constructed' };
+  const a = B.ANA.analyzeFrame({ vManifest: vOut.manifest, oManifest: oOut.manifest }), rest = COHORT12.filter(s => s.raw !== raw);
+  const allN = [a.metrics.T_frame.n, a.metrics.followRate.n, a.metrics.netShift.n, a.metrics.nonSpecific.n, a.metrics.sigmaBar.n, a.metrics.coldRate.n, a.executionRates.C.to9.n, a.executionRates.M11.other.n,
+    a.firstEdgeOutcome.firstEdgeContrast_GOODminusBAD.n, a.firstEdgeOutcome.decomposition.GOODminusCOLD.n, a.pairClasses.follow.of, a.exploration.unionVisible.of];
+  return a.frame.size === 11 && !a.frame.seeds.includes(raw) && allN.every(n => n === 11) && a.metrics.T_frame.sum === sumS(rest)
+    && a.reconciliation.stageV.valid === 12 && a.reconciliation.stageO.invalid === 1 && a.reconciliation.completeClusterFrame === 11 && a.reconciliation.consistent === true
+    && a.exclusions.rows.some(r => r.stage === 'O' && r.rule === 'V4b' && r.content === 'C' && r.twin === 'T11') && B.ANA.verifyAnalysis(a) === true;
+});
+def('g20.halt', 'G20', 'integrity failures halt the stage and are never seed exclusions: V9 and V12 at Stage O, V1 at Stage V, and a halted stage yields no frame', (B) => {
+  const v9 = makeCohort(B, COHORT12, { tweaks: [{ stage: 'O', raw: SR(2), key: 'M9|T9', fn: (r) => { r.bests = [[0, 0, 6, 4]]; } }] });
+  const e9 = v9.oOut.manifest.entries.find(x => x.raw === SR(2));
+  const v12 = makeCohort(B, COHORT12, { tweaks: [{ stage: 'O', raw: SR(3), key: 'C|T9', fn: (r) => { r.attempts[0][3] = 1 - r.attempts[0][3]; } }] });
+  const v1 = makeCohort(B, COHORT12, { tweaks: [{ stage: 'V', raw: SR(4), key: 'C|T9', fn: (r) => { r.tree.manifestSha256 = 'b'.repeat(64); } }] });
+  const refused = (c) => { try { B.FRM.buildFrame({ vManifest: c.vOut.manifest, oManifest: c.oOut.manifest }); return false; } catch (e) { return /halted/.test(e.message); } };
+  const analysisRefused = (() => { try { B.ANA.analyzeFrame({ vManifest: v9.vOut.manifest, oManifest: v9.oOut.manifest }); return false; } catch (e) { return /halted/.test(e.message); } })();
+  return v9.oOut.halted && v9.oOut.manifest.halts.some(h => h.rule === 'V9' && h.raw === SR(2) && same(h.runs, ['M9|T9'])) && e9.haltStage.includes('V9') && !e9.hardSeed.includes('V9')
+    && v12.oOut.halted && v12.oOut.manifest.halts.some(h => h.rule === 'V12' && h.raw === SR(3))
+    && v1.vOut.halted && v1.vOut.manifest.halts.some(h => h.rule === 'V1')
+    && refused(v9) && refused(v12) && analysisRefused;
+});
+def('g20.run', 'G20', 'a run error gets exactly one deterministic retry with identical inputs; a transient error recovers; a persistent error halts Q, V and O (never a silent seed drop)', async (B) => {
+  const calls = new Map(), seen = new Map();
+  const exec = async (input) => {
+    const n = (calls.get(input.label) || 0) + 1; calls.set(input.label, n);
+    (seen.get(input.label) || seen.set(input.label, []).get(input.label)).push(JSON.stringify(input));
+    if (input.label === 'persist') return { error: 'boom' };
+    if (input.label === 'transient' && n === 1) return { error: 'boom' };
+    return { label: input.label, fine: true };
+  };
+  const out = await B.ORC.runPool([{ label: 'ok' }, { label: 'persist' }, { label: 'transient' }], { concurrency: 3 }, null, exec);
+  const poolOk = calls.get('ok') === 1 && calls.get('persist') === 2 && calls.get('transient') === 2 && !!out[1].error && out[2].fine === true && out[2].error === undefined
+    && seen.get('persist')[0] === seen.get('persist')[1];
+  const errRun = (r) => { for (const k of Object.keys(r)) delete r[k]; r.error = 'boom'; };
+  const v = makeCohort(B, COHORT12, { tweaks: [{ stage: 'V', raw: SR(5), key: 'M9|T11', fn: errRun }] });
+  const o = makeCohort(B, COHORT12, { tweaks: [{ stage: 'O', raw: SR(6), key: 'C|T9', fn: errRun }] });
+  const q = B.ORC.assembleQ({ seeds: [SR(7), SR(8)], recs: [{ label: 'Q|a', error: 'boom' }, synthRun({ raw: SR(8), content: 'C', twin: 'T9', x: 9, best: 9, stage: 'V', ok: 1 })], expectedIdentity: EXPECTED });
+  return poolOk
+    && v.vOut.halted && v.vOut.manifest.halts.some(h => h.rule === 'RUN' && h.raw === SR(5) && same(h.runs, ['M9|T11']))
+    && o.oOut.halted && o.oOut.manifest.halts.some(h => h.rule === 'RUN' && h.raw === SR(6))
+    && q.halted && q.halts.some(h => h.rule === 'RUN' && h.raw === SR(7));
+});
+def('g20.firstfault', 'G20', 'the first non-operational seed-scope fault at Stage O halts the stage (ledger threshold 1); a higher threshold keeps it a seed exclusion', (B) => {
+  const tw = [{ stage: 'O', raw: SR(9), key: 'M11|T9', fn: (r) => { r.h1r.drawFaults = 1; } }];
+  const first = makeCohort(B, COHORT12, { tweaks: tw });
+  const loose = makeCohort(B, COHORT12, { tweaks: tw, haltCount: 2 });
+  return first.oOut.halted && first.oOut.manifest.halts.some(h => h.rule === 'SEED_FAULT_AT_O' && h.count === 1 && h.threshold === 1 && h.seeds[0].raw === SR(9))
+    && !loose.oOut.halted && loose.oOut.manifest.counts.invalid === 1;
+});
+def('g20.cachedir', 'G20', 'the run pool creates a missing output directory for its resumable cache and resumes from it without re-running (defect found by the CLI smoke: a stage run directly into a new --out)', async (B) => {
+  const cacheFile = path.join(TMP, `cachedir_${path.basename(B.dir)}`, 'nested', 'cache.jsonl');
+  let calls = 0; const exec = async (input) => { calls++; return { label: input.label, fine: true }; };
+  const inputs = [{ label: 'a' }, { label: 'b' }];
+  const first = await B.ORC.runPool(inputs, { concurrency: 2 }, cacheFile, exec);
+  const written = fs.readFileSync(cacheFile, 'utf8').split('\n').filter(Boolean).length;
+  const second = await B.ORC.runPool(inputs, { concurrency: 2 }, cacheFile, exec);
+  return first.length === 2 && written === 2 && calls === 2 && second.every(r => r.fine === true);
+});
+def('g20.report', 'G20', 'the CLI report carries the manifest\'s OWN hash (what --v-sha must be), distinct from the artifact file hash, and Stage O accepts exactly that value', async (B) => {
+  const { vOut } = makeCohort(B, COHORT12);
+  const art = B.ORC.writeArtifact(path.join(TMP, `report_${path.basename(B.dir)}`), 'validity_manifest.json', vOut.manifest);
+  const rep = B.ORC.artifactReport(art, vOut.manifest);
+  const o = await B.ORC.stageO({ vManifest: vOut.manifest, expectedVSha256: rep.manifestSha256, ctx, cacheFile: null, stopAt: 'attempt-hook',
+    exec: async (input) => synthRun({ raw: input.agentSeed, content: input.content, twin: input.twin, x: 9, best: 9, stage: 'O', ok: 1 }) }).then(() => 'accepted', (e) => e.message);
+  return rep.manifestSha256 === vOut.manifest.sha256 && rep.sha256 === art.sha256 && rep.manifestSha256 !== art.sha256 && o === 'accepted';
+});
+def('g21.v6', 'G21', 'V6 patterns stay eligible when everything else passes; pair-class counts, signed scores and the effect of the former restriction are reported', (B) => {
+  const { vOut, oOut } = makeCohort(B, COHORT12);
+  const rev = vOut.manifest.entries.find(x => x.raw === SR(4)), mix = vOut.manifest.entries.find(x => x.raw === SR(5));
+  if (!(rev.valid && mix.valid && rev.diagnostics.includes('V6') && mix.diagnostics.includes('V6') && rev.hard.length === 0 && rev.pairClass === 'reversed' && mix.pairClass === 'mixed')) return { ok: false, detail: 'V6 seeds not eligible' };
+  const a = B.ANA.analyzeFrame({ vManifest: vOut.manifest, oManifest: oOut.manifest }), pc = a.pairClasses, pv = a.previousV6Restriction;
+  return a.frame.seeds.includes(SR(4)) && a.frame.seeds.includes(SR(5)) && a.frame.size === 12
+    && pc.follow.count === 6 && pc.equal.count === 4 && pc.reversed.count === 1 && pc.mixed.count === 1 && pc.antiSteering.count === 1 && pc.v6Flagged.count === 2
+    && pc.signedScores['1'].count === 6 && pc.signedScores['-1'].count === 1 && pc.signedScores['0.5'].count === 1 && pc.signedScores['0'].count === 4
+    && pv.seedsOutsideFormerRestriction.count === 2 && pv.T_frame_formerRestriction.n === 10 && near(pv.T_frame_formerRestriction.value, 0.6) && near(pv.T_frame_fullFrame.value, 5.5 / 12)
+    && a.firstEdgeOutcome.firstEdgeContrast_GOODminusBAD.allBinary === false && pv.firstEdgeContrast_formerRestriction.n === 10;
+});
+def('g22.label', 'G22', 'the exploration indicator is labelled inferred, lists its limits, and distinguishes a COLD-only view from the union over the six runs (cold invisible, memory visible)', (B) => {
+  const spec = [{ raw: SR(0), pattern: P(9, 9, 9), best: { C: 9, M9: 9, M11: 11 } }, { raw: SR(1), pattern: P(9, 9, 11) }];
+  const { vOut, oOut } = makeCohort(B, spec);
+  const e = vOut.manifest.entries.find(x => x.raw === SR(0)).exploration, a = B.ANA.analyzeFrame({ vManifest: vOut.manifest, oManifest: oOut.manifest }), ex = a.exploration;
+  return e.indicator === 'inferred' && e.anyVisible === true && e.coldVisible === false && e.sharedPick === true && e.unobservableByConstruction === false
+    && ex.indicator === 'inferred' && ex.limitations.length >= 4 && ex.unionVisible.count === 1 && ex.coldVisible.count === 0 && ex.memoryOnlyVisible.count === 1 && ex.contentDependentPick.count === 0
+    && ex.strata.visible.n === 1 && ex.strata.notVisible.n === 1 && /not adjust for confounding/.test(ex.limitations.join(' '));
+});
+def('g22.invariance', 'G22', 'exploration status changes neither eligibility, nor the frame hash, nor the primary score, nor the outcome mapping (same cohort with nothing visible vs everything visible)', (B) => {
+  const plain = makeCohort(B, COHORT12), allVis = makeCohort(B, COHORT12.map(s => ({ ...s, best: { C: 6, M9: 6, M11: 6 } })));
+  const A = B.ANA.analyzeFrame({ vManifest: plain.vOut.manifest, oManifest: plain.oOut.manifest }), Z = B.ANA.analyzeFrame({ vManifest: allVis.vOut.manifest, oManifest: allVis.oOut.manifest });
+  const validSame = same(plain.vOut.manifest.entries.map(e => e.valid), allVis.vOut.manifest.entries.map(e => e.valid)) && same(plain.vOut.manifest.entries.map(e => e.hard), allVis.vOut.manifest.entries.map(e => e.hard));
+  const expectVisible = COHORT12.filter(s => Object.values(s.pattern).some(x => x !== 6)).length;      // best = 6 everywhere: only the all-6 seed stays invisible
+  return validSame && A.exploration.unionVisible.count === 0 && Z.exploration.unionVisible.count === expectVisible && expectVisible === 11 && same(A.frame.seeds, Z.frame.seeds)
+    && A.metrics.T_frame.sum === Z.metrics.T_frame.sum && A.firstEdgeOutcome.firstEdgeContrast_GOODminusBAD.sum === Z.firstEdgeOutcome.firstEdgeContrast_GOODminusBAD.sum
+    && same(plain.oOut.manifest.entries.map(e => e.outcomes), allVis.oOut.manifest.entries.map(e => e.outcomes)) && !allVis.oOut.halted;
+});
+def('g22.static', 'G22', 'the diagnostic is a pure function of records: its source contains no random-number or clock call (no RNG consumption)', (B) => {
+  const src = B.VAL.explorationOf.toString();
+  return !/makeRng|Math\.random|liveRng|Date\.now|new Date/.test(src) && B.VAL.explorationOf.length === 1;
+});
+def('g22.anchors', 'G22', 'the call-0 exploration facts the diagnostic relies on are present in the conformed tree: epsilon branch (0.2 base, fatigue term), M-BEST and M-DECISION hooks, stress and fatigue initialised to 0', () => {
+  const main = fs.readFileSync(path.join(ctx.treeDir, 'main.js'), 'utf8'), beh = fs.readFileSync(path.join(ctx.treeDir, 'render', 'behavior.js'), 'utf8');
+  return main.includes('if (liveRng() < epsilon && choices.length > 0)') && /0\.2\s*-\s*\(fatigueState \* 0\.002\)/.test(main) && main.includes('M-BEST') && main.includes('M-DECISION')
+    && /export let stressState = 0;/.test(beh) && /export let fatigueState = 0;/.test(beh);
+});
+def('g23.hash', 'G23', 'missing or inconsistent frame hashes cause refusal: altered frame body, deleted metric hash, foreign metric hash, altered denominator, edited body without rehash, wrong qualified-seed hash', (B) => {
+  const { vOut, oOut } = makeCohort(B, COHORT12);
+  const a = B.ANA.analyzeFrame({ vManifest: vOut.manifest, oManifest: oOut.manifest });
+  const rehash = (t) => { const { sha256: _s, ...b } = t; t.sha256 = B.CFG.sha256(B.CFG.canonicalJson(b)); return t; };
+  const clone = () => JSON.parse(JSON.stringify(a));
+  const throwsRefusal = (fn) => { try { fn(); return false; } catch (e) { return /MCF-1 (analysis|frame) refused/.test(e.message); } };
+  const t1 = clone(); t1.frame.seeds.pop(); rehash(t1);
+  const t2 = clone(); delete t2.metrics.netShift.frameSha256; rehash(t2);
+  const t3 = clone(); t3.metrics.sigmaBar.frameSha256 = 'a'.repeat(64); rehash(t3);
+  const t4 = clone(); t4.metrics.coldRate.n = 7; rehash(t4);
+  const t5 = clone(); t5.metrics.T_frame.sum = 99;
+  const wrongQ = throwsRefusal(() => B.ANA.analyzeFrame({ vManifest: vOut.manifest, oManifest: oOut.manifest, qualifiedSha256: 'c'.repeat(64) }));
+  return B.ANA.verifyAnalysis(a) === true && throwsRefusal(() => B.ANA.verifyAnalysis(t1)) && throwsRefusal(() => B.ANA.verifyAnalysis(t2)) && throwsRefusal(() => B.ANA.verifyAnalysis(t3))
+    && throwsRefusal(() => B.ANA.verifyAnalysis(t4)) && throwsRefusal(() => B.ANA.verifyAnalysis(t5)) && wrongQ;
+});
+def('g23.min', 'G23', 'the 100-seed minimum blocks scientific interpretation at 99 (primary withheld, no permitted claim) and permits it at exactly 100', (B) => {
+  const run = (n) => { const { vOut, oOut } = makeCohort(B, spec100(n)); return B.ANA.analyzeFrame({ vManifest: vOut.manifest, oManifest: oOut.manifest }); };
+  const a99 = run(99), a100 = run(100);
+  return a99.frame.size === 99 && a99.interpretation.allowed === false && a99.primaryDescriptive.value === null && a99.claims.permitted.length === 0 && a99.primaryDescriptive.status === 'WITHHELD_BELOW_MINIMUM_FRAME'
+    && a99.metrics.T_frame.interpretable === false && a100.frame.size === 100 && a100.interpretation.allowed === true && a100.primaryDescriptive.value !== null && a100.claims.permitted.length === 3;
+});
+def('g24.pin', 'G24', 'a complete synthetic freeze record with matching hashes cannot authorise by default; with the record hash injected as the pin it is accepted (positive control)', (B) => {
+  const approvals = Object.fromEntries(B.CFG.REQUIRED_FOR_OFFICIAL.map(k => [k, { value: 'x', status: 'APPROVED' }]));
+  const H = { preregistrationSha256: 'a'.repeat(64), configSha256: 'b'.repeat(64), inventorySha256: 'c'.repeat(64), admittedSha256: 'd'.repeat(64), treeDigest: 'e'.repeat(64) };
+  const good = { schema: 'mcf1.freeze/1', frozen: true, approvals, ...H };
+  let refused = false; try { B.CFG.assertOfficialAllowed(good, H); } catch (e) { refused = /official stage refused/.test(e.message); }
+  let ctrl = false; try { ctrl = B.CFG.assertOfficialAllowed(good, H, { pinnedFreezeSha256: B.CFG.hashObject(good) }) === true; } catch (e) { ctrl = false; }
+  return refused && ctrl;
+});
+def('g24.testonly', 'G24', 'a record marked testOnly is refused even when complete and pinned', (B) => {
+  const approvals = Object.fromEntries(B.CFG.REQUIRED_FOR_OFFICIAL.map(k => [k, { value: 'x', status: 'APPROVED' }]));
+  const H = { preregistrationSha256: 'a'.repeat(64), configSha256: 'b'.repeat(64), inventorySha256: 'c'.repeat(64), admittedSha256: 'd'.repeat(64), treeDigest: 'e'.repeat(64) };
+  const rec = { schema: 'mcf1.freeze/1', frozen: true, testOnly: true, approvals, ...H };
+  try { B.CFG.assertOfficialAllowed(rec, H, { pinnedFreezeSha256: B.CFG.hashObject(rec) }); return false; } catch (e) { return /testOnly/.test(e.message); }
+});
+def('g24.struct', 'G24', 'with a matching pin, a record whose hashes differ from the actual inputs is refused', (B) => {
+  const approvals = Object.fromEntries(B.CFG.REQUIRED_FOR_OFFICIAL.map(k => [k, { value: 'x', status: 'APPROVED' }]));
+  const H = { preregistrationSha256: 'a'.repeat(64), configSha256: 'b'.repeat(64), inventorySha256: 'c'.repeat(64), admittedSha256: 'd'.repeat(64), treeDigest: 'e'.repeat(64) };
+  const rec = { schema: 'mcf1.freeze/1', frozen: true, approvals, ...H };
+  try { B.CFG.assertOfficialAllowed(rec, { ...H, inventorySha256: 'f'.repeat(64) }, { pinnedFreezeSha256: B.CFG.hashObject(rec) }); return false; } catch (e) { return /inventorySha256 does not match/.test(e.message); }
+});
+def('g24.ctx', 'G24', 'an official context that did not come from makeContext\'s gate is refused by the stage functions before any run; a development context with the same fake executor works (control)', async (B) => {
+  let calls = 0; const exec = async (input) => { calls++; return synthRun({ raw: input.agentSeed, content: 'C', twin: 'T9', x: 9, best: 9, stage: 'V', ok: 1 }); };
+  const forged = { ...ctx, policy: 'official' };
+  let refused = false; try { await B.ORC.stageQ({ seeds: [SR(0)], ctx: forged, cacheFile: null, exec }); } catch (e) { refused = /official context must be created by makeContext/.test(e.message); }
+  const beforeControl = calls;
+  const ctrl = await B.ORC.stageQ({ seeds: [SR(0)], ctx, cacheFile: null, exec });
+  return refused && beforeControl === 0 && calls === 1 && ctrl.qualified.length === 1;
+});
+def('g24.preflight', 'G24', 'an authorised official Stage Q refuses unless EVERY admitted seed is already recorded (MCF-1, registered); it refuses before any run; with all recorded it proceeds', async (B) => {
+  const approvals = Object.fromEntries(B.CFG.REQUIRED_FOR_OFFICIAL.map(k => [k, { value: 'x', status: 'APPROVED' }]));
+  const H = { preregistrationSha256: 'a'.repeat(64), configSha256: 'b'.repeat(64), inventorySha256: 'c'.repeat(64), admittedSha256: 'd'.repeat(64), treeDigest: 'e'.repeat(64) };
+  const rec = { schema: 'mcf1.freeze/1', frozen: true, approvals, ...H };
+  const seeds = [SR(0), SR(1)];
+  const mkReg = (raws) => createTrajectoryRegistry({ records: [...TRAJECTORY_RECORDS, ...raws.map(value => ({ namespace: 'trajectory', value, study: CFG.STUDY, status: 'registered', executed: false, authorization: 'in-memory verification only', artifact: 'none', why: 'preflight semantics' }))], heldOut: [...TRAJECTORY_HELD_OUT], authorizations: [...TRAJECTORY_AUTHORIZATIONS] });
+  const none = B.ORC.registryPreflight({ admitted: seeds, registry: mkReg([]) }), partial = B.ORC.registryPreflight({ admitted: seeds, registry: mkReg([seeds[0]]) }), all = B.ORC.registryPreflight({ admitted: seeds, registry: mkReg(seeds) });
+  const empty = B.ORC.registryPreflight({ admitted: [], registry: mkReg([]) });
+  const pure = !none.ok && !partial.ok && same(partial.offenders.map(o => o.raw), [seeds[1]]) && all.ok && !empty.ok && none.counts.AVAILABLE === 2;
+  let calls = 0; const exec = async (input) => { calls++; return synthRun({ raw: input.agentSeed, content: 'C', twin: 'T9', x: 9, best: 9, stage: 'V', ok: 1 }); };
+  const mk = (reg) => B.ORC.makeContext({ policy: 'official', freeze: rec, actual: H, registry: reg, authorization: { pinnedFreezeSha256: B.CFG.hashObject(rec) } });
+  let refused = false; try { await B.ORC.stageQ({ seeds, ctx: mk(mkReg([])), cacheFile: null, exec }); } catch (e) { refused = /registry preflight failed/.test(e.message); }
+  const callsAfterRefusal = calls;
+  const ok = await B.ORC.stageQ({ seeds, ctx: mk(mkReg(seeds)), cacheFile: null, exec });
+  return pure && refused && callsAfterRefusal === 0 && calls === 2 && ok.qualified.length === 2;
+});
+def('g24.candidate', 'G24', 'the candidate block is refused for development before anything is scanned (a trap inventory is never touched) and for official mode; makeContext refuses official without the pinned record', async (B) => {
+  const trap = { get classes() { throw new Error('TRAP: the inventory was touched'); }, get derived() { throw new Error('TRAP: the inventory was touched'); } };
+  let pre = false; try { B.ORC.stageAdmit({ policy: 'development', start: B.CFG.BLOCK.start, length: 5, inventory: trap }); } catch (e) { pre = /admission refused: the candidate confirmatory block is not authorised/.test(e.message); }
+  let tail = false; try { B.ORC.stageAdmit({ policy: 'development', start: B.CFG.BLOCK.start + 3000, length: 5, inventory: trap }); } catch (e) { tail = /admission refused/.test(e.message); }
+  const pol = !B.CFG.seedPolicy('development', B.CFG.BLOCK.start).ok && !B.CFG.seedPolicy('official', B.CFG.BLOCK.start).ok;
+  let ctxRefused = false; try { B.ORC.makeContext({ policy: 'official', freeze: { schema: 'mcf1.freeze/1', frozen: true, approvals: {} }, actual: {} }); } catch (e) { ctxRefused = /official stage refused/.test(e.message); }
+  return pre && tail && pol && ctxRefused;
+});
+def('g24.cli', 'G24', 'the official CLI refuses a complete synthetic record before any inventory build or scan (a deliberately unparseable scan range is never reached)', (B) => {
+  const approvals = Object.fromEntries(B.CFG.REQUIRED_FOR_OFFICIAL.map(k => [k, { value: 'x', status: 'APPROVED' }]));
+  const H = { preregistrationSha256: 'a'.repeat(64), configSha256: 'b'.repeat(64), inventorySha256: 'c'.repeat(64), admittedSha256: 'd'.repeat(64), treeDigest: 'e'.repeat(64) };
+  const file = path.join(TMP, `synthetic_freeze_${path.basename(B.dir)}.json`);
+  fs.writeFileSync(file, JSON.stringify({ schema: 'mcf1.freeze/1', frozen: true, approvals, ...H }));
+  const r = spawnSync(process.execPath, [B.orchestratePath, 'admit', '--mode', 'official', '--freeze', file, '--start', 'unparseable', '--length', 'unparseable', '--out', path.join(TMP, 'cli_out')], { encoding: 'utf8' });
+  return r.status !== 0 && /OFFICIAL_AUTHORIZATION\.freezeRecordSha256 is not set/.test(r.stderr) && !fs.existsSync(path.join(TMP, 'cli_out'));
+});
+
+// ---- the source-mutant harness ----
+const MUT_ROOT = fs.mkdtempSync(path.join(TMPREAL, 'mcf1-mutants-'));
+const ENGINE_FILES = fs.readdirSync(HERE).filter(f => f.endsWith('.mjs') && f !== 'verify_mcf1.mjs' && f !== 'driver.mjs');
+const fileUrl = (p) => pathToFileURL(p).href;
+function rewriteImports(src, destDir) {
+  const toUrl = (spec) => { const abs = path.resolve(HERE, spec); return path.dirname(abs) === HERE ? fileUrl(path.join(destDir, path.basename(abs))) : fileUrl(abs); };
+  return src.replace(/(from\s+)'(\.{1,2}\/[^']+)'/g, (_, a, spec) => `${a}'${toUrl(spec)}'`)
+    .replace(/(readJson\()'(\.{1,2}\/[^']+)'(\))/g, (_, a, spec, c) => `${a}'${fileUrl(path.resolve(HERE, spec))}'${c}`);
+}
+async function loadBundle(id, edits) {
+  const dir = path.join(MUT_ROOT, id); fs.mkdirSync(dir, { recursive: true });
+  for (const f of Object.keys(edits)) if (!ENGINE_FILES.includes(f)) throw new Error(`mutant ${id}: ${f} is not a mutable engine file`);
+  for (const f of ENGINE_FILES) {
+    let src = fs.readFileSync(path.join(HERE, f), 'utf8');
+    for (const [find, rep] of (edits[f] || [])) {
+      const n = src.split(find).length - 1;
+      if (n !== 1) throw new Error(`mutant ${id}: anchor in ${f} matched ${n} times (must be exactly 1): ${find.slice(0, 70)}`);
+      src = src.replace(find, () => rep);
+    }
+    fs.writeFileSync(path.join(dir, f), rewriteImports(src, dir));
+  }
+  const imp = (f) => import(fileUrl(path.join(dir, f)));
+  const [cfgM, valM, frmM, anaM, orcM] = await Promise.all([imp('config.mjs'), imp('validity.mjs'), imp('frame.mjs'), imp('analyze.mjs'), imp('orchestrate.mjs')]);
+  return { CFG: cfgM, VAL: valM, FRM: frmM, ANA: anaM, ORC: orcM, dir, orchestratePath: path.join(dir, 'orchestrate.mjs') };
+}
+const REAL = { CFG, VAL, FRM, ANA, ORC, dir: HERE, orchestratePath: path.join(HERE, 'orchestrate.mjs') };
+async function runTest(id, B) {
+  const t = TESTS.get(id); let r;
+  try { r = res(await t.fn(B)); } catch (e) { r = { ok: false, detail: 'threw: ' + String(e && e.message ? e.message : e).slice(0, 120), threw: true }; }
+  return r;
+}
+
+// real implementation: every R1 gate must pass
+for (const t of TESTS.values()) {
+  const r = await runTest(t.id, REAL);
+  check(t.gate, `[${t.id}] ${t.desc}`, r.ok === true, r.detail || '');
+}
+
+// mutants: each deliberately breaks one safeguard; the named gate must fail against the mutated module graph
+const M = (id, desc, tests, edits) => ({ id, desc, tests, edits });
+const MUTANTS = [
+  M('m-status-approved', 'a ledger decision carrying the reserved APPROVED status', ['g15.ledger'], { 'config.mjs': [["value: 'C', status: 'APPROVED_FOR_IMPLEMENTATION', note: 'census of the whole", "value: 'C', status: 'APPROVED', note: 'census of the whole"]] }),
+  M('m-steer-old-indicator', 'primary score reverted to the follow indicator (success-pattern restricted definition)', ['g16.table', 'g16.mean'], { 'analyze.mjs': [['steering: (p) => 0.5 * (I(p.x9 === 9) - I(p.x9 === 11) + I(p.x11 === 11) - I(p.x11 === 9)),', 'steering: (p) => I(p.x9 === 9 && p.x11 === 11),']] }),
+  M('m-steer-sign', 'primary score with the wrong sign on the x9 = 11 term', ['g16.table'], { 'analyze.mjs': [['steering: (p) => 0.5 * (I(p.x9 === 9) - I(p.x9 === 11) + I(p.x11 === 11) - I(p.x11 === 9)),', 'steering: (p) => 0.5 * (I(p.x9 === 9) + I(p.x9 === 11) + I(p.x11 === 11) - I(p.x11 === 9)),']] }),
+  M('m-net-no-cold', 'net shift that forgets to subtract COLD', ['g17.secondary'], { 'analyze.mjs': [['net: (p) => 0.5 * (I(p.x9 === 9) + I(p.x11 === 11)) - 0.5 * (I(p.xC === 9) + I(p.xC === 11)),', 'net: (p) => 0.5 * (I(p.x9 === 9) + I(p.x11 === 11)),']] }),
+  M('m-selector-hardcoded', 'primary selector that labels the requested metric but computes T_frame', ['g18.selector'], { 'analyze.mjs': [['const sel = m.metrics[primary];', 'const sel = m.metrics.T_frame;']] }),
+  M('m-partial-cluster', 'validator that tolerates a single failing member of the cluster', ['g19.cluster'], { 'validity.mjs': [['return { raw, valid: hard.length === 0, hard, diagnostics, failures,', 'return { raw, valid: hard.length === 0 || Object.values(failures).every(a => a.length <= 1), hard, diagnostics, failures,']] }),
+  M('m-frame-keeps-O-invalid', 'frame that keeps seeds invalid at Stage O (steering from the Stage-V frame)', ['g19.stageO'], { 'frame.mjs': [['if (!o.valid) continue;', 'if (!o.valid) { rows.push(rowOf(v, { outcomes: Object.fromEntries(RUN_KEYS.map(k => [k, { edge: v.executed[k], ok: 0 }])) })); seeds.push(v.raw); continue; }']] }),
+  M('m-V9-as-seed-exclusion', 'a determinism mismatch demoted to an ordinary seed exclusion', ['g20.halt'], { 'validity.mjs': [["if (fingerprintPre(r) !== vEntry.fingerprints[k]) halt('V9', k);", "if (fingerprintPre(r) !== vEntry.fingerprints[k]) seedFail('V9', k);"]] }),
+  M('m-integrity-halts-ignored', 'assembleO that records integrity failures but never halts on them', ['g20.halt'], { 'orchestrate.mjs': [['for (const x of entries) for (const id of x.haltStage || []) halts.push({ rule: id, raw: x.raw, runs: ((x.haltDetail || {})[id] || []).slice() });', '']] }),
+  M('m-frame-from-halted-O', 'frame builder that accepts a halted Stage-O manifest', ['g20.halt'], { 'frame.mjs': [["if (oManifest.halted || (oManifest.halts && oManifest.halts.length)) refuse('Stage O halted: a halted stage yields no frame');", '']] }),
+  M('m-no-retry', 'run pool without the one deterministic retry', ['g20.run'], { 'orchestrate.mjs': [['if (rec.error) rec = await exec(input);', '']] }),
+  M('m-RUN-drop-at-V', 'a persistent run error at Stage V silently drops the seed instead of halting', ['g20.run'], { 'orchestrate.mjs': [["for (const e of entries) if (e.failures && e.failures.RUN) halts.push({ rule: 'RUN', raw: e.raw, runs: e.failures.RUN.slice() });", '']] }),
+  M('m-RUN-drop-at-O', 'a persistent run error at Stage O silently drops the seed instead of halting', ['g20.run'], { 'orchestrate.mjs': [["for (const x of entries) if (x.failures && x.failures.RUN) halts.push({ rule: 'RUN', raw: x.raw, runs: x.failures.RUN.slice() });", '']] }),
+  M('m-RUN-drop-at-Q', 'a persistent run error at Stage Q silently leaves the seed unqualified', ['g20.run'], { 'orchestrate.mjs': [["for (const raw of runFaults) halts.push({ rule: 'RUN', raw });", '']] }),
+  M('m-cachedir-missing', 'run pool that assumes the cache directory already exists', ['g20.cachedir'], { 'orchestrate.mjs': [['if (cacheFile) fs.mkdirSync(path.dirname(cacheFile), { recursive: true });', '']] }),
+  M('m-report-file-hash-only', 'CLI report that prints only the artifact file hash as the manifest hash', ['g20.report'], { 'orchestrate.mjs': [["manifestSha256: obj && typeof obj.sha256 === 'string' ? obj.sha256 : null", 'manifestSha256: art.sha256']] }),
+  M('m-fault-threshold-off-by-one', 'Stage-O seed-fault threshold that needs one fault more than the ledger value', ['g20.firstfault'], { 'orchestrate.mjs': [['if (haltCount !== null && faults.length >= haltCount)', 'if (haltCount !== null && faults.length > haltCount)']] }),
+  M('m-V6-hard', 'V6 restored as a hard eligibility exclusion', ['g21.v6'], { 'validity.mjs': [["if (!pair.supportOK) diagnostics.push('V6');", "if (!pair.supportOK) { diagnostics.push('V6'); fail('V6'); }"]] }),
+  M('m-exploration-eligibility', 'exploration status excludes seeds', ['g22.invariance'], { 'validity.mjs': [['return { raw, valid: hard.length === 0, hard, diagnostics, failures,', 'return { raw, valid: hard.length === 0 && !explorationOf(runs).anyVisible, hard, diagnostics, failures,']] }),
+  M('m-exploration-rng', 'exploration diagnostic that consumes an RNG draw', ['g22.static'], { 'validity.mjs': [['const T9 = (c) => per[`${c}|T9`];', 'const T9 = (c) => per[`${c}|T9`]; makeRng(1)();']] }),
+  M('m-verify-no-frame-check', 'analysis verifier that does not recompute the frame hash', ['g23.hash'], { 'analyze.mjs': [["if (!a.frame || !frameIntact(a.frame)) refuse('the frame hash is missing or does not match the frame body');", '']] }),
+  M('m-verify-no-metric-hash', 'analysis verifier that does not compare metric frame hashes', ['g23.hash'], { 'analyze.mjs': [['else if (o.frameSha256 !== a.frame.sha256) bad.push(`${p}: frame hash differs`);', 'else if (false) bad.push("x");']] }),
+  M('m-min-frame-off', 'minimum valid frame not enforced', ['g23.min'], { 'analyze.mjs': [['const belowMinimum = frame.size < min;', 'const belowMinimum = false;']] }),
+  M('m-pin-off', 'official gate without the pinned-authorisation checks', ['g24.pin'], { 'config.mjs': [
+    ["if (typeof pinnedFreezeSha256 !== 'string' || pinnedFreezeSha256.length < 12) officialFail('no freeze record is authorised: OFFICIAL_AUTHORIZATION.freezeRecordSha256 is not set');", ''],
+    ["if (hashObject(freeze) !== pinnedFreezeSha256) officialFail('the freeze record hash does not equal OFFICIAL_AUTHORIZATION.freezeRecordSha256');", '']] }),
+  M('m-testonly-off', 'official gate that ignores the testOnly marker', ['g24.testonly'], { 'config.mjs': [["if (freeze.testOnly === true) officialFail('freeze record is marked testOnly');", '']] }),
+  M('m-actual-hash-off', 'official gate that does not compare the actual hashes', ['g24.struct'], { 'config.mjs': [['if (actual[k] !== freeze[k]) officialFail(`${k} does not match the freeze record`);', '']] }),
+  M('m-ctx-guard-off', 'stage functions that accept a forged official context', ['g24.ctx'], { 'orchestrate.mjs': [["if (ctx.policy === 'official' && !AUTHORISED.has(ctx)) throw new Error('MCF-1 stage refused: an official context must be created by makeContext after the freeze-record gate');", '']] }),
+  M('m-preflight-off', 'official Stage Q without the registry preflight', ['g24.preflight'], { 'orchestrate.mjs': [["if (ctx.policy === 'official') assertRegistryPreflight({ admitted: seeds, registry: ctx.registry });", '']] }),
+  M('m-candidate-guard-off', 'development admission without the candidate-block refusal', ['g24.candidate'], { 'orchestrate.mjs': [["if (!p.ok) throw new Error(`MCF-1 admission refused: ${p.why}`);", '']] }),
+  M('m-cli-prescan-off', 'official CLI without the pre-scan authorisation check', ['g24.cli'], { 'orchestrate.mjs': [['assertFreezeAuthorised(freeze);', '']] }),
+];
+for (const m of MUTANTS) {
+  let B;
+  try { B = await loadBundle(m.id, m.edits); } catch (e) { mutant('R1', `${m.id}: ${m.desc}`, false, `MUTANT COULD NOT BE BUILT (verifier defect): ${e.message}`); continue; }
+  const outs = []; for (const tid of m.tests) outs.push({ tid, ...(await runTest(tid, B)) });
+  const caught = outs.some(o => o.ok !== true);
+  mutant(TESTS.get(m.tests[0]).gate, `${m.id}: ${m.desc}`, caught, outs.map(o => `${o.tid} ${o.ok === true ? 'PASSED (not caught)' : o.threw ? o.detail : 'failed as required'}`).join('; '));
+}
+
+// ---------------- G25: engine files untouched; G26: documentation ----------------
+console.log('\n== G25 engine files and G26 documentation ==');
 {
-  const an = ANA.analyzeFrame({ vManifest: Vs.manifest, oManifest: Oh.manifest, admissionSummary: admDev.summary, qualificationSummary: Q.summary });
-  check('G14', 'all stages ran without a halt and every manifest is self-consistent', !Q.halted && !Vs.halted && !Oh.halted && VAL.manifestIntact(Vs.manifest) && VAL.manifestIntact(Oh.manifest));
-  check('G14', 'analysis is a census: no inference, primary descriptive is the provisional T_frame', an.inference.performed === false && an.primaryDescriptive.name === 'T_frame' && an.primaryDescriptive.status === 'PROVISIONAL');
-  check('G14', 'claims block lists permitted and prohibited conclusions', an.claims.permitted.length >= 3 && an.claims.prohibited.includes('goal arrival or task completion'));
-  const art = ORC.writeArtifact(path.join(TMP, 'artifacts'), 'analysis.json', an);
-  check('G14', 'artifact writer produces a file whose sidecar hash matches its bytes', CFG.sha256(fs.readFileSync(path.join(TMP, 'artifacts', 'analysis.json'), 'utf8')) === art.sha256 && fs.readFileSync(path.join(TMP, 'artifacts', 'analysis.json.sha256'), 'utf8').trim() === art.sha256);
+  // the files whose behaviour R1 must not change (driver semantics, admission algorithm, inventory definitions, contents):
+  // SHA-256 of the line-ending-normalised text at the M-MCF1-HARNESS baseline commit 9aaf22e
+  const ENGINE_PINS = {
+    'driver.mjs': 'a5de9e6eafad61c137e8c9192315e209146cdc5029c8b6fb361c7d49c5c83992',
+    'inventory.mjs': '3f8a4b92a72e30ec3413b8b1bef9f62870bd5249f8ae93c39dc9612ce2eb0cb2',
+    'admission.mjs': '50757d65b423dffdb7b8779cf7129a7b100ac63e50539adad8448b2ba67f00af',
+    'episodes.mjs': 'c9f01f9d7d5599209ca9705f819c2d5628c69f47f05c3ac902b2b2c4767787e6',
+  };
+  for (const f of Object.keys(ENGINE_PINS)) {
+    const text = fs.readFileSync(path.join(HERE, f), 'utf8');
+    check('G25', `${f} is byte-identical (line-ending-normalised) to the M-MCF1-HARNESS baseline`, CFG.hashTextNormalised(text) === ENGINE_PINS[f], CFG.hashTextNormalised(text).slice(0, 16));
+    mutant('G25', `${f}: a one-character change is detected by the pin`, CFG.hashTextNormalised(text + ' ') !== ENGINE_PINS[f]);
+  }
+  const readme = fs.readFileSync(path.join(HERE, 'README.md'), 'utf8');
+  const REQUIRED = ['T_frame', 'S_s = 1/2 (1{x9=9} - 1{x9=11} + 1{x11=11} - 1{x11=9})', 'complete-cluster', 'V6', 'diagnostic', '100', 'inferred', 'not frozen', 'OFFICIAL_AUTHORIZATION', 'APPROVED_FOR_IMPLEMENTATION', 'candidate', 'prohibited', 'planning', 'general performance benefit', 'retry'];
+  const missing = REQUIRED.filter(p => !readme.includes(p));
+  check('G26', 'README documents the ledger, formulas, frame rule, V6, minimum, exploration limits, claim boundary and the execution lock', missing.length === 0, missing.join(' | '));
+  mutant('G26', 'a README without the formula and the lock is detected', REQUIRED.filter(p => !readme.replace(/OFFICIAL_AUTHORIZATION/g, '').replace(/S_s = 1\/2/g, '').includes(p)).length === 2);
+  check('G26', 'the README states the execution lock and does not describe the design as frozen', /not frozen/.test(readme) && !/design is frozen/.test(readme.replace(/not frozen/g, '')));
 }
 
 console.log(`\nRESULT: ${passed} checks passed, ${failed} failed; mutants caught ${mutantsCaught}, missed ${mutantsMissed}`);
 fs.rmSync(TMP, { recursive: true, force: true });
+fs.rmSync(MUT_ROOT, { recursive: true, force: true });
 process.exit(failed === 0 && mutantsMissed === 0 ? 0 : 1);

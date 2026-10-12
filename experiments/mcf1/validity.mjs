@@ -6,7 +6,16 @@
 // can only (a) invalidate a seed for an instrument reason that does not depend on success/failure, or
 // (b) halt the whole stage; it never adds, replaces or re-admits a seed.
 //
-// Hard rules invalidate (the seed, or the stage); diagnostic rules are reported and never exclude anything.
+// Three kinds of consequence, kept separate on purpose:
+//   seed exclusion   a seed-scope hard rule failed in ANY of the seed's six condition/twin runs: the WHOLE seed
+//                    leaves the frame (complete-cluster rule); the failing run keys are recorded per rule.
+//   stage halt       an integrity rule (V1, V9, V12) or a persistent run error (RUN) failed: the stage stops.
+//                    It is never converted into an ordinary seed exclusion.
+//   diagnostic       V6 and V7 are reported (with pair class and signed steering score) and decide nothing.
+//
+// R1: V6 (executed pair outside {(9,11)} U {x9 = x11}) is a diagnostic, not an eligibility condition.  The frame
+// is not selected on the executed routing pattern; anti-steering and unusual patterns stay in the frame and are
+// reported.  Independent legality and integrity checks (V2-V5, V8, V10, V11, V4b, V9, V12) are unchanged.
 // ==========================================================
 import { FRAME, DESIGN, BUDGETS, canonicalJson, sha256 } from './config.mjs';
 import { isGraphEdge, CONTENT_NODES, REGISTERED_BRAIN_HASHES } from './episodes.mjs';
@@ -14,14 +23,15 @@ import { makeRng } from '../../instrumentation/rng.js';
 import { streamSeeds, trajectorySeed } from '../registry/typed.js';
 
 export const RULES = Object.freeze({
-  V1:  { cls: 'hard',       scope: 'stage', stage: 'V,O', title: 'runtime identity: tree manifest digest equals the frozen digest and the H1-R conformance is on' },
+  RUN: { cls: 'hard',       scope: 'stage', stage: 'Q,V,O', title: 'a run stayed non-operational after one deterministic retry in an isolated process; the stage halts (an operational fault never silently drops a seed)' },
+  V1:  { cls: 'hard',       scope: 'stage', stage: 'Q,V,O', title: 'runtime identity: tree manifest digest equals the frozen digest and the H1-R conformance is on' },
   V2:  { cls: 'hard',       scope: 'seed',  stage: 'Q,V', title: 'start node 10; call 0 a prediction tick; exactly one decision; no replay at call 0' },
   V3:  { cls: 'hard',       scope: 'seed',  stage: 'Q,V', title: 'candidate set exactly {6,9,11,13}; every candidate a legal graph neighbour; no self-loop' },
   V4:  { cls: 'hard',       scope: 'seed',  stage: 'V',   title: 'executed first action is a candidate and a legal move (runtime predicate and independent graph check agree)' },
   V4b: { cls: 'hard',       scope: 'seed',  stage: 'O',   title: 'illegal-action counter 0; exactly one environment draw seen; one attempt recorded, from the start node to the executed edge; no draw fault' },
   V5:  { cls: 'hard',       scope: 'seed',  stage: 'V',   title: 'twin invariance: the pre-attempt record is identical under T9 and T11 for every content' },
-  V6:  { cls: 'hard',       scope: 'seed',  stage: 'V',   title: 'executed pair (x9,x11) is (9,11) or x9 = x11, so the first-edge contrast has support within {0,1}' },
-  V7:  { cls: 'diagnostic', scope: 'seed',  stage: 'V',   title: 'executed triple in the identity class (needed only for the GOOD/BAD vs COLD decomposition)' },
+  V6:  { cls: 'diagnostic', scope: 'seed',  stage: 'V',   title: 'executed pair (x9,x11) is neither (9,11) nor x9 = x11 (reversed or mixed): reported with its pair class and signed steering score, never an eligibility condition' },
+  V7:  { cls: 'diagnostic', scope: 'seed',  stage: 'V',   title: 'executed triple outside the identity class (relevant only to reading the GOOD/BAD vs COLD decomposition)' },
   V8:  { cls: 'hard',       scope: 'seed',  stage: 'V',   title: 'episode state: 0 episodes for C, exactly the registered episode for Mb, brain hash equal, no activeGoal stored, learning stores empty at the decision, embeddings identical across runs' },
   V9:  { cls: 'hard',       scope: 'stage', stage: 'O',   title: 'determinism: the Stage-O pre-attempt fingerprint equals the Stage-V fingerprint (any mismatch halts the stage)' },
   V10: { cls: 'hard',       scope: 'seed',  stage: 'V',   title: 'seed admitted by the frozen predicate and registry-available' },
@@ -44,7 +54,7 @@ export function fingerprintPre(rec) {
   }));
 }
 
-/** executed pair -> class; `supportOK` means D^R is supported on {0,1} (never on a negative value) */
+/** executed pair -> class; `supportOK` marks the two classes whose first-edge contrast is supported on {0,1} */
 export function classifyPair(x9, x11) {
   if (x9 === 9 && x11 === 11) return { cls: 'follow', supportOK: true };
   if (x9 === x11) return { cls: 'equal', supportOK: true };
@@ -57,33 +67,59 @@ export function inIdentityClass(xC, x9, x11) {
   return (inC(xC) && inC(x9) && inC(x11)) || (xC === x9 && x9 === x11);
 }
 
+/**
+ * Exploration indicator (INFERRED, never directly recorded).  The call-0 selection draws `liveRng() < epsilon`
+ * (epsilon = 0.2 at call 0, independent of memory) and, if it triggers, a second draw picks a candidate.  The sink
+ * records the step-0 argmax (M-BEST) and the executed edge (M-DECISION) but not the trigger or the pick.  A run is
+ * "visible" when its executed edge differs from its recorded argmax.  Limits: a triggered pick that equals the
+ * argmax is invisible in that run; when all three contents share one argmax, such a trigger is invisible in every run.
+ * Descriptive only: it never enters eligibility, the primary outcome or the outcome mapping.
+ */
+export function explorationOf(runs) {
+  const per = {};
+  for (const k of RUN_KEYS) {
+    const r = runs[k], b = r && r.bests ? r.bests.find(x => x[1] === 0) : null;
+    const argmax = b ? Number(b[2]) : null, executed = r ? executedOf(r) : null;
+    per[k] = { argmax, executed, visible: argmax !== null && executed !== null && executed !== argmax };
+  }
+  const T9 = (c) => per[`${c}|T9`];
+  const picks = DESIGN.contents.map(c => T9(c).executed), argmaxes = DESIGN.contents.map(c => T9(c).argmax);
+  const anyVisible = RUN_KEYS.some(k => per[k].visible);
+  return {
+    indicator: 'inferred', basis: 'executed first edge differs from the recorded step-0 argmax; the trigger draw and the pick are not recorded',
+    anyVisible, coldVisible: per['C|T9'].visible || per['C|T11'].visible,
+    sharedPick: anyVisible ? new Set(picks).size === 1 : null,
+    unobservableByConstruction: new Set(argmaxes).size === 1,
+    argmax: { C: T9('C').argmax, M9: T9('M9').argmax, M11: T9('M11').argmax },
+  };
+}
+
 /** Stage-V seed validation.  `runs` is keyed 'C|T9' ... 'M11|T11'. */
 export function validateSeedV({ raw, runs, admitted = true, registryDecision = 'AVAILABLE', budgets = BUDGETS }) {
-  const hard = [], diagnostics = [];
+  const hard = [], diagnostics = [], failures = {};
   const missing = RUN_KEYS.filter(k => !runs[k] || runs[k].error || !runs[k].outcome || !runs[k].outcome.abortedBySentinel);
-  if (missing.length) return { raw, valid: false, hard: ['RUN'], diagnostics, missing, pattern: null, steering: null, fingerprints: null };
-  const R = RUN_KEYS.map(k => runs[k]);
-  const fail = (id) => { if (!hard.includes(id)) hard.push(id); };
+  if (missing.length) return { raw, valid: false, hard: ['RUN'], diagnostics, failures: { RUN: missing.slice() }, missing, pattern: null, pair: null, pairClass: null, steering: null, identityClass: null, fingerprints: null, executed: null, exploration: null };
+  const fail = (id, key = 'seed') => { if (!hard.includes(id)) hard.push(id); const f = failures[id] || (failures[id] = []); if (!f.includes(key)) f.push(key); };
   // V2
-  for (const r of R) if (!(r.startNode === FRAME.startNode && r.replays.length === 0 && r.decisions.length === 1 && r.calls === 1)) fail('V2');
+  for (const k of RUN_KEYS) { const r = runs[k]; if (!(r.startNode === FRAME.startNode && r.replays.length === 0 && r.decisions.length === 1 && r.calls === 1)) fail('V2', k); }
   // V3
-  for (const r of R) {
-    const ks = r.step0.map(c => c.key);
-    if (!same(sorted(ks), FRAME.candidates) || r.step0.some(c => c.selfLoop) || !r.legality.candidatesAreEdges.every(Boolean) || !ks.every(k => isGraphEdge(FRAME.startNode, k))) fail('V3');
+  for (const k of RUN_KEYS) {
+    const r = runs[k], ks = r.step0.map(c => c.key);
+    if (!same(sorted(ks), FRAME.candidates) || r.step0.some(c => c.selfLoop) || !r.legality.candidatesAreEdges.every(Boolean) || !ks.every(c => isGraphEdge(FRAME.startNode, c))) fail('V3', k);
   }
   // V4
-  for (const r of R) {
-    const x = executedOf(r);
-    if (x === null || !r.step0.some(c => c.key === x) || r.legality.executedLegalMove !== true || !isGraphEdge(FRAME.startNode, x)) fail('V4');
+  for (const k of RUN_KEYS) {
+    const r = runs[k], x = executedOf(r);
+    if (x === null || !r.step0.some(c => c.key === x) || r.legality.executedLegalMove !== true || !isGraphEdge(FRAME.startNode, x)) fail('V4', k);
   }
   // V5
   const fps = Object.fromEntries(RUN_KEYS.map(k => [k, fingerprintPre(runs[k])]));
-  for (const c of DESIGN.contents) if (fps[`${c}|T9`] !== fps[`${c}|T11`]) fail('V5');
+  for (const c of DESIGN.contents) if (fps[`${c}|T9`] !== fps[`${c}|T11`]) { fail('V5', `${c}|T9`); fail('V5', `${c}|T11`); }
   // executed edges (twin-invariant under V5; T9 is used)
   const xC = executedOf(runs['C|T9']), x9 = executedOf(runs['M9|T9']), x11 = executedOf(runs['M11|T9']);
-  // V6
+  // V6 (diagnostic only: reported with its pair class, decides nothing)
   const pair = classifyPair(x9, x11);
-  if (!pair.supportOK) fail('V6');
+  if (!pair.supportOK) diagnostics.push('V6');
   // V7 (diagnostic)
   const ident = inIdentityClass(xC, x9, x11);
   if (!ident) diagnostics.push('V7');
@@ -92,51 +128,54 @@ export function validateSeedV({ raw, runs, admitted = true, registryDecision = '
   for (const k of RUN_KEYS) {
     const r = runs[k], c = k.split('|')[0], p0 = r.probes.find(p => p.phase === 'call0-start'), pd = r.probes.find(p => p.phase === 'at-decision');
     const want = c === 'C' ? 0 : 1;
-    if (!p0 || !pd || p0.episodes.length !== want) { fail('V8'); continue; }
+    if (!p0 || !pd || p0.episodes.length !== want) { fail('V8', k); continue; }
     if (c !== 'C') {
       const e = p0.episodes[0];
-      if (!same(e.nodes, CONTENT_NODES[c]) || e.hasActiveGoal !== false) fail('V8');
+      if (!same(e.nodes, CONTENT_NODES[c]) || e.hasActiveGoal !== false) fail('V8', k);
     }
-    if (r.brainHash !== REGISTERED_BRAIN_HASHES[c]) fail('V8');
-    if (pd.Q.size || pd.transitions.entries || pd.rewards || pd.penalties || pd.pathAttempts || pd.pathSuccesses || pd.confidenceMap) fail('V8');
+    if (r.brainHash !== REGISTERED_BRAIN_HASHES[c]) fail('V8', k);
+    if (pd.Q.size || pd.transitions.entries || pd.rewards || pd.penalties || pd.pathAttempts || pd.pathSuccesses || pd.confidenceMap) fail('V8', k);
     emb.add(p0.embeddingSha);
   }
-  if (emb.size !== 1) fail('V8');
+  if (emb.size !== 1) fail('V8', 'seed');
   // V10
-  if (admitted !== true || !(registryDecision === 'AVAILABLE' || registryDecision === 'REPRODUCTION')) fail('V10');
+  if (admitted !== true || !(registryDecision === 'AVAILABLE' || registryDecision === 'REPRODUCTION')) fail('V10', 'seed');
   // V11
-  for (const r of R) {
-    const a = r.artifacts || {}, env = a.envCounters || {};
-    if (!(a.cogDraws <= budgets.cognitive && a.visDraws <= budgets.visual && env.envDraws === 0)) fail('V11');
+  for (const k of RUN_KEYS) {
+    const a = runs[k].artifacts || {}, env = a.envCounters || {};
+    if (!(a.cogDraws <= budgets.cognitive && a.visDraws <= budgets.visual && env.envDraws === 0)) fail('V11', k);
   }
-  return { raw, valid: hard.length === 0, hard, diagnostics, missing: [], pattern: { xC, x9, x11 }, pair: pair.cls, steering: x9 === 9 && x11 === 11, identityClass: ident, fingerprints: fps, executed: Object.fromEntries(RUN_KEYS.map(k => [k, executedOf(runs[k])])) };
+  return { raw, valid: hard.length === 0, hard, diagnostics, failures, missing: [], pattern: { xC, x9, x11 }, pair: pair.cls, pairClass: pair.cls, steering: x9 === 9 && x11 === 11, identityClass: ident, fingerprints: fps,
+    executed: Object.fromEntries(RUN_KEYS.map(k => [k, executedOf(runs[k])])), exploration: explorationOf(runs) };
 }
 
 /** first environment draw of a seed, recomputed from the registry's derived environment seed (the draw the first attempt uses) */
 export function firstEnvironmentDraw(raw) { return makeRng(streamSeeds(trajectorySeed(raw)).environment)(); }
 
-/** Stage-O seed validation against the frozen Stage-V entry. */
+/** Stage-O seed validation against the frozen Stage-V entry.  Seed-scope failures: hardSeed.  Integrity failures: haltStage. */
 export function validateSeedO({ raw, vEntry, runs, budgets = BUDGETS }) {
-  const hardSeed = [], haltStage = [];
+  const hardSeed = [], haltStage = [], failures = {}, haltDetail = {};
   const missing = RUN_KEYS.filter(k => !runs[k] || runs[k].error || !runs[k].outcome || !runs[k].outcome.abortedBySentinel);
-  if (missing.length) return { raw, valid: false, hardSeed: ['RUN'], haltStage, missing, outcomes: null };
+  if (missing.length) return { raw, valid: false, hardSeed: ['RUN'], haltStage, failures: { RUN: missing.slice() }, haltDetail, missing, outcomes: null };
+  const seedFail = (id, key) => { if (!hardSeed.includes(id)) hardSeed.push(id); const f = failures[id] || (failures[id] = []); if (!f.includes(key)) f.push(key); };
+  const halt = (id, key) => { if (!haltStage.includes(id)) haltStage.push(id); const f = haltDetail[id] || (haltDetail[id] = []); if (!f.includes(key)) f.push(key); };
   const u1 = firstEnvironmentDraw(raw), outcomes = {};
   for (const k of RUN_KEYS) {
     const r = runs[k], x = executedOf(r), a = r.attempts && r.attempts[0];
-    // V9 — determinism against Stage V
-    if (fingerprintPre(r) !== vEntry.fingerprints[k]) { if (!haltStage.includes('V9')) haltStage.push('V9'); }
+    // V9 — determinism against Stage V (integrity: halts the stage)
+    if (fingerprintPre(r) !== vEntry.fingerprints[k]) halt('V9', k);
     // V4b
-    if (!(r.h1r.blockedIllegal === 0 && r.h1r.drawFaults === 0 && r.h1r.envDrawsSeen === 1 && r.attempts.length === 1 && a && a[1] === r.startNode && a[2] === x && r.legality.executedLegalMove === true)) { if (!hardSeed.includes('V4b')) hardSeed.push('V4b'); }
+    if (!(r.h1r.blockedIllegal === 0 && r.h1r.drawFaults === 0 && r.h1r.envDrawsSeen === 1 && r.attempts.length === 1 && a && a[1] === r.startNode && a[2] === x && r.legality.executedLegalMove === true)) seedFail('V4b', k);
     // V11
     const ar = r.artifacts || {}, env = ar.envCounters || {};
-    if (!(ar.cogDraws <= budgets.cognitive && ar.visDraws <= budgets.visual && env.envDraws === 1)) { if (!hardSeed.includes('V11')) hardSeed.push('V11'); }
-    // V12 — instrument mapping (applied identically to success and failure)
+    if (!(ar.cogDraws <= budgets.cognitive && ar.visDraws <= budgets.visual && env.envDraws === 1)) seedFail('V11', k);
+    // V12 — instrument mapping (applied identically to success and failure; integrity: halts the stage)
     if (a && typeof r.executedEdgeP === 'number') {
-      if ((a[3] === 1) !== (u1 < r.executedEdgeP)) { if (!haltStage.includes('V12')) haltStage.push('V12'); }
-    } else if (!haltStage.includes('V12')) haltStage.push('V12');
+      if ((a[3] === 1) !== (u1 < r.executedEdgeP)) halt('V12', k);
+    } else halt('V12', k);
     outcomes[k] = { edge: x, ok: a ? a[3] : null };
   }
-  return { raw, valid: hardSeed.length === 0 && haltStage.length === 0, hardSeed, haltStage, missing: [], outcomes };
+  return { raw, valid: hardSeed.length === 0 && haltStage.length === 0, hardSeed, haltStage, failures, haltDetail, missing: [], outcomes };
 }
 
 /** V1 across a set of run records: every record must carry the frozen tree identity and conformance on */
