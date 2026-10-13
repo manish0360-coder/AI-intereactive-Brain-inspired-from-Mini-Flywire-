@@ -33,10 +33,10 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { buildTree } from '../h1r/build_tree.mjs';
 import { trajectory, trajectorySeed, memberListOf } from '../registry/typed_v2.js';
-import { STUDY, FRAME, DESIGN, BUDGETS, APPROVALS, DEV_BLOCK, EXPOSURE, DEV_BASE_CONFIG, STUDY_CONFIGURATION, canonicalJson, sha256, configSnapshot, seedPolicy } from './config.mjs';
+import { STUDY, FRAME, DESIGN, BUDGETS, APPROVALS, DEV_BASE_CONFIG, STUDY_CONFIGURATION, canonicalJson, sha256, configSnapshot } from './config.mjs';
 import { officialAuthorisation, verifyTreeReadOnly, treeBindingFromManifest, liveBindings, sourcesDigest, verifierDigest, readChain, commitReceipt, evaluateEnvironment, environmentMismatch } from './lock.mjs';
 import { buildInventory } from './inventory.mjs';
-import { admitScan } from './admission.mjs';
+import { stageInventory, stageAdmit } from './scan.mjs';     // admission lives in a module that cannot execute anything
 import { RUN_KEYS, validateSeedV, validateSeedO, checkRuntimeIdentity, buildManifest, manifestIntact } from './validity.mjs';
 import { analyzeFrame, verifyAnalysis } from './analyze.mjs';
 
@@ -207,25 +207,9 @@ export function artifactReport(art, obj) {
 }
 
 // ---------------- stages ----------------
-/** inventory (+ development variant) */
-export function stageInventory({ policy }) {
-  const exclude = policy === 'development' ? [DEV_BLOCK.id, ...EXPOSURE.map(e => e.id)] : [];
-  return buildInventory({ exclude });
-}
-/**
- * admission: development scans stay inside the exploratory domain; the candidate block is refused before anything
- * is scanned.  An official scan needs the committed authorization and covers exactly the approved window: with no
- * record (this milestone) NO mode of this function can scan the candidate range.
- */
-export function stageAdmit({ policy, start, length, inventory }) {
-  if (policy === 'development') {
-    for (const raw of [start, start + length - 1]) { const p = seedPolicy('development', raw); if (!p.ok) throw new Error(`MCF-1 admission refused: ${p.why}`); }
-  } else if (policy === 'official') {
-    const A = officialAuthorisation();
-    if (start !== A.seedBlock || length !== A.scanLength) throw new Error('MCF-1 admission refused: an official scan covers exactly the approved seed block and scan length');
-  } else throw new Error(`MCF-1 admission refused: unknown policy ${policy}`);
-  return admitScan({ start, length, inventory, category: policy === 'official' ? 'registered' : 'development' });
-}
+// stageInventory and stageAdmit are the NON-EXECUTING admission stage (scan.mjs): re-exported here so existing callers
+// keep working, but defined in a module that has no path to runPool, execDriver or a driver process.
+export { stageInventory, stageAdmit };
 
 /** Stage Q classification (pure) */
 export function assembleQ({ seeds, recs, expectedIdentity }) {

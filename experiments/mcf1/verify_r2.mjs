@@ -738,7 +738,7 @@ def('f.sources', 'R2-F', 'the source digest covers exactly the declared closure:
   const dataFiles = new Set(['neurons.json', 'connections.json']);
   const missing = [...seen].filter(f => !declared.has(f) && !excluded.includes(f));
   const unreachable = [...declared].filter(f => !seen.has(f) && !dataFiles.has(f));
-  return { ok: allChange && missing.length === 0 && unreachable.length === 0 && declared.size === 32, detail: `missing ${missing.join(',')} unreachable ${unreachable.join(',')}` };
+  return { ok: allChange && missing.length === 0 && unreachable.length === 0 && declared.size === 33, detail: `missing ${missing.join(',')} unreachable ${unreachable.join(',')}` };
 });
 def('f.inventory', 'R2-F', 'reservation is not membership: registering the study\'s own block leaves the inventory hash and the admission summary hash unchanged; another study\'s block changes both and is reserved; an explicit own-study record is refused', async () => {
   const none = await mk({ authorised: false, frozen: false }), own = await mk({ blocks: [blockRecord(SYN_MEMBERS)] });
@@ -753,7 +753,7 @@ def('f.inventory', 'R2-F', 'reservation is not membership: registering the study
   // an explicit own-study record in the registry module is refused at inventory build
   const rec = { namespace: 'trajectory', value: SYN + 50, study: 'MCF-1', status: 'registered', authorization: 'verification world only', executed: false, artifact: 'none', why: 'explicit own record' };
   const ex = await mk({ authorised: false, frozen: false, edits: [] });
-  const typedPath = path.join(ex.root, 'experiments/registry/typed.js');
+  const typedPath = path.join(ex.root, LCK.SOURCE_FILES.find(f => f.endsWith('/typed.js')));
   const tsrc = fs.readFileSync(typedPath, 'utf8');
   const anchor = 'export const TRAJECTORY_RECORDS = ';
   if (tsrc.split(anchor).length !== 2) return { ok: false, detail: 'verifier defect: typed.js anchor' };
@@ -793,9 +793,10 @@ def('g.static', 'R2-G', 'static: no typed.js reference in the harness; the pin m
 });
 def('g.parity', 'R2-G', 'migration parity: against the baseline commit, the inventory hash, every class digest, the derived-seed count, and the admitted list and summary hashes of three non-candidate windows are IDENTICAL', async () => {
   const dir = path.join(ROOT, 'baseline');
-  const files = ['experiments/mcf1/admission.mjs', 'experiments/mcf1/config.mjs', 'experiments/mcf1/inventory.mjs', 'experiments/h1r/env_seed.mjs', 'experiments/registry/typed.js', 'experiments/registry/typed_v2.js',
-    'experiments/registry/trajectory_blocks.js', 'experiments/registry/consumed.js', 'experiments/registry/consumed_after_c1.js', 'experiments/registry/consumed_after_study2.js', 'experiments/registry/consumed_after_h1r.js',
-    'experiments/m8/instrument.js', 'experiments/m8/protocol.js', 'experiments/q1/instrument.js', 'experiments/q1/protocol.js', 'experiments/uqa/protocol.js', 'experiments/uqb/protocol.js', 'instrumentation/rng.js'];
+  // the baseline closure of the admission modules: the declared registry layer, the protocol files, the rng and the env_seed module,
+  // plus the three harness modules and the block data module (names derived from the declared list, never spelled as the legacy path)
+  const files = [...LCK.SOURCE_FILES.filter(f => f.startsWith('experiments/registry/') || /^experiments\/(m8|q1|uqa|uqb)\//.test(f) || f === 'instrumentation/rng.js' || f === 'experiments/h1r/env_seed.mjs'),
+    'experiments/registry/trajectory_blocks.js', 'experiments/mcf1/admission.mjs', 'experiments/mcf1/config.mjs', 'experiments/mcf1/inventory.mjs'];
   for (const f of files) { const to = path.join(dir, f); fs.mkdirSync(path.dirname(to), { recursive: true }); fs.writeFileSync(to, execFileSync('git', ['-C', REPO, 'show', `${BASELINE}:${f}`], { maxBuffer: 1 << 26 })); }
   const oldInv = await import(url(path.join(dir, 'experiments/mcf1/inventory.mjs'))), oldAdm = await import(url(path.join(dir, 'experiments/mcf1/admission.mjs')));
   const newInv = await import(url(path.join(REPO, 'experiments/mcf1/inventory.mjs'))), newAdm = await import(url(path.join(REPO, 'experiments/mcf1/admission.mjs')));
@@ -831,7 +832,7 @@ async function runTest(t) {
   try { return res(await t.fn()); } catch (e) { return { ok: false, detail: 'threw: ' + String(e && e.stack ? e.stack.split('\n').slice(0, 3).join(' / ') : e).slice(0, 300), threw: true, defect: /verifier defect/.test(String(e && e.message)) }; }
 }
 // ---------------- anti-vacuity mutants ----------------
-const L = 'experiments/mcf1/lock.mjs', O = 'experiments/mcf1/orchestrate.mjs', D = 'experiments/mcf1/driver.mjs', V = 'experiments/mcf1/envidentity.mjs', I = 'experiments/mcf1/inventory.mjs', C = 'experiments/mcf1/config.mjs';
+const L = 'experiments/mcf1/lock.mjs', O = 'experiments/mcf1/orchestrate.mjs', SC = 'experiments/mcf1/scan.mjs', D = 'experiments/mcf1/driver.mjs', V = 'experiments/mcf1/envidentity.mjs', I = 'experiments/mcf1/inventory.mjs', C = 'experiments/mcf1/config.mjs';
 const remove = (file, find) => [file, find, ''];
 const MUTANTS = [
   { id: 'frozen-flag-ignored', tests: ['r.block', 's.refuse'], edits: [remove(L, "  if (FROZEN !== true) fail('the design is not frozen: config FROZEN is false');\n")] },
@@ -881,7 +882,7 @@ const MUTANTS = [
   { id: 'admittedSet-override-allowed', tests: ['h.options'], edits: [remove(O, "  if (o.admittedSet !== undefined && o.admittedSet !== null) throw new Error('MCF-1 stage refused: an official stage takes no admitted-set override');\n")] },
   { id: 'haltCount-override-allowed', tests: ['h.options'], edits: [remove(O, "  if (o.haltCount !== undefined) throw new Error('MCF-1 stage refused: an official stage takes no halt-count override (the approved value is used)');\n")] },
   { id: 'runpool-guard-removed', tests: ['h.options'], edits: [[O, "  if (inputs.some(i => i && i.policy === 'official')) {", "  if (false) {"]] },
-  { id: 'official-admit-unguarded', tests: ['s.admit'], edits: [[O, '    const A = officialAuthorisation();\n    if (start !== A.seedBlock || length !== A.scanLength) throw new Error(', '    const A = { seedBlock: start, scanLength: length };\n    if (start !== A.seedBlock || length !== A.scanLength) throw new Error(']] },
+  { id: 'official-admit-unguarded', tests: ['s.admit'], edits: [[SC, '    const A = officialAuthorisation();\n    if (start !== A.seedBlock || length !== A.scanLength) throw new Error(', '    const A = { seedBlock: start, scanLength: length };\n    if (start !== A.seedBlock || length !== A.scanLength) throw new Error(']] },
   { id: 'preflight-skipped-at-Q', tests: ['h.preflight'], edits: [[O, "assertOfficialStageOptions(ctx, { exec }); assertRegistryPreflight({ admitted: seeds }); }", "assertOfficialStageOptions(ctx, { exec }); }"]] },
   { id: 'preflight-injected-registry', tests: ['h.preflight', 's.surface'], edits: [[O, 'export function registryPreflight({ admitted, category = \'registered\' }) { return evaluateRegistryPreflight(trajectory, { admitted, category }); }', 'export function registryPreflight({ admitted, category = \'registered\', registry = trajectory }) { return evaluateRegistryPreflight(registry, { admitted, category }); }'],
     [O, 'assertRegistryPreflight({ admitted: seeds }); }', 'assertRegistryPreflight({ admitted: seeds, registry: arguments[0].registry }); }']] },

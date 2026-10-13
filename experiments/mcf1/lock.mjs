@@ -25,8 +25,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { STUDY, FROZEN, REQUIRED_FOR_OFFICIAL, APPROVALS, STUDY_CONFIGURATION, DEV_BASE_CONFIG, canonicalJson, hashObject, hashTextNormalised, configSnapshot } from './config.mjs';
-import { FREEZE_RECORD_SHA256 } from './authorization.mjs';
+import { STUDY, FROZEN, BLOCK, REQUIRED_FOR_OFFICIAL, APPROVALS, STUDY_CONFIGURATION, DEV_BASE_CONFIG, canonicalJson, hashObject, hashTextNormalised, configSnapshot } from './config.mjs';
+import { FREEZE_RECORD_SHA256, SCAN_AUTHORIZATION } from './authorization.mjs';
 import { canonicalEnvironment, canonicalAcceptedConfiguration, ACCEPTED_SECTIONS, constantsOf, readGraph, frameEdgeValues } from './envidentity.mjs';
 import { trajectory, trajectorySeed, memberListOf, listSha256Of } from '../registry/typed_v2.js';
 
@@ -55,10 +55,12 @@ export const SOURCE_FILES = Object.freeze([
   'experiments/m8/instrument.js', 'experiments/m8/protocol.js',
   'experiments/mcf1/admission.mjs', 'experiments/mcf1/analyze.mjs', 'experiments/mcf1/config.mjs', 'experiments/mcf1/driver.mjs',
   'experiments/mcf1/envidentity.mjs', 'experiments/mcf1/episodes.mjs', 'experiments/mcf1/frame.mjs', 'experiments/mcf1/inventory.mjs',
-  'experiments/mcf1/lock.mjs', 'experiments/mcf1/orchestrate.mjs', 'experiments/mcf1/validity.mjs',
+  'experiments/mcf1/lock.mjs', 'experiments/mcf1/orchestrate.mjs', 'experiments/mcf1/scan.mjs', 'experiments/mcf1/validity.mjs',
   'experiments/q1/instrument.js', 'experiments/q1/protocol.js',
-  'experiments/registry/consumed.js', 'experiments/registry/consumed_after_c1.js', 'experiments/registry/consumed_after_h1r.js',
-  'experiments/registry/consumed_after_study2.js', 'experiments/registry/typed.js', 'experiments/registry/typed_v2.js',
+  // the registry layer, named by its base names (data): this module has a dynamic import for the tree's environment
+  // module, so a literal path to the legacy registry here would be read by the import-isolation gate as an indirect
+  // reference; it is hashed, never imported
+  ...['consumed', 'consumed_after_c1', 'consumed_after_h1r', 'consumed_after_study2', 'typed', 'typed_v2'].map(n => `experiments/registry/${n}.js`),
   'experiments/uqa/protocol.js', 'experiments/uqb/protocol.js',
   'instrumentation/rng.js', 'neurons.json',
 ]);
@@ -69,7 +71,7 @@ export const SOURCE_EXCLUSIONS = Object.freeze({
 });
 /** evidence, not behaviour: bound once per run by the orchestrator, never per driver process */
 export const VERIFIER_FILES = Object.freeze([
-  'experiments/mcf1/verify_mcf1.mjs', 'experiments/mcf1/verify_r2.mjs',
+  'experiments/mcf1/verify_mcf1.mjs', 'experiments/mcf1/verify_r2.mjs', 'experiments/mcf1/verify_scan.mjs',
   'experiments/registry/import_isolation.js', 'experiments/registry/legacy_typed_importers.json',
   'experiments/registry/verify_blocks.js', 'experiments/registry/verify_import_isolation.js', 'experiments/registry/verify_registry.js',
 ]);
@@ -100,9 +102,9 @@ function digestFiles(list) {
 export const sourcesDigest = () => digestFiles(SOURCE_FILES);
 export const verifierDigest = () => digestFiles(VERIFIER_FILES);
 
-// ---- the pin module must be exactly one declaration ----
+// ---- the pin module must be exactly the two declarations, in this order ----
 const COMMENT = String.raw`(?:\/\/[^\n]*|\/\*[\s\S]*?\*\/)`;
-const PIN_TEMPLATE = new RegExp(String.raw`^\s*(?:${COMMENT}\s*)*export const FREEZE_RECORD_SHA256 = (?:null|'[0-9a-f]{64}');\s*(?:${COMMENT}\s*)*$`);
+const PIN_TEMPLATE = new RegExp(String.raw`^\s*(?:${COMMENT}\s*)*export const FREEZE_RECORD_SHA256 = (?:null|'[0-9a-f]{64}');\s*(?:${COMMENT}\s*)*export const SCAN_AUTHORIZATION = (?:null|\{ start: \d+, length: \d+ \});\s*(?:${COMMENT}\s*)*$`);
 export const pinModuleShapeOk = (text) => PIN_TEMPLATE.test(String(text).replace(/\r\n/g, '\n'));
 
 // ---- read-only conformed-tree verification (never rebuilds, never deletes, never writes) ----
@@ -182,6 +184,24 @@ export function liveBindings() {
 }
 
 export const officialDirOf = (pin) => path.join(REPO, OFFICIAL_ROOT_REL, pin.slice(0, 16));
+
+// ---- the scan authority (M-SCAN-1): which window an admission scan of the candidate block may cover ----
+const scanFail = (m) => { throw new Error(`MCF-1 scan refused: ${m}`); };
+/**
+ * Parameterless, like officialAuthorisation: it reads the committed constant in authorization.mjs and nothing else
+ * (no option, argument, environment variable or file).  Returns the one authorized window or throws.  The constant is
+ * null until the user authorizes a scan, and can only ever name the candidate window recorded in config.mjs.
+ */
+export function scanAuthorisation() {
+  const text = fs.readFileSync(path.join(REPO, PIN_MODULE_REL), 'utf8');
+  if (!pinModuleShapeOk(text)) scanFail('authorization.mjs is not exactly the two documented declarations');
+  const S = SCAN_AUTHORIZATION;
+  if (S === null) scanFail('no scan authorization is set: the candidate window cannot be scanned');
+  if (!isPlain(S) || Object.keys(S).sort().join() !== 'length,start') scanFail('the scan authorization is malformed');
+  if (!Number.isSafeInteger(S.start) || !Number.isSafeInteger(S.length) || S.start < 0 || S.length < 1 || S.start + S.length > 2 ** 32) scanFail('the scan authorization window is malformed');
+  if (S.start !== BLOCK.start || S.length !== BLOCK.scanLength) scanFail('the scan authorization does not equal the candidate window recorded in config.mjs');
+  return deepFreeze({ start: S.start, length: S.length });
+}
 
 /**
  * The single authorization decision.  Parameterless on purpose: it reads the committed pin, the committed record

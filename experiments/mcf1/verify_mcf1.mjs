@@ -354,13 +354,13 @@ console.log('\n== G13 repository hygiene ==');
   const trackedOutside = tracked.map(l => l.slice(3)).filter(f => !f.startsWith('experiments/mcf1/') && !R2_REGISTRY_EDITS.includes(f));
   check('G13', 'no tracked file outside experiments/mcf1 (and the two registry documents R2 edits) is modified', trackedOutside.length === 0, trackedOutside.slice(0, 3).join(' | '));
   const harnessFiles = fs.readdirSync(HERE, { withFileTypes: true }).filter(d => d.isFile()).map(d => d.name);
-  check('G13', 'the harness directory holds only the expected files', harnessFiles.every(f => /^(admission|analyze|authorization|config|driver|envidentity|episodes|frame|inventory|lock|orchestrate|prepare_tree|validity|verify_mcf1|verify_r2)\.mjs$|^README\.md$|^\.gitignore$/.test(f)), harnessFiles.join(' '));
+  check('G13', 'the harness directory holds only the expected files', harnessFiles.every(f => /^(admission|analyze|authorization|config|driver|envidentity|episodes|frame|inventory|lock|orchestrate|prepare_tree|scan|validity|verify_mcf1|verify_r2|verify_scan)\.mjs$|^README\.md$|^\.gitignore$/.test(f)), harnessFiles.join(' '));
   const PATTERNS = [new RegExp('[A-Za-z]:[\\\\/]+Us' + 'ers'), new RegExp('/c/Us' + 'ers/'), new RegExp('Man' + 'ish', 'i'), new RegExp('App' + 'Data'), new RegExp('MAN' + 'ISH~1')];
   const files = fs.readdirSync(HERE).filter(f => /\.(mjs|md)$|^\.gitignore$/.test(f));
   const leaks = []; for (const f of files) { const t = fs.readFileSync(path.join(HERE, f), 'utf8'); for (const p of PATTERNS) if (p.test(t)) leaks.push(`${f}:${p}`); }
   check('G13', 'no local path or account name in any harness file', leaks.length === 0, leaks.join(' '));
   mutant('G13', 'the path scanner detects an injected local path', PATTERNS.some(p => p.test('C:' + '\\Us' + 'ers\\someone\\x')));
-  const banned = []; for (const f of ['orchestrate.mjs', 'analyze.mjs', 'frame.mjs', 'validity.mjs', 'admission.mjs', 'inventory.mjs', 'config.mjs', 'episodes.mjs', 'lock.mjs', 'envidentity.mjs', 'authorization.mjs']) { const t = fs.readFileSync(path.join(HERE, f), 'utf8').replace(/\/\/.*$/gm, ''); if (/Date\.now\(|Math\.random\(|new Date\(/.test(t)) banned.push(f); }
+  const banned = []; for (const f of ['orchestrate.mjs', 'analyze.mjs', 'frame.mjs', 'validity.mjs', 'admission.mjs', 'inventory.mjs', 'config.mjs', 'episodes.mjs', 'lock.mjs', 'envidentity.mjs', 'authorization.mjs', 'scan.mjs']) { const t = fs.readFileSync(path.join(HERE, f), 'utf8').replace(/\/\/.*$/gm, ''); if (/Date\.now\(|Math\.random\(|new Date\(/.test(t)) banned.push(f); }
   check('G13', 'no clock or Math.random in analysis, frame, orchestration, validity, admission, inventory, config', banned.length === 0, banned.join(','));
   const touched = git('diff', '--name-only', 'HEAD').split('\n').filter(Boolean);
   check('G13', 'H1-R files and the registry code and data are untouched (only the two documented registry documents may differ)', !touched.some(f => /^experiments\/(h1r|registry)\//.test(f) && !R2_REGISTRY_EDITS.includes(f)));
@@ -714,7 +714,7 @@ const MUTANTS = [
   M('m-ctx-guard-off', 'stage functions that accept a forged official context', ['g24.ctx'], { 'orchestrate.mjs': [["if (ctx.policy === 'official' && !AUTHORISED.has(ctx)) throw new Error('MCF-1 stage refused: an official context must be created by makeContext after the freeze-record gate');", '']] }),
   M('m-preflight-superset-allowed', 'preflight that accepts a registered block larger than the admitted list', ['g24.preflight'], { 'orchestrate.mjs': [["else if (list.length !== admitted.length || list.some((v, i) => v !== admitted[i])) block.why = 'the registered block members are not exactly the admitted list';", '']] }),
   M('m-preflight-hash-unchecked', 'preflight that does not compare the block list hash with the admitted list hash', ['g24.preflight'], { 'orchestrate.mjs': [["else if (b.listSha256 !== sha256(admitted.join(','))) block.why = 'the block list hash is not the admitted list hash';", '']] }),
-  M('m-candidate-guard-off', 'development admission without the candidate-block refusal', ['g24.candidate'], { 'orchestrate.mjs': [["if (!p.ok) throw new Error(`MCF-1 admission refused: ${p.why}`);", '']] }),
+  M('m-candidate-guard-off', 'development admission without the candidate-block refusal', ['g24.candidate'], { 'scan.mjs': [["if (!p.ok) throw new Error(`MCF-1 admission refused: ${p.why}`);", '']] }),
 ];
 for (const m of MUTANTS) {
   let B;

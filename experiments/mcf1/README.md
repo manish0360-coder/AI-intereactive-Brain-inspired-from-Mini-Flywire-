@@ -180,6 +180,30 @@ embedding `Map` into `{}`; the verifier demonstrates that and proves every param
 The design is not frozen. A later, separately authorised sequence (scan, block registration, preregistration text,
 freeze record, pin commit) is required before anything official can run.
 
+## Scan authority and the candidate block writer (M-SCAN-1)
+
+Admission is arithmetic over stream positions: it never runs an agent and never reads an outcome. It lives in a module
+that **cannot** execute anything, and the separation is a property of the import graph, not a flag.
+
+| piece | where | what it does |
+|---|---|---|
+| `SCAN_AUTHORIZATION` | `authorization.mjs`, second declaration | `null` until the user authorizes; then exactly `{ start, length }` equal to the candidate window in `config.mjs`. Read only by `lock.scanAuthorisation()`, which takes no parameter |
+| `stageAdmit` | `scan.mjs` | policies `development` (explicit window inside the exploratory domain), `official` (the window of a pinned record) and `candidate` (the one authorized window; takes no window and no inventory; builds its own inventory from committed state). Unknown arguments are refused by name |
+| `writeCandidateBlock` | `scan.mjs` | validates an admission result completely (hashes, counts, ordering, exclusions, accounting, deterministic recomputation by the committed predicate, registry conflicts) and only then writes one artifact atomically to a synthetic or development destination |
+| `scan.mjs` CLI | `admit --policy development|candidate`, `write-block` | `candidate` refuses while the authorization is null and refuses any window flag |
+
+Properties the verifier (`verify_scan.mjs`) proves: the scan module's import closure contains no orchestrator, driver,
+H1-R runtime, measurement layer, tree builder, episode contents, validity rules, frame or analysis and no process,
+thread or network module; running the stage under a `child_process` trap and a filesystem-read recorder spawns
+nothing and opens no outcome, cache, manifest or receipt file; the same window gives the same list and hash; every
+corrupted input is refused by its own guard and leaves no file; an interrupted write leaves either no block or a whole
+block plus a lock that makes a retry refuse; and the destination policy refuses the registry directory, the registry
+module, the repository tree and anything outside `experiments/mcf1/data` and the temporary directory.
+
+**Not done here, by design.** Nothing in this milestone scans `1,500,000,000 + 4,000`, sets the authorization,
+registers a block or writes `trajectory_blocks.js`. `renderBlocksModule` produces the text a later, separately
+authorized commit would hold in that module; no code path writes it there. The scan itself is a gate for the user.
+
 ## Stages and files
 
 | stage | what it does |
@@ -201,9 +225,10 @@ freeze record, pin commit) is required before anything official can run.
 | `validity.mjs` | rules, pair class, exploration indicator, manifests |
 | `frame.mjs` | the complete-cluster frame, reconciliation, exclusion table |
 | `analyze.mjs` | scores, metrics, selector, interpretation, `verifyAnalysis` |
-| `orchestrate.mjs` | stage assembly, retry policy, preflight, context lock, receipts, CLI |
+| `orchestrate.mjs` | stage assembly, retry policy, preflight, context lock, receipts, CLI (re-exports the admission stage) |
+| `scan.mjs` | the non-executing admission stage, the scan authority gate use and the candidate-block writer (M-SCAN-1) |
 | `prepare_tree.mjs` | non-official, single-process (re)build of the conformed tree |
-| `verify_mcf1.mjs`, `verify_r2.mjs` | harness gates with source mutants; R2 lock gates, adversarial matrix and mutants |
+| `verify_mcf1.mjs`, `verify_r2.mjs`, `verify_scan.mjs` | harness gates with source mutants; R2 lock gates, adversarial matrix and mutants; M-SCAN-1 authority, isolation and writer gates with mutants |
 | `data/` | git-ignored output directory (development runs; official artifacts and receipts under `data/official/`) |
 
 
@@ -212,6 +237,7 @@ freeze record, pin commit) is required before anything official can run.
 ```bash
 node experiments/mcf1/verify_mcf1.mjs
 node experiments/mcf1/verify_r2.mjs
+node experiments/mcf1/verify_scan.mjs
 node experiments/registry/verify_registry.js
 ```
 
