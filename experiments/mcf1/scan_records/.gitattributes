@@ -1,0 +1,4 @@
+# MCF-1 candidate admission evidence (the M-SCAN scan of 1500000000 + 4000), lodged byte-exact.
+# The SHA-256 sidecar and the registry record bind these exact bytes. Without `-text`, a checkout with core.autocrlf=true
+# rewrites LF to CRLF and the digest no longer holds. This file covers its own directory and everything below it.
+* -text
