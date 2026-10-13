@@ -1,0 +1,169 @@
+{
+  "schema": "registry.legacy-typed-importers/1",
+  "policy": "Outside experiments/h1r/, no file may reference experiments/registry/typed.js except experiments/registry/typed_v2.js and the exact files below with the exact normalised-content hash. A changed entry stops being an exception; an entry whose file no longer references typed.js must be removed. The list may only shrink.",
+  "baselineCommit": "fbac3eba78bbba0c1f743b4e22759d28ebc22b25",
+  "hashAlgorithm": "SHA-256 over the file text with CRLF normalised to LF",
+  "entries": [
+    {
+      "path": "experiments/m33/verify.js",
+      "sha256": "fcf9bcbdcde39b56e3dd21ab3b452e6f553a2df3633d17242186dd65c0207e3f",
+      "scope": "historical-verifier",
+      "reason": "Verifier of a closed milestone; byte-protected or time-pinned evidence (M33-M40). Not rewritten without explicit authorization.",
+      "kinds": ["indirect"]
+    },
+    {
+      "path": "experiments/m33/verify_r1.js",
+      "sha256": "2ff31d20a5d247cb923ebf5198829f805f7ee775c5062727a3096236217e94ee",
+      "scope": "historical-verifier",
+      "reason": "Verifier of a closed milestone; byte-protected or time-pinned evidence (M33-M40). Not rewritten without explicit authorization.",
+      "kinds": ["indirect"]
+    },
+    {
+      "path": "experiments/m34/verify.js",
+      "sha256": "3bd2cbc08eeebf50fb3f092b9b4d31b2a0af16c3a6bdc789dc2c45c9dd1e8d18",
+      "scope": "historical-verifier",
+      "reason": "Verifier of a closed milestone; byte-protected or time-pinned evidence (M33-M40). Not rewritten without explicit authorization.",
+      "kinds": ["indirect"]
+    },
+    {
+      "path": "experiments/m35/readiness.js",
+      "sha256": "0a05aff5053b919005a6ee7b674442f2e41268e02f40319c13df1f8d26b8ad4e",
+      "scope": "historical-verifier",
+      "reason": "Verifier of a closed milestone; byte-protected or time-pinned evidence (M33-M40). Not rewritten without explicit authorization.",
+      "kinds": ["indirect"]
+    },
+    {
+      "path": "experiments/m38/verify.js",
+      "sha256": "fb2fcadcef5ea393ecdfc0fb1cb220278d0fdea4f8e7b8254da3bbfe54fb63d1",
+      "scope": "historical-verifier",
+      "reason": "Verifier of a closed milestone; byte-protected or time-pinned evidence (M33-M40). Not rewritten without explicit authorization.",
+      "kinds": ["indirect", "indirect-composed"]
+    },
+    {
+      "path": "experiments/m39/verify.js",
+      "sha256": "be8d079a5e7e2606a85db5209e3179370b5aed26d50f8eb30cb639105740a639",
+      "scope": "historical-verifier",
+      "reason": "Verifier of a closed milestone; byte-protected or time-pinned evidence (M33-M40). Not rewritten without explicit authorization.",
+      "kinds": ["indirect"]
+    },
+    {
+      "path": "experiments/mcf1/admission.mjs",
+      "sha256": "50757d65b423dffdb7b8779cf7129a7b100ac63e50539adad8448b2ba67f00af",
+      "scope": "mcf1-harness-pending-migration",
+      "reason": "MCF-1 harness (M-MCF1-HARNESS, R1). Migration to typed_v2.js changes driver, inventory and admission, which the R1 verifier pins; it belongs to M-MCF1-R2 and removes these entries.",
+      "kinds": ["static"]
+    },
+    {
+      "path": "experiments/mcf1/driver.mjs",
+      "sha256": "a5de9e6eafad61c137e8c9192315e209146cdc5029c8b6fb361c7d49c5c83992",
+      "scope": "mcf1-harness-pending-migration",
+      "reason": "MCF-1 harness (M-MCF1-HARNESS, R1). Migration to typed_v2.js changes driver, inventory and admission, which the R1 verifier pins; it belongs to M-MCF1-R2 and removes these entries.",
+      "kinds": ["static"]
+    },
+    {
+      "path": "experiments/mcf1/inventory.mjs",
+      "sha256": "3f8a4b92a72e30ec3413b8b1bef9f62870bd5249f8ae93c39dc9612ce2eb0cb2",
+      "scope": "mcf1-harness-pending-migration",
+      "reason": "MCF-1 harness (M-MCF1-HARNESS, R1). Migration to typed_v2.js changes driver, inventory and admission, which the R1 verifier pins; it belongs to M-MCF1-R2 and removes these entries.",
+      "kinds": ["static"]
+    },
+    {
+      "path": "experiments/mcf1/orchestrate.mjs",
+      "sha256": "7d6cf5ccb8d8220c6f8edd1b9df3acae5a8a508bde4281540d24a49961e1f8e6",
+      "scope": "mcf1-harness-pending-migration",
+      "reason": "MCF-1 harness (M-MCF1-HARNESS, R1). Migration to typed_v2.js changes driver, inventory and admission, which the R1 verifier pins; it belongs to M-MCF1-R2 and removes these entries.",
+      "kinds": ["static"]
+    },
+    {
+      "path": "experiments/mcf1/validity.mjs",
+      "sha256": "49202f7d303ed7b0513f44f6a1f7b9754b625d3d50322675d288bacf9f7d870c",
+      "scope": "mcf1-harness-pending-migration",
+      "reason": "MCF-1 harness (M-MCF1-HARNESS, R1). Migration to typed_v2.js changes driver, inventory and admission, which the R1 verifier pins; it belongs to M-MCF1-R2 and removes these entries.",
+      "kinds": ["static"]
+    },
+    {
+      "path": "experiments/mcf1/verify_mcf1.mjs",
+      "sha256": "0b53aab45aecab69514c0ada3ebf0d1298b7a7d1048a648e7de885f7e837f94f",
+      "scope": "mcf1-harness-pending-migration",
+      "reason": "MCF-1 harness (M-MCF1-HARNESS, R1). Migration to typed_v2.js changes driver, inventory and admission, which the R1 verifier pins; it belongs to M-MCF1-R2 and removes these entries.",
+      "kinds": ["static"]
+    },
+    {
+      "path": "experiments/study2/governance.mjs",
+      "sha256": "27ac739eaf0f8d062350db944d32d34a60f404b16de66844330ef1b0cd079962",
+      "scope": "study2-executed",
+      "reason": "FutureScore V2.3 Study 2: executed and frozen. Its governance guard and verifiers are historical record; rewriting them would alter frozen evidence.",
+      "kinds": ["static"]
+    },
+    {
+      "path": "experiments/study2/verify_driver.js",
+      "sha256": "1c661fb5b6a122ac00a8074c7ce1baf262f10a4fa830101b2a2764edcf155e4b",
+      "scope": "study2-executed",
+      "reason": "FutureScore V2.3 Study 2: executed and frozen. Its governance guard and verifiers are historical record; rewriting them would alter frozen evidence.",
+      "kinds": ["indirect"]
+    },
+    {
+      "path": "experiments/study2/verify_study2_execution.js",
+      "sha256": "784ce282a1e66083ad63119e8ed2b9504f4fb3e0651ad83ec0605db547213323",
+      "scope": "study2-executed",
+      "reason": "FutureScore V2.3 Study 2: executed and frozen. Its governance guard and verifiers are historical record; rewriting them would alter frozen evidence.",
+      "kinds": ["indirect"]
+    },
+    {
+      "path": "research/preregistrations/h1r_v1_checks/pilot_registry_status.mjs",
+      "sha256": "97891e3c3733f76f27181c1c6f95ab48c1daa61e587efd062b6b17fae77cd837",
+      "scope": "h1r-adjacent-check",
+      "reason": "Read-only H1-R v1 pre-registration check outside experiments/h1r/. Closed with H1-R (D-032); no new consumer.",
+      "kinds": ["static"]
+    },
+    {
+      "path": "research/preregistrations/verify_m33.js",
+      "sha256": "eb17858f32e6e9973b90a98fa66713e14be3fa468d1dc6c7953069ee52ca784a",
+      "scope": "historical-verifier",
+      "reason": "Verifier of a closed milestone; byte-protected or time-pinned evidence (M33-M40). Not rewritten without explicit authorization.",
+      "kinds": ["indirect"]
+    },
+    {
+      "path": "research/preregistrations/verify_m33_r1.js",
+      "sha256": "a23ad437984085c79d3c3037dd79f4f1f6f9d8f288cc3227df553e4a1d8cb088",
+      "scope": "historical-verifier",
+      "reason": "Verifier of a closed milestone; byte-protected or time-pinned evidence (M33-M40). Not rewritten without explicit authorization.",
+      "kinds": ["indirect"]
+    },
+    {
+      "path": "research/preregistrations/verify_m34.js",
+      "sha256": "cb33ce333be35b9c312484f6212bda90532dcdaba9981e39096b907044452851",
+      "scope": "historical-verifier",
+      "reason": "Verifier of a closed milestone; byte-protected or time-pinned evidence (M33-M40). Not rewritten without explicit authorization.",
+      "kinds": ["indirect"]
+    },
+    {
+      "path": "research/preregistrations/verify_m37.js",
+      "sha256": "a71d99db793ce2a5bca51770119123b6fad5d7255984765e25a04b4c6ea2e39d",
+      "scope": "historical-verifier",
+      "reason": "Verifier of a closed milestone; byte-protected or time-pinned evidence (M33-M40). Not rewritten without explicit authorization.",
+      "kinds": ["indirect"]
+    },
+    {
+      "path": "research/preregistrations/verify_m38_p0.js",
+      "sha256": "45d053080d540d55dcfe4f77277a51f3d3a527f040b20ed854df162d30f248a0",
+      "scope": "historical-verifier",
+      "reason": "Verifier of a closed milestone; byte-protected or time-pinned evidence (M33-M40). Not rewritten without explicit authorization.",
+      "kinds": ["indirect"]
+    },
+    {
+      "path": "research/preregistrations/verify_m39.js",
+      "sha256": "120af9db94b10d7b4ef58d9657bda1bacf8d189711f961476a8b370c3bdc7754",
+      "scope": "historical-verifier",
+      "reason": "Verifier of a closed milestone; byte-protected or time-pinned evidence (M33-M40). Not rewritten without explicit authorization.",
+      "kinds": ["indirect"]
+    },
+    {
+      "path": "research/preregistrations/verify_m40.js",
+      "sha256": "4f82614bf48284ea778c683f3d6fe5a966a28e73da3cfbb68fa2cdcb22d053bb",
+      "scope": "historical-verifier",
+      "reason": "Verifier of a closed milestone; byte-protected or time-pinned evidence (M33-M40). Not rewritten without explicit authorization.",
+      "kinds": ["indirect"]
+    }
+  ]
+}
