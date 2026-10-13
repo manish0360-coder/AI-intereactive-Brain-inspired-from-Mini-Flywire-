@@ -56,6 +56,9 @@ function makeWorld(o = {}) {
   if (authorization !== null && /1_?500_?000_?000/.test(String(authorization))) throw new Error('verifier defect: the real candidate window must never be authorized, even in a copy');
   const root = path.join(ROOT, `w${++worldN}`);
   for (const rel of COPY_FILES) { const to = path.join(root, rel); fs.mkdirSync(path.dirname(to), { recursive: true }); fs.copyFileSync(path.join(REPO, rel), to); }
+  // a world always starts from the EMPTY block module too, whatever the real repository holds (it may hold the registered MCF-1
+  // block, and the scan stage correctly refuses a second block of one study)
+  fs.writeFileSync(path.join(root, 'experiments/registry/trajectory_blocks.js'), 'export const TRAJECTORY_BLOCKS = Object.freeze([]);\n');
   // a world always starts from the NULL authorization, whatever the real repository holds (it may be authorized)
   { const p = path.join(root, 'experiments/mcf1/authorization.mjs'); fs.writeFileSync(p, fs.readFileSync(p, 'utf8').replace(/export const SCAN_AUTHORIZATION = [^;]*;/, 'export const SCAN_AUTHORIZATION = null;')); }
   applyEdit(root, ['experiments/mcf1/config.mjs', '  start: 1_500_000_000,\n  scanLength: 4000,', `  start: ${SCAN.start},\n  scanLength: ${SCAN.length},`]);
@@ -87,6 +90,44 @@ const blockOf = (members, study) => {
     authorization: 'fixture', artifact: 'none', why: 'registry fixture', configuration: { seed: 1, index: 0, acceptedSeed: 1 } };
 };
 const baseView = () => ({ records: [...TRAJECTORY_RECORDS], heldOut: [...TRAJECTORY_HELD_OUT], authorizations: [...TRAJECTORY_AUTHORIZATIONS], blocks: [] });
+// ---------------- P2: structural invariants of the committed block data ----------------
+// The identity of a registered block is NOT pinned here: registryDigestSha256 in the freeze record binds it at the official gate
+// (lock.mjs liveBindings and validateRecord), and a literal in this verifier would only duplicate that binding.  This predicate
+// says that the committed block data is data, is well formed and, for MCF-1, is still the block the harness is built for: at most
+// one, registered, unexecuted, bound to the implemented study configuration and inside the configured candidate window.
+// (`executed` is the one field a later commit may flip, after a run; that commit must then change this verifier on purpose.)
+const BLOCK_KEYS = ['artifact', 'authorization', 'configuration', 'count', 'excluded', 'executed', 'hi', 'listSha256', 'lo', 'namespace', 'schema', 'status', 'study', 'why'];
+/** the module text as a JSON array, or null if it is anything but an Object.freeze of JSON (an import, a call, a second export ...) */
+const dataOnlyBlocks = (text) => {
+  const code = String(text).replace(/^\s*\/\/.*$/gm, '').trim();
+  const m = code.match(/^export const TRAJECTORY_BLOCKS = Object\.freeze\((\[[\s\S]*\])\);$/);
+  if (!m) return null;
+  try { const a = JSON.parse(m[1]); return Array.isArray(a) ? a : null; } catch (e) { return null; }
+};
+function mcf1BlockProblems(blocks, { study = CFG.STUDY, window = CFG.BLOCK, configuration = CFG.STUDY_CONFIGURATION } = {}) {
+  if (!Array.isArray(blocks)) return ['the block data is not an array'];
+  const p = [], isObj = (b) => b !== null && typeof b === 'object' && !Array.isArray(b), int = Number.isSafeInteger;
+  if (!blocks.every(isObj)) p.push('a block is not an object');
+  const mine = blocks.filter(b => isObj(b) && b.study === study);
+  if (mine.length > 1) p.push(`${mine.length} ${study} blocks (at most one)`);
+  const lo = window.start, hi = window.start + window.scanLength - 1;
+  const identity = { seed: configuration.seed, index: configuration.index, acceptedSeed: configuration.acceptedSeed };
+  for (const b of mine) {
+    const keys = Object.keys(b).sort().join();
+    if (keys !== BLOCK_KEYS.join()) p.push(`${study} block fields are ${keys}`);
+    if (b.schema !== 'trajectory.block/1') p.push(`${study} block schema is ${JSON.stringify(b.schema)}`);
+    if (b.namespace !== 'trajectory') p.push(`${study} block namespace is ${JSON.stringify(b.namespace)}`);
+    if (b.status !== 'registered') p.push(`${study} block status is ${JSON.stringify(b.status)} (registered required)`);
+    if (b.executed !== false) p.push(`${study} block executed is ${JSON.stringify(b.executed)} (false required)`);
+    if (!isObj(b.configuration) || CFG.canonicalJson(b.configuration) !== CFG.canonicalJson(identity)) p.push(`${study} block configuration differs from the implemented study configuration`);
+    if (!int(b.lo) || !int(b.hi) || b.lo > b.hi || b.lo < lo || b.hi > hi) p.push(`${study} block hull [${b.lo}, ${b.hi}] is not inside the configured window [${lo}, ${hi}]`);
+    else if (!Array.isArray(b.excluded) || !b.excluded.every((v, i) => int(v) && v > b.lo && v < b.hi && (i === 0 || v > b.excluded[i - 1]))) p.push(`${study} block exclusions are not ascending seeds inside the hull`);
+    else if (!int(b.count) || b.count < 1 || b.count !== b.hi - b.lo + 1 - b.excluded.length) p.push(`${study} block count does not equal its hull minus its exclusions`);
+    if (typeof b.listSha256 !== 'string' || !/^[0-9a-f]{64}$/.test(b.listSha256)) p.push(`${study} block listSha256 is not a 64-hex digest`);
+    for (const f of ['authorization', 'artifact', 'why']) if (typeof b[f] !== 'string' || b[f].trim() === '') p.push(`${study} block ${f} is empty`);
+  }
+  return p;
+}
 function withTmpdir(dir, fn) {
   const keys = ['TEMP', 'TMP', 'TMPDIR'], old = Object.fromEntries(keys.map(k => [k, process.env[k]]));
   for (const k of keys) process.env[k] = dir;
@@ -176,6 +217,53 @@ def('a.cli', 'SCAN-A', 'real process: the CLI cannot start a candidate scan: dev
   run('write-block of a missing admission', S, ['write-block', '--admission', path.join(ROOT, 'nope.json'), '--dest', '@OUT'], /ENOENT|no such file/, 1);
   run('orchestrator, candidate mode', O, ['admit', '--mode', 'candidate', '--out', '@OUT', ...win], /unknown policy candidate/, 1);
   run('orchestrator, development over the candidate window', O, ['admit', '--mode', 'development', ...win, '--out', '@OUT'], /candidate confirmatory block is not authorised/, 1);
+  return cellsResult(cells);
+});
+
+def('a.blockstate', 'SCAN-A', 'P2 structural invariants of the committed block data: the empty module and one well-formed, registered, unexecuted MCF-1 block of the implemented configuration inside the configured window are accepted; every status, execution, configuration, window, count, schema, field, duplicate and executable-module variation is rejected', async () => {
+  const win = CFG.BLOCK, sc = CFG.STUDY_CONFIGURATION, id = { seed: sc.seed, index: sc.index, acceptedSeed: sc.acceptedSeed };
+  const mkb = (members, o = {}) => ({ ...blockOf(members, CFG.STUDY), configuration: { ...id }, ...o });
+  const good = mkb([win.start + 1, win.start + 2, win.start + 4, win.start + 5]);            // hull [start+1, start+5], one interior exclusion
+  const many = mkb([win.start + 1, win.start + 4, win.start + 7]);                           // exclusions 2, 3, 5, 6
+  const cells = [];
+  const accept = (name, blocks) => { const q = mcf1BlockProblems(blocks); cells.push([`accept: ${name}`, q.length === 0, q.join('; ')]); };
+  const refuse = (name, blocks, re) => { const q = mcf1BlockProblems(blocks); cells.push([`refuse: ${name}`, q.length > 0 && q.some(x => re.test(x)), q.join('; ') || 'accepted']); };
+  accept('the empty data', []);
+  accept('one well-formed MCF-1 block', [good]);
+  accept('another study\'s block is not judged by the MCF-1 invariants', [good, { ...blockOf([win.start + 100, win.start + 101], 'OTHER-1'), status: 'pilot' }]);
+  accept('configuration key order does not matter', [mkb([win.start + 1, win.start + 2], { configuration: { acceptedSeed: id.acceptedSeed, index: id.index, seed: id.seed } })]);
+  accept('a hull that is exactly the configured window', [mkb([win.start, win.start + win.scanLength - 1])]);
+  refuse('status pilot', [{ ...good, status: 'pilot' }], /status is "pilot"/);
+  refuse('status development', [{ ...good, status: 'development' }], /status is "development"/);
+  refuse('executed true', [{ ...good, executed: true }], /executed is true/);
+  refuse('executed as a string', [{ ...good, executed: 'false' }], /executed is "false"/);
+  refuse('configuration seed', [{ ...good, configuration: { ...id, seed: id.seed + 1 } }], /configuration differs/);
+  refuse('configuration index', [{ ...good, configuration: { ...id, index: id.index + 1 } }], /configuration differs/);
+  refuse('configuration acceptedSeed', [{ ...good, configuration: { ...id, acceptedSeed: id.acceptedSeed + 1 } }], /configuration differs/);
+  refuse('configuration with an extra key', [{ ...good, configuration: { ...id, extra: 1 } }], /configuration differs/);
+  refuse('configuration absent', [{ ...good, configuration: null }], /configuration differs/);
+  refuse('hull below the window', [mkb([win.start - 1, win.start + 1])], /not inside the configured window/);
+  refuse('hull above the window', [mkb([win.start + 1, win.start + win.scanLength])], /not inside the configured window/);
+  refuse('count off by one', [{ ...good, count: good.count + 1 }], /count does not equal/);
+  refuse('an exclusion outside the hull', [{ ...good, excluded: [...good.excluded, good.hi + 1] }], /exclusions are not ascending/);
+  refuse('exclusions out of order', [{ ...many, excluded: [...many.excluded].reverse() }], /exclusions are not ascending/);
+  refuse('another schema', [{ ...good, schema: 'trajectory.block/2' }], /schema is "trajectory\.block\/2"/);
+  refuse('another namespace', [{ ...good, namespace: 'config' }], /namespace is "config"/);
+  refuse('an extra field', [{ ...good, note: 'x' }], /fields are/);
+  refuse('a missing field', [(({ why, ...r }) => r)(good)], /fields are/);
+  refuse('a list hash that is not a digest', [{ ...good, listSha256: 'xyz' }], /64-hex/);
+  refuse('an empty authorization', [{ ...good, authorization: '  ' }], /authorization is empty/);
+  refuse('two MCF-1 blocks', [good, mkb([win.start + 20, win.start + 21])], /2 MCF-1 blocks/);
+  refuse('not an array', null, /not an array/);
+  refuse('a non-object element', [good, 7], /not an object/);
+  // the module text: JSON data only
+  const head = 'export const TRAJECTORY_BLOCKS = Object.freeze(';
+  cells.push(['accept: the empty module text', dataOnlyBlocks(`${head}[]);\n`) !== null, '']);
+  cells.push(['accept: a commented JSON module', dataOnlyBlocks(`// a\n${head}${JSON.stringify([good], null, 2)});\n`) !== null, '']);
+  for (const [name, text] of [['an import', `import fs from 'node:fs';\n${head}[]);\n`], ['a call', `${head}[(() => 1)()]);\n`], ['trailing code', `${head}[]);\nglobalThis.x = 1;\n`],
+    ['a second export', `${head}[]);\nexport const X = Object.freeze([]);\n`], ['unquoted keys', `${head}[{ study: 'MCF-1' }]);\n`], ['another export name', 'export const BLOCKS = Object.freeze([]);\n'], ['no file', '']]) {
+    cells.push([`refuse: module text with ${name}`, dataOnlyBlocks(text) === null, '']);
+  }
   return cellsResult(cells);
 });
 
@@ -489,7 +577,9 @@ async function runTest(t) {
 const ONLY = process.env.SCAN_ONLY ? new RegExp(process.env.SCAN_ONLY) : null;
 
 // the real repository's committed state (not a copy): the scan authorization is null or EXACTLY the approved candidate
-// window; the block module is empty; the only content of data/scan is the documented admission artifacts
+// window; the block module is data only and satisfies the P2 structural invariants (empty, or at most one well-formed,
+// registered, unexecuted MCF-1 block of the implemented configuration inside the configured window); the only content of
+// data/scan is the documented admission artifacts
 {
   const auth = REAL_AUTH_TEXT;
   const blocksText = fs.readFileSync(path.join(REPO, 'experiments/registry/trajectory_blocks.js'), 'utf8');
@@ -500,14 +590,16 @@ const ONLY = process.env.SCAN_ONLY ? new RegExp(process.env.SCAN_ONLY) : null;
   const ALLOWED = /^1500000000-4000\/(admitted\.json(\.sha256)?|block\/block_candidate\.json|review\/[A-Za-z0-9_.-]+\.json)$/;
   const scanFiles = walk(scanDir);
   const authorized = decl === approved;
+  const parsedBlocks = dataOnlyBlocks(blocksText);
+  const blockProblems = parsedBlocks === null ? ['the block module is not data only (an Object.freeze of a JSON array)'] : mcf1BlockProblems(parsedBlocks);
   const state = {
     scanAuthorizationIsNullOrExactlyApproved: decl === 'null' || authorized, pinNull: /export const FREEZE_RECORD_SHA256 = null;/.test(auth), shape: LCK.pinModuleShapeOk(auth),
-    blocksEmpty: /export const TRAJECTORY_BLOCKS = Object.freeze\(\[\]\);/.test(blocksText), scanFilesAreDocumented: scanFiles.every(f => ALLOWED.test(f)),
+    blocksStructural: blockProblems.length === 0, scanFilesAreDocumented: scanFiles.every(f => ALLOWED.test(f)),
     noScanFilesBeforeAuthorization: authorized || scanFiles.length === 0,
     gateMatchesState: authorized ? same(LCK.scanAuthorisation(), { start: REAL_CANDIDATE.start, length: REAL_CANDIDATE.length }) : rx(/no scan authorization is set/, await refusal(() => LCK.scanAuthorisation())),
     candidateIsConfig: CFG.BLOCK.start === REAL_CANDIDATE.start && CFG.BLOCK.scanLength === REAL_CANDIDATE.length,
   };
-  check('SCAN-A', `the committed state: scan authorization ${authorized ? 'is exactly the approved candidate window' : 'is null'}, pin null, template intact, block module empty, scan outputs limited to the documented artifacts, candidate window unchanged in config`, Object.values(state).every(Boolean), JSON.stringify(state));
+  check('SCAN-A', `the committed state: scan authorization ${authorized ? 'is exactly the approved candidate window' : 'is null'}, pin null, template intact, block module data only with the P2 structural invariants, scan outputs limited to the documented artifacts, candidate window unchanged in config`, Object.values(state).every(Boolean), JSON.stringify({ ...state, blockProblems }));
 }
 
 {

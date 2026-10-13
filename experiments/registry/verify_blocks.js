@@ -12,7 +12,8 @@
 // COVERAGE. explicit-record parity (messages compared verbatim), the production registry, block membership versus
 // explicit records, statuses, authorizations, HELD_OUT as a lookup outcome (including the stream-degeneracy cases),
 // block-to-block overlap and cross-study ownership, duplicates, aliases, exclusion-list and hash tampering, member
-// added/removed, malformed and unsupported schemas, immutability, digest, the empty data module, and typed.js bytes.
+// added/removed, malformed and unsupported schemas, immutability, digest, the block data module (empty, or data only
+// with well-formed records and at most one block per study) and typed.js bytes.
 //
 // MUTANTS. typed_v2.js is copied to a temporary directory with ONE uniquely-anchored edit and the same test is run
 // against the copy. An anchor that is not found exactly once aborts that mutant (no silent no-ops).
@@ -191,6 +192,21 @@ def('parity.records', 'D4', 'with explicit records only, every construction refu
   cmp('isConsumedByStudy empty study', emptyStudy(o.reg), emptyStudy(c.reg));
   return { ok: mism.length === 0 && cases > 0, cases, mism: mism.slice(0, 4), mismatchCount: mism.length };
 });
+// ---- the committed block data: structural invariants only (P2) ----------------------------------------------------------------------
+// The production block module must be DATA ONLY (an Object.freeze of a JSON array: no import, call, expression or further export),
+// every block must be a well-formed trajectory.block/1 record, and no study may hold two blocks (the MCF-1 lock and the candidate
+// writer both require exactly one).  The identity of a registered block is deliberately NOT pinned here: registryDigestSha256 in
+// the freeze record binds it at the official gate, and a literal in this verifier would only duplicate that binding.
+const BLOCK_KEYS = ['artifact', 'authorization', 'configuration', 'count', 'excluded', 'executed', 'hi', 'listSha256', 'lo', 'namespace', 'schema', 'status', 'study', 'why'];
+const dataOnlyBlocks = (text) => {
+  const code = text.replace(/^\s*\/\/.*$/gm, '').trim();
+  const m = code.match(/^export const TRAJECTORY_BLOCKS = Object\.freeze\((\[[\s\S]*\])\);$/);
+  if (!m) return null;
+  try { const a = JSON.parse(m[1]); return Array.isArray(a) ? a : null; } catch (e) { return null; }
+};
+const oneBlockPerStudy = (blocks) => Array.isArray(blocks) && new Set(blocks.map(b => b && b.study)).size === blocks.length;
+const wellFormedBlock = (b) => b !== null && typeof b === 'object' && !Array.isArray(b) && Object.keys(b).sort().join() === BLOCK_KEYS.join()
+  && b.schema === REAL.BLOCK_SCHEMA && b.namespace === 'trajectory';
 def('parity.production', 'D4', 'the production registry equals the committed production registry on every value of every committed record, its neighbours and aliases, for every study, category, arm and configuration', (M) => {
   const acc = newAcc(); let cases = 0; const mism = [];
   const values = new Set([20260819000, 5, 0, 1, 900500, 1_700_000_000]);
@@ -204,7 +220,9 @@ def('parity.production', 'D4', 'the production registry equals the committed pro
   }
   const same = JSON.stringify(M.trajectory.records) === JSON.stringify(legacyTrajectory.records) && JSON.stringify(M.trajectory.heldOut) === JSON.stringify(legacyTrajectory.heldOut)
     && JSON.stringify(M.trajectory.authorizations) === JSON.stringify(legacyTrajectory.authorizations);
-  return { ok: mism.length === 0 && cases > 0 && same && M.trajectory.blocks.length === 0, cases, mism: mism.slice(0, 4), mismatchCount: mism.length, valuesProbed: values.size };
+  // records, held-out ranges and authorizations are the committed ones, and no probed value decides differently from the oracle
+  // (a block member among them would); a block, if present, is a well-formed record and no study holds two
+  return { ok: mism.length === 0 && cases > 0 && same && M.trajectory.blocks.every(wellFormedBlock) && oneBlockPerStudy(M.trajectory.blocks), cases, mism: mism.slice(0, 4), mismatchCount: mism.length, valuesProbed: values.size };
 });
 def('integrity.block', 'D5', 'every malformed, tampered or unsupported block is refused, while the untouched block builds', (M) => {
   const s = spec(120, { lo: LO + 600_000 });
@@ -267,10 +285,22 @@ def('digest', 'D6', 'the registry digest is stable, key-order independent, and c
   const reordered = (({ why, artifact, ...rest }) => ({ artifact, why, ...rest }))(blk(s));
   return d1 === d2 && /^[0-9a-f]{64}$/.test(d1) && mk(reordered).digest() === d1 && mk(blk(s2)).digest() !== d1 && mk(blk(s, { status: 'pilot' })).digest() !== d1 && mk(null).digest() !== d1;
 });
-def('data.empty', 'D7', 'the block data module is empty and holds no seed, hash or study', () => {
-  const text = fs.readFileSync(path.join(HERE, 'trajectory_blocks.js'), 'utf8');
-  const code = text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
-  return REAL.TRAJECTORY_BLOCKS.length === 0 && REAL.trajectory.blocks.length === 0 && !/\d{6,}/.test(code) && !/listSha256|schema|configuration|study/.test(code) && /Object\.freeze\(\[\]\)/.test(code);
+def('data.state', 'D7', 'the block data module is data only, every block is a well-formed trajectory.block/1 record, no study holds two blocks, and the production registry is built from exactly it', () => {
+  const parsed = dataOnlyBlocks(fs.readFileSync(path.join(HERE, 'trajectory_blocks.js'), 'utf8'));
+  return parsed !== null && JSON.stringify(parsed) === JSON.stringify(REAL.TRAJECTORY_BLOCKS)
+    && parsed.every(wellFormedBlock) && oneBlockPerStudy(parsed) && REAL.trajectory.blocks.length === parsed.length
+    && parsed.every(b => { const m = REAL.memberListOf(b); return m.length === b.count && REAL.listSha256Of(m) === b.listSha256; });
+});
+def('data.state.controls', 'D7', 'the data-only, well-formed and one-block-per-study predicates refuse an import, a call, trailing code, a second export, non-JSON content, a malformed record and two blocks of one study, and accept the empty module', () => {
+  const head = 'export const TRAJECTORY_BLOCKS = Object.freeze(';
+  const accepted = [head + '[]);\n', '// note\n' + head + '[{"study":"S"}]);\n'];
+  const refused = ["import fs from 'node:fs';\n" + head + '[]);\n', head + '[(() => 1)()]);\n', head + '[]);\nconsole.log(1);\n', head + '[]);\nexport const X = Object.freeze([]);\n',
+    head + '[{study: "S"}]);\n', 'export const X = 1;\n', head + '[]) \n', ''];
+  const wf = { ...Object.fromEntries(BLOCK_KEYS.map(k => [k, null])), schema: REAL.BLOCK_SCHEMA, namespace: 'trajectory' };
+  return accepted.every(t => dataOnlyBlocks(t) !== null) && refused.every(t => dataOnlyBlocks(t) === null)
+    && wellFormedBlock(wf) && !wellFormedBlock({ ...wf, schema: 'trajectory.block/2' }) && !wellFormedBlock({ ...wf, extra: 1 }) && !wellFormedBlock((({ why, ...r }) => r)(wf))
+    && !wellFormedBlock(null) && !wellFormedBlock([]) && !wellFormedBlock({ ...wf, namespace: 'config' })
+    && oneBlockPerStudy([]) && oneBlockPerStudy([{ study: 'A' }, { study: 'B' }]) && !oneBlockPerStudy([{ study: 'A' }, { study: 'A' }]) && !oneBlockPerStudy(null);
 });
 def('typed.identical', 'D7', 'typed.js is byte-identical to the baseline blob', () => {
   const pinned = '3958211bb753f5a0a14e4f4fb014edefa804308a';
@@ -329,7 +359,11 @@ console.log('\n== performance on a synthetic list of 3,852 members ==');
 console.log('\n== source mutants of typed_v2.js ==');
 const MUT_ROOT = fs.mkdtempSync(path.join(fs.realpathSync.native(os.tmpdir()), 'reg-v2-mut-'));
 const SRC = fs.readFileSync(path.join(HERE, 'typed_v2.js'), 'utf8');
-const rewrite = (text) => text.replace(/(from\s+)'(\.\/[^']+)'/g, (m, a, spec2) => `${a}'${pathToFileURL(path.join(HERE, spec2)).href}'`);
+// The mutants are judged on synthetic fixtures, never on the committed block data: a mutant that changes member reconstruction
+// would make a registered production block fail its own count check at import, so each copy loads an EMPTY block module.
+const EMPTY_BLOCKS = path.join(MUT_ROOT, 'trajectory_blocks.empty.js');
+fs.writeFileSync(EMPTY_BLOCKS, 'export const TRAJECTORY_BLOCKS = Object.freeze([]);\n');
+const rewrite = (text) => text.replace(/(from\s+)'(\.\/[^']+)'/g, (m, a, spec2) => `${a}'${pathToFileURL(spec2 === './trajectory_blocks.js' ? EMPTY_BLOCKS : path.join(HERE, spec2)).href}'`);
 async function loadMutant(id, edits) {
   let src = SRC;
   for (const [find, rep] of edits) {
