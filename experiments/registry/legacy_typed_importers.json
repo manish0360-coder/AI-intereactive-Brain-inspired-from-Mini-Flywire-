@@ -47,48 +47,6 @@
       "kinds": ["indirect"]
     },
     {
-      "path": "experiments/mcf1/admission.mjs",
-      "sha256": "50757d65b423dffdb7b8779cf7129a7b100ac63e50539adad8448b2ba67f00af",
-      "scope": "mcf1-harness-pending-migration",
-      "reason": "MCF-1 harness (M-MCF1-HARNESS, R1). Migration to typed_v2.js changes driver, inventory and admission, which the R1 verifier pins; it belongs to M-MCF1-R2 and removes these entries.",
-      "kinds": ["static"]
-    },
-    {
-      "path": "experiments/mcf1/driver.mjs",
-      "sha256": "a5de9e6eafad61c137e8c9192315e209146cdc5029c8b6fb361c7d49c5c83992",
-      "scope": "mcf1-harness-pending-migration",
-      "reason": "MCF-1 harness (M-MCF1-HARNESS, R1). Migration to typed_v2.js changes driver, inventory and admission, which the R1 verifier pins; it belongs to M-MCF1-R2 and removes these entries.",
-      "kinds": ["static"]
-    },
-    {
-      "path": "experiments/mcf1/inventory.mjs",
-      "sha256": "3f8a4b92a72e30ec3413b8b1bef9f62870bd5249f8ae93c39dc9612ce2eb0cb2",
-      "scope": "mcf1-harness-pending-migration",
-      "reason": "MCF-1 harness (M-MCF1-HARNESS, R1). Migration to typed_v2.js changes driver, inventory and admission, which the R1 verifier pins; it belongs to M-MCF1-R2 and removes these entries.",
-      "kinds": ["static"]
-    },
-    {
-      "path": "experiments/mcf1/orchestrate.mjs",
-      "sha256": "7d6cf5ccb8d8220c6f8edd1b9df3acae5a8a508bde4281540d24a49961e1f8e6",
-      "scope": "mcf1-harness-pending-migration",
-      "reason": "MCF-1 harness (M-MCF1-HARNESS, R1). Migration to typed_v2.js changes driver, inventory and admission, which the R1 verifier pins; it belongs to M-MCF1-R2 and removes these entries.",
-      "kinds": ["static"]
-    },
-    {
-      "path": "experiments/mcf1/validity.mjs",
-      "sha256": "49202f7d303ed7b0513f44f6a1f7b9754b625d3d50322675d288bacf9f7d870c",
-      "scope": "mcf1-harness-pending-migration",
-      "reason": "MCF-1 harness (M-MCF1-HARNESS, R1). Migration to typed_v2.js changes driver, inventory and admission, which the R1 verifier pins; it belongs to M-MCF1-R2 and removes these entries.",
-      "kinds": ["static"]
-    },
-    {
-      "path": "experiments/mcf1/verify_mcf1.mjs",
-      "sha256": "0b53aab45aecab69514c0ada3ebf0d1298b7a7d1048a648e7de885f7e837f94f",
-      "scope": "mcf1-harness-pending-migration",
-      "reason": "MCF-1 harness (M-MCF1-HARNESS, R1). Migration to typed_v2.js changes driver, inventory and admission, which the R1 verifier pins; it belongs to M-MCF1-R2 and removes these entries.",
-      "kinds": ["static"]
-    },
-    {
       "path": "experiments/study2/governance.mjs",
       "sha256": "27ac739eaf0f8d062350db944d32d34a60f404b16de66844330ef1b0cd079962",
       "scope": "study2-executed",

@@ -29,7 +29,8 @@ import * as VAL from './validity.mjs';
 import * as FRM from './frame.mjs';
 import * as ANA from './analyze.mjs';
 import * as ORC from './orchestrate.mjs';
-import { createTrajectoryRegistry, TRAJECTORY_RECORDS, TRAJECTORY_HELD_OUT, TRAJECTORY_AUTHORIZATIONS, trajectory, trajectorySeed } from '../registry/typed.js';
+import { createTrajectoryRegistry, TRAJECTORY_RECORDS, TRAJECTORY_HELD_OUT, TRAJECTORY_AUTHORIZATIONS, trajectory, trajectorySeed, listSha256Of } from '../registry/typed_v2.js';
+import * as LCK from './lock.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url)), REPO = path.resolve(HERE, '..', '..');
 let failed = 0, passed = 0, mutantsCaught = 0, mutantsMissed = 0;
@@ -326,24 +327,17 @@ const anaDev = ANA.analyzeFrame({ vManifest: Vs.manifest, oManifest: Oh.manifest
 // ---------------- G12: official-stage refusal ----------------
 console.log('\n== G12 official-stage refusal ==');
 {
-  const refusal = (f, a, o) => { try { CFG.assertOfficialAllowed(f, a, o); return false; } catch (e) { return /refused/.test(e.message); } };
-  check('G12', 'no freeze record -> refused', refusal(null, {}));
-  check('G12', 'frozen:false -> refused', refusal({ schema: 'mcf1.freeze/1', frozen: false }, {}));
-  const approvals = Object.fromEntries(CFG.REQUIRED_FOR_OFFICIAL.map(k => [k, { value: 'x', status: 'APPROVED' }]));
-  const H = { preregistrationSha256: 'a'.repeat(64), configSha256: 'b'.repeat(64), inventorySha256: 'c'.repeat(64), admittedSha256: 'd'.repeat(64), treeDigest: 'e'.repeat(64) };
-  const good = { schema: 'mcf1.freeze/1', frozen: true, approvals, ...H };
-  check('G12', 'a complete synthetic record with matching actual hashes is REFUSED by default (no authorised record is pinned)', refusal(good, H));
-  check('G12', 'positive control: with the record hash injected as the pin the same record is accepted, so the structural checks are not vacuous', (() => { try { return CFG.assertOfficialAllowed(good, H, { pinnedFreezeSha256: CFG.hashObject(good) }) === true; } catch (e) { return false; } })());
-  const pinned = (rec) => ({ pinnedFreezeSha256: CFG.hashObject(rec) });
-  mutant('G12', 'a complete record WITHOUT the actual hashes is refused even when pinned', refusal(good, {}, pinned(good)));
-  mutant('G12', 'a hash mismatch is refused even when pinned', refusal(good, { ...H, inventorySha256: 'f'.repeat(64) }, pinned(good)));
-  const unap = { ...good, approvals: { ...approvals, practicalThreshold: { value: null, status: 'UNDECIDED' } } };
-  mutant('G12', 'an unapproved decision is refused even when pinned', refusal(unap, H, pinned(unap)));
-  const to = { ...good, testOnly: true };
-  mutant('G12', 'a testOnly record is refused even when pinned and complete', refusal(to, H, pinned(to)));
-  check('G12', 'the shipped config is unfrozen, nothing in it carries the APPROVED status, and the pinned authorisation is null',
-    CFG.FROZEN === false && CFG.OFFICIAL_AUTHORIZATION.freezeRecordSha256 === null && Object.values(CFG.APPROVALS).every(a => a.status !== 'APPROVED') && CFG.REQUIRED_FOR_OFFICIAL.every(k => k in CFG.APPROVALS));
-  const cli = spawnSync(process.execPath, [path.join(HERE, 'orchestrate.mjs'), 'inventory', '--mode', 'official', '--out', path.join(TMP, 'official')], { encoding: 'utf8' });
+  // R2: authorization is parameterless and committed-state-derived; the full attack matrix (synthetic records, injected
+  // options, direct driver calls, receipts) lives in verify_r2.mjs.  Here: the shipped state refuses at the first guard.
+  const refusalOf = (fn) => { try { fn(); return null; } catch (e) { return String(e.message); } };
+  check('G12', 'no authorization exists: officialAuthorisation() refuses (the design is not frozen)', /official stage refused: the design is not frozen/.test(refusalOf(() => LCK.officialAuthorisation()) || ''));
+  check('G12', 'makeContext accepts no freeze record, pin, registry or authorization option (every one is refused by name)',
+    ['freeze', 'actual', 'authorization', 'registry', 'pinnedFreezeSha256'].every(k => /accepts no option other than policy and concurrency/.test(refusalOf(() => ORC.makeContext({ policy: 'official', [k]: {} })) || '')));
+  check('G12', 'an official context cannot be created in the shipped state', /official stage refused/.test(refusalOf(() => ORC.makeContext({ policy: 'official' })) || ''));
+  check('G12', 'the shipped config is unfrozen, nothing in it carries the APPROVED status, and the config exports no authority',
+    CFG.FROZEN === false && Object.values(CFG.APPROVALS).every(a => a.status !== 'APPROVED') && CFG.REQUIRED_FOR_OFFICIAL.every(k => k in CFG.APPROVALS)
+    && !('OFFICIAL_AUTHORIZATION' in CFG) && !('assertFreezeAuthorised' in CFG) && !('assertOfficialAllowed' in CFG));
+  const cli = spawnSync(process.execPath, [path.join(HERE, 'orchestrate.mjs'), 'inventory', '--mode', 'official'], { encoding: 'utf8' });
   check('G12', 'the CLI refuses official mode (exit != 0, refusal text)', cli.status !== 0 && /official stage refused/.test(cli.stderr), (cli.stderr || '').trim().split('\n')[0]);
   check('G12', 'seed policy: candidate block and out-of-domain seeds refused for development; official refused without a record',
     !CFG.seedPolicy('development', CFG.BLOCK.start).ok && !CFG.seedPolicy('development', CFG.BLOCK.start + CFG.BLOCK.scanLength - 1).ok && !CFG.seedPolicy('development', CFG.DEVELOPMENT_DOMAIN.hi + 1).ok && CFG.seedPolicy('development', D0).ok && !CFG.seedPolicy('official', D0).ok && !CFG.seedPolicy('official', CFG.BLOCK.start).ok);
@@ -354,19 +348,22 @@ console.log('\n== G12 official-stage refusal ==');
 console.log('\n== G13 repository hygiene ==');
 {
   const tracked = git('status', '--porcelain', '--untracked-files=no').split('\n').filter(Boolean);     // no trim: the first column of a line may be a space
-  const trackedOutside = tracked.map(l => l.slice(3)).filter(f => !f.startsWith('experiments/mcf1/'));
-  check('G13', 'no tracked file outside experiments/mcf1 is modified', trackedOutside.length === 0, trackedOutside.slice(0, 3).join(' | '));
+  // R2 also deliberately edits two registry documents (the legacy-importer baseline loses the six migrated entries and
+  // the registry README describes it); nothing else outside experiments/mcf1 may differ from HEAD
+  const R2_REGISTRY_EDITS = ['experiments/registry/legacy_typed_importers.json', 'experiments/registry/README.md'];
+  const trackedOutside = tracked.map(l => l.slice(3)).filter(f => !f.startsWith('experiments/mcf1/') && !R2_REGISTRY_EDITS.includes(f));
+  check('G13', 'no tracked file outside experiments/mcf1 (and the two registry documents R2 edits) is modified', trackedOutside.length === 0, trackedOutside.slice(0, 3).join(' | '));
   const harnessFiles = fs.readdirSync(HERE, { withFileTypes: true }).filter(d => d.isFile()).map(d => d.name);
-  check('G13', 'the harness directory holds only the expected files', harnessFiles.every(f => /^(admission|analyze|config|driver|episodes|frame|inventory|orchestrate|validity|verify_mcf1)\.mjs$|^README\.md$|^\.gitignore$/.test(f)), harnessFiles.join(' '));
+  check('G13', 'the harness directory holds only the expected files', harnessFiles.every(f => /^(admission|analyze|authorization|config|driver|envidentity|episodes|frame|inventory|lock|orchestrate|prepare_tree|validity|verify_mcf1|verify_r2)\.mjs$|^README\.md$|^\.gitignore$/.test(f)), harnessFiles.join(' '));
   const PATTERNS = [new RegExp('[A-Za-z]:[\\\\/]+Us' + 'ers'), new RegExp('/c/Us' + 'ers/'), new RegExp('Man' + 'ish', 'i'), new RegExp('App' + 'Data'), new RegExp('MAN' + 'ISH~1')];
   const files = fs.readdirSync(HERE).filter(f => /\.(mjs|md)$|^\.gitignore$/.test(f));
   const leaks = []; for (const f of files) { const t = fs.readFileSync(path.join(HERE, f), 'utf8'); for (const p of PATTERNS) if (p.test(t)) leaks.push(`${f}:${p}`); }
   check('G13', 'no local path or account name in any harness file', leaks.length === 0, leaks.join(' '));
   mutant('G13', 'the path scanner detects an injected local path', PATTERNS.some(p => p.test('C:' + '\\Us' + 'ers\\someone\\x')));
-  const banned = []; for (const f of ['orchestrate.mjs', 'analyze.mjs', 'frame.mjs', 'validity.mjs', 'admission.mjs', 'inventory.mjs', 'config.mjs', 'episodes.mjs']) { const t = fs.readFileSync(path.join(HERE, f), 'utf8').replace(/\/\/.*$/gm, ''); if (/Date\.now\(|Math\.random\(|new Date\(/.test(t)) banned.push(f); }
+  const banned = []; for (const f of ['orchestrate.mjs', 'analyze.mjs', 'frame.mjs', 'validity.mjs', 'admission.mjs', 'inventory.mjs', 'config.mjs', 'episodes.mjs', 'lock.mjs', 'envidentity.mjs', 'authorization.mjs']) { const t = fs.readFileSync(path.join(HERE, f), 'utf8').replace(/\/\/.*$/gm, ''); if (/Date\.now\(|Math\.random\(|new Date\(/.test(t)) banned.push(f); }
   check('G13', 'no clock or Math.random in analysis, frame, orchestration, validity, admission, inventory, config', banned.length === 0, banned.join(','));
   const touched = git('diff', '--name-only', 'HEAD').split('\n').filter(Boolean);
-  check('G13', 'H1-R and registry files are untouched', !touched.some(f => /^experiments\/(h1r|registry)\//.test(f)));
+  check('G13', 'H1-R files and the registry code and data are untouched (only the two documented registry documents may differ)', !touched.some(f => /^experiments\/(h1r|registry)\//.test(f) && !R2_REGISTRY_EDITS.includes(f)));
   const regFiles = fs.existsSync(path.join(HERE, 'data')) ? fs.readdirSync(path.join(HERE, 'data')).filter(f => f !== '.gitignore') : [];
   check('G13', 'no registry entry, freeze record or output artifact exists in the harness data directory', regFiles.length === 0, regFiles.join(' '));
 }
@@ -435,13 +432,14 @@ const res = (r) => (typeof r === 'boolean' ? { ok: r } : r);
 const TESTS = new Map();
 const def = (id, gate, desc, fn) => TESTS.set(id, { id, gate, desc, fn });
 
-def('g15.ledger', 'G15', 'ledger values: T_frame primary, min frame 100, no threshold, halt count 1, candidate block 1.5e9/4000 CANDIDATE_NOT_AUTHORIZED, budgets 4096/16384/64, complete-cluster frame, V6 diagnostic; nothing APPROVED, FROZEN false, no pinned authorisation', (B) => {
+def('g15.ledger', 'G15', 'ledger values: T_frame primary, min frame 100, no threshold, halt count 1, candidate block 1.5e9/4000 CANDIDATE_NOT_AUTHORIZED, budgets 4096/16384/64, complete-cluster frame, V6 diagnostic, the adopted study configuration; nothing APPROVED, FROZEN false', (B) => {
   const A = B.CFG.APPROVALS;
   return A.primaryDescriptive.value === 'T_frame' && A.minimumValidFrame.value === 100 && A.practicalThreshold.value === 'none' && A.instrumentHaltCount.value === 1
     && A.seedBlock.value === 1_500_000_000 && A.scanLength.value === 4000 && A.seedBlock.status === 'CANDIDATE_NOT_AUTHORIZED' && A.scanLength.status === 'CANDIDATE_NOT_AUTHORIZED' && B.CFG.BLOCK.status === 'CANDIDATE_NOT_AUTHORIZED'
     && B.CFG.BUDGETS.cognitive === 4096 && B.CFG.BUDGETS.visual === 16384 && B.CFG.BUDGETS.environment === 64
     && A.completeClusterFrame.value === 'complete-cluster' && A.v6Handling.value === 'diagnostic' && A.samplingDesign.value === 'C'
-    && B.CFG.FROZEN === false && B.CFG.OFFICIAL_AUTHORIZATION.freezeRecordSha256 === null && Object.values(A).every(a => a.status !== 'APPROVED') && B.CFG.REQUIRED_FOR_OFFICIAL.every(k => k in A);
+    && A.studyConfiguration.value === B.CFG.STUDY_CONFIGURATION && B.CFG.STUDY_CONFIGURATION.adoptedFromDevelopment === true && B.CFG.STUDY_CONFIGURATION.seed === 100000 && B.CFG.STUDY_CONFIGURATION.acceptedSeed === 100026
+    && B.CFG.FROZEN === false && Object.values(A).every(a => a.status !== 'APPROVED') && B.CFG.REQUIRED_FOR_OFFICIAL.every(k => k in A);
 });
 def('g16.table', 'G16', 'primary score S_s equals the hand-computed value for all 16 (x9,x11) pairs (negative, zero, positive and off-pattern)', (B) =>
   [6, 9, 11, 13].every(x9 => [6, 9, 11, 13].every(x11 => B.ANA.SCORES.steering({ xC: 9, x9, x11 }) === S_TABLE[x9][x11])));
@@ -613,26 +611,6 @@ def('g23.min', 'G23', 'the 100-seed minimum blocks scientific interpretation at 
   return a99.frame.size === 99 && a99.interpretation.allowed === false && a99.primaryDescriptive.value === null && a99.claims.permitted.length === 0 && a99.primaryDescriptive.status === 'WITHHELD_BELOW_MINIMUM_FRAME'
     && a99.metrics.T_frame.interpretable === false && a100.frame.size === 100 && a100.interpretation.allowed === true && a100.primaryDescriptive.value !== null && a100.claims.permitted.length === 3;
 });
-def('g24.pin', 'G24', 'a complete synthetic freeze record with matching hashes cannot authorise by default; with the record hash injected as the pin it is accepted (positive control)', (B) => {
-  const approvals = Object.fromEntries(B.CFG.REQUIRED_FOR_OFFICIAL.map(k => [k, { value: 'x', status: 'APPROVED' }]));
-  const H = { preregistrationSha256: 'a'.repeat(64), configSha256: 'b'.repeat(64), inventorySha256: 'c'.repeat(64), admittedSha256: 'd'.repeat(64), treeDigest: 'e'.repeat(64) };
-  const good = { schema: 'mcf1.freeze/1', frozen: true, approvals, ...H };
-  let refused = false; try { B.CFG.assertOfficialAllowed(good, H); } catch (e) { refused = /official stage refused/.test(e.message); }
-  let ctrl = false; try { ctrl = B.CFG.assertOfficialAllowed(good, H, { pinnedFreezeSha256: B.CFG.hashObject(good) }) === true; } catch (e) { ctrl = false; }
-  return refused && ctrl;
-});
-def('g24.testonly', 'G24', 'a record marked testOnly is refused even when complete and pinned', (B) => {
-  const approvals = Object.fromEntries(B.CFG.REQUIRED_FOR_OFFICIAL.map(k => [k, { value: 'x', status: 'APPROVED' }]));
-  const H = { preregistrationSha256: 'a'.repeat(64), configSha256: 'b'.repeat(64), inventorySha256: 'c'.repeat(64), admittedSha256: 'd'.repeat(64), treeDigest: 'e'.repeat(64) };
-  const rec = { schema: 'mcf1.freeze/1', frozen: true, testOnly: true, approvals, ...H };
-  try { B.CFG.assertOfficialAllowed(rec, H, { pinnedFreezeSha256: B.CFG.hashObject(rec) }); return false; } catch (e) { return /testOnly/.test(e.message); }
-});
-def('g24.struct', 'G24', 'with a matching pin, a record whose hashes differ from the actual inputs is refused', (B) => {
-  const approvals = Object.fromEntries(B.CFG.REQUIRED_FOR_OFFICIAL.map(k => [k, { value: 'x', status: 'APPROVED' }]));
-  const H = { preregistrationSha256: 'a'.repeat(64), configSha256: 'b'.repeat(64), inventorySha256: 'c'.repeat(64), admittedSha256: 'd'.repeat(64), treeDigest: 'e'.repeat(64) };
-  const rec = { schema: 'mcf1.freeze/1', frozen: true, approvals, ...H };
-  try { B.CFG.assertOfficialAllowed(rec, { ...H, inventorySha256: 'f'.repeat(64) }, { pinnedFreezeSha256: B.CFG.hashObject(rec) }); return false; } catch (e) { return /inventorySha256 does not match/.test(e.message); }
-});
 def('g24.ctx', 'G24', 'an official context that did not come from makeContext\'s gate is refused by the stage functions before any run; a development context with the same fake executor works (control)', async (B) => {
   let calls = 0; const exec = async (input) => { calls++; return synthRun({ raw: input.agentSeed, content: 'C', twin: 'T9', x: 9, best: 9, stage: 'V', ok: 1 }); };
   const forged = { ...ctx, policy: 'official' };
@@ -641,42 +619,37 @@ def('g24.ctx', 'G24', 'an official context that did not come from makeContext\'s
   const ctrl = await B.ORC.stageQ({ seeds: [SR(0)], ctx, cacheFile: null, exec });
   return refused && beforeControl === 0 && calls === 1 && ctrl.qualified.length === 1;
 });
-def('g24.preflight', 'G24', 'an authorised official Stage Q refuses unless EVERY admitted seed is already recorded (MCF-1, registered); it refuses before any run; with all recorded it proceeds', async (B) => {
-  const approvals = Object.fromEntries(B.CFG.REQUIRED_FOR_OFFICIAL.map(k => [k, { value: 'x', status: 'APPROVED' }]));
-  const H = { preregistrationSha256: 'a'.repeat(64), configSha256: 'b'.repeat(64), inventorySha256: 'c'.repeat(64), admittedSha256: 'd'.repeat(64), treeDigest: 'e'.repeat(64) };
-  const rec = { schema: 'mcf1.freeze/1', frozen: true, approvals, ...H };
-  const seeds = [SR(0), SR(1)];
-  const mkReg = (raws) => createTrajectoryRegistry({ records: [...TRAJECTORY_RECORDS, ...raws.map(value => ({ namespace: 'trajectory', value, study: CFG.STUDY, status: 'registered', executed: false, authorization: 'in-memory verification only', artifact: 'none', why: 'preflight semantics' }))], heldOut: [...TRAJECTORY_HELD_OUT], authorizations: [...TRAJECTORY_AUTHORIZATIONS] });
-  const none = B.ORC.registryPreflight({ admitted: seeds, registry: mkReg([]) }), partial = B.ORC.registryPreflight({ admitted: seeds, registry: mkReg([seeds[0]]) }), all = B.ORC.registryPreflight({ admitted: seeds, registry: mkReg(seeds) });
-  const empty = B.ORC.registryPreflight({ admitted: [], registry: mkReg([]) });
-  const pure = !none.ok && !partial.ok && same(partial.offenders.map(o => o.raw), [seeds[1]]) && all.ok && !empty.ok && none.counts.AVAILABLE === 2;
-  let calls = 0; const exec = async (input) => { calls++; return synthRun({ raw: input.agentSeed, content: 'C', twin: 'T9', x: 9, best: 9, stage: 'V', ok: 1 }); };
-  const mk = (reg) => B.ORC.makeContext({ policy: 'official', freeze: rec, actual: H, registry: reg, authorization: { pinnedFreezeSha256: B.CFG.hashObject(rec) } });
-  let refused = false; try { await B.ORC.stageQ({ seeds, ctx: mk(mkReg([])), cacheFile: null, exec }); } catch (e) { refused = /registry preflight failed/.test(e.message); }
-  const callsAfterRefusal = calls;
-  const ok = await B.ORC.stageQ({ seeds, ctx: mk(mkReg(seeds)), cacheFile: null, exec });
-  return pure && refused && callsAfterRefusal === 0 && calls === 2 && ok.qualified.length === 2;
+def('g24.preflight', 'G24', 'the registry preflight needs the registered MCF-1 block to EQUAL the admitted list (not a subset, not a superset, not a different list) and every admitted seed to decide REPRODUCTION; it creates nothing', (B) => {
+  const seeds = [SR(0), SR(1), SR(2)];
+  const block = (list, over = {}) => ({ schema: 'trajectory.block/1', namespace: 'trajectory', study: CFG.STUDY, status: 'registered', lo: list[0], hi: list[list.length - 1],
+    excluded: [], count: list.length, listSha256: listSha256Of(list), executed: false, authorization: 'in-memory verification only', artifact: 'none', why: 'preflight semantics',
+    configuration: { seed: 100000, index: 1, acceptedSeed: 100026 }, ...over });
+  const mkReg = (blocks) => createTrajectoryRegistry({ records: [...TRAJECTORY_RECORDS], heldOut: [...TRAJECTORY_HELD_OUT], authorizations: [...TRAJECTORY_AUTHORIZATIONS], blocks });
+  const run = (blocks, admitted = seeds) => B.ORC.evaluateRegistryPreflight(mkReg(blocks), { admitted });
+  const none = run([]), exact = run([block(seeds)]), subset = run([block(seeds.slice(0, 2))]), superset = run([block([...seeds, SR(3)])]);
+  const empty = B.ORC.evaluateRegistryPreflight(mkReg([]), { admitted: [] });
+  const notExecuted = run([block(seeds, { executed: true })]), dev = run([block(seeds, { status: 'development' })]);
+  // defence in depth: a registry-shaped object whose block carries the right members but a wrong list hash (the real
+  // constructor refuses such a block, so this exercises the preflight comparison itself)
+  const hashBad = B.ORC.evaluateRegistryPreflight({ blocks: [block(seeds, { listSha256: 'f'.repeat(64) })], checkUse: () => ({ decision: 'REPRODUCTION' }) }, { admitted: seeds });
+  return !none.ok && !hashBad.ok && /list hash/.test(hashBad.block.why) && none.counts.AVAILABLE === 3 && exact.ok && exact.block.ok && exact.counts.REPRODUCTION === 3
+    && !subset.ok && same(subset.offenders.map(o => o.raw), [seeds[2]]) && !superset.ok && /not exactly the admitted list/.test(superset.block.why)
+    && !empty.ok && !notExecuted.ok && !dev.ok;
 });
-def('g24.candidate', 'G24', 'the candidate block is refused for development before anything is scanned (a trap inventory is never touched) and for official mode; makeContext refuses official without the pinned record', async (B) => {
+def('g24.candidate', 'G24', 'the candidate block is refused for development before anything is scanned (a trap inventory is never touched); an official scan needs the committed authorization, so no mode of stageAdmit can scan the candidate range; makeContext refuses official without it', async (B) => {
   const trap = { get classes() { throw new Error('TRAP: the inventory was touched'); }, get derived() { throw new Error('TRAP: the inventory was touched'); } };
   let pre = false; try { B.ORC.stageAdmit({ policy: 'development', start: B.CFG.BLOCK.start, length: 5, inventory: trap }); } catch (e) { pre = /admission refused: the candidate confirmatory block is not authorised/.test(e.message); }
   let tail = false; try { B.ORC.stageAdmit({ policy: 'development', start: B.CFG.BLOCK.start + 3000, length: 5, inventory: trap }); } catch (e) { tail = /admission refused/.test(e.message); }
+  let official = false; try { B.ORC.stageAdmit({ policy: 'official', start: B.CFG.BLOCK.start, length: B.CFG.BLOCK.scanLength, inventory: trap }); } catch (e) { official = /official stage refused/.test(e.message); }
+  let unknown = false; try { B.ORC.stageAdmit({ policy: 'scan', start: B.CFG.BLOCK.start, length: 5, inventory: trap }); } catch (e) { unknown = /unknown policy/.test(e.message); }
   const pol = !B.CFG.seedPolicy('development', B.CFG.BLOCK.start).ok && !B.CFG.seedPolicy('official', B.CFG.BLOCK.start).ok;
-  let ctxRefused = false; try { B.ORC.makeContext({ policy: 'official', freeze: { schema: 'mcf1.freeze/1', frozen: true, approvals: {} }, actual: {} }); } catch (e) { ctxRefused = /official stage refused/.test(e.message); }
-  return pre && tail && pol && ctxRefused;
-});
-def('g24.cli', 'G24', 'the official CLI refuses a complete synthetic record before any inventory build or scan (a deliberately unparseable scan range is never reached)', (B) => {
-  const approvals = Object.fromEntries(B.CFG.REQUIRED_FOR_OFFICIAL.map(k => [k, { value: 'x', status: 'APPROVED' }]));
-  const H = { preregistrationSha256: 'a'.repeat(64), configSha256: 'b'.repeat(64), inventorySha256: 'c'.repeat(64), admittedSha256: 'd'.repeat(64), treeDigest: 'e'.repeat(64) };
-  const file = path.join(TMP, `synthetic_freeze_${path.basename(B.dir)}.json`);
-  fs.writeFileSync(file, JSON.stringify({ schema: 'mcf1.freeze/1', frozen: true, approvals, ...H }));
-  const r = spawnSync(process.execPath, [B.orchestratePath, 'admit', '--mode', 'official', '--freeze', file, '--start', 'unparseable', '--length', 'unparseable', '--out', path.join(TMP, 'cli_out')], { encoding: 'utf8' });
-  return r.status !== 0 && /OFFICIAL_AUTHORIZATION\.freezeRecordSha256 is not set/.test(r.stderr) && !fs.existsSync(path.join(TMP, 'cli_out'));
+  let ctxRefused = false; try { B.ORC.makeContext({ policy: 'official' }); } catch (e) { ctxRefused = /official stage refused/.test(e.message); }
+  return pre && tail && official && unknown && pol && ctxRefused;
 });
 
 // ---- the source-mutant harness ----
 const MUT_ROOT = fs.mkdtempSync(path.join(TMPREAL, 'mcf1-mutants-'));
-const ENGINE_FILES = fs.readdirSync(HERE).filter(f => f.endsWith('.mjs') && f !== 'verify_mcf1.mjs' && f !== 'driver.mjs');
+const ENGINE_FILES = fs.readdirSync(HERE).filter(f => f.endsWith('.mjs') && !f.startsWith('verify_') && f !== 'driver.mjs' && f !== 'prepare_tree.mjs');
 const fileUrl = (p) => pathToFileURL(p).href;
 function rewriteImports(src, destDir) {
   const toUrl = (spec) => { const abs = path.resolve(HERE, spec); return path.dirname(abs) === HERE ? fileUrl(path.join(destDir, path.basename(abs))) : fileUrl(abs); };
@@ -738,15 +711,10 @@ const MUTANTS = [
   M('m-verify-no-frame-check', 'analysis verifier that does not recompute the frame hash', ['g23.hash'], { 'analyze.mjs': [["if (!a.frame || !frameIntact(a.frame)) refuse('the frame hash is missing or does not match the frame body');", '']] }),
   M('m-verify-no-metric-hash', 'analysis verifier that does not compare metric frame hashes', ['g23.hash'], { 'analyze.mjs': [['else if (o.frameSha256 !== a.frame.sha256) bad.push(`${p}: frame hash differs`);', 'else if (false) bad.push("x");']] }),
   M('m-min-frame-off', 'minimum valid frame not enforced', ['g23.min'], { 'analyze.mjs': [['const belowMinimum = frame.size < min;', 'const belowMinimum = false;']] }),
-  M('m-pin-off', 'official gate without the pinned-authorisation checks', ['g24.pin'], { 'config.mjs': [
-    ["if (typeof pinnedFreezeSha256 !== 'string' || pinnedFreezeSha256.length < 12) officialFail('no freeze record is authorised: OFFICIAL_AUTHORIZATION.freezeRecordSha256 is not set');", ''],
-    ["if (hashObject(freeze) !== pinnedFreezeSha256) officialFail('the freeze record hash does not equal OFFICIAL_AUTHORIZATION.freezeRecordSha256');", '']] }),
-  M('m-testonly-off', 'official gate that ignores the testOnly marker', ['g24.testonly'], { 'config.mjs': [["if (freeze.testOnly === true) officialFail('freeze record is marked testOnly');", '']] }),
-  M('m-actual-hash-off', 'official gate that does not compare the actual hashes', ['g24.struct'], { 'config.mjs': [['if (actual[k] !== freeze[k]) officialFail(`${k} does not match the freeze record`);', '']] }),
   M('m-ctx-guard-off', 'stage functions that accept a forged official context', ['g24.ctx'], { 'orchestrate.mjs': [["if (ctx.policy === 'official' && !AUTHORISED.has(ctx)) throw new Error('MCF-1 stage refused: an official context must be created by makeContext after the freeze-record gate');", '']] }),
-  M('m-preflight-off', 'official Stage Q without the registry preflight', ['g24.preflight'], { 'orchestrate.mjs': [["if (ctx.policy === 'official') assertRegistryPreflight({ admitted: seeds, registry: ctx.registry });", '']] }),
+  M('m-preflight-superset-allowed', 'preflight that accepts a registered block larger than the admitted list', ['g24.preflight'], { 'orchestrate.mjs': [["else if (list.length !== admitted.length || list.some((v, i) => v !== admitted[i])) block.why = 'the registered block members are not exactly the admitted list';", '']] }),
+  M('m-preflight-hash-unchecked', 'preflight that does not compare the block list hash with the admitted list hash', ['g24.preflight'], { 'orchestrate.mjs': [["else if (b.listSha256 !== sha256(admitted.join(','))) block.why = 'the block list hash is not the admitted list hash';", '']] }),
   M('m-candidate-guard-off', 'development admission without the candidate-block refusal', ['g24.candidate'], { 'orchestrate.mjs': [["if (!p.ok) throw new Error(`MCF-1 admission refused: ${p.why}`);", '']] }),
-  M('m-cli-prescan-off', 'official CLI without the pre-scan authorisation check', ['g24.cli'], { 'orchestrate.mjs': [['assertFreezeAuthorised(freeze);', '']] }),
 ];
 for (const m of MUTANTS) {
   let B;
@@ -759,24 +727,26 @@ for (const m of MUTANTS) {
 // ---------------- G25: engine files untouched; G26: documentation ----------------
 console.log('\n== G25 engine files and G26 documentation ==');
 {
-  // the files whose behaviour R1 must not change (driver semantics, admission algorithm, inventory definitions, contents):
-  // SHA-256 of the line-ending-normalised text at the M-MCF1-HARNESS baseline commit 9aaf22e
+  // the engine files whose behaviour the verifier pins (driver semantics, admission algorithm, inventory definitions,
+  // contents): SHA-256 of the line-ending-normalised text.  M-MCF1-R2 deliberately re-baselined driver, inventory and
+  // admission (typed_v2 migration, driver-boundary enforcement, reservation view); G27/g.parity prove the behaviour the
+  // pins stand for is unchanged.  episodes.mjs is untouched since the M-MCF1-HARNESS baseline (9aaf22e).
   const ENGINE_PINS = {
-    'driver.mjs': 'a5de9e6eafad61c137e8c9192315e209146cdc5029c8b6fb361c7d49c5c83992',
-    'inventory.mjs': '3f8a4b92a72e30ec3413b8b1bef9f62870bd5249f8ae93c39dc9612ce2eb0cb2',
-    'admission.mjs': '50757d65b423dffdb7b8779cf7129a7b100ac63e50539adad8448b2ba67f00af',
+    'driver.mjs': '5e49978b23487978bda2d193a82b1b50f112b1e49384161aaa9d55b9f9d32808',
+    'inventory.mjs': '607047b3d0fb5551a7963537fd3e903a09e948526a62941d737ab49e7c018ec8',
+    'admission.mjs': '94cfb914f5dd93b7c2d4b84d1a5b09ef35b56b866e2187721fe6283fa6356aa5',
     'episodes.mjs': 'c9f01f9d7d5599209ca9705f819c2d5628c69f47f05c3ac902b2b2c4767787e6',
   };
   for (const f of Object.keys(ENGINE_PINS)) {
     const text = fs.readFileSync(path.join(HERE, f), 'utf8');
-    check('G25', `${f} is byte-identical (line-ending-normalised) to the M-MCF1-HARNESS baseline`, CFG.hashTextNormalised(text) === ENGINE_PINS[f], CFG.hashTextNormalised(text).slice(0, 16));
+    check('G25', `${f} is byte-identical (line-ending-normalised) to its pinned text`, CFG.hashTextNormalised(text) === ENGINE_PINS[f], CFG.hashTextNormalised(text).slice(0, 16));
     mutant('G25', `${f}: a one-character change is detected by the pin`, CFG.hashTextNormalised(text + ' ') !== ENGINE_PINS[f]);
   }
   const readme = fs.readFileSync(path.join(HERE, 'README.md'), 'utf8');
-  const REQUIRED = ['T_frame', 'S_s = 1/2 (1{x9=9} - 1{x9=11} + 1{x11=11} - 1{x11=9})', 'complete-cluster', 'V6', 'diagnostic', '100', 'inferred', 'not frozen', 'OFFICIAL_AUTHORIZATION', 'APPROVED_FOR_IMPLEMENTATION', 'candidate', 'prohibited', 'planning', 'general performance benefit', 'retry'];
+  const REQUIRED = ['T_frame', 'S_s = 1/2 (1{x9=9} - 1{x9=11} + 1{x11=11} - 1{x11=9})', 'complete-cluster', 'V6', 'diagnostic', '100', 'inferred', 'not frozen', 'officialAuthorisation', 'APPROVED_FOR_IMPLEMENTATION', 'candidate', 'prohibited', 'planning', 'general performance benefit', 'retry'];
   const missing = REQUIRED.filter(p => !readme.includes(p));
   check('G26', 'README documents the ledger, formulas, frame rule, V6, minimum, exploration limits, claim boundary and the execution lock', missing.length === 0, missing.join(' | '));
-  mutant('G26', 'a README without the formula and the lock is detected', REQUIRED.filter(p => !readme.replace(/OFFICIAL_AUTHORIZATION/g, '').replace(/S_s = 1\/2/g, '').includes(p)).length === 2);
+  mutant('G26', 'a README without the formula and the lock is detected', REQUIRED.filter(p => !readme.replace(/officialAuthorisation/g, '').replace(/S_s = 1\/2/g, '').includes(p)).length === 2);
   check('G26', 'the README states the execution lock and does not describe the design as frozen', /not frozen/.test(readme) && !/design is frozen/.test(readme.replace(/not frozen/g, '')));
 }
 

@@ -36,6 +36,7 @@ The user approved these values for implementation. In `config.mjs` they carry th
 | claim boundary | see "Claim boundary" |
 | frame | complete-cluster (below) |
 | V6 | diagnostic, never an eligibility condition |
+| study configuration | `100000 / 1 / accepted 100026`, **adopted from development and disclosed as such**; identity, provenance, goal, the six frame-edge reliabilities and a digest of the whole environment are bound (see "Execution lock"). No separate configuration chain (M-CFG-1) is built or needed for this milestone |
 
 ## Exact formulas
 
@@ -126,20 +127,58 @@ episodic recall, generalization beyond the frame or to other decision points, go
 cognition, a general performance benefit of memory, goal arrival, learning or trajectory effects, and any
 significance statement.
 
-## Execution lock
+## Execution lock (M-MCF1-R2)
 
-Official stages are **locked**:
+Official stages are **locked**, and the lock is a function of committed state only. No parameter, option, environment
+variable, CLI flag or input file carries authority; a caller may supply a value to be *checked*, never trusted.
 
-* `config.FROZEN` is false and no config status can unlock anything;
-* `assertFreezeAuthorised` runs before any inventory build or scan and requires a freeze record that is complete,
-  not `testOnly`, and whose own hash equals `OFFICIAL_AUTHORIZATION.freezeRecordSha256`, which is `null` here. A
-  synthetic record can therefore never authorise execution, even with matching hashes;
-* stage functions refuse an official context that did not pass that gate, and an official Stage Q additionally runs
-  the registry preflight;
-* the candidate block is refused in development mode before anything is scanned. This milestone did not scan it.
+| piece | file | role |
+|---|---|---|
+| the pin | `authorization.mjs` | one declaration, `FREEZE_RECORD_SHA256 = null`. Data only and **not** in any digest (it is the hash of a record that contains the source digest). `lock.mjs` and the verifier refuse it if it is anything but that declaration |
+| the decision | `lock.mjs` | `officialAuthorisation()` takes **no parameter**: `config.FROZEN`, the pin, `freeze_record.json` at a constant path (closed schema, parsed once from bytes), the preregistration at a constant path, the declared source digest, the configuration digest, the registry digest and the single registered `MCF-1` block |
+| the boundary | `driver.mjs` -> `lock.assertOfficialExecution` | the driver is the only place agent code runs. Its official branch derives authorization, seed membership, configuration, tree and stage ordering from committed state; every field of its input that names authority is only compared |
+| ordering evidence | `lock.mjs` receipt chain | `experiments/mcf1/data/official/<pin16>/receipts.json`, one file, replaced atomically |
 
-The design is not frozen. A later, separately authorised freeze must produce a record whose hashes match the
-corrected source and configuration, and a separate commit must pin that record's hash.
+Current state: `config.FROZEN` is false, the pin is `null`, no freeze record exists and no block is registered. Every
+official entry point refuses at its first guard, including a direct driver invocation, a forged context, an injected
+executor or registry, and `stageAdmit({policy:'official'})`. **No R2 path can scan the candidate range.**
+
+What the driver checks (official policy, before anything else is loaded)
+
+1. the input has exactly the documented keys; `freezeSha256` equals the pin (an echo, not authority);
+2. the record, preregistration, configuration, source and registry digests recomputed now equal the record's, and the
+   record's approved values equal the values implemented in `config.mjs`;
+3. the seed is a member of the registered block (registry decision `REPRODUCTION` and inside the block's list);
+4. `configSeed`/`configIndex` equal the approved study configuration;
+5. the conformed tree is verified with **plain reads only** (`verifyTreeReadOnly`); `IN.tree` must be that directory.
+   No official path (orchestrator, driver, lock) can build, repair or delete the tree: a missing or corrupt tree is
+   refused, and `prepare_tree.mjs` is the separate, single-process, non-official way to (re)build it;
+6. the environment generated from the verified tree equals the approved configuration (`envidentity.mjs`);
+7. Stage V needs a valid Q receipt that lists the seed; Stage O needs a valid V receipt that lists the seed and is linked
+   to the current Q receipt.
+
+**Receipt lineage.** Each receipt binds the frozen identity (record, preregistration, configuration, sources, registry,
+tree, admitted list, study configuration), its own stage and the hash of its upstream receipt. The three receipts live
+in one chain file that is replaced atomically (write a temporary file, flush, rename), under an exclusive lock file.
+Completing Q clears V and O and completing V clears O in that same replacement, so no state with a downstream receipt of
+an older upstream can exist; re-running a stage that reproduces an identical receipt changes nothing. A downstream
+stage never relies on file existence: it re-validates hashes, identity and the upstream link. An interrupted update
+leaves either the old chain or a lock file; **any lock file, truncated chain or hash mismatch is refused (fail
+closed)**, and the lock is removed only by a person after checking that no orchestrator is running.
+
+**Limits, stated.** Receipts are integrity and ordering evidence, not secrets. A determined local editor who changes
+`lock.mjs`, the registry data or a receipt can forge a consistent state: that is *detected* (every binding can be
+recomputed and is recorded outside the working tree), not prevented. Not claimed: protection against preloaded modules,
+a replaced Node binary, rewritten git history, or full control of the machine.
+
+**Environment representation.** The study configuration (`100000 / 1 / accepted 100026`, adopted from development and
+disclosed as such) is bound by an explicit canonical representation (`envidentity.mjs`): closed schema, integers as
+integers, every other number as its IEEE-754 bytes, the embedding `Map` as an ordered array, constants and graph
+included, one digest per section. A generic `JSON.stringify` of the configuration object would silently turn the
+embedding `Map` into `{}`; the verifier demonstrates that and proves every parameter changes the digest.
+
+The design is not frozen. A later, separately authorised sequence (scan, block registration, preregistration text,
+freeze record, pin commit) is required before anything official can run.
 
 ## Stages and files
 
@@ -154,19 +193,26 @@ corrected source and configuration, and a separate commit must pin that record's
 
 | file | role |
 |---|---|
-| `config.mjs` | constants, ledger, seed policy, official gate |
-| `inventory.mjs`, `admission.mjs`, `episodes.mjs`, `driver.mjs` | engine (unchanged by R1; pinned by the verifier) |
+| `config.mjs` | constants, ledger, seed policy, study configuration (no authority) |
+| `authorization.mjs` | the pin (data only) |
+| `lock.mjs` | `officialAuthorisation`, `assertOfficialExecution`, read-only tree verification, receipt chain, source digest |
+| `envidentity.mjs` | explicit canonical representation and digest of the study environment |
+| `inventory.mjs`, `admission.mjs`, `episodes.mjs`, `driver.mjs` | engine (the driver enforces the lock; pinned by the verifier) |
 | `validity.mjs` | rules, pair class, exploration indicator, manifests |
 | `frame.mjs` | the complete-cluster frame, reconciliation, exclusion table |
 | `analyze.mjs` | scores, metrics, selector, interpretation, `verifyAnalysis` |
-| `orchestrate.mjs` | stage assembly, retry policy, preflight, context lock, CLI |
-| `verify_mcf1.mjs` | gates and source mutants |
-| `data/` | git-ignored output directory for development runs |
+| `orchestrate.mjs` | stage assembly, retry policy, preflight, context lock, receipts, CLI |
+| `prepare_tree.mjs` | non-official, single-process (re)build of the conformed tree |
+| `verify_mcf1.mjs`, `verify_r2.mjs` | harness gates with source mutants; R2 lock gates, adversarial matrix and mutants |
+| `data/` | git-ignored output directory (development runs; official artifacts and receipts under `data/official/`) |
+
 
 ## Running (development seeds only)
 
 ```bash
 node experiments/mcf1/verify_mcf1.mjs
+node experiments/mcf1/verify_r2.mjs
+node experiments/registry/verify_registry.js
 ```
 
 Development mode is confined to the exploratory domain (raw seeds 1,100,000,000 to 1,100,199,999). The verifier

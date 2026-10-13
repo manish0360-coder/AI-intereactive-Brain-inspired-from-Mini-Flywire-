@@ -1,5 +1,5 @@
 // ==========================================================
-// MCF-1 Phase 1 — constants, approval status and the official-stage gate
+// MCF-1 Phase 1 — constants, approval status and the study configuration
 // ==========================================================
 // MCF-1 asks one narrow question about the frozen B2-conformed agent: at node 10 for goal 12,
 // does a restored prior episode on the reliable (rather than the unreliable) of two matched
@@ -12,11 +12,12 @@
 //     no sampling-based inference and no generalisation beyond the frame.
 //   * Every design choice below carries a status.  APPROVED_FOR_IMPLEMENTATION means the user
 //     approved the value and the harness implements it; it is NOT a freeze.  Only a freeze record
-//     (APPROVED statuses, matching hashes, and a record hash pinned in OFFICIAL_AUTHORIZATION by a
+//     (APPROVED statuses, matching hashes, and a record hash pinned in authorization.mjs by a
 //     separate authorised commit) can unlock an official stage.
 //   * This harness registers no seed, consumes no confirmatory seed and runs no official
-//     experiment.  `assertOfficialAllowed` refuses while FROZEN is false and while the pinned
-//     freeze-record hash is null; a synthetic or test-only record can therefore never authorise.
+//     experiment.  The decision lives in lock.mjs (`officialAuthorisation`), which reads only committed
+//     state; this module holds data and helpers and no authority.  While the pin is null a synthetic or
+//     test-only record can never authorise anything.
 //
 // Everything here is read-only with respect to H1-R and the seed registry.
 // ==========================================================
@@ -61,6 +62,38 @@ export const BLOCK = Object.freeze({
 // development-only base configuration (below the held-out floor, unconsumed; accepted seed 100026)
 export const DEV_BASE_CONFIG = Object.freeze({ configSeed: 100000, configIndex: 1, acceptedSeed: 100026, status: 'DEVELOPMENT' });
 
+// The study configuration: the environment an official run executes.  It is the development configuration ADOPTED
+// by decision (the census and fidelity passes were run on it), and it is disclosed as such: `adoptedFromDevelopment`.
+// Everything that can change the experiment is bound, not only the seed: provenance, the goal, the six registered
+// frame-edge reliabilities (exact doubles, disclosed in plain numbers) and the digest of the explicit canonical
+// representation of the WHOLE environment (envidentity.mjs: both reliability vectors, 20 x 32 embeddings, acceptance
+// record, the environment module's frozen constants and the graph), with one digest per section so that a mismatch
+// names what changed.  The verifier recomputes every value from both the repository and the conformed-tree copy of
+// env.js and proves they agree.
+export const STUDY_CONFIGURATION = Object.freeze({
+  seed: 100000, index: 1, acceptedSeed: 100026, rejectedBeforeAcceptance: 26,
+  adoptedFromDevelopment: true, adoptedFrom: 'DEV_BASE_CONFIG',
+  goal: 12,
+  frameEdgeReliabilities: Object.freeze({
+    '10-6': 0.9185002863872797, '10-13': 0.9150888603413477, '10-9': 0.9182312041288242,
+    '10-11': 0.31437050411477685, '9-12': 0.2715426693670452, '11-12': 0.28061404754407704,
+  }),
+  environment: Object.freeze({
+    schema: 'mcf1.env/1',
+    sha256: '76c141f8d5d4a1cb7a17ed42b5969e21e124dc90e93684aee5fbc24fd6a56257',
+    sections: Object.freeze({
+      identity: '845a913450df028b4defb06f04911b008aac800d39dad85401da8b2f6c6205fe',
+      selection: '12fcf25c6ee37e4b19643f338dc6f40c973fc281b543d07609133290247344ae',
+      pPhase1: '80856be20b111f42e220eda72b71c016c39e7e6d0b8eb605d6664b3f598b49f2',
+      pPhase2: 'a2e247ed6ec12c4cc73ef5fcb94348364641615a6949dd56529fdfa14cf92a7e',
+      embedding: '78612ed05d0f77af2685ef6b5db7d86ba297ce24c1a3167dd6380c994a6a4698',
+      acceptance: '49153d340e18f25081f3f365564426824c8afbffc074dd1cd9a619fffa3c8066',
+      constants: '3b367d94cb24f92a4651a7fc3d5824c84c08f7e7210624fec3bd58a2e9a56f1e',
+      graph: '7facf9ca1b89d9c6ac678e389860b0414976da836f7d7c0507d34d27173e7551',
+    }),
+  }),
+});
+
 // ---- exploratory provenance that must stay reserved (immutable disclosure) ----
 export const DEV_BLOCK = Object.freeze({
   id: 'EXPLORATORY_DEV_BLOCK', start: 1_100_000_000, count: 2400,
@@ -95,17 +128,13 @@ export const APPROVALS = Object.freeze({
   claimWording:        Object.freeze({ value: 'memory-guided first-edge routing within the single specified simulation context and the enumerated frame; no planning, probability understanding, goal-conditioned recall, generalization, general cognition or general performance benefit', status: 'APPROVED_FOR_IMPLEMENTATION' }),
   completeClusterFrame: Object.freeze({ value: 'complete-cluster', status: 'APPROVED_FOR_IMPLEMENTATION', note: 'a seed enters the frame only if all six condition/twin runs are present and valid at Stage V and Stage O; one frame for every metric' }),
   v6Handling:          Object.freeze({ value: 'diagnostic', status: 'APPROVED_FOR_IMPLEMENTATION', note: 'V6 pair-class and signed score are reported; V6 never decides frame membership' }),
+  studyConfiguration:  Object.freeze({ value: STUDY_CONFIGURATION, status: 'APPROVED_FOR_IMPLEMENTATION',
+    note: 'the development configuration 100000 / 1 / accepted 100026, adopted and disclosed as adopted from development; identity, provenance, goal, frame-edge reliabilities and the whole-environment digest are bound' }),
 });
 export const FROZEN = false;
-export const REQUIRED_FOR_OFFICIAL = Object.freeze(['samplingDesign', 'primaryDescriptive', 'practicalThreshold', 'minimumValidFrame', 'seedBlock', 'scanLength', 'budgets', 'instrumentHaltCount', 'registryRecordScope', 'claimWording', 'completeClusterFrame', 'v6Handling']);
-/**
- * The only way an official stage can ever be unlocked is a commit that pins the SHA-256 of the genuine freeze
- * record here.  While this is null no record, genuine or synthetic, can authorise anything.
- */
-export const OFFICIAL_AUTHORIZATION = Object.freeze({
-  freezeRecordSha256: null,
-  note: 'null: no freeze record is authorised.  A separate, explicitly authorised commit sets this after the design freeze.',
-});
+export const REQUIRED_FOR_OFFICIAL = Object.freeze(['samplingDesign', 'primaryDescriptive', 'practicalThreshold', 'minimumValidFrame', 'seedBlock', 'scanLength', 'budgets', 'instrumentHaltCount', 'registryRecordScope', 'claimWording', 'completeClusterFrame', 'v6Handling', 'studyConfiguration']);
+// The pin that authorises official stages is NOT here: it lives alone in authorization.mjs (a data-only module that
+// no digest covers) and is read only by lock.mjs.  Nothing in this module can unlock an official stage.
 
 // ---- helpers ----
 export function canonicalJson(x) {
@@ -124,7 +153,7 @@ export const hashTextNormalised = (text) => sha256(String(text).replace(/\r\n/g,
 /**
  * Which raw seeds may a run touch?
  *   development : only the already-exploratory development domain (never the candidate block)
- *   official    : only through a verified freeze record; the harness never builds one
+ *   official    : never decided here; official membership is the registered MCF-1 block, checked by lock.mjs
  */
 export function seedPolicy(mode, raw) {
   if (!Number.isSafeInteger(raw) || raw < 0 || raw >= M32) return { ok: false, why: 'raw seed must be an integer in [0, 2^32)' };
@@ -134,50 +163,16 @@ export function seedPolicy(mode, raw) {
     if (raw < DEVELOPMENT_DOMAIN.lo || raw > DEVELOPMENT_DOMAIN.hi) return { ok: false, why: 'development runs are confined to the exploratory development domain' };
     return { ok: true };
   }
-  if (mode === 'official') return { ok: false, why: 'official mode requires a verified freeze record (assertOfficialAllowed)' };
+  if (mode === 'official') return { ok: false, why: 'official mode is decided by lock.mjs (committed authorization and the registered block), never by seed policy' };
   return { ok: false, why: `unknown mode ${mode}` };
 }
 
-const officialFail = (m) => { throw new Error(`MCF-1 official stage refused: ${m}`); };
-
 /**
- * Step 1 of the official gate, run BEFORE any inventory build, admission scan or execution: a freeze record must
- * exist, say frozen:true, not be test-only, carry APPROVED status for every required decision, and its own hash must
- * equal OFFICIAL_AUTHORIZATION.freezeRecordSha256.  While that pin is null (this milestone) nothing passes.
- * `pinnedFreezeSha256` exists only so the verifier can prove the structural checks are not vacuous.
+ * The configuration object whose hash goes into every manifest and into the freeze record.  It deliberately contains
+ * no authorization pin: the record that binds this hash is itself pinned, so a pin in here would be a cycle.
  */
-export function assertFreezeAuthorised(freeze, { pinnedFreezeSha256 = OFFICIAL_AUTHORIZATION.freezeRecordSha256 } = {}) {
-  if (FROZEN !== true && !(freeze && freeze.frozen === true)) officialFail('the design is not frozen (config FROZEN=false and no freeze record)');
-  if (!freeze || typeof freeze !== 'object') officialFail('no freeze record supplied');
-  if (freeze.schema !== 'mcf1.freeze/1') officialFail('freeze record has the wrong schema');
-  if (freeze.frozen !== true) officialFail('freeze record does not say frozen:true');
-  if (freeze.testOnly === true) officialFail('freeze record is marked testOnly');
-  for (const k of REQUIRED_FOR_OFFICIAL) {
-    const a = freeze.approvals && freeze.approvals[k];
-    if (!a || a.status !== 'APPROVED' || a.value === null || a.value === undefined) officialFail(`decision "${k}" is not APPROVED in the freeze record`);
-  }
-  if (typeof pinnedFreezeSha256 !== 'string' || pinnedFreezeSha256.length < 12) officialFail('no freeze record is authorised: OFFICIAL_AUTHORIZATION.freezeRecordSha256 is not set');
-  if (hashObject(freeze) !== pinnedFreezeSha256) officialFail('the freeze record hash does not equal OFFICIAL_AUTHORIZATION.freezeRecordSha256');
-  return true;
-}
-
-/**
- * Step 2: the record's hashes must equal the actual inputs.  Official stages are refused unless BOTH steps pass.
- * No authorised record exists in this milestone.
- */
-export function assertOfficialAllowed(freeze, actual = {}, opts = {}) {
-  assertFreezeAuthorised(freeze, opts);
-  for (const k of ['preregistrationSha256', 'configSha256', 'inventorySha256', 'admittedSha256', 'treeDigest']) {
-    if (typeof freeze[k] !== 'string' || freeze[k].length < 12) officialFail(`freeze record lacks ${k}`);
-    if (typeof actual[k] !== 'string') officialFail(`the actual ${k} was not supplied for comparison`);
-    if (actual[k] !== freeze[k]) officialFail(`${k} does not match the freeze record`);
-  }
-  return true;
-}
-
-/** The configuration object whose hash goes into every manifest. */
 export function configSnapshot() {
   return { schema: SCHEMA, study: STUDY, frame: FRAME, design: DESIGN, budgets: BUDGETS, block: BLOCK, devBaseConfig: DEV_BASE_CONFIG,
-    devBlock: DEV_BLOCK, exposure: EXPOSURE, developmentDomain: DEVELOPMENT_DOMAIN, approvals: APPROVALS, frozen: FROZEN,
-    officialAuthorization: OFFICIAL_AUTHORIZATION };
+    studyConfiguration: STUDY_CONFIGURATION, devBlock: DEV_BLOCK, exposure: EXPOSURE, developmentDomain: DEVELOPMENT_DOMAIN,
+    approvals: APPROVALS, frozen: FROZEN };
 }

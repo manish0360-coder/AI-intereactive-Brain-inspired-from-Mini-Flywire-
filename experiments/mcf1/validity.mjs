@@ -20,7 +20,7 @@
 import { FRAME, DESIGN, BUDGETS, canonicalJson, sha256 } from './config.mjs';
 import { isGraphEdge, CONTENT_NODES, REGISTERED_BRAIN_HASHES } from './episodes.mjs';
 import { makeRng } from '../../instrumentation/rng.js';
-import { streamSeeds, trajectorySeed } from '../registry/typed.js';
+import { streamSeeds, trajectorySeed } from '../registry/typed_v2.js';
 
 export const RULES = Object.freeze({
   RUN: { cls: 'hard',       scope: 'stage', stage: 'Q,V,O', title: 'a run stayed non-operational after one deterministic retry in an isolated process; the stage halts (an operational fault never silently drops a seed)' },

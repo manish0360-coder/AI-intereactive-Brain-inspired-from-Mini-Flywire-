@@ -62,10 +62,9 @@ files are reported as warnings (strict mode fails them).
 | historical verifiers | `m33`, `m34`, `m35`, `m38`, `m39`, `research/preregistrations/verify_m33*.js`, `verify_m34`, `verify_m37`, `verify_m38_p0`, `verify_m39`, `verify_m40` | byte-protected or time-pinned evidence of closed milestones |
 | Study 2 | `experiments/study2/governance.mjs`, `verify_driver.js`, `verify_study2_execution.js` | executed and frozen |
 | H1-R adjacent | `research/preregistrations/h1r_v1_checks/pilot_registry_status.mjs` | closed with H1-R |
-| MCF-1 harness | `experiments/mcf1/{admission,driver,inventory,orchestrate,validity,verify_mcf1}` | migrating changes engine files pinned by the MCF-1 verifier; that belongs to the harness follow-up milestone |
 
-The smallest follow-up that achieves global enforcement is the MCF-1 harness migration to `typed_v2.js`
-(removes six entries); the historical entries stay by design.
+The MCF-1 harness migrated to `typed_v2.js` in M-MCF1-R2 (the six `experiments/mcf1/*` entries were removed; the list
+is now 17 historical entries and can only shrink). The historical entries stay by design.
 
 ## Running
 

@@ -16,12 +16,15 @@
 //   PRNG stream non-overlap      yes within the admitted set, by the clauses above
 //   statistical independence     NOT claimed or implied (span separation is not statistical independence)
 // ==========================================================
-import { trajectory, trajectorySeed } from '../registry/typed.js';
+import { trajectory, trajectorySeed } from '../registry/typed_v2.js';
 import { STUDY, M32, BUDGETS, canonicalJson, sha256 } from './config.mjs';
-import { USED_STREAMS, STREAMS, position, spansIntersect, derivedSeeds } from './inventory.mjs';
+import { USED_STREAMS, STREAMS, position, spansIntersect, derivedSeeds, registrySnapshotOf } from './inventory.mjs';
 
-/** same body and canonical form as inventory.registrySnapshot(), computed from a registry object */
-const registryDigest = (registry) => sha256(canonicalJson({ records: registry.records, heldOut: registry.heldOut, authorizations: registry.authorizations }));
+/**
+ * The registry state this scan was made against: the same reservation view as the inventory descriptor (this study's
+ * own block excluded), so the summary hash is invariant under registering the very list the scan produced.
+ */
+const registryDigest = (registry) => registrySnapshotOf(registry).sha256;
 
 /**
  * Ascending scan.  `inventory` comes from buildInventory().  Returns the admitted list, its hash and a full
