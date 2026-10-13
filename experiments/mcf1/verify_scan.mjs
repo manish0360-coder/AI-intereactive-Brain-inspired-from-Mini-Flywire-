@@ -128,6 +128,41 @@ function mcf1BlockProblems(blocks, { study = CFG.STUDY, window = CFG.BLOCK, conf
   }
   return p;
 }
+// ---------------- lodged admission evidence: integrity, and its link to a registered block ----------------
+// experiments/mcf1/scan_records/<start>-<length>/admitted.json is the tracked, byte-exact copy of the M-SCAN result that a block
+// record's `artifact` field points at.  Nothing here pins a literal: the file is checked against its own sidecar and arithmetic, and
+// a registered block of the study must be exactly what that evidence admits (members, list hash, count, exclusions).  So a block
+// whose data differs from its evidence cannot be committed with every gate green, and an edited evidence file is noticed.
+function evidenceProblems({ text, sidecar, blocks = [], window = CFG.BLOCK, study = CFG.STUDY }) {
+  if (typeof text !== 'string') return ['the lodged admission result is missing'];
+  const p = [], int = Number.isSafeInteger;
+  if (typeof sidecar !== 'string' || sidecar.trim() !== H(text)) p.push('the lodged result does not match its SHA-256 sidecar');
+  let a; try { a = JSON.parse(text); } catch (e) { return [...p, 'the lodged result is not JSON']; }
+  if (a === null || typeof a !== 'object' || a.summary === null || typeof a.summary !== 'object' || !Array.isArray(a.admitted) || !Array.isArray(a.rejected)) return [...p, 'the lodged result is malformed'];
+  const s = a.summary, adm = a.admitted, rej = a.rejected, lo = window.start, hi = window.start + window.scanLength - 1;
+  if (s.schema !== 'mcf1.admission/1' || s.study !== study || s.category !== 'registered') p.push('the lodged result is not a registered admission of this study');
+  if (s.start !== window.start || s.length !== window.scanLength || s.lastRaw !== hi || s.scanned !== window.scanLength) p.push('the lodged result does not cover exactly the configured window');
+  const ascending = (arr) => arr.every((v, i) => int(v) && v >= lo && v <= hi && (i === 0 || v > arr[i - 1]));
+  const rejRaw = rej.map(r => (r !== null && typeof r === 'object' && int(r.raw) ? r.raw : NaN));
+  if (!ascending(adm)) p.push('the admitted list is not strictly ascending seeds inside the window');
+  if (!ascending(rejRaw)) p.push('the rejected seeds are not strictly ascending seeds inside the window');
+  if (adm.length + rej.length !== window.scanLength || new Set([...adm, ...rejRaw]).size !== window.scanLength) p.push('admitted and rejected seeds do not account for every scanned seed exactly once');
+  if (s.admitted !== adm.length || s.rejected !== rej.length) p.push('the summary counts differ from the lists');
+  if (s.admittedSha256 !== H(adm.join(','))) p.push('the admitted-list hash does not match the admitted list');
+  if (a.sha256 !== H(CFG.canonicalJson(s))) p.push('the result hash does not match its summary');
+  if (rej.some(r => r === null || typeof r !== 'object' || !Array.isArray(r.reasons) || r.reasons.length === 0)) p.push('a rejection carries no reason');
+  for (const b of (Array.isArray(blocks) ? blocks : []).filter(x => x !== null && typeof x === 'object' && x.study === study)) {
+    if (!int(b.lo) || !int(b.hi) || b.hi < b.lo || b.hi - b.lo + 1 > window.scanLength || !Array.isArray(b.excluded)) { p.push('the registered block is malformed'); continue; }
+    const skip = new Set(b.excluded), members = [];
+    for (let v = b.lo; v <= b.hi; v++) if (!skip.has(v)) members.push(v);
+    if (members.length !== adm.length || members.some((v, i) => v !== adm[i])) p.push('the registered block members are not exactly the admitted list of the lodged evidence');
+    if (b.listSha256 !== s.admittedSha256) p.push('the registered block list hash is not the lodged admitted-list hash');
+    if (b.count !== adm.length) p.push('the registered block count is not the lodged admitted count');
+    const inHull = rejRaw.filter(v => v > b.lo && v < b.hi);
+    if (inHull.length !== b.excluded.length || inHull.some((v, i) => v !== b.excluded[i])) p.push('the registered block exclusions are not the lodged rejected seeds inside its hull');
+  }
+  return p;
+}
 function withTmpdir(dir, fn) {
   const keys = ['TEMP', 'TMP', 'TMPDIR'], old = Object.fromEntries(keys.map(k => [k, process.env[k]]));
   for (const k of keys) process.env[k] = dir;
@@ -264,6 +299,55 @@ def('a.blockstate', 'SCAN-A', 'P2 structural invariants of the committed block d
     ['a second export', `${head}[]);\nexport const X = Object.freeze([]);\n`], ['unquoted keys', `${head}[{ study: 'MCF-1' }]);\n`], ['another export name', 'export const BLOCKS = Object.freeze([]);\n'], ['no file', '']]) {
     cells.push([`refuse: module text with ${name}`, dataOnlyBlocks(text) === null, '']);
   }
+  return cellsResult(cells);
+});
+
+def('a.evidence', 'SCAN-A', 'lodged admission evidence: a result that matches its sidecar, covers exactly the configured window and accounts for every seed once is accepted, alone or with the block it admits; a sidecar, window, schema, ordering, accounting, hash or reason defect, and a block whose members, list hash, count or exclusions differ from the evidence, are rejected', async () => {
+  const W = { start: SCAN.start, scanLength: 12 };
+  const rejectedAt = [W.start + 3, W.start + 9];
+  const admitted = [];
+  for (let i = 0; i < W.scanLength; i++) if (!rejectedAt.includes(W.start + i)) admitted.push(W.start + i);
+  const mkEv = (mut = (e) => e, { rehashed = true } = {}) => {
+    const e = { summary: { schema: 'mcf1.admission/1', study: CFG.STUDY, category: 'registered', start: W.start, length: W.scanLength, lastRaw: W.start + W.scanLength - 1, scanned: W.scanLength, admitted: admitted.length, rejected: rejectedAt.length },
+      admitted: [...admitted], rejected: rejectedAt.map(raw => ({ raw, reasons: ['R3_ENV_SLOTS'] })), sha256: '' };
+    mut(e);
+    return rehashed ? rehash(e) : e;
+  };
+  const textOf = (e) => JSON.stringify(e);
+  const good = mkEv(), goodText = textOf(good), goodSide = `${H(goodText)}\n`;
+  const block = blockOf(admitted, CFG.STUDY);
+  const cells = [];
+  const accept = (name, args) => { const q = evidenceProblems({ window: W, ...args }); cells.push([`accept: ${name}`, q.length === 0, q.join('; ')]); };
+  const refuse = (name, args, re) => { const q = evidenceProblems({ window: W, ...args }); cells.push([`refuse: ${name}`, q.length > 0 && q.some(x => re.test(x)), q.join('; ') || 'accepted']); };
+  const withEv = (e, extra = {}) => { const t = textOf(e); return { text: t, sidecar: `${H(t)}\n`, ...extra }; };
+  accept('consistent evidence alone', { text: goodText, sidecar: goodSide });
+  accept('evidence with the block it admits', { text: goodText, sidecar: goodSide, blocks: [block] });
+  accept('a rejected seed at the window edge lies outside the hull and is not an exclusion', (() => { const e = mkEv((x) => { x.admitted = x.admitted.slice(1); x.rejected.unshift({ raw: W.start, reasons: ['H1R_RECORDS_AND_DOMAIN'] }); x.summary.admitted -= 1; x.summary.rejected += 1; }); return withEv(e, { blocks: [blockOf(e.admitted, CFG.STUDY)] }); })());
+  accept('another study\'s block is not linked to this evidence', { text: goodText, sidecar: goodSide, blocks: [{ ...blockOf([W.start + 100, W.start + 101], 'OTHER-1') }] });
+  refuse('the file is missing', { text: null, sidecar: null }, /is missing/);
+  refuse('the sidecar differs', { text: goodText, sidecar: `${'0'.repeat(64)}\n` }, /sidecar/);
+  refuse('the sidecar is absent', { text: goodText, sidecar: null }, /sidecar/);
+  refuse('the content is not JSON', { text: 'not json', sidecar: `${H('not json')}\n` }, /not JSON/);
+  refuse('another window', withEv(mkEv((e) => { e.summary.start += 1; })), /exactly the configured window/);
+  refuse('another study', withEv(mkEv((e) => { e.summary.study = 'OTHER-1'; })), /not a registered admission of this study/);
+  refuse('another category', withEv(mkEv((e) => { e.summary.category = 'development'; })), /not a registered admission of this study/);
+  refuse('admitted out of order', withEv(mkEv((e) => { e.admitted.reverse(); })), /not strictly ascending/);
+  refuse('an admitted seed outside the window', withEv(mkEv((e) => { e.admitted[0] = W.start - 1; })), /not strictly ascending seeds inside the window/);
+  refuse('a seed both admitted and rejected', withEv(mkEv((e) => { e.rejected[0].raw = e.admitted[0]; })), /every scanned seed exactly once|rejected seeds are not strictly ascending/);
+  refuse('a seed unaccounted for', withEv(mkEv((e) => { e.admitted.pop(); e.summary.admitted -= 1; })), /every scanned seed exactly once/);
+  refuse('a summary count that differs', withEv(mkEv((e) => { e.summary.admitted += 1; })), /summary counts differ/);
+  refuse('an admitted-list hash that differs', withEv(mkEv((e) => { e.summary.admittedSha256 = '0'.repeat(64); }, { rehashed: false })), /admitted-list hash/);
+  refuse('a result hash that differs', withEv((() => { const e = mkEv(); e.sha256 = '0'.repeat(64); return e; })()), /result hash/);
+  refuse('a rejection without a reason', withEv(mkEv((e) => { e.rejected[0].reasons = []; })), /carries no reason/);
+  const mutBlock = (o) => ({ ...block, ...o });
+  const without = (v) => admitted.filter(x => x !== v);
+  const asBlock = (members, o = {}) => ({ ...blockOf(members, CFG.STUDY), ...o });
+  refuse('a block that dropped a member (hash and count recomputed)', { text: goodText, sidecar: goodSide, blocks: [asBlock(without(admitted[4]))] }, /members are not exactly the admitted list/);
+  refuse('a block that added a rejected seed', { text: goodText, sidecar: goodSide, blocks: [asBlock([...admitted, rejectedAt[0]].sort((a, b) => a - b))] }, /members are not exactly the admitted list/);
+  refuse('a block with another list hash', { text: goodText, sidecar: goodSide, blocks: [mutBlock({ listSha256: '1'.repeat(64) })] }, /list hash is not the lodged/);
+  refuse('a block with another count', { text: goodText, sidecar: goodSide, blocks: [mutBlock({ count: block.count + 1 })] }, /count is not the lodged/);
+  refuse('a block with other exclusions', { text: goodText, sidecar: goodSide, blocks: [mutBlock({ excluded: [rejectedAt[0]] })] }, /exclusions are not the lodged/);
+  refuse('a block hull larger than the window', { text: goodText, sidecar: goodSide, blocks: [mutBlock({ lo: W.start - 5, hi: W.start + 40, excluded: [] })] }, /block is malformed/);
   return cellsResult(cells);
 });
 
@@ -578,8 +662,8 @@ const ONLY = process.env.SCAN_ONLY ? new RegExp(process.env.SCAN_ONLY) : null;
 
 // the real repository's committed state (not a copy): the scan authorization is null or EXACTLY the approved candidate
 // window; the block module is data only and satisfies the P2 structural invariants (empty, or at most one well-formed,
-// registered, unexecuted MCF-1 block of the implemented configuration inside the configured window); the only content of
-// data/scan is the documented admission artifacts
+// registered, unexecuted MCF-1 block of the implemented configuration inside the configured window); the lodged admission
+// evidence is intact and equal to any registered block; the only content of data/scan is the documented admission artifacts
 {
   const auth = REAL_AUTH_TEXT;
   const blocksText = fs.readFileSync(path.join(REPO, 'experiments/registry/trajectory_blocks.js'), 'utf8');
@@ -592,14 +676,19 @@ const ONLY = process.env.SCAN_ONLY ? new RegExp(process.env.SCAN_ONLY) : null;
   const authorized = decl === approved;
   const parsedBlocks = dataOnlyBlocks(blocksText);
   const blockProblems = parsedBlocks === null ? ['the block module is not data only (an Object.freeze of a JSON array)'] : mcf1BlockProblems(parsedBlocks);
+  // the lodged evidence (tracked, byte-exact): required once the scan is authorized, and then it must be intact and equal to any block
+  const evDir = path.join(REPO, 'experiments/mcf1/scan_records', `${CFG.BLOCK.start}-${CFG.BLOCK.scanLength}`);
+  const evFile = path.join(evDir, 'admitted.json'), evSide = path.join(evDir, 'admitted.json.sha256');
+  const evText = fs.existsSync(evFile) ? fs.readFileSync(evFile, 'utf8') : null, evSidecar = fs.existsSync(evSide) ? fs.readFileSync(evSide, 'utf8') : null;
+  const evidenceIssues = evText === null && !authorized ? [] : evidenceProblems({ text: evText, sidecar: evSidecar, blocks: parsedBlocks || [] });
   const state = {
     scanAuthorizationIsNullOrExactlyApproved: decl === 'null' || authorized, pinNull: /export const FREEZE_RECORD_SHA256 = null;/.test(auth), shape: LCK.pinModuleShapeOk(auth),
-    blocksStructural: blockProblems.length === 0, scanFilesAreDocumented: scanFiles.every(f => ALLOWED.test(f)),
+    blocksStructural: blockProblems.length === 0, lodgedEvidenceConsistent: evidenceIssues.length === 0, scanFilesAreDocumented: scanFiles.every(f => ALLOWED.test(f)),
     noScanFilesBeforeAuthorization: authorized || scanFiles.length === 0,
     gateMatchesState: authorized ? same(LCK.scanAuthorisation(), { start: REAL_CANDIDATE.start, length: REAL_CANDIDATE.length }) : rx(/no scan authorization is set/, await refusal(() => LCK.scanAuthorisation())),
     candidateIsConfig: CFG.BLOCK.start === REAL_CANDIDATE.start && CFG.BLOCK.scanLength === REAL_CANDIDATE.length,
   };
-  check('SCAN-A', `the committed state: scan authorization ${authorized ? 'is exactly the approved candidate window' : 'is null'}, pin null, template intact, block module data only with the P2 structural invariants, scan outputs limited to the documented artifacts, candidate window unchanged in config`, Object.values(state).every(Boolean), JSON.stringify({ ...state, blockProblems }));
+  check('SCAN-A', `the committed state: scan authorization ${authorized ? 'is exactly the approved candidate window' : 'is null'}, pin null, template intact, block module data only with the P2 structural invariants, lodged admission evidence intact and equal to any registered block, scan outputs limited to the documented artifacts, candidate window unchanged in config`, Object.values(state).every(Boolean), JSON.stringify({ ...state, blockProblems, evidenceIssues }));
 }
 
 {
