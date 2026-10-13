@@ -24,4 +24,4 @@
 // read from the environment, a flag or a caller argument.
 // ==========================================================
 export const FREEZE_RECORD_SHA256 = null;
-export const SCAN_AUTHORIZATION = null;
+export const SCAN_AUTHORIZATION = { start: 1500000000, length: 4000 };
