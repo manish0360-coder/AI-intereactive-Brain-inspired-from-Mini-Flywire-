@@ -364,8 +364,12 @@ console.log('\n== G13 repository hygiene ==');
   check('G13', 'no clock or Math.random in analysis, frame, orchestration, validity, admission, inventory, config', banned.length === 0, banned.join(','));
   const touched = git('diff', '--name-only', 'HEAD').split('\n').filter(Boolean);
   check('G13', 'H1-R files and the registry code and data are untouched (only the two documented registry documents may differ)', !touched.some(f => /^experiments\/(h1r|registry)\//.test(f) && !R2_REGISTRY_EDITS.includes(f)));
-  const regFiles = fs.existsSync(path.join(HERE, 'data')) ? fs.readdirSync(path.join(HERE, 'data')).filter(f => f !== '.gitignore') : [];
-  check('G13', 'no registry entry, freeze record or output artifact exists in the harness data directory', regFiles.length === 0, regFiles.join(' '));
+  // the only content permitted in data/ is the documented admission-scan output of the authorized candidate window
+  // (M-SCAN): no development output, no official output, no receipt, no registry entry, no freeze record
+  const walkData = (d, base = '') => (fs.existsSync(d) ? fs.readdirSync(d, { withFileTypes: true }).flatMap(e => (e.isDirectory() ? walkData(path.join(d, e.name), `${base}${e.name}/`) : [`${base}${e.name}`])) : []);
+  const SCAN_OUTPUT = /^scan\/1500000000-4000\/(admitted\.json(\.sha256)?|block\/block_candidate\.json|review\/[A-Za-z0-9_.-]+\.json)$/;
+  const regFiles = walkData(path.join(HERE, 'data')).filter(f => f !== '.gitignore' && !SCAN_OUTPUT.test(f));
+  check('G13', 'no registry entry, freeze record, receipt or development/official output exists in the harness data directory (only the documented admission-scan artifacts of the authorized window are permitted)', regFiles.length === 0, regFiles.join(' '));
 }
 
 // ==========================================================

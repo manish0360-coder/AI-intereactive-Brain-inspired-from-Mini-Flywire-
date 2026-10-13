@@ -200,8 +200,10 @@ corrupted input is refused by its own guard and leaves no file; an interrupted w
 block plus a lock that makes a retry refuse; and the destination policy refuses the registry directory, the registry
 module, the repository tree and anything outside `experiments/mcf1/data` and the temporary directory.
 
-**Not done here, by design.** Nothing in this milestone scans `1,500,000,000 + 4,000`, sets the authorization,
-registers a block or writes `trajectory_blocks.js`. `renderBlocksModule` produces the text a later, separately
+**Not done here, by design.** Nothing in M-SCAN-1 itself scanned `1,500,000,000 + 4,000`, set the authorization,
+registered a block or wrote `trajectory_blocks.js`. The user's separate decision (M-SCAN) set
+`SCAN_AUTHORIZATION` to exactly that window and ran the admission scan; its output lives in the git-ignored
+`data/scan/1500000000-4000/`. Registration remains a separate, unauthorized step. `renderBlocksModule` produces the text a later, separately
 authorized commit would hold in that module; no code path writes it there. The scan itself is a gate for the user.
 
 ## Stages and files

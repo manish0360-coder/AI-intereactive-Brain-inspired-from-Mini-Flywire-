@@ -38,6 +38,7 @@ const REAL_CANDIDATE = { start: 1_500_000_000, length: 4000 };      // never aut
 const SCAN = { start: 1_600_000_000, length: 48 };                  // the synthetic scan window of every world
 const SCAN_LITERAL = `{ start: ${SCAN.start}, length: ${SCAN.length} }`;
 const D0 = 1_100_000_000;
+const REAL_AUTH_FILE = path.join(REPO, 'experiments/mcf1/authorization.mjs'), REAL_AUTH_TEXT = fs.readFileSync(REAL_AUTH_FILE, 'utf8');
 const W_OK = { start: 1_600_000_100, length: 40 };     // 40 of 40 admitted, disjoint from SCAN
 const W_REJ = { start: 1_600_000_200, length: 64 };    // 63 of 64 admitted (seed ...254 rejected: H1R_RECORDS_AND_DOMAIN), disjoint from SCAN
 
@@ -55,6 +56,8 @@ function makeWorld(o = {}) {
   if (authorization !== null && /1_?500_?000_?000/.test(String(authorization))) throw new Error('verifier defect: the real candidate window must never be authorized, even in a copy');
   const root = path.join(ROOT, `w${++worldN}`);
   for (const rel of COPY_FILES) { const to = path.join(root, rel); fs.mkdirSync(path.dirname(to), { recursive: true }); fs.copyFileSync(path.join(REPO, rel), to); }
+  // a world always starts from the NULL authorization, whatever the real repository holds (it may be authorized)
+  { const p = path.join(root, 'experiments/mcf1/authorization.mjs'); fs.writeFileSync(p, fs.readFileSync(p, 'utf8').replace(/export const SCAN_AUTHORIZATION = [^;]*;/, 'export const SCAN_AUTHORIZATION = null;')); }
   applyEdit(root, ['experiments/mcf1/config.mjs', '  start: 1_500_000_000,\n  scanLength: 4000,', `  start: ${SCAN.start},\n  scanLength: ${SCAN.length},`]);
   if (authorization !== null) applyEdit(root, ['experiments/mcf1/authorization.mjs', 'export const SCAN_AUTHORIZATION = null;', `export const SCAN_AUTHORIZATION = ${authorization};`]);
   for (const e of [...edits, ...MUT_EDITS]) applyEdit(root, e);
@@ -149,11 +152,11 @@ def('a.active', 'SCAN-A', 'positive control in a synthetic world: the authorizat
   const dev = await refusal(() => S.stageAdmit({ policy: 'development', start: SCAN.start, length: SCAN.length, inventory: {} }));
   const real = await refusal(() => S.stageAdmit({ policy: 'development', start: REAL_CANDIDATE.start, length: REAL_CANDIDATE.length, inventory: {} }));
   const off = await refusal(() => S.stageAdmit({ policy: 'candidate', start: SCAN.start, length: SCAN.length }));
-  const realFile = fs.readFileSync(path.join(REPO, 'experiments/mcf1/authorization.mjs'), 'utf8');
+  const realFile = fs.readFileSync(REAL_AUTH_FILE, 'utf8');
   return win.start === SCAN.start && win.length === SCAN.length && r1.summary.category === 'registered' && r1.summary.start === SCAN.start && r1.summary.length === SCAN.length
     && r1.admitted.length > 40 && same(r1.admitted, direct.admitted) && r1.sha256 === direct.sha256 && r1.sha256 === r2.sha256 && r1.scan.policy === 'candidate'
     && rx(/candidate confirmatory block is not authorised/, dev) && rx(/confined to the exploratory development domain|candidate confirmatory block/, real) && rx(/takes no window/, off)
-    && /export const SCAN_AUTHORIZATION = null;/.test(realFile);
+    && realFile === REAL_AUTH_TEXT;                                    // the verifier never touches the real authorization
 });
 def('a.cli', 'SCAN-A', 'real process: the CLI cannot start a candidate scan: development over the candidate window, the candidate policy, a window flag, a missing or unknown policy, an environment hint and the orchestrator all refuse and create nothing', async () => {
   const w = await mk();
@@ -485,16 +488,26 @@ async function runTest(t) {
 }
 const ONLY = process.env.SCAN_ONLY ? new RegExp(process.env.SCAN_ONLY) : null;
 
-// the real repository's committed state (not a copy)
+// the real repository's committed state (not a copy): the scan authorization is null or EXACTLY the approved candidate
+// window; the block module is empty; the only content of data/scan is the documented admission artifacts
 {
-  const auth = fs.readFileSync(path.join(REPO, 'experiments/mcf1/authorization.mjs'), 'utf8');
+  const auth = REAL_AUTH_TEXT;
   const blocksText = fs.readFileSync(path.join(REPO, 'experiments/registry/trajectory_blocks.js'), 'utf8');
+  const decl = (auth.match(/export const SCAN_AUTHORIZATION = ([^;]*);/) || [])[1] || '';
+  const approved = `{ start: ${REAL_CANDIDATE.start}, length: ${REAL_CANDIDATE.length} }`;
+  const scanDir = path.join(REPO, 'experiments/mcf1/data/scan');
+  const walk = (d, base = '') => fs.existsSync(d) ? fs.readdirSync(d, { withFileTypes: true }).flatMap(e => (e.isDirectory() ? walk(path.join(d, e.name), `${base}${e.name}/`) : [`${base}${e.name}`])) : [];
+  const ALLOWED = /^1500000000-4000\/(admitted\.json(\.sha256)?|block\/block_candidate\.json|review\/[A-Za-z0-9_.-]+\.json)$/;
+  const scanFiles = walk(scanDir);
+  const authorized = decl === approved;
   const state = {
-    scanNull: /export const SCAN_AUTHORIZATION = null;/.test(auth), pinNull: /export const FREEZE_RECORD_SHA256 = null;/.test(auth), shape: LCK.pinModuleShapeOk(auth),
-    blocksEmpty: /export const TRAJECTORY_BLOCKS = Object.freeze\(\[\]\);/.test(blocksText), noScanDir: !fs.existsSync(path.join(REPO, 'experiments/mcf1/data/scan')),
-    refuses: rx(/no scan authorization is set/, await refusal(() => LCK.scanAuthorisation())), candidateIsConfig: CFG.BLOCK.start === REAL_CANDIDATE.start && CFG.BLOCK.scanLength === REAL_CANDIDATE.length,
+    scanAuthorizationIsNullOrExactlyApproved: decl === 'null' || authorized, pinNull: /export const FREEZE_RECORD_SHA256 = null;/.test(auth), shape: LCK.pinModuleShapeOk(auth),
+    blocksEmpty: /export const TRAJECTORY_BLOCKS = Object.freeze\(\[\]\);/.test(blocksText), scanFilesAreDocumented: scanFiles.every(f => ALLOWED.test(f)),
+    noScanFilesBeforeAuthorization: authorized || scanFiles.length === 0,
+    gateMatchesState: authorized ? same(LCK.scanAuthorisation(), { start: REAL_CANDIDATE.start, length: REAL_CANDIDATE.length }) : rx(/no scan authorization is set/, await refusal(() => LCK.scanAuthorisation())),
+    candidateIsConfig: CFG.BLOCK.start === REAL_CANDIDATE.start && CFG.BLOCK.scanLength === REAL_CANDIDATE.length,
   };
-  check('SCAN-A', 'the committed state: scan authorization null, pin null, template intact, block module empty, no scan output, candidate window unchanged in config', Object.values(state).every(Boolean), JSON.stringify(state));
+  check('SCAN-A', `the committed state: scan authorization ${authorized ? 'is exactly the approved candidate window' : 'is null'}, pin null, template intact, block module empty, scan outputs limited to the documented artifacts, candidate window unchanged in config`, Object.values(state).every(Boolean), JSON.stringify(state));
 }
 
 {
