@@ -366,5 +366,28 @@ try {
   mutant('A5.straddling-interval-is-inconclusive-not-non-inferior', straddle === 'INCONCLUSIVE');
 }
 
+// ============ E: lodged evidence is internally consistent and bound to the frozen design ============
+{
+  const dir = path.join(HERE, 'results');
+  const found = ['C', 'D'].filter(b => fs.existsSync(path.join(dir, `summary_block${b}.json`)));
+  if (found.length === 0) console.log('SKIP E: no lodged XFER-2 summaries');
+  for (const b of found) {
+    const s = JSON.parse(fs.readFileSync(path.join(dir, `summary_block${b}.json`), 'utf8'));
+    const size = C.BLOCKS[b].hi - C.BLOCKS[b].lo + 1;
+    check(`E.${b}.bound-to-the-frozen-design`, s.designDigest === C.designDigest() && s.schema === `${C.SCHEMA}.summary` && s.status === C.STATUS && s.block === b);
+    check(`E.${b}.world-allocation-and-integrity`, s.valid === true && s.worlds.length === size && s.excludedFraction <= C.RULES.maxExcludedFraction && /^[0-9a-f]{64}$/.test(s.manifestDigest));
+    if (!s.perWorld) { check(`E.${b}.not-interpreted-without-integrity`, !s.valid); continue; }
+    const d = (ref, x) => s.worlds.map(w => s.perWorld[w].arms[ref][0] - s.perWorld[w].arms[x][0]);
+    const benefit = pairedSummary(d('REAL', 'COLD'), C.BOOTSTRAP);
+    check(`E.${b}.benefit-of-real-recomputes`, Math.abs(benefit.mean - s.benefit.REAL.mean) < 1e-9 && benefit.ci.lower === s.benefit.REAL.ci.lower && benefit.ci.upper === s.benefit.REAL.ci.upper);
+    const status = benefit.ci.lower >= C.MARGIN.minRealBenefit ? 'OK' : benefit.ci.lower > 0 ? 'NOT_INTERPRETABLE_LOW_BENEFIT' : 'DID_NOT_REPRODUCE';
+    check(`E.${b}.status-follows-the-frozen-rule`, s.reproduction === status);
+    const pairs = { REAL_NR_vs_REAL: ['REAL', 'REAL_NR'], SAT_NR_vs_REAL_NR: ['REAL_NR', 'SAT_NR'], GEN_NR_vs_REAL_NR: ['REAL_NR', 'GEN_NR'], REV_NR_vs_REAL_NR: ['REAL_NR', 'REV_NR'], ENTRY_NR_vs_SAT_NR: ['SAT_NR', 'ENTRY_NR'], SAT_NOENTRY_NR_vs_SAT_NR: ['SAT_NR', 'SAT_NOENTRY_NR'] };
+    check(`E.${b}.every-classification-recomputes`, Object.entries(pairs).every(([k, [ref, x]]) => { const t = pairedSummary(d(ref, x), C.BOOTSTRAP); return t.ci.lower === s.classifications[k].shortfall.ci.lower && t.ci.upper === s.classifications[k].shortfall.ci.upper && C.classifyShortfall(t.ci) === s.classifications[k].class; }));
+    check(`E.${b}.verdict-follows-the-declared-rules`, s.verdict === C.interpret({ status, satVsRealNR: s.classifications.SAT_NR_vs_REAL_NR.class, genVsRealNR: s.classifications.GEN_NR_vs_REAL_NR.class, realVsRealNR: s.classifications.REAL_NR_vs_REAL.class, entryVsSat: s.classifications.ENTRY_NR_vs_SAT_NR.class, noentryVsSat: s.classifications.SAT_NOENTRY_NR_vs_SAT_NR.class }));
+    check(`E.${b}.no-prediction-passes-without-status-ok`, status === 'OK' || s.predictions.every(p => p.pass === false));
+  }
+}
+
 console.log(`\nRESULT: ${passed} checks passed, ${failed} failed; mutants caught ${caught}, missed ${missed}`);
 if (failed || missed) { console.log(fails.join('\n')); process.exit(1); }
