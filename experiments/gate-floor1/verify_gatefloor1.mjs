@@ -27,7 +27,7 @@ import { buildTree } from '../h1r/build_tree.mjs';
 import { generateAcceptedStream } from '../m7/env.js';
 import { configSeed as typedConfigSeed, config as typedConfig } from '../registry/typed_v2.js';
 import * as X1 from '../xfer1/config.mjs';
-import { prng } from '../xfer1/stats.mjs';
+import { prng, pairedSummary } from '../xfer1/stats.mjs';
 import { makeGraph, entryStore } from '../xfer2/controls.mjs';
 import { DEVELOPMENT_DOMAIN, DEV_BLOCK, BLOCK } from '../mcf1/config.mjs';
 import * as C from './config.mjs';
@@ -415,6 +415,72 @@ const hopProblems = (mod) => {
   check('D8.no-new-threshold-and-no-declared-criterion-changed', C.DIAGNOSTICS.finalHop.thresholds === null && C.DIAGNOSTICS.finalHop.status === 'DESCRIPTIVE_NOT_CONFIRMATORY'
     && C.MARGIN.delta === 25 && C.MARGIN.minBenefit === 50 && C.MARGIN.maxAttemptDrop === 0.05 && C.WORLDS_N === 160 && C.CLAIMS.length === 5 && C.TC_FLOOR === 1
     && C.WORLD_START === 232 && C.ARM_ORDER.length === 5 && JSON.stringify(C.GOALS) === '[8,12,16,19]');
+}
+
+// ============ E: the recorded block F results (consistency with the frozen rules; recomputed from the committed files) ============
+{
+  const R = path.join(HERE, 'results');
+  const files = ['summary_blockF.json', 'perworld_blockF.json', 'manifest_blockF.json', 'exploratory_edgemix.json'];
+  if (!files.every(f => fs.existsSync(path.join(R, f)))) console.log('E: no recorded results in this tree (freeze state); section skipped');
+  else {
+    const rd = (f) => JSON.parse(fs.readFileSync(path.join(R, f), 'utf8'));
+    const S = rd('summary_blockF.json'), PW = rd('perworld_blockF.json'), MF = rd('manifest_blockF.json'), EX = rd('exploratory_edgemix.json');
+    const near = (a, b) => Math.abs(a - b) < 1e-9;
+    const sameCi = (a, b) => near(a.lower, b.lower) && near(a.upper, b.upper);
+    const W = PW.worlds;
+    const reach = (a, w) => PW.perWorld[w].arms[a].goalReaches;
+    const diffs = (t, r, ws = W, k = 'goalReaches') => ws.map(w => PW.perWorld[w].arms[t][k] - PW.perWorld[w].arms[r][k]);
+    // E1 provenance
+    const { digest, ...rest } = MF;
+    check('E1.manifest-digest-recomputes-and-binds-the-design', C.hashObject(rest) === digest && S.manifestDigest === digest && PW.manifestDigest === digest && MF.designDigest === C.designDigest() && S.designDigest === C.designDigest() && PW.designDigest === C.designDigest());
+    check('E1.manifest-lists-960-sessions-pins-the-tree-and-records-no-exclusion', Object.keys(MF.sessions).length === 960 && MF.exclusions === 0 && MF.tree.mainSha256 === C.TREE.floorMainSha256 && MF.tree.parentMainSha256 === C.TREE.parentMainSha256);
+    check('E1.summary-is-valid-with-160-worlds-and-no-exclusion', S.valid === true && S.worlds.length === 160 && S.excludedFraction === 0 && S.problems.length === 0);
+    check('E1.decision-digest-is-still-the-reviewed-one', C.decisionDigest() === C.REVIEWED_DECISION_DIGEST);
+    // E2 world allocation
+    const cacheFile = fs.readdirSync(path.join(HERE, 'data')).find(f => f.startsWith(`stream_${C.CONFIG_START}_${C.WORLDS_TOTAL}_`));
+    const stream = cacheFile ? JSON.parse(fs.readFileSync(path.join(HERE, 'data', cacheFile), 'utf8')) : null;
+    check('E2.worlds-are-exactly-232-to-391-with-forty-per-goal-and-the-stream-configurations',
+      JSON.stringify(W) === JSON.stringify(Array.from({ length: 160 }, (_, i) => 232 + i)) && C.GOALS.every(g => W.filter(w => PW.perWorld[w].goal === g).length === 40)
+      && (stream === null || W.every(w => PW.perWorld[w].configSeed === stream[w].acceptedSeed && PW.perWorld[w].goal === stream[w].goal)));
+    // E3 benefits and classifications recomputed
+    const bOk = C.ARM_ORDER.filter(a => a !== 'COLD').every(a => { const b = pairedSummary(diffs(a, 'COLD'), X1.BOOTSTRAP); return near(b.mean, S.benefit[a].mean) && sameCi(b.ci, S.benefit[a].ci); });
+    check('E3.benefits-and-intervals-recompute-from-the-per-world-file', bOk);
+    const sf = (ref, x) => pairedSummary(diffs(ref, x), X1.BOOTSTRAP);
+    const sReal = sf('REAL', 'COLD_FLOOR'), sEntry = sf('ENTRY_NR', 'COLD_FLOOR');
+    check('E3.shortfall-classes-recompute', C.classifyShortfall(sReal.ci) === S.classifications.REAL_vs_COLD_FLOOR.class && C.classifyShortfall(sEntry.ci) === S.classifications.ENTRY_NR_vs_COLD_FLOOR.class
+      && sameCi(sReal.ci, S.classifications.REAL_vs_COLD_FLOOR.shortfall.ci) && sameCi(sEntry.ci, S.classifications.ENTRY_NR_vs_COLD_FLOOR.shortfall.ci));
+    // E4 claims by the declared rules, from the per-world file
+    const bF = pairedSummary(diffs('COLD_FLOOR', 'COLD'), X1.BOOTSTRAP), bR = pairedSummary(diffs('REAL', 'COLD'), X1.BOOTSTRAP), bE = pairedSummary(diffs('ENTRY_NR', 'COLD'), X1.BOOTSTRAP);
+    const okc = (c) => c === 'NON_INFERIOR' || c === 'EXCEEDS';
+    const c1 = bF.ci.lower >= C.MARGIN.minBenefit, i1 = bR.ci.lower >= C.MARGIN.minBenefit, i2 = bE.ci.lower >= C.MARGIN.minBenefit;
+    const c2 = i1 && okc(C.classifyShortfall(sReal.ci)), c3 = i2 && okc(C.classifyShortfall(sEntry.ci));
+    const harmG = C.GOALS.filter(g => pairedSummary(diffs('COLD_FLOOR', 'COLD', W.filter(w => PW.perWorld[w].goal === g)), X1.BOOTSTRAP).ci.upper < 0);
+    const att = pairedSummary(diffs('COLD_FLOOR', 'COLD', W, 'attemptSuccess'), X1.BOOTSTRAP);
+    const c4 = harmG.length === 0 && !(att.ci.lower < -C.MARGIN.maxAttemptDrop);
+    const floorOk = W.every(w => ['COLD_FLOOR', 'REAL_FLOOR'].every(a => { const f = PW.perWorld[w].arms[a].floor; return f && f.notLegal === 0 && f.lowered === 0 && f.maxRaise <= 100 + 1e-9; }))
+      && W.every(w => ['COLD', 'REAL', 'ENTRY_NR'].every(a => PW.perWorld[w].arms[a].floor === null));
+    check('E4.claims-recompute-from-the-per-world-file-by-the-declared-rules', S.claims.C1 === c1 && S.claims.C2 === c2 && S.claims.C3 === c3 && S.claims.C4 === c4 && S.claims.C5 === (floorOk && S.claims.auditFailureCount === 0)
+      && S.instrument.I1_REAL === (i1 ? 'OK' : 'x') && S.instrument.I2_ENTRY_NR === (i2 ? 'OK' : 'x'), JSON.stringify({ c1, c2, c3, c4, floorOk }));
+    check('E4.verdict-and-predictions-follow-the-declared-rules', S.verdict === C.interpret({ i1: 'OK', i2: 'OK', c1, benefitFloorLower: bF.ci.lower, realClass: C.classifyShortfall(sReal.ci), entryClass: C.classifyShortfall(sEntry.ci), harm: !c4, audit: S.claims.C5 })
+      && S.predictions.every(p => p.pass === (p.observed === p.predicted)) && C.PREDICTIONS.every(p => S.predictions.some(q => q.id === p.id)));
+    // E5 delivery per arm: episodes at the first agent call
+    check('E5.starting-stores-are-the-declared-ones', W.every(w => PW.perWorld[w].arms.COLD.episodesAtStart === 0 && PW.perWorld[w].arms.COLD_FLOOR.episodesAtStart === 0
+      && PW.perWorld[w].arms.REAL.episodesAtStart === PW.perWorld[w].realEpisodes && PW.perWorld[w].arms.REAL_FLOOR.episodesAtStart === PW.perWorld[w].realEpisodes && PW.perWorld[w].arms.ENTRY_NR.episodesAtStart > 0));
+    // E6 final-hop diagnostic recomputed from per-world summaries
+    const sums = (a, ws = W) => ws.map(w => PW.perWorld[w].arms[a].finalHop);
+    const poolOk = C.ARM_ORDER.every(a => { const p = poolArm(sums(a)), q = S.finalHop.byArm.all[a]; return p.attempts === q.attempts && p.failures === q.failures && p.successes === q.successes && p.zeroSuccessSessions === q.zeroSuccessSessions && near(p.failuresPerSuccess, q.failuresPerSuccess) && p.maxFailureRun === q.maxFailureRun; });
+    check('E6.final-hop-pooled-statistics-recompute-per-arm', poolOk);
+    const cmpOk = C.DIAGNOSTICS.finalHop.comparisons.every(([a, b]) => {
+      const c = pairedRetryComparison(sums(a), sums(b), X1.BOOTSTRAP), q = S.finalHop.comparisons.find(x => x.arm === a && x.reference === b).groups.all;
+      return near(c.difference, q.difference) && sameCi(c.ci, q.ci) && intervalDirection(c.ci) === q.direction;
+    });
+    check('E6.final-hop-paired-comparisons-recompute', cmpOk);
+    const dirs = S.finalHop.floorRetryLoad;
+    check('E6.wording-guard-follows-the-readings', S.finalHop.routingCapabilityWordingAllowed === !Object.values(dirs).includes('HIGHER') && S.finalHop.status === 'DESCRIPTIVE_NOT_CONFIRMATORY');
+    check('E6.zero-success-sessions-are-reported-by-arm-and-the-worlds-remain', S.finalHop.zeroSuccess.all.COLD.zeroSuccessSessions === sums('COLD').filter(x => x.zeroSuccess).length && S.worlds.length === 160);
+    // E7 the exploratory file stays exploratory
+    check('E7.exploratory-follow-up-is-labelled-and-not-used-by-any-claim', EX.status === 'EXPLORATORY_POST_HOC' && !/exploratory/i.test(JSON.stringify(S.claims)));
+  }
 }
 
 // ============ M: mutants ============

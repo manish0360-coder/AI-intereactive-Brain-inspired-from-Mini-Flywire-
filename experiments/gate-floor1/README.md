@@ -1,6 +1,6 @@
 # GATE-FLOOR-1 — does a guarded goal-entry floor reproduce the episode benefit without episodes?
 
-**Status: DEVELOPMENT / EXPLORATORY.** Not preregistered in the repository's formal sense. No registered or held-out seed,
+**Status: DEVELOPMENT / EXPLORATORY. Block F (160 worlds) executed under the frozen design (freeze `d5dbac1`); results in [results/RESULTS.md](results/RESULTS.md).** Not preregistered in the repository's formal sense. No registered or held-out seed,
 no production file, and no earlier experiment is modified. Substrate: the M7-conformed B2 tree that H1-R, MCF-1, XFER-1 and
 XFER-2 use — **not** current `main.js`.
 

@@ -1,0 +1,333 @@
+{
+ "status": "EXPLORATORY_POST_HOC",
+ "arms": {
+  "COLD": {
+   "attempts": 17210,
+   "observedSuccessShare": 0.7148169668797211,
+   "expectedSuccessShareFromEdgesUsed": 0.7115076519827067,
+   "impliedFailuresPerSuccess": 0.4054662619767653,
+   "observedFailuresPerSuccess": 0.3989595187774346,
+   "shareViaMostReliableGoalEdge": 0.23126089482858803,
+   "shareViaLeastReliableGoalEdge": 0.2966298663567693,
+   "meanDistinctGoalEdgesUsedPerSession": 2.375,
+   "consistencyZ": 0.9582340359856425
+  },
+  "COLD_FLOOR": {
+   "attempts": 58223,
+   "observedSuccessShare": 0.6307988252065335,
+   "expectedSuccessShareFromEdgesUsed": 0.6339508163678068,
+   "impliedFailuresPerSuccess": 0.5774094364756178,
+   "observedFailuresPerSuccess": 0.5852914749366951,
+   "shareViaMostReliableGoalEdge": 0.17429538155024646,
+   "shareViaLeastReliableGoalEdge": 0.38357693694931555,
+   "meanDistinctGoalEdgesUsedPerSession": 4,
+   "consistencyZ": -1.5788278424582953
+  },
+  "REAL": {
+   "attempts": 41418,
+   "observedSuccessShare": 0.7019894731759139,
+   "expectedSuccessShareFromEdgesUsed": 0.70022249360317,
+   "impliedFailuresPerSuccess": 0.4281175042724632,
+   "observedFailuresPerSuccess": 0.42452278589853826,
+   "shareViaMostReliableGoalEdge": 0.2585590805929789,
+   "shareViaLeastReliableGoalEdge": 0.32780433627891253,
+   "meanDistinctGoalEdgesUsedPerSession": 3.3,
+   "consistencyZ": 0.7848895383873086
+  },
+  "ENTRY_NR": {
+   "attempts": 56817,
+   "observedSuccessShare": 0.6267138356477815,
+   "expectedSuccessShareFromEdgesUsed": 0.6304585299809595,
+   "impliedFailuresPerSuccess": 0.5861471491712563,
+   "observedFailuresPerSuccess": 0.5956245787463491,
+   "shareViaMostReliableGoalEdge": 0.16905151627153844,
+   "shareViaLeastReliableGoalEdge": 0.3874720594188359,
+   "meanDistinctGoalEdgesUsedPerSession": 4,
+   "consistencyZ": -1.8492501785868543
+  },
+  "REAL_FLOOR": {
+   "attempts": 60985,
+   "observedSuccessShare": 0.6370254980732967,
+   "expectedSuccessShareFromEdgesUsed": 0.6385434636150283,
+   "impliedFailuresPerSuccess": 0.5660641083672423,
+   "observedFailuresPerSuccess": 0.5697958763417333,
+   "shareViaMostReliableGoalEdge": 0.2073132737558416,
+   "shareViaLeastReliableGoalEdge": 0.3786996802492416,
+   "meanDistinctGoalEdgesUsedPerSession": 4,
+   "consistencyZ": -0.7802794226670307
+  }
+ },
+ "pairedVsCOLD": {
+  "COLD_FLOOR": {
+   "worlds": 143,
+   "weightedMeanPDifference": {
+    "n": 143,
+    "mean": -0.08014193097461235,
+    "median": -0.054947476987037724,
+    "sd": 0.23724679005288668,
+    "positive": 60,
+    "negative": 83,
+    "zero": 0,
+    "ci": {
+     "lower": -0.11854563636270958,
+     "upper": -0.040853622863717375
+    }
+   }
+  },
+  "REAL": {
+   "worlds": 143,
+   "weightedMeanPDifference": {
+    "n": 143,
+    "mean": 0.02432295642128947,
+    "median": 0,
+    "sd": 0.2511286026411444,
+    "positive": 68,
+    "negative": 59,
+    "zero": 16,
+    "ci": {
+     "lower": -0.015958219793732006,
+     "upper": 0.06558419792078773
+    }
+   }
+  },
+  "ENTRY_NR": {
+   "worlds": 143,
+   "weightedMeanPDifference": {
+    "n": 143,
+    "mean": -0.08202575438090591,
+    "median": -0.052189977807442944,
+    "sd": 0.23685299895411388,
+    "positive": 61,
+    "negative": 82,
+    "zero": 0,
+    "ci": {
+     "lower": -0.12060303922420716,
+     "upper": -0.042880690153227326
+    }
+   }
+  },
+  "REAL_FLOOR": {
+   "worlds": 143,
+   "weightedMeanPDifference": {
+    "n": 143,
+    "mean": -0.06279663473903552,
+    "median": -0.049197617894863876,
+    "sd": 0.24800952750842906,
+    "positive": 54,
+    "negative": 89,
+    "zero": 0,
+    "ci": {
+     "lower": -0.10402019021427,
+     "upper": -0.021539560796858516
+    }
+   }
+  }
+ },
+ "goalEdgesMeanP": 0.7479747181452985,
+ "storeSize": {
+  "empty store (0 episodes)": {
+   "worlds": 18,
+   "benefitFloor": {
+    "n": 18,
+    "mean": 128.88888888888889,
+    "median": 133,
+    "sd": 101.81117983733064,
+    "positive": 15,
+    "negative": 3,
+    "zero": 0,
+    "ci": {
+     "lower": 82.83333333333333,
+     "upper": 173.11111111111111
+    }
+   },
+   "benefitReal": {
+    "n": 18,
+    "mean": 0,
+    "median": 0,
+    "sd": 0,
+    "positive": 0,
+    "negative": 0,
+    "zero": 18,
+    "ci": {
+     "lower": 0,
+     "upper": 0
+    }
+   },
+   "benefitEntry": {
+    "n": 18,
+    "mean": 147.27777777777777,
+    "median": 166.5,
+    "sd": 109.1878066644028,
+    "positive": 15,
+    "negative": 3,
+    "zero": 0,
+    "ci": {
+     "lower": 98.11111111111111,
+     "upper": 195.61111111111111
+    }
+   },
+   "shortfallRealMinusFloor": {
+    "n": 18,
+    "mean": -128.88888888888889,
+    "median": -133,
+    "sd": 101.81117983733064,
+    "positive": 3,
+    "negative": 15,
+    "zero": 0,
+    "ci": {
+     "lower": -173.11111111111111,
+     "upper": -82.83333333333333
+    }
+   },
+   "shortfallEntryMinusFloor": {
+    "n": 18,
+    "mean": 18.38888888888889,
+    "median": 0,
+    "sd": 66.33173217103906,
+    "positive": 5,
+    "negative": 3,
+    "zero": 10,
+    "ci": {
+     "lower": -7.055555555555555,
+     "upper": 52.111111111111114
+    }
+   }
+  },
+  "at least 1 episode": {
+   "worlds": 142,
+   "benefitFloor": {
+    "n": 142,
+    "mean": 155.66901408450704,
+    "median": 161.5,
+    "sd": 100.27322403610819,
+    "positive": 137,
+    "negative": 5,
+    "zero": 0,
+    "ci": {
+     "lower": 138.80281690140845,
+     "upper": 171.69718309859155
+    }
+   },
+   "benefitReal": {
+    "n": 142,
+    "mean": 118.11971830985915,
+    "median": 118,
+    "sd": 97.82923915661736,
+    "positive": 126,
+    "negative": 16,
+    "zero": 0,
+    "ci": {
+     "lower": 101.71126760563381,
+     "upper": 133.67605633802816
+    }
+   },
+   "benefitEntry": {
+    "n": 142,
+    "mean": 145.45774647887325,
+    "median": 149,
+    "sd": 104.24742956434056,
+    "positive": 133,
+    "negative": 9,
+    "zero": 0,
+    "ci": {
+     "lower": 128.17605633802816,
+     "upper": 162.6267605633803
+    }
+   },
+   "shortfallRealMinusFloor": {
+    "n": 142,
+    "mean": -37.54929577464789,
+    "median": -43.5,
+    "sd": 85.75220589059728,
+    "positive": 50,
+    "negative": 92,
+    "zero": 0,
+    "ci": {
+     "lower": -51.69718309859155,
+     "upper": -23.443661971830984
+    }
+   },
+   "shortfallEntryMinusFloor": {
+    "n": 142,
+    "mean": -10.211267605633802,
+    "median": 0,
+    "sd": 49.28680444093331,
+    "positive": 16,
+    "negative": 27,
+    "zero": 99,
+    "ci": {
+     "lower": -18.661971830985916,
+     "upper": -2.471830985915493
+    }
+   }
+  },
+  "at least 20 episodes": {
+   "worlds": 106,
+   "benefitFloor": {
+    "n": 106,
+    "mean": 153.19811320754718,
+    "median": 153,
+    "sd": 103.41340244827995,
+    "positive": 101,
+    "negative": 5,
+    "zero": 0,
+    "ci": {
+     "lower": 133.60377358490567,
+     "upper": 172.95283018867926
+    }
+   },
+   "benefitReal": {
+    "n": 106,
+    "mean": 125.66037735849056,
+    "median": 127,
+    "sd": 99.38926710210885,
+    "positive": 94,
+    "negative": 12,
+    "zero": 0,
+    "ci": {
+     "lower": 106.4245283018868,
+     "upper": 144.66981132075472
+    }
+   },
+   "benefitEntry": {
+    "n": 106,
+    "mean": 139.35849056603774,
+    "median": 132,
+    "sd": 107.96385538725848,
+    "positive": 97,
+    "negative": 9,
+    "zero": 0,
+    "ci": {
+     "lower": 118.98113207547169,
+     "upper": 160.11320754716982
+    }
+   },
+   "shortfallRealMinusFloor": {
+    "n": 106,
+    "mean": -27.537735849056602,
+    "median": -33,
+    "sd": 82.37731709619862,
+    "positive": 41,
+    "negative": 65,
+    "zero": 0,
+    "ci": {
+     "lower": -43.41509433962264,
+     "upper": -11.981132075471699
+    }
+   },
+   "shortfallEntryMinusFloor": {
+    "n": 106,
+    "mean": -13.839622641509434,
+    "median": 0,
+    "sd": 56.431861448324646,
+    "positive": 10,
+    "negative": 23,
+    "zero": 73,
+    "ci": {
+     "lower": -24.933962264150942,
+     "upper": -3.660377358490566
+    }
+   }
+  }
+ }
+}
