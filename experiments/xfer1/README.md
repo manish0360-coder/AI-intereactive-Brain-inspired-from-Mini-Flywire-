@@ -62,6 +62,27 @@ paired differences; "CI" is the seeded percentile bootstrap interval over worlds
 Contrasts D4, D6 and D8 and the three `post-A` entries in `config.mjs` were added after A was analysed; B is their
 first test. A prediction that fails in B is reported as failed.
 
+## Results
+
+See [`results/RESULTS.md`](results/RESULTS.md). Block B tested D1–D6 and all six held; D7 and D8 were declared
+open. Headline (80 worlds pooled, descriptive): persisting the episode store alone multiplies goal reaches by about
+2.1, the persisted `rewards` store lowers them, `signals` and `confidence` change nothing, and the product's default
+(persist everything) captures about a fifth of the episodic benefit.
+
+## What this does not establish
+
+* **Not reliability learning.** Donor-world episodes give about three quarters of the benefit with no gain in
+  per-attempt success; only a small, borderline increment is world-specific.
+* **Not goal-conditioned recall.** Donors share the goal and the graph; a cross-goal donor is not run.
+* **Not knowledge, as opposed to an unlocked handicap.** Episodes that cover every edge but come from no session are not
+  run, so "the stored episodes carry information" and "any edge familiarity removes the cold-start attenuation" are not
+  separated.
+* **Not HEAD.** The substrate is the M7-conformed B2 tree. HEAD `main.js` has later commits (FutureScore consumer,
+  boundary record) that are not exercised.
+* **Not persistence over long horizons or under a reliability shift.** Sessions are 1,500 calls, Phase I only.
+* **Not a test of any registered hypothesis**; it adds nothing to MCF-1's exposure ledger and does not touch its
+  configuration, seeds, registry or lock.
+
 ## Seeds and exposure ledger (this study)
 
 * Agent seeds: `1,100,100,000 + 2 w` (train) and `+ 2 w + 1` (test), w = 0..79 — inside the exploratory development
