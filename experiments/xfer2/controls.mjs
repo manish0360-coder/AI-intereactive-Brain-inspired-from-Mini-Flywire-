@@ -1,12 +1,12 @@
 // ==========================================================
 // XFER-2 — control episode stores (pure functions; no I/O, no clock, no ambient randomness)
 // ==========================================================
-// Every builder returns an array of episodes in exactly the representation the runtime persists (exportEpisodes):
+// Every builder returns an array of episodes in the representation the runtime persists (exportEpisodes):
 //   { id, source, nodes, labels, transitions:[{from,to,position,terminal}], quality, coherence, unique, diversity,
 //     timestamp, consolidationEligible }
-// `graph` = { directed:Set('a->b'), neighbors:Map(node -> sorted [nodes]), nodes:[...] }, `labelOf` = node -> label.
+// `g` = { directed:Set('a->b'), neighbors:Map(node -> sorted [nodes]), nodes:[...] }, `labelOf` = node -> label.
 // ==========================================================
-import { COVER, NR_QUALITY, REAL_POOL } from './config.mjs';
+import { SAT, NR_QUALITY, REAL_POOL, ENTRY_COUNT } from './config.mjs';
 import { prng } from '../xfer1/stats.mjs';
 
 // ---------- graph helpers ----------
@@ -53,6 +53,70 @@ export function reversedNoReplay(episodes, labelOf) {
   return episodes.map((e, i) => makeEpisode({ id: `rev_${i}`, nodes: e.nodes.slice().reverse(), labelOf, quality: NR_QUALITY, source: e.source }));
 }
 
+// ---------- balanced goal-free walks ----------
+/**
+ * Build one walk per spec ({L, simple}) over the `allowed` directed edges, balancing directed-edge usage:
+ * a walk starts on the least-used allowed edge and extends along the least-used allowed edges (seeded tie-breaks).
+ *   simple  : no repeated node;
+ *   loop    : a simple core of L-2 nodes with one immediate-reversal excursion (c -> x -> c) inserted, the pattern 91% of
+ *             the real loop episodes contain (A-B-A).
+ * Pure function of (graph, specs, allowed, seed).  Returns { episodes, use } with `use` the directed-edge usage.
+ */
+export function buildWalks(g, labelOf, specs, { allowed, seed, tag, quality }) {
+  const rnd = prng(seed);
+  const allowedList = [...allowed].sort().map(k => k.split('->').map(Number));
+  const use = new Map(allowedList.map(([a, b]) => [`${a}->${b}`, 0]));
+  const nbrs = (c) => (g.neighbors.get(c) || []).filter(v => allowed.has(`${c}->${v}`));
+  const pickMin = (cands) => {
+    let best = Infinity, tie = [];
+    for (const c of cands) { const u = use.get(`${c[0]}->${c[1]}`); if (u < best) { best = u; tie = [c]; } else if (u === best) tie.push(c); }
+    return tie[Math.floor(rnd() * tie.length)];
+  };
+  const episodes = [];
+  specs.forEach(({ L, simple }, i) => {
+    for (let attempt = 0; ; attempt++) {
+      if (attempt > 1000) throw new Error(`buildWalks: could not build walk ${i} (L=${L}, simple=${simple})`);
+      let path;
+      if (simple || L >= 4) {
+        const coreLen = simple ? L : L - 2;
+        // the start edge must allow the walk to proceed (a dead end retries with another tie-break)
+        const first = pickMin(allowedList);
+        path = [first[0], first[1]];
+        let ok = true;
+        while (path.length < coreLen) {
+          const cur = path[path.length - 1];
+          const options = nbrs(cur).filter(v => !path.includes(v)).map(v => [cur, v]);
+          if (!options.length) { ok = false; break; }
+          path.push(pickMin(options)[1]);
+        }
+        if (!ok) continue;
+        if (!simple) {
+          // insert c -> x -> c at a seeded position of the core; both directions must be allowed
+          const j = Math.floor(rnd() * path.length), c = path[j];
+          const xs = nbrs(c).filter(v => allowed.has(`${v}->${c}`)).map(v => [c, v]);
+          if (!xs.length) continue;
+          const x = pickMin(xs)[1];
+          path = [...path.slice(0, j + 1), x, c, ...path.slice(j + 1)];
+        }
+      } else {                                                         // a length-3 loop: a -> b -> a
+        const cands = allowedList.filter(([a, b]) => allowed.has(`${b}->${a}`));
+        if (!cands.length) continue;
+        const [a, b] = pickMin(cands);
+        path = [a, b, a];
+      }
+      if (path.length !== L) continue;
+      if ((new Set(path).size === path.length) !== simple) continue;
+      let valid = true;
+      for (let k = 0; k < path.length - 1; k++) if (!allowed.has(`${path[k]}->${path[k + 1]}`)) { valid = false; break; }
+      if (!valid) continue;
+      for (let k = 0; k < path.length - 1; k++) { const key = `${path[k]}->${path[k + 1]}`; use.set(key, use.get(key) + 1); }
+      episodes.push(makeEpisode({ id: `${tag}_${i}`, nodes: path, labelOf, quality: typeof quality === 'function' ? quality(simple) : quality }));
+      return;
+    }
+  });
+  return { episodes, use };
+}
+
 /** stratified, deterministic list of `count` lengths following a histogram */
 function lengthsFrom(hist, count, rnd) {
   const total = Object.values(hist).reduce((s, x) => s + x, 0), out = [];
@@ -64,55 +128,47 @@ function lengthsFrom(hist, count, rnd) {
   return out;
 }
 
+const goalEntering = (g, goal) => (g.neighbors.get(goal) || []).map(u => `${u}->${goal}`);
+
 /**
- * COVER: a goal-free, world-independent store of graph walks with balanced directed-edge usage.
- *   * `count` episodes; a fraction `simpleFraction` are simple paths (replay-eligible at quality >= .5), the rest are
- *     walks that revisit a node, as 21% of the real episodes do; lengths follow the pooled real histograms of each kind;
- *   * quality is the pooled real median of the kind (simple 0.8545, loop 0.6902);
- *   * each episode starts on the least-used directed edge and extends along least-used edges, so every directed edge
- *     reaches `minDirectedEdgeCount` (verified; the builder throws otherwise).
- * No goal is an input, no real episode is read, and the PRNG is seeded: the store is a pure function of the graph.
+ * SATURATED exposure (an UPPER BOUND, not a matched control): `count` goal-free walks, every allowed directed edge used
+ * at least `minDirectedEdgeCount` times.  World-independent when `excludeInto` is null; with `excludeInto = goal` no
+ * goal-entering transition is allowed (the non-goal gate alone).  Quality: the pooled real median of the kind, or `quality`.
  */
-export function coverStore(g, labelOf, { count = COVER.count, minCount = COVER.minDirectedEdgeCount, simpleFraction = COVER.simpleFraction, seed = COVER.seed, tag = 'cover', quality = null } = {}) {
-  const rnd = prng(seed);
+export function satStore(g, labelOf, { excludeInto = null, count = SAT.count, minCount = SAT.minDirectedEdgeCount, simpleFraction = SAT.simpleFraction, seed = SAT.seed, tag = 'sat', quality = null } = {}) {
+  const rnd = prng(seed ^ 0x9e3779b9);
   const nSimple = Math.round(count * simpleFraction), nLoop = count - nSimple;
   const simpleLens = lengthsFrom(REAL_POOL.simpleLengthHistogram, nSimple, rnd), loopLens = lengthsFrom(REAL_POOL.loopLengthHistogram, nLoop, rnd);
-  const slots = [...simpleLens.map(L => ({ L, simple: true })), ...loopLens.map(L => ({ L, simple: false }))];
-  for (let i = slots.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [slots[i], slots[j]] = [slots[j], slots[i]]; }
-  const directedList = [...g.directed].sort().map(k => k.split('->').map(Number));
-  const use = new Map([...g.directed].map(k => [k, 0]));
-  const pickMin = (cands) => {
-    let best = Infinity, tie = [];
-    for (const c of cands) { const u = use.get(`${c[0]}->${c[1]}`); if (u < best) { best = u; tie = [c]; } else if (u === best) tie.push(c); }
-    return tie[Math.floor(rnd() * tie.length)];
-  };
-  const episodes = [];
-  slots.forEach(({ L, simple }, i) => {
-    for (let attempt = 0; ; attempt++) {
-      if (attempt > 500) throw new Error('coverStore: could not build a walk');
-      const first = pickMin(directedList);
-      const path = [first[0], first[1]];
-      let ok = true;
-      while (path.length < L) {
-        const cur = path[path.length - 1];
-        const last = path.length === L - 1;
-        let options = (g.neighbors.get(cur) || []).map(v => [cur, v]);
-        if (simple) options = options.filter(([, v]) => !path.includes(v));
-        else if (last && new Set(path).size === path.length) options = options.filter(([, v]) => path.includes(v));   // force the revisit
-        if (!options.length) { ok = false; break; }
-        path.push(pickMin(options)[1]);
-      }
-      if (!ok || path.length !== L) continue;
-      const isSimple = new Set(path).size === path.length;
-      if (isSimple !== simple) continue;
-      for (let k = 0; k < path.length - 1; k++) { const key = `${path[k]}->${path[k + 1]}`; use.set(key, use.get(key) + 1); }
-      episodes.push(makeEpisode({ id: `${tag}_${i}`, nodes: path, labelOf, quality: quality !== null ? quality : (simple ? REAL_POOL.simpleQualityMedian : REAL_POOL.loopQualityMedian) }));
-      return;
-    }
-  });
+  const specs = [...simpleLens.map(L => ({ L, simple: true })), ...loopLens.map(L => ({ L, simple: false }))];
+  for (let i = specs.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [specs[i], specs[j]] = [specs[j], specs[i]]; }
+  const allowed = new Set(g.directed);
+  if (excludeInto !== null) for (const k of goalEntering(g, excludeInto)) allowed.delete(k);
+  const { episodes, use } = buildWalks(g, labelOf, specs, { allowed, seed, tag,
+    quality: quality !== null ? quality : (simple => (simple ? REAL_POOL.simpleQualityMedian : REAL_POOL.loopQualityMedian)) });
   const lowest = Math.min(...use.values());
-  if (lowest < minCount) throw new Error(`coverStore: lowest directed-edge count ${lowest} < ${minCount}`);
+  if (lowest < minCount) throw new Error(`satStore: lowest allowed directed-edge count ${lowest} < ${minCount}`);
   return episodes;
+}
+
+/**
+ * MATCHED generic store of a world: the same number of episodes, the same length of every episode, the same
+ * simple / loop-containing kind of every episode, hence the same total number of transitions, as the world's real store;
+ * edges are placed by balanced least-used selection with no reference to the goal or to any real path.  Quality is the
+ * replay-off value.  The manipulated variable relative to REAL_NR is the PLACEMENT of the same exposure budget (edge
+ * identity, direction and goal termination together).
+ */
+export function genStore(g, labelOf, realEpisodes, { seed, tag = 'gen' }) {
+  const specs = realEpisodes.map(e => ({ L: e.nodes.length, simple: new Set(e.nodes).size === e.nodes.length }));
+  const allowed = new Set(g.directed);
+  return buildWalks(g, labelOf, specs, { allowed, seed, tag, quality: NR_QUALITY }).episodes;
+}
+
+/** only goal-entering transitions: `ENTRY_COUNT` two-node episodes [u, goal] for every neighbour u of the goal */
+export function entryStore(g, labelOf, goal, { count = ENTRY_COUNT, tag = 'entry' } = {}) {
+  const out = [];
+  let k = 0;
+  for (const u of g.neighbors.get(goal) || []) for (let i = 0; i < count; i++) out.push(makeEpisode({ id: `${tag}_${k++}`, nodes: [u, goal], labelOf, quality: NR_QUALITY }));
+  return out;
 }
 
 // ---------- the runtime's replay eligibility (mirror of render/episodeManager.js replayOneEpisode's filter) ----------
@@ -128,9 +184,9 @@ export function replayEligible(ep, g) {
 // ---------- store statistics: the residual-difference measurements ----------
 /**
  * Decision-time quantities the runtime reads from a store, evaluated on every directed edge:
- *   count(u->v)   adjacency count (rebuildAdjacencyMemory), tc = min(count / 5, 1), gate = 0.10 + 0.90 tc
- *   integrity(u->v)  = min(episodes containing the directed pair / 5, 1)   (a pair-only context match is 1/3 >= 0.33, so
- *                      every episode that contains the pair counts once)
+ *   count(u->v)   adjacency count (rebuildAdjacencyMemory), tc = min(count / 5, 1);
+ *                 gate = 0.10 + 0.90 tc for a non-goal candidate, 100 * tc for the goal-entering candidate
+ *   integrity(u->v) = min(episodes containing the directed pair / 5, 1)   (a pair-only context match is 1/3 >= 0.33)
  * Edges are classed by BFS distance to the goal: goalward (v closer), level, away.
  */
 export function storeStats(episodes, g, goal) {
@@ -153,8 +209,10 @@ export function storeStats(episodes, g, goal) {
       if (!seen.has(k)) { seen.add(k); episodesWith.set(k, episodesWith.get(k) + 1); }
     }
   }
+  const entering = goalEntering(g, goal);
   const cls = { goalward: [], level: [], away: [] };
   for (const k of g.directed) {
+    if (entering.includes(k)) continue;                              // goal-entering edges are reported separately (100 * tc)
     const [u, v] = k.split('->').map(Number);
     const du = dist.get(u), dv = dist.get(v);
     (dv < du ? cls.goalward : dv > du ? cls.away : cls.level).push(k);
@@ -164,34 +222,40 @@ export function storeStats(episodes, g, goal) {
   const byClass = (f) => Object.fromEntries(Object.entries(cls).map(([c, ks]) => [c, mean(ks.map(f))]));
   const n = episodes.length;
   const edgesSorted = [...g.directed].sort();
-  const goalwardCount = cls.goalward.reduce((s, k) => s + count.get(k), 0);
   return {
     episodes: n, meanNodes: n ? lenSum / n : null, transitions,
     directedEdgesCovered: edgesSorted.filter(k => count.get(k) > 0).length, directedEdgesAtLeast5: edgesSorted.filter(k => count.get(k) >= 5).length,
     directedEdgesTotal: g.directed.size, edgeCounts: edgesSorted.map(k => count.get(k)),
-    gateMean: byClass(k => 0.10 + 0.90 * tc(k)),                // mean goal-gradient retention by edge class
-    integrityMean: byClass(integ),                              // mean trajectory-integrity strength by edge class
+    gateMean: byClass(k => 0.10 + 0.90 * tc(k)),                // non-goal goal-gradient retention by edge class
+    integrityMean: byClass(integ),
     classSizes: Object.fromEntries(Object.entries(cls).map(([c, ks]) => [c, ks.length])),
-    goalwardShareOfTransitions: transitions ? goalwardCount / transitions : null,
+    goalEntry: { edges: entering.length, atLeast5: entering.filter(k => count.get(k) >= 5).length, tcMean: mean(entering.map(tc)), integrityMean: mean(entering.map(integ)) },
+    goalwardShareOfTransitions: transitions ? cls.goalward.reduce((s, k) => s + count.get(k), 0) / transitions : null,
     endAtGoalFraction: n ? endAtGoal / n : null, containsGoalFraction: n ? containsGoal / n : null,
     simpleFraction: n ? simple / n : null, replayEligibleFraction: n ? eligible / n : null, qualityMean: n ? q / n : null,
     distinctStartNodes: startNodes.size,
   };
 }
 
-/** residual differences between a control store and the real store it is compared with (scalar summary) */
+/** residual differences between a control store and the real store it is compared with */
 export function residuals(control, real) {
   const tcOf = (arr) => arr.map(c => Math.min(c / 5, 1));
   const a = tcOf(control.edgeCounts), b = tcOf(real.edgeCounts);
+  const d = (x, y) => (x === null || y === null ? null : x - y);
   return {
     episodeCount: control.episodes - real.episodes,
-    meanNodes: control.meanNodes - real.meanNodes,
+    meanNodes: d(control.meanNodes, real.meanNodes),
     transitions: control.transitions - real.transitions,
+    simpleFractionDelta: d(control.simpleFraction, real.simpleFraction),
     directedEdgesCoveredDelta: control.directedEdgesCovered - real.directedEdgesCovered,
+    directedEdgesAtLeast5Delta: control.directedEdgesAtLeast5 - real.directedEdgesAtLeast5,
     tcL1Mean: a.reduce((s, x, i) => s + Math.abs(x - b[i]), 0) / a.length,
-    gateMeanDelta: Object.fromEntries(['goalward', 'level', 'away'].map(c => [c, control.gateMean[c] - real.gateMean[c]])),
-    integrityMeanDelta: Object.fromEntries(['goalward', 'level', 'away'].map(c => [c, control.integrityMean[c] - real.integrityMean[c]])),
-    endAtGoalFractionDelta: control.endAtGoalFraction - real.endAtGoalFraction,
-    replayEligibleFractionDelta: control.replayEligibleFraction - real.replayEligibleFraction,
+    gateMeanDelta: Object.fromEntries(['goalward', 'level', 'away'].map(c => [c, d(control.gateMean[c], real.gateMean[c])])),
+    integrityMeanDelta: Object.fromEntries(['goalward', 'level', 'away'].map(c => [c, d(control.integrityMean[c], real.integrityMean[c])])),
+    goalEntryTcMeanDelta: d(control.goalEntry.tcMean, real.goalEntry.tcMean),
+    goalEntryAtLeast5Delta: control.goalEntry.atLeast5 - real.goalEntry.atLeast5,
+    goalwardShareDelta: d(control.goalwardShareOfTransitions, real.goalwardShareOfTransitions),
+    endAtGoalFractionDelta: d(control.endAtGoalFraction, real.endAtGoalFraction),
+    replayEligibleFractionDelta: d(control.replayEligibleFraction, real.replayEligibleFraction),
   };
 }
