@@ -1,6 +1,6 @@
 # GATE-FLOOR-B2 — does the goal-entry floor survive on the pristine B2 runtime?
 
-**Status: DEVELOPMENT / EXPLORATORY.** Not preregistered in the repository's formal sense. No registered or held-out seed,
+**Status: DEVELOPMENT / EXPLORATORY. Block G (160 worlds) executed under the frozen design (freeze `a263fd5`): REPLICATED; results in [results/RESULTS.md](results/RESULTS.md).** Not preregistered in the repository's formal sense. No registered or held-out seed,
 no production file, and no earlier experiment is modified. Substrate: the exact B2 (`707cb1e`) blob set built by
 `experiments/h1r/build_tree.mjs --pristine` — **no** H1-R conformance edit and **no** H1-R runtime — plus two guarded lines
 (below). **Not** current `main.js`.

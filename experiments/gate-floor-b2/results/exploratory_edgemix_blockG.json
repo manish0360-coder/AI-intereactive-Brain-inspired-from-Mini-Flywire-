@@ -1,0 +1,614 @@
+{
+ "status": "EXPLORATORY_POST_HOC",
+ "basis": "summary_blockG.json",
+ "worlds": 160,
+ "arms": {
+  "COLD_FLOOR": {
+   "legalGain": {
+    "n": 160,
+    "mean": 190.15625,
+    "median": 179.5,
+    "sd": 89.93145865763164,
+    "positive": 156,
+    "negative": 2,
+    "zero": 2,
+    "ci": {
+     "lower": 176.275,
+     "upper": 204.1875
+    }
+   },
+   "nonEdgeChange": {
+    "n": 160,
+    "mean": -11.38125,
+    "median": -7,
+    "sd": 97.01480609783884,
+    "positive": 71,
+    "negative": 89,
+    "zero": 0,
+    "ci": {
+     "lower": -26.2375,
+     "upper": 3.59375
+    }
+   },
+   "everyResetGain": {
+    "n": 160,
+    "mean": 178.775,
+    "median": 165,
+    "sd": 118.52590142317457,
+    "positive": 152,
+    "negative": 7,
+    "zero": 1,
+    "ci": {
+     "lower": 160.525,
+     "upper": 197.29375
+    }
+   },
+   "goalEdgePenaltyChange": {
+    "n": 160,
+    "mean": 3.133893374393131,
+    "median": 2.971570967834767,
+    "sd": 2.825612366531247,
+    "positive": 139,
+    "negative": 21,
+    "zero": 0,
+    "ci": {
+     "lower": 2.7030685393740512,
+     "upper": 3.577079634686503
+    }
+   },
+   "legalShareOfEveryResetGain": 1.0636624248356872,
+   "corr_legalGain_nonEdgeChange": {
+    "r": -0.19778085581525243,
+    "ci": {
+     "lower": -0.3474753496213564,
+     "upper": -0.04112511364394371
+    }
+   },
+   "corr_legalGain_penaltyChange": {
+    "r": 0.31279087020713464,
+    "ci": {
+     "lower": 0.16292130322465065,
+     "upper": 0.4512900457302929
+    }
+   }
+  },
+  "ENTRY_NR": {
+   "legalGain": {
+    "n": 160,
+    "mean": 190.4125,
+    "median": 178.5,
+    "sd": 90.340821303056,
+    "positive": 157,
+    "negative": 2,
+    "zero": 1,
+    "ci": {
+     "lower": 176.59375,
+     "upper": 204.43125
+    }
+   },
+   "nonEdgeChange": {
+    "n": 160,
+    "mean": -11.55625,
+    "median": -5.5,
+    "sd": 98.2696039222274,
+    "positive": 73,
+    "negative": 87,
+    "zero": 0,
+    "ci": {
+     "lower": -26.55,
+     "upper": 3.60625
+    }
+   },
+   "everyResetGain": {
+    "n": 160,
+    "mean": 178.85625,
+    "median": 165,
+    "sd": 118.97443554349428,
+    "positive": 153,
+    "negative": 6,
+    "zero": 1,
+    "ci": {
+     "lower": 160.59375,
+     "upper": 197.4875
+    }
+   },
+   "goalEdgePenaltyChange": {
+    "n": 160,
+    "mean": 3.0650937457653833,
+    "median": 2.971570967834767,
+    "sd": 2.676625594567147,
+    "positive": 139,
+    "negative": 21,
+    "zero": 0,
+    "ci": {
+     "lower": 2.657326303247661,
+     "upper": 3.481352374824984
+    }
+   },
+   "legalShareOfEveryResetGain": 1.0646119439494008,
+   "corr_legalGain_nonEdgeChange": {
+    "r": -0.20632817773196585,
+    "ci": {
+     "lower": -0.3493097871718156,
+     "upper": -0.05215964001044937
+    }
+   },
+   "corr_legalGain_penaltyChange": {
+    "r": 0.2850594677954207,
+    "ci": {
+     "lower": 0.12474845209649467,
+     "upper": 0.4258047880591296
+    }
+   }
+  },
+  "REAL": {
+   "legalGain": {
+    "n": 160,
+    "mean": 85.4,
+    "median": 90.5,
+    "sd": 98.63567420773836,
+    "positive": 129,
+    "negative": 30,
+    "zero": 1,
+    "ci": {
+     "lower": 70.0125,
+     "upper": 100.6875
+    }
+   },
+   "nonEdgeChange": {
+    "n": 160,
+    "mean": 22.8875,
+    "median": 21,
+    "sd": 106.05403793474413,
+    "positive": 92,
+    "negative": 66,
+    "zero": 2,
+    "ci": {
+     "lower": 6.60625,
+     "upper": 39.48125
+    }
+   },
+   "everyResetGain": {
+    "n": 160,
+    "mean": 108.2875,
+    "median": 96,
+    "sd": 123.9370091324799,
+    "positive": 124,
+    "negative": 32,
+    "zero": 4,
+    "ci": {
+     "lower": 89.15625,
+     "upper": 128.01875
+    }
+   },
+   "goalEdgePenaltyChange": {
+    "n": 160,
+    "mean": 1.2037911369734196,
+    "median": 1.0530990238128812,
+    "sd": 2.2613666619806163,
+    "positive": 110,
+    "negative": 49,
+    "zero": 1,
+    "ci": {
+     "lower": 0.854591835649385,
+     "upper": 1.557062938256132
+    }
+   },
+   "legalShareOfEveryResetGain": 0.7886413482627266,
+   "corr_legalGain_nonEdgeChange": {
+    "r": -0.26843647000696275,
+    "ci": {
+     "lower": -0.413119080542164,
+     "upper": -0.11717783330974345
+    }
+   },
+   "corr_legalGain_penaltyChange": {
+    "r": 0.27383618348009847,
+    "ci": {
+     "lower": 0.129745462579384,
+     "upper": 0.410543697122256
+    }
+   }
+  },
+  "REAL_FLOOR": {
+   "legalGain": {
+    "n": 160,
+    "mean": 174.0375,
+    "median": 178,
+    "sd": 91.5393091834659,
+    "positive": 152,
+    "negative": 8,
+    "zero": 0,
+    "ci": {
+     "lower": 159.7125,
+     "upper": 188.025
+    }
+   },
+   "nonEdgeChange": {
+    "n": 160,
+    "mean": 18.25,
+    "median": 8,
+    "sd": 101.86956760991697,
+    "positive": 87,
+    "negative": 73,
+    "zero": 0,
+    "ci": {
+     "lower": 2.11875,
+     "upper": 34.0625
+    }
+   },
+   "everyResetGain": {
+    "n": 160,
+    "mean": 192.2875,
+    "median": 174.5,
+    "sd": 125.13662407758406,
+    "positive": 155,
+    "negative": 5,
+    "zero": 0,
+    "ci": {
+     "lower": 173.06875,
+     "upper": 211.86875
+    }
+   },
+   "goalEdgePenaltyChange": {
+    "n": 160,
+    "mean": 3.3156457301889404,
+    "median": 3.192914510450695,
+    "sd": 2.6810463077423927,
+    "positive": 144,
+    "negative": 16,
+    "zero": 0,
+    "ci": {
+     "lower": 2.900995668577853,
+     "upper": 3.7288404456329878
+    }
+   },
+   "legalShareOfEveryResetGain": 0.9050900344536176,
+   "corr_legalGain_nonEdgeChange": {
+    "r": -0.16609415781846334,
+    "ci": {
+     "lower": -0.30889715329221823,
+     "upper": -0.019893835581531287
+    }
+   },
+   "corr_legalGain_penaltyChange": {
+    "r": 0.32832380387871546,
+    "ci": {
+     "lower": 0.1844439870897522,
+     "upper": 0.4575013502227344
+    }
+   }
+  }
+ },
+ "storeSize": {
+  "empty store (0 episodes)": {
+   "worlds": 1,
+   "benefitFloor": {
+    "n": 1,
+    "mean": 228,
+    "median": 228,
+    "sd": null,
+    "positive": 1,
+    "negative": 0,
+    "zero": 0,
+    "ci": {
+     "lower": 228,
+     "upper": 228
+    }
+   },
+   "benefitReal": {
+    "n": 1,
+    "mean": 0,
+    "median": 0,
+    "sd": null,
+    "positive": 0,
+    "negative": 0,
+    "zero": 1,
+    "ci": {
+     "lower": 0,
+     "upper": 0
+    }
+   },
+   "benefitEntry": {
+    "n": 1,
+    "mean": 228,
+    "median": 228,
+    "sd": null,
+    "positive": 1,
+    "negative": 0,
+    "zero": 0,
+    "ci": {
+     "lower": 228,
+     "upper": 228
+    }
+   },
+   "realMinusFloor": {
+    "n": 1,
+    "mean": -228,
+    "median": -228,
+    "sd": null,
+    "positive": 0,
+    "negative": 1,
+    "zero": 0,
+    "ci": {
+     "lower": -228,
+     "upper": -228
+    }
+   },
+   "entryMinusFloor": {
+    "n": 1,
+    "mean": 0,
+    "median": 0,
+    "sd": null,
+    "positive": 0,
+    "negative": 0,
+    "zero": 1,
+    "ci": {
+     "lower": 0,
+     "upper": 0
+    }
+   }
+  },
+  "at least 1 episode": {
+   "worlds": 159,
+   "benefitFloor": {
+    "n": 159,
+    "mean": 189.9182389937107,
+    "median": 179,
+    "sd": 90.1650363453468,
+    "positive": 155,
+    "negative": 2,
+    "zero": 2,
+    "ci": {
+     "lower": 176.14465408805032,
+     "upper": 203.8679245283019
+    }
+   },
+   "benefitReal": {
+    "n": 159,
+    "mean": 85.937106918239,
+    "median": 91,
+    "sd": 98.71232244103916,
+    "positive": 129,
+    "negative": 30,
+    "zero": 0,
+    "ci": {
+     "lower": 70.29559748427673,
+     "upper": 101.16352201257861
+    }
+   },
+   "benefitEntry": {
+    "n": 159,
+    "mean": 190.1761006289308,
+    "median": 178,
+    "sd": 90.57660123358454,
+    "positive": 156,
+    "negative": 2,
+    "zero": 1,
+    "ci": {
+     "lower": 176.31446540880503,
+     "upper": 204.24528301886792
+    }
+   },
+   "realMinusFloor": {
+    "n": 159,
+    "mean": -103.98113207547169,
+    "median": -98,
+    "sd": 82.85189406772199,
+    "positive": 13,
+    "negative": 146,
+    "zero": 0,
+    "ci": {
+     "lower": -116.88050314465409,
+     "upper": -91.08176100628931
+    }
+   },
+   "entryMinusFloor": {
+    "n": 159,
+    "mean": 0.2578616352201258,
+    "median": 0,
+    "sd": 15.82107784758092,
+    "positive": 21,
+    "negative": 23,
+    "zero": 115,
+    "ci": {
+     "lower": -2.169811320754717,
+     "upper": 2.849056603773585
+    }
+   }
+  },
+  "at least 20 episodes": {
+   "worlds": 157,
+   "benefitFloor": {
+    "n": 157,
+    "mean": 191.14012738853503,
+    "median": 180,
+    "sd": 90.07706519610106,
+    "positive": 153,
+    "negative": 2,
+    "zero": 2,
+    "ci": {
+     "lower": 176.79617834394904,
+     "upper": 205.38853503184714
+    }
+   },
+   "benefitReal": {
+    "n": 157,
+    "mean": 87.04458598726114,
+    "median": 91,
+    "sd": 98.84735343648815,
+    "positive": 128,
+    "negative": 29,
+    "zero": 0,
+    "ci": {
+     "lower": 71.76433121019109,
+     "upper": 102.56050955414013
+    }
+   },
+   "benefitEntry": {
+    "n": 157,
+    "mean": 191.04458598726114,
+    "median": 179,
+    "sd": 90.73724703420709,
+    "positive": 154,
+    "negative": 2,
+    "zero": 1,
+    "ci": {
+     "lower": 176.6687898089172,
+     "upper": 205.3184713375796
+    }
+   },
+   "realMinusFloor": {
+    "n": 157,
+    "mean": -104.09554140127389,
+    "median": -98,
+    "sd": 83.36733537902357,
+    "positive": 13,
+    "negative": 144,
+    "zero": 0,
+    "ci": {
+     "lower": -117.40764331210191,
+     "upper": -91.171974522293
+    }
+   },
+   "entryMinusFloor": {
+    "n": 157,
+    "mean": -0.09554140127388536,
+    "median": 0,
+    "sd": 15.279776914522325,
+    "positive": 20,
+    "negative": 23,
+    "zero": 114,
+    "ci": {
+     "lower": -2.4076433121019107,
+     "upper": 2.4140127388535033
+    }
+   }
+  }
+ },
+ "storeEffect": {
+  "REAL_FLOOR_minus_COLD_FLOOR": {
+   "legal": {
+    "n": 160,
+    "mean": -16.11875,
+    "median": -13,
+    "sd": 71.68926411689999,
+    "positive": 67,
+    "negative": 91,
+    "zero": 2,
+    "ci": {
+     "lower": -27.28125,
+     "upper": -5.2875
+    }
+   },
+   "nonEdge": {
+    "n": 160,
+    "mean": 29.63125,
+    "median": 39,
+    "sd": 85.28926893023583,
+    "positive": 105,
+    "negative": 53,
+    "zero": 2,
+    "ci": {
+     "lower": 16.2875,
+     "upper": 42.96875
+    }
+   },
+   "everyReset": {
+    "n": 160,
+    "mean": 13.5125,
+    "median": 24,
+    "sd": 93.76009715017395,
+    "positive": 92,
+    "negative": 66,
+    "zero": 2,
+    "ci": {
+     "lower": -0.84375,
+     "upper": 27.90625
+    }
+   }
+  },
+  "REAL_minus_COLD": {
+   "legal": {
+    "n": 160,
+    "mean": 85.4,
+    "median": 90.5,
+    "sd": 98.63567420773836,
+    "positive": 129,
+    "negative": 30,
+    "zero": 1,
+    "ci": {
+     "lower": 70.0125,
+     "upper": 100.6875
+    }
+   },
+   "nonEdge": {
+    "n": 160,
+    "mean": 22.8875,
+    "median": 21,
+    "sd": 106.05403793474413,
+    "positive": 92,
+    "negative": 66,
+    "zero": 2,
+    "ci": {
+     "lower": 6.60625,
+     "upper": 39.48125
+    }
+   },
+   "everyReset": {
+    "n": 160,
+    "mean": 108.2875,
+    "median": 96,
+    "sd": 123.9370091324799,
+    "positive": 124,
+    "negative": 32,
+    "zero": 4,
+    "ci": {
+     "lower": 89.15625,
+     "upper": 128.01875
+    }
+   }
+  },
+  "ENTRY_NR_minus_COLD_FLOOR": {
+   "legal": {
+    "n": 160,
+    "mean": 0.25625,
+    "median": 0,
+    "sd": 15.771260732558442,
+    "positive": 21,
+    "negative": 23,
+    "zero": 116,
+    "ci": {
+     "lower": -2.05625,
+     "upper": 2.7625
+    }
+   },
+   "nonEdge": {
+    "n": 160,
+    "mean": -0.175,
+    "median": 0,
+    "sd": 17.09888002511297,
+    "positive": 23,
+    "negative": 24,
+    "zero": 113,
+    "ci": {
+     "lower": -2.975,
+     "upper": 2.3375
+    }
+   },
+   "everyReset": {
+    "n": 160,
+    "mean": 0.08125,
+    "median": 0,
+    "sd": 19.698345195957923,
+    "positive": 23,
+    "negative": 24,
+    "zero": 113,
+    "ci": {
+     "lower": -2.84375,
+     "upper": 3.35
+    }
+   }
+  }
+ }
+}
