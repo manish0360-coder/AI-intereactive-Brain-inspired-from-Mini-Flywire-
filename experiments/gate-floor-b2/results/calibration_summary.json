@@ -1,0 +1,1382 @@
+{
+ "status": "CALIBRATION_NOT_CONFIRMATORY",
+ "worlds": 40,
+ "perWorld": {
+  "0": {
+   "goal": 8,
+   "realEpisodes": 181,
+   "nonEdgeTransitions": 129,
+   "transitions": 571,
+   "arms": {
+    "COLD": {
+     "all": 112,
+     "legal": 87,
+     "nonEdge": 25,
+     "attemptSuccess": 0.6298003072196621,
+     "early": 0,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 341,
+     "legal": 247,
+     "nonEdge": 94,
+     "attemptSuccess": 0.628482972136223,
+     "early": 88,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 369,
+     "legal": 329,
+     "nonEdge": 40,
+     "attemptSuccess": 0.5296703296703297,
+     "early": 112,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "1": {
+   "goal": 12,
+   "realEpisodes": 122,
+   "nonEdgeTransitions": 68,
+   "transitions": 383,
+   "arms": {
+    "COLD": {
+     "all": 294,
+     "legal": 233,
+     "nonEdge": 61,
+     "attemptSuccess": 0.6130558183538316,
+     "early": 83,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 481,
+     "legal": 387,
+     "nonEdge": 94,
+     "attemptSuccess": 0.6863468634686347,
+     "early": 138,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 536,
+     "legal": 449,
+     "nonEdge": 87,
+     "attemptSuccess": 0.6510297482837528,
+     "early": 178,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "2": {
+   "goal": 16,
+   "realEpisodes": 120,
+   "nonEdgeTransitions": 181,
+   "transitions": 345,
+   "arms": {
+    "COLD": {
+     "all": 361,
+     "legal": 175,
+     "nonEdge": 186,
+     "attemptSuccess": 0.7094455852156057,
+     "early": 90,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 352,
+     "legal": 161,
+     "nonEdge": 191,
+     "attemptSuccess": 0.6075949367088608,
+     "early": 61,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 324,
+     "legal": 265,
+     "nonEdge": 59,
+     "attemptSuccess": 0.7591463414634146,
+     "early": 96,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "3": {
+   "goal": 19,
+   "realEpisodes": 21,
+   "nonEdgeTransitions": 25,
+   "transitions": 86,
+   "arms": {
+    "COLD": {
+     "all": 194,
+     "legal": 177,
+     "nonEdge": 17,
+     "attemptSuccess": 0.6115537848605578,
+     "early": 25,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 275,
+     "legal": 211,
+     "nonEdge": 64,
+     "attemptSuccess": 0.7543624161073825,
+     "early": 59,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 459,
+     "legal": 344,
+     "nonEdge": 115,
+     "attemptSuccess": 0.5753424657534246,
+     "early": 117,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "4": {
+   "goal": 8,
+   "realEpisodes": 51,
+   "nonEdgeTransitions": 59,
+   "transitions": 166,
+   "arms": {
+    "COLD": {
+     "all": 15,
+     "legal": 15,
+     "nonEdge": 0,
+     "attemptSuccess": 0.7197724039829303,
+     "early": 3,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 358,
+     "legal": 191,
+     "nonEdge": 167,
+     "attemptSuccess": 0.6608695652173913,
+     "early": 82,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 453,
+     "legal": 401,
+     "nonEdge": 52,
+     "attemptSuccess": 0.8126582278481013,
+     "early": 142,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "5": {
+   "goal": 12,
+   "realEpisodes": 196,
+   "nonEdgeTransitions": 219,
+   "transitions": 640,
+   "arms": {
+    "COLD": {
+     "all": 288,
+     "legal": 132,
+     "nonEdge": 156,
+     "attemptSuccess": 0.5565052231718899,
+     "early": 77,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 372,
+     "legal": 181,
+     "nonEdge": 191,
+     "attemptSuccess": 0.6917562724014337,
+     "early": 113,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 457,
+     "legal": 373,
+     "nonEdge": 84,
+     "attemptSuccess": 0.5038084874863983,
+     "early": 141,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "6": {
+   "goal": 16,
+   "realEpisodes": 224,
+   "nonEdgeTransitions": 197,
+   "transitions": 621,
+   "arms": {
+    "COLD": {
+     "all": 252,
+     "legal": 75,
+     "nonEdge": 177,
+     "attemptSuccess": 0.6632366697848456,
+     "early": 38,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 460,
+     "legal": 186,
+     "nonEdge": 274,
+     "attemptSuccess": 0.7154663518299882,
+     "early": 109,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 481,
+     "legal": 308,
+     "nonEdge": 173,
+     "attemptSuccess": 0.7518610421836228,
+     "early": 160,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "7": {
+   "goal": 19,
+   "realEpisodes": 209,
+   "nonEdgeTransitions": 210,
+   "transitions": 692,
+   "arms": {
+    "COLD": {
+     "all": 373,
+     "legal": 94,
+     "nonEdge": 279,
+     "attemptSuccess": 0.7575757575757576,
+     "early": 79,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 389,
+     "legal": 160,
+     "nonEdge": 229,
+     "attemptSuccess": 0.7879746835443038,
+     "early": 92,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 421,
+     "legal": 330,
+     "nonEdge": 91,
+     "attemptSuccess": 0.6861143523920653,
+     "early": 139,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "8": {
+   "goal": 8,
+   "realEpisodes": 35,
+   "nonEdgeTransitions": 9,
+   "transitions": 126,
+   "arms": {
+    "COLD": {
+     "all": 0,
+     "legal": 0,
+     "nonEdge": 0,
+     "attemptSuccess": 0.6925770308123249,
+     "early": 0,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 290,
+     "legal": 224,
+     "nonEdge": 66,
+     "attemptSuccess": 0.6836049856184084,
+     "early": 91,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 470,
+     "legal": 401,
+     "nonEdge": 69,
+     "attemptSuccess": 0.6907756813417191,
+     "early": 151,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "9": {
+   "goal": 12,
+   "realEpisodes": 219,
+   "nonEdgeTransitions": 330,
+   "transitions": 722,
+   "arms": {
+    "COLD": {
+     "all": 287,
+     "legal": 161,
+     "nonEdge": 126,
+     "attemptSuccess": 0.4827264239028945,
+     "early": 69,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 396,
+     "legal": 130,
+     "nonEdge": 266,
+     "attemptSuccess": 0.5632432432432433,
+     "early": 83,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 412,
+     "legal": 332,
+     "nonEdge": 80,
+     "attemptSuccess": 0.5823045267489712,
+     "early": 113,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "10": {
+   "goal": 16,
+   "realEpisodes": 159,
+   "nonEdgeTransitions": 169,
+   "transitions": 499,
+   "arms": {
+    "COLD": {
+     "all": 254,
+     "legal": 179,
+     "nonEdge": 75,
+     "attemptSuccess": 0.574108818011257,
+     "early": 77,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 348,
+     "legal": 236,
+     "nonEdge": 112,
+     "attemptSuccess": 0.6071784646061814,
+     "early": 106,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 466,
+     "legal": 289,
+     "nonEdge": 177,
+     "attemptSuccess": 0.7511574074074074,
+     "early": 140,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "11": {
+   "goal": 19,
+   "realEpisodes": 34,
+   "nonEdgeTransitions": 10,
+   "transitions": 106,
+   "arms": {
+    "COLD": {
+     "all": 271,
+     "legal": 244,
+     "nonEdge": 27,
+     "attemptSuccess": 0.7862068965517242,
+     "early": 57,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 156,
+     "legal": 135,
+     "nonEdge": 21,
+     "attemptSuccess": 0.5678610206297503,
+     "early": 53,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 436,
+     "legal": 330,
+     "nonEdge": 106,
+     "attemptSuccess": 0.5526932084309133,
+     "early": 119,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "12": {
+   "goal": 8,
+   "realEpisodes": 58,
+   "nonEdgeTransitions": 59,
+   "transitions": 194,
+   "arms": {
+    "COLD": {
+     "all": 233,
+     "legal": 185,
+     "nonEdge": 48,
+     "attemptSuccess": 0.7561196736174071,
+     "early": 2,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 371,
+     "legal": 198,
+     "nonEdge": 173,
+     "attemptSuccess": 0.644927536231884,
+     "early": 92,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 407,
+     "legal": 334,
+     "nonEdge": 73,
+     "attemptSuccess": 0.65,
+     "early": 89,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "13": {
+   "goal": 12,
+   "realEpisodes": 210,
+   "nonEdgeTransitions": 188,
+   "transitions": 674,
+   "arms": {
+    "COLD": {
+     "all": 310,
+     "legal": 266,
+     "nonEdge": 44,
+     "attemptSuccess": 0.678516228748068,
+     "early": 92,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 393,
+     "legal": 332,
+     "nonEdge": 61,
+     "attemptSuccess": 0.7009222661396575,
+     "early": 108,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 430,
+     "legal": 388,
+     "nonEdge": 42,
+     "attemptSuccess": 0.617579908675799,
+     "early": 130,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "14": {
+   "goal": 16,
+   "realEpisodes": 160,
+   "nonEdgeTransitions": 197,
+   "transitions": 493,
+   "arms": {
+    "COLD": {
+     "all": 332,
+     "legal": 204,
+     "nonEdge": 128,
+     "attemptSuccess": 0.6986692015209125,
+     "early": 93,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 372,
+     "legal": 278,
+     "nonEdge": 94,
+     "attemptSuccess": 0.5075431034482759,
+     "early": 97,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 469,
+     "legal": 271,
+     "nonEdge": 198,
+     "attemptSuccess": 0.8037383177570093,
+     "early": 145,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "15": {
+   "goal": 19,
+   "realEpisodes": 175,
+   "nonEdgeTransitions": 227,
+   "transitions": 536,
+   "arms": {
+    "COLD": {
+     "all": 321,
+     "legal": 140,
+     "nonEdge": 181,
+     "attemptSuccess": 0.6266349583828775,
+     "early": 77,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 369,
+     "legal": 144,
+     "nonEdge": 225,
+     "attemptSuccess": 0.6762749445676275,
+     "early": 93,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 414,
+     "legal": 264,
+     "nonEdge": 150,
+     "attemptSuccess": 0.5614849187935035,
+     "early": 131,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "16": {
+   "goal": 8,
+   "realEpisodes": 121,
+   "nonEdgeTransitions": 125,
+   "transitions": 406,
+   "arms": {
+    "COLD": {
+     "all": 134,
+     "legal": 19,
+     "nonEdge": 115,
+     "attemptSuccess": 0.5221238938053098,
+     "early": 20,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 367,
+     "legal": 272,
+     "nonEdge": 95,
+     "attemptSuccess": 0.4726911618669315,
+     "early": 100,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 388,
+     "legal": 288,
+     "nonEdge": 100,
+     "attemptSuccess": 0.4868131868131868,
+     "early": 114,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "17": {
+   "goal": 12,
+   "realEpisodes": 199,
+   "nonEdgeTransitions": 206,
+   "transitions": 651,
+   "arms": {
+    "COLD": {
+     "all": 336,
+     "legal": 296,
+     "nonEdge": 40,
+     "attemptSuccess": 0.6549479166666666,
+     "early": 95,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 430,
+     "legal": 371,
+     "nonEdge": 59,
+     "attemptSuccess": 0.6839481555333998,
+     "early": 135,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 544,
+     "legal": 416,
+     "nonEdge": 128,
+     "attemptSuccess": 0.7694954128440367,
+     "early": 164,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "18": {
+   "goal": 16,
+   "realEpisodes": 238,
+   "nonEdgeTransitions": 164,
+   "transitions": 761,
+   "arms": {
+    "COLD": {
+     "all": 177,
+     "legal": 69,
+     "nonEdge": 108,
+     "attemptSuccess": 0.6380255941499086,
+     "early": 23,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 437,
+     "legal": 239,
+     "nonEdge": 198,
+     "attemptSuccess": 0.787917737789203,
+     "early": 105,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 313,
+     "legal": 190,
+     "nonEdge": 123,
+     "attemptSuccess": 0.5292864749733759,
+     "early": 72,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "19": {
+   "goal": 19,
+   "realEpisodes": 213,
+   "nonEdgeTransitions": 273,
+   "transitions": 599,
+   "arms": {
+    "COLD": {
+     "all": 393,
+     "legal": 258,
+     "nonEdge": 135,
+     "attemptSuccess": 0.7174638487208009,
+     "early": 85,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 498,
+     "legal": 104,
+     "nonEdge": 394,
+     "attemptSuccess": 0.7251461988304093,
+     "early": 160,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 448,
+     "legal": 298,
+     "nonEdge": 150,
+     "attemptSuccess": 0.6002358490566038,
+     "early": 133,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "20": {
+   "goal": 8,
+   "realEpisodes": 110,
+   "nonEdgeTransitions": 142,
+   "transitions": 357,
+   "arms": {
+    "COLD": {
+     "all": 175,
+     "legal": 166,
+     "nonEdge": 9,
+     "attemptSuccess": 0.7906779661016949,
+     "early": 23,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 253,
+     "legal": 96,
+     "nonEdge": 157,
+     "attemptSuccess": 0.7597042513863216,
+     "early": 59,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 380,
+     "legal": 303,
+     "nonEdge": 77,
+     "attemptSuccess": 0.62625250501002,
+     "early": 105,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "21": {
+   "goal": 12,
+   "realEpisodes": 186,
+   "nonEdgeTransitions": 139,
+   "transitions": 586,
+   "arms": {
+    "COLD": {
+     "all": 287,
+     "legal": 230,
+     "nonEdge": 57,
+     "attemptSuccess": 0.6329233680227058,
+     "early": 53,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 473,
+     "legal": 309,
+     "nonEdge": 164,
+     "attemptSuccess": 0.7191697191697192,
+     "early": 148,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 512,
+     "legal": 442,
+     "nonEdge": 70,
+     "attemptSuccess": 0.6905537459283387,
+     "early": 149,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "22": {
+   "goal": 16,
+   "realEpisodes": 38,
+   "nonEdgeTransitions": 23,
+   "transitions": 127,
+   "arms": {
+    "COLD": {
+     "all": 345,
+     "legal": 200,
+     "nonEdge": 145,
+     "attemptSuccess": 0.5512048192771084,
+     "early": 93,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 310,
+     "legal": 270,
+     "nonEdge": 40,
+     "attemptSuccess": 0.6301531213191991,
+     "early": 101,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 450,
+     "legal": 250,
+     "nonEdge": 200,
+     "attemptSuccess": 0.5684695051783659,
+     "early": 130,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "23": {
+   "goal": 19,
+   "realEpisodes": 159,
+   "nonEdgeTransitions": 242,
+   "transitions": 594,
+   "arms": {
+    "COLD": {
+     "all": 204,
+     "legal": 109,
+     "nonEdge": 95,
+     "attemptSuccess": 0.5375457875457875,
+     "early": 42,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 447,
+     "legal": 247,
+     "nonEdge": 200,
+     "attemptSuccess": 0.6415552855407047,
+     "early": 105,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 405,
+     "legal": 312,
+     "nonEdge": 93,
+     "attemptSuccess": 0.5273743016759777,
+     "early": 119,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "24": {
+   "goal": 8,
+   "realEpisodes": 87,
+   "nonEdgeTransitions": 105,
+   "transitions": 299,
+   "arms": {
+    "COLD": {
+     "all": 106,
+     "legal": 103,
+     "nonEdge": 3,
+     "attemptSuccess": 0.576893649579189,
+     "early": 28,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 431,
+     "legal": 155,
+     "nonEdge": 276,
+     "attemptSuccess": 0.5612691466083151,
+     "early": 95,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 402,
+     "legal": 366,
+     "nonEdge": 36,
+     "attemptSuccess": 0.5952380952380952,
+     "early": 118,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "25": {
+   "goal": 12,
+   "realEpisodes": 176,
+   "nonEdgeTransitions": 194,
+   "transitions": 488,
+   "arms": {
+    "COLD": {
+     "all": 337,
+     "legal": 212,
+     "nonEdge": 125,
+     "attemptSuccess": 0.59375,
+     "early": 63,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 544,
+     "legal": 261,
+     "nonEdge": 283,
+     "attemptSuccess": 0.8046683046683046,
+     "early": 167,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 496,
+     "legal": 419,
+     "nonEdge": 77,
+     "attemptSuccess": 0.763681592039801,
+     "early": 177,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "26": {
+   "goal": 16,
+   "realEpisodes": 181,
+   "nonEdgeTransitions": 110,
+   "transitions": 526,
+   "arms": {
+    "COLD": {
+     "all": 144,
+     "legal": 133,
+     "nonEdge": 11,
+     "attemptSuccess": 0.7507002801120448,
+     "early": 11,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 283,
+     "legal": 186,
+     "nonEdge": 97,
+     "attemptSuccess": 0.6161849710982659,
+     "early": 57,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 370,
+     "legal": 320,
+     "nonEdge": 50,
+     "attemptSuccess": 0.6778074866310161,
+     "early": 92,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "27": {
+   "goal": 19,
+   "realEpisodes": 205,
+   "nonEdgeTransitions": 508,
+   "transitions": 720,
+   "arms": {
+    "COLD": {
+     "all": 351,
+     "legal": 207,
+     "nonEdge": 144,
+     "attemptSuccess": 0.6717647058823529,
+     "early": 92,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 345,
+     "legal": 213,
+     "nonEdge": 132,
+     "attemptSuccess": 0.7585421412300684,
+     "early": 76,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 500,
+     "legal": 407,
+     "nonEdge": 93,
+     "attemptSuccess": 0.7615979381443299,
+     "early": 139,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "28": {
+   "goal": 8,
+   "realEpisodes": 24,
+   "nonEdgeTransitions": 15,
+   "transitions": 85,
+   "arms": {
+    "COLD": {
+     "all": 101,
+     "legal": 68,
+     "nonEdge": 33,
+     "attemptSuccess": 0.685140562248996,
+     "early": 14,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 336,
+     "legal": 165,
+     "nonEdge": 171,
+     "attemptSuccess": 0.7192796610169492,
+     "early": 75,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 512,
+     "legal": 426,
+     "nonEdge": 86,
+     "attemptSuccess": 0.8839406207827261,
+     "early": 171,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "29": {
+   "goal": 12,
+   "realEpisodes": 158,
+   "nonEdgeTransitions": 217,
+   "transitions": 477,
+   "arms": {
+    "COLD": {
+     "all": 386,
+     "legal": 247,
+     "nonEdge": 139,
+     "attemptSuccess": 0.8871915393654524,
+     "early": 85,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 422,
+     "legal": 297,
+     "nonEdge": 125,
+     "attemptSuccess": 0.7894144144144144,
+     "early": 118,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 625,
+     "legal": 518,
+     "nonEdge": 107,
+     "attemptSuccess": 0.829232995658466,
+     "early": 196,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "30": {
+   "goal": 16,
+   "realEpisodes": 172,
+   "nonEdgeTransitions": 223,
+   "transitions": 492,
+   "arms": {
+    "COLD": {
+     "all": 286,
+     "legal": 137,
+     "nonEdge": 149,
+     "attemptSuccess": 0.6822867853795689,
+     "early": 26,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 401,
+     "legal": 184,
+     "nonEdge": 217,
+     "attemptSuccess": 0.6636971046770601,
+     "early": 124,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 491,
+     "legal": 274,
+     "nonEdge": 217,
+     "attemptSuccess": 0.6055045871559633,
+     "early": 136,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "31": {
+   "goal": 19,
+   "realEpisodes": 134,
+   "nonEdgeTransitions": 115,
+   "transitions": 412,
+   "arms": {
+    "COLD": {
+     "all": 77,
+     "legal": 48,
+     "nonEdge": 29,
+     "attemptSuccess": 0.6167664670658682,
+     "early": 0,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 399,
+     "legal": 219,
+     "nonEdge": 180,
+     "attemptSuccess": 0.7941176470588235,
+     "early": 94,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 396,
+     "legal": 238,
+     "nonEdge": 158,
+     "attemptSuccess": 0.5897129186602871,
+     "early": 85,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "32": {
+   "goal": 8,
+   "realEpisodes": 17,
+   "nonEdgeTransitions": 11,
+   "transitions": 57,
+   "arms": {
+    "COLD": {
+     "all": 15,
+     "legal": 5,
+     "nonEdge": 10,
+     "attemptSuccess": 0.6697247706422018,
+     "early": 0,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 337,
+     "legal": 148,
+     "nonEdge": 189,
+     "attemptSuccess": 0.6276595744680851,
+     "early": 74,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 408,
+     "legal": 375,
+     "nonEdge": 33,
+     "attemptSuccess": 0.5789473684210527,
+     "early": 130,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "33": {
+   "goal": 12,
+   "realEpisodes": 190,
+   "nonEdgeTransitions": 102,
+   "transitions": 665,
+   "arms": {
+    "COLD": {
+     "all": 265,
+     "legal": 256,
+     "nonEdge": 9,
+     "attemptSuccess": 0.8226711560044894,
+     "early": 69,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 463,
+     "legal": 223,
+     "nonEdge": 240,
+     "attemptSuccess": 0.7473806752037253,
+     "early": 144,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 492,
+     "legal": 434,
+     "nonEdge": 58,
+     "attemptSuccess": 0.6936671575846833,
+     "early": 169,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "34": {
+   "goal": 16,
+   "realEpisodes": 163,
+   "nonEdgeTransitions": 88,
+   "transitions": 563,
+   "arms": {
+    "COLD": {
+     "all": 221,
+     "legal": 16,
+     "nonEdge": 205,
+     "attemptSuccess": 0.6086206896551725,
+     "early": 44,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 296,
+     "legal": 160,
+     "nonEdge": 136,
+     "attemptSuccess": 0.6663376110562685,
+     "early": 75,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 369,
+     "legal": 214,
+     "nonEdge": 155,
+     "attemptSuccess": 0.5746445497630331,
+     "early": 100,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "35": {
+   "goal": 19,
+   "realEpisodes": 89,
+   "nonEdgeTransitions": 68,
+   "transitions": 276,
+   "arms": {
+    "COLD": {
+     "all": 247,
+     "legal": 129,
+     "nonEdge": 118,
+     "attemptSuccess": 0.6221408966148216,
+     "early": 26,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 271,
+     "legal": 111,
+     "nonEdge": 160,
+     "attemptSuccess": 0.630939226519337,
+     "early": 80,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 479,
+     "legal": 277,
+     "nonEdge": 202,
+     "attemptSuccess": 0.6007462686567164,
+     "early": 152,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "36": {
+   "goal": 8,
+   "realEpisodes": 170,
+   "nonEdgeTransitions": 74,
+   "transitions": 607,
+   "arms": {
+    "COLD": {
+     "all": 77,
+     "legal": 70,
+     "nonEdge": 7,
+     "attemptSuccess": 0.378698224852071,
+     "early": 0,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 317,
+     "legal": 252,
+     "nonEdge": 65,
+     "attemptSuccess": 0.694078947368421,
+     "early": 92,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 461,
+     "legal": 357,
+     "nonEdge": 104,
+     "attemptSuccess": 0.5580693815987934,
+     "early": 124,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "37": {
+   "goal": 12,
+   "realEpisodes": 191,
+   "nonEdgeTransitions": 201,
+   "transitions": 613,
+   "arms": {
+    "COLD": {
+     "all": 311,
+     "legal": 227,
+     "nonEdge": 84,
+     "attemptSuccess": 0.6335540838852097,
+     "early": 94,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 529,
+     "legal": 229,
+     "nonEdge": 300,
+     "attemptSuccess": 0.7157757496740548,
+     "early": 138,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 476,
+     "legal": 400,
+     "nonEdge": 76,
+     "attemptSuccess": 0.5436681222707423,
+     "early": 155,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "38": {
+   "goal": 16,
+   "realEpisodes": 196,
+   "nonEdgeTransitions": 232,
+   "transitions": 723,
+   "arms": {
+    "COLD": {
+     "all": 111,
+     "legal": 97,
+     "nonEdge": 14,
+     "attemptSuccess": 0.7067610062893082,
+     "early": 1,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 356,
+     "legal": 211,
+     "nonEdge": 145,
+     "attemptSuccess": 0.6451977401129944,
+     "early": 85,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 334,
+     "legal": 293,
+     "nonEdge": 41,
+     "attemptSuccess": 0.6937033084311632,
+     "early": 96,
+     "drawsIntoGoal": 0
+    }
+   }
+  },
+  "39": {
+   "goal": 19,
+   "realEpisodes": 140,
+   "nonEdgeTransitions": 140,
+   "transitions": 492,
+   "arms": {
+    "COLD": {
+     "all": 186,
+     "legal": 34,
+     "nonEdge": 152,
+     "attemptSuccess": 0.6902953586497891,
+     "early": 41,
+     "drawsIntoGoal": 0
+    },
+    "REAL": {
+     "all": 413,
+     "legal": 123,
+     "nonEdge": 290,
+     "attemptSuccess": 0.6801853997682503,
+     "early": 127,
+     "drawsIntoGoal": 0
+    },
+    "ENTRY_NR": {
+     "all": 422,
+     "legal": 253,
+     "nonEdge": 169,
+     "attemptSuccess": 0.7302383939774153,
+     "early": 131,
+     "drawsIntoGoal": 0
+    }
+   }
+  }
+ },
+ "arms": {
+  "COLD": {
+   "all": 229.225,
+   "legal": 142.575,
+   "nonEdge": 86.65,
+   "nonEdgeShare": 0.3780128694514124,
+   "attemptSuccess": 0.6549594538057265,
+   "early": 47.25,
+   "drawsIntoGoal": 0
+  },
+  "REAL": {
+   "all": 377.025,
+   "legal": 211.15,
+   "nonEdge": 165.875,
+   "nonEdgeShare": 0.4399575624958557,
+   "attemptSuccess": 0.6754855893069618,
+   "early": 99.975,
+   "drawsIntoGoal": 0
+  },
+  "ENTRY_NR": {
+   "all": 441.925,
+   "legal": 336.95,
+   "nonEdge": 104.975,
+   "nonEdgeShare": 0.23754030661311307,
+   "attemptSuccess": 0.6489561682682657,
+   "early": 131.5,
+   "drawsIntoGoal": 0
+  }
+ },
+ "benefit": {
+  "REAL_all": {
+   "n": 40,
+   "mean": 147.8,
+   "median": 138.5,
+   "sd": 111.64210215845534,
+   "positive": 36,
+   "negative": 4,
+   "zero": 0,
+   "ci": {
+    "lower": 113.05,
+    "upper": 181.5
+   }
+  },
+  "ENTRY_NR_all": {
+   "n": 40,
+   "mean": 212.7,
+   "median": 210,
+   "sd": 105.45194555110314,
+   "positive": 39,
+   "negative": 1,
+   "zero": 0,
+   "ci": {
+    "lower": 180.475,
+    "upper": 244.75
+   }
+  },
+  "REAL_legal": {
+   "n": 40,
+   "mean": 68.575,
+   "median": 66,
+   "sd": 86.85262716898004,
+   "positive": 33,
+   "negative": 7,
+   "zero": 0,
+   "ci": {
+    "lower": 42.275,
+    "upper": 95.2
+   }
+  },
+  "ENTRY_NR_legal": {
+   "n": 40,
+   "mean": 194.375,
+   "median": 193,
+   "sd": 87.08165560891538,
+   "positive": 40,
+   "negative": 0,
+   "zero": 0,
+   "ci": {
+    "lower": 167.8,
+    "upper": 221.3
+   }
+  }
+ },
+ "pairedSd": {
+  "REAL-COLD_all": 111.64210215845534,
+  "ENTRY_NR-COLD_all": 105.45194555110314,
+  "ENTRY_NR-REAL_all": 86.3367883676537,
+  "REAL-COLD_legal": 86.85262716898004,
+  "ENTRY_NR-COLD_legal": 87.08165560891538,
+  "ENTRY_NR-REAL_legal": 76.49977375532157
+ },
+ "storeStats": {
+  "meanEpisodes": 143.275,
+  "emptyStores": 0,
+  "nonEdgeTransitionShare": 0.3252306022788931
+ }
+}
