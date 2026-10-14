@@ -1,6 +1,6 @@
 # GATE-FLOOR-HEAD — the goal-entry floor on the exact audited HEAD runtime
 
-**Status: DEVELOPMENT / EXPLORATORY.** Not preregistered in the repository's formal sense. No registered or held-out seed,
+**Status: DEVELOPMENT / EXPLORATORY. Block H (280 worlds) executed under the frozen design (freeze `1d5c313`): REPLICATED; results in [results/RESULTS.md](results/RESULTS.md).** Not preregistered in the repository's formal sense. No registered or held-out seed,
 no production file and no earlier experiment is modified. Substrate: the runtime file set of audited commit
 `0df804c497e649affb9e7ebacb10fdc81ab6de8d` (FutureScore V2.3 live), materialised from git blobs in a temp directory, plus
 two guarded call-level lines in a *copy* of `main.js`. Production `main.js` is untouched.

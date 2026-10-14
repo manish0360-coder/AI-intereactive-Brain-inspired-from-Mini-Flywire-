@@ -49,6 +49,19 @@ export function exploratory(S) {
   // what the real store's own (partly non-graph) experience does on top of the floor, and on its own
   out.storeEffect = Object.fromEntries([['REAL_FLOOR_minus_COLD_FLOOR', 'REAL_FLOOR', 'COLD_FLOOR'], ['REAL_minus_COLD', 'REAL', 'COLD'], ['ENTRY_NR_minus_COLD_FLOOR', 'ENTRY_NR', 'COLD_FLOOR']].map(([k, x, y]) => [k, {
     legal: pairedSummary(W.map(w => A(w, x).legal - A(w, y).legal), C.BOOTSTRAP), nonEdge: pairedSummary(W.map(w => A(w, x).nonEdge - A(w, y).nonEdge), C.BOOTSTRAP), everyReset: pairedSummary(W.map(w => A(w, x).all - A(w, y).all), C.BOOTSTRAP) }]));
+  // (a) realized paired SDs of LEGAL reaches versus the 40-world calibration that sized the study
+  const sdOf = (xs) => { const m = mean(xs); return Math.sqrt(xs.reduce((s, x) => s + (x - m) ** 2, 0) / (xs.length - 1)); };
+  const L = (x, y) => W.map(w => A(w, x).legal - A(w, y).legal);
+  out.realizedPairedSd = { 'REAL-COLD': sdOf(L('REAL', 'COLD')), 'ENTRY_NR-COLD': sdOf(L('ENTRY_NR', 'COLD')), 'ENTRY_NR-REAL': sdOf(L('ENTRY_NR', 'REAL')), 'COLD_FLOOR-COLD': sdOf(L('COLD_FLOOR', 'COLD')), 'ENTRY_NR-COLD_FLOOR': sdOf(L('ENTRY_NR', 'COLD_FLOOR')),
+    calibrationMaxLegalSd: C.CALIBRATION.maxLegalPairedSd, requiredNAtDeltaForLargestRealizedSd: null };
+  out.realizedPairedSd.requiredNAtDeltaForLargestRealizedSd = Math.ceil((2.8 * Math.max(...['REAL-COLD', 'ENTRY_NR-COLD', 'ENTRY_NR-REAL', 'COLD_FLOOR-COLD', 'ENTRY_NR-COLD_FLOOR'].map(k => out.realizedPairedSd[k])) / C.MARGIN.delta) ** 2);
+  // (b) worlds in which COLD_FLOOR is indistinguishable from COLD on every endpoint (the floor changed nothing observable)
+  const same = (w) => ['legal', 'all', 'nonEdge', 'attemptSuccess', 'slipsPerCall', 'early'].every(k => A(w, 'COLD_FLOOR')[k] === A(w, 'COLD')[k]);
+  const idW = W.filter(same);
+  out.floorIdenticalToCold = { worlds: idW.length, ofWorlds: W.length, legalDifferenceZero: W.filter(w => A(w, 'COLD_FLOOR').legal === A(w, 'COLD').legal).length,
+    byGoal: Object.fromEntries(C.GOALS.map(g => [g, W.filter(w => S.perWorld[w].goal === g && same(w)).length])),
+    floorRaisedAnyScoreInThose: idW.filter(w => (A(w, 'COLD_FLOOR').floor && A(w, 'COLD_FLOOR').floor.raised > 0)).length,
+    meanColdLegalInThose: idW.length ? mean(idW.map(w => A(w, 'COLD').legal)) : null, meanColdLegalElsewhere: mean(W.filter(w => !same(w)).map(w => A(w, 'COLD').legal)) };
   for (const [name, pred] of [['empty store (0 episodes)', (n) => n === 0], ['at least 1 episode', (n) => n >= 1], ['at least 20 episodes', (n) => n >= 20]]) {
     const ws = W.filter(w => pred(S.perWorld[w].realEpisodes));
     if (!ws.length) { out.storeSize[name] = { worlds: 0 }; continue; }
@@ -71,6 +84,8 @@ if (invoked) {
   const g = (s) => (s ? `${f(s.mean)} [${f(s.ci.lower)}, ${f(s.ci.upper)}]` : 'n/a');
   console.log('EXPLORATORY (post-hoc): per-world paired changes relative to COLD');
   for (const [a, x] of Object.entries(r.arms)) console.log(`  ${a.padEnd(11)} legal gain ${g(x.legalGain)} | non-edge change ${g(x.nonEdgeChange)} | every-reset gain ${g(x.everyResetGain)} | goal-edge penalty change ${g(x.goalEdgePenaltyChange)} | legal share of every-reset gain ${f(x.legalShareOfEveryResetGain, 2)} | r(legal, non-edge) ${f(x.corr_legalGain_nonEdgeChange.r, 2)} | r(legal, penalty) ${f(x.corr_legalGain_penaltyChange.r, 2)}`);
+  console.log(`  realized paired SDs (legal): ${Object.entries(r.realizedPairedSd).map(([k, v]) => `${k} ${f(v, 1)}`).join(' | ')}`);
+  console.log(`  floor arm identical to COLD on every endpoint: ${r.floorIdenticalToCold.worlds}/${r.floorIdenticalToCold.ofWorlds} worlds (legal difference exactly 0 in ${r.floorIdenticalToCold.legalDifferenceZero}); by goal ${JSON.stringify(r.floorIdenticalToCold.byGoal)}; floor raised a score in ${r.floorIdenticalToCold.floorRaisedAnyScoreInThose} of them`);
   for (const [k, x] of Object.entries(r.storeEffect)) console.log(`  ${k.padEnd(28)} legal ${g(x.legal)} | non-edge ${g(x.nonEdge)} | every reset ${g(x.everyReset)}`);
   for (const [n, s] of Object.entries(r.storeSize)) console.log(`  store size ${n}: ${s.worlds} worlds` + (s.worlds ? `  floor ${g(s.benefitFloor)} REAL ${g(s.benefitReal)} ENTRY ${g(s.benefitEntry)}  REAL-floor ${g(s.realMinusFloor)}  ENTRY-floor ${g(s.entryMinusFloor)}` : ''));
 }
