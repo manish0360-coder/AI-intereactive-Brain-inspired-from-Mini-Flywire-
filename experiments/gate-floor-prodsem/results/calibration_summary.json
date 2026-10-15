@@ -1,0 +1,1519 @@
+{
+ "status": "CALIBRATION_NOT_CONFIRMATORY_PRODSEM_FLOOR_OFF",
+ "head": "0df804c",
+ "state": "P",
+ "worlds": 40,
+ "note": "XFER-1 worlds 0..39 (outside every study world); derived HEAD tree with the observational goal-reset probe only - the floor was never ON; hook states H = block-H harness, E = reliability environment removed only, P = every M7 semantic hook undefined. Top-level arms/benefit/pairedSd are state P (the frozen condition).",
+ "hookStates": {
+  "H": {
+   "arm": "A1",
+   "envMode": "on",
+   "creditMode": "on",
+   "pin": "on"
+  },
+  "E": {
+   "arm": "A1",
+   "envMode": "off",
+   "creditMode": "on",
+   "pin": "on"
+  },
+  "P": {
+   "arm": "OFF",
+   "envMode": "off",
+   "creditMode": "off",
+   "pin": "off"
+  }
+ },
+ "arms": {
+  "COLD": {
+   "all": 451.825,
+   "legal": 369.15,
+   "nonEdge": 82.675,
+   "nonEdgeShare": 0.18298013611464617,
+   "early": 142.375
+  },
+  "REAL": {
+   "all": 510.525,
+   "legal": 371.45,
+   "nonEdge": 139.075,
+   "nonEdgeShare": 0.2724156505558004,
+   "early": 157.1
+  },
+  "ENTRY_NR": {
+   "all": 519.55,
+   "legal": 451.175,
+   "nonEdge": 68.375,
+   "nonEdgeShare": 0.13160427292849583,
+   "early": 165.175
+  }
+ },
+ "benefit": {
+  "REAL_all": {
+   "n": 40,
+   "mean": 58.7,
+   "median": 57,
+   "sd": 89.82895427222242,
+   "positive": 32,
+   "negative": 8,
+   "zero": 0,
+   "ci": {
+    "lower": 31.35,
+    "upper": 85.175
+   }
+  },
+  "ENTRY_NR_all": {
+   "n": 40,
+   "mean": 67.725,
+   "median": 53,
+   "sd": 77.95034168771019,
+   "positive": 28,
+   "negative": 4,
+   "zero": 8,
+   "ci": {
+    "lower": 44.475,
+    "upper": 91.875
+   }
+  },
+  "REAL_legal": {
+   "n": 40,
+   "mean": 2.3,
+   "median": 6.5,
+   "sd": 98.43550537254694,
+   "positive": 21,
+   "negative": 18,
+   "zero": 1,
+   "ci": {
+    "lower": -27.825,
+    "upper": 31.6
+   }
+  },
+  "ENTRY_NR_legal": {
+   "n": 40,
+   "mean": 82.025,
+   "median": 84.5,
+   "sd": 77.5881591217206,
+   "positive": 29,
+   "negative": 2,
+   "zero": 9,
+   "ci": {
+    "lower": 58.875,
+    "upper": 105.75
+   }
+  }
+ },
+ "pairedSd": {
+  "REAL-COLD_all": 89.82895427222242,
+  "ENTRY_NR-COLD_all": 77.95034168771019,
+  "ENTRY_NR-REAL_all": 69.4101475992062,
+  "REAL-COLD_legal": 98.43550537254694,
+  "ENTRY_NR-COLD_legal": 77.5881591217206,
+  "ENTRY_NR-REAL_legal": 84.3876851812894
+ },
+ "integrity": {
+  "allConsistent": true,
+  "anyDrawIntoGoal": false,
+  "anySlippedEdge": false
+ },
+ "states": {
+  "H": {
+   "arms": {
+    "COLD": {
+     "all": 431.925,
+     "legal": 303.825,
+     "nonEdge": 128.1,
+     "nonEdgeShare": 0.29657926723389477,
+     "early": 125.65
+    },
+    "REAL": {
+     "all": 449.425,
+     "legal": 305.9,
+     "nonEdge": 143.525,
+     "nonEdgeShare": 0.31935250597986314,
+     "early": 127.65
+    },
+    "ENTRY_NR": {
+     "all": 480.475,
+     "legal": 364.35,
+     "nonEdge": 116.125,
+     "nonEdgeShare": 0.2416879130027577,
+     "early": 140.675
+    }
+   },
+   "benefit": {
+    "REAL_all": {
+     "n": 40,
+     "mean": 17.5,
+     "median": 14,
+     "sd": 88.16534582889246,
+     "positive": 23,
+     "negative": 17,
+     "zero": 0,
+     "ci": {
+      "lower": -8.65,
+      "upper": 43.65
+     }
+    },
+    "ENTRY_NR_all": {
+     "n": 40,
+     "mean": 48.55,
+     "median": 34.5,
+     "sd": 85.08395552147003,
+     "positive": 23,
+     "negative": 12,
+     "zero": 5,
+     "ci": {
+      "lower": 23.725,
+      "upper": 75.875
+     }
+    },
+    "REAL_legal": {
+     "n": 40,
+     "mean": 2.075,
+     "median": 11.5,
+     "sd": 81.98948885101848,
+     "positive": 23,
+     "negative": 17,
+     "zero": 0,
+     "ci": {
+      "lower": -22.7,
+      "upper": 27.4
+     }
+    },
+    "ENTRY_NR_legal": {
+     "n": 40,
+     "mean": 60.525,
+     "median": 47.5,
+     "sd": 85.9636140975817,
+     "positive": 27,
+     "negative": 9,
+     "zero": 4,
+     "ci": {
+      "lower": 34.2,
+      "upper": 87.225
+     }
+    }
+   },
+   "pairedSd": {
+    "REAL-COLD_all": 88.16534582889246,
+    "ENTRY_NR-COLD_all": 85.08395552147003,
+    "ENTRY_NR-REAL_all": 104.39249162507957,
+    "REAL-COLD_legal": 81.98948885101848,
+    "ENTRY_NR-COLD_legal": 85.9636140975817,
+    "ENTRY_NR-REAL_legal": 87.26116121396882
+   }
+  },
+  "E": {
+   "arms": {
+    "COLD": {
+     "all": 452,
+     "legal": 350.9,
+     "nonEdge": 101.1,
+     "nonEdgeShare": 0.2236725663716814,
+     "early": 139.975
+    },
+    "REAL": {
+     "all": 483.4,
+     "legal": 343.675,
+     "nonEdge": 139.725,
+     "nonEdgeShare": 0.2890463384360778,
+     "early": 146.025
+    },
+    "ENTRY_NR": {
+     "all": 540.875,
+     "legal": 440.35,
+     "nonEdge": 100.525,
+     "nonEdgeShare": 0.18585625144441878,
+     "early": 169.225
+    }
+   },
+   "benefit": {
+    "REAL_all": {
+     "n": 40,
+     "mean": 31.4,
+     "median": 28.5,
+     "sd": 116.43966193610697,
+     "positive": 23,
+     "negative": 16,
+     "zero": 1,
+     "ci": {
+      "lower": -4,
+      "upper": 66.975
+     }
+    },
+    "ENTRY_NR_all": {
+     "n": 40,
+     "mean": 88.875,
+     "median": 56,
+     "sd": 90.06726474967017,
+     "positive": 32,
+     "negative": 3,
+     "zero": 5,
+     "ci": {
+      "lower": 62.225,
+      "upper": 116.55
+     }
+    },
+    "REAL_legal": {
+     "n": 40,
+     "mean": -7.225,
+     "median": 7.5,
+     "sd": 95.09333808799619,
+     "positive": 22,
+     "negative": 16,
+     "zero": 2,
+     "ci": {
+      "lower": -38.225,
+      "upper": 20.275
+     }
+    },
+    "ENTRY_NR_legal": {
+     "n": 40,
+     "mean": 89.45,
+     "median": 66.5,
+     "sd": 81.55191833804639,
+     "positive": 32,
+     "negative": 3,
+     "zero": 5,
+     "ci": {
+      "lower": 65.325,
+      "upper": 114.35
+     }
+    }
+   },
+   "pairedSd": {
+    "REAL-COLD_all": 116.43966193610697,
+    "ENTRY_NR-COLD_all": 90.06726474967017,
+    "ENTRY_NR-REAL_all": 101.46692968900173,
+    "REAL-COLD_legal": 95.09333808799619,
+    "ENTRY_NR-COLD_legal": 81.55191833804639,
+    "ENTRY_NR-REAL_legal": 97.1254508619044
+   }
+  }
+ },
+ "paired": {
+  "E-H": {
+   "COLD_legal": {
+    "n": 40,
+    "mean": 47.075,
+    "median": 62,
+    "sd": 92.40529108505001,
+    "positive": 26,
+    "negative": 14,
+    "zero": 0,
+    "ci": {
+     "lower": 19.025,
+     "upper": 74.85
+    }
+   },
+   "COLD_nonEdge": {
+    "n": 40,
+    "mean": -27,
+    "median": -27,
+    "sd": 83.19085255434005,
+    "positive": 12,
+    "negative": 28,
+    "zero": 0,
+    "ci": {
+     "lower": -52.15,
+     "upper": -1
+    }
+   },
+   "ENTRY_NR_legal": {
+    "n": 40,
+    "mean": 76,
+    "median": 73,
+    "sd": 75.05553499465135,
+    "positive": 36,
+    "negative": 4,
+    "zero": 0,
+    "ci": {
+     "lower": 52.6,
+     "upper": 98.625
+    }
+   },
+   "ENTRY_NR_nonEdge": {
+    "n": 40,
+    "mean": -15.6,
+    "median": -27,
+    "sd": 76.24716892600517,
+    "positive": 12,
+    "negative": 28,
+    "zero": 0,
+    "ci": {
+     "lower": -38.875,
+     "upper": 7.7
+    }
+   },
+   "REAL_legal": {
+    "n": 40,
+    "mean": 37.775,
+    "median": 55.5,
+    "sd": 109.28496917316437,
+    "positive": 27,
+    "negative": 13,
+    "zero": 0,
+    "ci": {
+     "lower": 3.45,
+     "upper": 70.625
+    }
+   },
+   "REAL_nonEdge": {
+    "n": 40,
+    "mean": -3.8,
+    "median": -18,
+    "sd": 102.55660100771871,
+    "positive": 16,
+    "negative": 24,
+    "zero": 0,
+    "ci": {
+     "lower": -34.275,
+     "upper": 28.35
+    }
+   }
+  },
+  "P-H": {
+   "COLD_legal": {
+    "n": 40,
+    "mean": 65.325,
+    "median": 49.5,
+    "sd": 99.17619325066025,
+    "positive": 30,
+    "negative": 10,
+    "zero": 0,
+    "ci": {
+     "lower": 35.525,
+     "upper": 95.95
+    }
+   },
+   "COLD_nonEdge": {
+    "n": 40,
+    "mean": -45.425,
+    "median": -43.5,
+    "sd": 71.06691952858272,
+    "positive": 9,
+    "negative": 31,
+    "zero": 0,
+    "ci": {
+     "lower": -67.6,
+     "upper": -24.125
+    }
+   },
+   "ENTRY_NR_legal": {
+    "n": 40,
+    "mean": 86.825,
+    "median": 72,
+    "sd": 73.06719334687588,
+    "positive": 37,
+    "negative": 3,
+    "zero": 0,
+    "ci": {
+     "lower": 64.575,
+     "upper": 109.275
+    }
+   },
+   "ENTRY_NR_nonEdge": {
+    "n": 40,
+    "mean": -47.75,
+    "median": -49.5,
+    "sd": 61.33378623021192,
+    "positive": 11,
+    "negative": 29,
+    "zero": 0,
+    "ci": {
+     "lower": -66.8,
+     "upper": -29.425
+    }
+   },
+   "REAL_legal": {
+    "n": 40,
+    "mean": 65.55,
+    "median": 65.5,
+    "sd": 90.94488328032422,
+    "positive": 31,
+    "negative": 8,
+    "zero": 1,
+    "ci": {
+     "lower": 37.45,
+     "upper": 92.975
+    }
+   },
+   "REAL_nonEdge": {
+    "n": 40,
+    "mean": -4.45,
+    "median": -25.5,
+    "sd": 97.65479493787788,
+    "positive": 15,
+    "negative": 24,
+    "zero": 1,
+    "ci": {
+     "lower": -32.95,
+     "upper": 25.825
+    }
+   }
+  },
+  "P-E": {
+   "COLD_legal": {
+    "n": 40,
+    "mean": 18.25,
+    "median": -8,
+    "sd": 74.35319385135675,
+    "positive": 18,
+    "negative": 22,
+    "zero": 0,
+    "ci": {
+     "lower": -3.425,
+     "upper": 42.525
+    }
+   },
+   "COLD_nonEdge": {
+    "n": 40,
+    "mean": -18.425,
+    "median": -14,
+    "sd": 62.05534647104169,
+    "positive": 15,
+    "negative": 25,
+    "zero": 0,
+    "ci": {
+     "lower": -37.35,
+     "upper": 0.85
+    }
+   },
+   "ENTRY_NR_legal": {
+    "n": 40,
+    "mean": 10.825,
+    "median": 9,
+    "sd": 52.83883939601577,
+    "positive": 22,
+    "negative": 17,
+    "zero": 1,
+    "ci": {
+     "lower": -4.45,
+     "upper": 27.825
+    }
+   },
+   "ENTRY_NR_nonEdge": {
+    "n": 40,
+    "mean": -32.15,
+    "median": -12.5,
+    "sd": 57.832893665660464,
+    "positive": 12,
+    "negative": 27,
+    "zero": 1,
+    "ci": {
+     "lower": -49.775,
+     "upper": -14.675
+    }
+   },
+   "REAL_legal": {
+    "n": 40,
+    "mean": 27.775,
+    "median": 32.5,
+    "sd": 100.30351056054432,
+    "positive": 26,
+    "negative": 14,
+    "zero": 0,
+    "ci": {
+     "lower": -2.625,
+     "upper": 58.275
+    }
+   },
+   "REAL_nonEdge": {
+    "n": 40,
+    "mean": -0.65,
+    "median": -0.5,
+    "sd": 101.88770842552661,
+    "positive": 20,
+    "negative": 20,
+    "zero": 0,
+    "ci": {
+     "lower": -31.05,
+     "upper": 30.675
+    }
+   }
+  }
+ },
+ "perGoalEntryBenefitLegal": {
+  "8": {
+   "n": 10,
+   "coldLegal": 418.5,
+   "benefit": 89.2
+  },
+  "12": {
+   "n": 10,
+   "coldLegal": 404.1,
+   "benefit": 90.8
+  },
+  "16": {
+   "n": 10,
+   "coldLegal": 352.6,
+   "benefit": 39.2
+  },
+  "19": {
+   "n": 10,
+   "coldLegal": 301.4,
+   "benefit": 108.9
+  }
+ },
+ "perWorld": {
+  "0": {
+   "goal": 8,
+   "episodes": 219,
+   "arms": {
+    "COLD": {
+     "all": 452,
+     "legal": 399,
+     "nonEdge": 53,
+     "early": 142
+    },
+    "REAL": {
+     "all": 620,
+     "legal": 516,
+     "nonEdge": 104,
+     "early": 199
+    },
+    "ENTRY_NR": {
+     "all": 517,
+     "legal": 485,
+     "nonEdge": 32,
+     "early": 173
+    }
+   }
+  },
+  "1": {
+   "goal": 12,
+   "episodes": 233,
+   "arms": {
+    "COLD": {
+     "all": 494,
+     "legal": 445,
+     "nonEdge": 49,
+     "early": 162
+    },
+    "REAL": {
+     "all": 549,
+     "legal": 467,
+     "nonEdge": 82,
+     "early": 185
+    },
+    "ENTRY_NR": {
+     "all": 495,
+     "legal": 445,
+     "nonEdge": 50,
+     "early": 148
+    }
+   }
+  },
+  "2": {
+   "goal": 16,
+   "episodes": 207,
+   "arms": {
+    "COLD": {
+     "all": 415,
+     "legal": 400,
+     "nonEdge": 15,
+     "early": 139
+    },
+    "REAL": {
+     "all": 389,
+     "legal": 365,
+     "nonEdge": 24,
+     "early": 135
+    },
+    "ENTRY_NR": {
+     "all": 415,
+     "legal": 400,
+     "nonEdge": 15,
+     "early": 139
+    }
+   }
+  },
+  "3": {
+   "goal": 19,
+   "episodes": 242,
+   "arms": {
+    "COLD": {
+     "all": 399,
+     "legal": 278,
+     "nonEdge": 121,
+     "early": 121
+    },
+    "REAL": {
+     "all": 500,
+     "legal": 342,
+     "nonEdge": 158,
+     "early": 160
+    },
+    "ENTRY_NR": {
+     "all": 441,
+     "legal": 393,
+     "nonEdge": 48,
+     "early": 135
+    }
+   }
+  },
+  "4": {
+   "goal": 8,
+   "episodes": 238,
+   "arms": {
+    "COLD": {
+     "all": 507,
+     "legal": 472,
+     "nonEdge": 35,
+     "early": 171
+    },
+    "REAL": {
+     "all": 541,
+     "legal": 431,
+     "nonEdge": 110,
+     "early": 169
+    },
+    "ENTRY_NR": {
+     "all": 557,
+     "legal": 510,
+     "nonEdge": 47,
+     "early": 186
+    }
+   }
+  },
+  "5": {
+   "goal": 12,
+   "episodes": 236,
+   "arms": {
+    "COLD": {
+     "all": 379,
+     "legal": 355,
+     "nonEdge": 24,
+     "early": 132
+    },
+    "REAL": {
+     "all": 585,
+     "legal": 481,
+     "nonEdge": 104,
+     "early": 180
+    },
+    "ENTRY_NR": {
+     "all": 538,
+     "legal": 469,
+     "nonEdge": 69,
+     "early": 170
+    }
+   }
+  },
+  "6": {
+   "goal": 16,
+   "episodes": 219,
+   "arms": {
+    "COLD": {
+     "all": 392,
+     "legal": 303,
+     "nonEdge": 89,
+     "early": 118
+    },
+    "REAL": {
+     "all": 448,
+     "legal": 230,
+     "nonEdge": 218,
+     "early": 137
+    },
+    "ENTRY_NR": {
+     "all": 427,
+     "legal": 314,
+     "nonEdge": 113,
+     "early": 126
+    }
+   }
+  },
+  "7": {
+   "goal": 19,
+   "episodes": 234,
+   "arms": {
+    "COLD": {
+     "all": 399,
+     "legal": 265,
+     "nonEdge": 134,
+     "early": 114
+    },
+    "REAL": {
+     "all": 533,
+     "legal": 455,
+     "nonEdge": 78,
+     "early": 160
+    },
+    "ENTRY_NR": {
+     "all": 510,
+     "legal": 393,
+     "nonEdge": 117,
+     "early": 163
+    }
+   }
+  },
+  "8": {
+   "goal": 8,
+   "episodes": 235,
+   "arms": {
+    "COLD": {
+     "all": 610,
+     "legal": 546,
+     "nonEdge": 64,
+     "early": 193
+    },
+    "REAL": {
+     "all": 549,
+     "legal": 495,
+     "nonEdge": 54,
+     "early": 171
+    },
+    "ENTRY_NR": {
+     "all": 610,
+     "legal": 546,
+     "nonEdge": 64,
+     "early": 193
+    }
+   }
+  },
+  "9": {
+   "goal": 12,
+   "episodes": 239,
+   "arms": {
+    "COLD": {
+     "all": 433,
+     "legal": 376,
+     "nonEdge": 57,
+     "early": 124
+    },
+    "REAL": {
+     "all": 523,
+     "legal": 431,
+     "nonEdge": 92,
+     "early": 152
+    },
+    "ENTRY_NR": {
+     "all": 641,
+     "legal": 558,
+     "nonEdge": 83,
+     "early": 196
+    }
+   }
+  },
+  "10": {
+   "goal": 16,
+   "episodes": 219,
+   "arms": {
+    "COLD": {
+     "all": 434,
+     "legal": 351,
+     "nonEdge": 83,
+     "early": 142
+    },
+    "REAL": {
+     "all": 470,
+     "legal": 351,
+     "nonEdge": 119,
+     "early": 152
+    },
+    "ENTRY_NR": {
+     "all": 434,
+     "legal": 351,
+     "nonEdge": 83,
+     "early": 142
+    }
+   }
+  },
+  "11": {
+   "goal": 19,
+   "episodes": 251,
+   "arms": {
+    "COLD": {
+     "all": 382,
+     "legal": 243,
+     "nonEdge": 139,
+     "early": 112
+    },
+    "REAL": {
+     "all": 538,
+     "legal": 397,
+     "nonEdge": 141,
+     "early": 184
+    },
+    "ENTRY_NR": {
+     "all": 579,
+     "legal": 484,
+     "nonEdge": 95,
+     "early": 183
+    }
+   }
+  },
+  "12": {
+   "goal": 8,
+   "episodes": 183,
+   "arms": {
+    "COLD": {
+     "all": 408,
+     "legal": 354,
+     "nonEdge": 54,
+     "early": 146
+    },
+    "REAL": {
+     "all": 595,
+     "legal": 359,
+     "nonEdge": 236,
+     "early": 191
+    },
+    "ENTRY_NR": {
+     "all": 533,
+     "legal": 478,
+     "nonEdge": 55,
+     "early": 165
+    }
+   }
+  },
+  "13": {
+   "goal": 12,
+   "episodes": 232,
+   "arms": {
+    "COLD": {
+     "all": 514,
+     "legal": 412,
+     "nonEdge": 102,
+     "early": 149
+    },
+    "REAL": {
+     "all": 645,
+     "legal": 500,
+     "nonEdge": 145,
+     "early": 202
+    },
+    "ENTRY_NR": {
+     "all": 612,
+     "legal": 542,
+     "nonEdge": 70,
+     "early": 181
+    }
+   }
+  },
+  "14": {
+   "goal": 16,
+   "episodes": 239,
+   "arms": {
+    "COLD": {
+     "all": 426,
+     "legal": 311,
+     "nonEdge": 115,
+     "early": 131
+    },
+    "REAL": {
+     "all": 458,
+     "legal": 319,
+     "nonEdge": 139,
+     "early": 134
+    },
+    "ENTRY_NR": {
+     "all": 481,
+     "legal": 382,
+     "nonEdge": 99,
+     "early": 143
+    }
+   }
+  },
+  "15": {
+   "goal": 19,
+   "episodes": 274,
+   "arms": {
+    "COLD": {
+     "all": 431,
+     "legal": 358,
+     "nonEdge": 73,
+     "early": 134
+    },
+    "REAL": {
+     "all": 450,
+     "legal": 307,
+     "nonEdge": 143,
+     "early": 131
+    },
+    "ENTRY_NR": {
+     "all": 520,
+     "legal": 408,
+     "nonEdge": 112,
+     "early": 154
+    }
+   }
+  },
+  "16": {
+   "goal": 8,
+   "episodes": 225,
+   "arms": {
+    "COLD": {
+     "all": 429,
+     "legal": 400,
+     "nonEdge": 29,
+     "early": 121
+    },
+    "REAL": {
+     "all": 588,
+     "legal": 468,
+     "nonEdge": 120,
+     "early": 189
+    },
+    "ENTRY_NR": {
+     "all": 595,
+     "legal": 548,
+     "nonEdge": 47,
+     "early": 189
+    }
+   }
+  },
+  "17": {
+   "goal": 12,
+   "episodes": 287,
+   "arms": {
+    "COLD": {
+     "all": 519,
+     "legal": 465,
+     "nonEdge": 54,
+     "early": 183
+    },
+    "REAL": {
+     "all": 532,
+     "legal": 392,
+     "nonEdge": 140,
+     "early": 161
+    },
+    "ENTRY_NR": {
+     "all": 570,
+     "legal": 511,
+     "nonEdge": 59,
+     "early": 165
+    }
+   }
+  },
+  "18": {
+   "goal": 16,
+   "episodes": 242,
+   "arms": {
+    "COLD": {
+     "all": 453,
+     "legal": 411,
+     "nonEdge": 42,
+     "early": 160
+    },
+    "REAL": {
+     "all": 471,
+     "legal": 409,
+     "nonEdge": 62,
+     "early": 152
+    },
+    "ENTRY_NR": {
+     "all": 453,
+     "legal": 411,
+     "nonEdge": 42,
+     "early": 160
+    }
+   }
+  },
+  "19": {
+   "goal": 19,
+   "episodes": 240,
+   "arms": {
+    "COLD": {
+     "all": 467,
+     "legal": 395,
+     "nonEdge": 72,
+     "early": 149
+    },
+    "REAL": {
+     "all": 475,
+     "legal": 309,
+     "nonEdge": 166,
+     "early": 157
+    },
+    "ENTRY_NR": {
+     "all": 467,
+     "legal": 395,
+     "nonEdge": 72,
+     "early": 149
+    }
+   }
+  },
+  "20": {
+   "goal": 8,
+   "episodes": 199,
+   "arms": {
+    "COLD": {
+     "all": 395,
+     "legal": 367,
+     "nonEdge": 28,
+     "early": 132
+    },
+    "REAL": {
+     "all": 462,
+     "legal": 381,
+     "nonEdge": 81,
+     "early": 134
+    },
+    "ENTRY_NR": {
+     "all": 618,
+     "legal": 532,
+     "nonEdge": 86,
+     "early": 196
+    }
+   }
+  },
+  "21": {
+   "goal": 12,
+   "episodes": 246,
+   "arms": {
+    "COLD": {
+     "all": 418,
+     "legal": 350,
+     "nonEdge": 68,
+     "early": 143
+    },
+    "REAL": {
+     "all": 524,
+     "legal": 332,
+     "nonEdge": 192,
+     "early": 141
+    },
+    "ENTRY_NR": {
+     "all": 627,
+     "legal": 495,
+     "nonEdge": 132,
+     "early": 182
+    }
+   }
+  },
+  "22": {
+   "goal": 16,
+   "episodes": 235,
+   "arms": {
+    "COLD": {
+     "all": 404,
+     "legal": 294,
+     "nonEdge": 110,
+     "early": 134
+    },
+    "REAL": {
+     "all": 559,
+     "legal": 372,
+     "nonEdge": 187,
+     "early": 172
+    },
+    "ENTRY_NR": {
+     "all": 438,
+     "legal": 408,
+     "nonEdge": 30,
+     "early": 149
+    }
+   }
+  },
+  "23": {
+   "goal": 19,
+   "episodes": 256,
+   "arms": {
+    "COLD": {
+     "all": 455,
+     "legal": 276,
+     "nonEdge": 179,
+     "early": 131
+    },
+    "REAL": {
+     "all": 614,
+     "legal": 303,
+     "nonEdge": 311,
+     "early": 159
+    },
+    "ENTRY_NR": {
+     "all": 501,
+     "legal": 432,
+     "nonEdge": 69,
+     "early": 156
+    }
+   }
+  },
+  "24": {
+   "goal": 8,
+   "episodes": 253,
+   "arms": {
+    "COLD": {
+     "all": 524,
+     "legal": 461,
+     "nonEdge": 63,
+     "early": 170
+    },
+    "REAL": {
+     "all": 517,
+     "legal": 455,
+     "nonEdge": 62,
+     "early": 175
+    },
+    "ENTRY_NR": {
+     "all": 493,
+     "legal": 464,
+     "nonEdge": 29,
+     "early": 161
+    }
+   }
+  },
+  "25": {
+   "goal": 12,
+   "episodes": 229,
+   "arms": {
+    "COLD": {
+     "all": 489,
+     "legal": 431,
+     "nonEdge": 58,
+     "early": 173
+    },
+    "REAL": {
+     "all": 494,
+     "legal": 426,
+     "nonEdge": 68,
+     "early": 164
+    },
+    "ENTRY_NR": {
+     "all": 551,
+     "legal": 447,
+     "nonEdge": 104,
+     "early": 170
+    }
+   }
+  },
+  "26": {
+   "goal": 16,
+   "episodes": 251,
+   "arms": {
+    "COLD": {
+     "all": 424,
+     "legal": 371,
+     "nonEdge": 53,
+     "early": 138
+    },
+    "REAL": {
+     "all": 482,
+     "legal": 427,
+     "nonEdge": 55,
+     "early": 154
+    },
+    "ENTRY_NR": {
+     "all": 424,
+     "legal": 371,
+     "nonEdge": 53,
+     "early": 138
+    }
+   }
+  },
+  "27": {
+   "goal": 19,
+   "episodes": 236,
+   "arms": {
+    "COLD": {
+     "all": 341,
+     "legal": 224,
+     "nonEdge": 117,
+     "early": 101
+    },
+    "REAL": {
+     "all": 528,
+     "legal": 289,
+     "nonEdge": 239,
+     "early": 151
+    },
+    "ENTRY_NR": {
+     "all": 530,
+     "legal": 407,
+     "nonEdge": 123,
+     "early": 163
+    }
+   }
+  },
+  "28": {
+   "goal": 8,
+   "episodes": 235,
+   "arms": {
+    "COLD": {
+     "all": 474,
+     "legal": 415,
+     "nonEdge": 59,
+     "early": 144
+    },
+    "REAL": {
+     "all": 610,
+     "legal": 542,
+     "nonEdge": 68,
+     "early": 188
+    },
+    "ENTRY_NR": {
+     "all": 539,
+     "legal": 498,
+     "nonEdge": 41,
+     "early": 184
+    }
+   }
+  },
+  "29": {
+   "goal": 12,
+   "episodes": 253,
+   "arms": {
+    "COLD": {
+     "all": 650,
+     "legal": 568,
+     "nonEdge": 82,
+     "early": 203
+    },
+    "REAL": {
+     "all": 449,
+     "legal": 365,
+     "nonEdge": 84,
+     "early": 132
+    },
+    "ENTRY_NR": {
+     "all": 578,
+     "legal": 505,
+     "nonEdge": 73,
+     "early": 199
+    }
+   }
+  },
+  "30": {
+   "goal": 16,
+   "episodes": 242,
+   "arms": {
+    "COLD": {
+     "all": 438,
+     "legal": 419,
+     "nonEdge": 19,
+     "early": 138
+    },
+    "REAL": {
+     "all": 451,
+     "legal": 260,
+     "nonEdge": 191,
+     "early": 134
+    },
+    "ENTRY_NR": {
+     "all": 438,
+     "legal": 419,
+     "nonEdge": 19,
+     "early": 138
+    }
+   }
+  },
+  "31": {
+   "goal": 19,
+   "episodes": 231,
+   "arms": {
+    "COLD": {
+     "all": 543,
+     "legal": 402,
+     "nonEdge": 141,
+     "early": 170
+    },
+    "REAL": {
+     "all": 484,
+     "legal": 385,
+     "nonEdge": 99,
+     "early": 149
+    },
+    "ENTRY_NR": {
+     "all": 555,
+     "legal": 379,
+     "nonEdge": 176,
+     "early": 172
+    }
+   }
+  },
+  "32": {
+   "goal": 8,
+   "episodes": 201,
+   "arms": {
+    "COLD": {
+     "all": 563,
+     "legal": 400,
+     "nonEdge": 163,
+     "early": 173
+    },
+    "REAL": {
+     "all": 499,
+     "legal": 442,
+     "nonEdge": 57,
+     "early": 165
+    },
+    "ENTRY_NR": {
+     "all": 562,
+     "legal": 493,
+     "nonEdge": 69,
+     "early": 177
+    }
+   }
+  },
+  "33": {
+   "goal": 12,
+   "episodes": 236,
+   "arms": {
+    "COLD": {
+     "all": 437,
+     "legal": 332,
+     "nonEdge": 105,
+     "early": 132
+    },
+    "REAL": {
+     "all": 579,
+     "legal": 357,
+     "nonEdge": 222,
+     "early": 164
+    },
+    "ENTRY_NR": {
+     "all": 504,
+     "legal": 478,
+     "nonEdge": 26,
+     "early": 177
+    }
+   }
+  },
+  "34": {
+   "goal": 16,
+   "episodes": 256,
+   "arms": {
+    "COLD": {
+     "all": 486,
+     "legal": 418,
+     "nonEdge": 68,
+     "early": 162
+    },
+    "REAL": {
+     "all": 378,
+     "legal": 135,
+     "nonEdge": 243,
+     "early": 117
+    },
+    "ENTRY_NR": {
+     "all": 486,
+     "legal": 418,
+     "nonEdge": 68,
+     "early": 162
+    }
+   }
+  },
+  "35": {
+   "goal": 19,
+   "episodes": 236,
+   "arms": {
+    "COLD": {
+     "all": 417,
+     "legal": 249,
+     "nonEdge": 168,
+     "early": 96
+    },
+    "REAL": {
+     "all": 483,
+     "legal": 322,
+     "nonEdge": 161,
+     "early": 143
+    },
+    "ENTRY_NR": {
+     "all": 533,
+     "legal": 438,
+     "nonEdge": 95,
+     "early": 168
+    }
+   }
+  },
+  "36": {
+   "goal": 8,
+   "episodes": 222,
+   "arms": {
+    "COLD": {
+     "all": 475,
+     "legal": 371,
+     "nonEdge": 104,
+     "early": 145
+    },
+    "REAL": {
+     "all": 476,
+     "legal": 326,
+     "nonEdge": 150,
+     "early": 158
+    },
+    "ENTRY_NR": {
+     "all": 565,
+     "legal": 523,
+     "nonEdge": 42,
+     "early": 187
+    }
+   }
+  },
+  "37": {
+   "goal": 12,
+   "episodes": 220,
+   "arms": {
+    "COLD": {
+     "all": 408,
+     "legal": 307,
+     "nonEdge": 101,
+     "early": 139
+    },
+    "REAL": {
+     "all": 537,
+     "legal": 209,
+     "nonEdge": 328,
+     "early": 135
+    },
+    "ENTRY_NR": {
+     "all": 560,
+     "legal": 499,
+     "nonEdge": 61,
+     "early": 184
+    }
+   }
+  },
+  "38": {
+   "goal": 16,
+   "episodes": 234,
+   "arms": {
+    "COLD": {
+     "all": 318,
+     "legal": 248,
+     "nonEdge": 70,
+     "early": 92
+    },
+    "REAL": {
+     "all": 391,
+     "legal": 362,
+     "nonEdge": 29,
+     "early": 125
+    },
+    "ENTRY_NR": {
+     "all": 476,
+     "legal": 444,
+     "nonEdge": 32,
+     "early": 152
+    }
+   }
+  },
+  "39": {
+   "goal": 19,
+   "episodes": 228,
+   "arms": {
+    "COLD": {
+     "all": 471,
+     "legal": 324,
+     "nonEdge": 147,
+     "early": 136
+    },
+    "REAL": {
+     "all": 445,
+     "legal": 144,
+     "nonEdge": 301,
+     "early": 123
+    },
+    "ENTRY_NR": {
+     "all": 409,
+     "legal": 374,
+     "nonEdge": 35,
+     "early": 132
+    }
+   }
+  }
+ }
+}
