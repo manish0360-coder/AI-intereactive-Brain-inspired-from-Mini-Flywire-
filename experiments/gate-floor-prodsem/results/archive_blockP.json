@@ -1,0 +1,32 @@
+{
+ "schema": "gatefloorprodsem.archive/1",
+ "purpose": "durable, recoverable copy of the raw block-P output (the git-ignored experiments/gate-floor-prodsem/data/blockP); committed record = identification + verification only",
+ "freezeCommit": "cfc1e5c1be1c5f8fc3625701302661e280bbb82e",
+ "resultsCommit": "e60cdc85338d207dd278a5b61d6e5191b5deedbc",
+ "manifestDigest": "eb7ac3654b246af62aac7c8c25ec50c22287f50c533b9027b9d34cf0248190e6",
+ "manifestFileSha256": "27fe59bf9f3d21decfe03081f73c972308cd330610748080af8539ad69fb2aa8",
+ "archive": {
+  "name": "blockP_raw_cfc1e5c_e60cdc8.tar.gz",
+  "location": "E:/Projects/OpenSourceLab/archives/gate-floor-prodsem/blockP_raw_cfc1e5c_e60cdc8.tar.gz",
+  "sha256": "a05a94c98377deac8bfc665d18a10a57251436b1412450f2960528d723d34519",
+  "bytes": 12368214,
+  "uncompressedBytes": 89145681,
+  "root": "blockP",
+  "format": "tar (GNU tar 1.34) | gzip -n -9",
+  "creation": "cd experiments/gate-floor-prodsem/data && tar --sort=name --mtime=\"2026-10-15 00:00:00Z\" --owner=0 --group=0 --numeric-owner -cf - blockP | gzip -n -9 > <archive>",
+  "deterministic": "creating the archive a second time reproduced the same sha256"
+ },
+ "counts": {
+  "worlds": 280,
+  "sessions": 1680,
+  "brains": 840,
+  "files": 2523
+ },
+ "files": {
+  "MANIFEST.json": "27fe59bf9f3d21decfe03081f73c972308cd330610748080af8539ad69fb2aa8",
+  "plan.json": "b82ffaaaa2ee896c46cb7da1cbb4f416b8e4edc917f3eba0b7bce316e729e06d",
+  "controls.json": "bddcae3396ff1fab1f81470eb13de4e6b355e036bd576af60e9ec004675fd3ef"
+ },
+ "verification": "node experiments/gate-floor-prodsem/verify_archive_blockP.mjs --archive <archive>   (or --dir <extracted blockP>)",
+ "limits": "single local copy outside the repository working tree; no off-machine copy exists unless the owner makes one; the archive is bound by the committed sha256 above and each member by the manifest hashes"
+}
