@@ -247,3 +247,47 @@ cognition, or the guard's behaviour when the agent's whole history is guarded.
 Gemini review (`research/external/GATEFLOORINTERACTION_GEMINI_DESIGN_REVIEW_PACKAGE.md`) → Director reconciliation →
 (only then) freeze: `config.mjs`, session/orchestrator/analysis forks of PRODSEM, a gate with the I3/I4 checks and mutants,
 freeze commit pushed and remote-verified, execution, results commit.
+
+## 9. FREEZE ADDENDUM (written before any confirmatory outcome exists)
+
+**Review and authorization.** Independent review (Gemini): PASS WITH CLAIM LIMITS, one required correction. Research Director:
+correction, freeze and confirmatory execution authorized. The addendum records the correction and the implementation choices that
+the reviewed text left open; **no scientific parameter of §3–§7 changed** (δ = 20, 8 cells, 280 worlds / 70 per goal, family of
+three at Bonferroni-3, instruments I1–I7, fixed stopping).
+
+1. **The required correction (S5).** `static_checks.mjs` `lastReasoningInvariant(text)`: after comments are stripped it collects
+   every write-like operation on `lastReasoning` (plain / compound / logical assignment, `window.` / `globalThis.` / `self.`
+   qualified, bare and bracket forms; `delete`; `Object.defineProperty` / `Reflect.set`-style redefinition; property writes; `++`/`--`)
+   and requires exactly one write — an assignment whose right-hand side opens an object literal (HEAD `main.js:2765`). It is
+   asserted on three **pinned, built** sources (bare HEAD `c92c5c6b…`, PRODSEM derived `8cf1dc29…`, guard tree `a0eb7b37…`), not on
+   a working-tree copy. Mutation tests M5–M8 insert a clearing operation (`= null` at the goal-reset anchor, `delete`,
+   `globalThis… = undefined` and bracket forms, a property reset) and each must fail the invariant; M9 shows a comment and a read
+   are not flagged. Limit: comment stripping is a heuristic, so the check is a drift detector for the pinned sources, not a parser.
+2. **Implementation choices fixed at freeze (not in the reviewed text; none uses an outcome).**
+   * Instruments I5 and I6 use the **unadjusted 95 %** interval (they are validity gates, not claims); the primary family uses the
+     Bonferroni-3 interval (98.33 %); the unadjusted classification of the family is a declared non-decisive sensitivity.
+   * A session whose **condition integrity or guard completeness is violated is a failed session**: retried once, then its world is
+     excluded; > 10 % excluded → INVALID. Block-level: I1/I7 failure → INVALID; I2 → every primary claim VOID; I3 → PC1 and PC2
+     VOID; I6 → PC3 VOID; I5 → PC1 NOT_TESTABLE.
+   * PC2 `ACCOUNTING_ONLY` additionally requires the guard to have removed ≥ δ non-graph resets (otherwise `NEGLIGIBLE`).
+   * Guard completeness is recomputed from raw numbers in the analysis (G1: non-graph resets 0, executed non-graph moves 0, nothing
+     admitted; G0: masked 0, blocked 0); the session's own flag is not trusted.
+   * The two guard lines are pinned by content (`GUARD_TREE` in `config.mjs`); the guard tree rebuilt from the committed transform
+     is byte-identical to the calibration tree.
+   * 19 secondary contrasts are listed in `analyze.mjs` with their MDE (2.802·SD/√n); nothing gates on them.
+3. **Claim scope (mandatory).** The intervention is the **combined admission-mask + execution-guard bundle**; no effect is
+   attributed to either component. A supported result can justify a production-design *specification* only; it is not a
+   production change and not production readiness. The M7-bounded transition, 150-tick episode cap, deterministic replay,
+   legacy stale-keyed credit, unguarded store training and generalization limits of §7 stay explicit.
+4. **Backup risk.** The block-P raw archive has one local copy (12.4 MB, sha256 `a05a94c9…`); it is preserved and verified, not
+   redesigned here. The new block's raw output will be archived the same way and carries the same single-copy limit.
+5. **Verifier corrections made while freezing (no protocol change).** The first gate run failed one scope check and missed three
+   mutants; all three were defects of the *verifier*, corrected before the freeze: (a) the candidate-level scope test assumed the
+   first stream difference is always a masked candidate — the recorded first guard action is a **blocked execution at call 57**
+   and the first candidate-level difference is at call 58, so the test now asserts that nothing differs before the first guard
+   action (mask or block) and that a first action that is a mask removes a non-graph candidate; (b) mutant M3 (mask placed after
+   the admission test) was functionally equivalent and was replaced by a mask that counts but does not drop, which the
+   guard-on behaviour exposes — **note:** because the execution guard still blocks illegal moves, the I3 completeness record alone
+   cannot see a mask that fails to drop; the pinned guard-tree hash, gate checks L1/M3 and the descriptive per-session `maskedOut`
+   export cover it, and no analysis rule was changed for this; (c) two mutant fixtures were tuned (a goal group whose interval
+   straddles zero; a shared-seed violation).
