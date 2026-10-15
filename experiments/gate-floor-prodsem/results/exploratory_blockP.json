@@ -1,0 +1,652 @@
+{
+ "status": "EXPLORATORY_POST_HOC",
+ "basis": "summary_blockP.json",
+ "worlds": 280,
+ "arms": {
+  "COLD_FLOOR": {
+   "legalGain": {
+    "n": 280,
+    "mean": 67.44285714285714,
+    "median": 55,
+    "sd": 74.6755247653201,
+    "positive": 203,
+    "negative": 23,
+    "zero": 54,
+    "ci": {
+     "lower": 58.89642857142857,
+     "upper": 76.21785714285714
+    }
+   },
+   "nonEdgeChange": {
+    "n": 280,
+    "mean": -0.24285714285714285,
+    "median": 0,
+    "sd": 57.42108456291078,
+    "positive": 114,
+    "negative": 111,
+    "zero": 55,
+    "ci": {
+     "lower": -7.025,
+     "upper": 6.235714285714286
+    }
+   },
+   "everyResetGain": {
+    "n": 280,
+    "mean": 67.2,
+    "median": 54,
+    "sd": 74.74584895152287,
+    "positive": 199,
+    "negative": 25,
+    "zero": 56,
+    "ci": {
+     "lower": 58.542857142857144,
+     "upper": 75.92142857142858
+    }
+   },
+   "goalEdgePenaltyChange": {
+    "n": 280,
+    "mean": 1.4740922313237417,
+    "median": 0.5840738844596929,
+    "sd": 2.9739056862492625,
+    "positive": 160,
+    "negative": 66,
+    "zero": 54,
+    "ci": {
+     "lower": 1.1289856138756242,
+     "upper": 1.8131290049618645
+    }
+   },
+   "legalShareOfEveryResetGain": 1.0036139455782311,
+   "corr_legalGain_nonEdgeChange": {
+    "r": -0.3832452926636432,
+    "ci": {
+     "lower": -0.4875983517560389,
+     "upper": -0.26736352308660777
+    }
+   },
+   "corr_legalGain_penaltyChange": {
+    "r": 0.37474024699979536,
+    "ci": {
+     "lower": 0.2666355323606677,
+     "upper": 0.4758604604769175
+    }
+   }
+  },
+  "ENTRY_NR": {
+   "legalGain": {
+    "n": 280,
+    "mean": 67.52142857142857,
+    "median": 54.5,
+    "sd": 73.78040340271444,
+    "positive": 207,
+    "negative": 30,
+    "zero": 43,
+    "ci": {
+     "lower": 59.03214285714286,
+     "upper": 76.15714285714286
+    }
+   },
+   "nonEdgeChange": {
+    "n": 280,
+    "mean": -0.6392857142857142,
+    "median": 0,
+    "sd": 57.232424572326416,
+    "positive": 116,
+    "negative": 119,
+    "zero": 45,
+    "ci": {
+     "lower": -7.478571428571429,
+     "upper": 5.896428571428571
+    }
+   },
+   "everyResetGain": {
+    "n": 280,
+    "mean": 66.88214285714285,
+    "median": 57.5,
+    "sd": 74.34577529110472,
+    "positive": 202,
+    "negative": 31,
+    "zero": 47,
+    "ci": {
+     "lower": 58.17142857142857,
+     "upper": 75.47857142857143
+    }
+   },
+   "goalEdgePenaltyChange": {
+    "n": 280,
+    "mean": 1.4876106351978582,
+    "median": 0.8116213676495327,
+    "sd": 2.874637704866074,
+    "positive": 169,
+    "negative": 68,
+    "zero": 43,
+    "ci": {
+     "lower": 1.1538185737284443,
+     "upper": 1.821020654624193
+    }
+   },
+   "legalShareOfEveryResetGain": 1.0095583916270625,
+   "corr_legalGain_nonEdgeChange": {
+    "r": -0.3779401708758422,
+    "ci": {
+     "lower": -0.4788266240644155,
+     "upper": -0.2628065913979637
+    }
+   },
+   "corr_legalGain_penaltyChange": {
+    "r": 0.35757114244661176,
+    "ci": {
+     "lower": 0.24847197280335054,
+     "upper": 0.45547401142863586
+    }
+   }
+  },
+  "REAL": {
+   "legalGain": {
+    "n": 280,
+    "mean": 4.125,
+    "median": 6,
+    "sd": 92.3713990281783,
+    "positive": 149,
+    "negative": 131,
+    "zero": 0,
+    "ci": {
+     "lower": -6.714285714285714,
+     "upper": 14.746428571428572
+    }
+   },
+   "nonEdgeChange": {
+    "n": 280,
+    "mean": 42.92142857142857,
+    "median": 40.5,
+    "sd": 87.04767925626558,
+    "positive": 186,
+    "negative": 93,
+    "zero": 1,
+    "ci": {
+     "lower": 32.63928571428571,
+     "upper": 53.082142857142856
+    }
+   },
+   "everyResetGain": {
+    "n": 280,
+    "mean": 47.04642857142857,
+    "median": 47,
+    "sd": 97.11195911774534,
+    "positive": 187,
+    "negative": 91,
+    "zero": 2,
+    "ci": {
+     "lower": 35.75714285714286,
+     "upper": 58.48571428571429
+    }
+   },
+   "goalEdgePenaltyChange": {
+    "n": 280,
+    "mean": 0.8683792305846031,
+    "median": 1.0569843033179038,
+    "sd": 3.2839535161799094,
+    "positive": 179,
+    "negative": 101,
+    "zero": 0,
+    "ci": {
+     "lower": 0.4794185053935346,
+     "upper": 1.2526092824683903
+    }
+   },
+   "legalShareOfEveryResetGain": 0.08767934411295833,
+   "corr_legalGain_nonEdgeChange": {
+    "r": -0.4153262774854746,
+    "ci": {
+     "lower": -0.5101953103341945,
+     "upper": -0.3155665763299445
+    }
+   },
+   "corr_legalGain_penaltyChange": {
+    "r": 0.3047555159857912,
+    "ci": {
+     "lower": 0.19130443726015095,
+     "upper": 0.4088148420076905
+    }
+   }
+  },
+  "REAL_FLOOR": {
+   "legalGain": {
+    "n": 280,
+    "mean": 40.25,
+    "median": 43.5,
+    "sd": 84.59018855635682,
+    "positive": 190,
+    "negative": 89,
+    "zero": 1,
+    "ci": {
+     "lower": 30.53214285714286,
+     "upper": 50.25
+    }
+   },
+   "nonEdgeChange": {
+    "n": 280,
+    "mean": 49.11071428571429,
+    "median": 47,
+    "sd": 85.19376119015126,
+    "positive": 195,
+    "negative": 82,
+    "zero": 3,
+    "ci": {
+     "lower": 38.97857142857143,
+     "upper": 59.13214285714286
+    }
+   },
+   "everyResetGain": {
+    "n": 280,
+    "mean": 89.36071428571428,
+    "median": 91,
+    "sd": 92.48591034525849,
+    "positive": 228,
+    "negative": 51,
+    "zero": 1,
+    "ci": {
+     "lower": 78.57142857142857,
+     "upper": 100.2
+    }
+   },
+   "goalEdgePenaltyChange": {
+    "n": 280,
+    "mean": 2.00933299967613,
+    "median": 1.7515070537528696,
+    "sd": 3.235173332685512,
+    "positive": 208,
+    "negative": 72,
+    "zero": 0,
+    "ci": {
+     "lower": 1.6328746386862119,
+     "upper": 2.3857271738487915
+    }
+   },
+   "legalShareOfEveryResetGain": 0.4504216458175133,
+   "corr_legalGain_nonEdgeChange": {
+    "r": -0.4065626542536453,
+    "ci": {
+     "lower": -0.4963737344209287,
+     "upper": -0.31019073818815956
+    }
+   },
+   "corr_legalGain_penaltyChange": {
+    "r": 0.30180938464043283,
+    "ci": {
+     "lower": 0.18624965449218853,
+     "upper": 0.4116681430537068
+    }
+   }
+  }
+ },
+ "storeSize": {
+  "empty store (0 episodes)": {
+   "worlds": 0
+  },
+  "at least 1 episode": {
+   "worlds": 280,
+   "benefitFloor": {
+    "n": 280,
+    "mean": 67.44285714285714,
+    "median": 55,
+    "sd": 74.6755247653201,
+    "positive": 203,
+    "negative": 23,
+    "zero": 54,
+    "ci": {
+     "lower": 58.89642857142857,
+     "upper": 76.21785714285714
+    }
+   },
+   "benefitReal": {
+    "n": 280,
+    "mean": 4.125,
+    "median": 6,
+    "sd": 92.3713990281783,
+    "positive": 149,
+    "negative": 131,
+    "zero": 0,
+    "ci": {
+     "lower": -6.714285714285714,
+     "upper": 14.746428571428572
+    }
+   },
+   "benefitEntry": {
+    "n": 280,
+    "mean": 67.52142857142857,
+    "median": 54.5,
+    "sd": 73.78040340271444,
+    "positive": 207,
+    "negative": 30,
+    "zero": 43,
+    "ci": {
+     "lower": 59.03214285714286,
+     "upper": 76.15714285714286
+    }
+   },
+   "realMinusFloor": {
+    "n": 280,
+    "mean": -63.31785714285714,
+    "median": -63,
+    "sd": 83.30207393740818,
+    "positive": 59,
+    "negative": 220,
+    "zero": 1,
+    "ci": {
+     "lower": -72.98571428571428,
+     "upper": -53.58571428571429
+    }
+   },
+   "entryMinusFloor": {
+    "n": 280,
+    "mean": 0.07857142857142857,
+    "median": 0,
+    "sd": 12.34484662096854,
+    "positive": 35,
+    "negative": 40,
+    "zero": 205,
+    "ci": {
+     "lower": -1.3571428571428572,
+     "upper": 1.5321428571428573
+    }
+   }
+  },
+  "at least 20 episodes": {
+   "worlds": 280,
+   "benefitFloor": {
+    "n": 280,
+    "mean": 67.44285714285714,
+    "median": 55,
+    "sd": 74.6755247653201,
+    "positive": 203,
+    "negative": 23,
+    "zero": 54,
+    "ci": {
+     "lower": 58.89642857142857,
+     "upper": 76.21785714285714
+    }
+   },
+   "benefitReal": {
+    "n": 280,
+    "mean": 4.125,
+    "median": 6,
+    "sd": 92.3713990281783,
+    "positive": 149,
+    "negative": 131,
+    "zero": 0,
+    "ci": {
+     "lower": -6.714285714285714,
+     "upper": 14.746428571428572
+    }
+   },
+   "benefitEntry": {
+    "n": 280,
+    "mean": 67.52142857142857,
+    "median": 54.5,
+    "sd": 73.78040340271444,
+    "positive": 207,
+    "negative": 30,
+    "zero": 43,
+    "ci": {
+     "lower": 59.03214285714286,
+     "upper": 76.15714285714286
+    }
+   },
+   "realMinusFloor": {
+    "n": 280,
+    "mean": -63.31785714285714,
+    "median": -63,
+    "sd": 83.30207393740818,
+    "positive": 59,
+    "negative": 220,
+    "zero": 1,
+    "ci": {
+     "lower": -72.98571428571428,
+     "upper": -53.58571428571429
+    }
+   },
+   "entryMinusFloor": {
+    "n": 280,
+    "mean": 0.07857142857142857,
+    "median": 0,
+    "sd": 12.34484662096854,
+    "positive": 35,
+    "negative": 40,
+    "zero": 205,
+    "ci": {
+     "lower": -1.3571428571428572,
+     "upper": 1.5321428571428573
+    }
+   }
+  }
+ },
+ "storeEffect": {
+  "REAL_FLOOR_minus_COLD_FLOOR": {
+   "legal": {
+    "n": 280,
+    "mean": -27.192857142857143,
+    "median": -25,
+    "sd": 65.85537498751751,
+    "positive": 88,
+    "negative": 189,
+    "zero": 3,
+    "ci": {
+     "lower": -34.917857142857144,
+     "upper": -19.439285714285713
+    }
+   },
+   "nonEdge": {
+    "n": 280,
+    "mean": 49.35357142857143,
+    "median": 45.5,
+    "sd": 82.6136665954619,
+    "positive": 197,
+    "negative": 82,
+    "zero": 1,
+    "ci": {
+     "lower": 39.69285714285714,
+     "upper": 59.09642857142857
+    }
+   },
+   "everyReset": {
+    "n": 280,
+    "mean": 22.160714285714285,
+    "median": 27,
+    "sd": 82.00725048496905,
+    "positive": 172,
+    "negative": 107,
+    "zero": 1,
+    "ci": {
+     "lower": 12.639285714285714,
+     "upper": 31.710714285714285
+    }
+   }
+  },
+  "REAL_minus_COLD": {
+   "legal": {
+    "n": 280,
+    "mean": 4.125,
+    "median": 6,
+    "sd": 92.3713990281783,
+    "positive": 149,
+    "negative": 131,
+    "zero": 0,
+    "ci": {
+     "lower": -6.714285714285714,
+     "upper": 14.746428571428572
+    }
+   },
+   "nonEdge": {
+    "n": 280,
+    "mean": 42.92142857142857,
+    "median": 40.5,
+    "sd": 87.04767925626558,
+    "positive": 186,
+    "negative": 93,
+    "zero": 1,
+    "ci": {
+     "lower": 32.63928571428571,
+     "upper": 53.082142857142856
+    }
+   },
+   "everyReset": {
+    "n": 280,
+    "mean": 47.04642857142857,
+    "median": 47,
+    "sd": 97.11195911774534,
+    "positive": 187,
+    "negative": 91,
+    "zero": 2,
+    "ci": {
+     "lower": 35.75714285714286,
+     "upper": 58.48571428571429
+    }
+   }
+  },
+  "ENTRY_NR_minus_COLD_FLOOR": {
+   "legal": {
+    "n": 280,
+    "mean": 0.07857142857142857,
+    "median": 0,
+    "sd": 12.34484662096854,
+    "positive": 35,
+    "negative": 40,
+    "zero": 205,
+    "ci": {
+     "lower": -1.3571428571428572,
+     "upper": 1.5321428571428573
+    }
+   },
+   "nonEdge": {
+    "n": 280,
+    "mean": -0.3964285714285714,
+    "median": 0,
+    "sd": 12.961895690343773,
+    "positive": 41,
+    "negative": 35,
+    "zero": 204,
+    "ci": {
+     "lower": -1.9785714285714286,
+     "upper": 1.0678571428571428
+    }
+   },
+   "everyReset": {
+    "n": 280,
+    "mean": -0.31785714285714284,
+    "median": 0,
+    "sd": 17.065834018066827,
+    "positive": 41,
+    "negative": 38,
+    "zero": 201,
+    "ci": {
+     "lower": -2.407142857142857,
+     "upper": 1.6321428571428571
+    }
+   }
+  },
+  "REAL_FLOOR_minus_REAL": {
+   "legal": {
+    "n": 280,
+    "mean": 36.125,
+    "median": 0,
+    "sd": 62.02654724167721,
+    "positive": 125,
+    "negative": 21,
+    "zero": 134,
+    "ci": {
+     "lower": 28.942857142857143,
+     "upper": 43.38214285714286
+    }
+   },
+   "nonEdge": {
+    "n": 280,
+    "mean": 6.189285714285714,
+    "median": 0,
+    "sd": 59.05804713489616,
+    "positive": 77,
+    "negative": 65,
+    "zero": 138,
+    "ci": {
+     "lower": -0.7178571428571429,
+     "upper": 13.160714285714286
+    }
+   },
+   "everyReset": {
+    "n": 280,
+    "mean": 42.31428571428572,
+    "median": 0,
+    "sd": 65.40648589656402,
+    "positive": 127,
+    "negative": 19,
+    "zero": 134,
+    "ci": {
+     "lower": 34.75,
+     "upper": 49.989285714285714
+    }
+   }
+  }
+ },
+ "realizedPairedSd": {
+  "REAL-COLD": 92.3713990281783,
+  "ENTRY_NR-COLD": 73.78040340271444,
+  "ENTRY_NR-REAL": 82.15024692377045,
+  "COLD_FLOOR-COLD": 74.6755247653201,
+  "ENTRY_NR-COLD_FLOOR": 12.34484662096854,
+  "calibrationMaxLegalSd": 98.4,
+  "requiredNAtDeltaForLargestRealizedSd": 168
+ },
+ "floorIdenticalToCold": {
+  "worlds": 54,
+  "ofWorlds": 280,
+  "legalDifferenceZero": 54,
+  "byGoal": {
+   "8": 4,
+   "12": 4,
+   "16": 21,
+   "19": 25
+  },
+  "floorRaisedAnyScoreInThose": 54,
+  "meanColdLegalInThose": 409.3703703703704,
+  "meanColdLegalElsewhere": 362.84513274336285
+ },
+ "versusBlockH": {
+  "note": "different worlds and a different hook state: an UNPAIRED description, never a claim about the environment alone",
+  "floorBenefitPminusH": {
+   "mean": 4.878571428571419,
+   "ci": {
+    "lower": -6.885714285714286,
+    "upper": 17.03928571428571
+   },
+   "nA": 280,
+   "nB": 280
+  },
+  "entryBenefitPminusH": {
+   "mean": 6.046428571428571,
+   "ci": {
+    "lower": -5.910714285714292,
+    "upper": 18.178571428571438
+   },
+   "nA": 280,
+   "nB": 280
+  },
+  "coldLegalPminusH": {
+   "mean": 73.46071428571429,
+   "ci": {
+    "lower": 61.30000000000001,
+    "upper": 85.67142857142858
+   },
+   "nA": 280,
+   "nB": 280
+  },
+  "nonGraphColdPminusH": {
+   "mean": -25.253571428571433,
+   "ci": {
+    "lower": -34.39999999999999,
+    "upper": -16.003571428571433
+   },
+   "nA": 280,
+   "nB": 280
+  }
+ }
+}

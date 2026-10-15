@@ -537,6 +537,18 @@ const WS = C.WORLD_START;
     check('E4.mandatory-classification-deviations-and-limits-are-in-the-summary', S.classification === C.CLASSIFICATION && JSON.stringify(S.deviations) === JSON.stringify(C.DEVIATIONS) && JSON.stringify(S.claimLimits) === JSON.stringify(C.CLAIM_LIMITS)
       && S.verdict.endsWith(C.CLASSIFICATION));
     check('E5.exploratory-files-are-labelled', !fs.existsSync(path.join(R, 'exploratory_blockP.json')) || rd('exploratory_blockP.json').status === 'EXPLORATORY_POST_HOC');
+    // E6 (added at results time; a verification of the recorded evidence, not part of the frozen design or analysis): the per-session
+    // condition-integrity export covers every manifest session, binds each file hash and records no violation
+    const ciFile = path.join(R, 'condition_integrity_blockP.json');
+    if (!fs.existsSync(ciFile)) check('E6.condition-integrity-evidence-present', false, 'results/condition_integrity_blockP.json missing');
+    else {
+      const I = rd('condition_integrity_blockP.json');
+      check('E6.condition-integrity-evidence-covers-every-session-with-no-violation', I.state === 'P' && I.manifestDigest === digest && I.sessions === Object.keys(MF.sessions).length && I.rows.length === I.sessions && I.violations === 0
+        && I.rows.every(r => r.cond === 'P' && r.ok === true && r.recomputedProblems === 0 && r.envDraws === 0 && r.drawsLogged === 0 && r.creditKeys === 0 && r.peLaCalls === 0 && r.peDampCalls === 0
+          && r.traversalAttempts > 0 && r.traversalAttempts === r.traversalSuccesses && r.edgesWithSlip === 0 && r.maxCostEstimate === 1 && r.episodeCapArmed === true && r.replayDeterministic === true
+          && r.attemptSuccess === null && MF.sessions[r.file] === r.sha256)
+        && I.totals.traversalAttempts === I.totals.traversalSuccesses && I.totals.envDraws === 0 && I.totals.creditKeys === 0 && I.totals.peCalls === 0 && I.totals.sessionsWithNonNullAttemptSuccess === 0);
+    }
   }
 }
 

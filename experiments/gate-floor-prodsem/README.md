@@ -1,7 +1,7 @@
 # GATE-FLOOR-PRODSEM — the goal-entry floor under production-like transition semantics
 
-**Status: DEVELOPMENT / EXPLORATORY. Frozen design; confirmatory block P (280 worlds) is run only after this directory is committed,
-pushed and verified remotely.** Not preregistered in the repository's formal sense. No registered or held-out seed, no
+**Status: DEVELOPMENT / EXPLORATORY. Block P (280 worlds) executed under the frozen design (freeze `cfc1e5c`): TRANSFERS; results in
+[results/RESULTS.md](results/RESULTS.md).** Not preregistered in the repository's formal sense. No registered or held-out seed, no
 production file and no earlier experiment is modified. Substrate: the **same pinned derived HEAD tree as GATE-FLOOR-HEAD**
 (commit `0df804c497e649affb9e7ebacb10fdc81ab6de8d`, two guarded call-only lines in a *copy* of `main.js`, derived main sha256
 `8cf1dc296189286113ac9daa16a28f98bbab131b18b919ec6aeb1fed4d4abc1e`). Production `main.js` is untouched.
