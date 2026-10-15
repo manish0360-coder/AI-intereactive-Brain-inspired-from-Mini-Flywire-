@@ -1,0 +1,359 @@
+{
+ "candidateClasses": {
+  "COLD_F0_G0": {
+   "admittedGraph": 23438.15,
+   "nonGraphReachingAdmission": 1758.1750000000002,
+   "maskedOut": 0,
+   "blockedIllegal": 0,
+   "movesLegal": 1256.7,
+   "movesNonGraph": 128.95,
+   "movesSelf": 0,
+   "movesNone": 0
+  },
+  "COLD_F0_G1": {
+   "admittedGraph": 23539.4,
+   "nonGraphReachingAdmission": 1939.275,
+   "maskedOut": 1939.275,
+   "blockedIllegal": 26.75,
+   "movesLegal": 1386.05,
+   "movesNonGraph": 0,
+   "movesSelf": 0,
+   "movesNone": 0
+  },
+  "COLD_F1_G0": {
+   "admittedGraph": 23435.65,
+   "nonGraphReachingAdmission": 1581.0749999999998,
+   "maskedOut": 0,
+   "blockedIllegal": 0,
+   "movesLegal": 1281.9,
+   "movesNonGraph": 103.7,
+   "movesSelf": 0,
+   "movesNone": 0
+  },
+  "COLD_F1_G1": {
+   "admittedGraph": 23557.95,
+   "nonGraphReachingAdmission": 1724.775,
+   "maskedOut": 1724.775,
+   "blockedIllegal": 30.5,
+   "movesLegal": 1385.625,
+   "movesNonGraph": 0,
+   "movesSelf": 0,
+   "movesNone": 0
+  },
+  "REAL_F0_G0": {
+   "admittedGraph": 23354.55,
+   "nonGraphReachingAdmission": 1575.9,
+   "maskedOut": 0,
+   "blockedIllegal": 0,
+   "movesLegal": 1237.2,
+   "movesNonGraph": 147.15,
+   "movesSelf": 0,
+   "movesNone": 0
+  },
+  "REAL_F0_G1": {
+   "admittedGraph": 23567.925,
+   "nonGraphReachingAdmission": 2008.85,
+   "maskedOut": 2008.85,
+   "blockedIllegal": 28.225,
+   "movesLegal": 1386.725,
+   "movesNonGraph": 0,
+   "movesSelf": 0,
+   "movesNone": 0
+  },
+  "REAL_F1_G0": {
+   "admittedGraph": 23370.85,
+   "nonGraphReachingAdmission": 1419,
+   "maskedOut": 0,
+   "blockedIllegal": 0,
+   "movesLegal": 1244.3,
+   "movesNonGraph": 141.3,
+   "movesSelf": 0,
+   "movesNone": 0
+  },
+  "REAL_F1_G1": {
+   "admittedGraph": 23493.85,
+   "nonGraphReachingAdmission": 1800.275,
+   "maskedOut": 1800.275,
+   "blockedIllegal": 31.675,
+   "movesLegal": 1383.225,
+   "movesNonGraph": 0,
+   "movesSelf": 0,
+   "movesNone": 0
+  }
+ },
+ "guardOffNonGraphAdmissionsPerExecutedNonGraphMove": 12.408279030329943,
+ "perGoal": {
+  "8": {
+   "guardRealF1": {
+    "n": 10,
+    "mean": 40.9,
+    "sd": 60.20788062113538
+   },
+   "guardRealF0": {
+    "n": 10,
+    "mean": 29.7,
+    "sd": 68.42035109851778
+   },
+   "floorRealG0": {
+    "n": 10,
+    "mean": 38.8,
+    "sd": 59.83087274420567
+   },
+   "floorRealG1": {
+    "n": 10,
+    "mean": 50,
+    "sd": 71.06022484875456
+   },
+   "deficitG0": {
+    "n": 10,
+    "mean": -29.7,
+    "sd": 70.18396461364155
+   },
+   "deficitG1": {
+    "n": 10,
+    "mean": 15.1,
+    "sd": 50.96502068412543
+   }
+  },
+  "12": {
+   "guardRealF1": {
+    "n": 10,
+    "mean": 22.5,
+    "sd": 34.70270562618681
+   },
+   "guardRealF0": {
+    "n": 10,
+    "mean": 36.3,
+    "sd": 30.140596469803906
+   },
+   "floorRealG0": {
+    "n": 10,
+    "mean": 67.4,
+    "sd": 62.8864938688039
+   },
+   "floorRealG1": {
+    "n": 10,
+    "mean": 53.6,
+    "sd": 66.20036925039685
+   },
+   "deficitG0": {
+    "n": 10,
+    "mean": -30.6,
+    "sd": 66.90490764261368
+   },
+   "deficitG1": {
+    "n": 10,
+    "mean": -13.3,
+    "sd": 53.96511218679466
+   }
+  },
+  "16": {
+   "guardRealF1": {
+    "n": 10,
+    "mean": 57.1,
+    "sd": 52.052217371917344
+   },
+   "guardRealF0": {
+    "n": 10,
+    "mean": 57.7,
+    "sd": 55.22891754627582
+   },
+   "floorRealG0": {
+    "n": 10,
+    "mean": 11.1,
+    "sd": 35.809526975683745
+   },
+   "floorRealG1": {
+    "n": 10,
+    "mean": 10.5,
+    "sd": 26.395496248834235
+   },
+   "deficitG0": {
+    "n": 10,
+    "mean": -57.7,
+    "sd": 70.66202814965207
+   },
+   "deficitG1": {
+    "n": 10,
+    "mean": 11.9,
+    "sd": 36.17073709813255
+   }
+  },
+  "19": {
+   "guardRealF1": {
+    "n": 10,
+    "mean": 66.6,
+    "sd": 46.32541898833128
+   },
+   "guardRealF0": {
+    "n": 10,
+    "mean": 81.8,
+    "sd": 52.07857311580049
+   },
+   "floorRealG0": {
+    "n": 10,
+    "mean": 29.4,
+    "sd": 48.63743414284927
+   },
+   "floorRealG1": {
+    "n": 10,
+    "mean": 14.2,
+    "sd": 24.76467017524943
+   },
+   "deficitG0": {
+    "n": 10,
+    "mean": -55.2,
+    "sd": 51.4734019772456
+   },
+   "deficitG1": {
+    "n": 10,
+    "mean": 10.9,
+    "sd": 48.596867754574006
+   }
+  }
+ },
+ "sampleSize": {
+  "delta": 20,
+  "power": 0.8,
+  "zAlpha": {
+   "unadjusted": 1.959963986120195,
+   "bonferroni3": 2.3939798012415405
+  },
+  "zPower": 0.8416212327266186,
+  "rows": {
+   "floor | COLD, G0": {
+    "sd": 75.23739778621417,
+    "nUnadjusted": 112,
+    "nBonferroni3": 149,
+    "nBonferroni3Sd125": 232,
+    "mdeAt280Bonferroni3": 14.548215185958421
+   },
+   "floor | COLD, G1": {
+    "sd": 66.6399433619361,
+    "nUnadjusted": 88,
+    "nBonferroni3": 117,
+    "nBonferroni3Sd125": 182,
+    "mdeAt280Bonferroni3": 12.885775751632506
+   },
+   "floor | REAL, G0": {
+    "sd": 54.81829542060308,
+    "nUnadjusted": 59,
+    "nBonferroni3": 79,
+    "nBonferroni3Sd125": 123,
+    "mdeAt280Bonferroni3": 10.599892890666945
+   },
+   "floor | REAL, G1": {
+    "sd": 53.678715401725924,
+    "nUnadjusted": 57,
+    "nBonferroni3": 76,
+    "nBonferroni3Sd125": 118,
+    "mdeAt280Bonferroni3": 10.379538973279319
+   },
+   "guard | COLD, F0": {
+    "sd": 75.31138777240218,
+    "nUnadjusted": 112,
+    "nBonferroni3": 149,
+    "nBonferroni3Sd125": 232,
+    "mdeAt280Bonferroni3": 14.56252219646572
+   },
+   "guard | COLD, F1": {
+    "sd": 43.666209138335105,
+    "nUnadjusted": 38,
+    "nBonferroni3": 50,
+    "nBonferroni3Sd125": 78,
+    "mdeAt280Bonferroni3": 8.443479248241138
+   },
+   "guard | REAL, F0": {
+    "sd": 55.191362897300685,
+    "nUnadjusted": 60,
+    "nBonferroni3": 80,
+    "nBonferroni3Sd125": 125,
+    "mdeAt280Bonferroni3": 10.672030764777123
+   },
+   "guard | REAL, F1": {
+    "sd": 50.22946703852589,
+    "nUnadjusted": 50,
+    "nBonferroni3": 67,
+    "nBonferroni3Sd125": 104,
+    "mdeAt280Bonferroni3": 9.71257800846451
+   },
+   "store(REAL-COLD) | F0, G0": {
+    "sd": 98.43550537254694,
+    "nUnadjusted": 191,
+    "nBonferroni3": 254,
+    "nBonferroni3Sd125": 397,
+    "mdeAt280Bonferroni3": 19.03389745306658
+   },
+   "store(REAL-COLD) | F0, G1": {
+    "sd": 83.18212563790989,
+    "nUnadjusted": 136,
+    "nBonferroni3": 182,
+    "nBonferroni3Sd125": 283,
+    "mdeAt280Bonferroni3": 16.084440703868673
+   },
+   "store(REAL-COLD) | F1, G0": {
+    "sd": 64.12215905637677,
+    "nUnadjusted": 81,
+    "nBonferroni3": 108,
+    "nBonferroni3Sd125": 169,
+    "mdeAt280Bonferroni3": 12.398926539048261
+   },
+   "store(REAL-COLD) | F1, G1": {
+    "sd": 47.43608385271756,
+    "nUnadjusted": 45,
+    "nBonferroni3": 59,
+    "nBonferroni3Sd125": 93,
+    "mdeAt280Bonferroni3": 9.172437853704613
+   },
+   "INTERACTION store x guard | F0": {
+    "sd": 94.12958539244633,
+    "nUnadjusted": 174,
+    "nBonferroni3": 232,
+    "nBonferroni3Sd125": 363,
+    "mdeAt280Bonferroni3": 18.201286912467847
+   },
+   "INTERACTION store x guard | F1": {
+    "sd": 66.9661031743596,
+    "nUnadjusted": 88,
+    "nBonferroni3": 118,
+    "nBonferroni3Sd125": 184,
+    "mdeAt280Bonferroni3": 12.948843365289639
+   },
+   "INTERACTION floor x guard | COLD": {
+    "sd": 84.28781202766065,
+    "nUnadjusted": 140,
+    "nBonferroni3": 186,
+    "nBonferroni3Sd125": 291,
+    "mdeAt280Bonferroni3": 16.29824080859833
+   },
+   "INTERACTION floor x guard | REAL": {
+    "sd": 34.63346536338694,
+    "nUnadjusted": 24,
+    "nBonferroni3": 32,
+    "nBonferroni3Sd125": 50,
+    "mdeAt280Bonferroni3": 6.696870460268799
+   },
+   "INTERACTION store x floor | G0": {
+    "sd": 81.92329119991237,
+    "nUnadjusted": 132,
+    "nBonferroni3": 176,
+    "nBonferroni3Sd125": 275,
+    "mdeAt280Bonferroni3": 15.841027257546122
+   },
+   "INTERACTION store x floor | G1": {
+    "sd": 83.90974623260703,
+    "nUnadjusted": 139,
+    "nBonferroni3": 185,
+    "nBonferroni3Sd125": 288,
+    "mdeAt280Bonferroni3": 16.225136438926757
+   },
+   "3-WAY store x floor x guard": {
+    "sd": 89.42370691810063,
+    "nUnadjusted": 157,
+    "nBonferroni3": 210,
+    "nBonferroni3Sd125": 328,
+    "mdeAt280Bonferroni3": 17.291338739110167
+   }
+  }
+ }
+}

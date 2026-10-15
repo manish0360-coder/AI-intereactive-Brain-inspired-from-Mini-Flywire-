@@ -1,0 +1,367 @@
+{
+ "worlds": 40,
+ "cellMeans": {
+  "COLD_F0_G0": {
+   "legal": 369.15,
+   "nonEdge": 82.675,
+   "all": 451.825,
+   "blockedIllegal": 0,
+   "maskedOut": 0
+  },
+  "COLD_F0_G1": {
+   "legal": 395.45,
+   "nonEdge": 0,
+   "all": 395.45,
+   "blockedIllegal": 26.75,
+   "maskedOut": 1939.275
+  },
+  "COLD_F1_G0": {
+   "legal": 451.425,
+   "nonEdge": 68.4,
+   "all": 519.825,
+   "blockedIllegal": 0,
+   "maskedOut": 0
+  },
+  "COLD_F1_G1": {
+   "legal": 448.75,
+   "nonEdge": 0,
+   "all": 448.75,
+   "blockedIllegal": 30.5,
+   "maskedOut": 1724.775
+  },
+  "REAL_F0_G0": {
+   "legal": 371.45,
+   "nonEdge": 139.075,
+   "all": 510.525,
+   "blockedIllegal": 0,
+   "maskedOut": 0
+  },
+  "REAL_F0_G1": {
+   "legal": 422.825,
+   "nonEdge": 0,
+   "all": 422.825,
+   "blockedIllegal": 28.225,
+   "maskedOut": 2008.85
+  },
+  "REAL_F1_G0": {
+   "legal": 408.125,
+   "nonEdge": 136.325,
+   "all": 544.45,
+   "blockedIllegal": 0,
+   "maskedOut": 0
+  },
+  "REAL_F1_G1": {
+   "legal": 454.9,
+   "nonEdge": 0,
+   "all": 454.9,
+   "blockedIllegal": 31.675,
+   "maskedOut": 1800.275
+  }
+ },
+ "contrasts": {
+  "floor | COLD, G0": {
+   "legal": {
+    "mean": 82.275,
+    "lower": 59.85,
+    "upper": 105.2,
+    "sd": 75.23739778621417
+   },
+   "nonEdge": {
+    "mean": -14.275,
+    "sd": 45.288809678012974
+   },
+   "all": {
+    "mean": 68,
+    "sd": 77.03545637212477
+   }
+  },
+  "floor | COLD, G1": {
+   "legal": {
+    "mean": 53.3,
+    "lower": 32.775,
+    "upper": 74.325,
+    "sd": 66.6399433619361
+   },
+   "nonEdge": {
+    "mean": 0,
+    "sd": 0
+   },
+   "all": {
+    "mean": 53.3,
+    "sd": 66.6399433619361
+   }
+  },
+  "floor | REAL, G0": {
+   "legal": {
+    "mean": 36.675,
+    "lower": 20.675,
+    "upper": 53.9,
+    "sd": 54.81829542060308
+   },
+   "nonEdge": {
+    "mean": -2.75,
+    "sd": 39.35359104586426
+   },
+   "all": {
+    "mean": 33.925,
+    "sd": 52.891464824506905
+   }
+  },
+  "floor | REAL, G1": {
+   "legal": {
+    "mean": 32.075,
+    "lower": 17.125,
+    "upper": 49.5,
+    "sd": 53.678715401725924
+   },
+   "nonEdge": {
+    "mean": 0,
+    "sd": 0
+   },
+   "all": {
+    "mean": 32.075,
+    "sd": 53.678715401725924
+   }
+  },
+  "guard | COLD, F0": {
+   "legal": {
+    "mean": 26.3,
+    "lower": 3.2,
+    "upper": 48.875,
+    "sd": 75.31138777240218
+   },
+   "nonEdge": {
+    "mean": -82.675,
+    "sd": 43.04939768481832
+   },
+   "all": {
+    "mean": -56.375,
+    "sd": 71.07334149872842
+   }
+  },
+  "guard | COLD, F1": {
+   "legal": {
+    "mean": -2.675,
+    "lower": -16.075,
+    "upper": 10.625,
+    "sd": 43.666209138335105
+   },
+   "nonEdge": {
+    "mean": -68.4,
+    "sd": 33.431752141969035
+   },
+   "all": {
+    "mean": -71.075,
+    "sd": 51.62805215414164
+   }
+  },
+  "guard | REAL, F0": {
+   "legal": {
+    "mean": 51.375,
+    "lower": 34.575,
+    "upper": 68.2,
+    "sd": 55.191362897300685
+   },
+   "nonEdge": {
+    "mean": -139.075,
+    "sd": 77.45350549084601
+   },
+   "all": {
+    "mean": -87.7,
+    "sd": 55.27377084648508
+   }
+  },
+  "guard | REAL, F1": {
+   "legal": {
+    "mean": 46.775,
+    "lower": 31.4,
+    "upper": 62.45,
+    "sd": 50.22946703852589
+   },
+   "nonEdge": {
+    "mean": -136.325,
+    "sd": 68.96873594942522
+   },
+   "all": {
+    "mean": -89.55,
+    "sd": 50.869339916984806
+   }
+  },
+  "store(REAL-COLD) | F0, G0": {
+   "legal": {
+    "mean": 2.3,
+    "lower": -27.825,
+    "upper": 31.6,
+    "sd": 98.43550537254694
+   },
+   "nonEdge": {
+    "mean": 56.4,
+    "sd": 71.66367316347977
+   },
+   "all": {
+    "mean": 58.7,
+    "sd": 89.82895427222242
+   }
+  },
+  "store(REAL-COLD) | F0, G1": {
+   "legal": {
+    "mean": 27.375,
+    "lower": 1.675,
+    "upper": 52.175,
+    "sd": 83.18212563790989
+   },
+   "nonEdge": {
+    "mean": 0,
+    "sd": 0
+   },
+   "all": {
+    "mean": 27.375,
+    "sd": 83.18212563790989
+   }
+  },
+  "store(REAL-COLD) | F1, G0": {
+   "legal": {
+    "mean": -43.3,
+    "lower": -62.875,
+    "upper": -23.525,
+    "sd": 64.12215905637677
+   },
+   "nonEdge": {
+    "mean": 67.925,
+    "sd": 76.24602133377695
+   },
+   "all": {
+    "mean": 24.625,
+    "sd": 69.73234083963021
+   }
+  },
+  "store(REAL-COLD) | F1, G1": {
+   "legal": {
+    "mean": 6.15,
+    "lower": -8.35,
+    "upper": 20.875,
+    "sd": 47.43608385271756
+   },
+   "nonEdge": {
+    "mean": 0,
+    "sd": 0
+   },
+   "all": {
+    "mean": 6.15,
+    "sd": 47.43608385271756
+   }
+  },
+  "INTERACTION store x guard | F0": {
+   "legal": {
+    "mean": 25.075,
+    "lower": -4.175,
+    "upper": 53.625,
+    "sd": 94.12958539244633
+   },
+   "nonEdge": {
+    "mean": -56.4,
+    "sd": 71.66367316347977
+   },
+   "all": {
+    "mean": -31.325,
+    "sd": 102.92177450212695
+   }
+  },
+  "INTERACTION store x guard | F1": {
+   "legal": {
+    "mean": 49.45,
+    "lower": 28.95,
+    "upper": 70.025,
+    "sd": 66.9661031743596
+   },
+   "nonEdge": {
+    "mean": -67.925,
+    "sd": 76.24602133377695
+   },
+   "all": {
+    "mean": -18.475,
+    "sd": 76.57809404248376
+   }
+  },
+  "INTERACTION floor x guard | COLD": {
+   "legal": {
+    "mean": -28.975,
+    "lower": -54.825,
+    "upper": -3.125,
+    "sd": 84.28781202766065
+   },
+   "nonEdge": {
+    "mean": 14.275,
+    "sd": 45.288809678012974
+   },
+   "all": {
+    "mean": -14.7,
+    "sd": 90.41278557190789
+   }
+  },
+  "INTERACTION floor x guard | REAL": {
+   "legal": {
+    "mean": -4.6,
+    "lower": -15,
+    "upper": 5.775,
+    "sd": 34.63346536338694
+   },
+   "nonEdge": {
+    "mean": 2.75,
+    "sd": 39.35359104586426
+   },
+   "all": {
+    "mean": -1.85,
+    "sd": 42.75544649665356
+   }
+  },
+  "INTERACTION store x floor | G0": {
+   "legal": {
+    "mean": -45.6,
+    "lower": -70.375,
+    "upper": -21.325,
+    "sd": 81.92329119991237
+   },
+   "nonEdge": {
+    "mean": 11.525,
+    "sd": 65.36406426650576
+   },
+   "all": {
+    "mean": -34.075,
+    "sd": 83.38492377414825
+   }
+  },
+  "INTERACTION store x floor | G1": {
+   "legal": {
+    "mean": -21.225,
+    "lower": -46.4,
+    "upper": 4.725,
+    "sd": 83.90974623260703
+   },
+   "nonEdge": {
+    "mean": 0,
+    "sd": 0
+   },
+   "all": {
+    "mean": -21.225,
+    "sd": 83.90974623260703
+   }
+  },
+  "3-WAY store x floor x guard": {
+   "legal": {
+    "mean": 24.375,
+    "lower": -2.25,
+    "upper": 52.1,
+    "sd": 89.42370691810063
+   },
+   "nonEdge": {
+    "mean": -11.525,
+    "sd": 65.36406426650576
+   },
+   "all": {
+    "mean": 12.85,
+    "sd": 103.93551995199864
+   }
+  }
+ }
+}
