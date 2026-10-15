@@ -1,0 +1,30 @@
+{
+ "schema": "gatefloorinteraction.archive/1",
+ "purpose": "durable, recoverable copy of the raw block-I output (the git-ignored experiments/gate-floor-interaction/data/blockI); committed record = identification + verification only",
+ "freezeCommit": "80f83ad3dcc3bd008c841ee712318280b5a5db66",
+ "manifestDigest": "f56ef2cb8625251071c638f92bbda7ae8ca4938cc5994644184af87b5fa5b3ec",
+ "manifestFileSha256": "fbb3bfb43b1636dfd0dccdc7fa83a28cc5046c431e02f2be8ce101abd0ef3562",
+ "archive": {
+  "name": "blockI_raw_80f83ad.tar.gz",
+  "location": "E:/Projects/OpenSourceLab/archives/gate-floor-interaction/blockI_raw_80f83ad.tar.gz",
+  "sha256": "55efff3683a9059aa2581eafb894f5d1a7b74cd71d5a6869e7f497ac2729bdc9",
+  "bytes": 15111758,
+  "uncompressedBytes": 99967438,
+  "root": "blockI",
+  "format": "tar (GNU tar 1.34) | gzip -n -9",
+  "creation": "cd experiments/gate-floor-interaction/data && tar --sort=name --mtime=\"2026-10-15 00:00:00Z\" --owner=0 --group=0 --numeric-owner -cf - blockI | gzip -n -9 > <archive>"
+ },
+ "counts": {
+  "worlds": 280,
+  "sessions": 2520,
+  "brains": 560,
+  "files": 3083
+ },
+ "files": {
+  "MANIFEST.json": "fbb3bfb43b1636dfd0dccdc7fa83a28cc5046c431e02f2be8ce101abd0ef3562",
+  "plan.json": "4d26ad603e61abd2cddf75688dfd8cbef5743260909b9d7b5462c480b1a42441",
+  "controls.json": "d1d8a43e83052b5dc8dd701a147849c4a56b316b03eeeb6c425f934367d3729a"
+ },
+ "verification": "node experiments/gate-floor-interaction/verify_archive_blockI.mjs --archive <archive>   (or --dir <extracted blockI>)",
+ "limits": "single local copy outside the repository working tree (same limit as the block-P archive); no off-machine copy exists unless the owner makes one; the archive is bound by the committed sha256 above and each member by the manifest hashes"
+}

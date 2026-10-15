@@ -1,8 +1,9 @@
 # GATE-FLOOR-INTERACTION — store × floor × legal-edge guard bundle, paired 2 × 2 × 2 factorial
 
-**Status: DEVELOPMENT / EXPLORATORY. Frozen design (see DESIGN.md §9); the confirmatory block I (280 worlds, 2,520 sessions) is run
-only after this directory is committed, pushed and verified remotely.** Not preregistered in the repository's formal sense. No
-registered or held-out seed, no production file and no earlier experiment is modified.
+**Status: DEVELOPMENT / EXPLORATORY. Block I (280 worlds, 2,520 sessions) executed under the frozen design (freeze `80f83ad`,
+pushed and remotely verified before any outcome): PC1 NO_RECOVERY, PC2 IMPROVES, PC3 PERSISTS; results in
+[results/RESULTS.md](results/RESULTS.md).** Not preregistered in the repository's formal sense. No registered or held-out seed,
+no production file and no earlier experiment is modified.
 
 **Classification: Production-like transition semantics under M7 bounds.** Substrate: the GATE-FLOOR-PRODSEM derived HEAD tree
 (commit `0df804c497e649affb9e7ebacb10fdc81ab6de8d`, `main.js` sha256 `8cf1dc29…`) plus two guarded, default-off, call-only lines

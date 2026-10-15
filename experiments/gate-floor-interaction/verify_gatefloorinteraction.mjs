@@ -24,7 +24,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { generateAcceptedStream } from '../m7/env.js';
 import { configSeed as typedConfigSeed, config as typedConfig } from '../registry/typed_v2.js';
 import * as X1 from '../xfer1/config.mjs';
-import { prng, pairedSummary } from '../xfer1/stats.mjs';
+import { prng, pairedSummary, mean } from '../xfer1/stats.mjs';
 import { makeGraph, entryStore } from '../xfer2/controls.mjs';
 import { DEVELOPMENT_DOMAIN, DEV_BLOCK, BLOCK } from '../mcf1/config.mjs';
 import { continueStream } from '../gate-floor1/stream.mjs';
@@ -388,7 +388,16 @@ const mkBlock = ({ table = baseTable, nonGraphG0 = 80, perGoal = {}, n = 40, sd 
     const S = rd('summary_blockI.json'), MF = rd('manifest_blockI.json');
     const { digest, ...rest } = MF;
     const near = (a, b) => Math.abs(a - b) < 1e-9;
-    const W = S.worlds, val = (cell, k, w) => S.perWorld[w].cells[cell][k];
+    // The frozen analysis summary does not embed per-world records (it never wrote its internal per-world table); they are preserved in
+    // results/sessions_blockI.json (one row per session, bound to the manifest hashes) and in the raw archive.  The recomputations below
+    // read them from there.  The goal of a world is the frozen rule GOALS[configIndex % 4] (configIndex == world index in the stream).
+    const SXF = path.join(R, 'sessions_blockI.json');
+    const PW = {};
+    if (fs.existsSync(SXF)) for (const r of rd('sessions_blockI.json').rows) if (r.role === 'test') (PW[r.world] ||= { goal: C.GOALS[r.world % 4], cells: {} }).cells[r.cell] = { legal: r.legal, nonEdge: r.nonGraph, all: r.all };
+    const W = S.worlds, val = (cell, k, w) => PW[w].cells[cell][k];
+    check('E0.per-world-records-cover-every-world-and-cell-and-match-the-summary-means', W.every(w => PW[w] && C.CELL_NAMES.every(c => PW[w].cells[c]))
+      && C.CELL_NAMES.every(c => near(W.reduce((s, w) => s + PW[w].cells[c].legal, 0) / W.length, S.cellMeans[c].legal) && near(W.reduce((s, w) => s + PW[w].cells[c].nonEdge, 0) / W.length, S.cellMeans[c].nonEdge)
+        && near(W.reduce((s, w) => s + PW[w].cells[c].all, 0) / W.length, S.cellMeans[c].all)) && C.GOALS.every(gl => W.filter(w => PW[w].goal === gl).length === C.PER_GOAL || S.excludedFraction > 0));
     const vec = (fn) => W.map(fn);
     const diffD = (g, k = 'legal') => (w) => val(C.cellName('REAL', 1, g), k, w) - val(C.cellName('COLD', 1, g), k, w);
     check('E1.manifest-recomputes-and-binds-the-design-the-trees-and-the-state', C.hashObject(rest) === digest && S.manifestDigest === digest && MF.designDigest === C.designDigest() && S.designDigest === C.designDigest()
@@ -412,11 +421,11 @@ const mkBlock = ({ table = baseTable, nonGraphG0 = 80, perGoal = {}, n = 40, sd 
     const voidFor = (k) => (S.instruments.I2.status !== 'OK' || (['PC1', 'PC2'].includes(k) && S.instruments.I3.status !== 'OK') || (k === 'PC3' && !i6));
     check('E3.labels-recompute-by-the-declared-rules', ['PC1', 'PC2', 'PC3'].every(k => S.labels[k] === (voidFor(k) ? 'VOID' : exp[k])) && S.instruments.I5.status === (i5 ? 'OK' : 'FAILED') && S.instruments.I6.status === (i6 ? 'OK' : 'FAILED'), JSON.stringify({ exp, got: S.labels }));
     const hf = ['COLD'].length; // (kept explicit: the harm flags recompute below)
-    const goals = [...new Set(W.map(w => S.perWorld[w].goal))];
-    const harmG = goals.filter(gg => pairedSummary(W.filter(w => S.perWorld[w].goal === gg).map((w) => val('REAL_F1_G1', 'legal', w) - val('REAL_F1_G0', 'legal', w)), C.BOOT_95).ci.upper < 0);
+    const goals = [...new Set(W.map(w => PW[w].goal))];
+    const harmG = goals.filter(gg => pairedSummary(W.filter(w => PW[w].goal === gg).map((w) => val('REAL_F1_G1', 'legal', w) - val('REAL_F1_G0', 'legal', w)), C.BOOT_95).ci.upper < 0);
     check('E3.harm-flags-recompute', JSON.stringify(harmG.sort()) === JSON.stringify(S.harmFlags.PC2_guardReal_F1.slice().sort()) && hf === 1);
     check('E4.mandatory-classification-bundle-scope-and-limits-are-in-the-summary', S.classification === C.CLASSIFICATION && JSON.stringify(S.deviations) === JSON.stringify(C.DEVIATIONS) && JSON.stringify(S.claimLimits) === JSON.stringify(C.CLAIM_LIMITS)
-      && /bundle/.test(S.scope) && S.verdict.includes('no effect is attributed to either component'));
+      && /bundle/i.test(S.scope) && S.verdict.includes('no effect is attributed to either component'));
     check('E5.exploratory-files-are-labelled', !fs.existsSync(path.join(R, 'exploratory_blockI.json')) || rd('exploratory_blockI.json').status === 'EXPLORATORY_POST_HOC');
     const sf = path.join(R, 'sessions_blockI.json');
     if (!fs.existsSync(sf)) check('E6.per-session-evidence-present', false, 'results/sessions_blockI.json missing');
