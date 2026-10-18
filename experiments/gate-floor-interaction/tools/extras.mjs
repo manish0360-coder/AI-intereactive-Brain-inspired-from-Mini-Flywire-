@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import { fileURLToPath as _f2p } from 'node:url';
 import { resolve as _resolve } from 'node:path';
-const REPO = _resolve(_f2p(new URL('../../../', import.meta.url)));   // repository root
+const REPO = _resolve(_f2p(new URL('../../../', import.meta.url))).split(String.fromCharCode(92)).join('/');   // repository root (forward slashes)
 const { pairedSummary, mean, sd } = await import(`file:///${REPO}/experiments/xfer1/stats.mjs`);
 const X1 = await import(`file:///${REPO}/experiments/xfer1/config.mjs`);
 const D = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));

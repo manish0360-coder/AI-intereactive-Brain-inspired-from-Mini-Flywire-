@@ -4,7 +4,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { fileURLToPath as _f2p } from 'node:url';
 import { resolve as _resolve } from 'node:path';
-const REPO = _resolve(_f2p(new URL('../../../', import.meta.url)));   // repository root
+const REPO = _resolve(_f2p(new URL('../../../', import.meta.url))).split(String.fromCharCode(92)).join('/');   // repository root (forward slashes)
 const SRC = `${REPO}/experiments/gate-floor-prodsem`;
 let t = fs.readFileSync(`${SRC}/session.mjs`, 'utf8');
 const edit = (a, b) => { const n = t.split(a).length - 1; if (n !== 1) throw new Error(`anchor matched ${n} times: ${a.slice(0, 70)}`); t = t.replace(a, () => b); };

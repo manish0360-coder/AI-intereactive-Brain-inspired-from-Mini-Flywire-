@@ -3,7 +3,8 @@
 import fs from 'node:fs'; import path from 'node:path'; import { spawn } from 'node:child_process';
 import { fileURLToPath as _f2p } from 'node:url';
 import { resolve as _resolve } from 'node:path';
-const REPO = _resolve(_f2p(new URL('../../../', import.meta.url)));   // repository root
+const REPO = _resolve(_f2p(new URL('../../../', import.meta.url))).split(String.fromCharCode(92)).join('/');   // repository root (forward slashes)
+const S = path.dirname(process.argv[1]); const U = (p) => `file:///${REPO}/${p}`;
 const { generateAcceptedStream } = await import(U('experiments/m7/env.js')); const X1 = await import(U('experiments/xfer1/config.mjs'));
 const { buildHeadTree } = await import(U('experiments/gate-floor-prodsem/transform.mjs'));
 const REF_TREE = buildHeadTree({ derived: true }).dir;

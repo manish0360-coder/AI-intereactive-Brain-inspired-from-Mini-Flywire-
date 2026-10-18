@@ -9,7 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath as _f2p } from 'node:url';
 import { resolve as _resolve } from 'node:path';
-const REPO = _resolve(_f2p(new URL('../../../', import.meta.url)));   // repository root
+const REPO = _resolve(_f2p(new URL('../../../', import.meta.url))).split(String.fromCharCode(92)).join('/');   // repository root (forward slashes)
 const { buildHeadTree } = await import(`file:///${REPO}/experiments/gate-floor-prodsem/transform.mjs`);
 const outRoot = path.dirname(process.argv[1]);
 const d = buildHeadTree({ derived: true, outRoot: path.join(outRoot, 'trees') });
