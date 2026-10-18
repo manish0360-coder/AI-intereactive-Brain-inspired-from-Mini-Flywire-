@@ -1,0 +1,28 @@
+{
+  "schema": "evidence_backup/1",
+  "purpose": "identity and integrity record of the raw experiment archives that exist outside the repository; one entry per archive",
+  "recordedOn": "2026-10-19",
+  "archives": [
+    {
+      "milestone": "GATE-FLOOR-PRODSEM block P",
+      "name": "blockP_raw_cfc1e5c_e60cdc8.tar.gz",
+      "bytes": 12368214,
+      "sha256": "a05a94c98377deac8bfc665d18a10a57251436b1412450f2960528d723d34519",
+      "primaryCopy": "E:/Projects/OpenSourceLab/archives/gate-floor-prodsem/blockP_raw_cfc1e5c_e60cdc8.tar.gz",
+      "archiveRecord": "experiments/gate-floor-prodsem/results/archive_blockP.json",
+      "verifier": "node experiments/gate-floor-prodsem/verify_archive_blockP.mjs --archive <path>",
+      "secondCopy": null
+    },
+    {
+      "milestone": "GATE-FLOOR-INTERACTION block I",
+      "name": "blockI_raw_80f83ad.tar.gz",
+      "bytes": 15111758,
+      "sha256": "55efff3683a9059aa2581eafb894f5d1a7b74cd71d5a6869e7f497ac2729bdc9",
+      "primaryCopy": "E:/Projects/OpenSourceLab/archives/gate-floor-interaction/blockI_raw_80f83ad.tar.gz",
+      "archiveRecord": "experiments/gate-floor-interaction/results/archive_blockI.json",
+      "verifier": "node experiments/gate-floor-interaction/verify_archive_blockI.mjs --archive <path>",
+      "secondCopy": null
+    }
+  ],
+  "backupStatus": "OPEN: no off-machine copy exists for either archive (see README.md)"
+}
