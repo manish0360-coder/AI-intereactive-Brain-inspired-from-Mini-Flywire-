@@ -1,0 +1,15 @@
+world 1 (goal 12):
+  guard off   legal  445 nonGraph resets  50 total  495 | moves legal 1358 nonGraph  38 none 0 | masked     0 blocked    0 admittedNonGraph   576
+  guard mask  legal  526 nonGraph resets  31 total  557 | moves legal 1400 nonGraph   0 none 0 | masked   686 blocked    0 admittedNonGraph     0
+  guard exec  legal  414 nonGraph resets   0 total  414 | moves legal 1143 nonGraph 229 none 0 | masked     0 blocked  282 admittedNonGraph  1483
+  guard on    legal  508 nonGraph resets   0 total  508 | moves legal 1379 nonGraph   0 none 0 | masked   981 blocked   31 admittedNonGraph     0
+world 2 (goal 16):
+  guard off   legal  400 nonGraph resets  15 total  415 | moves legal 1360 nonGraph  38 none 0 | masked     0 blocked    0 admittedNonGraph  1376
+  guard mask  legal  400 nonGraph resets  24 total  424 | moves legal 1394 nonGraph   0 none 0 | masked  1341 blocked    0 admittedNonGraph     0
+  guard exec  legal  387 nonGraph resets   0 total  387 | moves legal 1312 nonGraph  79 none 0 | masked     0 blocked  101 admittedNonGraph  1434
+  guard on    legal  379 nonGraph resets   0 total  379 | moves legal 1381 nonGraph   0 none 0 | masked  1210 blocked   21 admittedNonGraph     0
+world 3 (goal 19):
+  guard off   legal  393 nonGraph resets  48 total  441 | moves legal 1352 nonGraph  41 none 0 | masked     0 blocked    0 admittedNonGraph  1365
+  guard mask  legal  382 nonGraph resets  26 total  408 | moves legal 1375 nonGraph   0 none 0 | masked   977 blocked    0 admittedNonGraph     0
+  guard exec  legal  307 nonGraph resets   0 total  307 | moves legal 1155 nonGraph 228 none 0 | masked     0 blocked  272 admittedNonGraph  1454
+  guard on    legal  374 nonGraph resets   0 total  374 | moves legal 1382 nonGraph   0 none 0 | masked  2007 blocked   32 admittedNonGraph     0

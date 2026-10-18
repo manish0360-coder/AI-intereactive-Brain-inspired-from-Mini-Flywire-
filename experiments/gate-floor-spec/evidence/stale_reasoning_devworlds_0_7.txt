@@ -1,0 +1,2 @@
+guard off  (8 dev worlds, floor ON): non-graph resets 60.9 = stale-reasoning 25.8 + decision non-edge 35.1; executed non-graph decisions 77.3
+guard mask (8 dev worlds, floor ON): non-graph resets 30.4 = stale-reasoning 30.4 + decision non-edge 0.0; executed non-graph decisions 0.0

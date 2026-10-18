@@ -1,0 +1,349 @@
+{
+ "worlds": 30,
+ "cellMeans": {
+  "U_off": {
+   "legal": 420.46666666666664,
+   "nonEdge": 125.16666666666667,
+   "all": 545.6333333333333,
+   "stale": 32.56666666666667,
+   "decisionNonEdge": 92.6,
+   "movesNonGraph": 123.1,
+   "masked": 0,
+   "blocked": 0,
+   "admittedNonGraph": 1376.6333333333334
+  },
+  "U_mask": {
+   "legal": 469,
+   "nonEdge": 30.9,
+   "all": 499.9,
+   "stale": 30.9,
+   "decisionNonEdge": 0,
+   "movesNonGraph": 0,
+   "masked": 1657.9333333333334,
+   "blocked": 0,
+   "admittedNonGraph": 0
+  },
+  "U_exec": {
+   "legal": 326.5,
+   "nonEdge": 0,
+   "all": 326.5,
+   "stale": 0,
+   "decisionNonEdge": 0,
+   "movesNonGraph": 394.1666666666667,
+   "masked": 0,
+   "blocked": 448.8333333333333,
+   "admittedNonGraph": 1529.5333333333333
+  },
+  "U_both": {
+   "legal": 460.9,
+   "nonEdge": 0,
+   "all": 460.9,
+   "stale": 0,
+   "decisionNonEdge": 0,
+   "movesNonGraph": 0,
+   "masked": 1859.2,
+   "blocked": 31.433333333333334,
+   "admittedNonGraph": 0
+  },
+  "G_off": {
+   "legal": 428.3666666666667,
+   "nonEdge": 124.23333333333333,
+   "all": 552.6,
+   "stale": 33.86666666666667,
+   "decisionNonEdge": 90.36666666666666,
+   "movesNonGraph": 115.4,
+   "masked": 0,
+   "blocked": 0,
+   "admittedNonGraph": 1309.2
+  },
+  "G_both": {
+   "legal": 450.1666666666667,
+   "nonEdge": 0,
+   "all": 450.1666666666667,
+   "stale": 0,
+   "decisionNonEdge": 0,
+   "movesNonGraph": 0,
+   "masked": 1652.1,
+   "blocked": 32.06666666666667,
+   "admittedNonGraph": 0
+  }
+ },
+ "contrasts": {
+  "retrofit: bundle at test, legacy store (U_both - U_off)  [Block I replicate]": {
+   "legal": {
+    "mean": 40.43333333333333,
+    "lower": 22.866666666666667,
+    "upper": 57.766666666666666,
+    "sd": 50.263226657497704
+   },
+   "nonEdge": -125.16666666666667,
+   "all": -84.73333333333333
+  },
+  "PS1 scope: guard-trained vs legacy store, bundle at test (G_both - U_both)": {
+   "legal": {
+    "mean": -10.733333333333333,
+    "lower": -30.766666666666666,
+    "upper": 8.866666666666667,
+    "sd": 57.07401929215183
+   },
+   "nonEdge": 0,
+   "all": -10.733333333333333
+  },
+  "PS2 package: guard-trained + bundle vs legacy + floor only (G_both - U_off)": {
+   "legal": {
+    "mean": 29.7,
+    "lower": 2.6,
+    "upper": 54.666666666666664,
+    "sd": 74.71469873389407
+   },
+   "nonEdge": -125.16666666666667,
+   "all": -95.46666666666667
+  },
+  "mask-only effect (U_mask - U_off)": {
+   "legal": {
+    "mean": 48.53333333333333,
+    "lower": 31.066666666666666,
+    "upper": 66.53333333333333,
+    "sd": 50.390019081049246
+   },
+   "nonEdge": -94.26666666666667,
+   "all": -45.733333333333334
+  },
+  "exec-only effect (U_exec - U_off)": {
+   "legal": {
+    "mean": -93.96666666666667,
+    "lower": -114.73333333333333,
+    "upper": -72.1,
+    "sd": 59.20477807682786
+   },
+   "nonEdge": -125.16666666666667,
+   "all": -219.13333333333333
+  },
+  "PS3 shortfall of mask-only vs bundle (U_both - U_mask)": {
+   "legal": {
+    "mean": -8.1,
+    "lower": -17.833333333333332,
+    "upper": 2.066666666666667,
+    "sd": 28.479090938610646
+   },
+   "nonEdge": -30.9,
+   "all": -39
+  },
+  "PS4 shortfall of exec-only vs bundle (U_both - U_exec)": {
+   "legal": {
+    "mean": 134.4,
+    "lower": 106.93333333333334,
+    "upper": 160.26666666666668,
+    "sd": 75.39395384155198
+   },
+   "nonEdge": 0,
+   "all": 134.4
+  },
+  "store-cleanliness without a runtime guard (G_off - U_off)  [mechanistic, not a production scenario]": {
+   "legal": {
+    "mean": 7.9,
+    "lower": -17.466666666666665,
+    "upper": 32.3,
+    "sd": 70.63473307970646
+   },
+   "nonEdge": null,
+   "all": null
+  },
+  "scope x runtime-guard interaction ((G_both - G_off) - (U_both - U_off))": {
+   "legal": {
+    "mean": -18.633333333333333,
+    "lower": -41.46666666666667,
+    "upper": 5.733333333333333,
+    "sd": 67.68154810598668
+   },
+   "nonEdge": null,
+   "all": null
+  }
+ },
+ "store": {
+  "U": {
+   "episodes": 236.23333333333332,
+   "pairs": 707.6,
+   "nonGraphPairs": 100.6,
+   "terminalNonGraph": 40.56666666666667,
+   "trainLegal": 376.3333333333333,
+   "trainNonGraph": 100,
+   "worldsWithAnyNonGraphPair": 30
+  },
+  "G": {
+   "episodes": 229.93333333333334,
+   "pairs": 734.7666666666667,
+   "nonGraphPairs": 25.8,
+   "terminalNonGraph": 7.833333333333333,
+   "trainLegal": 386.1666666666667,
+   "trainNonGraph": 0,
+   "worldsWithAnyNonGraphPair": 30
+  },
+  "episodeRatioGoverU": {
+   "mean": 0.9792324430560237,
+   "min": 0.6932270916334662,
+   "max": 1.1420765027322404
+  }
+ },
+ "structure": {
+  "bundleNonGraphResetsZero": [
+   30,
+   30
+  ],
+  "execOnlyNonGraphResetsZero": 30,
+  "maskOnlyDecisionNonEdgeZero": 30,
+  "maskOnlyMovesNonGraphZero": 30,
+  "guardOffMaskedBlockedZero": [
+   30,
+   30
+  ],
+  "integrityOk": [
+   30,
+   30,
+   30,
+   30,
+   30,
+   30
+  ],
+  "consistent": [
+   30,
+   30,
+   30,
+   30,
+   30,
+   30
+  ]
+ },
+ "sampleSize": {
+  "family3": {
+   "retrofit: bundle at test, legacy store (U_both - U_off)  [Block I replicate]": {
+    "sd": 50.263226657497704,
+    "n": 67,
+    "nInflated": 104,
+    "mde280": 9.719105908363355,
+    "mde360": 8.571445733142651
+   },
+   "PS1 scope: guard-trained vs legacy store, bundle at test (G_both - U_both)": {
+    "sd": 57.07401929215183,
+    "n": 86,
+    "nInflated": 134,
+    "mde280": 11.036069011173437,
+    "mde360": 9.732898018437139
+   },
+   "PS2 package: guard-trained + bundle vs legacy + floor only (G_both - U_off)": {
+    "sd": 74.71469873389407,
+    "n": 147,
+    "nInflated": 229,
+    "mde280": 14.44714392998201,
+    "mde360": 12.741183331296249
+   },
+   "mask-only effect (U_mask - U_off)": {
+    "sd": 50.390019081049246,
+    "n": 67,
+    "nInflated": 104,
+    "mde280": 9.743623017089236,
+    "mde360": 8.59306779066099
+   },
+   "exec-only effect (U_exec - U_off)": {
+    "sd": 59.20477807682786,
+    "n": 92,
+    "nInflated": 144,
+    "mde280": 11.44808136435078,
+    "mde360": 10.096258759635061
+   },
+   "PS3 shortfall of mask-only vs bundle (U_both - U_mask)": {
+    "sd": 28.479090938610646,
+    "n": 22,
+    "nInflated": 34,
+    "mde280": 5.506835104168136,
+    "mde360": 4.856572065556453
+   },
+   "PS4 shortfall of exec-only vs bundle (U_both - U_exec)": {
+    "sd": 75.39395384155198,
+    "n": 149,
+    "nInflated": 233,
+    "mde280": 14.578487513932746,
+    "mde360": 12.85701748444211
+   },
+   "store-cleanliness without a runtime guard (G_off - U_off)  [mechanistic, not a production scenario]": {
+    "sd": 70.63473307970646,
+    "n": 131,
+    "nInflated": 205,
+    "mde280": 13.6582248546958,
+    "mde360": 12.045422105375463
+   },
+   "scope x runtime-guard interaction ((G_both - G_off) - (U_both - U_off))": {
+    "sd": 67.68154810598668,
+    "n": 120,
+    "nInflated": 188,
+    "mde280": 13.087184763653646,
+    "mde360": 11.541812082193724
+   }
+  },
+  "family4": {
+   "retrofit: bundle at test, legacy store (U_both - U_off)  [Block I replicate]": {
+    "sd": 50.263226657497704,
+    "n": 71,
+    "nInflated": 111,
+    "mde280": 10.030677334246814,
+    "mde360": 8.846225902649794
+   },
+   "PS1 scope: guard-trained vs legacy store, bundle at test (G_both - U_both)": {
+    "sd": 57.07401929215183,
+    "n": 91,
+    "nInflated": 142,
+    "mde280": 11.38985914273283,
+    "mde360": 10.044911586575466
+   },
+   "PS2 package: guard-trained + bundle vs legacy + floor only (G_both - U_off)": {
+    "sd": 74.71469873389407,
+    "n": 156,
+    "nInflated": 244,
+    "mde280": 14.910285012777972,
+    "mde360": 13.149635373634679
+   },
+   "mask-only effect (U_mask - U_off)": {
+    "sd": 50.390019081049246,
+    "n": 71,
+    "nInflated": 111,
+    "mde280": 10.055980403183057,
+    "mde360": 8.868541111920468
+   },
+   "exec-only effect (U_exec - U_off)": {
+    "sd": 59.20477807682786,
+    "n": 98,
+    "nInflated": 153,
+    "mde280": 11.81507963229344,
+    "mde360": 10.419920809157636
+   },
+   "PS3 shortfall of mask-only vs bundle (U_both - U_mask)": {
+    "sd": 28.479090938610646,
+    "n": 23,
+    "nInflated": 36,
+    "mde280": 5.683371143767656,
+    "mde360": 5.012262218296645
+   },
+   "PS4 shortfall of exec-only vs bundle (U_both - U_exec)": {
+    "sd": 75.39395384155198,
+    "n": 159,
+    "nInflated": 248,
+    "mde280": 15.045839159728848,
+    "mde360": 13.26918289430652
+   },
+   "store-cleanliness without a runtime guard (G_off - U_off)  [mechanistic, not a production scenario]": {
+    "sd": 70.63473307970646,
+    "n": 140,
+    "nInflated": 218,
+    "mde280": 14.096075067785108,
+    "mde360": 12.431569697152446
+   },
+   "scope x runtime-guard interaction ((G_both - G_off) - (U_both - U_off))": {
+    "sd": 67.68154810598668,
+    "n": 128,
+    "nInflated": 200,
+    "mde280": 13.506728789210879,
+    "mde360": 11.911815134082843
+   }
+  }
+ }
+}
