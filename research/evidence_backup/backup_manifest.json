@@ -24,5 +24,44 @@
       "secondCopy": null
     }
   ],
-  "backupStatus": "OPEN: no off-machine copy exists for either archive (see README.md)"
+  "backupStatus": "OPEN: no off-machine copy exists for either archive (sources re-verified 2026-10-20; see README.md for the owner action that closes it)",
+  "checks": [
+    {
+      "date": "2026-10-19",
+      "sources": "both re-hashed: match",
+      "destinationFound": false,
+      "result": "NOT BACKED UP",
+      "note": "see README.md"
+    },
+    {
+      "date": "2026-10-20",
+      "milestone": "GATE-FLOOR evidence backup",
+      "sources": {
+        "blockP_raw_cfc1e5c_e60cdc8.tar.gz": {
+          "path": "E:/Projects/OpenSourceLab/archives/gate-floor-prodsem/blockP_raw_cfc1e5c_e60cdc8.tar.gz",
+          "expectedSha256": "a05a94c98377deac8bfc665d18a10a57251436b1412450f2960528d723d34519",
+          "actualSha256": "a05a94c98377deac8bfc665d18a10a57251436b1412450f2960528d723d34519",
+          "bytes": 12368214,
+          "deepVerifier": "PASS: 1680 session records match the manifest; 560 delivered stores match the controls; manifest digest eb7ac3654b246af6..."
+        },
+        "blockI_raw_80f83ad.tar.gz": {
+          "path": "E:/Projects/OpenSourceLab/archives/gate-floor-interaction/blockI_raw_80f83ad.tar.gz",
+          "expectedSha256": "55efff3683a9059aa2581eafb894f5d1a7b74cd71d5a6869e7f497ac2729bdc9",
+          "actualSha256": "55efff3683a9059aa2581eafb894f5d1a7b74cd71d5a6869e7f497ac2729bdc9",
+          "bytes": 15111758,
+          "deepVerifier": "PASS: 2520 session records match the manifest; 280 delivered REAL stores match the controls; manifest digest f56ef2cb86252510..."
+        }
+      },
+      "destinationSurvey": [
+        "one physical disk (internal NVMe, 512 GB) partitioned into C:, D:, E: - another partition is the same machine and the same disk",
+        "no removable drive, no mapped network share",
+        "a OneDrive folder exists but no OneDrive client is installed and no account is configured (nothing would sync)",
+        "a Dropbox folder exists but no Dropbox client is installed or running (nothing would sync)",
+        "no gh / rclone / aws / gsutil / az CLI; the GitHub repository is public and is excluded as a destination"
+      ],
+      "destinationFound": false,
+      "copiesMade": 0,
+      "result": "NOT BACKED UP - no authorized off-machine destination is available; a local duplicate is not counted"
+    }
+  ]
 }

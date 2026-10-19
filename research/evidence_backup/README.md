@@ -1,7 +1,36 @@
 # Raw-archive backup status
 
-**Status: OPEN. Neither raw archive has an off-machine copy.** Checked 2026-10-19; nothing was uploaded, nothing was committed to
-Git, and no historical result was regenerated or modified.
+**Status: OPEN. Neither raw archive has an off-machine copy.** Checked 2026-10-19 and again on 2026-10-20 (backup milestone).
+Nothing was uploaded, nothing was committed to Git, and no historical result was regenerated or modified.
+
+## Re-check 2026-10-20 (FACT)
+
+* **Sources verified.** Both archives exist at the paths below and hash to the recorded values.
+  * Block P: its own verifier extracts it and confirms that all 1,680 session records and 560 delivered stores match the committed
+    manifest.
+  * Block I: all 2,520 session records and 280 delivered stores match.
+* **No authorized off-machine destination exists on this machine.**
+  * C:, D: and E: are partitions of the single internal disk.
+  * There is no removable drive and no mapped network share.
+  * The OneDrive and Dropbox folders are leftovers: neither client is installed or signed in, so nothing placed there would sync.
+  * No storage CLI is installed.
+  * The GitHub repository is public and is excluded.
+
+  A copy to any of these would be a local duplicate and is not counted. No copy was made. The result is recorded in
+  `backup_manifest.json` (`checks`).
+* **Withdrawn.** The earlier "draft release on the GitHub repository" suggestion below is withdrawn: the 2026-10-20 instruction
+  excludes uploads to a public repository. Use one of the two owner actions in the next section.
+
+## Owner action that closes it (choose one; the verification is then done here)
+
+1. **External drive (smallest; no account involved).** Connect any USB drive or external disk with ≥ 30 MB free and name its drive
+   letter. Both files are then copied and each copy is re-hashed and deep-verified *on the drive*. You then eject it and keep it away
+   from this computer. A drive that stays attached is not off-machine.
+2. **Private storage you control.** Create an empty **private** GitHub repository (for example `mini-flywire-evidence`, visibility
+   Private) and give its URL with permission to push to it. The archives are pushed there, the repository is confirmed not publicly
+   readable, and a **fresh clone downloaded from GitHub** is hashed and deep-verified. That proves the copy that is off the machine.
+
+Either route ends with `secondCopy` filled in `backup_manifest.json` and `backupStatus: CLOSED`. Doing both gives two independent copies.
 
 | archive | bytes | sha256 | location (this machine only) |
 |---|---|---|---|
@@ -22,7 +51,7 @@ Both were re-hashed on 2026-10-19 and match their committed records (`backup_man
 * A draft GitHub release would keep the files non-public, but creating one from this machine means calling the GitHub API with the
   credential-manager token; that token was **not** extracted or used outside `git push`.
 
-## Smallest actionable next step (about two minutes, owner action)
+## Earlier suggestion (2026-10-19; the draft-release route is withdrawn, the verification commands still apply to any copy)
 
 1. In the browser: repository → **Releases → Draft a new release** → choose a tag name (for example `evidence-archives-2026-10-15`; a
    draft does not create the tag) → attach the two `.tar.gz` files → **Save draft** (do **not** publish). A draft is visible only to
