@@ -1,0 +1,218 @@
+{
+ "status": "DEVELOPMENT (XFER-1 worlds, not study worlds; design input only)",
+ "driver": "experiments/gate-floor-spec/session.mjs (diag on)",
+ "worlds": 30,
+ "failures": 0,
+ "fidelity": {
+  "comparedTo": "evidence/calibration6_rows.json",
+  "mismatches": 0,
+  "firstMismatches": []
+ },
+ "allAccountingCompletenessIntegrityOk": true,
+ "cells": {
+  "U_off": {
+   "legal": 420.46666666666664,
+   "nonGraph": 125.16666666666667,
+   "stale": 32.56666666666667,
+   "decision": 92,
+   "decisionCarried": 0.6,
+   "unclassified": 0,
+   "legalFromStale": 8.066666666666666,
+   "staleArrivals": 116.9,
+   "staleIllegal": 32.56666666666667,
+   "freshArrivals": 1385.6333333333334,
+   "carriedArrivals": 2.3666666666666667,
+   "freshIllegal": 123.1,
+   "illegalExecuted": 156.26666666666668,
+   "blocked": 0,
+   "blockedStale": 0
+  },
+  "U_mask": {
+   "legal": 469,
+   "nonGraph": 30.9,
+   "stale": 30.9,
+   "decision": 0,
+   "decisionCarried": 0,
+   "unclassified": 0,
+   "legalFromStale": 7.033333333333333,
+   "staleArrivals": 119.7,
+   "staleIllegal": 30.9,
+   "freshArrivals": 1382.7666666666667,
+   "carriedArrivals": 2.433333333333333,
+   "freshIllegal": 0,
+   "illegalExecuted": 30.9,
+   "blocked": 0,
+   "blockedStale": 0
+  },
+  "U_both": {
+   "legal": 460.9,
+   "nonGraph": 0,
+   "stale": 0,
+   "decision": 0,
+   "decisionCarried": 0,
+   "unclassified": 0,
+   "legalFromStale": 6.833333333333333,
+   "staleArrivals": 117.9,
+   "staleIllegal": 31.433333333333334,
+   "freshArrivals": 1385.2,
+   "carriedArrivals": 1.8,
+   "freshIllegal": 0,
+   "illegalExecuted": 0,
+   "blocked": 31.433333333333334,
+   "blockedStale": 31.433333333333334
+  },
+  "G_both": {
+   "legal": 450.1666666666667,
+   "nonGraph": 0,
+   "stale": 0,
+   "decision": 0,
+   "decisionCarried": 0,
+   "unclassified": 0,
+   "legalFromStale": 6.1,
+   "staleArrivals": 122,
+   "staleIllegal": 32.06666666666667,
+   "freshArrivals": 1381.0666666666666,
+   "carriedArrivals": 1.8333333333333333,
+   "freshIllegal": 0,
+   "illegalExecuted": 0,
+   "blocked": 32.06666666666667,
+   "blockedStale": 32.06666666666667
+  }
+ },
+ "stale": {
+  "X1_maskOnlyStaleShare": {
+   "share": 1,
+   "n": 30,
+   "ci": {
+    "lower": 1,
+    "upper": 1
+   }
+  },
+  "X3_bundleBlockedStaleShare": {
+   "share": 1,
+   "n": 30,
+   "ci": {
+    "lower": 1,
+    "upper": 1
+   }
+  },
+  "XU_unclassifiedShare": {
+   "share": 0,
+   "n": 30,
+   "ci": {
+    "lower": 0,
+    "upper": 0
+   }
+  },
+  "reading": "SUPPORTED"
+ },
+ "stores": {
+  "U": {
+   "episodes": 236.23333333333332,
+   "pairs": 707.6,
+   "nonGraphPairs": 100.6,
+   "nonGraphShare": 0.1389875389478776,
+   "terminalNonGraph": 40.56666666666667,
+   "twoHopConsistent": 99.93333333333334,
+   "attribution": {
+    "EXECUTED": 92.33333333333333,
+    "SKIP": 8.266666666666667,
+    "UNRECORDED": 0
+   },
+   "worldsWithExecutedNonGraphPair": 30,
+   "worldsWithUnrecordedPair": 0,
+   "trainingNonGraphResets": 100,
+   "trainingIllegalExecuted": 186.3,
+   "trainingBlocked": 0,
+   "recordingSkipAppended": 31.1,
+   "recordingInconsistent": 0
+  },
+  "G": {
+   "episodes": 229.93333333333334,
+   "pairs": 734.7666666666667,
+   "nonGraphPairs": 25.8,
+   "nonGraphShare": 0.03583603733801042,
+   "terminalNonGraph": 7.833333333333333,
+   "twoHopConsistent": 25.8,
+   "attribution": {
+    "EXECUTED": 0,
+    "SKIP": 25.8,
+    "UNRECORDED": 0
+   },
+   "worldsWithExecutedNonGraphPair": 0,
+   "worldsWithUnrecordedPair": 0,
+   "trainingNonGraphResets": 0,
+   "trainingIllegalExecuted": 0,
+   "trainingBlocked": 24.233333333333334,
+   "recordingSkipAppended": 39.13333333333333,
+   "recordingInconsistent": 0
+  }
+ },
+ "contrasts": {
+  "PS1_scope": {
+   "n": 30,
+   "mean": -10.733333333333333,
+   "median": -5.5,
+   "sd": 57.07401929215183,
+   "positive": 13,
+   "negative": 16,
+   "zero": 1,
+   "ci": {
+    "lower": -30.766666666666666,
+    "upper": 8.866666666666667
+   }
+  },
+  "PS2_package": {
+   "n": 30,
+   "mean": 29.7,
+   "median": 22,
+   "sd": 74.71469873389407,
+   "positive": 21,
+   "negative": 9,
+   "zero": 0,
+   "ci": {
+    "lower": 2.6,
+    "upper": 54.666666666666664
+   }
+  },
+  "PS3_execIncrement": {
+   "n": 30,
+   "mean": -8.1,
+   "median": -10.5,
+   "sd": 28.479090938610646,
+   "positive": 11,
+   "negative": 19,
+   "zero": 0,
+   "ci": {
+    "lower": -17.833333333333332,
+    "upper": 2.066666666666667
+   }
+  },
+  "D2_retrofit": {
+   "n": 30,
+   "mean": 40.43333333333333,
+   "median": 45.5,
+   "sd": 50.263226657497704,
+   "positive": 24,
+   "negative": 5,
+   "zero": 1,
+   "ci": {
+    "lower": 22.866666666666667,
+    "upper": 57.766666666666666
+   }
+  },
+  "M0_maskWithoutExec": {
+   "n": 30,
+   "mean": 48.53333333333333,
+   "median": 33.5,
+   "sd": 50.390019081049246,
+   "positive": 26,
+   "negative": 4,
+   "zero": 0,
+   "ci": {
+    "lower": 31.066666666666666,
+    "upper": 66.53333333333333
+   }
+  }
+ }
+}
