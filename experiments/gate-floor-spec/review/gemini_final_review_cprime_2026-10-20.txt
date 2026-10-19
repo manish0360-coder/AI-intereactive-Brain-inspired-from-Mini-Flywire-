@@ -1,0 +1,47 @@
+# INDEPENDENT ADVERSARIAL REVIEW — GATE-FLOOR-SCOPE C′ FINAL PRE-FREEZE REVIEW
+
+## 1. Verdict
+
+**FREEZE-READY WITH EXPLICIT LIMITATIONS**
+
+## 2. Estimand and statistical audit
+
+*   **PS1:** `E[Y(G,both) − Y(U,both)]` correctly estimates the *total effect* of the training regime. The paired design (sharing the test configuration and seed) correctly isolates the effect of the store. The limitation that this confounds training exposure, store size, and store content is explicitly acknowledged and appropriate.
+*   **PS2:** `E[Y(G,both) − Y(U,off)]` correctly estimates the package effect versus the legacy baseline.
+*   **PS3:** `E[Y(U,both) − Y(U,mask)]` correctly isolates the incremental effect of the execution guard given the mask's presence.
+*   **What C′ cannot identify:** The independent effect of the execution guard without the mask (the `U_exec` cell), or the effect of the mask without the execution guard *on a guard-trained store* (`G_mask` vs `G_off`).
+*   **Statistical validity:** The Bonferroni-3 correction with δ = 20 is appropriate for the primary family. Sizing based on n=30 development SDs with a 25% inflation factor to n=280 is a standard and acceptable heuristic. The decision rules correctly separate statistical estimation from the product decision (completeness). The use of confidence intervals relative to ±δ rather than null-hypothesis significance testing prevents misinterpreting "no significant difference" as "equivalence."
+
+## 3. Diagnostic and recording-artifact audit
+
+### Stale-Reasoning Diagnostic
+*   **FACT:** The diagnostic classifies events into FRESH, CARRIED, STALE, or UNCLASSIFIED based on `window.lastReasoning` and position. It correctly maps these to reset channels.
+*   **INFERENCE:** The diagnostic is behavior-neutral. (The evidence supports this, assuming the hook implementation is non-invasive as claimed). The development results suggest the mask handles decision-channel resets, and the execution guard handles stale-channel resets.
+*   **UNKNOWN:** Whether the classification thresholds (X1 ≥ 0.90, X3 ≥ 0.95) will be met in the confirmatory run. If not met, the proposed mechanism (that the mask leaves only stale errors) is weakened or falsified. The pre-specified interpretation rules (SUPPORTED/WEAKENED/UNRESOLVED) are correct.
+
+### Guarded-Store Non-Graph Pairs
+*   **FACT:** Guard-trained stores contain non-graph pairs (development finding: ~25.8 per store).
+*   **INFERENCE:** The episode-path buffer lagging behavior causes these pairs. They are recording artifacts rather than executed non-graph transitions. (The recording audit supports this *descriptively* at n=30).
+*   **UNKNOWN:** The critical unknown is proposition 3: whether these stored artifacts influence future behavior. The proposed fidelity rule (void PS1/PS2 if *any* non-graph pair is *executed*) is necessary but perhaps insufficient. It only detects if the artifact is directly executed, not if it subtly biases candidate selection. However, treating the G_both cell as measuring the *total effect* of the training regime (including the presence of these artifacts) mitigates this.
+
+## 4. Blocking defects
+
+None identified. The design correctly isolates the estimands requested and specifies decision rules that prevent overclaiming.
+
+## 5. Non-blocking limitations
+
+1.  **Guarded-store anomaly:** The `G_both` cell evaluates a store containing known non-graph artifacts. PS1 must be strictly interpreted as the effect of *this specific, artifact-containing training regime*, not the effect of a perfectly sanitized store. This limitation is currently pre-registered but must be emphasized in any final report.
+2.  **Extrapolation:** The findings apply only to Phase I behavior, legacy credit assignment, and 150-tick episodes.
+
+## 6. Minimum required corrections
+
+None. The design is valid as presented in the package.
+
+## 7. Scope statement
+
+*   **C′ CAN establish:** The total effect of guarded training vs unguarded training (PS1); the performance of the full guarded package vs the legacy baseline (PS2); the incremental performance benefit (or lack thereof) of the execution guard when the mask is already present (PS3); and whether the residual errors under mask-only are primarily stale reasoning (X1).
+*   **C′ CANNOT establish:** The independent value of the execution guard; the effect of a perfectly clean training store; production readiness; or whether the residual stale errors under mask-only are "acceptable" from a product standpoint.
+
+## 8. Final recommendation
+
+The user can responsibly authorize a separate freeze decision. The C′ design is scientifically sound, correctly addresses the questions it claims to answer, and incorporates appropriate safeguards against over-interpretation.

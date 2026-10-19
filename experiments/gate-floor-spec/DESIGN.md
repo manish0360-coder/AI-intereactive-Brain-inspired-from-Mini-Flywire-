@@ -1,9 +1,28 @@
-# GATE-FLOOR-SCOPE — design C′ pre-registration package (NOT FROZEN)
+# GATE-FLOOR-SCOPE — design C′ preregistration (FROZEN; confirmatory run NOT AUTHORIZED)
 
-**Status: final pre-registration package for one last independent review. Not frozen. No confirmatory session has run and none is
-authorised. Production `main.js` is unchanged. The freeze, and any confirmatory run, need the owner's explicit authorisation after
-that review.** Every session behind the numbers here ran on XFER-1 *development* worlds (0–29, outside every study world) and is
-labelled as development evidence. The earlier proposal (design C, 1,960 sessions) is commit `2b53a7f`. This document supersedes it.
+**Status: FROZEN on 2026-10-20 after the independent final review.**
+- Verdict: FREEZE-READY WITH EXPLICIT LIMITATIONS, with no blocking defects and no required corrections. The record is
+  [`FREEZE.md`](FREEZE.md) / [`FREEZE.json`](FREEZE.json).
+- The frozen design is commit `57beb5d`; every code and evidence file is byte-identical to it.
+- **The confirmatory run is NOT AUTHORIZED and NOT EXECUTED.** No session has run and no block S world has been consumed. Execution
+  needs the owner's separate, explicit authorisation.
+- Production `main.js` is unchanged.
+- Every session behind the numbers here ran on XFER-1 *development* worlds (0–29, outside every study world) and is labelled as
+  development evidence. The earlier proposal (design C, 1,960 sessions) is commit `2b53a7f`; this document supersedes it.
+
+**Mandatory statements (frozen; they bind every report):**
+1. The 1,680 total sessions comprise 560 training sessions and 1,120 test sessions (280 worlds x (2 training regimes + 4 test cells)).
+2. PS1 estimates the total effect of the specific guarded training regime, including its recorded-store artifacts; it is not the effect
+   of a clean store.
+3. The recording-artifact explanation of the non-graph pairs in guard-trained stores is supported by development evidence but does not
+   establish that they are behaviourally irrelevant.
+4. Results apply only within the specified bounds: Phase I (1,500 calls), legacy stale-keyed credit and the 150-tick episode cap (with
+   deterministic replay, hook state P, goals {8, 12, 16, 19}).
+5. Not established by this study: the independent effect of the execution guard without the mask, the effect of a perfectly clean
+   store, and production readiness.
+
+The rest of this document is the design exactly as reviewed. Only this header changed at the freeze. Statements in it such as "not
+frozen" describe the review state.
 
 Statements are tagged **FACT** (checked in source, in a gate, or in a recorded development run), **INFERENCE** (follows from facts,
 with the basis stated), **RECOMMENDATION**, or **UNKNOWN**.

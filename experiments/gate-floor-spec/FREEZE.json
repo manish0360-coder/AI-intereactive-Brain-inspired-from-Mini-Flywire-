@@ -1,0 +1,116 @@
+{
+ "schema": "gatefloorscope/1.freeze",
+ "study": "GATE-FLOOR-SCOPE",
+ "status": "FROZEN_PREREGISTRATION_NOT_RUN",
+ "designCommit": "57beb5d258890aa16ba7c8cba986a3d8a8d43659",
+ "designDigest": "31d01d7c0409218ba0de12b28c33e45def1b329ae837ff12175f2b19963cf2fd",
+ "decisionDigest": "82f3998279b0dc55ed9e70b0aaddfb7c8032edf3df30a853c7d4bff22c08955a",
+ "accounting": {
+  "training": 560,
+  "test": 1120,
+  "total": 1680,
+  "worldsN": 280,
+  "worlds": [
+   1392,
+   1671
+  ],
+  "perGoal": 70,
+  "cells": [
+   "U_off",
+   "U_mask",
+   "U_both",
+   "G_both"
+  ],
+  "trainings": [
+   "U",
+   "G"
+  ]
+ },
+ "substrate": {
+  "headCommit": "0df804c497e649affb9e7ebacb10fdc81ab6de8d",
+  "headMainSha256": "c92c5c6b6d2e32aed9114e2a8dc4075134630bfe6e5547b8052b9e8b839a3de3",
+  "derivedMainSha256": "8cf1dc296189286113ac9daa16a28f98bbab131b18b919ec6aeb1fed4d4abc1e",
+  "guardMainSha256": "a0eb7b377dcdf4b9304f0c04c2dd7c3b84328d605b5bd22bc00b534b671dec67",
+  "admitLineSha256": "cccaefd240e8dab8f3e7530604c468f7cd7fd2598d8f44027f69cefcf1fe3180",
+  "execLineSha256": "3f63ce0cfa0f7c08dacb7f759ddeb315e171bf35aa070c35765ef871092fd0ad",
+  "frozenInteractionCommit": "80f83ad3dcc3bd008c841ee712318280b5a5db66"
+ },
+ "frozenFiles": {
+  "experiments/gate-floor-spec/analyze.mjs": "8e346274fb895aad6820453ff0f31051db308c3ea8f23155ff697d81b5dc6125",
+  "experiments/gate-floor-spec/config.mjs": "b9e65668ce3ab88ec8c07412aeecc8ba9e88e873450bce7c3b1c2e8a964b7745",
+  "experiments/gate-floor-spec/data/.gitignore": "240a3e0d37d2e86b614063f5347eb02d4f99ca6c254de6b82871ff8d95532a7d",
+  "experiments/gate-floor-spec/diag.mjs": "825ebd0f409fea19763c15a2931bb4c0e77fac9e59b7a277fd75371e81dfee4d",
+  "experiments/gate-floor-spec/evidence/calibration6_rows.json": "b10cc3d6c45c4fdd4940bdcd7067e29837ae34d5da199f0057b015d058749fe4",
+  "experiments/gate-floor-spec/evidence/calibration6_summary.json": "e8be0647753d30883aad9e7f54255baa0c46818b7315deb455bd07ff5c69d962",
+  "experiments/gate-floor-spec/evidence/components_feasibility_devworlds_1_3.txt": "89682a73348c72713874b48fea2624f5e9aa1dea89421ec879df95edcd632cd2",
+  "experiments/gate-floor-spec/evidence/devcheck_cprime_rows.json": "f86fef85b194845a323a680798e5dbba35266e6fb9510bb2b682e4a9144fd8f2",
+  "experiments/gate-floor-spec/evidence/devcheck_cprime_summary.json": "de9a08614f781fe5e564d6cf497f2cc3b9f14033d8d43e19cd3af4d0fa3bdf87",
+  "experiments/gate-floor-spec/evidence/gate_verify_cprime.log": "0c260fe1d409acb17ccfb5aaf682c49254d2517083a37517477572cb9c5131a5",
+  "experiments/gate-floor-spec/evidence/stale_reasoning_devworlds_0_7.txt": "cfa87670e61a8c9dc736529fac2c2ffd95b8352b3933ed25a224bc0fff2cb29a",
+  "experiments/gate-floor-spec/orchestrate.mjs": "3540f94dc0240a287f3d4ed28244fa1ff6cf4e1763d8c3ce896d22fd15e8be42",
+  "experiments/gate-floor-spec/session.mjs": "7b91457d254e32ec7670623c3252b32cac117fb041e8f85983c24737e391129e",
+  "experiments/gate-floor-spec/tools/.gitignore": "99a5f7598149b30343241677f06f15a3f3fd9f92571dfccdd6ab4abe0fe2d317",
+  "experiments/gate-floor-spec/tools/calib6.mjs": "ffa6795de3a8a26a0cda229663a4ff8adee5d4f30a538bfee2aee9b290df201a",
+  "experiments/gate-floor-spec/tools/components.mjs": "a84dff18a5c351b29258d7a5182145744151d6f48bd25f4630b6e4d9e9a9d9ea",
+  "experiments/gate-floor-spec/tools/devcheck_cprime.mjs": "cbcaa8ae804c8a35b703aef19e2c2fd69d21bb52c6b7f45097259ed2474ba229",
+  "experiments/gate-floor-spec/tools/gen_session.mjs": "a8acec324c1693ac00e14cb9bc58540ce6813569505657f8a9b752200d2163d3",
+  "experiments/gate-floor-spec/tools/stale_check.mjs": "ae72903bc91ed9236db6c42d04094c9f3faf9b467d46e79108b19858802afa96",
+  "experiments/gate-floor-spec/tools/summ6.mjs": "ac7a4cec2dc205b6be58572b80a2a968008a61c15be8ee0085fd843462d9cc46",
+  "experiments/gate-floor-spec/verify_gatefloorscope.mjs": "19aa4b66d1d99b03507d52f14b3cbafb606d6ec4ac387ce93512588631f430bf"
+ },
+ "gateAtDesignCommit": {
+  "verifier": "experiments/gate-floor-spec/verify_gatefloorscope.mjs",
+  "checks": "93 passed, 0 failed",
+  "mutants": "29 caught, 0 missed",
+  "transcript": "experiments/gate-floor-spec/evidence/gate_verify_cprime.log",
+  "transcriptSha256": "0c260fe1d409acb17ccfb5aaf682c49254d2517083a37517477572cb9c5131a5",
+  "regression": "experiments/gate-floor-interaction/verify_gatefloorinteraction.mjs: 87 passed, 0 failed; 20 mutants caught, 0 missed"
+ },
+ "review": {
+  "reviewer": "Gemini, independent adversarial scientific reviewer (no repository access; reviewed the self-contained package; output relayed by the owner)",
+  "date": "2026-10-20",
+  "verdict": "FREEZE-READY WITH EXPLICIT LIMITATIONS",
+  "blockingDefects": 0,
+  "requiredCorrections": 0,
+  "reviewedPackage": {
+   "path": "experiments/gate-floor-spec/review/reviewed_package_cprime.md",
+   "sha256": "bf0215214eceb7b659db31cc5fb7643e7934dbe793a0740bcbe4131035e952c2"
+  },
+  "reviewRecord": {
+   "path": "experiments/gate-floor-spec/review/gemini_final_review_cprime_2026-10-20.txt",
+   "sha256": "d229494acf372568f8558a9c4ba35dab8165a16c9fe3abc71bcd0950556f98a8",
+   "note": "verbatim copy of the review text as relayed (CRLF line endings, 4,823 bytes, sha256AsRelayed); sha256 is of the LF-normalised content that git stores",
+   "sha256AsRelayed": "29cc6613f2a530f241c3237bdc0c9fcd1b19c9424fff4b3512ee0f9f7999ac63"
+  },
+  "nonBlockingLimitations": [
+   "G_both evaluates a store containing known non-graph recording artifacts: PS1 is the effect of this specific, artifact-containing training regime, not of a perfectly sanitised store",
+   "findings apply only to Phase I behaviour, legacy credit assignment and 150-tick episodes"
+  ],
+  "priorReview": {
+   "designCommit": "2b53a7fa1ead94a9bea2852e5dbff627f6235c67",
+   "verdict": "LIMITED CORRECTION",
+   "requiredCorrections": [
+    "adopt C' (drop U_exec)",
+    "disclose the guarded-store anomaly prominently",
+    "pre-specify the stale-reasoning diagnostic"
+   ],
+   "implementedIn": "57beb5d258890aa16ba7c8cba986a3d8a8d43659"
+  },
+  "reconciledBy": "Research Director; freeze authorised by the owner"
+ },
+ "authorization": {
+  "scope": "preregistration freeze only",
+  "date": "2026-10-20",
+  "confirmatoryRun": "NOT AUTHORIZED and NOT EXECUTED: no confirmatory plan generated in this milestone, no session run, no world of block S (1392-1671) consumed"
+ },
+ "mandatoryStatements": [
+  "The 1,680 total sessions comprise 560 training sessions and 1,120 test sessions (280 worlds x (2 training regimes + 4 test cells)).",
+  "PS1 estimates the total effect of the specific guarded training regime, including its recorded-store artifacts; it is not the effect of a clean store.",
+  "The recording-artifact explanation of the non-graph pairs in guard-trained stores is supported by development evidence but does not establish that they are behaviourally irrelevant.",
+  "Results apply only within the specified bounds: Phase I (1,500 calls), legacy stale-keyed credit and the 150-tick episode cap (with deterministic replay, hook state P, goals {8, 12, 16, 19}).",
+  "Not established by this study: the independent effect of the execution guard without the mask, the effect of a perfectly clean store, and production readiness."
+ ],
+ "openOperational": [
+  "The Block P and Block I raw archives have no verified off-machine copy (research/evidence_backup/backup_manifest.json status OPEN); off-machine backup is NOT complete."
+ ]
+}

@@ -1,7 +1,8 @@
-# GATE-FLOOR-SCOPE — design C′ pre-registration package (NOT FROZEN)
+# GATE-FLOOR-SCOPE — design C′ preregistration (FROZEN; confirmatory run NOT AUTHORIZED)
 
-**Status: complete pre-registration package for the final independent review. Not frozen, no confirmatory session, no production
-edit.**
+**Status: FROZEN on 2026-10-20 (design commit `57beb5d`; record [FREEZE.md](FREEZE.md) / [FREEZE.json](FREEZE.json); independent review
+FREEZE-READY WITH EXPLICIT LIMITATIONS). The confirmatory run is NOT AUTHORIZED and NOT EXECUTED: no session, no block S world
+consumed. No production edit.** The five mandatory statements are in FREEZE.md and at the top of DESIGN.md.
 
 [DESIGN.md](DESIGN.md) covers:
 * the questions;
@@ -16,6 +17,9 @@ The design C proposal it supersedes is commit `2b53a7f`.
 
 | path | role |
 |---|---|
+| `FREEZE.md`, `FREEZE.json` | the freeze record: frozen file hashes, digests, review record, mandatory statements, authorisation scope |
+| `review/` | the reviewed package and the reviewer's final review (verbatim copies) |
+| `verify_freeze_cprime.mjs` | freeze verification (no session, no plan) |
 | `DESIGN.md` | the pre-registration document |
 | `config.mjs` | machine-readable declarations: cells, settings, trainings, worlds, accounting, margin, family, thresholds, label rules, decision table, digests |
 | `diag.mjs` | pure classification functions: arrivals, resets, recording audit, store diagnostics, ratio interval |
@@ -29,7 +33,8 @@ The design C proposal it supersedes is commit `2b53a7f`.
 | `data/` | git-ignored: the accepted-configuration stream cache, logs |
 
 ```bash
-node experiments/gate-floor-spec/verify_gatefloorscope.mjs                      # the gate (development sessions only)
+node experiments/gate-floor-spec/verify_freeze_cprime.mjs                       # the freeze verification (no session, no plan)
+node experiments/gate-floor-spec/verify_gatefloorscope.mjs                      # the design gate (development sessions; section P generates the plan)
 node experiments/gate-floor-spec/orchestrate.mjs --plan-only --plan-json plan.json   # the exact 1,680-session plan; runs nothing
 node experiments/gate-floor-spec/tools/devcheck_cprime.mjs <outdir> 30 8         # development reproduction + diagnostic evidence
 ```
@@ -42,4 +47,5 @@ DESIGN.md section 13).
 
 **Do not** run two guard-tree builds at once: the gate, the orchestrator and the tools share one temp tree directory.
 
-**Not authorised here:** freezing the protocol, running `orchestrate.mjs` on block S (worlds 1392–1671), or any production change.
+**Not authorised:** running `orchestrate.mjs` on block S (worlds 1392–1671), or any production change. Execution needs the owner's
+separate, explicit authorisation. **Open operational item:** the Block P / Block I raw archives have no verified off-machine copy.
