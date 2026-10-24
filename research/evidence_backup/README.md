@@ -120,3 +120,9 @@ it is not counted as a backup here.
   * the block P/I copies unchanged.
 * **Still pending:** owner confirmation of safe ejection and storage away from this computer. Details: `backup_manifest.json`
   (third archive entry).
+* **Update (recorded 2026-10-25):** the owner confirmed the **safe ejection** of the USB drive.
+  * The time of the ejection itself is not recorded.
+  * **Storage away from this computer is still PENDING** owner confirmation.
+  * The drive was not reconnected for this record, and no hash check was made after the ejection. The latest verification on the drive
+    is the re-insertion check above.
+  * Details: `backup_manifest.json` (`checks`, last entry).

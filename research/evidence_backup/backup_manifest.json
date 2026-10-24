@@ -159,6 +159,17 @@
       "safeEjectionConfirmedByOwner": "PENDING",
       "storedAwayFromThisComputerConfirmedByOwner": "PENDING",
       "postReinsertionCheck": "PASSED 2026-10-25 (see archives[].secondCopy.postReinsertionCheck)"
+    },
+    {
+      "date": "2026-10-25",
+      "milestone": "LEARN-0 block L evidence backup: owner confirmation of safe ejection",
+      "source": "the owner's own statement in the working session (\"I have now safely ejected the USB drive\"), recorded 2026-10-25",
+      "safeEjectionConfirmedByOwner": "CONFIRMED by the owner (statement only; the time of the ejection itself is not recorded)",
+      "storedAwayFromThisComputerConfirmedByOwner": "PENDING (not confirmed by the owner)",
+      "deviceAccessedForThisRecord": false,
+      "postEjectionHashCheck": "NOT PERFORMED: the drive was not reconnected for this record; the latest verification on the drive is the post-reinsertion check of 2026-10-25 (archives[].secondCopy.postReinsertionCheck)",
+      "appliesTo": "the second copy of blockL_raw_cc8a42d.tar.gz; the same physical device also holds the block P and I copies, whose records are not changed by this entry",
+      "supersedes": "only the PENDING safe-ejection value of the previous block-L check entry, which is kept unchanged as history"
     }
   ]
 }
