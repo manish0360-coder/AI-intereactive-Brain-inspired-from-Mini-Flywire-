@@ -1,7 +1,30 @@
 # Raw-archive backup status
 
-**Status: OPEN. Neither raw archive has an off-machine copy.** Checked 2026-10-19 and again on 2026-10-20 (backup milestone).
-Nothing was uploaded, nothing was committed to Git, and no historical result was regenerated or modified.
+**Status: CLOSED (2026-10-24).** A verified, byte-identical second copy of both archives exists on a separate removable USB
+device. The device was detached from this computer when the record was made. **PENDING owner confirmation:** safe ejection and
+storage away from this computer. **Not claimed:** that the drive will remain available. Nothing was uploaded, no archive was
+committed to Git, and no historical result was regenerated or modified.
+
+## Second copy (2026-10-24, FACT)
+
+* **Destination:** `F:\MiniFlyWire_Evidence_Backup\`, holding both `.tar.gz` files plus `SHA256SUMS.txt`.
+  * The destination existed and was empty; the copy used no-overwrite.
+  * The device is a removable USB flash drive: volume label "WINDOWS 10", FAT32, physical disk 1 "USB DISK 3.0", bus type USB. It
+    is a different device from the internal NVMe disk.
+* **Checks on each copy (all passed):**
+  * `sha256sum` and Windows `Get-FileHash` both equal the recorded sha256;
+  * `cmp` shows it byte-identical to the primary;
+  * `gzip -t` passes;
+  * the tar listing, made without extracting, is identical to the primary's: 2,526 entries for block P and 3,086 for block I;
+  * `verify_backup_copy.mjs` reports MATCH;
+  * the per-block content verifier passes: 1,680 sessions and 560 stores for block P, 2,520 sessions and 280 stores for block I;
+  * `sha256sum -c SHA256SUMS.txt` on the drive passes.
+* **Sources:** unchanged, with the same sha256 and timestamps.
+* **Detached:** at 2026-10-24T17:08:52+05:30 no USB disk was attached to this computer.
+* **Re-check later:** run `sha256sum -c SHA256SUMS.txt` in the backup folder, or the three commands under "Earlier suggestion"
+  below.
+
+The entries further down are the history of how this record was opened. They are kept unchanged.
 
 ## Re-check 2026-10-20 (FACT)
 

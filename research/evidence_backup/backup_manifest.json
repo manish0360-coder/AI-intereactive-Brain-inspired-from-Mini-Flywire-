@@ -11,7 +11,26 @@
       "primaryCopy": "E:/Projects/OpenSourceLab/archives/gate-floor-prodsem/blockP_raw_cfc1e5c_e60cdc8.tar.gz",
       "archiveRecord": "experiments/gate-floor-prodsem/results/archive_blockP.json",
       "verifier": "node experiments/gate-floor-prodsem/verify_archive_blockP.mjs --archive <path>",
-      "secondCopy": null
+      "secondCopy": {
+        "location": "F:\\MiniFlyWire_Evidence_Backup\\blockP_raw_cfc1e5c_e60cdc8.tar.gz",
+        "medium": "removable USB flash drive: Windows volume label \"WINDOWS 10\", FAT32, 15,940,624,384 bytes, enumerated as physical disk 1 \"USB DISK 3.0\" (bus type USB), a different physical device from the internal NVMe disk 0",
+        "copiedOn": "2026-10-24",
+        "bytes": 12368214,
+        "sha256": "a05a94c98377deac8bfc665d18a10a57251436b1412450f2960528d723d34519",
+        "verifiedOn": "2026-10-24",
+        "verification": [
+          "sha256sum of the copy equals the expected sha256",
+          "Windows Get-FileHash of the copy equals the expected sha256",
+          "cmp: byte-identical to the primary copy",
+          "gzip -t: OK",
+          "tar -tzf (listing only, no extraction): 2526 entries, listing identical to the primary copy's",
+          "research/evidence_backup/verify_backup_copy.mjs: MATCH (size and sha256 vs this record)",
+          "verify_archive_blockP.mjs PASS: 1680 session records match the manifest; 560 delivered stores match the controls; manifest digest eb7ac3654b246af6...",
+          "sha256sum -c SHA256SUMS.txt on the drive: OK"
+        ],
+        "checksumFile": "F:\\MiniFlyWire_Evidence_Backup\\SHA256SUMS.txt",
+        "notClaimed": "that the drive or the copy remains available after 2026-10-24, or where the drive is stored"
+      }
     },
     {
       "milestone": "GATE-FLOOR-INTERACTION block I",
@@ -21,10 +40,29 @@
       "primaryCopy": "E:/Projects/OpenSourceLab/archives/gate-floor-interaction/blockI_raw_80f83ad.tar.gz",
       "archiveRecord": "experiments/gate-floor-interaction/results/archive_blockI.json",
       "verifier": "node experiments/gate-floor-interaction/verify_archive_blockI.mjs --archive <path>",
-      "secondCopy": null
+      "secondCopy": {
+        "location": "F:\\MiniFlyWire_Evidence_Backup\\blockI_raw_80f83ad.tar.gz",
+        "medium": "removable USB flash drive: Windows volume label \"WINDOWS 10\", FAT32, 15,940,624,384 bytes, enumerated as physical disk 1 \"USB DISK 3.0\" (bus type USB), a different physical device from the internal NVMe disk 0",
+        "copiedOn": "2026-10-24",
+        "bytes": 15111758,
+        "sha256": "55efff3683a9059aa2581eafb894f5d1a7b74cd71d5a6869e7f497ac2729bdc9",
+        "verifiedOn": "2026-10-24",
+        "verification": [
+          "sha256sum of the copy equals the expected sha256",
+          "Windows Get-FileHash of the copy equals the expected sha256",
+          "cmp: byte-identical to the primary copy",
+          "gzip -t: OK",
+          "tar -tzf (listing only, no extraction): 3086 entries, listing identical to the primary copy's",
+          "research/evidence_backup/verify_backup_copy.mjs: MATCH (size and sha256 vs this record)",
+          "verify_archive_blockI.mjs PASS: 2520 session records match the manifest; 280 delivered REAL stores match the controls; manifest digest f56ef2cb86252510...",
+          "sha256sum -c SHA256SUMS.txt on the drive: OK"
+        ],
+        "checksumFile": "F:\\MiniFlyWire_Evidence_Backup\\SHA256SUMS.txt",
+        "notClaimed": "that the drive or the copy remains available after 2026-10-24, or where the drive is stored"
+      }
     }
   ],
-  "backupStatus": "OPEN: no off-machine copy exists for either archive (sources re-verified 2026-10-20; see README.md for the owner action that closes it)",
+  "backupStatus": "CLOSED (2026-10-24): a verified, byte-identical second copy of both archives exists on a separate removable USB device, and the device was detached from this computer when this record was made (checked 2026-10-24T17:08:52+05:30: no USB disk attached). PENDING owner confirmation: safe ejection and storage away from this computer. Not claimed: future availability of the drive.",
   "checks": [
     {
       "date": "2026-10-19",
@@ -62,6 +100,19 @@
       "destinationFound": false,
       "copiesMade": 0,
       "result": "NOT BACKED UP - no authorized off-machine destination is available; a local duplicate is not counted"
+    },
+    {
+      "date": "2026-10-24",
+      "milestone": "GATE-FLOOR evidence backup: USB copy and record closure",
+      "sources": "both primary copies re-hashed before copying: match the recorded sha256; unchanged after copying (same sha256 and timestamps)",
+      "destination": "F:\\MiniFlyWire_Evidence_Backup\\ (existed and was empty before the copy; copied with no-overwrite)",
+      "destinationFound": true,
+      "copiesMade": 2,
+      "result": "SECOND COPY VERIFIED for both archives (see archives[].secondCopy.verification)",
+      "deviceDetachedAtRecordTime": true,
+      "detachedCheckedAt": "2026-10-24T17:08:52+05:30",
+      "safeEjectionConfirmedByOwner": "PENDING",
+      "storedAwayFromThisComputerConfirmedByOwner": "PENDING"
     }
   ]
 }
