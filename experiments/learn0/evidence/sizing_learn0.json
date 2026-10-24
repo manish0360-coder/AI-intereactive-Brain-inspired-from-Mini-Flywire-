@@ -1,0 +1,318 @@
+{
+ "schema": "learn0/1.sizing",
+ "status": "DEVELOPMENT (XFER-1 worlds 0..29; no study world)",
+ "devDifferences": {
+  "n": 30,
+  "mean": -18.533333333333335,
+  "sd": 107.5385202303497,
+  "skewness": -0.07030781375287097,
+  "excessKurtosis": -1.2409972891637993
+ },
+ "closedForm": {
+  "z975": 1.959964,
+  "z80": 0.841621,
+  "devSd": 107.53852,
+  "devN": 30,
+  "inflation": 1.25,
+  "delta": 20,
+  "n": 360,
+  "sdInterval95": {
+   "lower": 85.644423,
+   "upper": 144.565665
+  },
+  "inflationOneSidedUcLevel": 0.932051,
+  "nRule": {
+   "development": 227,
+   "inflated": 355,
+   "intervalUpper": 411
+  },
+  "nForNoEffect80": {
+   "development": 304,
+   "inflated": 475,
+   "intervalUpper": 549
+  },
+  "scenarios": {
+   "development": {
+    "sd": 107.53852,
+    "se": 5.667778,
+    "ciHalfWidth": 11.10864,
+    "detectableAt80": 35.878762,
+    "oc": {
+     "0": {
+      "LEARNS_WITHOUT_MAP": 0,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0,
+      "NO_PRACTICAL_EFFECT": 0.883295,
+      "INCONCLUSIVE": 0.116705
+     },
+     "10": {
+      "LEARNS_WITHOUT_MAP": 0.000098,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0,
+      "NO_PRACTICAL_EFFECT": 0.422031,
+      "INCONCLUSIVE": 0.577871
+     },
+     "20": {
+      "LEARNS_WITHOUT_MAP": 0.025,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0,
+      "NO_PRACTICAL_EFFECT": 0.025,
+      "INCONCLUSIVE": 0.95
+     },
+     "30": {
+      "LEARNS_WITHOUT_MAP": 0.42246,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0,
+      "NO_PRACTICAL_EFFECT": 0.000098,
+      "INCONCLUSIVE": 0.577442
+     },
+     "40": {
+      "LEARNS_WITHOUT_MAP": 0.941648,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0,
+      "NO_PRACTICAL_EFFECT": 0,
+      "INCONCLUSIVE": 0.058352
+     },
+     "-40": {
+      "LEARNS_WITHOUT_MAP": 0,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0.941648,
+      "NO_PRACTICAL_EFFECT": 0,
+      "INCONCLUSIVE": 0.058352
+     },
+     "-30": {
+      "LEARNS_WITHOUT_MAP": 0,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0.42246,
+      "NO_PRACTICAL_EFFECT": 0.000098,
+      "INCONCLUSIVE": 0.577442
+     },
+     "-20": {
+      "LEARNS_WITHOUT_MAP": 0,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0.025,
+      "NO_PRACTICAL_EFFECT": 0.025,
+      "INCONCLUSIVE": 0.95
+     },
+     "-10": {
+      "LEARNS_WITHOUT_MAP": 0,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0.000098,
+      "NO_PRACTICAL_EFFECT": 0.422031,
+      "INCONCLUSIVE": 0.577871
+     }
+    }
+   },
+   "inflated": {
+    "sd": 134.42315,
+    "se": 7.084722,
+    "ciHalfWidth": 13.8858,
+    "detectableAt80": 39.848453,
+    "oc": {
+     "0": {
+      "LEARNS_WITHOUT_MAP": 0.000001,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0.000001,
+      "NO_PRACTICAL_EFFECT": 0.611869,
+      "INCONCLUSIVE": 0.388129
+     },
+     "10": {
+      "LEARNS_WITHOUT_MAP": 0.000374,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0,
+      "NO_PRACTICAL_EFFECT": 0.280215,
+      "INCONCLUSIVE": 0.719412
+     },
+     "20": {
+      "LEARNS_WITHOUT_MAP": 0.025,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0,
+      "NO_PRACTICAL_EFFECT": 0.024886,
+      "INCONCLUSIVE": 0.950114
+     },
+     "30": {
+      "LEARNS_WITHOUT_MAP": 0.291683,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0,
+      "NO_PRACTICAL_EFFECT": 0.000374,
+      "INCONCLUSIVE": 0.707944
+     },
+     "40": {
+      "LEARNS_WITHOUT_MAP": 0.805935,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0,
+      "NO_PRACTICAL_EFFECT": 0.000001,
+      "INCONCLUSIVE": 0.194065
+     },
+     "-40": {
+      "LEARNS_WITHOUT_MAP": 0,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0.805935,
+      "NO_PRACTICAL_EFFECT": 0.000001,
+      "INCONCLUSIVE": 0.194065
+     },
+     "-30": {
+      "LEARNS_WITHOUT_MAP": 0,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0.291683,
+      "NO_PRACTICAL_EFFECT": 0.000374,
+      "INCONCLUSIVE": 0.707944
+     },
+     "-20": {
+      "LEARNS_WITHOUT_MAP": 0,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0.025,
+      "NO_PRACTICAL_EFFECT": 0.024886,
+      "INCONCLUSIVE": 0.950114
+     },
+     "-10": {
+      "LEARNS_WITHOUT_MAP": 0,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0.000374,
+      "NO_PRACTICAL_EFFECT": 0.280215,
+      "INCONCLUSIVE": 0.719412
+     }
+    }
+   },
+   "intervalUpper": {
+    "sd": 144.565665,
+    "se": 7.61928,
+    "ciHalfWidth": 14.933514,
+    "detectableAt80": 41.346061,
+    "oc": {
+     "0": {
+      "LEARNS_WITHOUT_MAP": 0.000002,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0.000002,
+      "NO_PRACTICAL_EFFECT": 0.493921,
+      "INCONCLUSIVE": 0.506074
+     },
+     "10": {
+      "LEARNS_WITHOUT_MAP": 0.000533,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0,
+      "NO_PRACTICAL_EFFECT": 0.234656,
+      "INCONCLUSIVE": 0.764811
+     },
+     "20": {
+      "LEARNS_WITHOUT_MAP": 0.025,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0,
+      "NO_PRACTICAL_EFFECT": 0.024499,
+      "INCONCLUSIVE": 0.950501
+     },
+     "30": {
+      "LEARNS_WITHOUT_MAP": 0.258653,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0,
+      "NO_PRACTICAL_EFFECT": 0.000531,
+      "INCONCLUSIVE": 0.740816
+     },
+     "40": {
+      "LEARNS_WITHOUT_MAP": 0.746961,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0,
+      "NO_PRACTICAL_EFFECT": 0.000002,
+      "INCONCLUSIVE": 0.253037
+     },
+     "-40": {
+      "LEARNS_WITHOUT_MAP": 0,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0.746961,
+      "NO_PRACTICAL_EFFECT": 0.000002,
+      "INCONCLUSIVE": 0.253037
+     },
+     "-30": {
+      "LEARNS_WITHOUT_MAP": 0,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0.258653,
+      "NO_PRACTICAL_EFFECT": 0.000531,
+      "INCONCLUSIVE": 0.740816
+     },
+     "-20": {
+      "LEARNS_WITHOUT_MAP": 0,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0.025,
+      "NO_PRACTICAL_EFFECT": 0.024499,
+      "INCONCLUSIVE": 0.950501
+     },
+     "-10": {
+      "LEARNS_WITHOUT_MAP": 0,
+      "EXPERIENCE_HARMS_WITHOUT_MAP": 0.000533,
+      "NO_PRACTICAL_EFFECT": 0.234656,
+      "INCONCLUSIVE": 0.764811
+     }
+    }
+   }
+  },
+  "atMarginForAnyN": {
+   "180": 0.025,
+   "360": 0.025,
+   "720": 0.025,
+   "1440": 0.025
+  }
+ },
+ "sdBootstrapInterval": {
+  "lower": 86.33980581959585,
+  "upper": 123.94713370636285,
+  "level": 0.95,
+  "replicates": 10000,
+  "seed": 20261024
+ },
+ "monteCarlo": {
+  "replications": 400,
+  "n": 360,
+  "sd": 134.42315028793712,
+  "bootstrap": {
+   "replicates": 10000,
+   "seed": 20261014,
+   "level": 0.95
+  },
+  "models": [
+   "normal",
+   "developmentShape"
+  ],
+  "result": {
+   "normal": {
+    "0": {
+     "LEARNS_WITHOUT_MAP": 0,
+     "EXPERIENCE_HARMS_WITHOUT_MAP": 0,
+     "NO_PRACTICAL_EFFECT": 0.6025,
+     "INCONCLUSIVE": 0.3975
+    },
+    "20": {
+     "LEARNS_WITHOUT_MAP": 0.0375,
+     "EXPERIENCE_HARMS_WITHOUT_MAP": 0,
+     "NO_PRACTICAL_EFFECT": 0.0125,
+     "INCONCLUSIVE": 0.95
+    },
+    "40": {
+     "LEARNS_WITHOUT_MAP": 0.8025,
+     "EXPERIENCE_HARMS_WITHOUT_MAP": 0,
+     "NO_PRACTICAL_EFFECT": 0,
+     "INCONCLUSIVE": 0.1975
+    },
+    "-40": {
+     "LEARNS_WITHOUT_MAP": 0,
+     "EXPERIENCE_HARMS_WITHOUT_MAP": 0.7875,
+     "NO_PRACTICAL_EFFECT": 0,
+     "INCONCLUSIVE": 0.2125
+    },
+    "-20": {
+     "LEARNS_WITHOUT_MAP": 0,
+     "EXPERIENCE_HARMS_WITHOUT_MAP": 0.0275,
+     "NO_PRACTICAL_EFFECT": 0.0375,
+     "INCONCLUSIVE": 0.935
+    }
+   },
+   "developmentShape": {
+    "0": {
+     "LEARNS_WITHOUT_MAP": 0,
+     "EXPERIENCE_HARMS_WITHOUT_MAP": 0,
+     "NO_PRACTICAL_EFFECT": 0.6625,
+     "INCONCLUSIVE": 0.3375
+    },
+    "20": {
+     "LEARNS_WITHOUT_MAP": 0.02,
+     "EXPERIENCE_HARMS_WITHOUT_MAP": 0,
+     "NO_PRACTICAL_EFFECT": 0.0275,
+     "INCONCLUSIVE": 0.9525
+    },
+    "40": {
+     "LEARNS_WITHOUT_MAP": 0.7875,
+     "EXPERIENCE_HARMS_WITHOUT_MAP": 0,
+     "NO_PRACTICAL_EFFECT": 0,
+     "INCONCLUSIVE": 0.2125
+    },
+    "-40": {
+     "LEARNS_WITHOUT_MAP": 0,
+     "EXPERIENCE_HARMS_WITHOUT_MAP": 0.8,
+     "NO_PRACTICAL_EFFECT": 0,
+     "INCONCLUSIVE": 0.2
+    },
+    "-20": {
+     "LEARNS_WITHOUT_MAP": 0,
+     "EXPERIENCE_HARMS_WITHOUT_MAP": 0.0325,
+     "NO_PRACTICAL_EFFECT": 0.025,
+     "INCONCLUSIVE": 0.9425
+    }
+   }
+  },
+  "maxAbsDeviationFromClosedForm": 0.05063099999999998,
+  "mcStandardErrorAtHalf": 0.025
+ }
+}

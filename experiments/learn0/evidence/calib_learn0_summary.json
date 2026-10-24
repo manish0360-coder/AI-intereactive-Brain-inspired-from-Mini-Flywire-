@@ -1,0 +1,187 @@
+{
+ "status": "DEVELOPMENT (XFER-1 worlds 0..N-1; not study worlds; design input only)",
+ "worlds": 30,
+ "failures": 0,
+ "integrity": {
+  "allMapAuditsOk": true,
+  "allConditionOk": true,
+  "deliveryExact": true
+ },
+ "cellMeans": {
+  "N0": {
+   "legal": 247.86666666666667,
+   "nonEdge": 97,
+   "all": 344.8666666666667,
+   "early": 127.83333333333333,
+   "late": 120.03333333333333,
+   "downhillFar": 0.5883922980281082,
+   "chanceFar": 0.45779969461023734,
+   "enterAdjacent": 0.6616547859328942,
+   "chanceAdjacent": 0.24644938423247328,
+   "illegalExecuted": 160.76666666666668,
+   "admittedNonGraph": 1756.3333333333333
+  },
+  "N1": {
+   "legal": 229.33333333333334,
+   "nonEdge": 237.8,
+   "all": 467.1333333333333,
+   "early": 113.8,
+   "late": 115.53333333333333,
+   "downhillFar": 0.612407818860234,
+   "chanceFar": 0.44453982189631647,
+   "enterAdjacent": 0.6794869536489773,
+   "chanceAdjacent": 0.23606238503147214,
+   "illegalExecuted": 374.1,
+   "admittedNonGraph": 4271
+  },
+  "O0": {
+   "legal": 376.53333333333336,
+   "nonEdge": 74.03333333333333,
+   "all": 450.56666666666666,
+   "early": 195.63333333333333,
+   "late": 180.9,
+   "downhillFar": 0.718755910705403,
+   "chanceFar": 0.4278600077114989,
+   "enterAdjacent": 0.738855817515251,
+   "chanceAdjacent": 0.23460371695026036,
+   "illegalExecuted": 146.16666666666666,
+   "admittedNonGraph": 1664.3333333333333
+  },
+  "N1E": {
+   "legal": 301.4,
+   "nonEdge": 107.86666666666666,
+   "all": 409.26666666666665,
+   "early": 158.4,
+   "late": 143,
+   "downhillFar": 0.6203771661519811,
+   "chanceFar": 0.44918303473673027,
+   "enterAdjacent": 0.7588943324831685,
+   "chanceAdjacent": 0.24215020963315798,
+   "illegalExecuted": 171.8,
+   "admittedNonGraph": 1804.6666666666667
+  },
+  "N1Q": {
+   "legal": 199.9,
+   "nonEdge": 92.23333333333333,
+   "all": 292.1333333333333,
+   "early": 89.1,
+   "late": 110.8,
+   "downhillFar": 0.5785574405224417,
+   "chanceFar": 0.44935209745067717,
+   "enterAdjacent": 0.5572302755162384,
+   "chanceAdjacent": 0.2383291739364936,
+   "illegalExecuted": 167.56666666666666,
+   "admittedNonGraph": 1765
+  }
+ },
+ "contrasts": {
+  "E1_N1_minus_N0": {
+   "mean": -18.533333333333335,
+   "lower": -57.166666666666664,
+   "upper": 18.3,
+   "sd": 107.5385202303497,
+   "positive": 15,
+   "negative": 15
+  },
+  "S1_nonGraph_N1_minus_N0": {
+   "mean": 140.8,
+   "lower": 91.53333333333333,
+   "upper": 190.46666666666667,
+   "sd": 140.40886110164868,
+   "positive": 23,
+   "negative": 7
+  },
+  "S1_all_N1_minus_N0": {
+   "mean": 122.26666666666667,
+   "lower": 85.83333333333333,
+   "upper": 159.86666666666667,
+   "sd": 105.53637494618435,
+   "positive": 27,
+   "negative": 3
+  },
+  "S2_N0_late_minus_early": {
+   "mean": -7.8,
+   "lower": -20.266666666666666,
+   "upper": 5.066666666666666,
+   "sd": 35.79674421720115,
+   "positive": 12,
+   "negative": 18
+  },
+  "S3_downhill_N1_minus_N0": {
+   "mean": 0.02401552083212557,
+   "lower": -0.01853214564480897,
+   "upper": 0.06478825628520127,
+   "sd": 0.11926495528723499,
+   "positive": 18,
+   "negative": 12
+  },
+  "S4_enter_N1_minus_N0": {
+   "mean": 0.017832167716082942,
+   "lower": -0.04490936303541578,
+   "upper": 0.07760851753828914,
+   "sd": 0.17344462902000707,
+   "positive": 17,
+   "negative": 13
+  },
+  "S5_O0_minus_N0": {
+   "mean": 128.66666666666666,
+   "lower": 100.1,
+   "upper": 157.6,
+   "sd": 81.57938098747042,
+   "positive": 29,
+   "negative": 1
+  },
+  "dev_N1E_minus_N0": {
+   "mean": 53.53333333333333,
+   "lower": 29.133333333333333,
+   "upper": 76.43333333333334,
+   "sd": 67.1620445630198,
+   "positive": 24,
+   "negative": 6
+  },
+  "dev_N1Q_minus_N0": {
+   "mean": -47.96666666666667,
+   "lower": -81,
+   "upper": -12.933333333333334,
+   "sd": 95.82220725019253,
+   "positive": 10,
+   "negative": 20
+  },
+  "dev_N1E_minus_N1": {
+   "mean": 72.06666666666666,
+   "lower": 41.333333333333336,
+   "upper": 104.83333333333333,
+   "sd": 89.02186222509047,
+   "positive": 24,
+   "negative": 6
+  }
+ },
+ "sizing": {
+  "delta10": {
+   "n": 908,
+   "nInflated": 1419
+  },
+  "delta15": {
+   "n": 404,
+   "nInflated": 631
+  },
+  "delta20": {
+   "n": 227,
+   "nInflated": 355
+  },
+  "delta25": {
+   "n": 146,
+   "nInflated": 227
+  },
+  "delta30": {
+   "n": 101,
+   "nInflated": 158
+  }
+ },
+ "training": {
+  "legal": 246.23333333333332,
+  "nonEdge": 109.2,
+  "goalKeyedQ": 149.33333333333334,
+  "episodes": 227.96666666666667
+ }
+}

@@ -1,0 +1,167 @@
+{
+ "schema": "learn0/1.freeze",
+ "study": "LEARN-0",
+ "status": "FROZEN_PREREGISTRATION_NOT_RUN",
+ "date": "2026-10-24",
+ "baseCommit": "8e699afa56b26b22dca6b5621a57ee378ec33aa7",
+ "runtime": {
+  "auditedCommit": "0df804c497e649affb9e7ebacb10fdc81ab6de8d",
+  "lastRuntimeChange": "952c9fcf3123eb6e7ca2deab8247d2a99af541cf",
+  "designedOn": "8e699afa56b26b22dca6b5621a57ee378ec33aa7",
+  "runtimePaths": [
+   "main.js",
+   "render",
+   "index.html",
+   "connections.json",
+   "neurons.json",
+   "instrumentation",
+   "experiments/m7"
+  ],
+  "mainBlob": "09c36b5caf24ed1bf447a13fe924d8297a11a301",
+  "renderTree": "dd0d28902b7d136e719b9cba05bdc04cd549b705",
+  "mainSha256": "c92c5c6b6d2e32aed9114e2a8dc4075134630bfe6e5547b8052b9e8b839a3de3"
+ },
+ "substrate": {
+  "headCommit": "0df804c497e649affb9e7ebacb10fdc81ab6de8d",
+  "headMainSha256": "c92c5c6b6d2e32aed9114e2a8dc4075134630bfe6e5547b8052b9e8b839a3de3",
+  "guardMainSha256": "a0eb7b377dcdf4b9304f0c04c2dd7c3b84328d605b5bd22bc00b534b671dec67",
+  "learn0MainSha256": "3d3266fde38c39ea0a38f3920b4a2384ef5998e88c748e0a0a53416ef62bccc3",
+  "learn0PlanningSha256": "34e06c655b4f2b04d77b4db0b8db744568235865788177085510b5dd78cf46dc"
+ },
+ "designDigest": "f2614ca360a4676493c5a36245a4c191a0c2744f5a808fd2abfd6d13bd05e74e",
+ "decisionDigest": "9beeef9761d252f34ce67f2a584138ded882c3218d0c40d398dab5328b19c8f0",
+ "preregistrationDigest": "70dcc4bef9f29cfbca7778b4f53d4220f507eb81eb8463126e59d4c48a51c7d3",
+ "design": {
+  "primary": "E1 = N1 - N0 (sole primary)",
+  "estimand": "E1 = E_w[ Y_w(N1) - Y_w(N0) ], Y = legal goal reaches per 1,500-call test session",
+  "n": 360,
+  "delta": 20,
+  "level": 0.95,
+  "worlds": [
+   1672,
+   2031
+  ],
+  "perGoal": 90,
+  "cells": [
+   "N0",
+   "N1",
+   "N1E",
+   "N1Q",
+   "O0"
+  ],
+  "accounting": {
+   "training": 360,
+   "test": 1800,
+   "total": 2160
+  },
+  "secondaryIntervals": 28
+ },
+ "claimLimits": [
+  "E1 measures what the persisted experience store does without the map in the SAME world and goal it was trained on; it is not transfer, recall, planning or understanding",
+  "A LEARNS_WITHOUT_MAP outcome may reflect experience-derived graph reconstruction and path-keyed Q-values; it does not demonstrate map-free spatial reasoning, abstract route planning, or cognition.",
+  "the store may describe the part of the graph T itself traversed (in the development worlds T executed 66-76 of 78 directed edges); I7 shows it describes nothing T did not traverse. LEARN-0 does not separate learning a map from experience from any other use of experience",
+  "the TOTAL effect of delivering the tested store (all eight persisted components of the world's own map-off training export, together) at the start of a map-off session, versus starting cold, under the same map-off procedure and test seed; it is not the causal contribution of any single component or learning mechanism"
+ ],
+ "frozenCount": 25,
+ "frozenFiles": {
+  "experiments/learn0/DESIGN.md": "b87bc1998f8f00d3a905981bac9365816e3f9d58589e131b94384c4df7acd989",
+  "experiments/learn0/analyze.mjs": "d0c3dfabdbba18dcbb050f9bba5e3632541e955b5f4811c602e559ac902186c1",
+  "experiments/learn0/blockL_worlds.json": "12612441cc06baf737ceb5520e9f54915c73ff46b26667d92b420ddc2db00bc8",
+  "experiments/learn0/config.mjs": "bcdd45799cc9435d8ff2194d6795ee1c2ebfcb00e901c93986ab7c4bc7c7de13",
+  "experiments/learn0/evidence/calib_learn0_rows.json": "f219d15c1477f344f1dd1a0fcbde56a0e63d8e0c15b29d7c53b4f27c5c874bda",
+  "experiments/learn0/evidence/calib_learn0_summary.json": "28a8c872019a556aa0adc07d40eeec3485fd61557ccfd203d6f45bdd46432439",
+  "experiments/learn0/evidence/gate_verify_learn0.log": "a02f6f4b5f075d95e5037bdfcc6436a9ac7d05ea533b9d0efc56f313cfa4279e",
+  "experiments/learn0/evidence/sizing_learn0.json": "53ce8ed7fee8d3c1c9caf1178e20b0b832355101839ab01e90b6bf8ec6514585",
+  "experiments/learn0/export_prereg.mjs": "97ffd03ce9c7230fa29bfdd1bd736f04f8fe5524cca3082c0e716e9b08549eb3",
+  "experiments/learn0/map_audit_table.json": "38c03c5e1008ddabe242eac435ecec484a2b4fce5c57c1d18fd6b3e3faafc075",
+  "experiments/learn0/map_sweep_table.json": "14e6dc749c5743c6db891be653a1f49253a9eaaf262a368c1870769133cacfee",
+  "experiments/learn0/orchestrate.mjs": "0066264c25bc1b82b6b9debb0e33376223f6ef6168c9a91a240c904af5d5c331",
+  "experiments/learn0/plan.mjs": "27482e17179f8f22a45e99d17401a175aab37b8f3deacfae3a7ba4c7736e6bbc",
+  "experiments/learn0/preregistration.json": "fbb3197e3826cf27412b2b4104911a8cb6115f454f3757f7176ff558bc75700b",
+  "experiments/learn0/provenance.mjs": "f112ff743b0d6dd2d0af38a3cedadf587a0116e16c91d00cd14a82d301e1ceb3",
+  "experiments/learn0/review/gemini_review_learn0_r2_2026-10-24.txt": "e3714b8cf680ba6b0c383ab5bb264e6601ca7575b70b90c33da9c84c3ec9bf0e",
+  "experiments/learn0/review/reviewed_package_learn0_r2.md": "2cf60179c252c9da8a12d6c46b7462b62b020673d15c4b87b465099e6cea1cb5",
+  "experiments/learn0/session.mjs": "1dc2d87711b91e9b96d1c84ef85f47e80c6be06fb362aa2bf08fbdbc0651d09a",
+  "experiments/learn0/sizing.mjs": "204ba91b7a1e45161446aebd0864518234add4106ab3413026462076f2729b9a",
+  "experiments/learn0/static_audit.mjs": "572fac3f997d9696a3e15cfe7694253d6ac55f012e16288e1093dab52e648359",
+  "experiments/learn0/tools/calib_learn0.mjs": "3b4dbdeacaa062a065062c22b8a01c23872e5cb78335e6ce6b5ad6e796c2963a",
+  "experiments/learn0/tools/freeze_blockL.mjs": "4381385c14f12c564119ce8b683c5704c8341425c344e003c6c504235ff8630e",
+  "experiments/learn0/tools/sizing_learn0.mjs": "f6754e402c88f06df3a51f1c702f50745241383b077ab2305654f3af4218465e",
+  "experiments/learn0/transform.mjs": "f8abdfe880ecf82f56ef8a7806a06416e5c4a76853801bae30d7a744786000cb",
+  "experiments/learn0/verify_learn0.mjs": "f0a9ce1db855be2f60ccd4411bd4f2fa599d1ddc612be291e62440b1452d706e"
+ },
+ "freezeVerifier": {
+  "path": "experiments/learn0/verify_freeze_learn0.mjs",
+  "sha256": "8b47323ae8610388a9cafd12c49de027e01c66913ab7034594f0a8831dca77a9"
+ },
+ "lineEndings": "every pin is the sha256 of the LF-normalised content (CRLF -> LF); core.autocrlf=true checkouts write CRLF, which leaves every pin unchanged (verified in F9 and in a fresh autocrlf clone). The design gate and export_prereg --check hash raw bytes and assume an LF working tree.",
+ "gateAtFreeze": {
+  "verifier": "experiments/learn0/verify_learn0.mjs",
+  "result": "LEARN-0 design gate: 62 checks passed, 0 failed; mutants 21 caught, 0 missed",
+  "worlds": "XFER-1 development worlds 0..3 only",
+  "transcript": "experiments/learn0/evidence/gate_verify_learn0.log",
+  "transcriptSha256": "a02f6f4b5f075d95e5037bdfcc6436a9ac7d05ea533b9d0efc56f313cfa4279e"
+ },
+ "review": {
+  "reviewer": "Gemini, independent adversarial scientific reviewer (self-contained package, no repository access; output relayed by the owner)",
+  "date": "2026-10-24",
+  "verdict": "PASS WITH CLAIM LIMITS",
+  "requiredCorrections": 1,
+  "correctionApplied": {
+   "what": "explicit LEARNS_WITHOUT_MAP claim limit (experience-derived graph reconstruction and path-keyed Q-values; not map-free spatial reasoning, abstract route planning or cognition)",
+   "where": [
+    "experiments/learn0/config.mjs RULES.learnsLimit (appended to every LEARNS_WITHOUT_MAP verdict by interpret())",
+    "experiments/learn0/DESIGN.md section 11"
+   ]
+  },
+  "record": {
+   "path": "experiments/learn0/review/gemini_review_learn0_r2_2026-10-24.txt",
+   "bytes": 6202,
+   "bytesLf": 6097,
+   "sha256": "e3714b8cf680ba6b0c383ab5bb264e6601ca7575b70b90c33da9c84c3ec9bf0e",
+   "sha256AsRelayed": "da703024e3629505419ddffa9896f0a435a8071b53d7b0ebf82aee5a0e0535c8",
+   "note": "verbatim byte copy of the review as relayed (CRLF line endings); sha256 is of the LF-normalised content that git stores"
+  },
+  "reviewedPackage": {
+   "path": "experiments/learn0/review/reviewed_package_learn0_r2.md",
+   "bytes": 15593,
+   "sha256": "2cf60179c252c9da8a12d6c46b7462b62b020673d15c4b87b465099e6cea1cb5",
+   "note": "byte copy of research/external/LEARN0_GEMINI_DESIGN_REVIEW_PACKAGE.md as sent for review (revision 2; decision digest 2009d7a2 before the correction)"
+  },
+  "factualSlipsNotAdopted": [
+   "the review calls delta = 20 about 4.4 % of cold reaches; the cold no-map development level is 247.9, so delta is about 8 %",
+   "the review says resolving effects near +-delta would need n > 1,440; a true effect of exactly +-delta is INCONCLUSIVE with probability 0.95 for every n (gate S5)"
+  ]
+ },
+ "blockL": {
+  "path": "experiments/learn0/blockL_worlds.json",
+  "digest": "eca92f1a8b557bb3e01f4f41743ec62a551ae27ba3426e04c04aa6e8f22dbce2",
+  "n": 360,
+  "indices": [
+   1672,
+   2031
+  ],
+  "seedRange": [
+   285246,
+   304469
+  ],
+  "perGoal": {
+   "8": 90,
+   "12": 90,
+   "16": 90,
+   "19": 90
+  },
+  "collisions": 0,
+  "integrityProblems": 0,
+  "purpose": "generated ONLY to verify that no configuration collides with held-out or consumed territory; no session was run and none is authorised"
+ },
+ "authorization": {
+  "scope": "preregistration freeze only (owner, 2026-10-24)",
+  "confirmatoryRun": "NOT AUTHORIZED and NOT EXECUTED: no session of block L run, no outcome produced or analysed; a run needs a separate explicit authorisation"
+ },
+ "openOperational": [
+  "the typed registry does not record LEARN-0 consumption of block L (programme governance item, as for C')",
+  "the design gate and export_prereg --check assume an LF working tree; on a CRLF checkout verify_freeze_learn0.mjs is the authority"
+ ],
+ "digest": "64ed965000c4504c1796219a6fa08e2e8fa8b9b3ced8d2a3af69c3586ffc4d9a"
+}

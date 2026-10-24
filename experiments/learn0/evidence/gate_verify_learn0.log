@@ -1,0 +1,93 @@
+PASS S1.runtime-identical-at-952c9fc-0df804c-and-head
+PASS S1.production-and-frozen-study-files-untouched
+PASS S2.fresh-build-equals-the-pinned-learn0-tree
+PASS S2.exactly-four-lines-added-and-their-removal-restores-the-base
+PASS S2.every-other-file-is-identical-to-the-guard-base
+PASS S2.transform-refuses-missing-duplicated-or-pre-tagged-anchors
+PASS S3.map-knowledge-call-graph-audit-equals-the-classified-table
+PASS S3.broader-graph-name-sweep-equals-its-reviewed-table-and-adds-no-map-route
+PASS S3.oracle-classes-are-exactly-the-four-guarded-functions-and-their-call-sites
+PASS S4.lastreasoning-invariant-holds-in-the-learn0-source
+PASS S5.declared-design
+PASS S5.calibration-constants-match-the-recorded-development-evidence
+PASS S5.sample-size-follows-the-programme-rule-recomputed-from-the-raw-rows
+PASS S5.the-rule-targets-effects-beyond-delta-a-true-effect-at-delta-is-inconclusive-for-every-n
+PASS S5.sizing-evidence-equals-the-recomputation-and-the-monte-carlo-agrees
+PASS S6.decision-digest-binds-the-declared-parameters
+PASS S7.source-hygiene
+PASS S8.machine-readable-preregistration-is-current-and-bound-to-the-decision-digest
+running 23 development sessions on 8 workers ...
+PASS N0.every-development-session-completed
+PASS N1.bare-head-equals-derived-equals-guard-equals-learn0-bare-equals-instrumented-map-on
+PASS N2.map-off-executes-zero-oracle-calls-in-every-role-and-arm
+INFO N2 map-off minimum blocked count per oracle: {"goalDistance":20450,"canReachGoal":65783,"graphDiameter":22220,"futureScore":22220}
+INFO N2 map-on minimum executed count per oracle: {"goalDistance":20714,"canReachGoal":68481,"graphDiameter":23019,"futureScore":23019}
+PASS N2.map-on-executes-the-oracles-and-blocks-none
+PASS N3.map-off-changes-behaviour-and-the-store-changes-behaviour
+PASS N4.deterministic
+PASS N4.condition-integrity-in-every-instrumented-session
+PASS N5.refuses-map-on-training-unknown-arms-floor-and-bad-map
+PASS N5.refuses-a-wrong-tree-a-wrong-seed-a-foreign-store-and-h1r
+INFO K oracle counts (guard executed / guard blocked / independent body): {"on":["goalDistance 22504/0/22504","canReachGoal 73586/0/73586","graphDiameter 25132/0/25132","futureScore 25132/0/25132"],"off":["goalDistance 0/22071/0","canReachGoal 0/70178/0","graphDiameter 0/23831/0","futureScore 0/23831/0"],"offFull":["goalDistance 0/25890/0","canReachGoal 0/81831/0","graphDiameter 0/28740/0","futureScore 0/28740/0"],"onFull":["goalDistance 25543/0/25543","canReachGoal 83239/0/83239","graphDiameter 28916/0/28916","futureScore 28916/0/28916"]}
+PASS K0.trace-runs-completed
+PASS K0.no-oracle-body-runs-with-the-map-off-independent-probe
+PASS K0.guard-accounting-equals-the-independent-body-count-with-the-map-on
+PASS K0.the-map-off-guards-are-reached-cold-and-with-a-store
+PASS K1.first-decision-traced-in-both-settings
+PASS K1.map-off-candidate-set-contains-map-on-and-every-extra-is-one-the-reachability-oracle-filters
+PASS K1.common-candidates-differ-only-in-the-oracle-derived-terms-and-drift
+PASS K1.drift-differs-only-by-the-random-stream-shift-of-the-extra-candidates
+PASS K1.map-off-oracle-terms-are-neutral
+PASS K1.non-vacuous-the-map-on-oracle-terms-act
+INFO K1 first decision: map on 2 candidates, map off 3 (extra 1); goal 12, from 3 at true distance 3
+PASS D1.move-direction-counts-recompute-independently-from-the-raw-trace
+PASS D1.measurement-is-non-vacuous-and-bounded
+PASS D2.reach-accounting-identities
+PASS D3.store-delivery-is-exact-per-component
+INFO R provenance: [{"w":1,"ok":true,"off":0,"coverage":{"nodes":20,"visited":20,"directedEdges":78,"executedDirectedEdges":72,"orderedPairs":380,"trajectoryPairs":233,"excludedOrderedPairs":147}},{"w":2,"ok":true,"off":0,"coverage":{"nodes":20,"visited":20,"directedEdges":78,"executedDirectedEdges":73,"orderedPairs":380,"trajectoryPairs":244,"excludedOrderedPairs":136}}]
+PASS R1.every-relational-store-entry-lies-on-the-trainings-own-trajectory
+PASS R1.the-rule-is-non-vacuous-it-excludes-ordered-pairs-the-agent-did-not-traverse
+PASS R1.lag-two-is-needed-the-runtimes-lagged-credit-is-in-the-real-store
+PASS R2.a-world-with-an-untraversed-edge-and-an-untraversed-far-pair-exists-so-the-injection-mutants-are-non-vacuous
+CAUGHT RM1.an-untraversed-graph-edge-injected-into-transitions-is-flagged
+CAUGHT RM2.an-untraversed-far-pair-injected-into-goal-keyed-Q-is-flagged
+CAUGHT RM3.a-dump-of-every-graph-edge-into-signals-is-flagged
+CAUGHT RM4.an-injected-episode-crossing-an-untraversed-pair-is-flagged
+PASS A1.clean-block-valid-and-labelled
+PASS A1.secondary-components-oracle-and-non-graph-are-reported
+PASS A1.secondaries-are-exploratory-no-label-no-claim-and-the-interval-count-is-disclosed
+PASS A2.primary-labels
+PASS A2.sensitivity-at-15-and-30-is-reported-and-not-decisive
+PASS A3.invalid-blocks-are-refused-with-the-reason
+PASS A4.digests-bound
+PASS P1.exact-session-accounting
+PASS P1.every-world-has-one-map-off-training-and-five-cells-with-its-own-seeds
+PASS P2.goals-balanced-ninety-each-by-the-index-rule
+PASS P2.block-disjoint-from-every-reserved-block
+PASS P2.agent-seeds-fresh-and-inside-the-domain
+INFO P: the configuration seeds of block L are generated at the freeze milestone (orchestrate.mjs extends the stream); none is generated here
+PASS O1.selftest-ran-two-worlds-x-six-sessions-without-exclusion
+PASS O1.manifest-binds-plan-controls-sessions-tree-and-driver
+PASS O1.the-analysis-refuses-a-selftest-block
+PASS O2.real-driver-records-pass-every-integrity-rule-of-the-analysis
+PASS O2.the-orchestrator-ran-the-provenance-check-before-the-tests
+CAUGHT M1.goaldistance-guard-removed-is-caught-by-the-oracle-audit-guard-never-reached
+CAUGHT M2.reachability-guard-with-the-wrong-neutral-value-changes-behaviour
+CAUGHT M3.futurescore-guard-removed-is-caught-by-the-oracle-audit-the-call-graph-audit-and-the-tree-pin
+CAUGHT M4.blocking-without-counting-is-caught-by-the-oracle-audit
+CAUGHT M5.inverted-map-switch-is-caught-by-the-oracle-audit
+CAUGHT M6.wrong-chance-rate-is-caught-by-the-independent-recomputation
+CAUGHT M7.an-unlisted-graph-read-fails-the-call-graph-audit
+CAUGHT M8.a-missing-guard-fails-the-call-graph-audit
+CAUGHT M8b.an-unreviewed-graph-name-line-fails-the-broader-sweep
+CAUGHT M9.primary-uses-all-resets
+CAUGHT M10.oracle-leak-check-removed
+CAUGHT M11.omitted-component-check-removed
+CAUGHT M12.undeclared-cell-check-removed
+CAUGHT M13.pairing-check-removed
+CAUGHT M14.neutral-band-widened
+CAUGHT M15.margin-lowered
+CAUGHT M16.store-provenance-check-removed
+
+LEARN-0 design gate: 62 checks passed, 0 failed; mutants 21 caught, 0 missed
+EXIT 0

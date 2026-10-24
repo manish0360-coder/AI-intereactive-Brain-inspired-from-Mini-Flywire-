@@ -1,0 +1,2554 @@
+{
+ "schema": "learn0/1.blockL",
+ "study": "LEARN-0",
+ "block": "L",
+ "indices": [
+  1672,
+  2031
+ ],
+ "n": 360,
+ "configStart": 200000,
+ "heldOutFloor": 900500,
+ "envSha12": "4a72bd23251b",
+ "prefixSource": "experiments/gate-floor-spec/data",
+ "prefixLastAcceptedSeed": 285191,
+ "seedRange": [
+  285246,
+  304469
+ ],
+ "perGoal": {
+  "8": 90,
+  "12": 90,
+  "16": 90,
+  "19": 90
+ },
+ "checks": {
+  "collisions": 0,
+  "integrityProblems": 0,
+  "registry": "typed_v2 isHeldOut / isConsumed (the session driver's own check)",
+  "earlierStreamMaxSeed": 285191
+ },
+ "worlds": [
+  {
+   "world": 1672,
+   "startingSeed": 285192,
+   "acceptedSeed": 285246,
+   "rejectedBeforeAcceptance": 54,
+   "goal": 8
+  },
+  {
+   "world": 1673,
+   "startingSeed": 285247,
+   "acceptedSeed": 285331,
+   "rejectedBeforeAcceptance": 84,
+   "goal": 12
+  },
+  {
+   "world": 1674,
+   "startingSeed": 285332,
+   "acceptedSeed": 285355,
+   "rejectedBeforeAcceptance": 23,
+   "goal": 16
+  },
+  {
+   "world": 1675,
+   "startingSeed": 285356,
+   "acceptedSeed": 285427,
+   "rejectedBeforeAcceptance": 71,
+   "goal": 19
+  },
+  {
+   "world": 1676,
+   "startingSeed": 285428,
+   "acceptedSeed": 285507,
+   "rejectedBeforeAcceptance": 79,
+   "goal": 8
+  },
+  {
+   "world": 1677,
+   "startingSeed": 285508,
+   "acceptedSeed": 285770,
+   "rejectedBeforeAcceptance": 262,
+   "goal": 12
+  },
+  {
+   "world": 1678,
+   "startingSeed": 285771,
+   "acceptedSeed": 285782,
+   "rejectedBeforeAcceptance": 11,
+   "goal": 16
+  },
+  {
+   "world": 1679,
+   "startingSeed": 285783,
+   "acceptedSeed": 285808,
+   "rejectedBeforeAcceptance": 25,
+   "goal": 19
+  },
+  {
+   "world": 1680,
+   "startingSeed": 285809,
+   "acceptedSeed": 285866,
+   "rejectedBeforeAcceptance": 57,
+   "goal": 8
+  },
+  {
+   "world": 1681,
+   "startingSeed": 285867,
+   "acceptedSeed": 285875,
+   "rejectedBeforeAcceptance": 8,
+   "goal": 12
+  },
+  {
+   "world": 1682,
+   "startingSeed": 285876,
+   "acceptedSeed": 285913,
+   "rejectedBeforeAcceptance": 37,
+   "goal": 16
+  },
+  {
+   "world": 1683,
+   "startingSeed": 285914,
+   "acceptedSeed": 285975,
+   "rejectedBeforeAcceptance": 61,
+   "goal": 19
+  },
+  {
+   "world": 1684,
+   "startingSeed": 285976,
+   "acceptedSeed": 286052,
+   "rejectedBeforeAcceptance": 76,
+   "goal": 8
+  },
+  {
+   "world": 1685,
+   "startingSeed": 286053,
+   "acceptedSeed": 286055,
+   "rejectedBeforeAcceptance": 2,
+   "goal": 12
+  },
+  {
+   "world": 1686,
+   "startingSeed": 286056,
+   "acceptedSeed": 286173,
+   "rejectedBeforeAcceptance": 117,
+   "goal": 16
+  },
+  {
+   "world": 1687,
+   "startingSeed": 286174,
+   "acceptedSeed": 286198,
+   "rejectedBeforeAcceptance": 24,
+   "goal": 19
+  },
+  {
+   "world": 1688,
+   "startingSeed": 286199,
+   "acceptedSeed": 286219,
+   "rejectedBeforeAcceptance": 20,
+   "goal": 8
+  },
+  {
+   "world": 1689,
+   "startingSeed": 286220,
+   "acceptedSeed": 286228,
+   "rejectedBeforeAcceptance": 8,
+   "goal": 12
+  },
+  {
+   "world": 1690,
+   "startingSeed": 286229,
+   "acceptedSeed": 286303,
+   "rejectedBeforeAcceptance": 74,
+   "goal": 16
+  },
+  {
+   "world": 1691,
+   "startingSeed": 286304,
+   "acceptedSeed": 286340,
+   "rejectedBeforeAcceptance": 36,
+   "goal": 19
+  },
+  {
+   "world": 1692,
+   "startingSeed": 286341,
+   "acceptedSeed": 286385,
+   "rejectedBeforeAcceptance": 44,
+   "goal": 8
+  },
+  {
+   "world": 1693,
+   "startingSeed": 286386,
+   "acceptedSeed": 286437,
+   "rejectedBeforeAcceptance": 51,
+   "goal": 12
+  },
+  {
+   "world": 1694,
+   "startingSeed": 286438,
+   "acceptedSeed": 286464,
+   "rejectedBeforeAcceptance": 26,
+   "goal": 16
+  },
+  {
+   "world": 1695,
+   "startingSeed": 286465,
+   "acceptedSeed": 286528,
+   "rejectedBeforeAcceptance": 63,
+   "goal": 19
+  },
+  {
+   "world": 1696,
+   "startingSeed": 286529,
+   "acceptedSeed": 286529,
+   "rejectedBeforeAcceptance": 0,
+   "goal": 8
+  },
+  {
+   "world": 1697,
+   "startingSeed": 286530,
+   "acceptedSeed": 286541,
+   "rejectedBeforeAcceptance": 11,
+   "goal": 12
+  },
+  {
+   "world": 1698,
+   "startingSeed": 286542,
+   "acceptedSeed": 286566,
+   "rejectedBeforeAcceptance": 24,
+   "goal": 16
+  },
+  {
+   "world": 1699,
+   "startingSeed": 286567,
+   "acceptedSeed": 286570,
+   "rejectedBeforeAcceptance": 3,
+   "goal": 19
+  },
+  {
+   "world": 1700,
+   "startingSeed": 286571,
+   "acceptedSeed": 286637,
+   "rejectedBeforeAcceptance": 66,
+   "goal": 8
+  },
+  {
+   "world": 1701,
+   "startingSeed": 286638,
+   "acceptedSeed": 286682,
+   "rejectedBeforeAcceptance": 44,
+   "goal": 12
+  },
+  {
+   "world": 1702,
+   "startingSeed": 286683,
+   "acceptedSeed": 286795,
+   "rejectedBeforeAcceptance": 112,
+   "goal": 16
+  },
+  {
+   "world": 1703,
+   "startingSeed": 286796,
+   "acceptedSeed": 286812,
+   "rejectedBeforeAcceptance": 16,
+   "goal": 19
+  },
+  {
+   "world": 1704,
+   "startingSeed": 286813,
+   "acceptedSeed": 286815,
+   "rejectedBeforeAcceptance": 2,
+   "goal": 8
+  },
+  {
+   "world": 1705,
+   "startingSeed": 286816,
+   "acceptedSeed": 286900,
+   "rejectedBeforeAcceptance": 84,
+   "goal": 12
+  },
+  {
+   "world": 1706,
+   "startingSeed": 286901,
+   "acceptedSeed": 286914,
+   "rejectedBeforeAcceptance": 13,
+   "goal": 16
+  },
+  {
+   "world": 1707,
+   "startingSeed": 286915,
+   "acceptedSeed": 286983,
+   "rejectedBeforeAcceptance": 68,
+   "goal": 19
+  },
+  {
+   "world": 1708,
+   "startingSeed": 286984,
+   "acceptedSeed": 287171,
+   "rejectedBeforeAcceptance": 187,
+   "goal": 8
+  },
+  {
+   "world": 1709,
+   "startingSeed": 287172,
+   "acceptedSeed": 287180,
+   "rejectedBeforeAcceptance": 8,
+   "goal": 12
+  },
+  {
+   "world": 1710,
+   "startingSeed": 287181,
+   "acceptedSeed": 287185,
+   "rejectedBeforeAcceptance": 4,
+   "goal": 16
+  },
+  {
+   "world": 1711,
+   "startingSeed": 287186,
+   "acceptedSeed": 287205,
+   "rejectedBeforeAcceptance": 19,
+   "goal": 19
+  },
+  {
+   "world": 1712,
+   "startingSeed": 287206,
+   "acceptedSeed": 287211,
+   "rejectedBeforeAcceptance": 5,
+   "goal": 8
+  },
+  {
+   "world": 1713,
+   "startingSeed": 287212,
+   "acceptedSeed": 287297,
+   "rejectedBeforeAcceptance": 85,
+   "goal": 12
+  },
+  {
+   "world": 1714,
+   "startingSeed": 287298,
+   "acceptedSeed": 287311,
+   "rejectedBeforeAcceptance": 13,
+   "goal": 16
+  },
+  {
+   "world": 1715,
+   "startingSeed": 287312,
+   "acceptedSeed": 287388,
+   "rejectedBeforeAcceptance": 76,
+   "goal": 19
+  },
+  {
+   "world": 1716,
+   "startingSeed": 287389,
+   "acceptedSeed": 287455,
+   "rejectedBeforeAcceptance": 66,
+   "goal": 8
+  },
+  {
+   "world": 1717,
+   "startingSeed": 287456,
+   "acceptedSeed": 287468,
+   "rejectedBeforeAcceptance": 12,
+   "goal": 12
+  },
+  {
+   "world": 1718,
+   "startingSeed": 287469,
+   "acceptedSeed": 287492,
+   "rejectedBeforeAcceptance": 23,
+   "goal": 16
+  },
+  {
+   "world": 1719,
+   "startingSeed": 287493,
+   "acceptedSeed": 287496,
+   "rejectedBeforeAcceptance": 3,
+   "goal": 19
+  },
+  {
+   "world": 1720,
+   "startingSeed": 287497,
+   "acceptedSeed": 287536,
+   "rejectedBeforeAcceptance": 39,
+   "goal": 8
+  },
+  {
+   "world": 1721,
+   "startingSeed": 287537,
+   "acceptedSeed": 287654,
+   "rejectedBeforeAcceptance": 117,
+   "goal": 12
+  },
+  {
+   "world": 1722,
+   "startingSeed": 287655,
+   "acceptedSeed": 287718,
+   "rejectedBeforeAcceptance": 63,
+   "goal": 16
+  },
+  {
+   "world": 1723,
+   "startingSeed": 287719,
+   "acceptedSeed": 287826,
+   "rejectedBeforeAcceptance": 107,
+   "goal": 19
+  },
+  {
+   "world": 1724,
+   "startingSeed": 287827,
+   "acceptedSeed": 287851,
+   "rejectedBeforeAcceptance": 24,
+   "goal": 8
+  },
+  {
+   "world": 1725,
+   "startingSeed": 287852,
+   "acceptedSeed": 287913,
+   "rejectedBeforeAcceptance": 61,
+   "goal": 12
+  },
+  {
+   "world": 1726,
+   "startingSeed": 287914,
+   "acceptedSeed": 287946,
+   "rejectedBeforeAcceptance": 32,
+   "goal": 16
+  },
+  {
+   "world": 1727,
+   "startingSeed": 287947,
+   "acceptedSeed": 288024,
+   "rejectedBeforeAcceptance": 77,
+   "goal": 19
+  },
+  {
+   "world": 1728,
+   "startingSeed": 288025,
+   "acceptedSeed": 288038,
+   "rejectedBeforeAcceptance": 13,
+   "goal": 8
+  },
+  {
+   "world": 1729,
+   "startingSeed": 288039,
+   "acceptedSeed": 288094,
+   "rejectedBeforeAcceptance": 55,
+   "goal": 12
+  },
+  {
+   "world": 1730,
+   "startingSeed": 288095,
+   "acceptedSeed": 288105,
+   "rejectedBeforeAcceptance": 10,
+   "goal": 16
+  },
+  {
+   "world": 1731,
+   "startingSeed": 288106,
+   "acceptedSeed": 288151,
+   "rejectedBeforeAcceptance": 45,
+   "goal": 19
+  },
+  {
+   "world": 1732,
+   "startingSeed": 288152,
+   "acceptedSeed": 288185,
+   "rejectedBeforeAcceptance": 33,
+   "goal": 8
+  },
+  {
+   "world": 1733,
+   "startingSeed": 288186,
+   "acceptedSeed": 288368,
+   "rejectedBeforeAcceptance": 182,
+   "goal": 12
+  },
+  {
+   "world": 1734,
+   "startingSeed": 288369,
+   "acceptedSeed": 288382,
+   "rejectedBeforeAcceptance": 13,
+   "goal": 16
+  },
+  {
+   "world": 1735,
+   "startingSeed": 288383,
+   "acceptedSeed": 288411,
+   "rejectedBeforeAcceptance": 28,
+   "goal": 19
+  },
+  {
+   "world": 1736,
+   "startingSeed": 288412,
+   "acceptedSeed": 288418,
+   "rejectedBeforeAcceptance": 6,
+   "goal": 8
+  },
+  {
+   "world": 1737,
+   "startingSeed": 288419,
+   "acceptedSeed": 288420,
+   "rejectedBeforeAcceptance": 1,
+   "goal": 12
+  },
+  {
+   "world": 1738,
+   "startingSeed": 288421,
+   "acceptedSeed": 288457,
+   "rejectedBeforeAcceptance": 36,
+   "goal": 16
+  },
+  {
+   "world": 1739,
+   "startingSeed": 288458,
+   "acceptedSeed": 288544,
+   "rejectedBeforeAcceptance": 86,
+   "goal": 19
+  },
+  {
+   "world": 1740,
+   "startingSeed": 288545,
+   "acceptedSeed": 288552,
+   "rejectedBeforeAcceptance": 7,
+   "goal": 8
+  },
+  {
+   "world": 1741,
+   "startingSeed": 288553,
+   "acceptedSeed": 288557,
+   "rejectedBeforeAcceptance": 4,
+   "goal": 12
+  },
+  {
+   "world": 1742,
+   "startingSeed": 288558,
+   "acceptedSeed": 288620,
+   "rejectedBeforeAcceptance": 62,
+   "goal": 16
+  },
+  {
+   "world": 1743,
+   "startingSeed": 288621,
+   "acceptedSeed": 288657,
+   "rejectedBeforeAcceptance": 36,
+   "goal": 19
+  },
+  {
+   "world": 1744,
+   "startingSeed": 288658,
+   "acceptedSeed": 288977,
+   "rejectedBeforeAcceptance": 319,
+   "goal": 8
+  },
+  {
+   "world": 1745,
+   "startingSeed": 288978,
+   "acceptedSeed": 289150,
+   "rejectedBeforeAcceptance": 172,
+   "goal": 12
+  },
+  {
+   "world": 1746,
+   "startingSeed": 289151,
+   "acceptedSeed": 289177,
+   "rejectedBeforeAcceptance": 26,
+   "goal": 16
+  },
+  {
+   "world": 1747,
+   "startingSeed": 289178,
+   "acceptedSeed": 289257,
+   "rejectedBeforeAcceptance": 79,
+   "goal": 19
+  },
+  {
+   "world": 1748,
+   "startingSeed": 289258,
+   "acceptedSeed": 289279,
+   "rejectedBeforeAcceptance": 21,
+   "goal": 8
+  },
+  {
+   "world": 1749,
+   "startingSeed": 289280,
+   "acceptedSeed": 289296,
+   "rejectedBeforeAcceptance": 16,
+   "goal": 12
+  },
+  {
+   "world": 1750,
+   "startingSeed": 289297,
+   "acceptedSeed": 289318,
+   "rejectedBeforeAcceptance": 21,
+   "goal": 16
+  },
+  {
+   "world": 1751,
+   "startingSeed": 289319,
+   "acceptedSeed": 289365,
+   "rejectedBeforeAcceptance": 46,
+   "goal": 19
+  },
+  {
+   "world": 1752,
+   "startingSeed": 289366,
+   "acceptedSeed": 289417,
+   "rejectedBeforeAcceptance": 51,
+   "goal": 8
+  },
+  {
+   "world": 1753,
+   "startingSeed": 289418,
+   "acceptedSeed": 289556,
+   "rejectedBeforeAcceptance": 138,
+   "goal": 12
+  },
+  {
+   "world": 1754,
+   "startingSeed": 289557,
+   "acceptedSeed": 289603,
+   "rejectedBeforeAcceptance": 46,
+   "goal": 16
+  },
+  {
+   "world": 1755,
+   "startingSeed": 289604,
+   "acceptedSeed": 289628,
+   "rejectedBeforeAcceptance": 24,
+   "goal": 19
+  },
+  {
+   "world": 1756,
+   "startingSeed": 289629,
+   "acceptedSeed": 289907,
+   "rejectedBeforeAcceptance": 278,
+   "goal": 8
+  },
+  {
+   "world": 1757,
+   "startingSeed": 289908,
+   "acceptedSeed": 289929,
+   "rejectedBeforeAcceptance": 21,
+   "goal": 12
+  },
+  {
+   "world": 1758,
+   "startingSeed": 289930,
+   "acceptedSeed": 289960,
+   "rejectedBeforeAcceptance": 30,
+   "goal": 16
+  },
+  {
+   "world": 1759,
+   "startingSeed": 289961,
+   "acceptedSeed": 289982,
+   "rejectedBeforeAcceptance": 21,
+   "goal": 19
+  },
+  {
+   "world": 1760,
+   "startingSeed": 289983,
+   "acceptedSeed": 290005,
+   "rejectedBeforeAcceptance": 22,
+   "goal": 8
+  },
+  {
+   "world": 1761,
+   "startingSeed": 290006,
+   "acceptedSeed": 290108,
+   "rejectedBeforeAcceptance": 102,
+   "goal": 12
+  },
+  {
+   "world": 1762,
+   "startingSeed": 290109,
+   "acceptedSeed": 290118,
+   "rejectedBeforeAcceptance": 9,
+   "goal": 16
+  },
+  {
+   "world": 1763,
+   "startingSeed": 290119,
+   "acceptedSeed": 290119,
+   "rejectedBeforeAcceptance": 0,
+   "goal": 19
+  },
+  {
+   "world": 1764,
+   "startingSeed": 290120,
+   "acceptedSeed": 290209,
+   "rejectedBeforeAcceptance": 89,
+   "goal": 8
+  },
+  {
+   "world": 1765,
+   "startingSeed": 290210,
+   "acceptedSeed": 290254,
+   "rejectedBeforeAcceptance": 44,
+   "goal": 12
+  },
+  {
+   "world": 1766,
+   "startingSeed": 290255,
+   "acceptedSeed": 290258,
+   "rejectedBeforeAcceptance": 3,
+   "goal": 16
+  },
+  {
+   "world": 1767,
+   "startingSeed": 290259,
+   "acceptedSeed": 290273,
+   "rejectedBeforeAcceptance": 14,
+   "goal": 19
+  },
+  {
+   "world": 1768,
+   "startingSeed": 290274,
+   "acceptedSeed": 290277,
+   "rejectedBeforeAcceptance": 3,
+   "goal": 8
+  },
+  {
+   "world": 1769,
+   "startingSeed": 290278,
+   "acceptedSeed": 290349,
+   "rejectedBeforeAcceptance": 71,
+   "goal": 12
+  },
+  {
+   "world": 1770,
+   "startingSeed": 290350,
+   "acceptedSeed": 290404,
+   "rejectedBeforeAcceptance": 54,
+   "goal": 16
+  },
+  {
+   "world": 1771,
+   "startingSeed": 290405,
+   "acceptedSeed": 290467,
+   "rejectedBeforeAcceptance": 62,
+   "goal": 19
+  },
+  {
+   "world": 1772,
+   "startingSeed": 290468,
+   "acceptedSeed": 290522,
+   "rejectedBeforeAcceptance": 54,
+   "goal": 8
+  },
+  {
+   "world": 1773,
+   "startingSeed": 290523,
+   "acceptedSeed": 290578,
+   "rejectedBeforeAcceptance": 55,
+   "goal": 12
+  },
+  {
+   "world": 1774,
+   "startingSeed": 290579,
+   "acceptedSeed": 290644,
+   "rejectedBeforeAcceptance": 65,
+   "goal": 16
+  },
+  {
+   "world": 1775,
+   "startingSeed": 290645,
+   "acceptedSeed": 290686,
+   "rejectedBeforeAcceptance": 41,
+   "goal": 19
+  },
+  {
+   "world": 1776,
+   "startingSeed": 290687,
+   "acceptedSeed": 290740,
+   "rejectedBeforeAcceptance": 53,
+   "goal": 8
+  },
+  {
+   "world": 1777,
+   "startingSeed": 290741,
+   "acceptedSeed": 290856,
+   "rejectedBeforeAcceptance": 115,
+   "goal": 12
+  },
+  {
+   "world": 1778,
+   "startingSeed": 290857,
+   "acceptedSeed": 290971,
+   "rejectedBeforeAcceptance": 114,
+   "goal": 16
+  },
+  {
+   "world": 1779,
+   "startingSeed": 290972,
+   "acceptedSeed": 291001,
+   "rejectedBeforeAcceptance": 29,
+   "goal": 19
+  },
+  {
+   "world": 1780,
+   "startingSeed": 291002,
+   "acceptedSeed": 291005,
+   "rejectedBeforeAcceptance": 3,
+   "goal": 8
+  },
+  {
+   "world": 1781,
+   "startingSeed": 291006,
+   "acceptedSeed": 291064,
+   "rejectedBeforeAcceptance": 58,
+   "goal": 12
+  },
+  {
+   "world": 1782,
+   "startingSeed": 291065,
+   "acceptedSeed": 291118,
+   "rejectedBeforeAcceptance": 53,
+   "goal": 16
+  },
+  {
+   "world": 1783,
+   "startingSeed": 291119,
+   "acceptedSeed": 291136,
+   "rejectedBeforeAcceptance": 17,
+   "goal": 19
+  },
+  {
+   "world": 1784,
+   "startingSeed": 291137,
+   "acceptedSeed": 291268,
+   "rejectedBeforeAcceptance": 131,
+   "goal": 8
+  },
+  {
+   "world": 1785,
+   "startingSeed": 291269,
+   "acceptedSeed": 291288,
+   "rejectedBeforeAcceptance": 19,
+   "goal": 12
+  },
+  {
+   "world": 1786,
+   "startingSeed": 291289,
+   "acceptedSeed": 291353,
+   "rejectedBeforeAcceptance": 64,
+   "goal": 16
+  },
+  {
+   "world": 1787,
+   "startingSeed": 291354,
+   "acceptedSeed": 291369,
+   "rejectedBeforeAcceptance": 15,
+   "goal": 19
+  },
+  {
+   "world": 1788,
+   "startingSeed": 291370,
+   "acceptedSeed": 291421,
+   "rejectedBeforeAcceptance": 51,
+   "goal": 8
+  },
+  {
+   "world": 1789,
+   "startingSeed": 291422,
+   "acceptedSeed": 291458,
+   "rejectedBeforeAcceptance": 36,
+   "goal": 12
+  },
+  {
+   "world": 1790,
+   "startingSeed": 291459,
+   "acceptedSeed": 291472,
+   "rejectedBeforeAcceptance": 13,
+   "goal": 16
+  },
+  {
+   "world": 1791,
+   "startingSeed": 291473,
+   "acceptedSeed": 291594,
+   "rejectedBeforeAcceptance": 121,
+   "goal": 19
+  },
+  {
+   "world": 1792,
+   "startingSeed": 291595,
+   "acceptedSeed": 291648,
+   "rejectedBeforeAcceptance": 53,
+   "goal": 8
+  },
+  {
+   "world": 1793,
+   "startingSeed": 291649,
+   "acceptedSeed": 291657,
+   "rejectedBeforeAcceptance": 8,
+   "goal": 12
+  },
+  {
+   "world": 1794,
+   "startingSeed": 291658,
+   "acceptedSeed": 291723,
+   "rejectedBeforeAcceptance": 65,
+   "goal": 16
+  },
+  {
+   "world": 1795,
+   "startingSeed": 291724,
+   "acceptedSeed": 291803,
+   "rejectedBeforeAcceptance": 79,
+   "goal": 19
+  },
+  {
+   "world": 1796,
+   "startingSeed": 291804,
+   "acceptedSeed": 291906,
+   "rejectedBeforeAcceptance": 102,
+   "goal": 8
+  },
+  {
+   "world": 1797,
+   "startingSeed": 291907,
+   "acceptedSeed": 291922,
+   "rejectedBeforeAcceptance": 15,
+   "goal": 12
+  },
+  {
+   "world": 1798,
+   "startingSeed": 291923,
+   "acceptedSeed": 291940,
+   "rejectedBeforeAcceptance": 17,
+   "goal": 16
+  },
+  {
+   "world": 1799,
+   "startingSeed": 291941,
+   "acceptedSeed": 292161,
+   "rejectedBeforeAcceptance": 220,
+   "goal": 19
+  },
+  {
+   "world": 1800,
+   "startingSeed": 292162,
+   "acceptedSeed": 292305,
+   "rejectedBeforeAcceptance": 143,
+   "goal": 8
+  },
+  {
+   "world": 1801,
+   "startingSeed": 292306,
+   "acceptedSeed": 292320,
+   "rejectedBeforeAcceptance": 14,
+   "goal": 12
+  },
+  {
+   "world": 1802,
+   "startingSeed": 292321,
+   "acceptedSeed": 292382,
+   "rejectedBeforeAcceptance": 61,
+   "goal": 16
+  },
+  {
+   "world": 1803,
+   "startingSeed": 292383,
+   "acceptedSeed": 292397,
+   "rejectedBeforeAcceptance": 14,
+   "goal": 19
+  },
+  {
+   "world": 1804,
+   "startingSeed": 292398,
+   "acceptedSeed": 292520,
+   "rejectedBeforeAcceptance": 122,
+   "goal": 8
+  },
+  {
+   "world": 1805,
+   "startingSeed": 292521,
+   "acceptedSeed": 292638,
+   "rejectedBeforeAcceptance": 117,
+   "goal": 12
+  },
+  {
+   "world": 1806,
+   "startingSeed": 292639,
+   "acceptedSeed": 292707,
+   "rejectedBeforeAcceptance": 68,
+   "goal": 16
+  },
+  {
+   "world": 1807,
+   "startingSeed": 292708,
+   "acceptedSeed": 292798,
+   "rejectedBeforeAcceptance": 90,
+   "goal": 19
+  },
+  {
+   "world": 1808,
+   "startingSeed": 292799,
+   "acceptedSeed": 292927,
+   "rejectedBeforeAcceptance": 128,
+   "goal": 8
+  },
+  {
+   "world": 1809,
+   "startingSeed": 292928,
+   "acceptedSeed": 292944,
+   "rejectedBeforeAcceptance": 16,
+   "goal": 12
+  },
+  {
+   "world": 1810,
+   "startingSeed": 292945,
+   "acceptedSeed": 292960,
+   "rejectedBeforeAcceptance": 15,
+   "goal": 16
+  },
+  {
+   "world": 1811,
+   "startingSeed": 292961,
+   "acceptedSeed": 292969,
+   "rejectedBeforeAcceptance": 8,
+   "goal": 19
+  },
+  {
+   "world": 1812,
+   "startingSeed": 292970,
+   "acceptedSeed": 293032,
+   "rejectedBeforeAcceptance": 62,
+   "goal": 8
+  },
+  {
+   "world": 1813,
+   "startingSeed": 293033,
+   "acceptedSeed": 293034,
+   "rejectedBeforeAcceptance": 1,
+   "goal": 12
+  },
+  {
+   "world": 1814,
+   "startingSeed": 293035,
+   "acceptedSeed": 293096,
+   "rejectedBeforeAcceptance": 61,
+   "goal": 16
+  },
+  {
+   "world": 1815,
+   "startingSeed": 293097,
+   "acceptedSeed": 293241,
+   "rejectedBeforeAcceptance": 144,
+   "goal": 19
+  },
+  {
+   "world": 1816,
+   "startingSeed": 293242,
+   "acceptedSeed": 293358,
+   "rejectedBeforeAcceptance": 116,
+   "goal": 8
+  },
+  {
+   "world": 1817,
+   "startingSeed": 293359,
+   "acceptedSeed": 293389,
+   "rejectedBeforeAcceptance": 30,
+   "goal": 12
+  },
+  {
+   "world": 1818,
+   "startingSeed": 293390,
+   "acceptedSeed": 293417,
+   "rejectedBeforeAcceptance": 27,
+   "goal": 16
+  },
+  {
+   "world": 1819,
+   "startingSeed": 293418,
+   "acceptedSeed": 293427,
+   "rejectedBeforeAcceptance": 9,
+   "goal": 19
+  },
+  {
+   "world": 1820,
+   "startingSeed": 293428,
+   "acceptedSeed": 293497,
+   "rejectedBeforeAcceptance": 69,
+   "goal": 8
+  },
+  {
+   "world": 1821,
+   "startingSeed": 293498,
+   "acceptedSeed": 293522,
+   "rejectedBeforeAcceptance": 24,
+   "goal": 12
+  },
+  {
+   "world": 1822,
+   "startingSeed": 293523,
+   "acceptedSeed": 293533,
+   "rejectedBeforeAcceptance": 10,
+   "goal": 16
+  },
+  {
+   "world": 1823,
+   "startingSeed": 293534,
+   "acceptedSeed": 293590,
+   "rejectedBeforeAcceptance": 56,
+   "goal": 19
+  },
+  {
+   "world": 1824,
+   "startingSeed": 293591,
+   "acceptedSeed": 293598,
+   "rejectedBeforeAcceptance": 7,
+   "goal": 8
+  },
+  {
+   "world": 1825,
+   "startingSeed": 293599,
+   "acceptedSeed": 293682,
+   "rejectedBeforeAcceptance": 83,
+   "goal": 12
+  },
+  {
+   "world": 1826,
+   "startingSeed": 293683,
+   "acceptedSeed": 293715,
+   "rejectedBeforeAcceptance": 32,
+   "goal": 16
+  },
+  {
+   "world": 1827,
+   "startingSeed": 293716,
+   "acceptedSeed": 293760,
+   "rejectedBeforeAcceptance": 44,
+   "goal": 19
+  },
+  {
+   "world": 1828,
+   "startingSeed": 293761,
+   "acceptedSeed": 293781,
+   "rejectedBeforeAcceptance": 20,
+   "goal": 8
+  },
+  {
+   "world": 1829,
+   "startingSeed": 293782,
+   "acceptedSeed": 293825,
+   "rejectedBeforeAcceptance": 43,
+   "goal": 12
+  },
+  {
+   "world": 1830,
+   "startingSeed": 293826,
+   "acceptedSeed": 293865,
+   "rejectedBeforeAcceptance": 39,
+   "goal": 16
+  },
+  {
+   "world": 1831,
+   "startingSeed": 293866,
+   "acceptedSeed": 293912,
+   "rejectedBeforeAcceptance": 46,
+   "goal": 19
+  },
+  {
+   "world": 1832,
+   "startingSeed": 293913,
+   "acceptedSeed": 293928,
+   "rejectedBeforeAcceptance": 15,
+   "goal": 8
+  },
+  {
+   "world": 1833,
+   "startingSeed": 293929,
+   "acceptedSeed": 293935,
+   "rejectedBeforeAcceptance": 6,
+   "goal": 12
+  },
+  {
+   "world": 1834,
+   "startingSeed": 293936,
+   "acceptedSeed": 293967,
+   "rejectedBeforeAcceptance": 31,
+   "goal": 16
+  },
+  {
+   "world": 1835,
+   "startingSeed": 293968,
+   "acceptedSeed": 294000,
+   "rejectedBeforeAcceptance": 32,
+   "goal": 19
+  },
+  {
+   "world": 1836,
+   "startingSeed": 294001,
+   "acceptedSeed": 294007,
+   "rejectedBeforeAcceptance": 6,
+   "goal": 8
+  },
+  {
+   "world": 1837,
+   "startingSeed": 294008,
+   "acceptedSeed": 294045,
+   "rejectedBeforeAcceptance": 37,
+   "goal": 12
+  },
+  {
+   "world": 1838,
+   "startingSeed": 294046,
+   "acceptedSeed": 294055,
+   "rejectedBeforeAcceptance": 9,
+   "goal": 16
+  },
+  {
+   "world": 1839,
+   "startingSeed": 294056,
+   "acceptedSeed": 294182,
+   "rejectedBeforeAcceptance": 126,
+   "goal": 19
+  },
+  {
+   "world": 1840,
+   "startingSeed": 294183,
+   "acceptedSeed": 294231,
+   "rejectedBeforeAcceptance": 48,
+   "goal": 8
+  },
+  {
+   "world": 1841,
+   "startingSeed": 294232,
+   "acceptedSeed": 294233,
+   "rejectedBeforeAcceptance": 1,
+   "goal": 12
+  },
+  {
+   "world": 1842,
+   "startingSeed": 294234,
+   "acceptedSeed": 294352,
+   "rejectedBeforeAcceptance": 118,
+   "goal": 16
+  },
+  {
+   "world": 1843,
+   "startingSeed": 294353,
+   "acceptedSeed": 294477,
+   "rejectedBeforeAcceptance": 124,
+   "goal": 19
+  },
+  {
+   "world": 1844,
+   "startingSeed": 294478,
+   "acceptedSeed": 294655,
+   "rejectedBeforeAcceptance": 177,
+   "goal": 8
+  },
+  {
+   "world": 1845,
+   "startingSeed": 294656,
+   "acceptedSeed": 294705,
+   "rejectedBeforeAcceptance": 49,
+   "goal": 12
+  },
+  {
+   "world": 1846,
+   "startingSeed": 294706,
+   "acceptedSeed": 294754,
+   "rejectedBeforeAcceptance": 48,
+   "goal": 16
+  },
+  {
+   "world": 1847,
+   "startingSeed": 294755,
+   "acceptedSeed": 294791,
+   "rejectedBeforeAcceptance": 36,
+   "goal": 19
+  },
+  {
+   "world": 1848,
+   "startingSeed": 294792,
+   "acceptedSeed": 294824,
+   "rejectedBeforeAcceptance": 32,
+   "goal": 8
+  },
+  {
+   "world": 1849,
+   "startingSeed": 294825,
+   "acceptedSeed": 294847,
+   "rejectedBeforeAcceptance": 22,
+   "goal": 12
+  },
+  {
+   "world": 1850,
+   "startingSeed": 294848,
+   "acceptedSeed": 294860,
+   "rejectedBeforeAcceptance": 12,
+   "goal": 16
+  },
+  {
+   "world": 1851,
+   "startingSeed": 294861,
+   "acceptedSeed": 294920,
+   "rejectedBeforeAcceptance": 59,
+   "goal": 19
+  },
+  {
+   "world": 1852,
+   "startingSeed": 294921,
+   "acceptedSeed": 295001,
+   "rejectedBeforeAcceptance": 80,
+   "goal": 8
+  },
+  {
+   "world": 1853,
+   "startingSeed": 295002,
+   "acceptedSeed": 295214,
+   "rejectedBeforeAcceptance": 212,
+   "goal": 12
+  },
+  {
+   "world": 1854,
+   "startingSeed": 295215,
+   "acceptedSeed": 295218,
+   "rejectedBeforeAcceptance": 3,
+   "goal": 16
+  },
+  {
+   "world": 1855,
+   "startingSeed": 295219,
+   "acceptedSeed": 295228,
+   "rejectedBeforeAcceptance": 9,
+   "goal": 19
+  },
+  {
+   "world": 1856,
+   "startingSeed": 295229,
+   "acceptedSeed": 295453,
+   "rejectedBeforeAcceptance": 224,
+   "goal": 8
+  },
+  {
+   "world": 1857,
+   "startingSeed": 295454,
+   "acceptedSeed": 295469,
+   "rejectedBeforeAcceptance": 15,
+   "goal": 12
+  },
+  {
+   "world": 1858,
+   "startingSeed": 295470,
+   "acceptedSeed": 295497,
+   "rejectedBeforeAcceptance": 27,
+   "goal": 16
+  },
+  {
+   "world": 1859,
+   "startingSeed": 295498,
+   "acceptedSeed": 295502,
+   "rejectedBeforeAcceptance": 4,
+   "goal": 19
+  },
+  {
+   "world": 1860,
+   "startingSeed": 295503,
+   "acceptedSeed": 295514,
+   "rejectedBeforeAcceptance": 11,
+   "goal": 8
+  },
+  {
+   "world": 1861,
+   "startingSeed": 295515,
+   "acceptedSeed": 295523,
+   "rejectedBeforeAcceptance": 8,
+   "goal": 12
+  },
+  {
+   "world": 1862,
+   "startingSeed": 295524,
+   "acceptedSeed": 295542,
+   "rejectedBeforeAcceptance": 18,
+   "goal": 16
+  },
+  {
+   "world": 1863,
+   "startingSeed": 295543,
+   "acceptedSeed": 295700,
+   "rejectedBeforeAcceptance": 157,
+   "goal": 19
+  },
+  {
+   "world": 1864,
+   "startingSeed": 295701,
+   "acceptedSeed": 295707,
+   "rejectedBeforeAcceptance": 6,
+   "goal": 8
+  },
+  {
+   "world": 1865,
+   "startingSeed": 295708,
+   "acceptedSeed": 295714,
+   "rejectedBeforeAcceptance": 6,
+   "goal": 12
+  },
+  {
+   "world": 1866,
+   "startingSeed": 295715,
+   "acceptedSeed": 295735,
+   "rejectedBeforeAcceptance": 20,
+   "goal": 16
+  },
+  {
+   "world": 1867,
+   "startingSeed": 295736,
+   "acceptedSeed": 295759,
+   "rejectedBeforeAcceptance": 23,
+   "goal": 19
+  },
+  {
+   "world": 1868,
+   "startingSeed": 295760,
+   "acceptedSeed": 295858,
+   "rejectedBeforeAcceptance": 98,
+   "goal": 8
+  },
+  {
+   "world": 1869,
+   "startingSeed": 295859,
+   "acceptedSeed": 295908,
+   "rejectedBeforeAcceptance": 49,
+   "goal": 12
+  },
+  {
+   "world": 1870,
+   "startingSeed": 295909,
+   "acceptedSeed": 295933,
+   "rejectedBeforeAcceptance": 24,
+   "goal": 16
+  },
+  {
+   "world": 1871,
+   "startingSeed": 295934,
+   "acceptedSeed": 296015,
+   "rejectedBeforeAcceptance": 81,
+   "goal": 19
+  },
+  {
+   "world": 1872,
+   "startingSeed": 296016,
+   "acceptedSeed": 296149,
+   "rejectedBeforeAcceptance": 133,
+   "goal": 8
+  },
+  {
+   "world": 1873,
+   "startingSeed": 296150,
+   "acceptedSeed": 296228,
+   "rejectedBeforeAcceptance": 78,
+   "goal": 12
+  },
+  {
+   "world": 1874,
+   "startingSeed": 296229,
+   "acceptedSeed": 296265,
+   "rejectedBeforeAcceptance": 36,
+   "goal": 16
+  },
+  {
+   "world": 1875,
+   "startingSeed": 296266,
+   "acceptedSeed": 296306,
+   "rejectedBeforeAcceptance": 40,
+   "goal": 19
+  },
+  {
+   "world": 1876,
+   "startingSeed": 296307,
+   "acceptedSeed": 296476,
+   "rejectedBeforeAcceptance": 169,
+   "goal": 8
+  },
+  {
+   "world": 1877,
+   "startingSeed": 296477,
+   "acceptedSeed": 296574,
+   "rejectedBeforeAcceptance": 97,
+   "goal": 12
+  },
+  {
+   "world": 1878,
+   "startingSeed": 296575,
+   "acceptedSeed": 296628,
+   "rejectedBeforeAcceptance": 53,
+   "goal": 16
+  },
+  {
+   "world": 1879,
+   "startingSeed": 296629,
+   "acceptedSeed": 296655,
+   "rejectedBeforeAcceptance": 26,
+   "goal": 19
+  },
+  {
+   "world": 1880,
+   "startingSeed": 296656,
+   "acceptedSeed": 296659,
+   "rejectedBeforeAcceptance": 3,
+   "goal": 8
+  },
+  {
+   "world": 1881,
+   "startingSeed": 296660,
+   "acceptedSeed": 296664,
+   "rejectedBeforeAcceptance": 4,
+   "goal": 12
+  },
+  {
+   "world": 1882,
+   "startingSeed": 296665,
+   "acceptedSeed": 296676,
+   "rejectedBeforeAcceptance": 11,
+   "goal": 16
+  },
+  {
+   "world": 1883,
+   "startingSeed": 296677,
+   "acceptedSeed": 296684,
+   "rejectedBeforeAcceptance": 7,
+   "goal": 19
+  },
+  {
+   "world": 1884,
+   "startingSeed": 296685,
+   "acceptedSeed": 296798,
+   "rejectedBeforeAcceptance": 113,
+   "goal": 8
+  },
+  {
+   "world": 1885,
+   "startingSeed": 296799,
+   "acceptedSeed": 296799,
+   "rejectedBeforeAcceptance": 0,
+   "goal": 12
+  },
+  {
+   "world": 1886,
+   "startingSeed": 296800,
+   "acceptedSeed": 297125,
+   "rejectedBeforeAcceptance": 325,
+   "goal": 16
+  },
+  {
+   "world": 1887,
+   "startingSeed": 297126,
+   "acceptedSeed": 297162,
+   "rejectedBeforeAcceptance": 36,
+   "goal": 19
+  },
+  {
+   "world": 1888,
+   "startingSeed": 297163,
+   "acceptedSeed": 297186,
+   "rejectedBeforeAcceptance": 23,
+   "goal": 8
+  },
+  {
+   "world": 1889,
+   "startingSeed": 297187,
+   "acceptedSeed": 297252,
+   "rejectedBeforeAcceptance": 65,
+   "goal": 12
+  },
+  {
+   "world": 1890,
+   "startingSeed": 297253,
+   "acceptedSeed": 297262,
+   "rejectedBeforeAcceptance": 9,
+   "goal": 16
+  },
+  {
+   "world": 1891,
+   "startingSeed": 297263,
+   "acceptedSeed": 297309,
+   "rejectedBeforeAcceptance": 46,
+   "goal": 19
+  },
+  {
+   "world": 1892,
+   "startingSeed": 297310,
+   "acceptedSeed": 297355,
+   "rejectedBeforeAcceptance": 45,
+   "goal": 8
+  },
+  {
+   "world": 1893,
+   "startingSeed": 297356,
+   "acceptedSeed": 297368,
+   "rejectedBeforeAcceptance": 12,
+   "goal": 12
+  },
+  {
+   "world": 1894,
+   "startingSeed": 297369,
+   "acceptedSeed": 297443,
+   "rejectedBeforeAcceptance": 74,
+   "goal": 16
+  },
+  {
+   "world": 1895,
+   "startingSeed": 297444,
+   "acceptedSeed": 297464,
+   "rejectedBeforeAcceptance": 20,
+   "goal": 19
+  },
+  {
+   "world": 1896,
+   "startingSeed": 297465,
+   "acceptedSeed": 297482,
+   "rejectedBeforeAcceptance": 17,
+   "goal": 8
+  },
+  {
+   "world": 1897,
+   "startingSeed": 297483,
+   "acceptedSeed": 297486,
+   "rejectedBeforeAcceptance": 3,
+   "goal": 12
+  },
+  {
+   "world": 1898,
+   "startingSeed": 297487,
+   "acceptedSeed": 297545,
+   "rejectedBeforeAcceptance": 58,
+   "goal": 16
+  },
+  {
+   "world": 1899,
+   "startingSeed": 297546,
+   "acceptedSeed": 297557,
+   "rejectedBeforeAcceptance": 11,
+   "goal": 19
+  },
+  {
+   "world": 1900,
+   "startingSeed": 297558,
+   "acceptedSeed": 297632,
+   "rejectedBeforeAcceptance": 74,
+   "goal": 8
+  },
+  {
+   "world": 1901,
+   "startingSeed": 297633,
+   "acceptedSeed": 297695,
+   "rejectedBeforeAcceptance": 62,
+   "goal": 12
+  },
+  {
+   "world": 1902,
+   "startingSeed": 297696,
+   "acceptedSeed": 297701,
+   "rejectedBeforeAcceptance": 5,
+   "goal": 16
+  },
+  {
+   "world": 1903,
+   "startingSeed": 297702,
+   "acceptedSeed": 297713,
+   "rejectedBeforeAcceptance": 11,
+   "goal": 19
+  },
+  {
+   "world": 1904,
+   "startingSeed": 297714,
+   "acceptedSeed": 297720,
+   "rejectedBeforeAcceptance": 6,
+   "goal": 8
+  },
+  {
+   "world": 1905,
+   "startingSeed": 297721,
+   "acceptedSeed": 297725,
+   "rejectedBeforeAcceptance": 4,
+   "goal": 12
+  },
+  {
+   "world": 1906,
+   "startingSeed": 297726,
+   "acceptedSeed": 297741,
+   "rejectedBeforeAcceptance": 15,
+   "goal": 16
+  },
+  {
+   "world": 1907,
+   "startingSeed": 297742,
+   "acceptedSeed": 297769,
+   "rejectedBeforeAcceptance": 27,
+   "goal": 19
+  },
+  {
+   "world": 1908,
+   "startingSeed": 297770,
+   "acceptedSeed": 297779,
+   "rejectedBeforeAcceptance": 9,
+   "goal": 8
+  },
+  {
+   "world": 1909,
+   "startingSeed": 297780,
+   "acceptedSeed": 297842,
+   "rejectedBeforeAcceptance": 62,
+   "goal": 12
+  },
+  {
+   "world": 1910,
+   "startingSeed": 297843,
+   "acceptedSeed": 298027,
+   "rejectedBeforeAcceptance": 184,
+   "goal": 16
+  },
+  {
+   "world": 1911,
+   "startingSeed": 298028,
+   "acceptedSeed": 298139,
+   "rejectedBeforeAcceptance": 111,
+   "goal": 19
+  },
+  {
+   "world": 1912,
+   "startingSeed": 298140,
+   "acceptedSeed": 298197,
+   "rejectedBeforeAcceptance": 57,
+   "goal": 8
+  },
+  {
+   "world": 1913,
+   "startingSeed": 298198,
+   "acceptedSeed": 298200,
+   "rejectedBeforeAcceptance": 2,
+   "goal": 12
+  },
+  {
+   "world": 1914,
+   "startingSeed": 298201,
+   "acceptedSeed": 298233,
+   "rejectedBeforeAcceptance": 32,
+   "goal": 16
+  },
+  {
+   "world": 1915,
+   "startingSeed": 298234,
+   "acceptedSeed": 298252,
+   "rejectedBeforeAcceptance": 18,
+   "goal": 19
+  },
+  {
+   "world": 1916,
+   "startingSeed": 298253,
+   "acceptedSeed": 298343,
+   "rejectedBeforeAcceptance": 90,
+   "goal": 8
+  },
+  {
+   "world": 1917,
+   "startingSeed": 298344,
+   "acceptedSeed": 298384,
+   "rejectedBeforeAcceptance": 40,
+   "goal": 12
+  },
+  {
+   "world": 1918,
+   "startingSeed": 298385,
+   "acceptedSeed": 298391,
+   "rejectedBeforeAcceptance": 6,
+   "goal": 16
+  },
+  {
+   "world": 1919,
+   "startingSeed": 298392,
+   "acceptedSeed": 298436,
+   "rejectedBeforeAcceptance": 44,
+   "goal": 19
+  },
+  {
+   "world": 1920,
+   "startingSeed": 298437,
+   "acceptedSeed": 298456,
+   "rejectedBeforeAcceptance": 19,
+   "goal": 8
+  },
+  {
+   "world": 1921,
+   "startingSeed": 298457,
+   "acceptedSeed": 298515,
+   "rejectedBeforeAcceptance": 58,
+   "goal": 12
+  },
+  {
+   "world": 1922,
+   "startingSeed": 298516,
+   "acceptedSeed": 298563,
+   "rejectedBeforeAcceptance": 47,
+   "goal": 16
+  },
+  {
+   "world": 1923,
+   "startingSeed": 298564,
+   "acceptedSeed": 298621,
+   "rejectedBeforeAcceptance": 57,
+   "goal": 19
+  },
+  {
+   "world": 1924,
+   "startingSeed": 298622,
+   "acceptedSeed": 298672,
+   "rejectedBeforeAcceptance": 50,
+   "goal": 8
+  },
+  {
+   "world": 1925,
+   "startingSeed": 298673,
+   "acceptedSeed": 298722,
+   "rejectedBeforeAcceptance": 49,
+   "goal": 12
+  },
+  {
+   "world": 1926,
+   "startingSeed": 298723,
+   "acceptedSeed": 298735,
+   "rejectedBeforeAcceptance": 12,
+   "goal": 16
+  },
+  {
+   "world": 1927,
+   "startingSeed": 298736,
+   "acceptedSeed": 298747,
+   "rejectedBeforeAcceptance": 11,
+   "goal": 19
+  },
+  {
+   "world": 1928,
+   "startingSeed": 298748,
+   "acceptedSeed": 298751,
+   "rejectedBeforeAcceptance": 3,
+   "goal": 8
+  },
+  {
+   "world": 1929,
+   "startingSeed": 298752,
+   "acceptedSeed": 298854,
+   "rejectedBeforeAcceptance": 102,
+   "goal": 12
+  },
+  {
+   "world": 1930,
+   "startingSeed": 298855,
+   "acceptedSeed": 298873,
+   "rejectedBeforeAcceptance": 18,
+   "goal": 16
+  },
+  {
+   "world": 1931,
+   "startingSeed": 298874,
+   "acceptedSeed": 298876,
+   "rejectedBeforeAcceptance": 2,
+   "goal": 19
+  },
+  {
+   "world": 1932,
+   "startingSeed": 298877,
+   "acceptedSeed": 298881,
+   "rejectedBeforeAcceptance": 4,
+   "goal": 8
+  },
+  {
+   "world": 1933,
+   "startingSeed": 298882,
+   "acceptedSeed": 298888,
+   "rejectedBeforeAcceptance": 6,
+   "goal": 12
+  },
+  {
+   "world": 1934,
+   "startingSeed": 298889,
+   "acceptedSeed": 299038,
+   "rejectedBeforeAcceptance": 149,
+   "goal": 16
+  },
+  {
+   "world": 1935,
+   "startingSeed": 299039,
+   "acceptedSeed": 299123,
+   "rejectedBeforeAcceptance": 84,
+   "goal": 19
+  },
+  {
+   "world": 1936,
+   "startingSeed": 299124,
+   "acceptedSeed": 299194,
+   "rejectedBeforeAcceptance": 70,
+   "goal": 8
+  },
+  {
+   "world": 1937,
+   "startingSeed": 299195,
+   "acceptedSeed": 299208,
+   "rejectedBeforeAcceptance": 13,
+   "goal": 12
+  },
+  {
+   "world": 1938,
+   "startingSeed": 299209,
+   "acceptedSeed": 299229,
+   "rejectedBeforeAcceptance": 20,
+   "goal": 16
+  },
+  {
+   "world": 1939,
+   "startingSeed": 299230,
+   "acceptedSeed": 299290,
+   "rejectedBeforeAcceptance": 60,
+   "goal": 19
+  },
+  {
+   "world": 1940,
+   "startingSeed": 299291,
+   "acceptedSeed": 299304,
+   "rejectedBeforeAcceptance": 13,
+   "goal": 8
+  },
+  {
+   "world": 1941,
+   "startingSeed": 299305,
+   "acceptedSeed": 299482,
+   "rejectedBeforeAcceptance": 177,
+   "goal": 12
+  },
+  {
+   "world": 1942,
+   "startingSeed": 299483,
+   "acceptedSeed": 299565,
+   "rejectedBeforeAcceptance": 82,
+   "goal": 16
+  },
+  {
+   "world": 1943,
+   "startingSeed": 299566,
+   "acceptedSeed": 299658,
+   "rejectedBeforeAcceptance": 92,
+   "goal": 19
+  },
+  {
+   "world": 1944,
+   "startingSeed": 299659,
+   "acceptedSeed": 299753,
+   "rejectedBeforeAcceptance": 94,
+   "goal": 8
+  },
+  {
+   "world": 1945,
+   "startingSeed": 299754,
+   "acceptedSeed": 299778,
+   "rejectedBeforeAcceptance": 24,
+   "goal": 12
+  },
+  {
+   "world": 1946,
+   "startingSeed": 299779,
+   "acceptedSeed": 299957,
+   "rejectedBeforeAcceptance": 178,
+   "goal": 16
+  },
+  {
+   "world": 1947,
+   "startingSeed": 299958,
+   "acceptedSeed": 300019,
+   "rejectedBeforeAcceptance": 61,
+   "goal": 19
+  },
+  {
+   "world": 1948,
+   "startingSeed": 300020,
+   "acceptedSeed": 300077,
+   "rejectedBeforeAcceptance": 57,
+   "goal": 8
+  },
+  {
+   "world": 1949,
+   "startingSeed": 300078,
+   "acceptedSeed": 300093,
+   "rejectedBeforeAcceptance": 15,
+   "goal": 12
+  },
+  {
+   "world": 1950,
+   "startingSeed": 300094,
+   "acceptedSeed": 300106,
+   "rejectedBeforeAcceptance": 12,
+   "goal": 16
+  },
+  {
+   "world": 1951,
+   "startingSeed": 300107,
+   "acceptedSeed": 300214,
+   "rejectedBeforeAcceptance": 107,
+   "goal": 19
+  },
+  {
+   "world": 1952,
+   "startingSeed": 300215,
+   "acceptedSeed": 300411,
+   "rejectedBeforeAcceptance": 196,
+   "goal": 8
+  },
+  {
+   "world": 1953,
+   "startingSeed": 300412,
+   "acceptedSeed": 300454,
+   "rejectedBeforeAcceptance": 42,
+   "goal": 12
+  },
+  {
+   "world": 1954,
+   "startingSeed": 300455,
+   "acceptedSeed": 300485,
+   "rejectedBeforeAcceptance": 30,
+   "goal": 16
+  },
+  {
+   "world": 1955,
+   "startingSeed": 300486,
+   "acceptedSeed": 300497,
+   "rejectedBeforeAcceptance": 11,
+   "goal": 19
+  },
+  {
+   "world": 1956,
+   "startingSeed": 300498,
+   "acceptedSeed": 300562,
+   "rejectedBeforeAcceptance": 64,
+   "goal": 8
+  },
+  {
+   "world": 1957,
+   "startingSeed": 300563,
+   "acceptedSeed": 300594,
+   "rejectedBeforeAcceptance": 31,
+   "goal": 12
+  },
+  {
+   "world": 1958,
+   "startingSeed": 300595,
+   "acceptedSeed": 300661,
+   "rejectedBeforeAcceptance": 66,
+   "goal": 16
+  },
+  {
+   "world": 1959,
+   "startingSeed": 300662,
+   "acceptedSeed": 300759,
+   "rejectedBeforeAcceptance": 97,
+   "goal": 19
+  },
+  {
+   "world": 1960,
+   "startingSeed": 300760,
+   "acceptedSeed": 300853,
+   "rejectedBeforeAcceptance": 93,
+   "goal": 8
+  },
+  {
+   "world": 1961,
+   "startingSeed": 300854,
+   "acceptedSeed": 300886,
+   "rejectedBeforeAcceptance": 32,
+   "goal": 12
+  },
+  {
+   "world": 1962,
+   "startingSeed": 300887,
+   "acceptedSeed": 300893,
+   "rejectedBeforeAcceptance": 6,
+   "goal": 16
+  },
+  {
+   "world": 1963,
+   "startingSeed": 300894,
+   "acceptedSeed": 301039,
+   "rejectedBeforeAcceptance": 145,
+   "goal": 19
+  },
+  {
+   "world": 1964,
+   "startingSeed": 301040,
+   "acceptedSeed": 301087,
+   "rejectedBeforeAcceptance": 47,
+   "goal": 8
+  },
+  {
+   "world": 1965,
+   "startingSeed": 301088,
+   "acceptedSeed": 301111,
+   "rejectedBeforeAcceptance": 23,
+   "goal": 12
+  },
+  {
+   "world": 1966,
+   "startingSeed": 301112,
+   "acceptedSeed": 301267,
+   "rejectedBeforeAcceptance": 155,
+   "goal": 16
+  },
+  {
+   "world": 1967,
+   "startingSeed": 301268,
+   "acceptedSeed": 301276,
+   "rejectedBeforeAcceptance": 8,
+   "goal": 19
+  },
+  {
+   "world": 1968,
+   "startingSeed": 301277,
+   "acceptedSeed": 301297,
+   "rejectedBeforeAcceptance": 20,
+   "goal": 8
+  },
+  {
+   "world": 1969,
+   "startingSeed": 301298,
+   "acceptedSeed": 301325,
+   "rejectedBeforeAcceptance": 27,
+   "goal": 12
+  },
+  {
+   "world": 1970,
+   "startingSeed": 301326,
+   "acceptedSeed": 301449,
+   "rejectedBeforeAcceptance": 123,
+   "goal": 16
+  },
+  {
+   "world": 1971,
+   "startingSeed": 301450,
+   "acceptedSeed": 301456,
+   "rejectedBeforeAcceptance": 6,
+   "goal": 19
+  },
+  {
+   "world": 1972,
+   "startingSeed": 301457,
+   "acceptedSeed": 301498,
+   "rejectedBeforeAcceptance": 41,
+   "goal": 8
+  },
+  {
+   "world": 1973,
+   "startingSeed": 301499,
+   "acceptedSeed": 301502,
+   "rejectedBeforeAcceptance": 3,
+   "goal": 12
+  },
+  {
+   "world": 1974,
+   "startingSeed": 301503,
+   "acceptedSeed": 301646,
+   "rejectedBeforeAcceptance": 143,
+   "goal": 16
+  },
+  {
+   "world": 1975,
+   "startingSeed": 301647,
+   "acceptedSeed": 301688,
+   "rejectedBeforeAcceptance": 41,
+   "goal": 19
+  },
+  {
+   "world": 1976,
+   "startingSeed": 301689,
+   "acceptedSeed": 301700,
+   "rejectedBeforeAcceptance": 11,
+   "goal": 8
+  },
+  {
+   "world": 1977,
+   "startingSeed": 301701,
+   "acceptedSeed": 301713,
+   "rejectedBeforeAcceptance": 12,
+   "goal": 12
+  },
+  {
+   "world": 1978,
+   "startingSeed": 301714,
+   "acceptedSeed": 301839,
+   "rejectedBeforeAcceptance": 125,
+   "goal": 16
+  },
+  {
+   "world": 1979,
+   "startingSeed": 301840,
+   "acceptedSeed": 301963,
+   "rejectedBeforeAcceptance": 123,
+   "goal": 19
+  },
+  {
+   "world": 1980,
+   "startingSeed": 301964,
+   "acceptedSeed": 302014,
+   "rejectedBeforeAcceptance": 50,
+   "goal": 8
+  },
+  {
+   "world": 1981,
+   "startingSeed": 302015,
+   "acceptedSeed": 302056,
+   "rejectedBeforeAcceptance": 41,
+   "goal": 12
+  },
+  {
+   "world": 1982,
+   "startingSeed": 302057,
+   "acceptedSeed": 302065,
+   "rejectedBeforeAcceptance": 8,
+   "goal": 16
+  },
+  {
+   "world": 1983,
+   "startingSeed": 302066,
+   "acceptedSeed": 302073,
+   "rejectedBeforeAcceptance": 7,
+   "goal": 19
+  },
+  {
+   "world": 1984,
+   "startingSeed": 302074,
+   "acceptedSeed": 302087,
+   "rejectedBeforeAcceptance": 13,
+   "goal": 8
+  },
+  {
+   "world": 1985,
+   "startingSeed": 302088,
+   "acceptedSeed": 302189,
+   "rejectedBeforeAcceptance": 101,
+   "goal": 12
+  },
+  {
+   "world": 1986,
+   "startingSeed": 302190,
+   "acceptedSeed": 302199,
+   "rejectedBeforeAcceptance": 9,
+   "goal": 16
+  },
+  {
+   "world": 1987,
+   "startingSeed": 302200,
+   "acceptedSeed": 302313,
+   "rejectedBeforeAcceptance": 113,
+   "goal": 19
+  },
+  {
+   "world": 1988,
+   "startingSeed": 302314,
+   "acceptedSeed": 302323,
+   "rejectedBeforeAcceptance": 9,
+   "goal": 8
+  },
+  {
+   "world": 1989,
+   "startingSeed": 302324,
+   "acceptedSeed": 302340,
+   "rejectedBeforeAcceptance": 16,
+   "goal": 12
+  },
+  {
+   "world": 1990,
+   "startingSeed": 302341,
+   "acceptedSeed": 302379,
+   "rejectedBeforeAcceptance": 38,
+   "goal": 16
+  },
+  {
+   "world": 1991,
+   "startingSeed": 302380,
+   "acceptedSeed": 302438,
+   "rejectedBeforeAcceptance": 58,
+   "goal": 19
+  },
+  {
+   "world": 1992,
+   "startingSeed": 302439,
+   "acceptedSeed": 302522,
+   "rejectedBeforeAcceptance": 83,
+   "goal": 8
+  },
+  {
+   "world": 1993,
+   "startingSeed": 302523,
+   "acceptedSeed": 302564,
+   "rejectedBeforeAcceptance": 41,
+   "goal": 12
+  },
+  {
+   "world": 1994,
+   "startingSeed": 302565,
+   "acceptedSeed": 302566,
+   "rejectedBeforeAcceptance": 1,
+   "goal": 16
+  },
+  {
+   "world": 1995,
+   "startingSeed": 302567,
+   "acceptedSeed": 302573,
+   "rejectedBeforeAcceptance": 6,
+   "goal": 19
+  },
+  {
+   "world": 1996,
+   "startingSeed": 302574,
+   "acceptedSeed": 302629,
+   "rejectedBeforeAcceptance": 55,
+   "goal": 8
+  },
+  {
+   "world": 1997,
+   "startingSeed": 302630,
+   "acceptedSeed": 302644,
+   "rejectedBeforeAcceptance": 14,
+   "goal": 12
+  },
+  {
+   "world": 1998,
+   "startingSeed": 302645,
+   "acceptedSeed": 302711,
+   "rejectedBeforeAcceptance": 66,
+   "goal": 16
+  },
+  {
+   "world": 1999,
+   "startingSeed": 302712,
+   "acceptedSeed": 302719,
+   "rejectedBeforeAcceptance": 7,
+   "goal": 19
+  },
+  {
+   "world": 2000,
+   "startingSeed": 302720,
+   "acceptedSeed": 302799,
+   "rejectedBeforeAcceptance": 79,
+   "goal": 8
+  },
+  {
+   "world": 2001,
+   "startingSeed": 302800,
+   "acceptedSeed": 302833,
+   "rejectedBeforeAcceptance": 33,
+   "goal": 12
+  },
+  {
+   "world": 2002,
+   "startingSeed": 302834,
+   "acceptedSeed": 302921,
+   "rejectedBeforeAcceptance": 87,
+   "goal": 16
+  },
+  {
+   "world": 2003,
+   "startingSeed": 302922,
+   "acceptedSeed": 302979,
+   "rejectedBeforeAcceptance": 57,
+   "goal": 19
+  },
+  {
+   "world": 2004,
+   "startingSeed": 302980,
+   "acceptedSeed": 303049,
+   "rejectedBeforeAcceptance": 69,
+   "goal": 8
+  },
+  {
+   "world": 2005,
+   "startingSeed": 303050,
+   "acceptedSeed": 303057,
+   "rejectedBeforeAcceptance": 7,
+   "goal": 12
+  },
+  {
+   "world": 2006,
+   "startingSeed": 303058,
+   "acceptedSeed": 303078,
+   "rejectedBeforeAcceptance": 20,
+   "goal": 16
+  },
+  {
+   "world": 2007,
+   "startingSeed": 303079,
+   "acceptedSeed": 303136,
+   "rejectedBeforeAcceptance": 57,
+   "goal": 19
+  },
+  {
+   "world": 2008,
+   "startingSeed": 303137,
+   "acceptedSeed": 303170,
+   "rejectedBeforeAcceptance": 33,
+   "goal": 8
+  },
+  {
+   "world": 2009,
+   "startingSeed": 303171,
+   "acceptedSeed": 303246,
+   "rejectedBeforeAcceptance": 75,
+   "goal": 12
+  },
+  {
+   "world": 2010,
+   "startingSeed": 303247,
+   "acceptedSeed": 303251,
+   "rejectedBeforeAcceptance": 4,
+   "goal": 16
+  },
+  {
+   "world": 2011,
+   "startingSeed": 303252,
+   "acceptedSeed": 303288,
+   "rejectedBeforeAcceptance": 36,
+   "goal": 19
+  },
+  {
+   "world": 2012,
+   "startingSeed": 303289,
+   "acceptedSeed": 303372,
+   "rejectedBeforeAcceptance": 83,
+   "goal": 8
+  },
+  {
+   "world": 2013,
+   "startingSeed": 303373,
+   "acceptedSeed": 303376,
+   "rejectedBeforeAcceptance": 3,
+   "goal": 12
+  },
+  {
+   "world": 2014,
+   "startingSeed": 303377,
+   "acceptedSeed": 303455,
+   "rejectedBeforeAcceptance": 78,
+   "goal": 16
+  },
+  {
+   "world": 2015,
+   "startingSeed": 303456,
+   "acceptedSeed": 303525,
+   "rejectedBeforeAcceptance": 69,
+   "goal": 19
+  },
+  {
+   "world": 2016,
+   "startingSeed": 303526,
+   "acceptedSeed": 303647,
+   "rejectedBeforeAcceptance": 121,
+   "goal": 8
+  },
+  {
+   "world": 2017,
+   "startingSeed": 303648,
+   "acceptedSeed": 303765,
+   "rejectedBeforeAcceptance": 117,
+   "goal": 12
+  },
+  {
+   "world": 2018,
+   "startingSeed": 303766,
+   "acceptedSeed": 303795,
+   "rejectedBeforeAcceptance": 29,
+   "goal": 16
+  },
+  {
+   "world": 2019,
+   "startingSeed": 303796,
+   "acceptedSeed": 303812,
+   "rejectedBeforeAcceptance": 16,
+   "goal": 19
+  },
+  {
+   "world": 2020,
+   "startingSeed": 303813,
+   "acceptedSeed": 303988,
+   "rejectedBeforeAcceptance": 175,
+   "goal": 8
+  },
+  {
+   "world": 2021,
+   "startingSeed": 303989,
+   "acceptedSeed": 304027,
+   "rejectedBeforeAcceptance": 38,
+   "goal": 12
+  },
+  {
+   "world": 2022,
+   "startingSeed": 304028,
+   "acceptedSeed": 304077,
+   "rejectedBeforeAcceptance": 49,
+   "goal": 16
+  },
+  {
+   "world": 2023,
+   "startingSeed": 304078,
+   "acceptedSeed": 304102,
+   "rejectedBeforeAcceptance": 24,
+   "goal": 19
+  },
+  {
+   "world": 2024,
+   "startingSeed": 304103,
+   "acceptedSeed": 304204,
+   "rejectedBeforeAcceptance": 101,
+   "goal": 8
+  },
+  {
+   "world": 2025,
+   "startingSeed": 304205,
+   "acceptedSeed": 304213,
+   "rejectedBeforeAcceptance": 8,
+   "goal": 12
+  },
+  {
+   "world": 2026,
+   "startingSeed": 304214,
+   "acceptedSeed": 304223,
+   "rejectedBeforeAcceptance": 9,
+   "goal": 16
+  },
+  {
+   "world": 2027,
+   "startingSeed": 304224,
+   "acceptedSeed": 304283,
+   "rejectedBeforeAcceptance": 59,
+   "goal": 19
+  },
+  {
+   "world": 2028,
+   "startingSeed": 304284,
+   "acceptedSeed": 304285,
+   "rejectedBeforeAcceptance": 1,
+   "goal": 8
+  },
+  {
+   "world": 2029,
+   "startingSeed": 304286,
+   "acceptedSeed": 304320,
+   "rejectedBeforeAcceptance": 34,
+   "goal": 12
+  },
+  {
+   "world": 2030,
+   "startingSeed": 304321,
+   "acceptedSeed": 304454,
+   "rejectedBeforeAcceptance": 133,
+   "goal": 16
+  },
+  {
+   "world": 2031,
+   "startingSeed": 304455,
+   "acceptedSeed": 304469,
+   "rejectedBeforeAcceptance": 14,
+   "goal": 19
+  }
+ ],
+ "digest": "eca92f1a8b557bb3e01f4f41743ec62a551ae27ba3426e04c04aa6e8f22dbce2"
+}

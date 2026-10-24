@@ -1,0 +1,370 @@
+[
+ {
+  "file": "main.js",
+  "line": 1153,
+  "text": "function canReachGoal(startId, goalId, maxDepth = 4) {",
+  "cls": "ORACLE_GUARDED",
+  "fn": "canReachGoal",
+  "note": "oracle definition"
+ },
+ {
+  "file": "main.js",
+  "line": 1154,
+  "text": "if (globalThis.__LEARN0__ && globalThis.__LEARN0__.blocks('canReachGoal')) return true; // LEARN-0 map-oracle switch (guarded, default off)",
+  "cls": "ORACLE_GUARDED",
+  "fn": "canReachGoal",
+  "note": "LEARN-0 guard line"
+ },
+ {
+  "file": "main.js",
+  "line": 1188,
+  "text": "for (let nextId of neuron.userData.neighbors) {",
+  "cls": "ORACLE_GUARDED",
+  "fn": "canReachGoal",
+  "note": "depth-4 path search (runs only when the map is on)"
+ },
+ {
+  "file": "main.js",
+  "line": 1278,
+  "text": "function graphDiameter() {",
+  "cls": "ORACLE_GUARDED",
+  "fn": "graphDiameter",
+  "note": "oracle definition (guard on the next line)"
+ },
+ {
+  "file": "main.js",
+  "line": 1291,
+  "text": "const current = queue.shift();",
+  "cls": "ORACLE_GUARDED",
+  "fn": "graphDiameter",
+  "note": "all-pairs BFS"
+ },
+ {
+  "file": "main.js",
+  "line": 1293,
+  "text": "const neighbors = (neuron && neuron.userData && neuron.userData.neighbors) || [];",
+  "cls": "ORACLE_GUARDED",
+  "fn": "graphDiameter",
+  "note": "all-pairs BFS"
+ },
+ {
+  "file": "main.js",
+  "line": 1319,
+  "text": "function goalDistance(startId, goalId, maxDepth = 8) {",
+  "cls": "ORACLE_GUARDED",
+  "fn": "goalDistance",
+  "note": "oracle definition (guard on the next line)"
+ },
+ {
+  "file": "main.js",
+  "line": 1346,
+  "text": "const neighbors = new Set(neuron.userData.neighbors);",
+  "cls": "ORACLE_GUARDED",
+  "fn": "goalDistance",
+  "note": "BFS to the goal"
+ },
+ {
+  "file": "main.js",
+  "line": 1476,
+  "text": "if (goalNeuron && goalNeuron.userData.neighbors) {",
+  "cls": "INERT_NOT_REACHED",
+  "fn": "pruneGoalWraparound",
+  "note": "called only from the window click listener (no clicks in autonomous runs)"
+ },
+ {
+  "file": "main.js",
+  "line": 1477,
+  "text": "goalNeuron.userData.neighbors.forEach(nbId => {",
+  "cls": "INERT_NOT_REACHED",
+  "fn": "pruneGoalWraparound",
+  "note": "as above"
+ },
+ {
+  "file": "main.js",
+  "line": 1641,
+  "text": "startNeuron.userData.neighbors.forEach(id => {",
+  "cls": "LOCAL_PERCEPTION",
+  "fn": "runPrediction",
+  "note": "structureMap = the current node's own neighbours (steps >= 1: the imagined node; feeds only the visual thought tree)"
+ },
+ {
+  "file": "main.js",
+  "line": 1680,
+  "text": "startNeuron.userData.neighbors.forEach(id => {",
+  "cls": "LOCAL_PERCEPTION",
+  "fn": "runPrediction",
+  "note": "candidate generation from the current node's own neighbours"
+ },
+ {
+  "file": "main.js",
+  "line": 1718,
+  "text": "startNeuron.userData.neighbors.forEach(id => {",
+  "cls": "LOCAL_PERCEPTION",
+  "fn": "runPrediction",
+  "note": "candidate generation from the current node's own neighbours"
+ },
+ {
+  "file": "main.js",
+  "line": 1798,
+  "text": "if (goalNeuronId !== null && !canReachGoal(k, goalNeuronId)) {",
+  "cls": "ORACLE_CALL_SITE",
+  "fn": "runPrediction",
+  "note": "canReachGoal admission filter (guarded at the oracle entry)"
+ },
+ {
+  "file": "main.js",
+  "line": 1822,
+  "text": "canReachGoal",
+  "cls": "ORACLE_CALL_SITE",
+  "fn": "runPrediction",
+  "note": "canReachGoal passed to candidateAnalysis (guarded at the oracle entry)"
+ },
+ {
+  "file": "main.js",
+  "line": 1975,
+  "text": "? futureScore(",
+  "cls": "ORACLE_CALL_SITE",
+  "fn": "runPrediction",
+  "note": "futureScore (guarded at the oracle entry)"
+ },
+ {
+  "file": "main.js",
+  "line": 1995,
+  "text": "projectFutureScore(imaginedFuture, graphDiameter());",
+  "cls": "ORACLE_CALL_SITE",
+  "fn": "runPrediction",
+  "note": "graphDiameter as the projection scale (guarded at the oracle entry)"
+ },
+ {
+  "file": "main.js",
+  "line": 2071,
+  "text": "const dist = goalDistance(k, goalNeuronId);",
+  "cls": "ORACLE_CALL_SITE",
+  "fn": "runPrediction",
+  "note": "goalDistance gradient (guarded at the oracle entry)"
+ },
+ {
+  "file": "main.js",
+  "line": 2547,
+  "text": "if (goalNeuronId !== null && !canReachGoal(k, goalNeuronId)) {",
+  "cls": "ORACLE_CALL_SITE",
+  "fn": "runPrediction",
+  "note": "canReachGoal filter of the structure loop (guarded at the oracle entry)"
+ },
+ {
+  "file": "main.js",
+  "line": 2833,
+  "text": "decidedNeuron.userData.neighbors || []",
+  "cls": "INERT_VISUAL",
+  "fn": "runPrediction",
+  "note": "setAttentionSpotlight: visual highlighting only"
+ },
+ {
+  "file": "main.js",
+  "line": 4712,
+  "text": "Array.isArray(prevNeuronForMem.userData.neighbors) &&",
+  "cls": "LEGALITY_OF_EXPERIENCED_PAIR",
+  "fn": "runAgent",
+  "note": "transitions are written only for a graph-neighbour pair (prev, current) the agent just executed"
+ },
+ {
+  "file": "main.js",
+  "line": 4713,
+  "text": "prevNeuronForMem.userData.neighbors.includes(Number(current));",
+  "cls": "LEGALITY_OF_EXPERIENCED_PAIR",
+  "fn": "runAgent",
+  "note": "as above"
+ },
+ {
+  "file": "main.js",
+  "line": 5437,
+  "text": "obj.userData.neighbors.forEach(id => {",
+  "cls": "INERT_NOT_REACHED",
+  "fn": "window click listener",
+  "note": "UI highlighting on a click"
+ },
+ {
+  "file": "render/candidateAnalysis.js",
+  "line": 89,
+  "text": "canReachGoal",
+  "cls": "ORACLE_CALL_SITE",
+  "fn": "analyzeCandidate (parameter)",
+  "note": "canReachGoal received as a parameter (the guarded main.js function)"
+ },
+ {
+  "file": "render/candidateAnalysis.js",
+  "line": 144,
+  "text": "!canReachGoal(",
+  "cls": "ORACLE_CALL_SITE",
+  "fn": "analyzeCandidate",
+  "note": "canReachGoal filter (guarded at the oracle entry)"
+ },
+ {
+  "file": "render/candidateAnalysis.js",
+  "line": 294,
+  "text": "startNeuron.userData.neighbors",
+  "cls": "LOCAL_PERCEPTION",
+  "fn": "analyzeCandidate",
+  "note": "the current node's own neighbours"
+ },
+ {
+  "file": "render/connections.js",
+  "line": 120,
+  "text": "n1.userData.neighbors.push(id2);",
+  "cls": "CONSTRUCTION",
+  "fn": "graph construction",
+  "note": "adjacency built at start-up"
+ },
+ {
+  "file": "render/connections.js",
+  "line": 125,
+  "text": "n2.userData.neighbors.push(id1);",
+  "cls": "CONSTRUCTION",
+  "fn": "graph construction",
+  "note": "adjacency built at start-up"
+ },
+ {
+  "file": "render/embeddings.js",
+  "line": 283,
+  "text": "n1.userData.neighbors.includes(id);",
+  "cls": "EXPERIENCE_COUPLED_SEMANTIC",
+  "fn": "embedding training",
+  "note": "protects the trained pair's own neighbours from embedding drift; no goal; semantic candidates are skipped while a goal is active (main.js FIX 2)"
+ },
+ {
+  "file": "render/embeddings.js",
+  "line": 286,
+  "text": "n2.userData.neighbors.includes(id);",
+  "cls": "EXPERIENCE_COUPLED_SEMANTIC",
+  "fn": "embedding training",
+  "note": "as above"
+ },
+ {
+  "file": "render/episodeManager.js",
+  "line": 388,
+  "text": "Array.isArray(fromN.userData.neighbors) &&",
+  "cls": "LEGALITY_OF_EXPERIENCED_PAIR",
+  "fn": "recordAutonomousStep",
+  "note": "explore steps are recorded only for a graph-neighbour pair"
+ },
+ {
+  "file": "render/episodeManager.js",
+  "line": 389,
+  "text": "fromN.userData.neighbors.includes(Number(toId));",
+  "cls": "LEGALITY_OF_EXPERIENCED_PAIR",
+  "fn": "recordAutonomousStep",
+  "note": "as above"
+ },
+ {
+  "file": "render/episodeManager.js",
+  "line": 460,
+  "text": "Array.isArray(fromN.userData.neighbors) &&",
+  "cls": "LEGALITY_OF_EXPERIENCED_PAIR",
+  "fn": "replayOneEpisode",
+  "note": "replay eligibility: every remembered pair must be a graph edge or a trained transition"
+ },
+ {
+  "file": "render/episodeManager.js",
+  "line": 461,
+  "text": "fromN.userData.neighbors.includes(Number(toId));",
+  "cls": "LEGALITY_OF_EXPERIENCED_PAIR",
+  "fn": "replayOneEpisode",
+  "note": "as above"
+ },
+ {
+  "file": "render/neuronVisuals.js",
+  "line": 192,
+  "text": "coreMesh.userData.neighbors = [];",
+  "cls": "CONSTRUCTION",
+  "fn": "mesh creation",
+  "note": "initialises an empty neighbour list"
+ },
+ {
+  "file": "render/planning.js",
+  "line": 50,
+  "text": "export function lookAheadScore(",
+  "cls": "DEAD_NEVER_CALLED",
+  "fn": "lookAheadScore",
+  "note": "exported, no caller in main.js or render/"
+ },
+ {
+  "file": "render/planning.js",
+  "line": 134,
+  "text": "neuron.userData.neighbors.forEach(nextId => {",
+  "cls": "DEAD_NEVER_CALLED",
+  "fn": "lookAheadScore (dfs)",
+  "note": "as above"
+ },
+ {
+  "file": "render/planning.js",
+  "line": 253,
+  "text": "function hopDistancesFrom(goalId) {",
+  "cls": "ORACLE_GUARDED",
+  "fn": "hopDistancesFrom",
+  "note": "called only from futureScore, after its guard"
+ },
+ {
+  "file": "render/planning.js",
+  "line": 260,
+  "text": "const current = queue.shift();",
+  "cls": "ORACLE_GUARDED",
+  "fn": "hopDistancesFrom",
+  "note": "BFS from the goal"
+ },
+ {
+  "file": "render/planning.js",
+  "line": 262,
+  "text": "const neighbors = (neuron && neuron.userData && neuron.userData.neighbors) || [];",
+  "cls": "ORACLE_GUARDED",
+  "fn": "hopDistancesFrom",
+  "note": "BFS from the goal"
+ },
+ {
+  "file": "render/planning.js",
+  "line": 283,
+  "text": "export function futureScore(",
+  "cls": "ORACLE_GUARDED",
+  "fn": "futureScore",
+  "note": "oracle definition (guard before its first statement)"
+ },
+ {
+  "file": "render/planning.js",
+  "line": 307,
+  "text": "const distance = hopDistancesFrom(goal);",
+  "cls": "ORACLE_GUARDED",
+  "fn": "futureScore",
+  "note": "hopDistancesFrom call (after the guard)"
+ },
+ {
+  "file": "render/planning.js",
+  "line": 344,
+  "text": "(current && current.userData && current.userData.neighbors) || [];",
+  "cls": "ORACLE_GUARDED",
+  "fn": "futureScore (explore)",
+  "note": "H=3 path enumeration"
+ },
+ {
+  "file": "render/traversalRecord.js",
+  "line": 76,
+  "text": "const neighbors = neuron && neuron.userData && neuron.userData.neighbors;",
+  "cls": "INERT_WRITE_ONLY",
+  "fn": "traversal record",
+  "note": "legality check inside the write-only traversal record; read only by futureScore (off without the map; cost = 1 under state P)"
+ },
+ {
+  "file": "render/uncertaintyLedger.js",
+  "line": 360,
+  "text": "const isNeighbor = neuron.userData.neighbors",
+  "cls": "INERT_FOR_DECISIONS",
+  "fn": "ledger propagation",
+  "note": "uncertainty is accepted but unused by the scorer (MCF-0 audit, scoring.js)"
+ },
+ {
+  "file": "render/uncertaintyLedger.js",
+  "line": 361,
+  "text": "&& neuron.userData.neighbors.includes(fromId);",
+  "cls": "INERT_FOR_DECISIONS",
+  "fn": "ledger propagation",
+  "note": "as above"
+ }
+]

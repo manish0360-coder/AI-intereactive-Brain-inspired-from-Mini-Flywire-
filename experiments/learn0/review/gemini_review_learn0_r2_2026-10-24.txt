@@ -1,0 +1,106 @@
+### INDEPENDENT SCIENTIFIC ADVERSARIAL REVIEW: LEARN-0 (Revision 2)
+
+**VERDICT: PASS WITH CLAIM LIMITS**
+
+The `LEARN-0` revision 2 design package presents a rigorous, mathematically verified framework to test whether MiniFlyWire's experience store provides a genuine, goal-directed performance advantage when all four topological map oracles are disabled.
+
+The introduction of Instrument I7 (`provenance.mjs`) successfully verifies that no un-traversed graph edges or global map state leak into the persisted store via external channels. However, because 20-node training sessions cover 66–76 of the 78 directed edges in the environment, the store inherently accumulates an experience-derived reconstruction of the graph. The experiment tests the efficacy of *all experience-derived state as a total bundle*, not whether the agent is capable of abstract "map-free" navigation.
+
+---
+
+### Responses to Focused Review Questions (§11)
+
+#### 1. Map Knowledge and Store Provenance
+
+* **AGREE WITH CLAIM LIMIT: "Experience" in 20-node worlds includes an experience-reconstructed graph.**
+* **Evaluation:** The three-way taxonomy (local perception, experience-derived info, prohibited oracle access) is structurally sound. Instrument I7 effectively verifies trajectory provenance by proving every relational entry originates from lag-1 or lag-2 steps in $T$'s actual visited sequence. However, because $T$ traverses 85–97% of all graph edges during training, the store contains a nearly complete empirical reconstruction of the graph topology. The claim limit must explicitly state that `LEARN-0` evaluates experience-derived graph memory and Q-values as a whole, and cannot distinguish topological memory acquired through experience from non-topological heuristic learning.
+
+
+
+#### 2. Oracle Leakage and Verification
+
+* **AGREE.**
+* **Evaluation:** The five-layer static and dynamic audit suite (content pins, executable call-graph line audits, session accounting, body probes, first-decision candidate checks, and I7 provenance) provides complete mathematical assurance that no active oracle reads occur during map-off sessions.
+
+
+
+#### 3. Random-Stream and Admission Shift
+
+* **AGREE WITH CLAIM LIMIT: Random-stream drift is an orthogonal precision cost absorbed by paired world-level bootstrapping.**
+* **Evaluation:** Disabling `canReachGoal` permits distance-4 candidates, introducing a single extra RNG draw for curiosity drift that diverges the random stream. Because $N0$ and $N1$ are evaluated under the identical map-off candidate admission procedure and starting test seeds, this divergence is structurally symmetric across treatment and control. The resulting variance is a source of un-nested random noise that is fully accounted for by the paired percentile bootstrap across worlds.
+
+
+
+#### 4. Estimand and Multiplicity Policy
+
+* **AGREE.**
+* **Evaluation:** Framing $E1 = E_w[Y(N1) - Y(N0)]$ as the *total bundle effect* of the delivered store avoids misleading component-level attributions. The secondary multiplicity policy (28 unadjusted, unlabelled 95% intervals, zero influence on $E1$'s label, strict gate enforcement) completely protects the study against selective post-hoc interpretation.
+
+
+
+#### 5. Sample Size ($n=360$) and Power
+
+* **AGREE.**
+* **Evaluation:** Sizing $n=360$ based on applying the programme rule $n \ge ((z_{0.975} + z_{0.80}) \cdot \text{SD}/\delta)^2$ to a 25% inflation of the empirical calibration SD ($\text{SD}=134.4$) is fully justified. This sample size guarantees 80% power to detect true bundle effects $\ge 2\delta$ ($\approx 40$ legal reaches). Attempting to power the study to resolve marginal effects near $\pm\delta$ would require an unviable expansion ($n > 1,440$) without altering the decision boundaries.
+
+
+
+#### 6. Decision Margin ($\delta = 20$)
+
+* **AGREE.**
+* **Evaluation:** $\delta = 20$ represents $\approx 4.4\%$ of cold-floor reaches and is consistent with the established programme margin across prior milestones.
+
+
+
+#### 7. Secondary Metrics and Resets
+
+* **AGREE.**
+* **Evaluation:** Restricting $S3$ to legal moves at true distance $\ge 2$ and reporting non-graph resets separately ensures that reset classification changes cannot artificially inflate or pollute the primary legal goal reach outcome.
+
+
+
+#### 8. Claim Limits and Scope
+
+* **AGREE WITH CLAIM LIMIT: Outcomes do not license claims of "map-free navigation," "cognition," or component-level attribution.**
+* **Evaluation:** The claim boundaries are explicitly and conservatively drawn.
+
+
+
+---
+
+### Required Minimal Corrections
+
+1. **Mandatory Claim Limitation on Graph Reconstruction:**
+* *What:* Section 11 ("What each label would and would not license") must explicitly state that a `LEARNS_WITHOUT_MAP` outcome demonstrates performance supported by *experience-derived map reconstruction and path-keyed Q-values*, and does **not** prove map-free spatial reasoning or abstract route planning.
+
+
+* *Why:* To prevent future overclaiming regarding "oracle-free navigation" when the agent's store contains $85\text{--}97\%$ of the environment's edge transitions learned during training.
+
+
+* *Scale:* One sentence added to the claim bounds in `config.mjs` and `DESIGN.md`.
+
+
+
+
+
+*(No further corrections required. The design package revision 2 is scientifically complete).*
+
+---
+
+### Optional Future Studies (Non-Blocking)
+
+* **Partial-Experience Transfer (LEARN-1):** Evaluate store transfer under a restricted training budget $T$ (e.g., 300 calls instead of 1,500) where edge coverage is artificially capped at $<50\%$, isolating performance under incomplete environment experience.
+
+
+
+---
+
+### FINAL SCIENTIFIC VERDICT
+
+**PASS WITH CLAIM LIMITS**
+
+The `LEARN-0` revision 2 design package is scientifically adequate, fully verified, and ready for authorization and freeze.
+
+### Highest-Value Next Action
+
+**Authorize the Freeze Milestone.** Proceed with freezing the `LEARN-0` configuration, pinning the verified files (`config.mjs`, `transform.mjs`, `provenance.mjs`, `verify_learn0.mjs`), and generating the balanced configuration stream for worlds 1672–2031.

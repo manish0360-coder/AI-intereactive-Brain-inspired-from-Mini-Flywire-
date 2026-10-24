@@ -1,0 +1,289 @@
+[
+ {
+  "file": "main.js",
+  "line": 154,
+  "text": "} from \"./render/connections.js\";",
+  "cls": "LOADING",
+  "note": "module import of the graph-construction helpers"
+ },
+ {
+  "file": "main.js",
+  "line": 619,
+  "text": "neighbors: [],   // important for graph brain",
+  "cls": "CONSTRUCTION",
+  "note": "initialises an empty neighbour list on a new neuron"
+ },
+ {
+  "file": "main.js",
+  "line": 647,
+  "text": "return fetch('connections.json');",
+  "cls": "LOADING",
+  "note": "fetches connections.json at start-up"
+ },
+ {
+  "file": "main.js",
+  "line": 669,
+  "text": "console.log(\"✅ Connections loaded\");",
+  "cls": "LOG_TEXT",
+  "note": "console message"
+ },
+ {
+  "file": "main.js",
+  "line": 812,
+  "text": "rebuildAdjacencyMemory();",
+  "cls": "EPISODE_DERIVED",
+  "note": "rebuilds the episodic adjacency memory from sealed episodes (experience, not the graph)"
+ },
+ {
+  "file": "main.js",
+  "line": 951,
+  "text": "const adjacencyMemory = new Map();",
+  "cls": "EPISODE_DERIVED",
+  "note": "episodic adjacency memory: counts consecutive pairs in sealed episodes"
+ },
+ {
+  "file": "main.js",
+  "line": 953,
+  "text": "function rebuildAdjacencyMemory() {",
+  "cls": "EPISODE_DERIVED",
+  "note": "as above"
+ },
+ {
+  "file": "main.js",
+  "line": 954,
+  "text": "adjacencyMemory.clear();",
+  "cls": "EPISODE_DERIVED",
+  "note": "as above"
+ },
+ {
+  "file": "main.js",
+  "line": 958,
+  "text": "adjacencyMemory.set(key, (adjacencyMemory.get(key) || 0) + 1);",
+  "cls": "EPISODE_DERIVED",
+  "note": "as above"
+ },
+ {
+  "file": "main.js",
+  "line": 965,
+  "text": "const count = adjacencyMemory.get(fromId + \"->\" + toId) || 0;",
+  "cls": "EPISODE_DERIVED",
+  "note": "trajectoryConfidence reads the episodic adjacency memory"
+ },
+ {
+  "file": "main.js",
+  "line": 1146,
+  "text": "rebuildAdjacencyMemory();",
+  "cls": "EPISODE_DERIVED",
+  "note": "start-up rebuild of the episodic adjacency memory"
+ },
+ {
+  "file": "main.js",
+  "line": 1295,
+  "text": "for (const raw of neighbors) {",
+  "cls": "INSIDE_GUARDED_ORACLE",
+  "note": "graphDiameter body (runs only when the map is on)"
+ },
+ {
+  "file": "main.js",
+  "line": 1354,
+  "text": "if (strength > 1) neighbors.add(toId);",
+  "cls": "INSIDE_GUARDED_ORACLE",
+  "note": "goalDistance body: trained transitions extend the BFS (runs only when the map is on)"
+ },
+ {
+  "file": "main.js",
+  "line": 1358,
+  "text": "for (const nb of neighbors) {",
+  "cls": "INSIDE_GUARDED_ORACLE",
+  "note": "goalDistance body"
+ },
+ {
+  "file": "main.js",
+  "line": 1459,
+  "text": "} catch (e) { /* edge not present */ }",
+  "cls": "INERT_NOT_REACHED",
+  "note": "pruneGoalWraparound (click listener only)"
+ },
+ {
+  "file": "main.js",
+  "line": 1766,
+  "text": "const isGraphNeighbor   = structureMap.has(k);",
+  "cls": "CONSUMER_OF_LOCAL_PERCEPTION",
+  "note": "isGraphNeighbor = structureMap.has(k): structureMap is the current node's own neighbours (main.js:1644)"
+ },
+ {
+  "file": "main.js",
+  "line": 1787,
+  "text": "const hasEpisodicWitness = (adjacencyMemory.get(currentKey + \"->\" + k) || 0) > 0;",
+  "cls": "EPISODE_DERIVED",
+  "note": "hasEpisodicWitness: the episodic adjacency memory"
+ },
+ {
+  "file": "main.js",
+  "line": 1792,
+  "text": "if (globalThis.__GFGUARD__ && globalThis.__GFGUARD__.admit(currentKey, k, isGraphNeighbor, isEpisodeTrained, isHumanTrained) === false) return; // GFGUARD: candidate-class counter + N1-MASK semantics (guarded, default off)",
+  "cls": "GUARD_DIAGNOSTIC",
+  "note": "GATE-FLOOR-INTERACTION ADMIT line; the LEARN-0 driver installs it in diagnostic mode (admit always returns true)"
+ },
+ {
+  "file": "main.js",
+  "line": 1793,
+  "text": "if (!isGraphNeighbor && !isEpisodeTrained && !isHumanTrained) {",
+  "cls": "CONSUMER_OF_LOCAL_PERCEPTION",
+  "note": "admission: a candidate must be a neighbour of the current node or an experienced (episode / human-trained) pair"
+ },
+ {
+  "file": "main.js",
+  "line": 3944,
+  "text": "\" | Noise edges: \" + semSum.noise +",
+  "cls": "LOG_TEXT",
+  "note": "HUD text"
+ },
+ {
+  "file": "main.js",
+  "line": 4710,
+  "text": "const isGraphNeighborForMem =",
+  "cls": "CONSUMER_OF_LISTED_READ",
+  "note": "legality of the executed pair before the transition write (main.js:4715-4716 in the table)"
+ },
+ {
+  "file": "main.js",
+  "line": 4715,
+  "text": "if (isGraphNeighborForMem) {",
+  "cls": "CONSUMER_OF_LISTED_READ",
+  "note": "as above"
+ },
+ {
+  "file": "main.js",
+  "line": 5258,
+  "text": "rebuildAdjacencyMemory();",
+  "cls": "EPISODE_DERIVED",
+  "note": "periodic rebuild of the episodic adjacency memory"
+ },
+ {
+  "file": "main.js",
+  "line": 5439,
+  "text": "if (n) setNeuronHighlight(id, 'neighbor');",
+  "cls": "INERT_VISUAL",
+  "note": "UI highlighting on a click"
+ },
+ {
+  "file": "render/embeddings.js",
+  "line": 282,
+  "text": "const isNeighborOfN1 =",
+  "cls": "CONSUMER_OF_LISTED_READ",
+  "note": "embedding drift protection (embeddings.js:283 in the table)"
+ },
+ {
+  "file": "render/embeddings.js",
+  "line": 285,
+  "text": "const isNeighborOfN2 =",
+  "cls": "CONSUMER_OF_LISTED_READ",
+  "note": "as above"
+ },
+ {
+  "file": "render/embeddings.js",
+  "line": 288,
+  "text": "if (isNeighborOfN1 || isNeighborOfN2) return;",
+  "cls": "CONSUMER_OF_LISTED_READ",
+  "note": "as above"
+ },
+ {
+  "file": "render/episodeManager.js",
+  "line": 387,
+  "text": "const isActualGraphNeighbor =",
+  "cls": "CONSUMER_OF_LISTED_READ",
+  "note": "explore-step recording legality (episodeManager.js:388 in the table)"
+ },
+ {
+  "file": "render/episodeManager.js",
+  "line": 391,
+  "text": "if (!isActualGraphNeighbor) return;",
+  "cls": "CONSUMER_OF_LISTED_READ",
+  "note": "as above"
+ },
+ {
+  "file": "render/neuronVisuals.js",
+  "line": 456,
+  "text": "export function setAttentionSpotlight(activeId, neighborIds) {",
+  "cls": "INERT_VISUAL",
+  "note": "attention spotlight"
+ },
+ {
+  "file": "render/neuronVisuals.js",
+  "line": 458,
+  "text": "const neighborSet = new Set(neighborIds || []);",
+  "cls": "INERT_VISUAL",
+  "note": "as above"
+ },
+ {
+  "file": "render/neuronVisuals.js",
+  "line": 470,
+  "text": "} else if (neighborSet.has(id)) {",
+  "cls": "INERT_VISUAL",
+  "note": "as above"
+ },
+ {
+  "file": "render/neuronVisuals.js",
+  "line": 496,
+  "text": "} else if (state === 'neighbor') {",
+  "cls": "INERT_VISUAL",
+  "note": "as above"
+ },
+ {
+  "file": "render/planning.js",
+  "line": 264,
+  "text": "for (const raw of neighbors) {",
+  "cls": "INSIDE_GUARDED_ORACLE",
+  "note": "hopDistancesFrom body (called only from futureScore after its guard)"
+ },
+ {
+  "file": "render/planning.js",
+  "line": 343,
+  "text": "const neighbors =",
+  "cls": "INSIDE_GUARDED_ORACLE",
+  "note": "futureScore explore body"
+ },
+ {
+  "file": "render/planning.js",
+  "line": 350,
+  "text": "for (const raw of neighbors) {",
+  "cls": "INSIDE_GUARDED_ORACLE",
+  "note": "futureScore explore body"
+ },
+ {
+  "file": "render/traversalRecord.js",
+  "line": 71,
+  "text": "function isDeclaredEdge(from, to) {",
+  "cls": "INERT_WRITE_ONLY",
+  "note": "isDeclaredEdge: legality inside the write-only traversal record"
+ },
+ {
+  "file": "render/traversalRecord.js",
+  "line": 78,
+  "text": "if (!Array.isArray(neighbors)) return false;",
+  "cls": "INERT_WRITE_ONLY",
+  "note": "as above"
+ },
+ {
+  "file": "render/traversalRecord.js",
+  "line": 80,
+  "text": "return neighbors.some(id => Number(id) === Number(to));",
+  "cls": "INERT_WRITE_ONLY",
+  "note": "as above"
+ },
+ {
+  "file": "render/traversalRecord.js",
+  "line": 110,
+  "text": "if (!isDeclaredEdge(f, t)) return false;",
+  "cls": "INERT_WRITE_ONLY",
+  "note": "as above"
+ },
+ {
+  "file": "render/uncertaintyLedger.js",
+  "line": 363,
+  "text": "if (!isNeighbor) return;",
+  "cls": "INERT_FOR_DECISIONS",
+  "note": "ledger propagation (uncertaintyLedger.js:360-361 in the table)"
+ }
+]
