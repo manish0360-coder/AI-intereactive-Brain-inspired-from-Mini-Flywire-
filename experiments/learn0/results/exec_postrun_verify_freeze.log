@@ -1,0 +1,35 @@
+PASS F1.freeze-record-status-and-scope
+PASS F1.freeze-record-self-digest
+PASS F1.this-verifier-matches-its-pin
+FAIL F2.the-frozen-set-is-exactly-the-package-minus-the-freeze-record-and-the-status-readme :: {"onlyPresent":["results/exec_gate2_verify_freeze.log","results/exec_gate3_equality.log","results/exec_gate3_plan_only.log","results/exec_postrun_provenance.log","results/exec_postrun_verify_freeze.log","results/exec_run_blockL.log","results/summary_blockL.json"],"onlyPinned":[]}
+PASS F2.every-frozen-file-matches-its-pin-in-the-worktree
+PASS F2.every-frozen-file-matches-its-pin-at-head
+PASS F2.the-committed-directory-is-exactly-the-frozen-set-plus-the-freeze-record
+FAIL F2.the-directory-is-clean
+PASS F3.design-and-decision-digests-recompute-to-the-frozen-values
+PASS F3.preregistration-self-digest-and-frozen-digest
+PASS F3.preregistration-file-pins-equal-the-sources-line-ending-independently
+PASS F3.preregistration-body-equals-what-the-sources-produce
+PASS F3.approved-design-unchanged-sole-primary-n-delta-worlds-accounting
+PASS F3.approved-claim-limits-frozen-verbatim
+PASS F4.no-runtime-path-changed-since-the-last-runtime-commit
+PASS F4.the-learn0-tree-builds-to-its-pins
+PASS F4.the-call-graph-audit-passes-on-the-built-tree
+PASS F5.review-record-and-reviewed-package-match-their-pins
+PASS F5.the-verdict-and-the-required-correction-are-the-reviewer-s-own-text
+PASS F5.the-required-correction-is-applied-in-config-and-design
+PASS F5.reviewer-factual-slips-are-recorded-and-not-adopted
+PASS F6.block-list-matches-its-digest-and-the-freeze-record
+PASS F6.360-consecutive-worlds-recurrence-goals-and-no-held-out-or-consumed-seed
+PASS F6.every-frozen-seed-regenerates-its-configuration-as-the-session-driver-requires
+PASS F6.the-block-continues-the-cached-earlier-stream
+FAIL F7.no-block-l-session-record-run-manifest-or-results-path :: E:\Projects\OpenSourceLab\repos\mini-flywire\experiments\learn0\data\run_blockL\sessions\l0-N0-w1672.json, E:\Projects\OpenSourceLab\repos\mini-flywire\experiments\learn0\data\run_blockL\sessions\l0-N0-w1673.json, E:\Projects\OpenSourceLab\repos\mini-flywire\experiments\learn0\data\run_blockL\sessions\l0-N0-w1674.json
+PASS F7.the-confirmatory-run-is-stated-not-authorized-and-not-executed
+PASS F8.decision-rule-boundaries
+PASS F9.every-frozen-file-matches-its-pin-after-lf-to-crlf-conversion
+PASS F9.the-conversion-changes-the-raw-bytes-so-the-normalisation-is-load-bearing
+
+LEARN-0 freeze verification: 27 checks passed, 3 failed (no session run, nothing generated)
+F2.the-frozen-set-is-exactly-the-package-minus-the-freeze-record-and-the-status-readme {"onlyPresent":["results/exec_gate2_verify_freeze.log","results/exec_gate3_equality.log","results/exec_gate3_plan_only.log","results/exec_postrun_provenance.log","results/exec_postrun_verify_freeze.log","results/exec_run_blockL.log","results/summary_blockL.json"],"onlyPinned":[]}
+F2.the-directory-is-clean 
+F7.no-block-l-session-record-run-manifest-or-results-path E:\Projects\OpenSourceLab\repos\mini-flywire\experiments\learn0\data\run_blockL\sessions\l0-N0-w1672.json, E:\Projects\OpenSourceLab\repos\mini-flywire\experiments\learn0\data\run_blockL\sessions\l0-N0-w1673.json, E:\Projects\OpenSourceLab\repos\mini-flywire\experiments\learn0\data\run_blockL\sessions\l0-N0-w1674.json

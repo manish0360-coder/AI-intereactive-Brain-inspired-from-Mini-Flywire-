@@ -1,0 +1,8 @@
+PASS G3.frozen-block-list-self-digest
+PASS G3.regenerated-stream-has-2032-elements-and-its-prefix-equals-the-frozen-source
+PASS G3.regenerated-block-equals-the-frozen-list-field-by-field-360-of-360
+PASS G3.orchestrator-plan-worlds-equal-the-frozen-list
+PASS G3.orchestrator-plan-accounting-is-the-frozen-2160
+INFO cache stream_200000_2032_4a72bd23251b.json sha256 8067c4f826b4897d3075c8493b0e41ce358a08f2ded3213cbfc7faf659ae4b19; plan sha256 a15a186b5eb620cfdd66f64977f71f0d0a2337a43dfc2eb4cb536becf240a8d6
+
+Gate 3: 5 passed, 0 failed

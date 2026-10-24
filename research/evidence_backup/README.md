@@ -100,3 +100,23 @@ commands above against the copies. Either route closes the risk; the sha256 valu
 
 A second copy on this machine (another folder or drive) would guard against accidental deletion only, not against loss of the machine;
 it is not counted as a backup here.
+
+## LEARN-0 block L (2026-10-25, FACT)
+
+* **Archive:** `blockL_raw_cc8a42d.tar.gz`, 13,295,150 bytes, sha256 `a943ddb25b00ea086e9feece109790da2e17f56fde3e633ce158987d239cbf27`
+  (primary: `E:/Projects/OpenSourceLab/archives/learn0/`; record: `experiments/learn0/results/archive_blockL.json`).
+* **Second copy:** `F:\MiniFlyWire_Evidence_Backup\learn0_blockL_cc8a42d\` on the same removable USB device as blocks P and I, in a new
+  folder (no overwrite), with the evidence snapshot `blockL_evidence_snapshot_cc8a42d\` (17 files) and its `SHA256SUMS.txt`.
+  Verified 2026-10-25: three independent hashes, `cmp`, `gzip -t`, the 2,527-entry listing, all 2,524 extracted files against the
+  inventory, `verify_archive_blockL.mjs` on the extracted tree, the snapshot manifest 17 of 17. The block P/I copies were unchanged.
+* **Re-checked after physical re-insertion (2026-10-25, PASSED).** The Windows log shows the drive removed at 00:57 IST and re-attached
+  at 01:13:27 IST. On re-insertion:
+  * three independent hashes;
+  * `gzip -t`;
+  * the 2,527-entry listing;
+  * the snapshot manifest 17 of 17;
+  * `verify_archive_blockL.mjs --archive` PASS;
+  * `verify_backup_copy.mjs` MATCH;
+  * the block P/I copies unchanged.
+* **Still pending:** owner confirmation of safe ejection and storage away from this computer. Details: `backup_manifest.json`
+  (third archive entry).

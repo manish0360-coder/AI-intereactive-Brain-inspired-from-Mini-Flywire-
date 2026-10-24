@@ -1,0 +1,44 @@
+{
+ "schema": "learn0.archive/1",
+ "purpose": "durable, recoverable copy of the raw block-L output (the git-ignored experiments/learn0/data/run_blockL and the stream cache the run read); committed record = identification + verification only",
+ "freezeCommit": "cc8a42d63db01a98a5ce0a95dc18953a41dfe180",
+ "manifestDigest": "5ac256a7b3d1ae45af30f99e23dbf9b9a3b97e58744798a3b7b00b01e6ef7f69",
+ "manifestFileSha256": "61230bbc3d158c797ceb117bd6a52de02b64a238760c9fd56e4ddc8b0dc19f00",
+ "archive": {
+  "name": "blockL_raw_cc8a42d.tar.gz",
+  "location": "E:/Projects/OpenSourceLab/archives/learn0/blockL_raw_cc8a42d.tar.gz",
+  "sha256": "a943ddb25b00ea086e9feece109790da2e17f56fde3e633ce158987d239cbf27",
+  "bytes": 13295150,
+  "uncompressedBytes": 121190400,
+  "root": "run_blockL",
+  "format": "tar (GNU tar 1.34) | gzip -n -9",
+  "creation": "cd experiments/learn0/data && tar --sort=name --mtime=\"2026-10-24 00:00:00Z\" --owner=0 --group=0 --numeric-owner -cf - run_blockL stream_200000_2032_4a72bd23251b.json | gzip -n -9 > <archive>",
+  "deterministic": "creating the archive a second time reproduced the same bytes (cmp)",
+  "entries": 2527
+ },
+ "streamCache": {
+  "name": "stream_200000_2032_4a72bd23251b.json",
+  "sha256": "8067c4f826b4897d3075c8493b0e41ce358a08f2ded3213cbfc7faf659ae4b19",
+  "bytes": 264499,
+  "note": "beside run_blockL in the archive (and in experiments/learn0/data); the accepted-configuration stream the run read; its block-L slice equals blockL_worlds.json"
+ },
+ "inventory": {
+  "name": "SHA256SUMS_learn0_blockL_raw.txt",
+  "sha256": "a0555244b96ee4428fa07bb14532ed8400b8dd7754be4bd78719d338d833352b",
+  "files": 2524,
+  "note": "GNU sha256sum format over every file in the archive (run_blockL/** + the stream cache); kept beside the archive on every copy, not in the repository"
+ },
+ "counts": {
+  "worlds": 360,
+  "sessions": 2160,
+  "brains": 360,
+  "files": 2523
+ },
+ "files": {
+  "MANIFEST.json": "61230bbc3d158c797ceb117bd6a52de02b64a238760c9fd56e4ddc8b0dc19f00",
+  "plan.json": "727732b234e96248ca75f0de88a1cdd8f3a85620cf9e870193ed709ae027049c",
+  "controls.json": "247a73b132f4da4bcddaebe59ee2e863b439e73f4c3c9e7b8b0ce710c9c078a0"
+ },
+ "verification": "node experiments/learn0/verify_archive_blockL.mjs --archive <archive>   (or --dir <run_blockL directory with the stream cache beside it>)",
+ "limits": "primary copy outside the repository working tree on the internal disk; the second copy and its verification are recorded in research/evidence_backup/backup_manifest.json; the archive is bound by the committed sha256 above and each member by the manifest hashes"
+}

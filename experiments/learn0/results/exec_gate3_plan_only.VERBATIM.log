@@ -1,0 +1,22 @@
+  stream element 1672 (3 s)
+  stream element 1692 (65 s)
+  stream element 1712 (107 s)
+  stream element 1732 (157 s)
+  stream element 1752 (218 s)
+  stream element 1772 (270 s)
+  stream element 1792 (328 s)
+  stream element 1812 (400 s)
+  stream element 1832 (448 s)
+  stream element 1852 (507 s)
+  stream element 1872 (563 s)
+  stream element 1892 (626 s)
+  stream element 1912 (672 s)
+  stream element 1932 (706 s)
+  stream element 1952 (788 s)
+  stream element 1972 (847 s)
+  stream element 1992 (905 s)
+  stream element 2012 (948 s)
+design digest f2614ca360a4676493c5a36245a4c191a0c2744f5a808fd2abfd6d13bd05e74e
+decision digest 9beeef9761d252f34ce67f2a584138ded882c3218d0c40d398dab5328b19c8f0
+block L: 360 worlds; planned sessions 2160 (360 training + 1800 test); per cell {"N0":360,"N1":360,"N1E":360,"N1Q":360,"O0":360}
+exit 0

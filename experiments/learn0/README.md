@@ -1,9 +1,15 @@
 # LEARN-0 — experience without the map
 
-**Status: FROZEN PREREGISTRATION (2026-10-24).** The confirmatory run is **NOT AUTHORIZED and NOT EXECUTED**.
-- Gemini's revision-2 verdict was PASS WITH CLAIM LIMITS, and its one required correction is applied.
-- The freeze record is [FREEZE.md](FREEZE.md), checked with `node experiments/learn0/verify_freeze_learn0.mjs`. That verifier is line-ending independent, so use it on a CRLF checkout.
-- Block L's configurations ([blockL_worlds.json](blockL_worlds.json)) were generated only to check for collisions. Production is unchanged.
+**Status: EXECUTED under the frozen design (2026-10-24).** E1 = −24.4 [−36.3, −12.3], **INCONCLUSIVE** (δ = 20).
+- Block L ran 360 worlds and 2,160 sessions with 0 exclusions. Results are in [results/RESULTS.md](results/RESULTS.md).
+- The freeze was `cc8a42d`, pushed and remotely verified before any outcome. Gemini's revision-2 verdict was PASS WITH CLAIM LIMITS, and its one required correction was applied before the freeze.
+- The freeze record is [FREEZE.md](FREEZE.md). `verify_freeze_learn0.mjs` certifies the **pre-run** state.
+  - After execution, its frozen-pin, digest, configuration and line-ending checks still pass.
+  - Its pre-run-only checks fail by design: F2 on the exact file set and the committed directory, and F7 on "no results" and the "not executed" statement.
+  - The exact pass/fail breakdown is in [results/RESULTS.md](results/RESULTS.md) §1.
+- The post-run check is `verify_results_learn0.mjs`. It re-checks every frozen pin and recomputes every result from the per-session rows in `results/`.
+- The raw data is archived and verified: [results/archive_blockL.json](results/archive_blockL.json) and `research/evidence_backup/backup_manifest.json`.
+- Production and the typed registry are unchanged.
 
 **Question.** With all four map oracles disabled (`goalDistance`, `canReachGoal`, `graphDiameter`, `futureScore`), does the world's own experience store raise legal goal reaches?
 
@@ -45,11 +51,21 @@ node experiments/learn0/export_prereg.mjs --check
 node experiments/learn0/tools/sizing_learn0.mjs
 ```
 
+```bash
+node experiments/learn0/verify_results_learn0.mjs
+```
+
+```bash
+node experiments/learn0/verify_archive_blockL.mjs --archive E:/Projects/OpenSourceLab/archives/learn0/blockL_raw_cc8a42d.tar.gz
+```
+
 - The first command is the design gate. It uses development worlds only.
 - The second checks that the preregistration is current.
 - The third re-derives the sizing evidence, including the Monte Carlo check. It takes about 4 minutes and uses no study world.
+- The fourth is the post-run results check. It needs no raw data.
+- The fifth deep-checks the raw archive.
 
-`orchestrate.mjs --plan-only` generates the block-L stream, so it belongs to the freeze milestone only. `orchestrate.mjs --out <dir>` (block L) is **NOT AUTHORISED**.
+`orchestrate.mjs --out <dir>` (block L) was executed once, under the owner's authorisation, on 2026-10-24. Block L is used up; **do not run it again.**
 
 ## Gate result (development worlds only)
 

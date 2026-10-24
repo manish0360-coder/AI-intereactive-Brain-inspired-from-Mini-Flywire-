@@ -1,0 +1,8 @@
+PASS P1.manifest-self-digest-and-frozen-digests
+PASS P1.manifest-binds-the-pinned-tree-and-the-committed-driver
+PASS P2.every-session-file-matches-the-manifest
+PASS P3.every-session-runs-a-frozen-configuration-with-its-frozen-seed-on-the-pinned-tree
+PASS P4.session-accounting-every-valid-world-has-its-six-sessions
+INFO executed block L: worlds 1672-2031; configuration seeds 285246-304469; agent seeds 1100103344-1100104063; sessions 2160 (360 training + 1800 test); excluded worlds 0; manifest 5ac256a7b3d1ae45af30f99e23dbf9b9a3b97e58744798a3b7b00b01e6ef7f69
+
+post-run provenance: 5 passed, 0 failed

@@ -1,0 +1,6 @@
+design digest f2614ca360a4676493c5a36245a4c191a0c2744f5a808fd2abfd6d13bd05e74e
+decision digest 9beeef9761d252f34ce67f2a584138ded882c3218d0c40d398dab5328b19c8f0
+block L: 360 worlds; planned sessions 2160 (360 training + 1800 test); per cell {"N0":360,"N1":360,"N1E":360,"N1Q":360,"O0":360}
+manifest digest 5ac256a7b3d1ae45af30f99e23dbf9b9a3b97e58744798a3b7b00b01e6ef7f69; excluded worlds 0/360
+exit 0
+2026-10-24T18:01:01Z

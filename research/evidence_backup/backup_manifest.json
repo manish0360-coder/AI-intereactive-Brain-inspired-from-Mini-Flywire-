@@ -60,6 +60,38 @@
         "checksumFile": "F:\\MiniFlyWire_Evidence_Backup\\SHA256SUMS.txt",
         "notClaimed": "that the drive or the copy remains available after 2026-10-24, or where the drive is stored"
       }
+    },
+    {
+      "milestone": "LEARN-0 block L",
+      "name": "blockL_raw_cc8a42d.tar.gz",
+      "bytes": 13295150,
+      "sha256": "a943ddb25b00ea086e9feece109790da2e17f56fde3e633ce158987d239cbf27",
+      "primaryCopy": "E:/Projects/OpenSourceLab/archives/learn0/blockL_raw_cc8a42d.tar.gz",
+      "archiveRecord": "experiments/learn0/results/archive_blockL.json",
+      "verifier": "node experiments/learn0/verify_archive_blockL.mjs --archive <path>",
+      "secondCopy": {
+        "location": "F:\\MiniFlyWire_Evidence_Backup\\learn0_blockL_cc8a42d\\blockL_raw_cc8a42d.tar.gz",
+        "medium": "removable USB flash drive: Windows volume label \"WINDOWS 10\", FAT32, 15,940,624,384 bytes, enumerated as physical disk 1 \"USB DISK 3.0\" (bus type USB), a different physical device from the internal NVMe disk 0",
+        "copiedOn": "2026-10-25",
+        "bytes": 13295150,
+        "sha256": "a943ddb25b00ea086e9feece109790da2e17f56fde3e633ce158987d239cbf27",
+        "verifiedOn": "2026-10-25",
+        "verification": [
+          "Windows Get-FileHash of the copy equals the expected sha256",
+          "Windows certutil -hashfile SHA256 of the copy equals the expected sha256",
+          "sha256sum of the copy equals the expected sha256; size 13295150 bytes",
+          "cmp: byte-identical to the primary copy",
+          "gzip -t: OK",
+          "tar -tzf: 2527 entries, identical to the expected listing (3 directories + 2523 run files + the stream cache)",
+          "extracted to a new temporary directory: all 2524 files match the inventory SHA256SUMS_learn0_blockL_raw.txt (sha256 a0555244b96ee442...); exactly 2524 files",
+          "verify_archive_blockL.mjs --dir on that extracted tree (run 2026-10-25 in the results-preparation review): PASS, 2160 session records match the manifest; 360 exported stores match the controls; stream cache intact; manifest digest 5ac256a7b3d1ae45...",
+          "evidence snapshot blockL_evidence_snapshot_cc8a42d (17 files): its SHA256SUMS.txt (sha256 d7f981f56eb3f275...) verifies 17 of 17 on the drive; folder identical to the local snapshot (diff -rq)",
+          "the earlier block P / block I copies and the root SHA256SUMS.txt kept the same hashes, sizes and timestamps (pre-write baseline vs after)"
+        ],
+        "checksumFile": "F:\\MiniFlyWire_Evidence_Backup\\learn0_blockL_cc8a42d\\blockL_evidence_snapshot_cc8a42d\\SHA256SUMS.txt",
+        "postReinsertionCheck": "PASSED 2026-10-25 after a physical removal and re-insertion of the drive (Windows log Microsoft-Windows-Partition/Diagnostic event 1006 for \"USB DISK 3.0\": capacity 0 at 00:56:59 and 00:57:04 IST, re-arrival with capacity 15,958,474,752 at 01:13:27 IST): sha256sum, Get-FileHash and certutil of the copy equal the expected sha256; gzip -t OK; 2527 listing entries; the snapshot SHA256SUMS.txt verifies 17 of 17; block P / I copies unchanged vs the pre-write baseline; verify_archive_blockL.mjs --archive on the copy PASS under both GNU tar 1.34 and Windows bsdtar 3.8.9 (with its forward-slash -C fix), and a deliberately corrupted copy rejected under both; verify_backup_copy.mjs MATCH",
+        "notClaimed": "that the drive or the copy remains available after 2026-10-25, or where the drive is stored"
+      }
     }
   ],
   "backupStatus": "CLOSED (2026-10-24): a verified, byte-identical second copy of both archives exists on a separate removable USB device, and the device was detached from this computer when this record was made (checked 2026-10-24T17:08:52+05:30: no USB disk attached). PENDING owner confirmation: safe ejection and storage away from this computer. Not claimed: future availability of the drive.",
@@ -113,6 +145,20 @@
       "detachedCheckedAt": "2026-10-24T17:08:52+05:30",
       "safeEjectionConfirmedByOwner": "PENDING",
       "storedAwayFromThisComputerConfirmedByOwner": "PENDING"
+    },
+    {
+      "date": "2026-10-25",
+      "milestone": "LEARN-0 block L evidence backup: local archive + USB copy",
+      "sources": "raw run directory and stream cache: 2524 files matched the inventory before and after archiving; local archive re-hashed before the copy: match; unchanged after the copy",
+      "destination": "F:\\MiniFlyWire_Evidence_Backup\\learn0_blockL_cc8a42d\\ (did not exist; created new; copied with --no-clobber; nothing else on the drive was written)",
+      "destinationFound": true,
+      "copiesMade": 1,
+      "result": "SECOND COPY VERIFIED for blockL_raw_cc8a42d.tar.gz (see archives[].secondCopy.verification)",
+      "deviceDetachedAtRecordTime": false,
+      "deviceAttachedCheckedAt": "2026-10-25T01:32:14+05:30 (USB disk 1 \"USB DISK 3.0\" attached when this record was prepared; it had been removed at 00:57 and re-inserted at 01:13:27 IST for the re-insertion check; re-check at commit time)",
+      "safeEjectionConfirmedByOwner": "PENDING",
+      "storedAwayFromThisComputerConfirmedByOwner": "PENDING",
+      "postReinsertionCheck": "PASSED 2026-10-25 (see archives[].secondCopy.postReinsertionCheck)"
     }
   ]
 }
