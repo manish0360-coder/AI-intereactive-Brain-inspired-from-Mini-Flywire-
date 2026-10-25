@@ -17,10 +17,12 @@ import { censusBlock } from './census.mjs';
 import { censusFile, censusRoot, TABLE, UNRESOLVED } from './writecensus.mjs';
 import { transformMain, reverseMain, buildCredit1Trees, LINES, insertedIds } from './transform.mjs';
 import { createLedger, parseCaller } from './instruments.mjs';
-import { checkFixtures, checkMutants, telemetryNeutral, selfTargetCounter } from './fixtures.mjs';
+import { checkFixtures, checkMutants, telemetryNeutral, selfTargetCounter, isEdge as graphEdge } from './fixtures.mjs';
 import { pi, checkPairing, deliveryFor, maskStore, KEEP, noQMaskOk } from './delivery.mjs';
 import * as LOCK from './lock.mjs';
-import { COMPONENTS } from '../xfer1/config.mjs';
+import { lineRolesOf, classifyEvents } from './events.mjs';
+import * as K from './calibration.mjs';
+import { COMPONENTS, CONFIG_START as X1_CONFIG_START, trainSeed, testSeed } from '../xfer1/config.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..', '..');
@@ -296,9 +298,13 @@ function s5(t, arm) {
   check('G5.4 driver parses (node --check: parsed, not executed)', chk.status === 0, chk.stderr.trim().slice(0, 120));
   const src = fs.readFileSync(path.join(HERE, 'session.mjs'), 'utf8');
   const iLock = src.indexOf('assertSessionAuthorized();'), iArgv = src.indexOf('JSON.parse(process.argv'), iImp = src.indexOf('await T(');
-  check('G5.5 driver asserts the session lock before reading input or loading any runtime module', iLock > 0 && iLock < iArgv && iLock < iImp && /^import \{ assertSessionAuthorized, assertAPlusAuthorized \} from '\.\/lock\.mjs';$/m.test(src));
-  check('G5.6 session lock and A+ module lock are null; the lock refuses', LOCK.SESSION_AUTHORIZATION === null && LOCK.A_PLUS_MODULE_AUTHORIZATION === null && (() => { try { LOCK.assertSessionAuthorized(); return false; } catch { return true; } })());
-  check('G5.7 driver emits the required instrument fields (I-CRED, I-LEDGER, episodes, redirects, self-target counts) and swap delivery only via pi', ['icred:', 'ledger:', 'episodes:', 'redirects:', 'selfCandidates:', "deliveryFor(CELL.name, IN.world)", 'brainWorld !== DELIVERY.brainWorld'].every(s => src.includes(s)));
+  const iScope = src.indexOf('assertSessionScope({ world: IN.world, cell: IN.cell, procedure: IN.procedure });');
+  check('G5.5 driver asserts the session lock before reading input, and the session scope after reading it but before loading any runtime module', iLock > 0 && iLock < iArgv && iArgv < iScope && iScope < iImp && /^import \{ assertSessionAuthorized, assertAPlusAuthorized, assertSessionScope, PROCEDURES \} from '\.\/lock\.mjs';$/m.test(src));
+  // the session lock is null (the driver refuses) or exactly the calibration-only record; the A+ module lock is null
+  const lockNull = LOCK.SESSION_AUTHORIZATION === null && (() => { try { LOCK.assertSessionAuthorized(); return false; } catch { return true; } })();
+  const lockCal = LOCK.SESSION_AUTHORIZATION !== null && LOCK.calibrationRecordProblems(LOCK.SESSION_AUTHORIZATION).length === 0 && LOCK.scopeProblems(LOCK.SESSION_AUTHORIZATION, { world: 30, cell: 'T_L' }).length > 0;
+  check('G5.6 session lock is null (refuses) or exactly the calibration-only record (development worlds 0-29, the 9 cells, A+ excluded); the A+ module lock is null', (lockNull || lockCal) && LOCK.A_PLUS_MODULE_AUTHORIZATION === null, lockNull ? 'session lock null' : lockCal ? 'calibration-only record' : 'OTHER');
+  check('G5.7 driver emits the required instrument fields (I-CRED, I-LEDGER, episodes, redirects, self-target counts, event classes, procedure) and swap delivery only via pi', ['icred:', 'ledger:', 'episodes:', 'redirects:', 'selfCandidates:', 'eventClasses,', 'procedure: IN.procedure === undefined ? null : IN.procedure', "deliveryFor(CELL.name, IN.world)", 'brainWorld !== DELIVERY.brainWorld'].every(s => src.includes(s)));
 }
 
 // ================= G6: calibration protocol (BC-7) =================
@@ -327,6 +333,186 @@ function s5(t, arm) {
   check('G7.5 territory: confirmatory start 2032 above every reserved range; nothing generated', territoryOk(C.TERRITORY) && C.TERRITORY.confirmatoryStart === maxReserved + 1);
   mutant('AM3 a confirmatory start inside 0-2031 is rejected', !territoryOk({ ...C.TERRITORY, confirmatoryStart: 2000 }));
   mutant('AM3b a territory marked as generated is rejected', !territoryOk({ ...C.TERRITORY, generated: true }));
+}
+
+// ================= G9: calibration harness (Stage H; runs no session) =================
+{
+  // G9.1 the plan
+  const P = K.planCalibration();
+  const counts = P.reduce((m, e) => ((m[e.step] = (m[e.step] || 0) + 1), m), {});
+  const vp = K.validatePlan(P);
+  check('G9.1 calibration plan: 364 sessions (D-0 8, D-1 80, D-2 40, cells 236) on development worlds 0-29 only, no A+ cell, every design cell once per world (swap cells on quartets 0-27), every store exported earlier',
+    vp.length === 0 && P.length === 364 && counts['D-0'] === 8 && counts['D-1'] === 80 && counts['D-2'] === 40 && counts.CELLS === 236 && P.every(e => e.world >= 0 && e.world <= 29), vp.slice(0, 2).join(' | ') || JSON.stringify(counts));
+  const mutPlan = (f) => { const Q = P.map(e => ({ ...e })); f(Q); return K.validatePlan(Q).length > 0; };
+  const at = (Q, label) => Q.find(e => e.label === label);
+  const renum = (Q) => Q.forEach((e, i) => { e.seq = i + 1; });
+  mutant('PM1 a session on world 30 is rejected', mutPlan(Q => { at(Q, 'N0A-w29').world = 30; }));
+  mutant('PM2 a session in confirmatory territory (world 2032) is rejected', mutPlan(Q => { at(Q, 'N0A-w29').world = 2032; }));
+  mutant('PM3 an A+ module cell is rejected', mutPlan(Q => { at(Q, 'N0A-w29').cell = 'N0AP'; }));
+  mutant('PM4 a swap cell outside the complete quartets is rejected', mutPlan(Q => { const e = at(Q, 'N1A_noQ-w28'); e.cell = 'N1AX'; e.brainFrom = 'T_A-w29'; }));
+  mutant('PM5 an own-store cell given another world\'s store is rejected', mutPlan(Q => { at(Q, 'N1A-w5').brainFrom = 'T_A-w6'; }));
+  mutant('PM6 a swap cell given its own world\'s store is rejected', mutPlan(Q => { at(Q, 'N1AX-w5').brainFrom = 'T_A-w5'; }));
+  mutant('PM7 a D-2 test fed by a non-procedure store is rejected', mutPlan(Q => { at(Q, 'D2-N1L-w3').brainFrom = 'T_L-w3'; }));
+  mutant('PM8 a missing design cell is rejected', mutPlan(Q => { Q.splice(Q.findIndex(e => e.label === 'N0A-w12'), 1); renum(Q); }));
+  mutant('PM9 a test scheduled before its store is rejected', mutPlan(Q => { const i = Q.findIndex(e => e.label === 'T_A-w7'), j = Q.findIndex(e => e.label === 'N1A-w7'); [Q[i], Q[j]] = [Q[j], Q[i]]; renum(Q); }));
+  mutant('PM10 a development procedure on an A cell is rejected', mutPlan(Q => { at(Q, 'N0A-w4').procedure = 'D2_ALIGNED_FALSE'; }));
+  mutant('PM11 the map on without the map-on procedure is rejected', mutPlan(Q => { at(Q, 'N0L-w14').map = 'on'; }));
+
+  // G9.2 plan-only mode: the exact list on the existing XFER-1 development configurations (no lock needed, no session)
+  const planJson = path.join(os.tmpdir(), 'mfw-credit1-gate-plan.json');
+  fs.rmSync(planJson, { force: true });
+  const po = run(process.execPath, [path.join('experiments', 'credit1', 'calibrate.mjs'), '--plan-only', '--json', planJson]);
+  let pj = null; try { pj = JSON.parse(fs.readFileSync(planJson, 'utf8')); } catch { pj = null; }
+  const poOk = po.status === 0 && !!pj && pj.total === 364 && pj.planProblems.length === 0 && pj.goalMismatches.length === 0 && pj.sameWorldsAsLearn0 === true
+    && JSON.stringify(pj.plan.map(e => e.label)) === JSON.stringify(P.map(e => e.label)) && new Set(pj.plan.map(e => e.configSeed)).size === 30
+    && pj.plan.every(e => e.configIndex === e.world && e.configSeed >= X1_CONFIG_START && e.agentSeed === (e.role === 'train' ? trainSeed(e.world) : testSeed(e.world)));
+  check('G9.2 plan-only mode (no lock, no session): 364 sessions on the 30 existing XFER-1 development configurations; goals equal LEARN-0\'s development evidence; D-5 pre-check holds', poOk, pj ? `${pj.total} sessions, ${new Set(pj.plan.map(e => e.configSeed)).size} configurations` : po.stderr.trim().slice(0, 120));
+
+  // G9.3 run mode refuses before deriving, building or spawning anything
+  const refusedDir = path.join(os.tmpdir(), 'mfw-credit1-gate-refusal');
+  fs.rmSync(refusedDir, { recursive: true, force: true });
+  const rr = run(process.execPath, [path.join('experiments', 'credit1', 'calibrate.mjs'), '--out', refusedDir]);
+  check('G9.3 run mode refuses an unauthorized or out-of-scope run before anything is derived, built or spawned (null lock: the lock; calibration lock: an output directory outside data/)', rr.status === 2 && /calibration refused/.test(rr.stderr) && !fs.existsSync(refusedDir), rr.stderr.trim().slice(0, 140));
+  const cs = fs.readFileSync(path.join(HERE, 'calibrate.mjs'), 'utf8');
+  const ord = ['LOCK.assertSessionAuthorized()', 'calibrationRecordProblems(LOCK.SESSION_AUTHORIZATION)', 'the output directory must be inside', "'diff', '--quiet', 'HEAD'", "imp('experiments/m7/env.js')", 'spawn(process.execPath'].map(s => cs.indexOf(s));
+  check('G9.3b runner order: session lock, calibration-only record, output directory under data/, clean working tree, then derivation; sessions only after C-0', ord.every(i => i > 0) && ord.every((v, i) => i === 0 || ord[i - 1] < v) && cs.indexOf("step: 'C-0'") < cs.indexOf("await runStep('D-0')"));
+
+  // G9.4 lock scope (pure; a synthetic record shaped like the calibration-only scope)
+  const REC = { ...JSON.parse(JSON.stringify(LOCK.CALIBRATION_SCOPE)), authorizedBy: 'gate-synthetic' };
+  const inScope = (a, i) => LOCK.scopeProblems(a, i).length === 0;
+  const scopeOk = !inScope(null, { world: 0, cell: 'T_L' }) && inScope(REC, { world: 0, cell: 'T_L' }) && inScope(REC, { world: 29, cell: 'N1LX' }) && inScope(REC, { world: 5, cell: 'N0L', procedure: 'MAP_ON_PARITY' })
+    && inScope(REC, { world: 5, cell: 'T_L', procedure: 'D2_ALIGNED_FALSE' }) && inScope(REC, { world: 5, cell: 'N0L', procedure: 'D2_MAP_ON_PARITY' })
+    && !inScope(REC, { world: 30, cell: 'T_L' }) && !inScope(REC, { world: 2032, cell: 'T_L' }) && !inScope(REC, { world: -1, cell: 'T_L' }) && !inScope(REC, { world: 0, cell: 'T_AP' }) && !inScope(REC, { world: 0, cell: 'N1AP' })
+    && !inScope(REC, { world: 0, cell: 'N0A', procedure: 'D2_ALIGNED_FALSE' }) && !inScope(REC, { world: 0, cell: 'T_L', procedure: 'MAP_ON_PARITY' }) && !inScope(REC, { world: 0, cell: 'T_L', procedure: 'X' });
+  const scopeConsts = JSON.stringify([...LOCK.CALIBRATION_SCOPE.cells].sort()) === JSON.stringify(C.CELLS.map(c => c.name).sort()) && LOCK.CALIBRATION_SCOPE.aPlus === false
+    && LOCK.CALIBRATION_SCOPE.worlds.lo === C.CALIBRATION.worlds.lo && LOCK.CALIBRATION_SCOPE.worlds.hi === C.CALIBRATION.worlds.hi && LOCK.CONFIRMATORY_START === C.TERRITORY.confirmatoryStart;
+  check('G9.4 lock scope: development worlds 0-29, the 9 cells, the development procedures on their L cells only; world 30, confirmatory territory, A+ cells, procedures elsewhere and unknown procedures are refused', scopeOk && scopeConsts);
+  const recBad = (f) => { const r = JSON.parse(JSON.stringify(REC)); f(r); return LOCK.calibrationRecordProblems(r).length > 0 && LOCK.scopeProblems(r, { world: 0, cell: 'T_L' }).length > 0; };
+  mutant('LM1 a record admitting world 30 is rejected', recBad(r => { r.worlds.hi = 30; }));
+  mutant('LM2 a record admitting an A+ cell is rejected', recBad(r => { r.cells.push('T_AP'); }));
+  mutant('LM3 a record with A+ enabled is rejected', recBad(r => { r.aPlus = true; }));
+  mutant('LM4 a record with an extra procedure is rejected', recBad(r => { r.procedures.push('ALIGNED_TRUE_ON_L'); }));
+
+  // G9.5 the driver's calibration additions (static)
+  const s1 = fs.readFileSync(path.join(HERE, 'session.mjs'), 'utf8'), s0 = fs.readFileSync(path.join(ROOT, 'experiments', 'learn0', 'session.mjs'), 'utf8');
+  const procOk = s1.includes('if (PROC && PROC.alignedFalse) globalThis.__CREDIT1__ = { aligned: false };') && s1.includes("const MAP = PROC && PROC.mapOn ? 'on' : CELL.map;") && s1.split('\n').filter(l => !/^\s*\/\//.test(l) && /__CREDIT1__ = \{ aligned: false \}/.test(l)).length === 1;   // one code line (comments aside)
+  const FIELDS = ['outcome:', 'counters:', 'reaches:', 'endpoints:', 'deliveredSizes:', 'goalKeyedQ:', 'localStorageReads:', 'conditionIntegrity, mapAudit, guard', 'moveClass, moves', 'audit:', 'diagnostics:', 'drawsLogged:', 'traversal,', 'loopsExecuted:', 'writesSha256:', 'qSum:', 'arrivals: diag.arrivals'];
+  const miss = [...FIELDS.filter(f => !s0.includes(f)).map(f => `LEARN-0 ${f}`), ...FIELDS.filter(f => !s1.includes(f)).map(f => `CREDIT-1 ${f}`)];
+  check('G9.5 driver: aligned:false only through the D-2 procedure, the map on only through the map-on procedures; the parent\'s D-1 fields recorded under the same names; event classes recorded', procOk && miss.length === 0, miss.join(', '));
+
+  // G9.6 event-class line roles
+  const prodRoles = lineRolesOf(prodText), baseRoles = lineRolesOf(baseText);
+  const expectProd = { PREDERR: [4144, 4341], FALLBACK: [4342, 4456], DAMPQ: [4219, 4223], CUR_SIGNAL: [4319, 4328] };
+  const inBlock = (r) => !!r && Object.values(r).every(([a, b]) => a > TC.block.openIdx + 1 && b < TC.block.closeIdx + 1);
+  const treeRolesOk = ['A', 'A+'].every(arm => { const t = built.trees[arm].transform.text, rr2 = lineRolesOf(t), M = mapOf(t, arm);
+    return rr2.problems.length === 0 && Object.entries(rr2.roles).every(([k, [a, b]]) => M[baseRoles.roles[k][0] - 1] === a - 1 && M[baseRoles.roles[k][1] - 1] === b - 1); });
+  check('G9.6 event-class line roles: production 4144-4341 / 4342-4456 / 4219-4223 / 4319-4328; inside the credit block of the LEARN-0 tree; the same base lines on trees A and A+',
+    prodRoles.problems.length === 0 && JSON.stringify(prodRoles.roles) === JSON.stringify(expectProd) && baseRoles.problems.length === 0 && inBlock(baseRoles.roles) && treeRolesOk, JSON.stringify(prodRoles.roles));
+  const BL = baseText.split('\n');
+  const rolesBroken = (f) => { const M2 = BL.slice(); f(M2); return lineRolesOf(M2.join('\n')).problems.length > 0; };
+  mutant('LR1 a second dampQ anchor is detected', rolesBroken(M2 => { M2.splice(M2.indexOf('        dampQ('), 0, '        dampQ('); }));
+  mutant('LR2 a missing fallback else is detected', rolesBroken(M2 => { const i = M2.indexOf('if (predError) {'); M2[M2.findIndex((l, k) => k > i && l === '} else {')] = '} else{'; }));
+  mutant('LR3 the curiosity-signal write outside the prediction-error branch is detected', rolesBroken(M2 => { const c = M2.indexOf('    if (predError.curiositySignal > 0) {'); const [line] = M2.splice(c, 1); const i = M2.indexOf('if (predError) {'); M2.splice(M2.findIndex((l, k) => k > i && l === '} else {') + 1, 0, line); }));
+
+  // G9.7 the classifier on a hand-built trace on the real graph (expected counts written by hand)
+  const ROLES = { PREDERR: [100, 199], FALLBACK: [200, 299], DAMPQ: [120, 125], CUR_SIGNAL: [150, 155] };
+  const ev = (call, last, cur, x) => ({ call, on: false, o: String(last), x: String(x), last: String(last), cur: String(cur), n: String(cur), goal: '19' });
+  const ar = (call, a, to, fresh = true) => ({ call, a, to, fresh, rFrom: a });
+  const trace = () => ({
+    creditEvents: [ev(1, 4, 9, 10), ev(3, 13, 14, 16), ev(4, 10, 11, 11), ev(5, 1, 2, 9), ev(6, 8, 17, 19), ev(7, 3, 3, 2), ev(8, 5, 5, 6), ev(9, 5, 8, 7), ev(10, 4, 9, 8), ev(11, 12, 15, 16)],
+    arrivals: [ar(0, 4, 9), ar(1, 9, 10), ar(2, 10, 9), ar(3, 14, 16, false), ar(4, 11, 11), ar(5, 2, 9), ar(6, 17, 19), ar(7, 3, 2), ar(8, 5, 6), ar(9, 8, 7), ar(10, 9, 8), ar(11, 15, 16), ar(12, 16, 7)],
+    resets: [{ call: 6, from: 17, to: 19, goal: 19 }],
+    ledgerEvents: [{ call: 1, map: 'Q', line: 50 }, { call: 9, map: 'Q', line: 210 }, { call: 10, map: 'Q', line: 122 }, { call: 10, map: 'Q', line: 151 }, { call: 11, map: 'curiosity', line: 152 }],
+    roles: ROLES, isEdge: graphEdge });
+  const want = { ordinary_legal_move: 4, goal_entry_reset: 1, first_move_after_reset: 1, hold: 1, reversal_guard_skip: 1, first_call_guard_skip: 1, self_target: 1, carried_decision: 1,
+    nongraph_execution: 2, fallback_branch: 1, dampq_firing: 1, curiosity_signal_write: 1, aplus_filter_pass: 7, aplus_filter_fail: 3 };
+  const got = classifyEvents(trace());
+  check('G9.7 event classifier on a hand-built 13-call trace (real graph): hand-written counts for all 14 classes, guard skips, informative and edge-filter counts',
+    JSON.stringify(got.counts) === JSON.stringify(Object.fromEntries(C.EVENT_CLASSES.map(c => [c, want[c]]))) && got.creditEvents === 10 && got.informative === 8 && got.legacyEdge === 2 && got.alignedEdge === 5
+    && JSON.stringify(got.guardSkips) === '{"firstCall":1,"reversal":1,"other":1}', JSON.stringify(got.counts));
+  const noLed = classifyEvents({ ...trace(), ledgerEvents: null });
+  check('G9.7b with the ledger off the ledger-based classes are null, never a silent zero', noLed.counts.fallback_branch === null && noLed.counts.dampq_firing === null && noLed.counts.curiosity_signal_write === null && noLed.counts.hold === 1);
+  mutant('EM1 a dropped goal reset changes the counts (no goal entry, no first move after reset, one more hold)', (() => { const g = classifyEvents({ ...trace(), resets: [] }).counts; return g.goal_entry_reset === 0 && g.first_move_after_reset === 0 && g.hold === 2; })());
+  mutant('EM2 a curiosity-signal range shifted away loses the curiosity write', classifyEvents({ ...trace(), roles: { ...ROLES, CUR_SIGNAL: [160, 165] } }).counts.curiosity_signal_write === 0);
+  mutant('EM3 a fallback write attributed outside the fallback range is not counted', classifyEvents({ ...trace(), ledgerEvents: trace().ledgerEvents.map(w => (w.line === 210 ? { ...w, line: 310 } : w)) }).counts.fallback_branch === 0);
+
+  // G9.8 D-1 comparator across the two drivers' schemas
+  const baseRec = () => ({ role: 'test', map: 'off', input: { world: 3, configSeed: 200500, configIndex: 3, goal: 16, agentSeed: 7, ticks: 1500 },
+    outcome: { crashed: false, completed: true, ticksExecuted: 1500, loopsExecuted: 1500, error: null }, counters: { calls: 1500, envDraws: 0, attempts: 0, successes: 0, slips: 0 },
+    reaches: { goal: 3, legal: 2, nonEdge: 1, legalHalves: [1, 1], goalCalls: [10, 20, 30], legalCalls: [10, 30] }, endpoints: { goalReaches: 3, legalReaches: 2, attemptSuccess: null },
+    brain: { deliveredHash: 'none', deliveredHashes: null, deliveredSizes: null, start: { brainHash: 'b0' }, endHash: 'e1', endHashes: { Q: 'q1', rewards: 'r1' }, endSizes: { Q: 5 }, localStorageReads: ['x'], goalKeyedQ: 4 },
+    conditionIntegrity: { ok: true, envDraws: 0, traversal: { attempts: 0 } }, mapAudit: { ok: true, executed: { a: 0 }, blocked: { a: 9 } }, guard: { counters: { admitted: 1 } },
+    moveClass: { legal: 10, nonGraph: 1, self: 0, none: 2 }, moves: { far: 5, farDownhill: 2 }, diag: { arrivals: 1499, channels: { x: 1 } }, audit: { goalReaches: 3 }, diagnostics: { writes: 9 },
+    artifacts: { fingerprint: 'fp', writesSha256: 'ws', qSum: 1.5 } });
+  const l0 = { ...baseRec(), schema: 'learn0/1.session', label: 'L0-N0-w3', tree: { name: 'learn0' }, input: { ...baseRec().input, arm: 'COLD', keep: null, brainFile: null } };
+  const c1r = { ...baseRec(), schema: 'credit1/1.session', label: 'N0L-w3', cell: 'N0L', credit: 'L', procedure: null, tree: { name: 'A' }, credit1: { icred: {} }, input: { ...baseRec().input, delivery: { source: 'none' } } };
+  check('G9.8 D-1 comparator: records of the two drivers with equal compared fields match (labels, trees and schema-specific fields are not compared)', K.compareParity(l0, c1r).length === 0, K.compareParity(l0, c1r).join(', '));
+  const setPath = (o, p, v) => { const ks = p.split('.'); const last = ks.pop(); ks.reduce((x, k) => x[k], o)[last] = v; };
+  for (const [p, v] of [['artifacts.fingerprint', 'fp2'], ['artifacts.writesSha256', 'ws2'], ['brain.endHash', 'e2'], ['brain.endHashes.Q', 'q2'], ['brain.start.brainHash', 'b1'], ['reaches.goalCalls.0', 11],
+    ['moves.farDownhill', 3], ['moveClass.legal', 11], ['guard.counters.admitted', 2], ['mapAudit.blocked.a', 8], ['conditionIntegrity.ok', false], ['counters.calls', 1499]]) {
+    const m = JSON.parse(JSON.stringify(c1r)); setPath(m, p, v); mutant(`PC a differing ${p} fails D-1`, K.compareParity(l0, m).length > 0);
+  }
+  { const m = JSON.parse(JSON.stringify(c1r)); delete m.moves; mutant('PC a compared field missing from one record fails D-1', K.compareParity(l0, m).length > 0); }
+
+  // G9.9 D-0 and G9.10 D-2 comparators
+  const d0recs = {};
+  for (const [a, b] of K.d0Pairs()) for (const lab of [a, b]) d0recs[lab] = { ...JSON.parse(JSON.stringify(l0)), label: lab, input: { ...l0.input, brainFile: `${lab}.json` } };
+  const [ta, tb] = K.d0Pairs()[0];
+  check('G9.9 D-0 comparator: identical records (label and store file name aside) and byte-equal exports pass', K.d0(d0recs, { [ta]: 'h1', [tb]: 'h1' }).pass);
+  { const m = JSON.parse(JSON.stringify(d0recs)); m[K.d0Pairs()[2][1]].brain.endHash = 'x'; mutant('D0M1 one differing value fails D-0', !K.d0(m, { [ta]: 'h1', [tb]: 'h1' }).pass); }
+  mutant('D0M2 differing exports fail D-0', !K.d0(d0recs, { [ta]: 'h1', [tb]: 'h2' }).pass);
+  const d2recs = {};
+  for (const [a, b] of K.d2Pairs()) {
+    d2recs[a] = { ...JSON.parse(JSON.stringify(c1r)), label: a, input: { ...c1r.input, delivery: { source: 'own', brainFile: a } }, credit1: { ledger: { verdict: 'LEGACY_PATTERN' }, eventClasses: { counts: { hold: 1 } } } };
+    d2recs[b] = { ...JSON.parse(JSON.stringify(d2recs[a])), label: b, procedure: 'D2_ALIGNED_FALSE', input: { ...d2recs[a].input, delivery: { source: 'own', brainFile: b } } };
+  }
+  check('G9.10 D-2 comparator: records equal except label, procedure and store file name pass', K.d2(d2recs).pass);
+  { const m = JSON.parse(JSON.stringify(d2recs)); m[K.d2Pairs()[5][1]].credit1.ledger.verdict = 'FAIL'; mutant('D2M1 a differing instrument verdict fails D-2', !K.d2(m).pass); }
+  { const m = JSON.parse(JSON.stringify(d2recs)); m[K.d2Pairs()[9][1]].credit1.eventClasses.counts.hold = 2; mutant('D2M2 a differing event count fails D-2', !K.d2(m).pass); }
+
+  // G9.11 D-1c coverage
+  const fullCounts = Object.fromEntries(C.EVENT_CLASSES.map(c => [c, c.startsWith('aplus_') ? 0 : 1]));
+  const covSet = (f) => { const R = {}; for (const [, lab] of K.d1Pairs()) R[lab] = { label: lab, role: lab.startsWith('T_L') ? 'train' : 'test', map: lab.startsWith('MAPON') ? 'on' : 'off',
+    input: { delivery: { source: lab.startsWith('N1L') ? 'own' : 'none' } }, credit1: { eventClasses: { counts: { ...fullCounts } } } }; if (f) f(R); return R; };
+  check('G9.11 D-1c coverage: every non-A+ event class, map on and off, stored and cold, training and test (A+ classes excluded while the module is unauthorized)', K.d1c(covSet()).pass);
+  mutant('CV1 an event class never observed fails D-1c', !K.d1c(covSet(R => { for (const r of Object.values(R)) r.credit1.eventClasses.counts.dampq_firing = 0; })).pass);
+  mutant('CV2 no map-on session fails D-1c', !K.d1c(covSet(R => { for (const r of Object.values(R)) r.map = 'off'; })).pass);
+  mutant('CV3 a class unknown in one session (ledger off) fails D-1c, never a silent zero', !K.d1c(covSet(R => { Object.values(R)[0].credit1.eventClasses.counts.fallback_branch = null; })).pass);
+
+  // G9.12 D-3, D-4, D-5
+  const instRec = (label, credit, role, ic, lg) => ({ schema: 'credit1/1.session', label, credit, role, procedure: null, input: { world: 0, goal: 8 }, credit1: { icred: { verdict: ic }, ledger: { verdict: lg }, redirects: { survival: 0, recovery: 0 } } });
+  const instSet = (f) => { const R = { a: instRec('T_A-w0', 'A', 'train', 'PASS', 'PASS'), b: instRec('N1A-w0', 'A', 'test', 'PASS', 'PASS'), c: instRec('T_L-w0', 'L', 'train', 'DISCRIMINATING', 'LEGACY_PATTERN'),
+    d: instRec('N0L-w0', 'L', 'test', 'NOT_DISCRIMINATING', 'NOT_DISCRIMINATING') }; if (f) f(R); return R; };
+  check('G9.12 D-3 and D-4 rules: A cells PASS/PASS, L training DISCRIMINATING/LEGACY_PATTERN, no FAIL anywhere, goal-redirect counters 0', K.d3(instSet()).pass && K.d4(instSet()).pass);
+  mutant('IM1 an A cell with I-CRED FAIL fails D-3', !K.d3(instSet(R => { R.b.credit1.icred.verdict = 'FAIL'; })).pass);
+  mutant('IM2 an L training session that is not discriminating fails D-3', !K.d3(instSet(R => { R.c.credit1.icred.verdict = 'NOT_DISCRIMINATING'; })).pass);
+  mutant('IM3 an L test session with I-LEDGER FAIL fails D-3', !K.d3(instSet(R => { R.d.credit1.ledger.verdict = 'FAIL'; })).pass);
+  mutant('IM4 a recovery redirect fails D-4', !K.d4(instSet(R => { R.d.credit1.redirects.recovery = 1; })).pass);
+  const goalSet = (bad) => Object.fromEntries(Array.from({ length: 30 }, (_, w) => [`x${w}`, { input: { world: w, goal: bad === w ? 99 : C.GOALS[w % 4] } }]));
+  check('G9.12b D-5: every development world\'s recorded goal equals GOALS[w mod 4]', K.d5(goalSet(-1)).pass);
+  mutant('IM5 one world with another goal fails D-5', !K.d5(goalSet(13)).pass);
+
+  // G9.13 C-1 and G9.14 C-2
+  const c1recs = {}, sw = (w) => (w % 2 ? 10 : -10);
+  for (let w = 0; w <= 27; w++) { c1recs[`N0A-w${w}`] = { reaches: { legal: 100 } }; c1recs[`N1A-w${w}`] = { reaches: { legal: 100 + sw(w) } }; c1recs[`N0L-w${w}`] = { reaches: { legal: 100 } }; c1recs[`N1L-w${w}`] = { reaches: { legal: 100 - sw(w) } }; }
+  const r1 = K.c1(c1recs), s1e = Math.sqrt(28 * 100 / 27), s2e = 2 * s1e;
+  check('G9.13 C-1: SDs of P1 and of P2 (difference in differences estimated directly: here 2 x SD(P1), not sqrt2 x) over the 28 quartet worlds; n = config.nFor of the larger',
+    r1.pass && Math.abs(r1.P1.sd - s1e) < 1e-9 && Math.abs(r1.P2.sd - s2e) < 1e-9 && r1.n === Math.max(C.nFor(s1e), C.nFor(s2e)) && r1.worlds === 28, JSON.stringify({ P1: r1.P1, P2: r1.P2, n: r1.n }));
+  { const m = { ...c1recs }; delete m['N0L-w17']; mutant('C1M1 a missing world fails C-1 (no silent drop)', !K.c1(m).pass); }
+  const rateRec = (credit, evn, carried, fb, inf, le, self, procedure = null) => ({ schema: 'credit1/1.session', credit, procedure,
+    credit1: { eventClasses: { creditEvents: evn, counts: { fallback_branch: fb }, informative: inf, legacyEdge: le }, icred: { carried, events: evn }, selfCandidates: { all: { evaluations: 10, self } } } });
+  const r2 = K.c2({ a: rateRec('L', 100, 10, 5, 80, 6, 1), b: rateRec('L', 300, 30, 15, 120, 4, 3), c: rateRec('A', 50, 5, 1, 40, 2, 0), d: rateRec('L', 999, 999, 999, 999, 999, 9, 'D2_ALIGNED_FALSE') }, { sessionsPerMinute: 12 });
+  check('G9.14 C-2: descriptive rates pooled over the design cells (procedure sessions excluded): carried, fallback, edge-filtered firing under L, self-target, throughput',
+    r2.pass && Math.abs(r2.rates.L.carriedShare - 0.1) < 1e-12 && Math.abs(r2.rates.L.fallbackShare - 0.05) < 1e-12 && Math.abs(r2.rates.edgeFilterFiringUnderL - 0.05) < 1e-12 && r2.rates.L.selfTarget.all.rate === 0.2 && r2.rates.sessionsPerMinute === 12,
+    JSON.stringify(r2.rates.L).slice(0, 160));
+
+  // G9.15 the data directory and G9.16 the README
+  const gi = path.join(HERE, 'data', '.gitignore');
+  check('G9.15 experiments/credit1/data/ is git-ignored (only its .gitignore is tracked)', fs.existsSync(gi) && fs.readFileSync(gi, 'utf8').split('\n').filter(Boolean).join('|') === '*|!.gitignore'
+    && git('check-ignore', '-q', 'experiments/credit1/data/run/sessions/x.json').status === 0 && git('check-ignore', '-q', 'experiments/credit1/data/.gitignore').status !== 0);
+  const rd = fs.readFileSync(path.join(HERE, 'README.md'), 'utf8');
+  check('G9.16 README documents the harness, the plan-only command and the two interpretation limits (N1L× has no LEARN-0 counterpart; map-on coverage through a development procedure)',
+    ['calibrate.mjs --plan-only', 'calibration.mjs', 'events.mjs', 'N1L×', 'MAP_ON_PARITY', 'D2_ALIGNED_FALSE', '364'].every(s => rd.includes(s)));
 }
 
 // ================= G8: session count is zero =================
