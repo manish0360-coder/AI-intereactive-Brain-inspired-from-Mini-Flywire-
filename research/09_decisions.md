@@ -7,6 +7,87 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-034 — Index of studies and rulings recorded after D-032 (documentation only)
+
+**Date:** 2026-10-25 · **Authority:** owner authorization of the documentation-only closure milestone (2026-10-25) · **Status:** index; no executable effect
+**Scope:** a pointer table to committed records.
+- It restates their recorded status and changes none of them.
+- It is not a ruling on any study and reopens nothing. Where this table and a linked record differ, the record governs.
+- The rulings behind these studies were given in working sessions and were not entered in this log at the time. This entry closes that gap by reference only.
+
+| dates | study or item | commits | status as recorded | record |
+|---|---|---|---|---|
+| 2026-10-12 – 10-14 | MCF-1 Phase-1 harness, block-aware registry (M-REG-1), candidate admission scan | `9aaf22e`, `fbac3eb`, `b9b2a98`, `ad85d68`, `f16e571`, `64142e7`, `a42e1d9`, `1b4c909`, `6bd6405`, `6d7db9c` | Engineering only. The candidate scan of 1,500,000,000 + 4,000 is lodged: 3,851 admitted, 149 rejected. No block is registered (`trajectory_blocks.js` is empty), the design is not frozen, and no official run exists. | [`experiments/mcf1/README.md`](../experiments/mcf1/README.md), [`experiments/registry/README.md`](../experiments/registry/README.md) |
+| 2026-10-14 | XFER-1 | `7d923dc`, `259b85e` | Exploratory, two blocks of 40 worlds. Restoring only the episode store raised goal reaches (block B +110.2 [83.4, 138.1]); restoring only `rewards` lowered them (−26.7 [−52.9, −1.4]). | [`experiments/xfer1/results/RESULTS.md`](../experiments/xfer1/results/RESULTS.md) |
+| 2026-10-14 | XFER-2 | `baf837b`, `3501da3`, `573dfd7` | Exploratory. The episodic gain was carried by familiarity of transitions into the goal (ENTRY_NR +130.3 [113.0, 147.4]), not by replay (REAL_NR vs REAL +0.1 [−8.1, 7.9]) and not by the real content (GEN_NR vs REAL_NR −1.1 [−15.8, 14.1]; P4 failed). | [`experiments/xfer2/results/RESULTS.md`](../experiments/xfer2/results/RESULTS.md) |
+| 2026-10-14 | GATE-FLOOR-1 | `d5dbac1`, `89a3330` | Development / exploratory. The goal-entry floor without episodes gave +152.7 [137.2, 168.4] goal reaches over cold; C1–C5 hold. Not claimed: routing capability, learning or planning. | [`experiments/gate-floor1/results/RESULTS.md`](../experiments/gate-floor1/results/RESULTS.md) |
+| 2026-10-14 | GATE-FLOOR-B2 | `a263fd5`, `0df804c` | REPLICATED on the pristine B2 runtime: +190.2 [176.3, 204.2] legal reaches. | [`experiments/gate-floor-b2/results/RESULTS.md`](../experiments/gate-floor-b2/results/RESULTS.md) |
+| 2026-10-15 | GATE-FLOOR-HEAD | `1d5c313`, `68a945b` | REPLICATED on the audited HEAD runtime (`0df804c`), with a smaller benefit: +62.6 [54.6, 70.6] legal reaches. | [`experiments/gate-floor-head/results/RESULTS.md`](../experiments/gate-floor-head/results/RESULTS.md) |
+| 2026-10-15 | GATE-FLOOR-PRODSEM | `cfc1e5c`, `e60cdc8`, `aac8b6f` | TRANSFERS under hook state P: +67.4 [58.9, 76.2] legal reaches. | [`experiments/gate-floor-prodsem/results/RESULTS.md`](../experiments/gate-floor-prodsem/results/RESULTS.md) |
+| 2026-10-15 – 10-19 | GATE-FLOOR-INTERACTION | `5a1c2ab`, `80f83ad`, `43cfd19`, `5dda4c5` | PC1 NO_RECOVERY (+7.1 [−2.0, 16.1]); PC2 IMPROVES (+28.1 [21.9, 34.6] legal reaches); PC3 PERSISTS (+40.6 / +33.3). | [`experiments/gate-floor-interaction/results/RESULTS.md`](../experiments/gate-floor-interaction/results/RESULTS.md) |
+| 2026-10-19 – 10-20 | GATE-FLOOR-SCOPE (design C′) | `2b53a7f`, `57beb5d`, `68e553e` | Frozen. The confirmatory run is NOT authorized and NOT executed. | [`experiments/gate-floor-spec/FREEZE.md`](../experiments/gate-floor-spec/FREEZE.md) |
+| 2026-10-19 – 10-25 | Raw-evidence backup | `06efc5b`, `8ac3c3e`, `8e699af`, `354d785` | The block P and block I second copy is recorded as CLOSED. The block L second copy is verified, and its safe ejection is confirmed by the owner. Storage away from this computer is PENDING. | [`evidence_backup/README.md`](evidence_backup/README.md) |
+| 2026-10-24 – 10-25 | LEARN-0 | `cc8a42d`, `8bb5f95` | E1 INCONCLUSIVE; see D-033. | [`experiments/learn0/results/RESULTS.md`](../experiments/learn0/results/RESULTS.md), D-033 |
+
+---
+
+## D-033 — LEARN-0: Director ruling after the INCONCLUSIVE primary result (documentation only)
+
+**Date:** 2026-10-25 · **Authority:** Director ruling of 2026-10-25 (LEARN-0 decision review and its audit), approved by the owner on 2026-10-25 · **Status:** in force; no executable effect
+**Scope:** governance record only.
+- It changes no frozen design (freeze `cc8a42d`), result (`8bb5f95`), analysis, threshold, label, registry entry, seed or production file.
+- Block L is not rerun.
+
+### 1. Ruling
+The hypothesis that the persisted experience store, as a whole, raises legal goal reaches without the map is **not supported for the tested store**. The tested store is one produced by the runtime's current credit site (§3).
+
+No LEARN-1 attribution study is run on stores produced by that credit site.
+
+### 2. Record (FACT)
+- **Commits.** Frozen design `cc8a42d`; results `8bb5f95`; evidence-backup closure `354d785`.
+- **Block L.** 360 worlds (90 per goal; goals 8, 12, 16, 19); 2,160 sessions; 0 excluded.
+- **Primary result.** E1 = N1 − N0, in legal goal reaches per 1,500-call map-off test session, = −24.4 [−36.3, −12.3] (95 % percentile bootstrap; exact −24.356 [−36.289, −12.347]).
+  - The label at δ = 20 is **INCONCLUSIVE**.
+  - At the declared sensitivities δ = 15 and δ = 30 it is also INCONCLUSIVE.
+- **Frozen routing.**
+  - DESIGN.md §11, INCONCLUSIVE row: the strongest allowed sentence is "none beyond the interval itself", and the next decision is "the design question goes back to the Director".
+  - `config.mjs` `RULES.recommendation`: "a result justifies only the next design decision (LEARN-1 attribution, or retiring the cognition claims); it changes no production code".
+- **Verification.** `experiments/learn0/verify_results_learn0.mjs` passes 13 of 13 checks at this record.
+
+### 3. Claim limits
+**Licensed.**
+- E1 is INCONCLUSIVE under the frozen rule.
+- The tested store did not demonstrate an improvement. LEARNS_WITHOUT_MAP needs a lower bound of at least +20, and the whole interval lies below 0.
+- Scope of both statements: the world's own map-off training export (all eight components); the same world and goal; hook state P; 1,500-call sessions; the 360 worlds of block L.
+
+**Not licensed.**
+- Harm: the upper bound −12.3 is above −20.
+- No effect.
+- Any statement about a single component. The 28 secondary intervals are exploratory.
+- That experience cannot support multi-step navigation.
+- Map-free spatial reasoning, abstract route planning, transfer, recall, understanding or cognition. These are excluded by the frozen claim limits.
+- Anything about a learner whose credit is keyed to the executed transition. The tested store was produced by the legacy credit site:
+  - `main.js` pairs `prev = agentLast` with `current = next` (lines 4483–4484);
+  - it keys the Q update at `agentLast` (lines 4168 and 4349);
+  - scoring reads Q at the agent's current position (lines 1735 and 1924).
+
+  LEARN-0 `DESIGN.md` records this as OPEN-8, and GATE-FLOOR-PRODSEM's results record calls it "a known temporal misalignment relative to the intended credit semantics".
+
+### 4. Post-hoc decomposition
+- In review on 2026-10-25, legal reaches were split into goal-adjacent entry opportunities and an entry rate.
+- Its figures reproduce exactly from `experiments/learn0/results/sessions_blockL.json`.
+- The split is not an exact identity: per session, legal reaches and goal-adjacent entries differ by 0 or 1.
+- It was designed after the outcomes were seen. It is therefore post hoc and **is not part of the basis** of this ruling.
+- Its script is not committed.
+
+### 5. Carried forward
+- **OPEN-8 goes to CREDIT-1.** OPEN-8 (the lagged credit) is carried into CREDIT-1, which the owner approved on 2026-10-25 as the next fundamental milestone. This record does **not** authorize the CREDIT-1 design, any implementation, or any development calibration.
+- **Open; not decided here:**
+  - The typed registry does not record block L's consumption: configuration seeds 285,246–304,469 and agent seeds 1,100,103,344–1,100,104,063.
+  - Storage of the USB second copy away from this computer is PENDING the owner's confirmation.
+
+---
+
 ## D-032 — H1-R final study closure: closed as a VOID study (documentation only)
 
 **Date:** 2026-10-06 · **Authority:** Research Director "H1-R final study closure" ruling (2026-10-06), after the lodging commits `e16ef7e` and `d4e9011` · **Status:** in force; no executable effect

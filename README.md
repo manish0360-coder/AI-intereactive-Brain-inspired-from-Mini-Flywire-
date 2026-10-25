@@ -20,12 +20,21 @@
 - **What makes it different.** I audited my own system, found that several of its "cognitive"
   modules did not affect behaviour, and then repaired and measured it under frozen,
   preregistered protocols with executable verification gates.
-- **What is verified.** Five defects are repaired and gated (Q-value namespace, scoring
-  sign inversions, goal-aware Q lookup, seeded randomness, the exploration branch).
-  13 gate scripts: 11 fully green, 2 keep one historical failure each, superseded by corrected
-  gates that pass.
-- **What is open.** The executive controller has **no effect** on the main (60%) scoring path.
-  The look-ahead (`futureScore`) id defect is **not repaired**. Neither is presented as solved.
+- **What is verified.** Six defects are repaired and gated:
+  - the Q-value namespace;
+  - scoring sign inversions;
+  - goal-aware Q lookup;
+  - seeded randomness;
+  - the exploration branch;
+  - the look-ahead id defect D2, repaired 2026-09-19.
+
+  At the last full re-run of the 13 Phase 1.0 gate scripts (2026-09-15), 11 were fully green and 2 kept one historical
+  failure each, superseded by corrected gates. Since FutureScore V2.3 (2026-09-20), one of those corrected gates fails its
+  aggregate check S3.2′(b). That failure is recorded with a disposition, not repaired.
+- **What is open.**
+  - The executive controller has **no effect** on the main (60%) scoring path. It is not presented as solved.
+  - The look-ahead built on the repaired D2 path (FutureScore V2.3) has **no demonstrated behavioural benefit**: its
+    preregistered study ended UNRESOLVED.
 - **What it is not.** It is not a demonstrated cognitive architecture. The audit's verdict — a
   heuristic scoring function over a fully observable graph — has not been overturned.
 
@@ -41,9 +50,10 @@
 | Scoring sign inversions (D3) | ✅ Repaired · verified | [`verify_S1.js`](experiments/phase1_0/verify_S1.js) |
 | Goal-aware Q lookup (Q4) | ✅ Repaired · verified | [`verify_S2_Q4.js`](experiments/phase1_0/verify_S2_Q4.js) |
 | Seeded, reproducible randomness (Q3) | ✅ Repaired · verified | [`verify_S4.js`](experiments/phase1_0/verify_S4.js) |
-| Exploration branch (F2) | ✅ Repaired · verified by corrected gate | [`verify_S3prime.js`](experiments/phase1_0/verify_S3prime.js) |
+| Exploration branch (F2) | ✅ Repaired · invariant S3.2′(a) holds · ⚠️ aggregate check S3.2′(b) fails since FutureScore V2.3 (disposition recorded) | [`verify_S3prime.js`](experiments/phase1_0/verify_S3prime.js) · [FS-BD-01](research/preregistrations/FUTURESCORE_V2_3_BEHAVIORAL_DISPOSITION_01.md) |
 | Executive controller → main scoring path | ❌ **Open** — inert (influence 0, capability 8.06) | [`exec_influence/report.json`](experiments/exec_influence/report.json) |
-| Look-ahead planning (`futureScore`, D2) | ❌ **Open** — id defect not repaired | [`render/planning.js`](render/planning.js) |
+| Look-ahead id defect (D2) | ✅ Repaired 2026-09-19 · verified | [`experiments/d2/verify.js`](experiments/d2/verify.js) |
+| Look-ahead planning (FutureScore V2.3) | ⚠️ Implemented · behavioural benefit UNRESOLVED (study closed) | [Study 2 disposition](research/preregistrations/FUTURESCORE_V2_3_STUDY2_DISPOSITION.md) |
 | Prediction error in the browser app | ⚠️ Zero by construction — environment is fully observable | [Status §6](docs/VERIFICATION_STATUS.md) |
 | Hidden-structure environment | 🧪 Harness only — not in the browser app | [`experiments/m7/env.js`](experiments/m7/env.js) |
 
@@ -110,7 +120,7 @@ node verify_S2.js
 | `render/` | Scoring, Q-learning, memory, motivational state, visualisation modules |
 | `instrumentation/` | Seeded RNG, telemetry bus, trace schema, session recorder |
 | `benchmarks/harness/` | Headless shim that runs the real `main.js` under Node |
-| `experiments/` | Gates (`phase1_0/`), controller measurement (`exec_influence/`), studies (`m7/` onward, `c1/`, `q1/`, `uqa/`, `uqb/`) |
+| `experiments/` | Gates (`phase1_0/`, `d2/`), controller measurement (`exec_influence/`), studies (`m7/` onward, `c1/`, `q1/`, `uqa/`, `uqb/`, `study2/`, `h1r/`, `mcf1/`, `xfer1/`, `xfer2/`, `gate-floor*/`, `learn0/`) |
 | `research/` | Audit, preregistrations, errata, interpretations |
 | `docs/` | [`VERIFICATION_STATUS.md`](docs/VERIFICATION_STATUS.md) |
 | `Portfolio_Assets/MiniFlyWire/` | Design documents and media. They describe design intent and predate the audit; where they differ, `docs/VERIFICATION_STATUS.md` is current. |

@@ -8,6 +8,14 @@ historical. Where this page disagrees with older design documents (including
 **Gate results below were re-run on 2026-09-15** against the committed code (Node.js v24.15.0).
 Re-running them did not change any tracked file.
 
+**Update 2026-10-25 (documentation only).** Three facts on this page were out of date. Each is corrected in place and
+marked *Updated 2026-10-25*:
+- D2 is repaired (§3).
+- One check of the corrected exploration gate has failed since FutureScore V2.3 (§4).
+- §7 now lists the studies recorded after C1.
+
+No gate was re-run for this update. Results dated 2026-09-15 stand as recorded.
+
 ---
 
 ## 1. Status vocabulary
@@ -47,7 +55,7 @@ re-audited and is not claimed to be overturned.**
 | ID | Defect (from the audit) | Status | Evidence |
 |---|---|---|---|
 | **D1** | Q-learning wrote `pos#goal->act` keys; scoring read `pos->act`. Learned values were never read. | **REPAIRED · VERIFIED** | [`verify_S2.js`](../experiments/phase1_0/verify_S2.js) (14/0) |
-| **D2** | `futureScore` starts its search from the Three.js object counter (`neuron.id`) instead of the node id (`neuron.userData.id`), so look-ahead evaluates from no node or from the wrong node. | **OPEN — NOT REPAIRED** | [`render/planning.js`](../render/planning.js) line 357 still passes `neuron.id` to `dfs`; no gate covers it; the frozen [M7 preregistration](../research/cognitive-audit/M7_PREREGISTRATION.md) records it as unrepaired. Phase 0 Probe B. |
+| **D2** | `futureScore` started its search from the Three.js object counter (`neuron.id`) instead of the node id (`neuron.userData.id`), so look-ahead evaluated from no node or from the wrong node. | **REPAIRED · VERIFIED** (2026-09-19, `8b9355f`) — *Updated 2026-10-25* | One-line repair, `neuron.id` → `neuron.userData.id`. Gate [`experiments/d2/verify.js`](../experiments/d2/verify.js): 20/20 as recorded in [`D2_EVIDENCE_LINEAGE.md`](../experiments/d2/D2_EVIDENCE_LINEAGE.md). D2 was still OPEN at the 2026-09-15 re-run; the frozen [M7 preregistration](../research/cognitive-audit/M7_PREREGISTRATION.md) records it as unrepaired at its date. Phase 0 Probe B. FutureScore V2.3 was later built on the repaired path (§7). |
 | **D3** | Sign inversions in `calculateDecisionScore`: danger and boredom penalties *increased* a path's score. | **REPAIRED · VERIFIED** | [`verify_S1.js`](../experiments/phase1_0/verify_S1.js) — repaired agent prefers the taught path over the punished one; [`verify_S1b.js`](../experiments/phase1_0/verify_S1b.js) S1.5b |
 | **Q4** | Goal-aware Q lookup (`getQAny`). | **REPAIRED · VERIFIED** | [`verify_S2_Q4.js`](../experiments/phase1_0/verify_S2_Q4.js) (15/0) |
 | **Q3** | Unseeded randomness in the cognitive path. | **REPAIRED · VERIFIED** | [`verify_S4.js`](../experiments/phase1_0/verify_S4.js) (12/0) |
@@ -62,6 +70,11 @@ re-audited and is not claimed to be overturned.**
 Thirteen gate scripts. **11 are fully green. 2 each retain one historical failing assertion,
 kept deliberately as provenance; both are superseded by a corrected gate that passes.**
 
+*Updated 2026-10-25:*
+- That count is from the 2026-09-15 re-run.
+- `verify_S3prime.js` has since failed one check (see its row below).
+- The D2 repair has its own gate, [`experiments/d2/verify.js`](../experiments/d2/verify.js), which is not among the thirteen.
+
 | Gate | Asserts | Result (2026-09-15) |
 |---|---|---|
 | [`parity_termarray.js`](../experiments/phase1_0/parity_termarray.js) | Term-array refactor is arithmetic-identical to the original (200,000 contexts, 0 mismatches) | PASS, exit 0 |
@@ -71,7 +84,7 @@ kept deliberately as provenance; both are superseded by a corrected gate that pa
 | [`verify_S2.js`](../experiments/phase1_0/verify_S2.js) | D1 Q-namespace repair (with Q4) | 14 passed, 0 failed |
 | [`verify_S2_Q4.js`](../experiments/phase1_0/verify_S2_Q4.js) | Q4 goal-aware lookup | 15 passed, 0 failed |
 | [`verify_S3.js`](../experiments/phase1_0/verify_S3.js) | F2 epsilon repair on the real `main.js`, headless | 8 passed, **1 failed — S3.2, HISTORICAL** (exits 1) |
-| [`verify_S3prime.js`](../experiments/phase1_0/verify_S3prime.js) | Superseding criterion for S3.2 | 2 passed, 0 failed |
+| [`verify_S3prime.js`](../experiments/phase1_0/verify_S3prime.js) | Superseding criterion for S3.2 | 2 passed, 0 failed (2026-09-15). *Updated 2026-10-25:* since FutureScore V2.3 (`952c9fc`), S3.2′(a) passes and **S3.2′(b) fails**: the median stale rate is 5.55 % against the 5.28 % limit. This is recorded in [FS-BD-01](../research/preregistrations/FUTURESCORE_V2_3_BEHAVIORAL_DISPOSITION_01.md). The gate is not modified and was not re-run for this update. |
 | [`verify_S4.js`](../experiments/phase1_0/verify_S4.js) | Seeded RNG in the cognitive path | 12 passed, 0 failed |
 | [`verify_S6.js`](../experiments/phase1_0/verify_S6.js) | Transition-uncertainty read accessor | 18 passed, 0 failed |
 | [`verify_G9.js`](../experiments/phase1_0/verify_G9.js) | No cognitive export surface changed | 11 passed, 0 failed |
@@ -149,6 +162,22 @@ Representative results, reported as frozen — including the ones that did not c
 | Q1 | **INCONCLUSIVE — insufficient material.** Pre-registered minimum of 20 configurations not met (17). | [`Q1_INTERPRETATION.md`](../research/preregistrations/Q1_INTERPRETATION.md) |
 | C1 | Descriptive census of one registered seed block, comparing the `futureScore` term delivered vs. forced to 0. **No statistical inference; no generalisation.** It measures the term as built, which includes the open D2 defect. | [`C1_INTERPRETATION.md`](../research/preregistrations/C1_INTERPRETATION.md) |
 
+*Updated 2026-10-25:* studies recorded after C1. Labels are as frozen in each linked record. The GATE-FLOOR records and
+XFER-1/2 are titled development / exploratory in their own headers. An index with commit hashes is decision D-034 in
+[`research/09_decisions.md`](../research/09_decisions.md).
+
+| Study | Result | Record |
+|---|---|---|
+| FutureScore V2.3 Study 2 | OQ-1a **UNRESOLVED**: θ = 0, 95 % interval [0, 0.0403]. No improvement claim and no disproof. The research thread is closed. | [`FUTURESCORE_V2_3_STUDY2_DISPOSITION.md`](../research/preregistrations/FUTURESCORE_V2_3_STUDY2_DISPOSITION.md) |
+| H1-R | **Closed as VOID.** Stage 2 was not reachable under the frozen protocol, and no effect estimate is reported. | D-032 in [`09_decisions.md`](../research/09_decisions.md) |
+| MCF-1 | Harness and lodged admission-scan evidence only (3,851 admitted, 149 rejected). No block is registered and there is no official run. | [`experiments/mcf1/README.md`](../experiments/mcf1/README.md) |
+| XFER-1 | Restoring only the episode store raised goal reaches (block B +110.2 [83.4, 138.1]); restoring only `rewards` lowered them. | [`experiments/xfer1/results/RESULTS.md`](../experiments/xfer1/results/RESULTS.md) |
+| XFER-2 | The episodic gain was carried by familiarity of transitions into the goal (+130.3), not by replay (+0.1 [−8.1, 7.9]) and not by the real content. | [`experiments/xfer2/results/RESULTS.md`](../experiments/xfer2/results/RESULTS.md) |
+| GATE-FLOOR-1, -B2, -HEAD, -PRODSEM | A guarded goal-entry floor raised goal reaches on every substrate tested: +152.7, then REPLICATED (+190.2 legal), REPLICATED (+62.6 legal), and TRANSFERS (+67.4 legal). Not claimed: routing capability, learning or planning. | [`gate-floor1`](../experiments/gate-floor1/results/RESULTS.md), [`-b2`](../experiments/gate-floor-b2/results/RESULTS.md), [`-head`](../experiments/gate-floor-head/results/RESULTS.md), [`-prodsem`](../experiments/gate-floor-prodsem/results/RESULTS.md) |
+| GATE-FLOOR-INTERACTION | PC1 NO_RECOVERY (+7.1 [−2.0, 16.1]); PC2 IMPROVES (+28.1 legal); PC3 PERSISTS (+40.6 / +33.3). | [`RESULTS.md`](../experiments/gate-floor-interaction/results/RESULTS.md) |
+| GATE-FLOOR-SCOPE (design C′) | Frozen. The confirmatory run is not authorized and not executed. | [`FREEZE.md`](../experiments/gate-floor-spec/FREEZE.md) |
+| LEARN-0 | E1 = −24.4 [−36.3, −12.3] legal goal reaches: **INCONCLUSIVE**. The tested store did not demonstrate an improvement without the map; no harm and no component claim is made. Director ruling D-033. | [`experiments/learn0/results/RESULTS.md`](../experiments/learn0/results/RESULTS.md) |
+
 Errata are appended, never edited in. Where a claim in a later milestone was too strong, a
 dated `-R1` correction narrows it and the narrowing is itself checked by a verifier.
 
@@ -157,7 +186,8 @@ dated `-R1` correction narrows it and the narrowing is itself checked by a verif
 ## 8. Known limitations
 
 - The executive controller defect (§5) is open.
-- The `futureScore` look-ahead id defect (D2, §3) is open.
+- *Updated 2026-10-25:* the `futureScore` look-ahead id defect (D2, §3) was repaired on 2026-09-19. The FutureScore V2.3
+  mechanism built on it has no demonstrated behavioural benefit (§7).
 - The browser environment has no hidden structure; claims about belief, uncertainty or prediction
   apply only to the harness environment in §6.
 - The Phase 0 verdict has not been re-audited after the repairs.
