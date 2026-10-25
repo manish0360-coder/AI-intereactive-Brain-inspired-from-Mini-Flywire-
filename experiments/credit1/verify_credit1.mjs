@@ -33,6 +33,14 @@ const mutant = (id, caught) => { mutantsCaught.push({ id, caught: !!caught }); i
 const spawns = [];
 const run = (cmd, args, opts = {}) => { spawns.push([cmd, ...args]); return spawnSync(cmd, args, { cwd: ROOT, encoding: 'utf8', maxBuffer: 1 << 28, ...opts }); };
 const git = (...a) => run('git', a);
+// line ends.  Integrity is always judged on raw bytes (committed blob, exact working-copy form); text inspection uses lf().
+//   lf(b)      drops the CR of every CRLF pair (the LEARN-0 verifier's idiom)
+//   crlfOf(b)  the bytes git checks out for an LF blob under core.autocrlf=true (every LF becomes CRLF)
+const lf = (b) => { const o = Buffer.allocUnsafe(b.length); let n = 0; for (let i = 0; i < b.length; i++) { if (b[i] === 13 && b[i + 1] === 10) continue; o[n++] = b[i]; } return o.subarray(0, n); };
+const crlfOf = (b) => Buffer.from(b.toString('latin1').replace(/\n/g, '\r\n'), 'latin1');
+const blob = (rev, p) => { const r = run('git', ['show', `${rev}:${p}`], { encoding: 'buffer' }); return r.status === 0 ? r.stdout : null; };
+const MAIN_RAW = fs.readFileSync(path.join(ROOT, 'main.js'));
+const MAIN_BLOB = blob('HEAD', 'main.js');
 
 // ================= G0: base revision, production source, frozen evidence, registry, results =================
 {
@@ -43,10 +51,22 @@ const git = (...a) => run('git', a);
   const allowed = (p) => p.startsWith('experiments/credit1/') || /^research\/external\/CREDIT1_[A-Z0-9_]+\.md$/.test(p);
   const outside = changed.filter(p => !allowed(p));
   check('G0.2 tracked changes since the base are confined to experiments/credit1/ and research/external/CREDIT1_*', outside.length === 0, outside.length ? outside.join(', ') : `${changed.length} tracked path(s) changed, all inside`);
-  const mainSha = sha256(fs.readFileSync(path.join(ROOT, 'main.js')));
-  check('G0.3 production main.js is the audited file and unchanged since the base', mainSha === C.PRODUCTION_MAIN_SHA256 && git('diff', '--quiet', C.BASE_COMMIT, '--', 'main.js', 'render').status === 0, mainSha.slice(0, 16));
+  const PIN = C.PRODUCTION_MAIN_SHA256;
+  const baseBlob = blob(C.BASE_COMMIT, 'main.js');
+  const blobOk = !!baseBlob && !!MAIN_BLOB && sha256(baseBlob) === PIN && sha256(MAIN_BLOB) === PIN;
+  check('G0.3a production main.js committed bytes (raw SHA-256 of the blob at the base and at HEAD) are the audited file; main.js and render/ unchanged since the base', blobOk && git('diff', '--quiet', C.BASE_COMMIT, '--', 'main.js', 'render').status === 0, `blob ${MAIN_BLOB ? sha256(MAIN_BLOB).slice(0, 16) : 'missing'}`);
+  // the working copy may be the committed LF bytes or exactly their autocrlf CRLF checkout; any other byte difference fails
+  const rawSha = sha256(MAIN_RAW), form = rawSha === PIN ? 'LF' : (MAIN_BLOB && rawSha === sha256(crlfOf(MAIN_BLOB))) ? 'CRLF' : 'OTHER';
+  const normSha = sha256(lf(MAIN_RAW));
+  check('G0.3b production main.js working copy: raw bytes are exactly the committed bytes (LF) or exactly their core.autocrlf checkout (CRLF), and the LF-normalized hash is the audited file', form !== 'OTHER' && normSha === PIN, `raw ${rawSha.slice(0, 16)} (${form}), LF-normalized ${normSha.slice(0, 16)}`);
   const v = run(process.execPath, [path.join('experiments', 'learn0', 'verify_results_learn0.mjs')]);
-  check('G0.4 LEARN-0 frozen evidence: verify_results_learn0 13/13', v.status === 0 && /13 checks passed, 0 failed/.test(v.stdout), (v.stdout.trim().split('\n').pop() || '').slice(0, 100));
+  const v4 = v.status === 0 && /13 checks passed, 0 failed/.test(v.stdout);
+  let note = '';
+  if (!v4) { // diagnostic only, never changes the verdict: V5 hashes the raw bytes of this manifest (README, "Known checkout limitation")
+    const mp = 'experiments/learn0/results/manifest_blockL.json', cb = blob('HEAD', mp);
+    if (cb) note = ` | diagnostic: ${mp} working copy ${sha256(fs.readFileSync(path.join(ROOT, ...mp.split('/')))).slice(0, 16)}, committed blob ${sha256(cb).slice(0, 16)}, its CRLF checkout ${sha256(crlfOf(cb)).slice(0, 16)}`;
+  }
+  check('G0.4 LEARN-0 frozen evidence: verify_results_learn0 13/13', v4, (v.stdout.trim().split('\n').pop() || '').slice(0, 100) + note);
   check('G0.5 LEARN-0 directory unchanged since the base (tracked) and no untracked LEARN-0 files', git('diff', '--quiet', C.BASE_COMMIT, '--', 'experiments/learn0').status === 0 && git('ls-files', '--others', '--exclude-standard', '--', 'experiments/learn0').stdout.trim() === '');
   check('G0.6 registry unchanged since the base and no untracked registry files', git('diff', '--quiet', C.BASE_COMMIT, '--', 'experiments/registry').status === 0 && git('ls-files', '--others', '--exclude-standard', '--', 'experiments/registry').stdout.trim() === '');
   check('G0.7 results, decision log and evidence-backup records unchanged since the base', git('diff', '--quiet', C.BASE_COMMIT, '--', ':(glob)experiments/*/results/**', 'research/09_decisions.md', 'research/evidence_backup').status === 0);
@@ -57,7 +77,7 @@ const git = (...a) => run('git', a);
 }
 
 // ================= G1: credit-block census, A and A+ (BC-1) =================
-const prodText = fs.readFileSync(path.join(ROOT, 'main.js'), 'utf8');
+const prodText = lf(MAIN_RAW).toString('utf8');                          // inspection text, LF-normalized (integrity: G0.3a, G0.3b)
 {
   const r = censusBlock(prodText);
   check('G1.1 production census: 46 lines classified, invariants I1-I5 hold', r.problems.length === 0 && r.rows.length === 46, r.problems.slice(0, 2).join(' | ') || JSON.stringify(r.summary));
@@ -71,16 +91,25 @@ const prodText = fs.readFileSync(path.join(ROOT, 'main.js'), 'utf8');
     && eq(lines(x => x.class === 'HELD' && x.actionAplus === 'KEEP'), D.HELD_OTHER) && eq(lines(x => x.class === 'POSITION'), D.POSITION) && eq(lines(x => x.class === 'RESET'), D.RESET)
     && eq(lines(x => x.class === 'LOG'), D.LOG) && eq(lines(x => x.class === 'COMMENT'), D.COMMENT);
   check('G1.3 every classified line number equals DESIGN r2 section 2.1 (production main.js)', ok);
-  // census mutants
-  const L = prodText.split('\n');
-  const mut = (f) => { const M = L.slice(); f(M); return censusBlock(M.join('\n')).problems.length > 0; };
-  const idxOf = (t) => L.findIndex(l => l.trim() === t);
-  mutant('CM1 TD state re-keyed in the source', mut(M => { const i = idxOf('state:     makeStateKey(agentLast,    goalNeuronId),'); M[i] = M[i].replace('agentLast', 'agentCurrent'); }));
-  mutant('CM2 re-decision between the probe and the block', mut(M => { const i = L.indexOf('  let nextStep = reasoning.to;'); M[i] = M[i] + ' runPrediction(agentCurrent);'; }));
-  mutant('CM3 agentLast assigned inside the block', mut(M => { const i = idxOf('const prev = agentLast; // 👉 where we were before'); M.splice(i + 1, 0, 'agentLast = next;'); }));
-  mutant('CM4 an extra unclassified occurrence', mut(M => { const i = idxOf('updateSequenceError(agentCurrent);'); M[i] = M[i] + ' void agentLast;'; }));
-  mutant('CM5 `next` reassigned inside the block (I4)', mut(M => { const i = idxOf('const prev = agentLast; // 👉 where we were before'); M.splice(i + 1, 0, 'next = agentCurrent;'); }));
-  mutant('CM6 a second goal assignment inside the block (I5)', mut(M => { const i = idxOf('const prev = agentLast; // 👉 where we were before'); M.splice(i + 1, 0, 'goalNeuronId = 7;'); }));
+  // census mutants.  A mutant whose anchor is not found counts as NOT caught (it never lands on another line).
+  class AnchorMissing extends Error {}
+  const at = (M, pred, what) => { const i = M.findIndex(pred); if (i < 0) throw new AnchorMissing(what); return i; };
+  const mutOn = (text, f) => { const M = text.split('\n'); try { f(M); } catch (e) { if (e instanceof AnchorMissing) return false; throw e; } return censusBlock(M.join('\n')).problems.length > 0; };
+  const idxOf = (M, t) => at(M, l => l.trim() === t, t);
+  const cm2 = (M) => { const i = at(M, l => l === '  let nextStep = reasoning.to;', 'execution probe'); M[i] = M[i] + ' runPrediction(agentCurrent);'; };
+  mutant('CM1 TD state re-keyed in the source', mutOn(prodText, M => { const i = idxOf(M, 'state:     makeStateKey(agentLast,    goalNeuronId),'); M[i] = M[i].replace('agentLast', 'agentCurrent'); }));
+  mutant('CM2 re-decision between the probe and the block', mutOn(prodText, cm2));
+  mutant('CM3 agentLast assigned inside the block', mutOn(prodText, M => { const i = idxOf(M, 'const prev = agentLast; // 👉 where we were before'); M.splice(i + 1, 0, 'agentLast = next;'); }));
+  mutant('CM4 an extra unclassified occurrence', mutOn(prodText, M => { const i = idxOf(M, 'updateSequenceError(agentCurrent);'); M[i] = M[i] + ' void agentLast;'; }));
+  mutant('CM5 `next` reassigned inside the block (I4)', mutOn(prodText, M => { const i = idxOf(M, 'const prev = agentLast; // 👉 where we were before'); M.splice(i + 1, 0, 'next = agentCurrent;'); }));
+  mutant('CM6 a second goal assignment inside the block (I5)', mutOn(prodText, M => { const i = idxOf(M, 'const prev = agentLast; // 👉 where we were before'); M.splice(i + 1, 0, 'goalNeuronId = 7;'); }));
+  // line-ending robustness of the inspection path, on both checkout forms of the committed bytes: each normalizes to the
+  // gate's inspection text, passes the census, and CM2 is caught on it.  Control: the unnormalized CRLF text misses CM2's
+  // exact-line anchor (the fresh-clone defect this path removes), which also shows the CRLF form really carries CRs.
+  const le = MAIN_BLOB ? [['LF', MAIN_BLOB], ['CRLF', crlfOf(MAIN_BLOB)]].map(([k, b]) => { const t = lf(b).toString('utf8');
+    return { k, same: t === prodText, census: censusBlock(t).problems.length === 0, cm2: mutOn(t, cm2), control: k === 'LF' || !mutOn(b.toString('utf8'), cm2) }; }) : [];
+  check('G1.4 line ends: the LF and CRLF checkout forms of the committed main.js both normalize to the inspection text, pass the census and catch CM2 (control: unnormalized CRLF misses it)',
+    le.length === 2 && le.every(x => x.same && x.census && x.cm2 && x.control), le.map(x => `${x.k}: same ${x.same}, census ${x.census}, CM2 ${x.cm2}, control ${x.control}`).join(' | '));
 }
 
 // ================= G2: write-site census (BC-3) =================

@@ -33,6 +33,32 @@ node experiments/credit1/verify_credit1.mjs
 | `review/` | the reviewed r1 design, both review texts, the review record | — |
 | `.gitattributes` | `* -text`: checkout bytes equal the committed bytes, so the recorded SHA-256 values hold under `core.autocrlf=true` | — |
 
+## Line endings
+The gate inspects `main.js` as LF-normalized text (census, census mutants). Integrity is judged separately, on raw bytes:
+- **G0.3a:** the committed blob of `main.js` at the base and at HEAD hashes to the audited value `c92c5c6b…`. `main.js` and `render/` are unchanged since the base.
+- **G0.3b:** the working copy is byte-exactly one of two forms:
+  - the committed LF bytes (`c92c5c6b…`);
+  - their `core.autocrlf=true` checkout (`55b0685765c3cdb2137c7f4bc03ca42ab23133878c79da7e77fe030941b47da0`).
+
+  Any other difference fails. That includes a single changed line ending, which `git diff` reports as unchanged.
+- **G1.4:** both checkout forms normalize to the same inspection text and catch census mutant CM2.
+
+## Known checkout limitation: G0.4 (frozen LEARN-0; not repaired here)
+- **Reproduce:** make a fresh clone on a system where `core.autocrlf=true`. Git for Windows sets this in its system gitconfig.
+- **Cause:** `experiments/learn0/results/manifest_blockL.json` has no `-text` attribute, so it checks out with CRLF line ends. LEARN-0 check V5 hashes its raw bytes:
+  - committed blob (LF): `61230bbc3d158c797ceb117bd6a52de02b64a238760c9fd56e4ddc8b0dc19f00`. This equals `manifestFileSha256` and `files["MANIFEST.json"]` in `results/archive_blockL.json`.
+  - CRLF checkout: `25d546c717d60e82aef201f36611379fadb828a086cd63df02ad3bda68f1e647`. V5 fails, `verify_results_learn0` reports 12/13, and G0.4 fails.
+- **Not an integrity failure:** the committed bytes agree with the archive record.
+- **Not excluded:** in such a clone this gate reports G0.4 FAIL and `GATE FAILED`. The G0.4 detail then prints the working-copy hash, the committed-blob hash and the CRLF-checkout hash.
+- **Verifying from the committed bytes** changes no frozen file and no verification rule:
+
+  ```bash
+  git clone -c core.autocrlf=false <repository> <directory>
+  ```
+
+  Then run `node experiments/learn0/verify_results_learn0.mjs` in that clone. Expected result: 13/13.
+- **Repair is out of scope:** a `-text` attribute for the LEARN-0 results would touch frozen-study files and the root `.gitattributes`. That is a separate governance decision.
+
 ## Documented gaps (I-LEDGER)
 - These stores are not exported `Map`s and are not wrapped: the emotion map, the semantic layers, the uncertainty ledgers, semantic vitality, `timeMemory` and `adjacencyMemory` (both private to `main.js`), and the consolidation registry.
 - Their effect on the chosen move is unverified (DESIGN r2 section 11).
