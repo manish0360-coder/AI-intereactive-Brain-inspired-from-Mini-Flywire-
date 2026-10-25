@@ -1,0 +1,1266 @@
+{
+  "schema": "credit1/1.site-census",
+  "main": {
+    "path": "main.js",
+    "sha256": "c92c5c6b6d2e32aed9114e2a8dc4075134630bfe6e5547b8052b9e8b839a3de3"
+  },
+  "tree": false,
+  "block": {
+    "ifLine": 3961,
+    "openLine": 3971,
+    "closeLine": 4963,
+    "ifIdx": 3960,
+    "openIdx": 3970,
+    "closeIdx": 4962
+  },
+  "lines": 46,
+  "summary": {
+    "GUARD": 4,
+    "DEAD": 1,
+    "REKEY": 26,
+    "POSITION": 2,
+    "LOG": 4,
+    "HELD": 6,
+    "RESET": 2,
+    "COMMENT": 1,
+    "INSTRUMENT": 0
+  },
+  "totals": {
+    "A": {
+      "total": 28,
+      "lines": 26,
+      "agentLast": 17,
+      "agentCurrent": 5,
+      "prev": 6
+    },
+    "A+": {
+      "total": 32,
+      "lines": 30,
+      "agentLast": 17,
+      "agentCurrent": 5,
+      "prev": 10
+    }
+  },
+  "invariants": {
+    "I1_assignments": [
+      [
+        "agentCurrent",
+        4861
+      ],
+      [
+        "agentLast",
+        4862
+      ]
+    ],
+    "I2_execAnchorLine": 3641,
+    "I3_reads": [
+      {
+        "pattern": "getQ\\(makeStateKey\\(currentKey, goalNeuronId\\), k\\)",
+        "lines": [
+          1735,
+          1924
+        ]
+      },
+      {
+        "pattern": "rewards\\.get\\(currentKey \\+ [\"']->[\"'] \\+ k\\)",
+        "lines": [
+          1783,
+          1868,
+          1962
+        ]
+      },
+      {
+        "pattern": "penalties\\.get\\(currentKey \\+ [\"']->[\"'] \\+ k\\)",
+        "lines": [
+          1726,
+          1870
+        ]
+      },
+      {
+        "pattern": "const curKey = currentKey \\+ \"->\" \\+ k;",
+        "lines": [
+          1872
+        ]
+      },
+      {
+        "pattern": "transitions\\.get\\(currentKey\\)",
+        "lines": [
+          1626,
+          1764
+        ]
+      },
+      {
+        "pattern": "getPathTrust\\(currentKey \\+ \"->\" \\+ k\\)",
+        "lines": [
+          2298,
+          2299
+        ]
+      },
+      {
+        "pattern": "getTransitionUncertainty\\(currentKey, k\\)",
+        "lines": [
+          2260
+        ]
+      }
+    ],
+    "I4_nextAssignments": [],
+    "I5_goalAssignments": [
+      [
+        4309,
+        "goalNeuronId = window.homeNeuronId;"
+      ]
+    ]
+  },
+  "rows": [
+    {
+      "line": 3963,
+      "text": "agentLast !== null &&",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "GUARD",
+      "actionA": "KEEP",
+      "actionAplus": "KEEP",
+      "site": "block guard (when credit happens)"
+    },
+    {
+      "line": 3967,
+      "text": "agentLast !== next &&",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "GUARD",
+      "actionA": "KEEP",
+      "actionAplus": "KEEP",
+      "site": "block guard"
+    },
+    {
+      "line": 3969,
+      "text": "agentLast !== goalNeuronId",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "GUARD",
+      "actionA": "KEEP",
+      "actionAplus": "KEEP",
+      "site": "block guard"
+    },
+    {
+      "line": 3990,
+      "text": "if (agentLast === next) {",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "DEAD",
+      "actionA": "KEEP",
+      "actionAplus": "KEEP",
+      "site": "energy cost; never true inside the guard"
+    },
+    {
+      "line": 3999,
+      "text": "agentLast + \"->\" + next;",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "REKEY",
+      "actionA": "FROM",
+      "actionAplus": "FROM",
+      "site": "repeatKey: curiosity read -> repetition penalty in rewardSignal"
+    },
+    {
+      "line": 4098,
+      "text": "fromId: agentLast,",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "REKEY",
+      "actionA": "FROM",
+      "actionAplus": "FROM",
+      "site": "updateLocalEmotion (render/emotionMap.js; session-only)"
+    },
+    {
+      "line": 4168,
+      "text": "state:     makeStateKey(agentLast,    goalNeuronId),",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "REKEY",
+      "actionA": "FROM",
+      "actionAplus": "FROM",
+      "site": "TD Q update, state (persisted Q)"
+    },
+    {
+      "line": 4171,
+      "text": "nextState: makeStateKey(agentCurrent, goalNeuronId),",
+      "identifiers": [
+        "agentCurrent"
+      ],
+      "class": "REKEY",
+      "actionA": "TO",
+      "actionAplus": "TO",
+      "site": "TD Q update, bootstrap state (persisted Q)"
+    },
+    {
+      "line": 4183,
+      "text": "agentLast,",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "REKEY",
+      "actionA": "FROM",
+      "actionAplus": "FROM",
+      "site": "updateTransitionUncertainty (render/predictionError.js; session-only)"
+    },
+    {
+      "line": 4191,
+      "text": "updateSequenceError(agentCurrent);",
+      "identifiers": [
+        "agentCurrent"
+      ],
+      "class": "POSITION",
+      "actionA": "KEEP",
+      "actionAplus": "KEEP",
+      "site": "position-level sequence error (no pair)"
+    },
+    {
+      "line": 4220,
+      "text": "makeStateKey(agentLast, goalNeuronId),",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "REKEY",
+      "actionA": "FROM",
+      "actionAplus": "FROM",
+      "site": "dampQ (persisted Q)"
+    },
+    {
+      "line": 4233,
+      "text": "const fromNeuronSemExp = neuronMap.get(Number(agentLast));",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "REKEY",
+      "actionA": "FROM",
+      "actionAplus": "FROM",
+      "site": "semantic expectation outcome (session-only); legacy pair = previous move"
+    },
+    {
+      "line": 4234,
+      "text": "const toNeuronSemExp   = neuronMap.get(Number(agentCurrent));",
+      "identifiers": [
+        "agentCurrent"
+      ],
+      "class": "REKEY",
+      "actionA": "TO",
+      "actionAplus": "TO",
+      "site": "semantic expectation outcome (session-only)"
+    },
+    {
+      "line": 4267,
+      "text": "updateProceduralUncertainty(agentLast, agentCurrent, proceduralOutcome);",
+      "identifiers": [
+        "agentLast",
+        "agentCurrent"
+      ],
+      "class": "REKEY",
+      "actionA": "FROM+TO",
+      "actionAplus": "FROM+TO",
+      "site": "procedural uncertainty ledger (session-only)"
+    },
+    {
+      "line": 4270,
+      "text": "propagateUncertainty(agentLast, agentCurrent, neuronMap);",
+      "identifiers": [
+        "agentLast",
+        "agentCurrent"
+      ],
+      "class": "REKEY",
+      "actionA": "FROM+TO",
+      "actionAplus": "FROM+TO",
+      "site": "uncertainty propagation (session-only)"
+    },
+    {
+      "line": 4321,
+      "text": "const curKey = agentLast + \"->\" + next;",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "REKEY",
+      "actionA": "FROM",
+      "actionAplus": "FROM",
+      "site": "curiosity write from prediction error (persisted curiosity)"
+    },
+    {
+      "line": 4338,
+      "text": "\"| transUnc:\", getTransitionUncertainty(agentLast, next).toFixed(3),",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "LOG",
+      "actionA": "KEEP",
+      "actionAplus": "KEEP",
+      "site": "console log only"
+    },
+    {
+      "line": 4349,
+      "text": "state:     makeStateKey(agentLast,    goalNeuronId),",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "REKEY",
+      "actionA": "FROM",
+      "actionAplus": "FROM",
+      "site": "fallback TD Q update, state (persisted Q)"
+    },
+    {
+      "line": 4352,
+      "text": "nextState: makeStateKey(agentCurrent, goalNeuronId),",
+      "identifiers": [
+        "agentCurrent"
+      ],
+      "class": "REKEY",
+      "actionA": "TO",
+      "actionAplus": "TO",
+      "site": "fallback TD Q update, bootstrap state (persisted Q)"
+    },
+    {
+      "line": 4364,
+      "text": "const fromNeuronSem  = findNeuronById(agentLast);",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "REKEY",
+      "actionA": "FROM",
+      "actionAplus": "FROM",
+      "site": "semantic memory layer (fallback branch; session-only)"
+    },
+    {
+      "line": 4370,
+      "text": "agentLast,",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "REKEY",
+      "actionA": "FROM",
+      "actionAplus": "FROM",
+      "site": "recordSemanticEdge (fallback; session-only)"
+    },
+    {
+      "line": 4380,
+      "text": "agentLast,",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "REKEY",
+      "actionA": "FROM",
+      "actionAplus": "FROM",
+      "site": "reinforcePath (fallback; session-only; feeds the consolidation registry)"
+    },
+    {
+      "line": 4387,
+      "text": "weakenPath(agentLast, next, Math.abs(rewardSignal) * 0.3);",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "REKEY",
+      "actionA": "FROM",
+      "actionAplus": "FROM",
+      "site": "weakenPath (fallback; session-only; feeds the consolidation registry)"
+    },
+    {
+      "line": 4412,
+      "text": "agentLast + \"->\" + next;",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "REKEY",
+      "actionA": "FROM",
+      "actionAplus": "FROM",
+      "site": "stepPathKey: uncertainty engine + semantic vitality (fallback; session-only)"
+    },
+    {
+      "line": 4415,
+      "text": "getQ(makeStateKey(agentLast, goalNeuronId), next);   // D1",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "REKEY",
+      "actionA": "FROM",
+      "actionAplus": "FROM",
+      "site": "predictedQ read for the uncertainty engine (fallback)"
+    },
+    {
+      "line": 4451,
+      "text": "updateSequenceError(agentCurrent);",
+      "identifiers": [
+        "agentCurrent"
+      ],
+      "class": "POSITION",
+      "actionA": "KEEP",
+      "actionAplus": "KEEP",
+      "site": "position-level sequence error (no pair)"
+    },
+    {
+      "line": 4474,
+      "text": "agentLast !== null && next !== null && agentLast !== next) {",
+      "identifiers": [
+        "agentLast",
+        "agentLast"
+      ],
+      "class": "GUARD",
+      "actionA": "KEEP",
+      "actionAplus": "KEEP",
+      "site": "trust-attempt guard"
+    },
+    {
+      "line": 4476,
+      "text": "const attemptKey = agentLast + \"->\" + next;",
+      "identifiers": [
+        "agentLast"
+      ],
+      "class": "REKEY",
+      "actionA": "FROM",
+      "actionAplus": "FROM",
+      "site": "trust attempt (render/trustMemory.js; session-only; live in scoring)"
+    },
+    {
+      "line": 4483,
+      "text": "const prev = agentLast; // 👉 where we were before",
+      "identifiers": [
+        "prev",
+        "agentLast"
+      ],
+      "class": "HELD",
+      "actionA": "KEEP",
+      "actionAplus": "KEEP",
+      "site": "`prev` keeps its legacy value"
+    },
+    {
+      "line": 4495,
+      "text": "if (current !== null && current !== prev) {",
+      "identifiers": [
+        "prev"
+      ],
+      "class": "HELD",
+      "actionA": "KEEP",
+      "actionAplus": "KEEP",
+      "site": "recentMemory push condition (path buffer, not a credit key)"
+    },
+    {
+      "line": 4506,
+      "text": "const key = prev + \"->\" + current;",
+      "identifiers": [
+        "prev"
+      ],
+      "class": "REKEY",
+      "actionA": "PREV",
+      "actionAplus": "PREV",
+      "site": "key: curiosity write, goal reward, penalty, confidence penalty (persisted)"
+    },
+    {
+      "line": 4699,
+      "text": "// prev→current where eat(9) is not a graph neighbor of milk(7)",
+      "identifiers": [
+        "prev"
+      ],
+      "class": "COMMENT",
+      "actionA": "KEEP",
+      "actionAplus": "KEEP",
+      "site": "comment"
+    },
+    {
+      "line": 4703,
+      "text": "const prevNeuronForMem = findNeuronById(prev);",
+      "identifiers": [
+        "prev"
+      ],
+      "class": "HELD",
+      "actionA": "KEEP",
+      "actionAplus": "PREV_P",
+      "site": "transitions write, edge-filtered"
+    },
+    {
+      "line": 4710,
+      "text": "const map = transitions.get(prev) || new Map();",
+      "identifiers": [
+        "prev"
+      ],
+      "class": "HELD",
+      "actionA": "KEEP",
+      "actionAplus": "PREV_P",
+      "site": "transitions write, edge-filtered"
+    },
+    {
+      "line": 4712,
+      "text": "transitions.set(prev, map);",
+      "identifiers": [
+        "prev"
+      ],
+      "class": "HELD",
+      "actionA": "KEEP",
+      "actionAplus": "PREV_P",
+      "site": "transitions write, edge-filtered"
+    },
+    {
+      "line": 4719,
+      "text": "const key = prev + \"->\" + current;",
+      "identifiers": [
+        "prev"
+      ],
+      "class": "REKEY",
+      "actionA": "PREV",
+      "actionAplus": "PREV",
+      "site": "goal key: shortcut penalty and scaled goal reward (persisted)"
+    },
+    {
+      "line": 4749,
+      "text": "const finalStepTC = trajectoryConfidence(prev, current);",
+      "identifiers": [
+        "prev"
+      ],
+      "class": "REKEY",
+      "actionA": "PREV",
+      "actionAplus": "PREV",
+      "site": "final-step trajectory confidence that scales the goal reward"
+    },
+    {
+      "line": 4758,
+      "text": "findNeuronById(prev)?.userData.label,",
+      "identifiers": [
+        "prev"
+      ],
+      "class": "LOG",
+      "actionA": "KEEP",
+      "actionAplus": "KEEP",
+      "site": "console log only"
+    },
+    {
+      "line": 4861,
+      "text": "agentCurrent = allIds[Math.floor(liveRng() * allIds.length)];",
+      "identifiers": [
+        "agentCurrent"
+      ],
+      "class": "RESET",
+      "actionA": "KEEP",
+      "actionAplus": "KEEP",
+      "site": "goal reset (position assignment)"
+    },
+    {
+      "line": 4862,
+      "text": "agentLast    = agentCurrent;",
+      "identifiers": [
+        "agentLast",
+        "agentCurrent"
+      ],
+      "class": "RESET",
+      "actionA": "KEEP",
+      "actionAplus": "KEEP",
+      "site": "goal reset (position assignment)"
+    },
+    {
+      "line": 4867,
+      "text": "console.log(\"🔄 Reset after goal → starting from:\", agentCurrent);",
+      "identifiers": [
+        "agentCurrent"
+      ],
+      "class": "LOG",
+      "actionA": "KEEP",
+      "actionAplus": "KEEP",
+      "site": "console log only"
+    },
+    {
+      "line": 4908,
+      "text": "const badKey = prev + \"->\" + current;",
+      "identifiers": [
+        "prev"
+      ],
+      "class": "REKEY",
+      "actionA": "PREV",
+      "actionAplus": "PREV",
+      "site": "bad-path penalty (persisted penalties)"
+    },
+    {
+      "line": 4933,
+      "text": "const signalKey = prev + \"->\" + current;",
+      "identifiers": [
+        "prev"
+      ],
+      "class": "REKEY",
+      "actionA": "PREV",
+      "actionAplus": "PREV",
+      "site": "signals (persisted; behaviourally inert, XFER-1 D5)"
+    },
+    {
+      "line": 4940,
+      "text": "const timeKey = prev + \"->\" + current;",
+      "identifiers": [
+        "prev"
+      ],
+      "class": "REKEY",
+      "actionA": "PREV",
+      "actionAplus": "PREV",
+      "site": "timeMemory (session-only)"
+    },
+    {
+      "line": 4945,
+      "text": "console.log(\"🧠 Self learned:\", prev, \"→\", current);",
+      "identifiers": [
+        "prev"
+      ],
+      "class": "LOG",
+      "actionA": "KEEP",
+      "actionAplus": "KEEP",
+      "site": "console log only"
+    },
+    {
+      "line": 4960,
+      "text": "recordAutonomousStep(prev, current, neuronMap, goalNeuronId);   // D1",
+      "identifiers": [
+        "prev"
+      ],
+      "class": "HELD",
+      "actionA": "KEEP",
+      "actionAplus": "PREV_P",
+      "site": "autonomous-explore pipeline, edge-filtered"
+    }
+  ],
+  "plan": {
+    "A": [
+      {
+        "line": 3999,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4098,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4168,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4171,
+        "action": "TO",
+        "ops": [
+          [
+            "agentCurrent",
+            "__c1n"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4183,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4220,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4233,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4234,
+        "action": "TO",
+        "ops": [
+          [
+            "agentCurrent",
+            "__c1n"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4267,
+        "action": "FROM+TO",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ],
+          [
+            "agentCurrent",
+            "__c1n"
+          ]
+        ],
+        "count": 2
+      },
+      {
+        "line": 4270,
+        "action": "FROM+TO",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ],
+          [
+            "agentCurrent",
+            "__c1n"
+          ]
+        ],
+        "count": 2
+      },
+      {
+        "line": 4321,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4349,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4352,
+        "action": "TO",
+        "ops": [
+          [
+            "agentCurrent",
+            "__c1n"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4364,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4370,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4380,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4387,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4412,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4415,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4476,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4506,
+        "action": "PREV",
+        "ops": [
+          [
+            "prev",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4719,
+        "action": "PREV",
+        "ops": [
+          [
+            "prev",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4749,
+        "action": "PREV",
+        "ops": [
+          [
+            "prev",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4908,
+        "action": "PREV",
+        "ops": [
+          [
+            "prev",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4933,
+        "action": "PREV",
+        "ops": [
+          [
+            "prev",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4940,
+        "action": "PREV",
+        "ops": [
+          [
+            "prev",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      }
+    ],
+    "A+": [
+      {
+        "line": 3999,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4098,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4168,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4171,
+        "action": "TO",
+        "ops": [
+          [
+            "agentCurrent",
+            "__c1n"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4183,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4220,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4233,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4234,
+        "action": "TO",
+        "ops": [
+          [
+            "agentCurrent",
+            "__c1n"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4267,
+        "action": "FROM+TO",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ],
+          [
+            "agentCurrent",
+            "__c1n"
+          ]
+        ],
+        "count": 2
+      },
+      {
+        "line": 4270,
+        "action": "FROM+TO",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ],
+          [
+            "agentCurrent",
+            "__c1n"
+          ]
+        ],
+        "count": 2
+      },
+      {
+        "line": 4321,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4349,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4352,
+        "action": "TO",
+        "ops": [
+          [
+            "agentCurrent",
+            "__c1n"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4364,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4370,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4380,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4387,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4412,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4415,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4476,
+        "action": "FROM",
+        "ops": [
+          [
+            "agentLast",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4506,
+        "action": "PREV",
+        "ops": [
+          [
+            "prev",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4703,
+        "action": "PREV_P",
+        "ops": [
+          [
+            "prev",
+            "__c1p"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4710,
+        "action": "PREV_P",
+        "ops": [
+          [
+            "prev",
+            "__c1p"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4712,
+        "action": "PREV_P",
+        "ops": [
+          [
+            "prev",
+            "__c1p"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4719,
+        "action": "PREV",
+        "ops": [
+          [
+            "prev",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4749,
+        "action": "PREV",
+        "ops": [
+          [
+            "prev",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4908,
+        "action": "PREV",
+        "ops": [
+          [
+            "prev",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4933,
+        "action": "PREV",
+        "ops": [
+          [
+            "prev",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4940,
+        "action": "PREV",
+        "ops": [
+          [
+            "prev",
+            "__c1o"
+          ]
+        ],
+        "count": 1
+      },
+      {
+        "line": 4960,
+        "action": "PREV_P",
+        "ops": [
+          [
+            "prev",
+            "__c1p"
+          ]
+        ],
+        "count": 1
+      }
+    ]
+  },
+  "problems": []
+}

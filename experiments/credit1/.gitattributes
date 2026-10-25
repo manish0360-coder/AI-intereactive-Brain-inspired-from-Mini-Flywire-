@@ -1,0 +1,5 @@
+# CREDIT-1 implementation milestone: lodged byte-exact, so the recorded SHA-256 values hold in every checkout.
+# config.mjs and the gate (G0.8, G0.9) bind DESIGN.md and the review records by a SHA-256 over their exact bytes; the round-1
+# review is recorded raw with CRLF line ends. Without `-text`, a checkout with core.autocrlf=true rewrites line ends and those
+# digests no longer hold. This file covers its own directory and everything below it.
+* -text

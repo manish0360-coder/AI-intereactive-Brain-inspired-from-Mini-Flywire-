@@ -1,0 +1,103 @@
+{
+  "schema": "credit1/1.store-census",
+  "source": {
+    "run": "experiments\\learn0\\data\\run_blockL",
+    "manifestDigest": "5ac256a7b3d1ae45af30f99e23dbf9b9a3b97e58744798a3b7b00b01e6ef7f69",
+    "controlsSha256": "247a73b132f4da4bcddaebe59ee2e863b439e73f4c3c9e7b8b0ce710c9c078a0",
+    "trainingExports": 360
+  },
+  "table": [
+    {
+      "store": "rewards",
+      "keys": 34395,
+      "edgeKeyShare": 0.635,
+      "edgeMassShare": 0.777,
+      "LAG1": 28379,
+      "LAG2": 2096,
+      "SELF": 3920,
+      "lagTwoShare": 0.061
+    },
+    {
+      "store": "penalties",
+      "keys": 2777,
+      "edgeKeyShare": 0.463,
+      "edgeMassShare": 0.495,
+      "LAG1": 2644,
+      "LAG2": 133,
+      "SELF": 0,
+      "lagTwoShare": 0.048
+    },
+    {
+      "store": "signals",
+      "keys": 52810,
+      "edgeKeyShare": 0.383,
+      "edgeMassShare": 0.373,
+      "LAG1": 26782,
+      "LAG2": 26028,
+      "SELF": 0,
+      "lagTwoShare": 0.493
+    },
+    {
+      "store": "curiosity",
+      "keys": 52810,
+      "edgeKeyShare": 0.383,
+      "edgeMassShare": 0.421,
+      "LAG1": 26782,
+      "LAG2": 26028,
+      "SELF": 0,
+      "lagTwoShare": 0.493
+    },
+    {
+      "store": "confidence",
+      "keys": 40372,
+      "edgeKeyShare": 0.457,
+      "edgeMassShare": 0.689,
+      "LAG1": 21971,
+      "LAG2": 14481,
+      "SELF": 3920,
+      "lagTwoShare": 0.359
+    },
+    {
+      "store": "Q",
+      "keys": 64739,
+      "edgeKeyShare": 0.465,
+      "edgeMassShare": 0.62,
+      "LAG1": 38498,
+      "LAG2": 26241,
+      "SELF": 0,
+      "lagTwoShare": 0.405
+    },
+    {
+      "store": "transitions",
+      "keys": 26589,
+      "edgeKeyShare": 0.821,
+      "edgeMassShare": 0.842,
+      "LAG1": 25020,
+      "LAG2": 1569,
+      "SELF": 0,
+      "lagTwoShare": 0.059
+    },
+    {
+      "store": "episodes",
+      "keys": null,
+      "edgeKeyShare": null,
+      "edgeMassShare": null,
+      "LAG1": 276777,
+      "LAG2": 1729,
+      "SELF": 0,
+      "lagTwoShare": 0.006
+    }
+  ],
+  "perWorld": {
+    "QedgeKeyShare": {
+      "min": 0.354,
+      "median": 0.47,
+      "max": 0.557
+    },
+    "QlagTwoShare": {
+      "min": 0.296,
+      "median": 0.4,
+      "max": 0.553
+    }
+  }
+}

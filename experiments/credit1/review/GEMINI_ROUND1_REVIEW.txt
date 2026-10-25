@@ -1,0 +1,187 @@
+# INDEPENDENT SCIENTIFIC ADVERSARIAL REVIEW: CREDIT-1
+
+**To:** Program Owner / Research Lead
+
+**From:** Independent Scientific Reviewer
+
+**Date:** October 25, 2026
+
+**Subject:** Scientific Review of CREDIT-1 Experimental Design Packages (Original Design & Claude Review Brief)
+
+---
+
+### Executive Summary
+
+The core causal question of **CREDIT-1**—*whether correctly crediting the agent's executed transitions under map-off conditions recovers or establishes goal-directed value propagation*—is fundamental to evaluating MiniFlyWire’s model-free architecture.
+
+However, both the original CREDIT-1 design package and Claude's proposed modifications carry critical structural flaws that invalidate their primary estimands. Specifically:
+
+1. **Claude's proposed 5-substitution "values-only" arm (I-1) is causally confounded.** Restricting alignment to 5 lines while leaving 21 active learning lines misaligned creates an asymmetric, hybrid runtime where different modules learn on different graphs.
+
+
+2. **Claude's proposed "no-values" control (I-9) fails as a specificity control.** Stripping Q-values and rewards destroys the treatment itself rather than testing goal specificity.
+
+
+3. **The original 28-substitution Arm A (O1/O2) is structurally incomplete.** Holding the transition-write and exploration-pipeline sites at legacy operands retains legacy misaligned keys at two of the most influential decision-time read sites.
+
+
+4. **The downhill measure $P3$ (I-7) is mathematically invalid.** Evaluating downhill rates strictly at true graph distance $\ge 2$ under map-off conditions assumes the agent possesses oracle distance knowledge, conflating external map metrics with internal goal-directed behavior.
+
+
+
+Below is the formal evaluation, detailed answers to priority questions, issue classifications, and the required minimal revisions.
+
+---
+
+### A. Verdict on the Original CREDIT-1 Design
+
+**Verdict: UNACCEPTABLE IN PRESENT FORM (Requires Mandatory Revisions Before Calibration)**
+
+**Principal Reasons:**
+
+1. **Incomplete Credit Alignment:** Leaving the transition counter (`main.js:4703-4712`) and autonomous exploration pipeline (`main.js:4960`) unaligned creates an internal contradiction. Decision-time scoring reads transitions at the current node via $tc(s,k)$, but Arm A leaves those writes keyed to legacy lag-2 triangles.
+
+
+2. **Flawed Downhill Metric ($P3$):** Measuring $D$ as legal moves that reduce true graph distance at $dist \ge 2$ under map-off conditions evaluates the agent against an oracle distance metric that the agent cannot perceive.
+
+
+3. **Over-parameterized Primary Family:** Using a 3-claim Bonferroni family ($P1, P2, P3$) creates massive sample-size penalties ($n \approx 1,090$ worlds / $\approx 9,810$ sessions) while forcing an arbitrary, unvalidated threshold ($\delta_d = 0.03$) into the primary decision logic.
+
+
+
+---
+
+### B. Ruling on Claude's Proposed Changes (from Review Brief)
+
+1. **Proposed Change I-1 (Replace 28 substitutions with 5 "values-only" substitutions):**
+* **Ruling:** **REJECT.**
+* **Reasoning:** Re-keying only 5 lines (TD Q state/nextState, dampQ) while leaving 21 other credit lines (curiosity, goal rewards, penalties, signals, confidence) at legacy lag-2 keys creates a mixed-credit agent. At decision time, scoring sums Q-values (aligned) with curiosity/rewards/penalties (misaligned). If this arm fails or succeeds, it is impossible to attribute the outcome to "values only" versus internal credit conflict.
+
+
+
+
+2. **Proposed Change I-9 (Replace goal-swapped store control $N1A^\times$ with "own store minus learned values"):**
+* **Ruling:** **REJECT.**
+* **Reasoning:** A specificity control must test whether the learned memory is specific to the target goal $g$. Stripping Q-values and rewards entirely creates an ablated baseline ($N1A_{\text{noQ}}$), which tests *component attribution*, not *goal specificity*. $N1A^\times$ (delivering a store trained on goal $g'$ when evaluating goal $g$) remains the appropriate goal-specificity control.
+
+
+
+
+3. **Proposed Change I-7 (Modify downhill measure to a chance-adjusted index):**
+* **Ruling:** **REVISE.**
+* **Reasoning:** While chance adjustment is an improvement over raw downhill shares, evaluating downhill movement under map-off conditions against a true BFS graph distance remains problematic. Downhill movement must be demoted to an exploratory mediator ($M6$), using uniform-random baseline normalization.
+
+
+
+
+
+---
+
+### C. Issue Classification
+
+#### 1. BLOCKER BEFORE CALIBRATION
+
+* **B-1: Exhaustive Credit Alignment Definition.** The experiment must define a fully aligned arm (Arm A_FULL) that re-keys ALL 28 credit write sites (including transitions and exploration pipeline). The 28-substitution partial arm must not be presented as "full alignment".
+
+
+* **B-2: Instrument I-CRED / I-WRITE Verification.** The test wrappers for I-CRED and I-WRITE must be validated on synthetic, deterministic 5-step trace fixtures to prove 100% identity under alignment and non-zero legacy detection under control.
+
+
+* **B-3: Demotion of $P3$ from Primary Family.** $P3$ (downhill share) must be removed from the Bonferroni primary family and reclassified as an exploratory mediator ($M6$).
+
+
+
+#### 2. BLOCKER BEFORE DESIGN FREEZE
+
+* **B-4: Sizing and Primary Family Simplification.** The primary family must be simplified to $P1$ ($N1A - N0A$) and $P2$ ($[N1A - N0A] - [N1L - N0L]$) under a Bonferroni-2 correction ($\alpha = 0.05 / 2 = 0.025$). Sample sizes must be updated based on empirical SDs obtained from the authorized calibration run.
+
+
+* **B-5: Collision Registry Update.** Consumed world indices from LEARN-0 (1672–2031) and C' (1392–1671) must be formally logged in the seed registry to guarantee strict exclusion from CREDIT-1 confirmatory streams ($> 2031$).
+
+
+
+#### 3. DOCUMENT AND DEFER
+
+* **D-1: Reversal and First-Step Credit (Guard Alignment).** Defer aligning the credit block guard (`agentLast !== next`) to a subsequent milestone (CREDIT-2).
+
+
+* **D-2: Q-Value Decay Half-Life ($t_{1/2} = 693$ calls).** Document that Q-decay may limit long-range credit propagation over 1,500 calls. Defer session length extensions.
+
+
+
+---
+
+### D. Errors and Unsupported Assumptions in Claude's Analysis
+
+1. **False Equivalence of "Values-Only":** Claude assumed that TD Q-updates represent the entirety of "value credit". In MiniFlyWire, goal rewards (`main.js:4627`) and penalties (`main.js:4687`) directly modulate scoring. Isolating Q-updates while leaving reward/penalty keys misaligned creates a credit mismatch, not a clean value isolation.
+
+
+2. **Misinterpretation of Specificity Controls:** Claude claimed $N1A^\times$ is invalid due to goal-entry gating. In reality, because $N1A^\times$ delivers a store trained on $g'$ to an agent evaluated on $g$, any goal-entry gating for $g'$ is inactive at $g$. $N1A^\times$ directly measures whether the delivered store's benefit is specific to goal $g$.
+
+
+3. **Over-reliance on Downhill Share as a Primary Metric:** Claude treated downhill movement as a necessary condition for goal-directed behavior. Under map-off conditions, an agent learning via model-free credit may increase legal goal reaches by forming local topological value gradients without increasing global BFS downhill rates at $dist \ge 2$.
+
+
+
+---
+
+### E. Minimum Set of Necessary Design Revisions
+
+1. **Adopt Two Explicit Aligned Arms:**
+* **Arm A (Pure Re-keying):** Re-key all 26 lines / 28 substitutions where write execution does not depend on an edge filter.
+
+
+* **Arm A+ (Full Semantic Alignment):** Re-key all write sites including edge-filtered transitions (`main.js:4703-4712`) and the exploration pipeline (`main.js:4960`).
+
+
+
+
+2. **Restructure Primary Estimands (Bonferroni-2):**
+* **$P1$:** $N1A - N0A \ge \delta$ ($\delta = 20$).
+
+
+* **$P2$:** $(N1A - N0A) - (N1L - N0L) \ge \delta$ ($\delta = 20$).
+
+
+* *Remove $P3$ from the primary decision table*.
+
+
+
+
+3. **Reclassify Metrics and Controls:**
+* Keep $N1A^\times$ as the primary Goal-Specificity Control.
+
+
+* Move $D$ (downhill share) to Exploratory Mediator $M6$, normalized against random chance.
+
+
+
+
+4. **Update Decision Table Rows:**
+* **Row R1:** $P1 \text{ (LEARNS)} \land P2 \text{ (RAISES)} \implies$ Credit alignment restores goal-directed experience reuse.
+
+
+* **Row R4:** $P1 \in \{\text{NO\_EFFECT}, \text{HARMS}\} \land P2 \in \{\text{NO\_DIFFERENCE}\} \implies$ Retire model-free credit alignment as the mechanism for map-free goal direction.
+
+
+
+
+
+---
+
+### F. Scope of Causal Claims
+
+If Arm A (or Arm A+) achieves $P1 \ge 20$ and $P2 \ge 20$:
+
+* **Supported Claim:** *"Correcting the temporal credit assignment of executed transitions in model-free memory updates significantly increases legal goal reaches and establishes positive experience reuse under map-off conditions."*
+
+
+* **Prohibited Claims:** The evidence will **NOT** support claims of "map-free spatial reasoning," "route planning," "model-based cognition," or "production readiness for active map-on environments."
+
+
+
+---
+
+### G. Final Verdict
+
+**READY FOR DESIGN REVISION**
