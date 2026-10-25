@@ -10,8 +10,9 @@
 // ==========================================================
 import { CELLS, GOALS, EVENT_CLASSES, nFor } from './config.mjs';
 import { pi, deliveryFor, cellOf } from './delivery.mjs';
-import { CALIBRATION_SCOPE, PROCEDURES, scopeProblems } from './lock.mjs';
+import { CALIBRATION_SCOPE, PROCEDURES, scopeProblems, calibrationRecordProblems } from './lock.mjs';
 import { TICKS, trainSeed, testSeed } from '../xfer1/config.mjs';
+import { brainHash, componentHashes, VOLATILE_EPISODE_FIELDS } from '../xfer1/brain.mjs';
 
 export const PLAN = Object.freeze({
   worlds: Object.freeze({ lo: 0, hi: 29 }),        // protocol section 1
@@ -146,6 +147,51 @@ export function validatePlan(plan, { pairing = pi, aPlus = false } = {}) {
   return problems;
 }
 
+/**
+ * the git-ignored data directory holds only authorized development-calibration runs (gate G8.1).  files: [{ rel, json }] relative
+ * to experiments/credit1/data ('/'-separated; json parsed for summary and session files, else null); tracked: git-tracked paths under
+ * the data directory; headCarriesLock(head): the commit recorded by a run carries the calibration-only lock.  A run is a directory
+ * <run>/ with summary.json, sessions/<label>.json, brains/<label>.json and logs/<file>; its summary must record the calibration-only
+ * lock, its commit must carry it, and every record must be a planned, in-scope session.  Anything else fails.
+ */
+const RUN_FILE = /^([^/]+)\/(summary\.json|sessions\/[^/]+\.json|brains\/[^/]+\.json|logs\/[^/]+)$/;
+export function dataDirProblems({ files, tracked, headCarriesLock }) {
+  const problems = [];
+  const planned = new Map(planCalibration().map(e => [e.label, e]));
+  const trackedRecords = tracked.filter(t => t !== 'experiments/credit1/data/.gitignore');
+  if (trackedRecords.length) problems.push(`tracked calibration file(s): ${trackedRecords.slice(0, 3).join(', ')}`);
+  const runs = new Map();
+  for (const f of files) {
+    if (f.rel === '.gitignore') continue;
+    const m = RUN_FILE.exec(f.rel);
+    if (!m) { problems.push(`stray file ${f.rel}`); continue; }
+    if (!runs.has(m[1])) runs.set(m[1], []);
+    runs.get(m[1]).push({ ...f, kind: m[2] });
+  }
+  let records = 0;
+  for (const [run, list] of runs) {
+    const s = list.find(x => x.kind === 'summary.json');
+    if (!s || !s.json || s.json.schema !== 'credit1/1.calibration') { problems.push(`${run}: no calibration summary (records outside an authorized run)`); continue; }
+    const a = s.json.authorization;
+    if (calibrationRecordProblems(a).length || a.authorizedBy !== 'owner') problems.push(`${run}: the summary does not record the calibration-only lock`);
+    if (!headCarriesLock(s.json.head)) problems.push(`${run}: its commit ${String(s.json.head).slice(0, 7)} does not carry the calibration-only lock`);
+    for (const x of list) {
+      if (x.kind.startsWith('sessions/')) {
+        records++;
+        const label = x.kind.slice('sessions/'.length, -'.json'.length), e = planned.get(label), r = x.json;
+        if (!e) { problems.push(`${run}: ${label} is not a planned session`); continue; }
+        const isCredit1 = !!r && String(r.schema).startsWith('credit1/');
+        if (!r || r.label !== label || !r.input || r.input.world !== e.world || (e.driver === 'credit1') !== isCredit1
+          || (isCredit1 && (r.cell !== e.cell || !CALIBRATION_SCOPE.cells.includes(r.cell)))) problems.push(`${run}: ${label} does not match its planned, in-scope session`);
+      } else if (x.kind.startsWith('brains/')) {
+        const label = x.kind.slice('brains/'.length, -'.json'.length), e = planned.get(label);
+        if (!e || !e.export) problems.push(`${run}: ${label} is not a planned export`);
+      }
+    }
+  }
+  return { problems, runs: runs.size, records };
+}
+
 /** D-5 pre-check on the stream: worlds whose goal is not GOALS[w mod 4] */
 export const goalMismatches = (stream) => stream.map((s, w) => ({ w, goal: s.goal, want: GOALS[w % 4] })).filter(x => x.goal !== x.want);
 
@@ -179,17 +225,50 @@ export function d0Pairs() { const w = PLAN.d0World; return ['T', 'N0', 'N1', 'O0
 export function d1Pairs() { return range(PLAN.d1Worlds).flatMap(w => [[`L0-T-w${w}`, `T_L-w${w}`], [`L0-N0-w${w}`, `N0L-w${w}`], [`L0-N1-w${w}`, `N1L-w${w}`], [`L0-O0-w${w}`, `MAPON-N0L-w${w}`]]); }
 export function d2Pairs() { return range(PLAN.d1Worlds).flatMap(w => [[`T_L-w${w}`, `D2-T_L-w${w}`], [`N0L-w${w}`, `D2-N0L-w${w}`], [`N1L-w${w}`, `D2-N1L-w${w}`], [`MAPON-N0L-w${w}`, `D2-MAPON-N0L-w${w}`]]); }
 
+// every differing leaf path (uncapped)
+function leafDiffs(a, b, prefix = '', out = []) {
+  if (a && b && typeof a === 'object' && typeof b === 'object' && Array.isArray(a) === Array.isArray(b)) {
+    for (const k of new Set([...Object.keys(a), ...Object.keys(b)])) leafDiffs(a[k], b[k], prefix ? `${prefix}.${k}` : k, out);
+  } else if (JSON.stringify(a) !== JSON.stringify(b)) out.push(prefix || '(root)');
+  return out;
+}
+/**
+ * two exported stores of the same session run twice.  The runtime stamps every episode with wall-clock identifiers, so the
+ * comparison follows the XFER-1 hash view (xfer1/brain.mjs VOLATILE_EPISODE_FIELDS: id, timestamp): the store hash and every
+ * component hash must be equal, and the raw exports (canonical JSON bytes) may differ ONLY in episodes[*].id and
+ * episodes[*].timestamp.  Any other difference fails.
+ */
+export function exportProblems(rawA, rawB) {
+  if (typeof rawA !== 'string' || typeof rawB !== 'string') return ['missing export'];
+  let A, B;
+  try { A = JSON.parse(rawA); B = JSON.parse(rawB); } catch { return ['an export is not valid JSON']; }
+  const p = [];
+  if (JSON.stringify(A) !== rawA || JSON.stringify(B) !== rawB) p.push('an export is not in canonical JSON form');
+  if (brainHash(A) !== brainHash(B)) p.push('the store hash (XFER-1 hash view) differs');
+  if (JSON.stringify(componentHashes(A)) !== JSON.stringify(componentHashes(B))) p.push('a component hash differs');
+  const volatile = new RegExp(`^episodes\\.\\d+\\.(${VOLATILE_EPISODE_FIELDS.join('|')})$`);
+  const other = leafDiffs(A, B).filter(x => !volatile.test(x));
+  if (other.length) p.push(`the raw exports differ outside the volatile episode fields: ${other.slice(0, 5).join(', ')}${other.length > 5 ? ` (+${other.length - 5})` : ''}`);
+  return p;
+}
+
 // ---------------- protocol steps ----------------
-/** D-0: the same LEARN-0-tree session run twice is identical (whole record except its label and store file name; exports byte-equal) */
-export function d0(recs, exportSha = {}) {
+/**
+ * D-0: the same LEARN-0-tree session run twice is identical: the whole record except its label and store file name; and the two
+ * training exports compare equal under exportProblems.  exports: { label: raw export text }
+ */
+export function d0(recs, exports = {}) {
   const fails = [];
   for (const [a, b] of d0Pairs()) {
     const d = diffPaths(canon(without(recs[a], ['label', 'input.brainFile'])), canon(without(recs[b], ['label', 'input.brainFile'])));
     if (!recs[a] || !recs[b]) fails.push({ pair: [a, b], diffs: ['missing record'] }); else if (d.length) fails.push({ pair: [a, b], diffs: d });
   }
   const [ta, tb] = d0Pairs()[0];
-  if (!exportSha[ta] || exportSha[ta] !== exportSha[tb]) fails.push({ pair: [ta, tb], diffs: ['exported store bytes differ'] });
-  return { step: 'D-0', pass: fails.length === 0, pairs: d0Pairs().length, fails };
+  const ep = exportProblems(exports[ta], exports[tb]);
+  if (ep.length) fails.push({ pair: [ta, tb], diffs: ep });
+  let volatileDiffs = null;
+  try { volatileDiffs = leafDiffs(JSON.parse(exports[ta]), JSON.parse(exports[tb])).length; } catch { volatileDiffs = null; }
+  return { step: 'D-0', pass: fails.length === 0, pairs: d0Pairs().length, exportVolatileDiffs: ep.length ? null : volatileDiffs, fails };
 }
 /** D-1: the CREDIT-1 tree with the global absent is identical to the LEARN-0 tree on every compared field */
 export function d1(recs) {

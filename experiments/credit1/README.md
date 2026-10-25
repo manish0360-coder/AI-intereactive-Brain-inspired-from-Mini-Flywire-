@@ -9,7 +9,8 @@
   - **Stage C:** runtime calibration. It starts only after the owner explicitly confirms, following the checkpoint report.
 - **Not authorized:** seed or world generation (beyond re-deriving the existing development configurations), registration, freeze, the A+ module, any confirmatory session, push.
 - **Session lock:** `lock.mjs` holds the lock. While `SESSION_AUTHORIZATION` is `null`, the driver refuses before it reads its input. The only other value the gate accepts is the calibration-only record: development worlds 0–29, the 9 cells, the development procedures, A+ excluded. The driver checks every session input against that record before it loads any runtime module.
-- **Session count so far: zero.**
+- **Sessions run so far:** 8 development sessions (D-0) in the stopped run `calib-20261026-c66f830`. No confirmatory session has run.
+- **Session records** live only in git-ignored, authorized calibration runs under `data/`. Gate G8.1 checks that each run's summary records the calibration-only lock, that its commit carries that lock, and that every record is a planned in-scope session. Nothing in `data/` is tracked except its `.gitignore`.
 - **LEARN-0** (E1 −24.4 [−36.3, −12.3], INCONCLUSIVE) and its frozen evidence are untouched.
 
 ## Run the gate (read-only on the repository; builds trees under the system temp directory; runs no agent)
@@ -59,6 +60,20 @@ Plan-only runs no session and needs no lock. It re-derives the existing XFER-1 d
 | D-1 | 80 | worlds 0–9, both trees. LEARN-0 driver: T, N0, N1, O0. CREDIT-1 tree A with the global absent: T_L, N0L, N1L and `MAP_ON_PARITY` (N0L with the map on). |
 | D-2 | 40 | the same four CREDIT-1 procedures under `D2_ALIGNED_FALSE` / `D2_MAP_ON_PARITY` (`__CREDIT1__ = { aligned: false }`, telemetry and ledger installed) |
 | cells | 236 | the remaining design-cell sessions. Every cell runs once per world. Worlds 28–29 run the six core cells and N1A_noQ only. |
+
+**D-0 exports.** The runtime stamps every episode with wall-clock identifiers, so two identical training runs export different bytes. D-0 therefore follows the XFER-1 hash view (`xfer1/brain.mjs`, `VOLATILE_EPISODE_FIELDS`):
+- the store hash and every component hash must be equal;
+- the raw exports (canonical JSON) may differ only in `episodes[*].id` and `episodes[*].timestamp`;
+- any other difference fails.
+
+The protocol's own D-0 rule, 100 % identical session records, applies unchanged.
+
+**Run history.** The first Stage C run, `calib-20261026-c66f830`, stopped at D-0:
+- all four record pairs were identical;
+- the export check then required byte-identical exports, which is stricter than the protocol and the XFER-1 convention;
+- the two exports differed only in the 230 episodes' `id` and `timestamp`.
+
+The run is preserved unchanged in `data/`, and the check was corrected as above.
 
 **Run** (Stage C only, after the owner's explicit confirmation):
 

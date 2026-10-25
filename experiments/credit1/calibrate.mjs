@@ -18,7 +18,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import * as LOCK from './lock.mjs';
-import { PLAN, EXPECTED_COUNTS, planCalibration, withConfigs, validatePlan, driverInput, goalMismatches, sessionProblems, d0, d1, d1c, d2, d3, d4, d5, c1, c2 } from './calibration.mjs';
+import { PLAN, EXPECTED_COUNTS, planCalibration, withConfigs, validatePlan, driverInput, goalMismatches, sessionProblems, d0Pairs, d0, d1, d1c, d2, d3, d4, d5, c1, c2 } from './calibration.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..', '..');
@@ -145,7 +145,9 @@ async function runStep(step) {
 }
 
 await runStep('D-0');
-{ const r = d0(recs, exportSha); if (!r.pass) stop('D-0', r); else pass(r); }
+{ const exp = Object.fromEntries(d0Pairs()[0].map(l => [l, fs.existsSync(brain(l)) ? fs.readFileSync(brain(l), 'utf8') : null]));
+  const r = { ...d0(recs, exp), exportSha: Object.fromEntries(d0Pairs()[0].map(l => [l, exportSha[l] || null])) };
+  if (!r.pass) stop('D-0', r); else pass(r); }
 await runStep('D-1');
 { const r = d1(recs); if (!r.pass) stop('D-1', r); else pass(r); }
 { const r = d1c(recs, { aPlus: false }); if (!r.pass) stop('D-1c', r); else pass(r); }

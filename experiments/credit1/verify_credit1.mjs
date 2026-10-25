@@ -23,6 +23,7 @@ import * as LOCK from './lock.mjs';
 import { lineRolesOf, classifyEvents } from './events.mjs';
 import * as K from './calibration.mjs';
 import { COMPONENTS, CONFIG_START as X1_CONFIG_START, trainSeed, testSeed } from '../xfer1/config.mjs';
+import { VOLATILE_EPISODE_FIELDS } from '../xfer1/brain.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..', '..');
@@ -458,9 +459,22 @@ function s5(t, arm) {
   const d0recs = {};
   for (const [a, b] of K.d0Pairs()) for (const lab of [a, b]) d0recs[lab] = { ...JSON.parse(JSON.stringify(l0)), label: lab, input: { ...l0.input, brainFile: `${lab}.json` } };
   const [ta, tb] = K.d0Pairs()[0];
-  check('G9.9 D-0 comparator: identical records (label and store file name aside) and byte-equal exports pass', K.d0(d0recs, { [ta]: 'h1', [tb]: 'h1' }).pass);
-  { const m = JSON.parse(JSON.stringify(d0recs)); m[K.d0Pairs()[2][1]].brain.endHash = 'x'; mutant('D0M1 one differing value fails D-0', !K.d0(m, { [ta]: 'h1', [tb]: 'h1' }).pass); }
-  mutant('D0M2 differing exports fail D-0', !K.d0(d0recs, { [ta]: 'h1', [tb]: 'h2' }).pass);
+  // store-shaped exports; the second run differs only in the wall-clock episode fields (as the runtime stamps them)
+  const store = (ts) => ({ transitions: { 1: { 2: 3 } }, rewards: { '1->2': 1.5 }, penalties: {}, signals: { '1->2': 2 }, curiosity: { '1->2': 0.15 }, Q: { '1#19->2': 0.7 }, confidence: { '1->2': 5 },
+    episodes: [{ id: `autonomous_success_${ts}_ab12c`, source: 'autonomous_success', nodes: [14, 17, 19], timestamp: ts }, { id: `autonomous_success_${ts + 9}_x9y8z`, source: 'autonomous_success', nodes: [3, 2, 1], timestamp: ts + 9 }],
+    homeNeuronId: null, goalNeuronId: null });
+  const exA = JSON.stringify(store(1792954767010)), exOk = { [ta]: exA, [tb]: JSON.stringify(store(1792954766990)) };
+  check('G9.9 D-0 comparator: identical records (label and store file name aside), and exports equal under the XFER-1 hash view that differ only in the volatile episode fields (id, timestamp), pass',
+    exOk[ta] !== exOk[tb] && K.exportProblems(exOk[ta], exOk[tb]).length === 0 && K.d0(d0recs, exOk).pass);
+  check('G9.9b the volatile episode fields are exactly the XFER-1 convention (id, timestamp)', JSON.stringify(VOLATILE_EPISODE_FIELDS) === '["id","timestamp"]');
+  { const m = JSON.parse(JSON.stringify(d0recs)); m[K.d0Pairs()[2][1]].brain.endHash = 'x'; mutant('D0M1 one differing record value fails D-0', !K.d0(m, exOk).pass); }
+  const exMut = (f) => { const s = store(1792954766990); f(s); return { [ta]: exA, [tb]: JSON.stringify(s) }; };
+  mutant('D0M2 an export differing in a non-volatile episode field fails D-0', !K.d0(d0recs, exMut(s => { s.episodes[1].nodes = [3, 2, 4]; })).pass);
+  mutant('D0M3 an export differing in a store component fails D-0', !K.d0(d0recs, exMut(s => { s.Q['1#19->2'] = 0.71; })).pass);
+  mutant('D0M4 an export with an extra episode fails D-0', !K.d0(d0recs, exMut(s => { s.episodes.push({ id: 'x', source: 'autonomous_success', nodes: [5], timestamp: 1 }); })).pass);
+  mutant('D0M5 an export with a new field inside an episode fails D-0', !K.d0(d0recs, exMut(s => { s.episodes[0].extra = 1; })).pass);
+  mutant('D0M6 a non-canonical export (formatting outside the parsed fields) fails D-0', !K.d0(d0recs, { [ta]: exA, [tb]: JSON.stringify(store(1792954766990), null, 1) }).pass);
+  mutant('D0M7 a missing export fails D-0', !K.d0(d0recs, { [ta]: exA }).pass);
   const d2recs = {};
   for (const [a, b] of K.d2Pairs()) {
     d2recs[a] = { ...JSON.parse(JSON.stringify(c1r)), label: a, input: { ...c1r.input, delivery: { source: 'own', brainFile: a } }, credit1: { ledger: { verdict: 'LEGACY_PATTERN' }, eventClasses: { counts: { hold: 1 } } } };
@@ -515,11 +529,57 @@ function s5(t, arm) {
     ['calibrate.mjs --plan-only', 'calibration.mjs', 'events.mjs', 'N1L×', 'MAP_ON_PARITY', 'D2_ALIGNED_FALSE', '364'].every(s => rd.includes(s)));
 }
 
-// ================= G8: session count is zero =================
+// ================= G8: session records only inside authorized calibration runs; this gate runs no session =================
 {
   const data = path.join(HERE, 'data');
-  const sessionFiles = fs.existsSync(data) ? fs.readdirSync(data, { recursive: true }).filter(f => /\.json$/.test(String(f))) : [];
-  check('G8.1 no CREDIT-1 session record exists (experiments/credit1/data absent or empty)', sessionFiles.length === 0, fs.existsSync(data) ? `${sessionFiles.length} file(s)` : 'absent');
+  const files = [];
+  if (fs.existsSync(data)) for (const p of fs.readdirSync(data, { recursive: true }).map(String)) {
+    const abs = path.join(data, p);
+    if (!fs.statSync(abs).isFile()) continue;
+    const relp = p.split(path.sep).join('/');
+    let json = null;
+    if (/(^|\/)(summary\.json|sessions\/[^/]+\.json)$/.test(relp)) { try { json = JSON.parse(fs.readFileSync(abs, 'utf8')); } catch { json = null; } }
+    files.push({ rel: relp, json });
+  }
+  // a run's commit must be in this history and its lock.mjs must hold the calibration-only record
+  const LOCK_LINE = 'export const SESSION_AUTHORIZATION = Object.freeze({ ...CALIBRATION_SCOPE,';
+  const headSeen = new Map();
+  const headCarriesLock = (h) => {
+    if (typeof h !== 'string' || !/^[0-9a-f]{40}$/.test(h)) return false;
+    if (!headSeen.has(h)) {
+      const anc = git('merge-base', '--is-ancestor', h, 'HEAD').status === 0;
+      const src = anc ? git('show', `${h}:experiments/credit1/lock.mjs`) : null;
+      headSeen.set(h, anc && src.status === 0 && src.stdout.includes(LOCK_LINE) && src.stdout.includes("kind: 'DEVELOPMENT_CALIBRATION'"));
+    }
+    return headSeen.get(h);
+  };
+  const tracked = git('ls-files', '--', 'experiments/credit1/data').stdout.trim().split('\n').filter(Boolean);
+  const dd = K.dataDirProblems({ files, tracked, headCarriesLock });
+  check('G8.1 session records exist only inside authorized development-calibration runs (the summary records the calibration-only lock, its commit carries that lock, every record is a planned in-scope session); no calibration record is tracked; nothing stray',
+    dd.problems.length === 0, dd.problems.slice(0, 2).join(' | ') || `${dd.runs} run(s), ${dd.records} session record(s)`);
+  const synth = (f) => {
+    const S = { files: [{ rel: '.gitignore', json: null },
+      { rel: 'calib-x/summary.json', json: { schema: 'credit1/1.calibration', head: 'a'.repeat(40), authorization: { ...JSON.parse(JSON.stringify(LOCK.CALIBRATION_SCOPE)), authorizedBy: 'owner' } } },
+      { rel: 'calib-x/sessions/N0A-w3.json', json: { schema: 'credit1/1.session', label: 'N0A-w3', cell: 'N0A', input: { world: 3 } } },
+      { rel: 'calib-x/sessions/L0-T-w2.json', json: { schema: 'learn0/1.session', label: 'L0-T-w2', input: { world: 2 } } },
+      { rel: 'calib-x/brains/T_A-w3.json', json: null }, { rel: 'calib-x/logs/c0_gate.log', json: null }],
+      tracked: ['experiments/credit1/data/.gitignore'], headCarriesLock: (h) => h === 'a'.repeat(40) };
+    if (f) f(S);
+    return K.dataDirProblems(S).problems.length > 0;
+  };
+  check('G8.1b the G8.1 rule accepts a well-formed authorized run (synthetic)', !synth());
+  check('G8.1c the commit check: the calibration-lock commit c66f830 carries the lock; the base commit does not', headCarriesLock('c66f83028377303a8b0a1419061ba9a002070a43') && !headCarriesLock(C.BASE_COMMIT));
+  mutant('DG1 a stray record directly under data/ fails G8.1', synth(S => { S.files.push({ rel: 'x.json', json: {} }); }));
+  mutant('DG2 records in a directory without a calibration summary fail G8.1', synth(S => { S.files.push({ rel: 'other/sessions/N0A-w3.json', json: { schema: 'credit1/1.session', label: 'N0A-w3', cell: 'N0A', input: { world: 3 } } }); }));
+  mutant('DG3 a run whose summary lacks the authorization record fails G8.1', synth(S => { S.files[1].json.authorization = null; }));
+  mutant('DG4 a run whose authorization is not the calibration-only scope fails G8.1', synth(S => { S.files[1].json.authorization.aPlus = true; }));
+  mutant('DG5 a run whose commit does not carry the calibration-only lock fails G8.1', synth(S => { S.files[1].json.head = 'b'.repeat(40); }));
+  mutant('DG6 a tracked calibration record fails G8.1', synth(S => { S.tracked.push('experiments/credit1/data/calib-x/sessions/N0A-w3.json'); }));
+  mutant('DG7 a session record that is not a planned session fails G8.1', synth(S => { S.files.push({ rel: 'calib-x/sessions/N0A-w31.json', json: { schema: 'credit1/1.session', label: 'N0A-w31', cell: 'N0A', input: { world: 31 } } }); }));
+  mutant('DG8 an A+ cell record inside a run fails G8.1', synth(S => { S.files[2].json.cell = 'N0AP'; }));
+  mutant('DG9 an unexpected file inside a run fails G8.1', synth(S => { S.files.push({ rel: 'calib-x/notes.txt', json: null }); }));
+  mutant('DG10 an export that is not a planned export fails G8.1', synth(S => { S.files.push({ rel: 'calib-x/brains/N0A-w3.json', json: null }); }));
+  mutant('DG11 a record whose content does not match its planned session fails G8.1', synth(S => { S.files[2].json.input.world = 4; }));
   const runtimeImport = /from\s+['"][^'"]*(\/render\/|\/main\.js|experiments\/m7\/run\.js|\.\/session\.mjs)['"]|import\(\s*['"][^'"]*(render\/|main\.js|run\.js|session\.mjs)/;
   const mods = fs.readdirSync(HERE).filter(f => f.endsWith('.mjs') && f !== 'session.mjs');
   const offending = mods.filter(f => runtimeImport.test(fs.readFileSync(path.join(HERE, f), 'utf8')));
