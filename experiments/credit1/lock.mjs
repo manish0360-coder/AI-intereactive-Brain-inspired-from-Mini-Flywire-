@@ -1,11 +1,12 @@
 // ==========================================================
 // CREDIT-1 — session lock
 // ==========================================================
-// No CREDIT-1 session of any kind (development calibration, smoke, confirmatory) is authorized.  The driver calls
-// assertSessionAuthorized() before it reads its input or loads any runtime module, so it refuses while this is null.
-// Changing it requires the owner's separate, explicit authorization, recorded in a commit of its own.
-// The only non-null value the gate accepts is a development-calibration record with exactly the scope below; the driver checks
-// every session input against it (assertSessionScope) before any runtime module is loaded.
+// Stage L (owner authorization of 2026-10-25, recorded in a commit of its own): the session lock holds the calibration-only
+// record below.  Only development calibration is in scope: XFER-1 development worlds 0-29, the 9 cells, the development
+// procedures; the A+ module, confirmatory territory and every other session remain refused.  The runtime calibration (Stage C)
+// starts only on the owner's explicit confirmation after the checkpoint report.
+// The driver calls assertSessionAuthorized() before it reads its input, and assertSessionScope() for every session input before
+// any runtime module is loaded.  The only non-null value the gate accepts is a record with exactly the scope below.
 // ==========================================================
 export const CALIBRATION_SCOPE = Object.freeze({
   kind: 'DEVELOPMENT_CALIBRATION',
@@ -22,7 +23,8 @@ export const PROCEDURES = Object.freeze({
 });
 export const CONFIRMATORY_START = 2032;                                       // config.TERRITORY.confirmatoryStart
 
-export const SESSION_AUTHORIZATION = null;
+export const SESSION_AUTHORIZATION = Object.freeze({ ...CALIBRATION_SCOPE, authorizedBy: 'owner', authorizedOn: '2026-10-25', stage: 'L',
+  note: 'development calibration only; the runtime calibration (Stage C) starts only on the owner\'s explicit confirmation' });
 export const A_PLUS_MODULE_AUTHORIZATION = null;
 
 export function assertSessionAuthorized() {
