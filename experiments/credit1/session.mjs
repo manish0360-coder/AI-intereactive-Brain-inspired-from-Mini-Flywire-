@@ -32,7 +32,7 @@ import { HEAD_COMMIT, HOOK_STATES, CONFIRMATORY_STATE, ORACLES } from '../learn0
 import { summarizeDiag } from '../gate-floor-spec/diag.mjs';
 import { SCHEMA, MODES, CREDIT1_TREE, LEARN0_TREE } from './config.mjs';
 import { cellOf, deliveryFor, maskStore } from './delivery.mjs';
-import { createTelemetry, checkCredit, createLedger, evaluateLedger, parseCaller } from './instruments.mjs';
+import { createTelemetry, checkCredit, createLedger, evaluateLedger, parseCaller, captureStack } from './instruments.mjs';
 import { lineRolesOf, classifyEvents } from './events.mjs';
 
 const IN = JSON.parse(process.argv[2]);
@@ -113,7 +113,7 @@ globalThis.__stores = () => ({ transitions: mem.transitions, rewards: mem.reward
   Q: qmod.Q, confidence: mem.confidenceMap, episodes: epm.exportEpisodes() });
 const telemetry = createTelemetry({ callIndex: () => calls - 1 });
 globalThis.__CREDIT1_TEL__ = telemetry;
-const ledger = IN.ledger === 'full' ? createLedger({ callIndex: () => calls - 1, caller: () => parseCaller(new Error().stack, TREE_MAIN),
+const ledger = IN.ledger === 'full' ? createLedger({ callIndex: () => calls - 1, caller: () => parseCaller(captureStack(), TREE_MAIN),
   pathOf: () => (Array.isArray(globalThis.recentMemory) ? globalThis.recentMemory : []) }) : null;
 if (ledger) {
   ledger.wrapMap('Q', qmod.Q);

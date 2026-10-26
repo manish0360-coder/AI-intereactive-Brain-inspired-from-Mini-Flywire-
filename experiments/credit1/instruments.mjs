@@ -83,6 +83,18 @@ export function checkCredit({ creditEvents, arrivals, resets = [], arm }) {
 
 // ---------------- I-LEDGER ----------------
 /**
+ * the stack of the current write, deep enough to reach main.js.  V8 keeps Error.stackTraceLimit (default 10) frames, and the
+ * episode pipeline writes Q 11 frames below main.js (_runPipeline -> _learnProcedural -> forEach -> updateQ -> setQ -> wrapper), so
+ * the limit is raised to STACK_CAPTURE_LIMIT for this one capture and the previous value is restored before returning, also on an
+ * exception.  The change is synchronous: no other code runs while it is raised.
+ */
+export const STACK_CAPTURE_LIMIT = 64;
+export function captureStack(limit = STACK_CAPTURE_LIMIT) {
+  const prev = Error.stackTraceLimit;
+  try { Error.stackTraceLimit = limit; return new Error().stack; } finally { Error.stackTraceLimit = prev; }
+}
+
+/**
  * first stack frame inside the tree's main.js -> its line number (pure; the stack text is passed in).
  * Matched on the last two path segments (<unique tree dir>/main.js), URL-decoded and case-folded on both sides, because Windows
  * can report one directory as an 8.3 short path (MANISH~1) or as the long path (Manish%20Raj) in module URLs.

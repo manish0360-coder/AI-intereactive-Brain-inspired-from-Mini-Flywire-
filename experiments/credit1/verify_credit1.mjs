@@ -16,7 +16,7 @@ import * as C from './config.mjs';
 import { censusBlock } from './census.mjs';
 import { censusFile, censusRoot, TABLE, UNRESOLVED } from './writecensus.mjs';
 import { transformMain, reverseMain, buildCredit1Trees, LINES, insertedIds } from './transform.mjs';
-import { createLedger, parseCaller } from './instruments.mjs';
+import { createLedger, parseCaller, captureStack, STACK_CAPTURE_LIMIT } from './instruments.mjs';
 import { checkFixtures, checkMutants, telemetryNeutral, selfTargetCounter, isEdge as graphEdge } from './fixtures.mjs';
 import { pi, checkPairing, deliveryFor, maskStore, KEEP, noQMaskOk } from './delivery.mjs';
 import * as LOCK from './lock.mjs';
@@ -276,6 +276,40 @@ function s5(t, arm) {
   const mod = await import(pathToFileURL(path.join(dir, 'main.js')).href);
   mod.w(m);
   check('G4.5 I-LEDGER stack attribution on a real stack (8.3 / long path and URL-encoding safe): the write is attributed to line 2', led.events.length === 1 && led.events[0].line === 2, `line ${led.events[0] && led.events[0].line}`);
+  // G4.5b deep stack, shaped like the episode pipeline: main.js line 3 -> d0 -> Array.forEach -> callback -> d1 .. d15 -> the write
+  const ddir = path.join(os.tmpdir(), 'mfw-credit1-stacktest', 'stk-deep-' + sha256('credit1-stack-deep').slice(0, 12));
+  fs.mkdirSync(ddir, { recursive: true });
+  const DEPTH = 15;
+  fs.writeFileSync(path.join(ddir, 'pipeline.js'), ['export function d0(map) { [1].forEach(() => d1(map)); }',
+    ...Array.from({ length: DEPTH }, (_, i) => `export function d${i + 1}(map) { ${i + 1 < DEPTH ? `d${i + 2}(map);` : "map.set('deep', 1);"} }`)].join('\n') + '\n');
+  fs.writeFileSync(path.join(ddir, 'main.js'), "import { d0 } from './pipeline.js';\nexport function w(map) {\n  d0(map);\n}\n");
+  const dmain = path.join(ddir, 'main.js');
+  const dmod = await import(pathToFileURL(dmain).href);
+  const deep = (capture) => { let stack = ''; const l = createLedger({ caller: () => { stack = capture(); return parseCaller(stack, dmain); } }); const mm = new Map(); l.wrapMap('Q', mm); dmod.w(mm);
+    const fr = stack.split('\n').slice(1), iWrite = fr.findIndex(x => x.includes('pipeline.js')), iMain = fr.findIndex(x => x.includes('main.js'));
+    return { line: l.events.length === 1 ? l.events[0].line : 'n/a', between: iWrite >= 0 && iMain > iWrite ? iMain - iWrite : null }; };
+  const limit0 = Error.stackTraceLimit;
+  const dg = deep(() => captureStack());
+  check('G4.5b I-LEDGER attribution through a deep stack (at least 15 frames between main.js and the write, one through Array.forEach): attributed to main.js line 3 with the 64-frame capture',
+    dg.line === 3 && dg.between >= 15 && STACK_CAPTURE_LIMIT === 64 && Error.stackTraceLimit === limit0, `line ${dg.line}, ${dg.between} frames between`);
+  const withLimit = (n, f) => { const p = Error.stackTraceLimit; Error.stackTraceLimit = n; try { return f(); } finally { Error.stackTraceLimit = p; } };
+  mutant('SM1 the default stack-trace limit (10) loses the main.js frame of a deep write', deep(() => withLimit(10, () => new Error().stack)).line !== 3);
+  // G4.5c the previous limit is restored on the normal path and when stack formatting throws
+  const restoredAfter = (capture) => { const p = Error.stackTraceLimit; Error.stackTraceLimit = 7; let ok;
+    try { capture(); const normal = Error.stackTraceLimit === 7; const pst = Error.prepareStackTrace; let threw = false;
+      Error.prepareStackTrace = () => { throw new Error('gate: formatting throws'); };
+      try { capture(); } catch { threw = true; } finally { Error.prepareStackTrace = pst; }
+      ok = normal && threw && Error.stackTraceLimit === 7; } finally { Error.stackTraceLimit = p; }
+    return ok; };
+  check('G4.5c captureStack restores the previous stack-trace limit, on the normal path and when stack formatting throws', restoredAfter(() => captureStack()) && Error.stackTraceLimit === limit0);
+  mutant('SM2 a capture that leaves the raised limit in place is detected', !restoredAfter(() => { Error.stackTraceLimit = 64; return new Error().stack; }));
+  mutant('SM3 a capture that restores only on the normal path is detected', !restoredAfter(() => { const p = Error.stackTraceLimit; Error.stackTraceLimit = 64; const s = new Error().stack; Error.stackTraceLimit = p; return s; }));
+  // G4.5d the driver uses the capture; nothing in the runtime reads or sets the limit or a stack hook (the change is unobservable)
+  const drv = fs.readFileSync(path.join(HERE, 'session.mjs'), 'utf8');
+  const runtimeSrc = ['main.js', ...fs.readdirSync(path.join(ROOT, 'render')).filter(f => f.endsWith('.js')).map(f => `render/${f}`), ...fs.readdirSync(path.join(ROOT, 'experiments', 'm7')).filter(f => f.endsWith('.js')).map(f => `experiments/m7/${f}`)];
+  const touching = runtimeSrc.filter(f => /stackTraceLimit|prepareStackTrace/.test(fs.readFileSync(path.join(ROOT, ...f.split('/')), 'utf8')));
+  check('G4.5d the driver attributes writes through captureStack only; the runtime (main.js, render/, experiments/m7) never reads or sets the stack-trace limit or a stack hook',
+    drv.includes('caller: () => parseCaller(captureStack(), TREE_MAIN)') && !/new Error\(\)\.stack/.test(drv) && touching.length === 0, touching.join(', '));
   check('G4.6 I-LEDGER map list: every exported keyed store is wrapped by the driver (Q, rewards, penalties, signals, curiosity, confidence, transitions nested, pathAttempts, pathSuccesses)',
     ['Q', 'rewards', 'penalties', 'signals', 'curiosity', 'confidence', 'transitions', 'pathAttempts', 'pathSuccesses'].every(n => fs.readFileSync(path.join(HERE, 'session.mjs'), 'utf8').includes(`'${n}'`)));
 }

@@ -9,7 +9,9 @@
   - **Stage C:** runtime calibration. It starts only after the owner explicitly confirms, following the checkpoint report.
 - **Not authorized:** seed or world generation (beyond re-deriving the existing development configurations), registration, freeze, the A+ module, any confirmatory session, push.
 - **Session lock:** `lock.mjs` holds the lock. While `SESSION_AUTHORIZATION` is `null`, the driver refuses before it reads its input. The only other value the gate accepts is the calibration-only record: development worlds 0–29, the 9 cells, the development procedures, A+ excluded. The driver checks every session input against that record before it loads any runtime module.
-- **Sessions run so far:** 8 development sessions (D-0) in the stopped run `calib-20261026-c66f830`. No confirmatory session has run.
+- **Sessions run so far** (no confirmatory session has run):
+  - 8 development sessions (D-0) in the stopped run `calib-20261026-c66f830`;
+  - 364 in the stopped run `calib-20261026-8f67a8d`.
 - **Session records** live only in git-ignored, authorized calibration runs under `data/`. Gate G8.1 checks that each run's summary records the calibration-only lock, that its commit carries that lock, and that every record is a planned in-scope session. Nothing in `data/` is tracked except its `.gitignore`.
 - **LEARN-0** (E1 −24.4 [−36.3, −12.3], INCONCLUSIVE) and its frozen evidence are untouched.
 
@@ -74,6 +76,14 @@ The protocol's own D-0 rule, 100 % identical session records, applies unchanged.
 - the two exports differed only in the 230 episodes' `id` and `timestamp`.
 
 The run is preserved unchanged in `data/`, and the check was corrected as above.
+
+The second run, `calib-20261026-8f67a8d`, completed all 364 sessions and passed C-0, D-0, D-1, D-1c and D-2. It stopped at D-3:
+- I-LEDGER failed in all 316 CREDIT-1 sessions, solely from Q writes without an attributed source line (0.337 % of writes);
+- the cause was stack truncation: V8 keeps `Error.stackTraceLimit` (default 10) frames, and the episode pipeline writes Q 11 frames below `main.js`;
+- the ledger now captures each stack through `captureStack`, which raises the limit to 64 for that one capture and restores it, also on an exception;
+- the I-LEDGER rule is unchanged: an unattributed write still fails.
+
+The run is preserved unchanged.
 
 **Run** (Stage C only, after the owner's explicit confirmation):
 
