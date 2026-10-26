@@ -129,6 +129,21 @@ The gate inspects `main.js` as LF-normalized text (census, census mutants). Inte
   Then run `node experiments/learn0/verify_results_learn0.mjs` in that clone. Expected result: 13/13.
 - **Repair is out of scope:** a `-text` attribute for the LEARN-0 results would touch frozen-study files and the root `.gitattributes`. That is a separate governance decision.
 
+## Pipeline writes (I-LEDGER; Gemini round 3, CRITICAL)
+Writes from the episode pipeline (`PIPELINE_REPLAY`: `replayOneEpisode();`; `PIPELINE_BRIDGE`: the bridge's `recordAutonomousSuccess(`) are key-checked; no class bypasses validation.
+
+**The rule.** Each such write must be a `set` to Q, rewards, transitions, pathSuccesses or confidence, with a well-formed key built from a consecutive pair of the episode the pipeline processed:
+- **Q goal part:** GOAL_NONE (0) for replay, because the copy's `activeGoal` stays `null`; the terminal node for the bridge.
+- **Single episode:** one replay call must come from one episode.
+
+**Evidence the driver records** (observational, through `exportEpisodes()`):
+- the replay candidates at the `replayBranch()` hook, which immediately precedes `replayOneEpisode()`;
+- the stored bridge episodes after a call with bridge writes.
+
+A pipeline write without evidence fails. Gate G4.7–G4.7d and mutants PL1–PL12.
+
+**Not yet validated on real sessions.** The calibration run `calib-20261026-c144130` passed D-3 under the previous evaluator, which did not key-check pipeline writes. The corrected I-LEDGER must be validated on development sessions before freeze.
+
 ## Documented gaps (I-LEDGER)
 - These stores are not exported `Map`s and are not wrapped: the emotion map, the semantic layers, the uncertainty ledgers, semantic vitality, `timeMemory` and `adjacencyMemory` (both private to `main.js`), and the consolidation registry.
 - Their effect on the chosen move is unverified (DESIGN r2 section 11).

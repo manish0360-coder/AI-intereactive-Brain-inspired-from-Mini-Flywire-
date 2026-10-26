@@ -16,7 +16,7 @@ import * as C from './config.mjs';
 import { censusBlock } from './census.mjs';
 import { censusFile, censusRoot, TABLE, UNRESOLVED } from './writecensus.mjs';
 import { transformMain, reverseMain, buildCredit1Trees, LINES, insertedIds } from './transform.mjs';
-import { createLedger, parseCaller, captureStack, STACK_CAPTURE_LIMIT } from './instruments.mjs';
+import { createLedger, parseCaller, captureStack, STACK_CAPTURE_LIMIT, evaluateLedger, pipelineCandidates, GOAL_NONE } from './instruments.mjs';
 import { checkFixtures, checkMutants, telemetryNeutral, selfTargetCounter, isEdge as graphEdge } from './fixtures.mjs';
 import { pi, checkPairing, deliveryFor, maskStore, KEEP, noQMaskOk } from './delivery.mjs';
 import * as LOCK from './lock.mjs';
@@ -312,6 +312,60 @@ function s5(t, arm) {
     drv.includes('caller: () => parseCaller(captureStack(), TREE_MAIN)') && !/new Error\(\)\.stack/.test(drv) && touching.length === 0, touching.join(', '));
   check('G4.6 I-LEDGER map list: every exported keyed store is wrapped by the driver (Q, rewards, penalties, signals, curiosity, confidence, transitions nested, pathAttempts, pathSuccesses)',
     ['Q', 'rewards', 'penalties', 'signals', 'curiosity', 'confidence', 'transitions', 'pathAttempts', 'pathSuccesses'].every(n => fs.readFileSync(path.join(HERE, 'session.mjs'), 'utf8').includes(`'${n}'`)));
+  // G4.7 pipeline writes are validated (no class bypasses key checking): the real ledger and evaluator on a synthetic pipeline that
+  // writes, per consecutive pair of the processed episode, what _learnProcedural and _updateTrust write
+  const PLINE = { PIPELINE_REPLAY: 7002, PIPELINE_BRIDGE: 7003 };
+  const plClassOf = (l) => (l === PLINE.PIPELINE_REPLAY ? 'PIPELINE_REPLAY' : l === PLINE.PIPELINE_BRIDGE ? 'PIPELINE_BRIDGE' : null);
+  const EPISODES = [   // exported-episode shape (render/episodeManager.js exportEpisodes)
+    { id: 'e1', source: 'autonomous_success', transitions: [{ from: 14, to: 17 }, { from: 17, to: 19 }] },
+    { id: 'e2', source: 'autonomous_success', transitions: [{ from: 3, to: 2 }, { from: 2, to: 1 }, { from: 1, to: 8 }] },
+    { id: 'e3', source: 'replay', transitions: [{ from: 5, to: 6 }, { from: 6, to: 7 }] },
+  ];
+  const plRun = ({ cls = 'PIPELINE_REPLAY', pairs = [[3, 2], [2, 1], [1, 8]], goal = GOAL_NONE, evidence = true, extra = [], classOf = plClassOf } = {}) => {
+    const call = 5, line = PLINE[cls];
+    const S = { Q: new Map(), rewards: new Map(), transitions: new Map(), pathSuccesses: new Map(), confidence: new Map(), penalties: new Map() };
+    const led = createLedger({ callIndex: () => call, caller: () => line });
+    for (const [n, m] of Object.entries(S)) led.wrapMap(n, m, { nested: n === 'transitions' });
+    const W = [];
+    for (const [f, t] of pairs) W.push(['transitions', f, t], ['Q', `${f}#${goal}->${t}`], ['rewards', `${f}->${t}`]);
+    for (const [f, t] of pairs) W.push(['pathSuccesses', `${f}->${t}`], ['confidence', `${f}->${t}`]);
+    for (const w of [...W, ...extra]) {
+      if (w[0] === 'transitions') { const m = S.transitions.get(w[1]) || new Map(); m.set(w[2], 1); S.transitions.set(w[1], m); }
+      else if (w[0] === 'DELETE') S[w[1]].delete(w[2]);
+      else S[w[0]].set(w[1], 1);
+    }
+    const ev = { PIPELINE_REPLAY: new Map(), PIPELINE_BRIDGE: new Map() };
+    if (evidence) ev[cls].set(call, pipelineCandidates(EPISODES, cls));
+    return evaluateLedger({ events: led.events, creditEvents: [], siteClassOf: classOf, arm: 'A', isEdge: graphEdge, pipelineEvidence: ev });
+  };
+  const okReplay = plRun(), okBridge = plRun({ cls: 'PIPELINE_BRIDGE', pairs: [[14, 17], [17, 19]], goal: 19 });
+  check('G4.7 I-LEDGER validates pipeline writes: a legitimate replay (one stored episode, GOAL_NONE) and a legitimate bridge (terminal-node goal) pass with every write counted as a pipeline pair write',
+    okReplay.verdict === 'PASS' && okReplay.keyClass.PIPE === 15 && okReplay.keyClass.OTHER === 0 && okBridge.verdict === 'PASS' && okBridge.keyClass.PIPE === 10,
+    `replay ${okReplay.verdict} ${okReplay.keyClass.PIPE}, bridge ${okBridge.verdict} ${okBridge.keyClass.PIPE}${okReplay.failures[0] ? ' | ' + okReplay.failures[0].why : ''}`);
+  const rc = pipelineCandidates(EPISODES, 'PIPELINE_REPLAY'), bc = pipelineCandidates(EPISODES, 'PIPELINE_BRIDGE');
+  check('G4.7b pipeline candidates: replay sources exclude replay/imagination episodes and use GOAL_NONE; bridge episodes are autonomous_success with their terminal node as goal',
+    rc.length === 2 && rc.every(c => c.goal === GOAL_NONE) && !rc.some(c => c.pairs.includes('5->6')) && bc.length === 2 && bc[0].goal === 19 && bc[1].goal === 8);
+  const qsrc = fs.readFileSync(path.join(ROOT, 'render', 'qlearning.js'), 'utf8'), isrc = fs.readFileSync(path.join(HERE, 'instruments.mjs'), 'utf8');
+  check('G4.7c the pipeline goal namespace is the runtime\'s: GOAL_NONE = 0 and makeStateKey maps a null goal to it (render/qlearning.js)',
+    GOAL_NONE === 0 && qsrc.includes('export const GOAL_NONE = 0;') && qsrc.includes('const g = (goal != null) ? Number(goal) : GOAL_NONE;'));
+  const drvSrc = fs.readFileSync(path.join(HERE, 'session.mjs'), 'utf8');
+  check('G4.7d no class bypasses key checking: the evaluator validates pipeline classes, and the driver records replay evidence before replayOneEpisode and bridge evidence after the call and passes it to the evaluator',
+    !/PIPELINE_REPLAY'\)\s*continue;/.test(isrc) && isrc.includes('const why = pipelineKeyProblem(w, cands);')
+    && drvSrc.includes("replayBranch() { replayCalls.push(calls - 1); if (ledger) pipelineEvidence.PIPELINE_REPLAY.set(calls - 1, pipelineCandidates(epm.exportEpisodes(), 'PIPELINE_REPLAY')); }")
+    && drvSrc.includes('step() { bridgeEvidence();') && drvSrc.includes('isEdge, pipelineEvidence })'));
+  const plFails = (o) => plRun(o).verdict === 'FAIL';
+  mutant('PL1 a legacy lag-2 key written by the replay pipeline fails I-LEDGER', plFails({ extra: [['Q', '3#0->1']] }));
+  mutant('PL2 a malformed pipeline key fails I-LEDGER', plFails({ extra: [['rewards', '3->x']] }) && plFails({ extra: [['Q', '3->2']] }));
+  mutant('PL3 a replay Q write outside the GOAL_NONE namespace fails I-LEDGER', plFails({ goal: 19 }));
+  mutant('PL4 replay writes mixing two episodes in one call fail I-LEDGER', plFails({ pairs: [[3, 2], [14, 17]] }));
+  mutant('PL5 a pipeline write without episode evidence fails I-LEDGER', plFails({ evidence: false }));
+  mutant('PL6 a pipeline write to a store the pipeline never writes fails I-LEDGER', plFails({ extra: [['penalties', '3->2']] }));
+  mutant('PL7 a pipeline delete fails I-LEDGER', plFails({ extra: [['DELETE', 'rewards', '3->2']] }));
+  mutant('PL8 a replay write from an episode that is itself a replay copy fails I-LEDGER', plFails({ pairs: [[5, 6]] }));
+  mutant('PL9 relabelled as a bridge write, a lag-2 key still fails I-LEDGER', plFails({ cls: 'PIPELINE_BRIDGE', pairs: [[14, 17], [17, 19]], goal: 19, extra: [['Q', '14#19->19']] }));
+  mutant('PL10 a bridge Q write in the replay namespace fails I-LEDGER', plFails({ cls: 'PIPELINE_BRIDGE', pairs: [[14, 17], [17, 19]], goal: GOAL_NONE }));
+  mutant('PL11 reclassified as DECAY, a new pipeline key fails I-LEDGER', plFails({ classOf: (l) => (l === PLINE.PIPELINE_REPLAY ? 'DECAY' : null) }));
+  mutant('PL12 reclassified to no class, a pipeline write fails I-LEDGER', plFails({ classOf: () => null }));
 }
 
 // ================= G5: delivery and the locked driver (BC-2) =================

@@ -32,7 +32,7 @@ import { HEAD_COMMIT, HOOK_STATES, CONFIRMATORY_STATE, ORACLES } from '../learn0
 import { summarizeDiag } from '../gate-floor-spec/diag.mjs';
 import { SCHEMA, MODES, CREDIT1_TREE, LEARN0_TREE } from './config.mjs';
 import { cellOf, deliveryFor, maskStore } from './delivery.mjs';
-import { createTelemetry, checkCredit, createLedger, evaluateLedger, parseCaller, captureStack } from './instruments.mjs';
+import { createTelemetry, checkCredit, createLedger, evaluateLedger, parseCaller, captureStack, pipelineCandidates } from './instruments.mjs';
 import { lineRolesOf, classifyEvents } from './events.mjs';
 
 const IN = JSON.parse(process.argv[2]);
@@ -122,9 +122,22 @@ if (ledger) {
   ledger.wrapMap('pathAttempts', trust.pathAttempts);
   ledger.wrapMap('pathSuccesses', trust.pathSuccesses);
 }
+// pipeline episode evidence for I-LEDGER (observational: exportEpisodes returns copies of the store): the replay candidates just
+// before replayOneEpisode (the replayBranch hook precedes it in the same call), and the stored bridge episodes after a call whose
+// writes came from the bridge line (scanned at the next call start and once after the run)
+const pipelineEvidence = { PIPELINE_REPLAY: new Map(), PIPELINE_BRIDGE: new Map() };
+const BRIDGE_LINES = new Set(Object.entries(SITE).filter(([, c]) => c === 'PIPELINE_BRIDGE').map(([l]) => Number(l)));
+let bridgeScanFrom = 0;
+const bridgeEvidence = () => {
+  if (!ledger) return;
+  const ev = ledger.events, bridgeCalls = new Set();
+  for (let i = bridgeScanFrom; i < ev.length; i++) if (BRIDGE_LINES.has(ev[i].line)) bridgeCalls.add(ev[i].call);
+  bridgeScanFrom = ev.length;
+  if (bridgeCalls.size) { const cands = pipelineCandidates(epm.exportEpisodes(), 'PIPELINE_BRIDGE'); for (const c of bridgeCalls) pipelineEvidence.PIPELINE_BRIDGE.set(c, cands); }
+};
 globalThis.__M7_TEL__ = {
-  step() { calls++; lrAtStart = globalThis.lastReasoning; if (calls === 1) { const b = serializeBrain(globalThis.__stores()); startState = { hashes: componentHashes(b), sizes: componentSizes(b), brainHash: brainHash(b) }; } },
-  replayBranch() { replayCalls.push(calls - 1); },
+  step() { bridgeEvidence(); calls++; lrAtStart = globalThis.lastReasoning; if (calls === 1) { const b = serializeBrain(globalThis.__stores()); startState = { hashes: componentHashes(b), sizes: componentSizes(b), brainHash: brainHash(b) }; } },
+  replayBranch() { replayCalls.push(calls - 1); if (ledger) pipelineEvidence.PIPELINE_REPLAY.set(calls - 1, pipelineCandidates(epm.exportEpisodes(), 'PIPELINE_REPLAY')); },
 };
 globalThis.__GFB2__ = { goalReset(from, to, goal) {
   goalResets.push([calls - 1, Number(from), isEdge(from, to) && Number(to) === Number(goal) ? 1 : 0]);
@@ -208,7 +221,8 @@ const mapAudit = { setting: IN.map, ...oracle, ok: IN.map === 'off' ? (exec === 
 
 // I-CRED and I-LEDGER (DESIGN r2 section 5); any FAIL voids the block (instruments.blockIntegrity, applied by the analysis)
 const icred = checkCredit({ creditEvents: telemetry.credit, arrivals, resets: resetsDiag, arm: CELL.credit });
-const ledgerEval = ledger ? evaluateLedger({ events: ledger.events, creditEvents: telemetry.credit, siteClassOf, arm: CELL.credit, isEdge }) : null;
+bridgeEvidence();                                                            // the last call's bridge writes, if any
+const ledgerEval = ledger ? evaluateLedger({ events: ledger.events, creditEvents: telemetry.credit, siteClassOf, arm: CELL.credit, isEdge, pipelineEvidence }) : null;
 // per-episode records: starts (initial / goal / cap) from the telemetry; a goal start closes the previous episode with the goal-reset probe of that call
 const starts = telemetry.episodes.slice().sort((a, b) => a.call - b.call);
 const episodes = starts.map((s, i) => {
@@ -244,7 +258,8 @@ const out = {
     eventClasses,
     telemetry: telemetry.summary(),
     icred: { verdict: icred.verdict, events: icred.events, identityRate: icred.identityRate, informative: icred.informative, fresh: icred.fresh, carried: icred.carried, rFromMismatch: icred.rFromMismatch, crossChecked: icred.crossChecked, failures: icred.failures.slice(0, 20) },
-    ledger: ledgerEval ? { verdict: ledgerEval.verdict, writes: ledgerEval.writes, byClass: ledgerEval.byClass, keyClass: ledgerEval.keyClass, held: ledgerEval.held, informativeExec: ledgerEval.informativeExec, legacyNonEdge: ledgerEval.legacyNonEdge, failures: ledgerEval.failures.slice(0, 20), failureCount: ledgerEval.failures.length } : { verdict: 'OFF' },
+    ledger: ledgerEval ? { verdict: ledgerEval.verdict, writes: ledgerEval.writes, byClass: ledgerEval.byClass, keyClass: ledgerEval.keyClass, held: ledgerEval.held, informativeExec: ledgerEval.informativeExec, legacyNonEdge: ledgerEval.legacyNonEdge, failures: ledgerEval.failures.slice(0, 20), failureCount: ledgerEval.failures.length,
+      pipelineEvidence: { replayCalls: pipelineEvidence.PIPELINE_REPLAY.size, bridgeCalls: pipelineEvidence.PIPELINE_BRIDGE.size } } : { verdict: 'OFF' },
     episodes: { count: episodes.length, byOutcome: episodeSummary, meanCalls: (() => { const c = episodes.filter(e => e.calls !== null); return c.length ? c.reduce((s, e) => s + e.calls, 0) / c.length : null; })() },
     redirects: telemetry.summary().redirects,
     selfCandidates: telemetry.summary().candidates,

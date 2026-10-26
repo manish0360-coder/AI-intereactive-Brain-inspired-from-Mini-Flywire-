@@ -168,15 +168,55 @@ const pathPairs = (p, goal) => {
 };
 
 /**
+ * the episode pipeline (render/episodeManager.js _runPipeline -> _learnProcedural, _updateTrust) writes, for each consecutive pair
+ * {from, to} of the processed episode's transitions: transitions[from][to], Q[makeStateKey(from, activeGoal) -> to],
+ * rewards[from->to], pathSuccesses[from->to] and confidence[from->to].  Nothing else among the ledger's stores (write census).
+ *   PIPELINE_REPLAY  replayOneEpisode copies the nodes of ONE stored episode whose source is not replay/imagination; the copy's
+ *                    activeGoal stays null, so its Q keys use GOAL_NONE.  Replay copies are not stored afterwards.
+ *   PIPELINE_BRIDGE  recordAutonomousSuccess(nodes.slice(0, -1), terminal node): a stored autonomous_success episode whose
+ *                    activeGoal is its terminal node.
+ * pipelineCandidates(exportedEpisodes, cls): the episodes a pipeline write of that class may come from, as { goal, pairs }.
+ */
+export const GOAL_NONE = 0;                                                   // render/qlearning.js GOAL_NONE (gate G4.7c)
+export const PIPELINE_MAPS = Object.freeze(['Q', 'rewards', 'transitions', 'pathSuccesses', 'confidence']);
+export function pipelineCandidates(episodes, cls) {
+  const out = [];
+  for (const e of Array.isArray(episodes) ? episodes : []) {
+    const tr = Array.isArray(e.transitions) ? e.transitions : [];
+    if (!tr.length) continue;
+    const pairs = tr.map(p => `${Number(p.from)}->${Number(p.to)}`);
+    if (cls === 'PIPELINE_REPLAY') { if (e.source !== 'replay' && e.source !== 'imagination') out.push({ goal: GOAL_NONE, pairs }); }
+    else if (cls === 'PIPELINE_BRIDGE') { if (e.source === 'autonomous_success') out.push({ goal: Number(tr[tr.length - 1].to), pairs }); }
+  }
+  return out;
+}
+/** why one pipeline write is not a pair write of a candidate episode (null = valid) */
+function pipelineKeyProblem(w, cands) {
+  if (w.op !== 'set') return `${w.op} is not a pipeline write`;
+  if (!PIPELINE_MAPS.includes(w.map)) return `the pipeline does not write ${w.map}`;
+  const m = w.map === 'Q' ? /^(-?\d+)#(-?\d+)->(-?\d+)$/.exec(w.key) : /^(-?\d+)->(-?\d+)$/.exec(w.key);
+  if (!m) return `malformed key ${w.key}`;
+  const [from, goal, to] = w.map === 'Q' ? [m[1], m[2], m[3]] : [m[1], null, m[2]];
+  if (!Array.isArray(cands) || !cands.length) return 'no pipeline episode evidence for this call';
+  const pair = `${Number(from)}->${Number(to)}`;
+  const hit = cands.filter(c => c.pairs.includes(pair));
+  if (!hit.length) return `${pair} is not a consecutive pair of a candidate episode`;
+  if (goal !== null && !hit.some(c => c.goal === Number(goal))) return `goal ${goal} is not the goal of an episode with ${pair}`;
+  return null;
+}
+
+/**
  * evaluate recorded writes.  siteClassOf(line) -> a write-census class (BLOCK_REKEY, BLOCK_HELD, BLOCK_PATH, LOAD, DECAY,
  * KEY_PRESERVING, PIPELINE_BRIDGE, PIPELINE_REPLAY, CLICK_ONLY, USER_RESET) or null.  isEdge(a, b) is the graph oracle
- * (analysis only).  creditEvents: telemetry.credit.
+ * (analysis only).  creditEvents: telemetry.credit.  pipelineEvidence: { PIPELINE_REPLAY, PIPELINE_BRIDGE } each a Map
+ * call -> pipelineCandidates(..) recorded by the driver; a pipeline write without evidence fails.
  */
-export function evaluateLedger({ events, creditEvents, siteClassOf, arm, isEdge }) {
+export function evaluateLedger({ events, creditEvents, siteClassOf, arm, isEdge, pipelineEvidence = null }) {
   const aligned = arm === 'A' || arm === 'A+';
   const evByCall = new Map(creditEvents.map(e => [e.call, e]));
   const firstCall = creditEvents.length ? Math.min(...creditEvents.map(e => e.call)) : Infinity;
-  const out = { arm, writes: events.length, byClass: {}, keyClass: { EXEC: 0, LEGACY: 0, BOTH: 0, PATH: 0, OTHER: 0 }, informativeExec: 0, legacyNonEdge: 0, held: { EXEC: 0, LEGACY: 0, BOTH: 0 }, failures: [] };
+  const out = { arm, writes: events.length, byClass: {}, keyClass: { EXEC: 0, LEGACY: 0, BOTH: 0, PATH: 0, PIPE: 0, OTHER: 0 }, informativeExec: 0, legacyNonEdge: 0, held: { EXEC: 0, LEGACY: 0, BOTH: 0 }, failures: [] };
+  const replayPairs = new Map();                                              // call -> pairs written by the replay pipeline
   const fail = (w, why) => out.failures.push({ seq: w.seq, call: w.call, map: w.map, key: w.key, line: w.line, why });
   for (const w of events) {
     const cls = w.line === null ? null : siteClassOf(w.line);
@@ -185,7 +225,14 @@ export function evaluateLedger({ events, creditEvents, siteClassOf, arm, isEdge 
     if (cls === 'CLICK_ONLY' || cls === 'USER_RESET') { fail(w, `write from a ${cls} site in a harness session`); continue; }
     if (cls === 'LOAD') { if (!(w.call < firstCall) && w.call !== -1) fail(w, 'store restore after the first agent call'); continue; }
     if (cls === 'DECAY' || cls === 'KEY_PRESERVING') { if (w.op === 'set' && w.existed !== true) fail(w, `${cls} write created a new key`); continue; }
-    if (cls === 'PIPELINE_BRIDGE' || cls === 'PIPELINE_REPLAY') continue;
+    if (cls === 'PIPELINE_BRIDGE' || cls === 'PIPELINE_REPLAY') {
+      const cands = pipelineEvidence && pipelineEvidence[cls] instanceof Map ? pipelineEvidence[cls].get(w.call) : undefined;
+      const why = pipelineKeyProblem(w, cands);
+      if (why) { out.keyClass.OTHER++; fail(w, `${cls}: ${why}`); continue; }
+      out.keyClass.PIPE++;
+      if (cls === 'PIPELINE_REPLAY') { const m = /^(-?\d+)(?:#-?\d+)?->(-?\d+)$/.exec(w.key); (replayPairs.get(w.call) || replayPairs.set(w.call, new Set()).get(w.call)).add(`${Number(m[1])}->${Number(m[2])}`); }
+      continue;
+    }
     const e = evByCall.get(w.call);
     if (!e) { fail(w, `${cls} write outside any credit event`); continue; }
     if (w.op !== 'set') { fail(w, `${cls} ${w.op} is not expected`); continue; }
@@ -211,6 +258,11 @@ export function evaluateLedger({ events, creditEvents, siteClassOf, arm, isEdge 
       const [a, b] = wantExec ? [e.cur, e.x] : [e.last, e.x];
       if (!isEdge(a, b)) fail(w, 'edge-filtered write on a non-edge pair');
     } else fail(w, `unexpected class ${cls}`);
+  }
+  // one replayOneEpisode call replays exactly one episode: all its pairs must belong to a single candidate
+  for (const [call, pairs] of replayPairs) {
+    const cands = pipelineEvidence.PIPELINE_REPLAY.get(call);
+    if (!cands.some(c => [...pairs].every(p => c.pairs.includes(p)))) out.failures.push({ seq: null, call, map: '*', key: [...pairs].join(','), line: null, why: 'PIPELINE_REPLAY: the replay writes of this call do not come from one episode' });
   }
   if (aligned) out.verdict = out.failures.length ? 'FAIL' : 'PASS';
   else out.verdict = out.failures.length ? 'FAIL' : out.legacyNonEdge > 0 ? 'LEGACY_PATTERN' : 'NOT_DISCRIMINATING';
