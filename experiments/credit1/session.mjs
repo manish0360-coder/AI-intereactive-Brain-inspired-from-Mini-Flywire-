@@ -31,7 +31,7 @@ import { serializeBrain, componentHashes, componentSizes, brainHash } from '../x
 import { HEAD_COMMIT, HOOK_STATES, CONFIRMATORY_STATE, ORACLES } from '../learn0/config.mjs';
 import { summarizeDiag } from '../gate-floor-spec/diag.mjs';
 import { SCHEMA, MODES, CREDIT1_TREE, LEARN0_TREE } from './config.mjs';
-import { cellOf, deliveryFor, maskStore } from './delivery.mjs';
+import { cellOf, deliveryFor, maskStore, pi } from './delivery.mjs';
 import { createTelemetry, checkCredit, createLedger, evaluateLedger, parseCaller, captureStack, pipelineCandidates } from './instruments.mjs';
 import { lineRolesOf, classifyEvents } from './events.mjs';
 
@@ -43,7 +43,7 @@ if (process.env.H1R === 'on') refuse('H1R=on: this driver runs the audited HEAD 
 if (process.env.M7_RUN_WARMSTORE !== undefined) refuse('M7_RUN_WARMSTORE is set: every session starts from a cold localStorage');
 
 // ---- argument guards (before anything is loaded) ----
-const KEYS = ['role', 'label', 'tree', 'world', 'configSeed', 'configIndex', 'agentSeed', 'ticks', 'cell', 'brainPath', 'brainWorld', 'exportPath', 'map', 'instrument', 'cond', 'ledger', 'procedure'];
+const KEYS = ['role', 'label', 'tree', 'world', 'configSeed', 'configIndex', 'agentSeed', 'ticks', 'cell', 'brainPath', 'brainWorld', 'exportPath', 'map', 'instrument', 'cond', 'ledger', 'procedure', 'storeSourceWorld'];
 if (IN === null || typeof IN !== 'object' || Array.isArray(IN)) refuse('the input must be a JSON object');
 { const unknown = Object.keys(IN).filter(k => !KEYS.includes(k)); if (unknown.length) refuse(`unknown input field(s): ${unknown.join(', ')}`); }
 assertSessionScope({ world: IN.world, cell: IN.cell, procedure: IN.procedure });
@@ -67,6 +67,9 @@ else {
   if (typeof IN.brainPath !== 'string') refuse(`cell ${CELL.name} needs a store file`);
   if (IN.brainWorld !== DELIVERY.brainWorld) refuse(`cell ${CELL.name} must receive the store of world ${DELIVERY.brainWorld} (${DELIVERY.source})`);
 }
+// swap-parity own path: the copy of world pi(w)'s export is declared through the own-store path; its true source is recorded
+if (PROC && PROC.ownPathCopy) { if (DELIVERY.source !== 'own' || IN.storeSourceWorld !== pi(IN.world)) refuse(`procedure ${IN.procedure} delivers a copy of world pi(${IN.world}) = ${pi(IN.world)} through the own-store path`); }
+else if (IN.storeSourceWorld !== undefined) refuse('storeSourceWorld belongs to the swap-parity procedure only');
 if (IN.role === 'train' && typeof IN.exportPath !== 'string') refuse('a training session exports its store');
 if (IN.configSeed < CONFIG_START || IN.configSeed >= HELDOUT_FLOOR || typedConfig.isHeldOut(typedConfigSeed(IN.configSeed)) || typedConfig.isConsumed(typedConfigSeed(IN.configSeed))) refuse('config seed is outside the territory or is held-out/consumed');
 
@@ -238,7 +241,7 @@ const eventClasses = classifyEvents({ creditEvents: telemetry.credit, arrivals, 
 const out = {
   schema: `${SCHEMA}.session`, role: IN.role, label: IN.label, cell: CELL.name, credit: CELL.credit, map: IN.map, procedure: IN.procedure === undefined ? null : IN.procedure,
   input: { world: IN.world, configSeed: IN.configSeed, configIndex: IN.configIndex, goal: goalId, agentSeed: IN.agentSeed, ticks: IN.ticks,
-    delivery: { source: DELIVERY.source, brainWorld: DELIVERY.brainWorld, training: DELIVERY.training, mask: DELIVERY.mask || null, brainFile: typeof IN.brainPath === 'string' ? path.basename(IN.brainPath) : null } },
+    delivery: { source: DELIVERY.source, brainWorld: DELIVERY.brainWorld, training: DELIVERY.training, mask: DELIVERY.mask || null, storeSourceWorld: IN.storeSourceWorld === undefined ? null : IN.storeSourceWorld, brainFile: typeof IN.brainPath === 'string' ? path.basename(IN.brainPath) : null } },
   tree: { name: path.basename(IN.tree), arm: TREE_ARM, mainSha256: mainSha, manifestSha256: sha256(canonicalJson(treeManifest.files)) },
   outcome: { crashed: rec.outcome.crashed, completed: rec.outcome.completed, ticksExecuted: rec.outcome.ticksExecuted, loopsExecuted: rec.outcome.loopsExecuted,
     error: rec.outcome.error ? { message: String(rec.outcome.error.message).slice(0, 200), tickAtCrash: rec.outcome.error.tickAtCrash } : null },

@@ -393,6 +393,8 @@ function s5(t, arm) {
   const lockNull = LOCK.SESSION_AUTHORIZATION === null && (() => { try { LOCK.assertSessionAuthorized(); return false; } catch { return true; } })();
   const lockCal = LOCK.SESSION_AUTHORIZATION !== null && LOCK.calibrationRecordProblems(LOCK.SESSION_AUTHORIZATION).length === 0 && LOCK.scopeProblems(LOCK.SESSION_AUTHORIZATION, { world: 30, cell: 'T_L' }).length > 0;
   check('G5.6 session lock is null (refuses) or exactly the calibration-only record (development worlds 0-29, the 9 cells, A+ excluded); the A+ module lock is null', (lockNull || lockCal) && LOCK.A_PLUS_MODULE_AUTHORIZATION === null, lockNull ? 'session lock null' : lockCal ? 'calibration-only record' : 'OTHER');
+  const swapNull = LOCK.SWAP_PARITY_AUTHORIZATION === null, swapRec = !swapNull && LOCK.swapParityRecordProblems(LOCK.SWAP_PARITY_AUTHORIZATION).length === 0 && LOCK.SWAP_PARITY_AUTHORIZATION.authorizedBy === 'owner';
+  check('G5.6b the swap-parity lock is null (the own-path procedure is refused) or exactly the swap-parity record', swapNull || swapRec, swapNull ? 'swap-parity lock null' : swapRec ? 'swap-parity record' : 'OTHER');
   check('G5.7 driver emits the required instrument fields (I-CRED, I-LEDGER, episodes, redirects, self-target counts, event classes, procedure) and swap delivery only via pi', ['icred:', 'ledger:', 'episodes:', 'redirects:', 'selfCandidates:', 'eventClasses,', 'procedure: IN.procedure === undefined ? null : IN.procedure', "deliveryFor(CELL.name, IN.world)", 'brainWorld !== DELIVERY.brainWorld'].every(s => src.includes(s)));
 }
 
@@ -617,6 +619,124 @@ function s5(t, arm) {
     ['calibrate.mjs --plan-only', 'calibration.mjs', 'events.mjs', 'N1L×', 'MAP_ON_PARITY', 'D2_ALIGNED_FALSE', '364'].every(s => rd.includes(s)));
 }
 
+// ================= G10: swap-parity harness (development only; Gemini round 3; runs no session) =================
+{
+  // G10.1 the plan
+  const SPL = K.planSwapParity(), vsp = K.validateSwapPlan(SPL);
+  const srcWorlds = [...new Set(SPL.filter(e => e.role === 'train').map(e => e.world))].sort((a, b) => a - b);
+  const wantSrc = [...new Set(Array.from({ length: 10 }, (_, w) => pi(w)))].sort((a, b) => a - b);
+  check('G10.1 swap-parity plan: 60 sessions (20 training on the pi sources of worlds 0-9, 20 swapped N1AX/N1LX, 20 own-path N1A/N1L copies), worlds 0-10 only, no A+ cell, every pair complete',
+    vsp.length === 0 && SPL.length === 60 && JSON.stringify(srcWorlds) === JSON.stringify(wantSrc) && SPL.every(e => e.world >= 0 && e.world <= 10) && !SPL.some(e => /AP$/.test(e.cell)) && K.swapPairs().length === 20,
+    vsp.slice(0, 2).join(' | ') || `sources ${srcWorlds.join(',')}`);
+  const mutSwap = (f) => { const Q = SPL.map(e => ({ ...e })); f(Q); return K.validateSwapPlan(Q).length > 0; };
+  const sat = (Q, l) => Q.find(e => e.label === l);
+  const renumber = (Q) => Q.forEach((e, i) => { e.seq = i + 1; });
+  mutant('SP1 a swap-parity session on world 11 is rejected', mutSwap(Q => { sat(Q, 'N1A-OWN-w9').world = 11; }));
+  mutant('SP2 a swap-parity session in confirmatory territory is rejected', mutSwap(Q => { sat(Q, 'N1A-OWN-w9').world = 2032; }));
+  mutant('SP3 an own-path copy of the own world\'s export instead of pi(w)\'s is rejected', mutSwap(Q => { sat(Q, 'N1A-OWN-w3').brainFrom = 'T_A-w3'; }));
+  mutant('SP4 the own-path procedure on a swapped cell is rejected', mutSwap(Q => { const e = sat(Q, 'N1AX-w3'); e.procedure = 'SWAP_PARITY_OWNPATH'; e.copyAs = 'COPY-x'; e.storeSourceWorld = 0; }));
+  mutant('SP5 a swapped cell given its own world\'s store is rejected', mutSwap(Q => { sat(Q, 'N1AX-w4').brainFrom = 'T_A-w4'; }));
+  mutant('SP6 a wrong declared source world is rejected', mutSwap(Q => { sat(Q, 'N1L-OWN-w5').storeSourceWorld = 5; }));
+  mutant('SP7 a pair missing its own-path partner is rejected', mutSwap(Q => { Q.splice(Q.findIndex(e => e.label === 'N1L-OWN-w5'), 1); renumber(Q); }));
+  mutant('SP8 an A+ cell is rejected', mutSwap(Q => { sat(Q, 'N1AX-w2').cell = 'N1AP'; }));
+  mutant('SP9 an own-path session without its own byte copy is rejected', mutSwap(Q => { sat(Q, 'N1A-OWN-w6').copyAs = null; }));
+  mutant('SP10 two own-path sessions sharing one copy are rejected', mutSwap(Q => { sat(Q, 'N1A-OWN-w6').copyAs = sat(Q, 'N1A-OWN-w7').copyAs; }));
+  mutant('SP11 a test scheduled before its source export is rejected', mutSwap(Q => { const i = Q.findIndex(e => e.label === 'T_A-w1'), j = Q.findIndex(e => e.label === 'N1A-OWN-w0'); [Q[i], Q[j]] = [Q[j], Q[i]]; renumber(Q); }));
+
+  // G10.2 lock scope: the own-path procedure only under the swap-parity record, only on N1A / N1L, worlds 0-10
+  const SREC = { ...JSON.parse(JSON.stringify(LOCK.SWAP_PARITY_SCOPE)), authorizedBy: 'gate-synthetic' };
+  const swapIn = (a, i) => LOCK.swapScopeProblems(a, i).length === 0;
+  const own = (world, cell) => ({ world, cell, procedure: 'SWAP_PARITY_OWNPATH' });
+  const realAllows = (i) => { try { LOCK.assertSessionScope(i); return true; } catch { return false; } };
+  const realOk = LOCK.SWAP_PARITY_AUTHORIZATION === null ? !realAllows(own(3, 'N1A')) : (realAllows(own(3, 'N1A')) && !realAllows(own(11, 'N1A')));
+  check('G10.2 the own-path procedure runs only under the swap-parity record (refused while it is null, never under the calibration record), only on N1A / N1L, worlds 0-10; the calibration scope is unchanged',
+    realOk && LOCK.scopeProblems(LOCK.CALIBRATION_SCOPE, own(3, 'N1A')).length > 0 && swapIn(SREC, own(0, 'N1A')) && swapIn(SREC, own(10, 'N1L')) && !swapIn(null, own(3, 'N1A'))
+    && !swapIn(SREC, own(11, 'N1A')) && !swapIn(SREC, own(2032, 'N1A')) && !swapIn(SREC, own(3, 'N0A')) && !swapIn(SREC, own(3, 'N1AX')) && !swapIn(SREC, own(3, 'T_A'))
+    && !swapIn(SREC, { world: 3, cell: 'N1A', procedure: 'MAP_ON_PARITY' }) && JSON.stringify(LOCK.CALIBRATION_SCOPE.procedures) === '["D2_ALIGNED_FALSE","MAP_ON_PARITY","D2_MAP_ON_PARITY"]',
+    LOCK.SWAP_PARITY_AUTHORIZATION === null ? 'swap-parity lock null' : 'swap-parity record');
+  const swapRecBad = (f) => { const r = JSON.parse(JSON.stringify(SREC)); f(r); return LOCK.swapParityRecordProblems(r).length > 0 && !swapIn(r, own(3, 'N1A')); };
+  mutant('LS1 a swap-parity record admitting world 11 is rejected', swapRecBad(r => { r.worlds.hi = 11; }));
+  mutant('LS2 a swap-parity record admitting N0A is rejected', swapRecBad(r => { r.cells.push('N0A'); }));
+  mutant('LS3 a swap-parity record with an extra procedure is rejected', swapRecBad(r => { r.procedures.push('D2_ALIGNED_FALSE'); }));
+  mutant('LS4 a swap-parity record with A+ enabled is rejected', swapRecBad(r => { r.aPlus = true; }));
+
+  // G10.3 the driver
+  const dsrc = fs.readFileSync(path.join(HERE, 'session.mjs'), 'utf8');
+  check('G10.3 driver: storeSourceWorld only with the own-path procedure and equal to pi(w); the copy is declared through the own-store path; the true source is recorded',
+    dsrc.includes("'procedure', 'storeSourceWorld'];") && dsrc.includes("if (PROC && PROC.ownPathCopy) { if (DELIVERY.source !== 'own' || IN.storeSourceWorld !== pi(IN.world)) refuse(")
+    && dsrc.includes("else if (IN.storeSourceWorld !== undefined) refuse('storeSourceWorld belongs to the swap-parity procedure only');") && dsrc.includes('storeSourceWorld: IN.storeSourceWorld === undefined ? null : IN.storeSourceWorld'));
+
+  // G10.4 the verdict on synthetic records (world 3; pi(3) = 0)
+  const SRC = 'T_A-w0', COPY = 'COPY-T_A-w0-for-w3';
+  const recOf = (label, cell, credit, procedure, delivery, ic, lg) => ({ schema: 'credit1/1.session', label, cell, credit, procedure, role: 'test', map: 'off',
+    input: { world: 3, configSeed: 200247, configIndex: 3, goal: 19, agentSeed: 1100100007, ticks: 1500, delivery: { training: credit === 'A' ? 'T_A' : 'T_L', mask: 'FULL', ...delivery } },
+    tree: { name: 'A', arm: 'A', mainSha256: 'm', manifestSha256: 'mf' },
+    outcome: { crashed: false, completed: true, ticksExecuted: 1500, loopsExecuted: 1500, error: null }, counters: { calls: 1500, envDraws: 0, attempts: 0, successes: 0, slips: 0 },
+    reaches: { goal: 9, legal: 7, nonEdge: 2, legalHalves: [3, 4], goalCalls: [5, 9], legalCalls: [5] }, endpoints: { goalReaches: 9, legalReaches: 7, attemptSuccess: null },
+    brain: { deliveredHash: 'dh0', deliveredHashes: { Q: 'q' }, deliveredSizes: { Q: 3 }, start: { brainHash: 's' }, endHash: 'e', endHashes: { Q: 'qe' }, endSizes: { Q: 4 }, localStorageReads: ['brain: served'], goalKeyedQ: 2 },
+    conditionIntegrity: { ok: true }, mapAudit: { ok: true }, guard: { counters: {} }, moveClass: { legal: 1 }, moves: { far: 1 }, diag: { channels: {} }, audit: { goalReaches: 9 }, diagnostics: { writes: 3 },
+    credit1: { telemetry: { creditEvents: 10 }, icred: { verdict: ic, identityRate: 1 }, ledger: { verdict: lg, keyClass: { PIPE: 12 }, pipelineEvidence: { replayCalls: 3, bridgeCalls: 0 } },
+      eventClasses: { counts: { hold: 2 } }, episodes: { count: 4 }, redirects: { survival: 0, recovery: 0 }, selfCandidates: { all: { evaluations: 9, self: 0 } } },
+    artifacts: { fingerprint: 'fp', writesSha256: 'ws' } });
+  const pairRecs = (credit = 'A', ic = 'PASS', lg = 'PASS') => { const [X, O, src, cp] = credit === 'A' ? ['N1AX', 'N1A', SRC, COPY] : ['N1LX', 'N1L', 'T_L-w0', 'COPY-T_L-w0-for-w3'];
+    return { [`${X}-w3`]: recOf(`${X}-w3`, X, credit, null, { source: 'paired', brainWorld: 0, storeSourceWorld: null, brainFile: `${src}.json` }, ic, lg),
+      [`${O}-OWN-w3`]: recOf(`${O}-OWN-w3`, O, credit, 'SWAP_PARITY_OWNPATH', { source: 'own', brainWorld: 3, storeSourceWorld: 0, brainFile: `${cp}.json` }, ic, lg) }; };
+  const EV = () => ({ fileSha: { [SRC]: 'f1', [COPY]: 'f1', 'T_L-w0': 'g1', 'COPY-T_L-w0-for-w3': 'g1' }, expectedDeliveredHash: { [SRC]: 'dh0', 'T_L-w0': 'dh0' } });
+  const PAIR_A = [['N1AX-w3', 'N1A-OWN-w3', SRC, COPY, 'A']], PAIR_L = [['N1LX-w3', 'N1L-OWN-w3', 'T_L-w0', 'COPY-T_L-w0-for-w3', 'L']];
+  const swapV = (fr, fe) => { const R = pairRecs(), E = EV(); if (fr) fr(R); if (fe) fe(E); return K.swapParity(R, E, { pairs: PAIR_A }); };
+  const vA = swapV(), vL = K.swapParity(pairRecs('L', 'DISCRIMINATING', 'LEGACY_PATTERN'), EV(), { pairs: PAIR_L });
+  check('G10.4 swap-parity verdict: a swapped session and its own-path copy partner, equal everywhere except label, cell, procedure and the delivery path, with byte-identical store files and the expected delivered store, pass (A pair PASS/PASS; L pair with legacy verdicts)',
+    vA.pass && vL.pass, JSON.stringify([...vA.fails, ...vL.fails]).slice(0, 200));
+  const own3 = (R) => R['N1A-OWN-w3'], swp3 = (R) => R['N1AX-w3'];
+  const caught = (fr, fe) => !swapV(fr, fe).pass;
+  mutant('SC1 a copy that is not byte-identical to its source export fails swap parity', caught(null, E => { E.fileSha[COPY] = 'f2'; }));
+  mutant('SC2 a delivered store that is not the expected masked store fails swap parity', caught(null, E => { E.expectedDeliveredHash[SRC] = 'dhX'; }));
+  mutant('SC3 delivered store hashes that differ within the pair fail swap parity', caught(R => { own3(R).brain.deliveredHash = 'dh1'; }));
+  mutant('SC4 an own-path session recorded through the swapped path fails swap parity', caught(R => { own3(R).input.delivery.source = 'paired'; }));
+  mutant('SC5 a swapped session recorded through the own path fails swap parity', caught(R => { swp3(R).input.delivery.source = 'own'; swp3(R).input.delivery.brainWorld = 3; }));
+  mutant('SC6 a wrong declared source world fails swap parity', caught(R => { own3(R).input.delivery.storeSourceWorld = 5; }));
+  mutant('SC7 an own-path partner without the own-path procedure fails swap parity', caught(R => { own3(R).procedure = null; }));
+  mutant('SC8 a missing session record fails swap parity', caught(R => { delete R['N1A-OWN-w3']; }));
+  mutant('SC9 missing store-file hash evidence fails swap parity', caught(null, E => { delete E.fileSha[COPY]; }));
+  mutant('SC10 records without the corrected I-LEDGER pipeline evidence fail swap parity', caught(R => { delete own3(R).credit1.ledger.pipelineEvidence; delete swp3(R).credit1.ledger.pipelineEvidence; }));
+  mutant('SC11 a differing D-1 field (fingerprint) fails swap parity', caught(R => { own3(R).artifacts.fingerprint = 'fp2'; }));
+  mutant('SC12 a differing reach call list fails swap parity', caught(R => { own3(R).reaches.goalCalls[1] = 10; }));
+  mutant('SC13 a differing I-CRED result fails swap parity', caught(R => { own3(R).credit1.icred.identityRate = 0.99; }));
+  mutant('SC14 differing I-LEDGER pipeline-key counts fail swap parity', caught(R => { own3(R).credit1.ledger.keyClass.PIPE = 11; }));
+  mutant('SC15 a differing event-class count fails swap parity', caught(R => { own3(R).credit1.eventClasses.counts.hold = 3; }));
+  mutant('SC16 a differing episode summary fails swap parity', caught(R => { own3(R).credit1.episodes.count = 5; }));
+  mutant('SC17 a differing goal-redirect counter fails swap parity', caught(R => { own3(R).credit1.redirects.recovery = 1; }));
+  mutant('SC18 differing self-target counts fail swap parity', caught(R => { own3(R).credit1.selfCandidates.all.self = 1; }));
+  mutant('SC19 an invalid session (condition integrity) fails swap parity even when both agree', caught(R => { own3(R).conditionIntegrity.ok = false; swp3(R).conditionIntegrity.ok = false; }));
+  mutant('SC20 an instrument FAIL in an A pair fails swap parity even when both agree', caught(R => { own3(R).credit1.ledger.verdict = 'FAIL'; swp3(R).credit1.ledger.verdict = 'FAIL'; }));
+  mutant('SC21 a swapped session that read the copy instead of the export fails swap parity', caught(R => { swp3(R).input.delivery.brainFile = `${COPY}.json`; }));
+  mutant('SC22 a missing credit1 block in both records fails swap parity', caught(R => { delete own3(R).credit1.episodes; delete swp3(R).credit1.episodes; }));
+  mutant('SC23 a missing D-1 field in both records fails swap parity', caught(R => { delete own3(R).moves; delete swp3(R).moves; }));
+  mutant('SC24 an I-LEDGER FAIL in an L pair fails swap parity', !K.swapParity(pairRecs('L', 'DISCRIMINATING', 'FAIL'), EV(), { pairs: PAIR_L }).pass);
+
+  // G10.5 the runner: plan-only without a lock and without a session; run mode refuses before anything is derived or spawned
+  const spJson = path.join(os.tmpdir(), 'mfw-credit1-gate-swapplan.json');
+  fs.rmSync(spJson, { force: true });
+  const spo = run(process.execPath, [path.join('experiments', 'credit1', 'run_swap_parity.mjs'), '--plan-only', '--json', spJson]);
+  let spj = null; try { spj = JSON.parse(fs.readFileSync(spJson, 'utf8')); } catch { spj = null; }
+  check('G10.5 swap-parity plan-only (no lock, no session): 60 sessions on the 11 existing XFER-1 development configurations of worlds 0-10',
+    spo.status === 0 && !!spj && spj.total === 60 && spj.planProblems.length === 0 && JSON.stringify(spj.plan.map(e => e.label)) === JSON.stringify(SPL.map(e => e.label))
+    && new Set(spj.plan.map(e => e.configSeed)).size === 11 && spj.plan.every(e => e.configIndex === e.world && e.agentSeed === (e.role === 'train' ? trainSeed(e.world) : testSeed(e.world))),
+    spj ? `${spj.total} sessions, ${new Set(spj.plan.map(e => e.configSeed)).size} configurations` : spo.stderr.trim().slice(0, 120));
+  const spRefused = path.join(os.tmpdir(), 'mfw-credit1-gate-swaprefusal');
+  fs.rmSync(spRefused, { recursive: true, force: true });
+  const spr = run(process.execPath, [path.join('experiments', 'credit1', 'run_swap_parity.mjs'), '--out', spRefused]);
+  const rs = fs.readFileSync(path.join(HERE, 'run_swap_parity.mjs'), 'utf8');
+  const ordr = ['swapParityRecordProblems(LOCK.SWAP_PARITY_AUTHORIZATION)', 'calibrationRecordProblems(LOCK.SESSION_AUTHORIZATION)', 'the output directory must be inside', "'diff', '--quiet', 'HEAD'", "imp('experiments/m7/env.js')", "step: 'C-0'", "await runPhase('TRAIN'", 'fs.copyFileSync(', "await runPhase('TEST'", 'swapParity(recs'].map(s => rs.indexOf(s));
+  check('G10.5b swap-parity run mode refuses an unauthorized or out-of-scope run before anything is derived, built or spawned; order: locks, output directory, clean tree, derivation, C-0, training, byte copies, tests, verdict',
+    spr.status === 2 && /swap-parity refused/.test(spr.stderr) && !fs.existsSync(spRefused) && ordr.every(i => i > 0) && ordr.every((v, i) => i === 0 || ordr[i - 1] < v), spr.stderr.trim().slice(0, 140));
+
+  // G10.6 documentation
+  const rdm = fs.readFileSync(path.join(HERE, 'README.md'), 'utf8');
+  check('G10.6 README documents the swap-parity check: its plan, comparison, claim limit (delivery-path equivalence only) and that it is not authorized',
+    ['run_swap_parity.mjs --plan-only', 'SWAP_PARITY_OWNPATH', 'SWAP_PARITY_AUTHORIZATION', 'delivery-path equivalence', '60 sessions'].every(s => rdm.includes(s)));
+}
+
 // ================= G8: session records only inside authorized calibration runs; this gate runs no session =================
 {
   const data = path.join(HERE, 'data');
@@ -630,16 +750,19 @@ function s5(t, arm) {
     files.push({ rel: relp, json });
   }
   // a run's commit must be in this history and its lock.mjs must hold the calibration-only record
-  const LOCK_LINE = 'export const SESSION_AUTHORIZATION = Object.freeze({ ...CALIBRATION_SCOPE,';
+  // per run kind: the authorization line and scope kind its commit's lock.mjs must hold
+  const LOCK_OF = { calibration: ['export const SESSION_AUTHORIZATION = Object.freeze({ ...CALIBRATION_SCOPE,', "kind: 'DEVELOPMENT_CALIBRATION'"],
+    'swap-parity': ['export const SWAP_PARITY_AUTHORIZATION = Object.freeze({ ...SWAP_PARITY_SCOPE,', "kind: 'SWAP_PARITY_CHECK'"] };
   const headSeen = new Map();
-  const headCarriesLock = (h) => {
-    if (typeof h !== 'string' || !/^[0-9a-f]{40}$/.test(h)) return false;
-    if (!headSeen.has(h)) {
+  const headCarriesLock = (h, kind = 'calibration') => {
+    if (typeof h !== 'string' || !/^[0-9a-f]{40}$/.test(h) || !LOCK_OF[kind]) return false;
+    const key = `${h}:${kind}`;
+    if (!headSeen.has(key)) {
       const anc = git('merge-base', '--is-ancestor', h, 'HEAD').status === 0;
       const src = anc ? git('show', `${h}:experiments/credit1/lock.mjs`) : null;
-      headSeen.set(h, anc && src.status === 0 && src.stdout.includes(LOCK_LINE) && src.stdout.includes("kind: 'DEVELOPMENT_CALIBRATION'"));
+      headSeen.set(key, anc && src.status === 0 && LOCK_OF[kind].every(s => src.stdout.includes(s)));
     }
-    return headSeen.get(h);
+    return headSeen.get(key);
   };
   const tracked = git('ls-files', '--', 'experiments/credit1/data').stdout.trim().split('\n').filter(Boolean);
   const dd = K.dataDirProblems({ files, tracked, headCarriesLock });
@@ -656,7 +779,24 @@ function s5(t, arm) {
     return K.dataDirProblems(S).problems.length > 0;
   };
   check('G8.1b the G8.1 rule accepts a well-formed authorized run (synthetic)', !synth());
-  check('G8.1c the commit check: the calibration-lock commit c66f830 carries the lock; the base commit does not', headCarriesLock('c66f83028377303a8b0a1419061ba9a002070a43') && !headCarriesLock(C.BASE_COMMIT));
+  check('G8.1c the commit check: the calibration-lock commit c66f830 carries the calibration lock (not a swap-parity lock); the base commit carries neither',
+    headCarriesLock('c66f83028377303a8b0a1419061ba9a002070a43', 'calibration') && !headCarriesLock('c66f83028377303a8b0a1419061ba9a002070a43', 'swap-parity') && !headCarriesLock(C.BASE_COMMIT, 'calibration'));
+  // a swap-parity run is accepted only under its own lock, plan and scope
+  const swapRun = (f) => {
+    const S = { files: [{ rel: 'swap-x/summary.json', json: { schema: 'credit1/1.swap-parity', head: 'c'.repeat(40), authorization: { ...JSON.parse(JSON.stringify(LOCK.SWAP_PARITY_SCOPE)), authorizedBy: 'owner' } } },
+      { rel: 'swap-x/sessions/N1AX-w3.json', json: { schema: 'credit1/1.session', label: 'N1AX-w3', cell: 'N1AX', input: { world: 3 } } },
+      { rel: 'swap-x/sessions/N1A-OWN-w3.json', json: { schema: 'credit1/1.session', label: 'N1A-OWN-w3', cell: 'N1A', input: { world: 3 } } },
+      { rel: 'swap-x/brains/T_A-w0.json', json: null }, { rel: 'swap-x/brains/COPY-T_A-w0-for-w3.json', json: null }, { rel: 'swap-x/logs/c0_gate.log', json: null }],
+      tracked: ['experiments/credit1/data/.gitignore'], headCarriesLock: (h, kind) => h === 'c'.repeat(40) && kind === 'swap-parity' };
+    if (f) f(S);
+    return K.dataDirProblems(S).problems.length > 0;
+  };
+  check('G8.1d the G8.1 rule accepts a well-formed swap-parity run under the swap-parity lock (synthetic)', !swapRun());
+  mutant('DG12 a swap-parity run recorded under the calibration scope fails G8.1', swapRun(S => { S.files[0].json.authorization = { ...JSON.parse(JSON.stringify(LOCK.CALIBRATION_SCOPE)), authorizedBy: 'owner' }; }));
+  mutant('DG13 a swap-parity run whose commit carries only the calibration lock fails G8.1', swapRun(S => { S.headCarriesLock = (h, kind) => kind === 'calibration'; }));
+  mutant('DG14 a swap-parity record that is not a planned swap session fails G8.1', swapRun(S => { S.files.push({ rel: 'swap-x/sessions/N0A-w3.json', json: { schema: 'credit1/1.session', label: 'N0A-w3', cell: 'N0A', input: { world: 3 } } }); }));
+  mutant('DG15 a copy file that is not a planned copy fails G8.1', swapRun(S => { S.files.push({ rel: 'swap-x/brains/COPY-T_A-w5-for-w3.json', json: null }); }));
+  mutant('DG16 calibration records inside a swap-parity run fail G8.1', swapRun(S => { S.files.push({ rel: 'swap-x/sessions/MAPON-N0L-w3.json', json: { schema: 'credit1/1.session', label: 'MAPON-N0L-w3', cell: 'N0L', input: { world: 3 } } }); }));
   mutant('DG1 a stray record directly under data/ fails G8.1', synth(S => { S.files.push({ rel: 'x.json', json: {} }); }));
   mutant('DG2 records in a directory without a calibration summary fail G8.1', synth(S => { S.files.push({ rel: 'other/sessions/N0A-w3.json', json: { schema: 'credit1/1.session', label: 'N0A-w3', cell: 'N0A', input: { world: 3 } } }); }));
   mutant('DG3 a run whose summary lacks the authorization record fails G8.1', synth(S => { S.files[1].json.authorization = null; }));

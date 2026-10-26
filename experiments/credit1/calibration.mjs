@@ -10,7 +10,7 @@
 // ==========================================================
 import { CELLS, GOALS, EVENT_CLASSES, nFor } from './config.mjs';
 import { pi, deliveryFor, cellOf } from './delivery.mjs';
-import { CALIBRATION_SCOPE, PROCEDURES, scopeProblems, calibrationRecordProblems } from './lock.mjs';
+import { CALIBRATION_SCOPE, PROCEDURES, scopeProblems, calibrationRecordProblems, SWAP_PARITY_SCOPE, swapScopeProblems, swapParityRecordProblems } from './lock.mjs';
 import { TICKS, trainSeed, testSeed } from '../xfer1/config.mjs';
 import { brainHash, componentHashes, VOLATILE_EPISODE_FIELDS } from '../xfer1/brain.mjs';
 
@@ -86,18 +86,20 @@ export function withConfigs(plan, stream) {
     const s = stream[e.world];
     if (!s || s.acceptedConfigIndex !== e.world) throw new Error(`CREDIT-1 calibration: no development configuration for world ${e.world}`);
     const src = e.brainFrom ? by.get(e.brainFrom) : null;
+    // a swap-parity own-path copy is declared through the own-store path (brainWorld = its own world)
     return Object.freeze({ ...e, configSeed: s.acceptedSeed, configIndex: s.acceptedConfigIndex, goal: s.goal,
-      agentSeed: e.role === 'train' ? trainSeed(e.world) : testSeed(e.world), ticks: TICKS[e.role], brainWorld: src ? src.world : null });
+      agentSeed: e.role === 'train' ? trainSeed(e.world) : testSeed(e.world), ticks: TICKS[e.role], brainWorld: src ? (e.copyAs ? e.world : src.world) : null });
   }));
 }
 
 /** the exact driver input of one entry; paths: { tree: { learn0, credit1 }, brain(label) } */
 export function driverInput(e, paths) {
   const base = { role: e.role, label: e.label, world: e.world, configSeed: e.configSeed, configIndex: e.configIndex, agentSeed: e.agentSeed, ticks: e.ticks, map: e.map, instrument: true, cond: 'P' };
-  const store = e.brainFrom ? { brainPath: paths.brain(e.brainFrom), brainWorld: e.brainWorld } : {};
+  const store = e.brainFrom ? { brainPath: paths.brain(e.copyAs || e.brainFrom), brainWorld: e.brainWorld } : {};
   const exp = e.export ? { exportPath: paths.brain(e.label) } : {};
   if (e.driver === 'learn0') return { ...base, tree: paths.tree.learn0, ...(e.arm ? { arm: e.arm } : {}), ...store, ...exp };
-  return { ...base, tree: paths.tree.credit1, cell: e.cell, ledger: 'full', ...(e.procedure ? { procedure: e.procedure } : {}), ...store, ...exp };
+  return { ...base, tree: paths.tree.credit1, cell: e.cell, ledger: 'full', ...(e.procedure ? { procedure: e.procedure } : {}),
+    ...(Number.isInteger(e.storeSourceWorld) ? { storeSourceWorld: e.storeSourceWorld } : {}), ...store, ...exp };
 }
 
 export function validatePlan(plan, { pairing = pi, aPlus = false } = {}) {
@@ -148,16 +150,21 @@ export function validatePlan(plan, { pairing = pi, aPlus = false } = {}) {
 }
 
 /**
- * the git-ignored data directory holds only authorized development-calibration runs (gate G8.1).  files: [{ rel, json }] relative
- * to experiments/credit1/data ('/'-separated; json parsed for summary and session files, else null); tracked: git-tracked paths under
- * the data directory; headCarriesLock(head): the commit recorded by a run carries the calibration-only lock.  A run is a directory
- * <run>/ with summary.json, sessions/<label>.json, brains/<label>.json and logs/<file>; its summary must record the calibration-only
- * lock, its commit must carry it, and every record must be a planned, in-scope session.  Anything else fails.
+ * the git-ignored data directory holds only authorized development runs (gate G8.1).  files: [{ rel, json }] relative to
+ * experiments/credit1/data ('/'-separated; json parsed for summary and session files, else null); tracked: git-tracked paths under
+ * the data directory; headCarriesLock(head, kind): the commit recorded by a run carries that kind's lock.  A run is a directory
+ * <run>/ with summary.json, sessions/<label>.json, brains/<label>.json and logs/<file>.  Two kinds, each checked against its own
+ * scope, plan and lock: a development calibration (calibration-only lock) and a swap-parity check (swap-parity lock).  Its summary
+ * must record its lock, its commit must carry it, and every record must be a planned, in-scope session of that kind.  Anything
+ * else fails.
  */
 const RUN_FILE = /^([^/]+)\/(summary\.json|sessions\/[^/]+\.json|brains\/[^/]+\.json|logs\/[^/]+)$/;
+export const RUN_KINDS = Object.freeze({
+  'credit1/1.calibration': Object.freeze({ lock: 'calibration', scope: CALIBRATION_SCOPE, recordProblems: (a) => calibrationRecordProblems(a), plan: () => planCalibration() }),
+  'credit1/1.swap-parity': Object.freeze({ lock: 'swap-parity', scope: SWAP_PARITY_SCOPE, recordProblems: (a) => swapParityRecordProblems(a), plan: () => planSwapParity() }),
+});
 export function dataDirProblems({ files, tracked, headCarriesLock }) {
   const problems = [];
-  const planned = new Map(planCalibration().map(e => [e.label, e]));
   const trackedRecords = tracked.filter(t => t !== 'experiments/credit1/data/.gitignore');
   if (trackedRecords.length) problems.push(`tracked calibration file(s): ${trackedRecords.slice(0, 3).join(', ')}`);
   const runs = new Map();
@@ -171,10 +178,13 @@ export function dataDirProblems({ files, tracked, headCarriesLock }) {
   let records = 0;
   for (const [run, list] of runs) {
     const s = list.find(x => x.kind === 'summary.json');
-    if (!s || !s.json || s.json.schema !== 'credit1/1.calibration') { problems.push(`${run}: no calibration summary (records outside an authorized run)`); continue; }
+    const K = s && s.json ? RUN_KINDS[s.json.schema] : null;
+    if (!K) { problems.push(`${run}: no calibration summary (records outside an authorized run)`); continue; }
+    const planned = new Map(K.plan().map(e => [e.label, e]));
+    const copies = new Set(K.plan().filter(e => e.copyAs).map(e => e.copyAs));
     const a = s.json.authorization;
-    if (calibrationRecordProblems(a).length || a.authorizedBy !== 'owner') problems.push(`${run}: the summary does not record the calibration-only lock`);
-    if (!headCarriesLock(s.json.head)) problems.push(`${run}: its commit ${String(s.json.head).slice(0, 7)} does not carry the calibration-only lock`);
+    if (K.recordProblems(a).length || a.authorizedBy !== 'owner') problems.push(`${run}: the summary does not record the ${K.lock} lock`);
+    if (!headCarriesLock(s.json.head, K.lock)) problems.push(`${run}: its commit ${String(s.json.head).slice(0, 7)} does not carry the ${K.lock} lock`);
     for (const x of list) {
       if (x.kind.startsWith('sessions/')) {
         records++;
@@ -182,10 +192,10 @@ export function dataDirProblems({ files, tracked, headCarriesLock }) {
         if (!e) { problems.push(`${run}: ${label} is not a planned session`); continue; }
         const isCredit1 = !!r && String(r.schema).startsWith('credit1/');
         if (!r || r.label !== label || !r.input || r.input.world !== e.world || (e.driver === 'credit1') !== isCredit1
-          || (isCredit1 && (r.cell !== e.cell || !CALIBRATION_SCOPE.cells.includes(r.cell)))) problems.push(`${run}: ${label} does not match its planned, in-scope session`);
+          || (isCredit1 && (r.cell !== e.cell || !K.scope.cells.includes(r.cell)))) problems.push(`${run}: ${label} does not match its planned, in-scope session`);
       } else if (x.kind.startsWith('brains/')) {
         const label = x.kind.slice('brains/'.length, -'.json'.length), e = planned.get(label);
-        if (!e || !e.export) problems.push(`${run}: ${label} is not a planned export`);
+        if (!(e && e.export) && !copies.has(label)) problems.push(`${run}: ${label} is not a planned export`);
       }
     }
   }
@@ -353,3 +363,96 @@ export function c2(recs, { sessionsPerMinute = null } = {}) {
   out.pass = Object.values(out.rates.L).every(v => v !== undefined) && out.rates.L.sessions > 0;
   return out;
 }
+
+// ---------------- swap-parity check (development only; Gemini round 3, HIGH; runs only under SWAP_PARITY_AUTHORIZATION) ----------------
+// Question: does delivering the training export of world pi(w) through the swapped-store path (N1AX / N1LX, brainWorld = pi(w))
+// behave exactly like delivering a byte copy of the same export through the normal own-store path (N1A / N1L under
+// SWAP_PARITY_OWNPATH, brainWorld = w)?  Same world w, seeds, tree, credit mode and mask; only the delivery path differs.
+// It establishes delivery-path equivalence, nothing about whether alignment improves learning.
+export const SWAP_PLAN = Object.freeze({ worlds: Object.freeze({ lo: 0, hi: 9 }) });
+export const SWAP_EXPECTED = Object.freeze({ train: 20, swap: 20, own: 20, total: 60 });
+const SWAP_ARMS = Object.freeze([['A', 'T_A', 'N1AX', 'N1A'], ['L', 'T_L', 'N1LX', 'N1L']]);
+// the only fields a swap session and its own-path partner may differ in (everything else, the credit1 block included, must be equal)
+export const SWAP_ALLOWED_DIFFS = Object.freeze(['label', 'cell', 'procedure', 'input.delivery.source', 'input.delivery.brainWorld', 'input.delivery.brainFile', 'input.delivery.storeSourceWorld']);
+export const SWAP_CREDIT1_BLOCKS = Object.freeze(['telemetry', 'icred', 'ledger', 'eventClasses', 'episodes', 'redirects', 'selfCandidates']);
+
+export function planSwapParity() {
+  const out = [];
+  const add = (e) => out.push(Object.freeze({ seq: out.length + 1, step: 'SWAP', driver: 'credit1', map: 'off', procedure: null, brainFrom: null, export: false, copyAs: null, storeSourceWorld: null, ...e }));
+  const W = range(SWAP_PLAN.worlds), sources = [...new Set(W.map(pi))].sort((a, b) => a - b);
+  for (const [, T] of SWAP_ARMS) for (const s of sources) add({ label: `${T}-w${s}`, world: s, role: 'train', cell: T, export: true });
+  for (const w of W) for (const [, T, X, O] of SWAP_ARMS) {
+    add({ label: `${X}-w${w}`, world: w, role: 'test', cell: X, brainFrom: `${T}-w${pi(w)}` });
+    add({ label: `${O}-OWN-w${w}`, world: w, role: 'test', cell: O, procedure: 'SWAP_PARITY_OWNPATH', brainFrom: `${T}-w${pi(w)}`, copyAs: `COPY-${T}-w${pi(w)}-for-w${w}`, storeSourceWorld: pi(w) });
+  }
+  return Object.freeze(out);
+}
+/** [swap label, own-path label, source export label, copy label, arm] per world and arm */
+export const swapPairs = () => range(SWAP_PLAN.worlds).flatMap(w => SWAP_ARMS.map(([arm, T, X, O]) => [`${X}-w${w}`, `${O}-OWN-w${w}`, `${T}-w${pi(w)}`, `COPY-${T}-w${pi(w)}-for-w${w}`, arm]));
+
+export function validateSwapPlan(plan, { pairing = pi } = {}) {
+  const problems = [], by = new Map();
+  plan.forEach((e, i) => { if (e.seq !== i + 1) problems.push(`entry ${i + 1}: sequence number ${e.seq}`); if (by.has(e.label)) problems.push(`duplicate label ${e.label}`); by.set(e.label, e); });
+  const copies = new Set();
+  for (const e of plan) {
+    if (e.driver !== 'credit1') problems.push(`${e.label}: driver ${e.driver}`);
+    if (!Number.isInteger(e.world) || e.world < SWAP_PARITY_SCOPE.worlds.lo || e.world > SWAP_PARITY_SCOPE.worlds.hi) problems.push(`${e.label}: world ${e.world} is outside the swap-parity worlds`);
+    if (!SWAP_PARITY_SCOPE.cells.includes(e.cell)) problems.push(`${e.label}: cell ${e.cell} is not in the swap-parity scope`);
+    let c; try { c = cellOf(e.cell); } catch { problems.push(`${e.label}: unknown cell ${e.cell}`); continue; }
+    if (c.role !== e.role || e.map !== 'off') problems.push(`${e.label}: role or map`);
+    const d = deliveryFor(e.cell, e.world), src = e.brainFrom ? by.get(e.brainFrom) : null;
+    if (e.procedure === 'SWAP_PARITY_OWNPATH') {
+      const sp = swapScopeProblems(SWAP_PARITY_SCOPE, { world: e.world, cell: e.cell, procedure: e.procedure });
+      if (sp.length) problems.push(`${e.label}: ${sp[0]}`);
+      if (d.source !== 'own') problems.push(`${e.label}: the own-path procedure on a ${d.source} cell`);
+      if (e.storeSourceWorld !== pairing(e.world)) problems.push(`${e.label}: storeSourceWorld ${e.storeSourceWorld}, expected ${pairing(e.world)}`);
+      if (typeof e.copyAs !== 'string' || !e.copyAs.startsWith('COPY-') || copies.has(e.copyAs) || by.has(e.copyAs)) problems.push(`${e.label}: the own-path session needs its own byte copy`);
+      copies.add(e.copyAs);
+    } else {
+      if (e.procedure !== null || e.copyAs !== null || e.storeSourceWorld !== null) problems.push(`${e.label}: procedure, copy or source world outside the own-path procedure`);
+      const sp = scopeProblems(CALIBRATION_SCOPE, { world: e.world, cell: e.cell });
+      if (sp.length) problems.push(`${e.label}: ${sp[0]}`);
+    }
+    if (d.source === 'none') { if (e.brainFrom) problems.push(`${e.label}: a cold cell has a store`); }
+    else if (!src || src.seq >= e.seq || !src.export || src.cell !== d.training || src.world !== pairing(e.world)) problems.push(`${e.label}: its store must be the ${d.training} export of world ${pairing(e.world)}, exported earlier`);
+  }
+  for (const [x, o] of swapPairs()) if (!by.has(x) || !by.has(o)) problems.push(`missing pair ${x} / ${o}`);
+  const n = (f) => plan.filter(f).length;
+  if (n(e => e.role === 'train') !== SWAP_EXPECTED.train || n(e => ['N1AX', 'N1LX'].includes(e.cell)) !== SWAP_EXPECTED.swap || n(e => e.procedure === 'SWAP_PARITY_OWNPATH') !== SWAP_EXPECTED.own || plan.length !== SWAP_EXPECTED.total)
+    problems.push(`counts: ${plan.length} sessions, expected ${SWAP_EXPECTED.total} (20 training, 20 swapped, 20 own-path)`);
+  return problems;
+}
+
+/**
+ * the swap-parity verdict.  recs: label -> session record; evidence: { fileSha: label -> sha256 of the store file (source exports
+ * and copies), expectedDeliveredHash: source label -> brainHash(maskStore(export, FULL)) } computed by the runner from the files.
+ * Per pair: both sessions valid; I-CRED / I-LEDGER PASS in A pairs and no FAIL in L pairs; the copy byte-identical to its source;
+ * the recorded delivery paths as planned; delivered hashes equal to each other and to the expected masked-store hash; every D-1
+ * field and every credit1 block present; and the two records equal everywhere except SWAP_ALLOWED_DIFFS.
+ */
+export function swapParity(recs, evidence = {}, { pairs = swapPairs() } = {}) {
+  const fails = [], fileSha = evidence.fileSha || {}, expected = evidence.expectedDeliveredHash || {};
+  for (const [x, o, src, copy, arm] of pairs) {
+    const why = [], R = recs[x], O = recs[o];
+    if (!R || !O) { fails.push({ pair: [x, o], why: ['missing record'] }); continue; }
+    for (const r of [R, O]) why.push(...sessionProblems(r));
+    for (const r of [R, O]) {
+      const ic = r.credit1 && r.credit1.icred && r.credit1.icred.verdict, lg = r.credit1 && r.credit1.ledger && r.credit1.ledger.verdict;
+      if (arm === 'A' ? (ic !== 'PASS' || lg !== 'PASS') : (!ic || !lg || ic === 'FAIL' || lg === 'FAIL')) why.push(`${r.label}: I-CRED ${ic}, I-LEDGER ${lg}`);
+      const missing = [...PARITY_FIELDS.filter(f => getPath(r, f) === undefined), ...SWAP_CREDIT1_BLOCKS.filter(b => !r.credit1 || r.credit1[b] === undefined)];
+      if (!r.credit1 || !r.credit1.ledger || !r.credit1.ledger.pipelineEvidence) missing.push('credit1.ledger.pipelineEvidence');
+      if (missing.length) why.push(`${r.label}: missing ${missing.slice(0, 3).join(', ')}`);
+    }
+    if (!fileSha[src] || !fileSha[copy]) why.push('missing store-file hash evidence');
+    else if (fileSha[src] !== fileSha[copy]) why.push('the copy is not byte-identical to its source export');
+    const w = R.input && R.input.world, dR = (R.input && R.input.delivery) || {}, dO = (O.input && O.input.delivery) || {};
+    if (dR.source !== 'paired' || dR.brainWorld !== pi(w) || dR.storeSourceWorld !== null || dR.brainFile !== `${src}.json`) why.push(`${x}: delivery is not the swapped path from ${src}`);
+    if (dO.source !== 'own' || dO.brainWorld !== w || dO.storeSourceWorld !== pi(w) || dO.brainFile !== `${copy}.json` || O.procedure !== 'SWAP_PARITY_OWNPATH') why.push(`${o}: delivery is not the own path of the copy`);
+    if (!R.brain || !O.brain || !expected[src] || R.brain.deliveredHash !== O.brain.deliveredHash || R.brain.deliveredHash !== expected[src]) why.push('the delivered store hash differs from the pair or from the expected masked store');
+    const d = diffPaths(canon(without(R, SWAP_ALLOWED_DIFFS)), canon(without(O, SWAP_ALLOWED_DIFFS)));
+    if (d.length) why.push(`records differ: ${d.slice(0, 5).join(', ')}`);
+    if (why.length) fails.push({ pair: [x, o], why });
+  }
+  return { step: 'SWAP-PARITY', pass: fails.length === 0 && pairs.length > 0, pairs: pairs.length, fails };
+}
+

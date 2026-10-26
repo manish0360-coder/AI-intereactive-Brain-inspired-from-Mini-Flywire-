@@ -144,6 +144,38 @@ A pipeline write without evidence fails. Gate G4.7–G4.7d and mutants PL1–PL1
 
 **Not yet validated on real sessions.** The calibration run `calib-20261026-c144130` passed D-3 under the previous evaluator, which did not key-check pipeline writes. The corrected I-LEDGER must be validated on development sessions before freeze.
 
+## Swap-parity check (development only; Gemini round 3, HIGH): built, NOT AUTHORIZED, NOT RUN
+**The question.** Does delivering the training export of world π(w) through the swapped-store path (N1A× / N1L×, `brainWorld = π(w)`) behave exactly like delivering a byte copy of the same export through the normal own-store path? The own-path session is N1A / N1L under `SWAP_PARITY_OWNPATH`, with `brainWorld = w` and `storeSourceWorld = π(w)`. Everything else is the same: world w, seeds, tree, credit mode and mask.
+
+**Claim limit.** A pass establishes delivery-path equivalence only. It says nothing about whether credit alignment improves learning; that is the confirmatory experiment's question.
+
+```bash
+node experiments/credit1/run_swap_parity.mjs --plan-only
+```
+
+**Plan: 60 sessions** on the existing XFER-1 development configurations of worlds 0–10:
+- 20 training sessions: T_A and T_L on the π sources of worlds 0–9 (worlds 0–7, 9, 10);
+- 20 swapped sessions: N1A× and N1L× on worlds 0–9;
+- 20 own-path sessions: N1A and N1L under `SWAP_PARITY_OWNPATH`, each given its own byte copy of the same export.
+
+**Pass rule.** For each of the 20 pairs:
+- both sessions are valid (completed, condition integrity, map audit);
+- I-CRED and I-LEDGER: PASS/PASS in A pairs, no FAIL in L pairs (the corrected pipeline-key checks included);
+- the copy's sha256 equals its source export's;
+- the recorded delivery paths are as planned;
+- the delivered store hashes are equal to each other and to the expected masked store;
+- every D-1 field and every CREDIT-1 instrument block (telemetry, I-CRED, I-LEDGER with its pipeline evidence, event classes, episodes, redirects, self-target counts) is present;
+- the two records are equal everywhere except `label`, `cell`, `procedure` and the delivery source, world, file and declared source world.
+
+Any other difference fails, and the run stops at the first failure.
+
+**Scope.**
+- The own-path procedure runs only under `SWAP_PARITY_AUTHORIZATION` in `lock.mjs`, which is `null` (the driver and the runner refuse). It is never authorized by the calibration record, and only on N1A / N1L, worlds 0–10.
+- The training and swapped sessions are design cells within the calibration scope.
+- No world outside 0–10, no confirmatory territory, no A+.
+- Output goes to a git-ignored `data/<run>` directory (G8.1 checks it against the swap-parity lock, plan and scope).
+- Gate G10.1–G10.6, G5.6b, G8.1d; mutants SP1–SP11, LS1–LS4, SC1–SC24, DG12–DG16.
+
 ## Documented gaps (I-LEDGER)
 - These stores are not exported `Map`s and are not wrapped: the emotion map, the semantic layers, the uncertainty ledgers, semantic vitality, `timeMemory` and `adjacencyMemory` (both private to `main.js`), and the consolidation registry.
 - Their effect on the chosen move is unverified (DESIGN r2 section 11).
