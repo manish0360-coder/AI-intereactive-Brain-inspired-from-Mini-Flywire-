@@ -34,8 +34,9 @@ export const SWAP_PARITY_SCOPE = Object.freeze({
   procedures: Object.freeze(['SWAP_PARITY_OWNPATH']),
   aPlus: false,
 });
-// NOT AUTHORIZED: the swap-parity sessions need the owner's separate authorization, recorded in a commit of its own
-export const SWAP_PARITY_AUTHORIZATION = null;
+// AUTHORIZED by the owner on 2026-10-27, recorded in this commit of its own: the 60-session swap-parity check, nothing else
+export const SWAP_PARITY_AUTHORIZATION = Object.freeze({ ...SWAP_PARITY_SCOPE, authorizedBy: 'owner', authorizedOn: '2026-10-27', stage: 'SWAP',
+  note: 'development-only swap-parity check (60 sessions, worlds 0-10); establishes delivery-path equivalence only' });
 
 export const SESSION_AUTHORIZATION = Object.freeze({ ...CALIBRATION_SCOPE, authorizedBy: 'owner', authorizedOn: '2026-10-25', stage: 'L',
   note: 'development calibration only; the runtime calibration (Stage C) starts only on the owner\'s explicit confirmation' });
