@@ -1,0 +1,49 @@
+{
+ "schema": "coga/1.null-calibration",
+ "set": "sim:0:400",
+ "params": {
+  "alpha": 0.5,
+  "epsilon": 0.1,
+  "k": 5
+ },
+ "source": "experiments/coga/data/sim_baselines_0_400.json (git-ignored; regenerate: node experiments/coga/run_baselines.mjs --set sim:0:400 --alpha 0.5 --epsilon 0.1 --out <file>)",
+ "sourceSha256": "663aceec2645c7b23ef76a706a73ba8c8e17ae5cbdb136e05f8d53825a8753fe",
+ "agents": {
+  "RW": {
+   "worlds": 254,
+   "strata": {
+    "AA": 439,
+    "A0": 0,
+    "0A": 0,
+    "00": 0,
+    "q": 1,
+    "encounterS": 1,
+    "encounterN": 1
+   },
+   "theta": 0.025056947608200455,
+   "lo": -0.0343980343980344,
+   "hi": 0.08101851851851852,
+   "coversZero": true,
+   "iIdent": true
+  },
+  "QB1": {
+   "worlds": 254,
+   "strata": {
+    "AA": 439,
+    "A0": 0,
+    "0A": 0,
+    "00": 0,
+    "q": 1,
+    "encounterS": 1,
+    "encounterN": 1
+   },
+   "theta": -0.009111617312072893,
+   "lo": -0.035794183445190156,
+   "hi": 0.0166270783847981,
+   "coversZero": true,
+   "iIdent": true
+  }
+ },
+ "dynaIIdent": true,
+ "dynaSealed": true
+}
