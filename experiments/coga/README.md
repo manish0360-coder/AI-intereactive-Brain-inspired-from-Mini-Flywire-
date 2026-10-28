@@ -12,8 +12,10 @@ intelligence. A null shows only that this procedure detected no propagation.
 
 | milestone | status | commit | verification |
 |---|---|---|---|
-| M-COGA-1 repository and scientific audit | done | (this commit) | CREDIT-1 gate 115/115 + 299/299 at `4122186`; distal tests 11/11 |
-| M-COGA-2 frozen design and static census | next | — | — |
+| M-COGA-1 repository and scientific audit | done | `9432f63` | CREDIT-1 gate 115/115 + 299/299 at `4122186`; distal tests 11/11 |
+| census rules pre-declared | done | `8740c06` | committed before the census first ran |
+| M-COGA-2 design and static census | done (δ, q_min open) | (this commit) | census FEASIBLE at γ 0.95, κ 0.10 (1.00 DISTAL/world, 18/30 worlds) |
+| M-COGA-3 environment, agents, instrumentation | next | — | — |
 | M-COGA-3 environment, agents, instrumentation | — | — | — |
 | M-COGA-4 verification and development validation | — | — | — |
 | M-COGA-5 preregistration and confirmatory readiness | — | — | — |
@@ -33,3 +35,8 @@ intelligence. A null shows only that this procedure detected no propagation.
 | `M1_AUDIT.md` | evidence ledger, QB-1 null proof, RNG, estimand and distal-construction audit |
 | `distal.mjs` | distal-state classification (pure) |
 | `test_distal.mjs` | `node experiments/coga/test_distal.mjs` — independent mathematical tests |
+| `census.mjs` | `node experiments/coga/census.mjs --out evidence/census_dev.json` — zero-session static census, pre-declared rules |
+| `evidence/census_dev.json` | census output on development worlds 0–29 |
+| `DESIGN.md` | design (all parameters fixed except δ, q_min) |
+| `DECISION_TABLE.md` | prespecified superiority + equivalence reading, preconditions, claim licences |
+| `POWER_ANALYSIS.md` | simulation method; results after development runs |
