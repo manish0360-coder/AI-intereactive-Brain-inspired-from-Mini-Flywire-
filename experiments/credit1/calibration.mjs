@@ -10,7 +10,10 @@
 // ==========================================================
 import { CELLS, GOALS, EVENT_CLASSES, nFor } from './config.mjs';
 import { pi, deliveryFor, cellOf } from './delivery.mjs';
-import { CALIBRATION_SCOPE, PROCEDURES, scopeProblems, calibrationRecordProblems, SWAP_PARITY_SCOPE, swapScopeProblems, swapParityRecordProblems } from './lock.mjs';
+import { CALIBRATION_SCOPE, PROCEDURES, scopeProblems, calibrationRecordProblems, SWAP_PARITY_SCOPE, swapScopeProblems, swapParityRecordProblems,
+  TIMING_DIAGNOSTIC_SCOPE, timingDiagnosticRecordProblems } from './lock.mjs';
+import { CLOCK_PROCEDURE } from './clock.mjs';
+import { planTimingDiagnostic, diagnosticBrainFiles } from './diagnostic.mjs';
 import { TICKS, trainSeed, testSeed } from '../xfer1/config.mjs';
 import { brainHash, componentHashes, VOLATILE_EPISODE_FIELDS } from '../xfer1/brain.mjs';
 
@@ -153,15 +156,18 @@ export function validatePlan(plan, { pairing = pi, aPlus = false } = {}) {
  * the git-ignored data directory holds only authorized development runs (gate G8.1).  files: [{ rel, json }] relative to
  * experiments/credit1/data ('/'-separated; json parsed for summary and session files, else null); tracked: git-tracked paths under
  * the data directory; headCarriesLock(head, kind): the commit recorded by a run carries that kind's lock.  A run is a directory
- * <run>/ with summary.json, sessions/<label>.json, brains/<label>.json and logs/<file>.  Two kinds, each checked against its own
- * scope, plan and lock: a development calibration (calibration-only lock) and a swap-parity check (swap-parity lock).  Its summary
- * must record its lock, its commit must carry it, and every record must be a planned, in-scope session of that kind.  Anything
- * else fails.
+ * <run>/ with summary.json, sessions/<label>.json, brains/<label>.json and logs/<file> (a timing-diagnostic run also traces/<file>.json).
+ * Three kinds, each checked against its own scope, plan and lock: a development calibration (calibration-only lock), a swap-parity
+ * check (swap-parity lock) and the timing diagnostic (timing-diagnostic lock; files keyed <condition>__<label>, records carry the
+ * clock block).  Its summary must record its lock, its commit must carry it, and every record must be a planned, in-scope session
+ * of that kind; a clock-bearing record outside the timing diagnostic fails.  Anything else fails.
  */
-const RUN_FILE = /^([^/]+)\/(summary\.json|sessions\/[^/]+\.json|brains\/[^/]+\.json|logs\/[^/]+)$/;
+const RUN_FILE = /^([^/]+)\/(summary\.json|report\.json|sessions\/[^/]+\.json|brains\/[^/]+\.json|traces\/[^/]+\.json|logs\/[^/]+)$/;
 export const RUN_KINDS = Object.freeze({
   'credit1/1.calibration': Object.freeze({ lock: 'calibration', scope: CALIBRATION_SCOPE, recordProblems: (a) => calibrationRecordProblems(a), plan: () => planCalibration() }),
   'credit1/1.swap-parity': Object.freeze({ lock: 'swap-parity', scope: SWAP_PARITY_SCOPE, recordProblems: (a) => swapParityRecordProblems(a), plan: () => planSwapParity() }),
+  'credit1/1.timing-diagnostic': Object.freeze({ lock: 'timing-diagnostic', scope: TIMING_DIAGNOSTIC_SCOPE, recordProblems: (a) => timingDiagnosticRecordProblems(a),
+    plan: () => planTimingDiagnostic(), key: (e) => e.file, traces: true, clockRecords: true, brainFiles: () => diagnosticBrainFiles(planTimingDiagnostic()) }),
 });
 export function dataDirProblems({ files, tracked, headCarriesLock }) {
   const problems = [];
@@ -180,8 +186,10 @@ export function dataDirProblems({ files, tracked, headCarriesLock }) {
     const s = list.find(x => x.kind === 'summary.json');
     const K = s && s.json ? RUN_KINDS[s.json.schema] : null;
     if (!K) { problems.push(`${run}: no calibration summary (records outside an authorized run)`); continue; }
-    const planned = new Map(K.plan().map(e => [e.label, e]));
+    const keyOf = K.key || ((e) => e.label);
+    const planned = new Map(K.plan().map(e => [keyOf(e), e]));
     const copies = new Set(K.plan().filter(e => e.copyAs).map(e => e.copyAs));
+    const brainFiles = K.brainFiles ? K.brainFiles() : null;
     const a = s.json.authorization;
     if (K.recordProblems(a).length || a.authorizedBy !== 'owner') problems.push(`${run}: the summary does not record the ${K.lock} lock`);
     if (!headCarriesLock(s.json.head, K.lock)) problems.push(`${run}: its commit ${String(s.json.head).slice(0, 7)} does not carry the ${K.lock} lock`);
@@ -191,11 +199,17 @@ export function dataDirProblems({ files, tracked, headCarriesLock }) {
         const label = x.kind.slice('sessions/'.length, -'.json'.length), e = planned.get(label), r = x.json;
         if (!e) { problems.push(`${run}: ${label} is not a planned session`); continue; }
         const isCredit1 = !!r && String(r.schema).startsWith('credit1/');
-        if (!r || r.label !== label || !r.input || r.input.world !== e.world || (e.driver === 'credit1') !== isCredit1
-          || (isCredit1 && (r.cell !== e.cell || !K.scope.cells.includes(r.cell)))) problems.push(`${run}: ${label} does not match its planned, in-scope session`);
+        const clockOk = K.clockRecords ? (!!r && r.procedure === CLOCK_PROCEDURE && !!r.clock) : (!!r && r.clock === undefined && r.procedure !== CLOCK_PROCEDURE);
+        if (!r || r.label !== e.label || !r.input || r.input.world !== e.world || (K.clockRecords ? !isCredit1 : (e.driver === 'credit1') !== isCredit1)
+          || (isCredit1 && (r.cell !== e.cell || !K.scope.cells.includes(r.cell))) || !clockOk) problems.push(`${run}: ${label} does not match its planned, in-scope session`);
+      } else if (x.kind === 'report.json') {
+        if (!K.traces) problems.push(`${run}: a timing-diagnostic report outside a timing-diagnostic run`);
+      } else if (x.kind.startsWith('traces/')) {
+        const label = x.kind.slice('traces/'.length, -'.json'.length);
+        if (!K.traces || !planned.has(label)) problems.push(`${run}: ${label} is not a planned trace`);
       } else if (x.kind.startsWith('brains/')) {
         const label = x.kind.slice('brains/'.length, -'.json'.length), e = planned.get(label);
-        if (!(e && e.export) && !copies.has(label)) problems.push(`${run}: ${label} is not a planned export`);
+        if (brainFiles ? !brainFiles.has(label) : (!(e && e.export) && !copies.has(label))) problems.push(`${run}: ${label} is not a planned export`);
       }
     }
   }
@@ -228,8 +242,9 @@ export function compareParity(learn0Rec, credit1Rec) {
   return [...missing.map(f => `missing ${f}`), ...diffPaths(parityView(learn0Rec), parityView(credit1Rec))];
 }
 const sessionOk = (r) => !!r && r.outcome && r.outcome.completed === true && r.outcome.crashed !== true && r.conditionIntegrity && r.conditionIntegrity.ok === true && r.mapAudit && r.mapAudit.ok === true;
-/** a session record is usable: completed, not crashed, condition integrity and the map audit hold */
-export const sessionProblems = (r) => (sessionOk(r) ? [] : [`${r && r.label}: ${!r ? 'no record' : !r.outcome || r.outcome.completed !== true || r.outcome.crashed ? 'incomplete or crashed' : r.conditionIntegrity && r.conditionIntegrity.ok !== true ? 'condition integrity' : 'map audit'}`]);
+/** a session record is usable: completed, not crashed, condition integrity and the map audit hold; a timing-diagnostic (clock) record never is */
+export const sessionProblems = (r) => (r && (r.clock !== undefined || r.procedure === CLOCK_PROCEDURE) ? [`${r.label}: a timing-diagnostic record (clock) outside the timing diagnostic`]
+  : sessionOk(r) ? [] : [`${r && r.label}: ${!r ? 'no record' : !r.outcome || r.outcome.completed !== true || r.outcome.crashed ? 'incomplete or crashed' : r.conditionIntegrity && r.conditionIntegrity.ok !== true ? 'condition integrity' : 'map audit'}`]);
 
 export function d0Pairs() { const w = PLAN.d0World; return ['T', 'N0', 'N1', 'O0'].map(x => [`D0r1-${x}-w${w}`, `D0r2-${x}-w${w}`]); }
 export function d1Pairs() { return range(PLAN.d1Worlds).flatMap(w => [[`L0-T-w${w}`, `T_L-w${w}`], [`L0-N0-w${w}`, `N0L-w${w}`], [`L0-N1-w${w}`, `N1L-w${w}`], [`L0-O0-w${w}`, `MAPON-N0L-w${w}`]]); }

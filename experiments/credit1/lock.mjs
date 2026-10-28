@@ -24,6 +24,9 @@ export const PROCEDURES = Object.freeze({
   MAP_ON_PARITY: Object.freeze({ cells: Object.freeze(['N0L']), alignedFalse: false, mapOn: true }),
   D2_MAP_ON_PARITY: Object.freeze({ cells: Object.freeze(['N0L']), alignedFalse: true, mapOn: true }),
   SWAP_PARITY_OWNPATH: Object.freeze({ cells: Object.freeze(['N1A', 'N1L']), alignedFalse: false, mapOn: false, ownPathCopy: true }),
+  //   TIMING_DIAGNOSTIC (TIMING_DIAGNOSTIC_PLAN.md): the cell's own session, unchanged, under the clock preload (clock.mjs); authorized
+  //   only by TIMING_DIAGNOSTIC_AUTHORIZATION, never by the calibration or swap-parity record.
+  TIMING_DIAGNOSTIC: Object.freeze({ cells: Object.freeze(['T_A', 'T_L', 'N0A', 'N1A', 'N0L', 'N1L', 'N1AX', 'N1LX']), alignedFalse: false, mapOn: false, timingDiagnostic: true }),
 });
 export const CONFIRMATORY_START = 2032;                                       // config.TERRITORY.confirmatoryStart
 // the swap-parity check: development worlds 0-9 and their pi sources (0-10), the cells it runs, the own-path procedure, A+ excluded
@@ -37,6 +40,19 @@ export const SWAP_PARITY_SCOPE = Object.freeze({
 // AUTHORIZED by the owner on 2026-10-27, recorded in this commit of its own: the 60-session swap-parity check, nothing else
 export const SWAP_PARITY_AUTHORIZATION = Object.freeze({ ...SWAP_PARITY_SCOPE, authorizedBy: 'owner', authorizedOn: '2026-10-27', stage: 'SWAP',
   note: 'development-only swap-parity check (60 sessions, worlds 0-10); establishes delivery-path equivalence only' });
+
+// the timing diagnostic (T-build, owner authorization of 2026-10-28: build only, no session): the ten development worlds of its plan
+// (the five divergent swap sessions, their store sources and the primary cells), its eight cells, its one procedure, A+ excluded,
+// and the hash of the preregistered plan document.  NOT AUTHORIZED: the record stays null until the owner authorizes the run.
+export const TIMING_DIAGNOSTIC_SCOPE = Object.freeze({
+  kind: 'TIMING_DIAGNOSTIC',
+  worlds: Object.freeze([2, 3, 6, 7, 14, 15, 21, 22, 25, 26]),
+  cells: Object.freeze(['T_A', 'T_L', 'N0A', 'N1A', 'N0L', 'N1L', 'N1AX', 'N1LX']),
+  procedures: Object.freeze(['TIMING_DIAGNOSTIC']),
+  aPlus: false,
+  planDocSha256: '98d41aaaf322432648e37ebb57b3130cb2bf243a8c7c51fae9bda33460954789',
+});
+export const TIMING_DIAGNOSTIC_AUTHORIZATION = null;
 
 export const SESSION_AUTHORIZATION = Object.freeze({ ...CALIBRATION_SCOPE, authorizedBy: 'owner', authorizedOn: '2026-10-25', stage: 'L',
   note: 'development calibration only; the runtime calibration (Stage C) starts only on the owner\'s explicit confirmation' });
@@ -90,8 +106,29 @@ export function swapScopeProblems(auth, { world, cell, procedure } = {}) {
   else if (!PROCEDURES[procedure].cells.includes(cell)) p.push(`procedure ${procedure} does not run on cell ${cell}`);
   return p;
 }
-/** the own-path procedure is checked against the swap-parity authorization; every other session against the calibration record */
+/** a timing-diagnostic record is accepted only if its scope fields equal TIMING_DIAGNOSTIC_SCOPE exactly */
+export function timingDiagnosticRecordProblems(auth) {
+  if (auth === null || typeof auth !== 'object') return ['the timing diagnostic is not authorized'];
+  const p = [];
+  for (const k of Object.keys(TIMING_DIAGNOSTIC_SCOPE)) if (JSON.stringify(auth[k]) !== JSON.stringify(TIMING_DIAGNOSTIC_SCOPE[k])) p.push(`authorization field ${k} is not the timing-diagnostic scope`);
+  return p;
+}
+/** pure: why one TIMING_DIAGNOSTIC session input is outside the timing-diagnostic authorization (empty = inside) */
+export function timingDiagnosticScopeProblems(auth, { world, cell, procedure } = {}) {
+  const p = timingDiagnosticRecordProblems(auth);
+  if (p.length) return p;
+  if (!Number.isInteger(world)) p.push('world must be an integer');
+  else if (world >= CONFIRMATORY_START) p.push(`world ${world} is confirmatory territory (from ${CONFIRMATORY_START})`);
+  else if (!auth.worlds.includes(world)) p.push(`world ${world} is not a timing-diagnostic world`);
+  if (!auth.cells.includes(cell)) p.push(`cell ${cell} is not in the timing-diagnostic scope (A+ excluded)`);
+  if (!auth.procedures.includes(procedure) || !PROCEDURES[procedure] || !PROCEDURES[procedure].timingDiagnostic) p.push(`procedure ${procedure} is not the timing-diagnostic procedure`);
+  else if (!PROCEDURES[procedure].cells.includes(cell)) p.push(`procedure ${procedure} does not run on cell ${cell}`);
+  return p;
+}
+/** the own-path procedure is checked against the swap-parity authorization, the timing diagnostic against its own; every other session against the calibration record */
 export function assertSessionScope(input) {
-  const p = input && input.procedure === 'SWAP_PARITY_OWNPATH' ? swapScopeProblems(SWAP_PARITY_AUTHORIZATION, input) : scopeProblems(SESSION_AUTHORIZATION, input);
+  const proc = input && input.procedure;
+  const p = proc === 'SWAP_PARITY_OWNPATH' ? swapScopeProblems(SWAP_PARITY_AUTHORIZATION, input)
+    : proc === 'TIMING_DIAGNOSTIC' ? timingDiagnosticScopeProblems(TIMING_DIAGNOSTIC_AUTHORIZATION, input) : scopeProblems(SESSION_AUTHORIZATION, input);
   if (p.length) throw new Error(`CREDIT-1 session refused: ${p.join('; ')}`);
 }

@@ -737,6 +737,500 @@ function s5(t, arm) {
     ['run_swap_parity.mjs --plan-only', 'SWAP_PARITY_OWNPATH', 'SWAP_PARITY_AUTHORIZATION', 'delivery-path equivalence', '60 sessions'].every(s => rdm.includes(s)));
 }
 
+// ================= G11: timing-diagnostic harness (Milestone T, T-build; zero sessions) =================
+// The real preload runs against fixtures: a fixture tree under the system temp directory holds byte copies of tree A's harness shim
+// and phase1_0/_driver.js (pressSpace) and small fixture modules at the throttle's site and caller lines.  No fixture loads a tree's
+// main.js, render/, env.js or run.js, and no driver process is started (G8.3).  Mutants are mutated copies of the preload, clock.mjs,
+// diagnostic.mjs and the driver text; a mutant whose anchor is not found exactly once counts as NOT caught.
+{
+  const CK = await import('./clock.mjs');
+  const D = await import('./diagnostic.mjs');
+  const TB_BASE = 'cb7e015ce1182b0a132b7d04271adfd5fd909360';                // the T-build base (swap-parity authorization record)
+  const PRELOAD = path.join(HERE, CK.PRELOAD_FILE), PRELOAD_URL = pathToFileURL(PRELOAD).href;
+  const PLAN_DOC = path.join(HERE, 'TIMING_DIAGNOSTIC_PLAN.md');
+  const treeA = built.trees.A.dir;
+  const T0A = CK.T0A, T0B = CK.T0B;
+  const VCLK = (t0 = T0A) => ({ mode: 'VIRTUAL', t0, delayMs: 500 });
+  const preSrc = fs.readFileSync(PRELOAD, 'utf8'), ckSrc = fs.readFileSync(path.join(HERE, 'clock.mjs'), 'utf8'), dgSrc = fs.readFileSync(path.join(HERE, 'diagnostic.mjs'), 'utf8');
+  const fxRoot = path.join(os.tmpdir(), 'mfw-credit1-gate-clock');
+  fs.rmSync(fxRoot, { recursive: true, force: true });
+  fs.mkdirSync(fxRoot, { recursive: true });
+  let mutN = 0;
+  const once = (src, anchor, repl) => (src.split(anchor).length === 2 ? src.replace(anchor, () => repl) : null);   // null: anchor not found exactly once
+  const absImports = (src) => src.replace(/from '(\.\.?\/[^']+)'/g, (m, r) => `from '${pathToFileURL(path.join(HERE, r)).href}'`);
+  const loadMutant = async (src) => { if (src === null) return null; const p = path.join(fxRoot, `mut-${++mutN}.mjs`); fs.writeFileSync(p, absImports(src)); return import(pathToFileURL(p).href); };
+  const preloadMutant = (anchor, repl) => { const src = once(preSrc, anchor, repl); if (src === null) return null; const dir = path.join(fxRoot, `pm-${++mutN}`); fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, CK.PRELOAD_FILE), src); fs.copyFileSync(path.join(HERE, 'clock.mjs'), path.join(dir, 'clock.mjs')); return pathToFileURL(path.join(dir, CK.PRELOAD_FILE)).href; };
+
+  // G11.1 pins and constants
+  const importsOf = (s) => [...s.matchAll(/^import .* from '([^']+)';$/gm)].map(m => m[1]);
+  const lenOk = [T0A, T0B].every(t => [t, t + 2 * 1500 * 500].every(x => String(x).length === 13 && x.toString(36).length === 8));
+  check('G11.1 pins: clock_preload.mjs is the pinned file; TIMING_DIAGNOSTIC_PLAN.md is the timing-diagnostic scope\'s plan document; t0a 2026-01-01Z and t0b 2027-01-01Z (>= 15,000 ms; 13 decimal digits and 8 base-36 characters over a session); loop delay 500 ms; clock.mjs imports Node built-ins only, the preload clock.mjs and Node built-ins only',
+    sha256(fs.readFileSync(PRELOAD)) === CK.PRELOAD_SHA256 && sha256(fs.readFileSync(PLAN_DOC)) === LOCK.TIMING_DIAGNOSTIC_SCOPE.planDocSha256 && T0A === 1767225600000 && T0B === 1798761600000
+    && [T0A, T0B].every(t => t >= CK.REBUILD_INTERVAL_MS) && lenOk && CK.LOOP_DELAY_MS === 500 && CK.LOOP_CALLBACK_NAME === 'runAgentLoop'
+    && importsOf(ckSrc).every(m => m.startsWith('node:')) && importsOf(preSrc).every(m => m.startsWith('node:') || m === './clock.mjs'),
+    `preload ${CK.PRELOAD_SHA256.slice(0, 12)}, plan document ${LOCK.TIMING_DIAGNOSTIC_SCOPE.planDocSha256.slice(0, 12)}`);
+
+  // the fixture tree
+  const FX = path.join(fxRoot, 'fx-tree-' + sha256('credit1-clock-fixture').slice(0, 12));
+  const put = (relp, text) => { const p = path.join(FX, ...relp.split('/')); fs.mkdirSync(path.dirname(p), { recursive: true }); fs.writeFileSync(p, text); };
+  for (const relp of ['benchmarks/harness/headlessShim.js', 'experiments/phase1_0/_driver.js']) put(relp, fs.readFileSync(path.join(treeA, ...relp.split('/'))));
+  const lines = (n, at) => { const L = Array.from({ length: n }, (_, i) => `// fixture line ${i + 1}`); for (const [ln, t] of Object.entries(at)) L[Number(ln) - 1] = t; return L.join('\n') + '\n'; };
+  put('render/schemaMemory.js', lines(141, { 132: 'export function rebuildSchemas(store, force = false) {', 133: '    const now = Date.now();', 134: '    return now;', 135: '}', 139: 'export function other() {', 140: '    return Date.now();', 141: '}' }));
+  put('render/episodeManager.js', lines(1225, { 1: "const SM = await import(new URL('./schemaMemory.js', import.meta.url));", 1148: 'export function forced() {', 1149: '    return SM.rebuildSchemas([], true);', 1150: '}', 1223: 'export function consolidate() {', 1224: '    return SM.rebuildSchemas([]);', 1225: '}' }));
+  put('main.js', lines(5266, { 1: "const SM = await import(new URL('./render/schemaMemory.js', import.meta.url));", 5264: 'export function loopRebuild() {', 5265: '  return SM.rebuildSchemas([]);', 5266: '}' }));
+  const ENTRY = [
+    'const IN = JSON.parse(process.argv[2]);',
+    'const boot = Date.now();',
+    'const U = (r) => new URL(r, import.meta.url);',
+    'const M = globalThis.__CREDIT1_CLOCK__;',
+    'const out = { scenario: IN.scenario, boot, entryRan: true };',
+    'try {',
+    "  if (IN.scenario === 'advance') {",
+    "    const shim = await import(U('../../benchmarks/harness/headlessShim.js')); const drv = await import(U('../phase1_0/_driver.js'));",
+    '    const timer = shim.installTimerControl(); const seq = [];',
+    "    function runAgentLoop() { seq.push(['loop', Date.now(), Date.now()]); setTimeout(runAgentLoop, 500); }",
+    '    drv.pressSpace({ listeners: { keydown: [() => runAgentLoop()] } });',
+    "    seq.push(['after-space', Date.now(), Date.now(), Date.now()]);",
+    '    setTimeout(() => {}, 1000); setTimeout(function other() {}, 500); setInterval(() => {}, 500);',
+    '    await new Promise(r => setImmediate(r)); await Promise.resolve();',
+    "    seq.push(['after-other-timers', Date.now()]);",
+    "    for (let i = 0; i < 4; i++) { const fired = timer.tick(); seq.push(['tick', fired, Date.now()]); }",
+    "    clearTimeout(1); seq.push(['after-clear', timer.tick(), Date.now()]);",
+    '    out.seq = seq; out.observed = M.observed();',
+    "  } else if (IN.scenario === 'delays') {",
+    "    const shim = await import(U('../../benchmarks/harness/headlessShim.js')); shim.installTimerControl();",
+    '    function runAgentLoop() {}',
+    "    out.delays = [499, 501, 0, undefined, '500', 500.0001, NaN, Infinity, -500, 1000, 500].map(d => { try { setTimeout(runAgentLoop, d); return [String(d), 'accepted']; } catch (e) { return [String(d), /CREDIT-1 clock: loop-delay/.test(e.message) ? 'refused' : 'other']; } });",
+    '    out.observed = M.observed();',
+    "  } else if (IN.scenario === 'sites' || IN.scenario === 'reads') {",
+    "    const main = await import(U('../../main.js')); const sm = await import(U('../../render/schemaMemory.js')); const em = await import(U('../../render/episodeManager.js'));",
+    "    if (IN.scenario === 'sites') { main.loopRebuild(); em.consolidate(); em.forced(); sm.other(); out.via = M.schemaVia(); out.observed = M.observed(); }",
+    '    else {',
+    '      const before = performance.timeOrigin + performance.now(); out.values = [boot];',
+    '      out.values.push(main.loopRebuild()); out.values.push(sm.other()); out.values.push(Date.now());',
+    '      const after = performance.timeOrigin + performance.now(); out.bounds = [before, after];',
+    '      if (IN.extraRebuild) out.values.push(main.loopRebuild());',
+    "      if (M.config.mode === 'REAL_RECORD') out.rec = M.recording();",
+    '      out.observed = M.observed();',
+    '    }',
+    "  } else if (IN.scenario === 'marker') {",
+    '    out.frozen = Object.isFrozen(M); out.configFrozen = Object.isFrozen(M.config); out.config = M.config; out.preloadSha256 = M.preloadSha256; out.identity = Date.now === M.now;',
+    '    out.reassigned = (() => { try { globalThis.__CREDIT1_CLOCK__ = {}; return globalThis.__CREDIT1_CLOCK__ !== M; } catch { return false; } })();',
+    '    out.mutated = (() => { try { M.config.t0 = 1; return M.config.t0 === 1; } catch { return false; } })();',
+    "    out.redefined = (() => { try { Object.defineProperty(globalThis, '__CREDIT1_CLOCK__', { value: {} }); return true; } catch { return false; } })();",
+    '  }',
+    '} catch (e) { out.error = String(e && e.message); out.observed = M ? M.observed() : null; }',
+    "process.stdout.write('@@FX@@' + JSON.stringify(out) + '@@END@@');",
+  ];
+  put('experiments/m7/fx_entry.mjs', ENTRY.join('\n') + '\n');
+  const ENTRY_PATH = path.join(FX, 'experiments', 'm7', 'fx_entry.mjs');
+  const S_BOOT = 'experiments/m7/fx_entry.mjs:2', S_DIRECT = `experiments/m7/fx_entry.mjs:${ENTRY.findIndex(l => l.includes('out.values.push(Date.now())')) + 1}`;
+  const fx = (input, url = PRELOAD_URL, raw = null) => {
+    const r = run(process.execPath, ['--import', url, ENTRY_PATH, raw !== null ? raw : JSON.stringify({ tree: FX, ...input })]);
+    const m = /@@FX@@(.*)@@END@@/s.exec(r.stdout || ''); let o = null; try { o = m ? JSON.parse(m[1]) : null; } catch { o = null; }
+    return { status: r.status, out: o, stderr: r.stderr || '' };
+  };
+  const trace = (reads, mode = 'REAL_RECORD') => { const p = path.join(fxRoot, `trace-${sha256(JSON.stringify([reads, mode])).slice(0, 12)}.json`); fs.writeFileSync(p, JSON.stringify({ mode, reads })); return { replayPath: p, replaySha256: sha256(fs.readFileSync(p)) }; };
+  const R4 = [[S_BOOT, 111], ['render/schemaMemory.js:133', 222], ['render/schemaMemory.js:140', 333], [S_DIRECT, 444]];
+  const RS = [[S_BOOT, 9], ['render/schemaMemory.js:133', 222], ['X:1', 5], [S_DIRECT, 7]];
+  // every fixture expectation, by group; a preload mutant is caught when any expectation fails
+  function fixtureSuite(url) {
+    const res = [];
+    const expect = (group, name, ok) => res.push({ group, name, ok: !!ok });
+    for (const t0 of [T0A, T0B]) {
+      const a = fx({ scenario: 'advance', clock: VCLK(t0) }, url).out, T = t0;
+      const want = [['loop', T, T], ['after-space', T, T, T], ['after-other-timers', T]];
+      for (let i = 1; i <= 4; i++) want.push(['loop', T + 500 * i, T + 500 * i], ['tick', true, T + 500 * i]);
+      want.push(['after-clear', false, T + 2000]);
+      expect('advance', `t0 ${t0}`, a && !a.error && a.boot === T && JSON.stringify(a.seq) === JSON.stringify(want) && a.observed.loopFires === 4 && JSON.stringify(a.observed.delays) === '{"500":4}'
+        && a.observed.violations.length === 0 && a.observed.reads === 20);
+    }
+    const d = fx({ scenario: 'delays', clock: VCLK() }, url).out;
+    const wantD = [['499', 'refused'], ['501', 'refused'], ['0', 'refused'], ['undefined', 'refused'], ['500', 'refused'], ['500.0001', 'refused'], ['NaN', 'refused'], ['Infinity', 'refused'], ['-500', 'refused'], ['1000', 'refused'], ['500', 'accepted']];
+    expect('delays', 'only the number 500', d && !d.error && JSON.stringify(d.delays) === JSON.stringify(wantD) && d.observed.violations.length === 10 && d.observed.violations.every(v => v.kind === 'loop-delay'));
+    const s = fx({ scenario: 'sites', clock: VCLK() }, url).out;
+    expect('modes', 'call sites and rebuildSchemas callers', s && !s.error && JSON.stringify(s.via) === JSON.stringify(['main.js:5265', 'render/episodeManager.js:1224', 'render/episodeManager.js:1149']) && s.via.map(CK.viaClass).join('') === 'LKF'
+      && JSON.stringify(s.observed.readsBySite) === JSON.stringify({ [S_BOOT]: 1, 'render/schemaMemory.js:133': 3, 'render/schemaMemory.js:140': 1 }) && s.observed.schemaReads === 3);
+    const rr = fx({ scenario: 'reads', clock: { mode: 'REAL_RECORD', t0: null, delayMs: 500 } }, url).out;
+    expect('modes', 'REAL_RECORD returns and records the real clock with its sites', rr && !rr.error && Array.isArray(rr.rec) && rr.rec.length === 4
+      && JSON.stringify(rr.rec.map(x => x[0])) === JSON.stringify([S_BOOT, 'render/schemaMemory.js:133', 'render/schemaMemory.js:140', S_DIRECT]) && JSON.stringify(rr.rec.map(x => x[1])) === JSON.stringify(rr.values)
+      && rr.rec.every(x => Number.isInteger(x[1]) && x[1] > 1.6e12 && Math.abs(x[1] - rr.bounds[1]) < 5000 && x[1] !== T0A && x[1] !== T0B) && rr.rec.every((x, i) => i === 0 || x[1] >= rr.rec[i - 1][1]));
+    const ok1 = fx({ scenario: 'reads', clock: { mode: 'REPLAY_FULL', t0: null, delayMs: 500, ...trace(R4) } }, url).out;
+    expect('modes', 'REPLAY_FULL returns the recorded values in read order', ok1 && !ok1.error && JSON.stringify(ok1.values) === '[111,222,333,444]' && ok1.observed.violations.length === 0);
+    const mm = fx({ scenario: 'reads', clock: { mode: 'REPLAY_FULL', t0: null, delayMs: 500, ...trace([R4[0], ['render/schemaMemory.js:999', 222], R4[2], R4[3]]) } }, url).out;
+    expect('modes', 'REPLAY_FULL refuses a site mismatch (fails closed)', mm && /replay-site-mismatch/.test(mm.error || '') && mm.observed.violations.length === 1 && mm.observed.violations[0].read === 1);
+    const ov = fx({ scenario: 'reads', clock: { mode: 'REPLAY_FULL', t0: null, delayMs: 500, ...trace(R4.slice(0, 2)) } }, url).out;
+    expect('modes', 'REPLAY_FULL refuses an overrun (fails closed)', ov && /replay-overrun/.test(ov.error || '') && ov.observed.violations[0].read === 2);
+    const rs = fx({ scenario: 'reads', clock: { mode: 'REPLAY_SITE', t0: T0A, delayMs: 500, ...trace(RS) } }, url).out;
+    expect('modes', 'REPLAY_SITE: recorded values at the throttle site only, the virtual clock elsewhere', rs && !rs.error && JSON.stringify(rs.values) === JSON.stringify([T0A, 222, T0A, T0A]));
+    const rso = fx({ scenario: 'reads', extraRebuild: true, clock: { mode: 'REPLAY_SITE', t0: T0A, delayMs: 500, ...trace(RS) } }, url).out;
+    expect('modes', 'REPLAY_SITE refuses an overrun at the throttle site', rso && /replay-overrun/.test(rso.error || ''));
+    const mk = fx({ scenario: 'marker', clock: VCLK() }, url).out;
+    expect('marker', 'frozen, non-configurable, the configuration and hash of the loaded preload, Date.now the installed clock', mk && mk.frozen === true && mk.configFrozen === true && CK.canonical(mk.config) === CK.canonical(VCLK())
+      && mk.preloadSha256 === sha256(fs.readFileSync(fileURLToPath(url))) && mk.identity === true && mk.reassigned === false && mk.mutated === false && mk.redefined === false);
+    const goodTrace = trace(R4);
+    const bad = [['no clock configuration', { scenario: 'noop' }], ['an unknown key', { scenario: 'noop', clock: { ...VCLK(), extra: 1 } }], ['an unknown mode', { scenario: 'noop', clock: { ...VCLK(), mode: 'FROZEN' } }],
+      ['an unknown mode with t0 null (refused by the mode rule alone)', { scenario: 'noop', clock: { mode: 'FROZEN', t0: null, delayMs: 500 } }],
+      ['t0 below 15,000', { scenario: 'noop', clock: VCLK(12345) }], ['an unpinned t0', { scenario: 'noop', clock: VCLK(T0A + 1) }], ['delay 499', { scenario: 'noop', clock: { ...VCLK(), delayMs: 499 } }],
+      ['t0 in a real-clock mode', { scenario: 'noop', clock: { mode: 'REAL_RECORD', t0: T0A, delayMs: 500 } }], ['a replay without a source', { scenario: 'noop', clock: { mode: 'REPLAY_FULL', t0: null, delayMs: 500 } }],
+      ['a replay source with another hash', { scenario: 'noop', clock: { mode: 'REPLAY_FULL', t0: null, delayMs: 500, replayPath: goodTrace.replayPath, replaySha256: '0'.repeat(64) } }],
+      ['a replay source that is not a REAL_RECORD trace', { scenario: 'noop', clock: { mode: 'REPLAY_FULL', t0: null, delayMs: 500, ...trace(R4, 'VIRTUAL') } }]];
+    for (const [name, input] of bad) { const r = fx(input, url); expect('refusal', name, r.status !== 0 && !r.out && /CREDIT-1 clock preload refused/.test(r.stderr)); }
+    const nj = fx(null, url, 'not-json');
+    expect('refusal', 'a session input that is not JSON', nj.status !== 0 && !nj.out && /CREDIT-1 clock preload refused/.test(nj.stderr));
+    const nt = fx(null, url, JSON.stringify({ scenario: 'noop', clock: VCLK() }));
+    expect('refusal', 'no tree', nt.status !== 0 && !nt.out && /CREDIT-1 clock preload refused/.test(nt.stderr));
+    const ok = fx({ scenario: 'noop', clock: VCLK() }, url);
+    expect('refusal', 'a valid configuration runs the entry with empty stderr', ok.status === 0 && ok.out && ok.out.entryRan === true && ok.stderr.trim() === '');
+    return res;
+  }
+  const FXR = fixtureSuite(PRELOAD_URL);
+  const grp = (g) => { const r = FXR.filter(x => x.group === g); return { ok: r.length > 0 && r.every(x => x.ok), detail: `${r.filter(x => x.ok).length}/${r.length}${r.some(x => !x.ok) ? ' | failed: ' + r.filter(x => !x.ok).map(x => x.name).join(', ') : ''}` }; };
+  { const g = grp('advance'); check('G11.2 the virtual clock advances only when the harness fires runAgentLoop, by its 500 ms delay (reads, other callbacks, setInterval, setImmediate, promises and a scheduled-but-unfired loop do not advance it); t0a and t0b', g.ok, g.detail); }
+  { const g = grp('delays'); check('G11.3 every agent-loop delay must be exactly the number 500: 499, 501, 0, undefined, "500", 500.0001, NaN, Infinity, -500 and 1000 are refused and recorded as violations', g.ok, g.detail); }
+  // G11.4 the first loop and module-level reads see t0 (fixture G11.2: boot and Space-key loop at t0), and the tree's own anchors
+  const TA = (relp) => fs.readFileSync(path.join(treeA, ...relp.split('/')), 'utf8').split(/\r?\n/);
+  const mainA = TA('main.js'), emA = TA('render/episodeManager.js'), smA = TA('render/schemaMemory.js'), shimA = TA('benchmarks/harness/headlessShim.js').join('\n'), runA = TA('experiments/m7/run.js').join('\n'), drvA = TA('experiments/phase1_0/_driver.js').join('\n');
+  const spaceIdx = mainA.findIndex(l => l.includes('if (e.code === "Space") {'));
+  const anchorsOk = mainA[5264].trim() === 'rebuildSchemas(getAllEpisodes());' && emA[1148].trim().startsWith('_sys.rebuildSchemas(episodicStore, true);') && emA[1223].trim() === '_sys.rebuildSchemas(episodicStore);'
+    && smA[132].trim() === 'const now = Date.now();' && mainA.filter(l => l.trim().startsWith('let agentSpeed = 500;')).length === 1 && mainA.filter(l => l.includes('setTimeout(runAgentLoop, agentSpeed)')).length === 1
+    && spaceIdx > 0 && mainA.slice(spaceIdx, spaceIdx + 8).some(l => l.trim().startsWith('runAgentLoop(); // start Safe loop')) && shimA.includes("if (typeof fn === 'function' && fn.name === 'runAgentLoop') { loopCallback = fn; captured++; return 1; }")
+    && shimA.includes('tick(){ const cb = loopCallback; loopCallback = null; if (!cb) return false; cb(); return true; }') && drvA.includes("dom.listeners.keydown.forEach(fn => fn({ code:'Space'")
+    && runA.indexOf('pressSpace(dom);') > 0 && runA.indexOf('pressSpace(dom);') < runA.indexOf('if (!timer.tick()) break;') && CK.SCHEMA_SITE === 'render/schemaMemory.js:133'
+    && JSON.stringify(CK.SCHEMA_CALLERS) === JSON.stringify({ L: 'main.js:5265', K: 'render/episodeManager.js:1224', F: 'render/episodeManager.js:1149' });
+  check('G11.4 the Space-key loop and module-level reads see t0 (fixture); tree A anchors: the throttle read render/schemaMemory.js:133, its callers main.js:5265 (L), render/episodeManager.js:1224 (K) and :1149 (forced F), agentSpeed 500 with one setTimeout(runAgentLoop, agentSpeed), the Space handler calls runAgentLoop() directly, the shim captures the loop by name and tick() fires it, run.js presses Space before the tick loop',
+    grp('advance').ok && anchorsOk);
+  { const g = grp('modes'), m = grp('marker'); check('G11.5 call-site attribution and the diagnostic modes: rebuildSchemas callers L/K/F, REAL_RECORD records the real clock, REPLAY_FULL returns the recording and refuses a site mismatch or overrun, REPLAY_SITE replays the throttle site only; the marker is frozen and non-configurable and reports the loaded preload', g.ok && m.ok, `${g.detail}; marker ${m.detail}`); }
+  { const g = grp('refusal'); check('G11.6 the preload fails closed: no clock, unknown key or mode, unpinned or too-small t0, delay 499, t0 in a real-clock mode, a replay without a source, with another hash or not from REAL_RECORD, input not JSON, no tree: node exits before the entry runs; a valid configuration runs it with empty stderr', g.ok, g.detail); }
+
+  // G11.6b the driver's guard (pure) and G11.6c its wiring
+  const guardSuite = (G) => {
+    const fails = [], expect = (n, ok) => { if (!ok) fails.push(n); };
+    const bytes = fs.readFileSync(PRELOAD), fakeNow = function now() { return 1; };
+    const mk = (over = {}) => Object.freeze({ installed: true, config: Object.freeze({ ...VCLK() }), preloadSha256: G.PRELOAD_SHA256, now: fakeNow, ...over });
+    const diag = (over = {}) => ({ input: { procedure: 'TIMING_DIAGNOSTIC', clock: VCLK(), tracePath: 't.json' }, execArgv: ['--import', PRELOAD_URL], nodeOptions: undefined, marker: mk(), dateNow: fakeNow, preloadUrl: PRELOAD_URL, preloadBytes: bytes, ...over });
+    const norm = (over = {}) => ({ input: { role: 'test' }, execArgv: [], nodeOptions: undefined, marker: undefined, dateNow: Date.now, preloadUrl: PRELOAD_URL, preloadBytes: bytes, ...over });
+    const P = (ctx) => G.driverClockProblems(ctx);
+    expect('the diagnostic configuration is accepted', P(diag()).length === 0);
+    expect('a normal session is accepted', P(norm()).length === 0 && P(norm({ nodeOptions: '--max-old-space-size=4096' })).length === 0 && P(norm({ input: { procedure: 'D2_ALIGNED_FALSE' } })).length === 0);
+    const refusedD = { 'no preload': diag({ execArgv: [], marker: undefined, dateNow: Date.now }), 'another preload URL': diag({ execArgv: ['--import', PRELOAD_URL + 'x'] }),
+      'an extra node flag': diag({ execArgv: ['--import', PRELOAD_URL, '--require', 'x'] }), 'the --import= form': diag({ execArgv: [`--import=${PRELOAD_URL}`] }),
+      'NODE_OPTIONS --import': diag({ nodeOptions: '--import x' }), 'NODE_OPTIONS --require': diag({ nodeOptions: '--require y' }), 'NODE_OPTIONS -r': diag({ nodeOptions: '-r q' }),
+      'NODE_OPTIONS --loader': diag({ nodeOptions: '--loader z' }), 'NODE_OPTIONS --experimental-loader=': diag({ nodeOptions: '--experimental-loader=w' }),
+      'a modified preload file': diag({ preloadBytes: Buffer.concat([bytes, Buffer.from(' ')]) }), 'a marker with another configuration': diag({ marker: mk({ config: Object.freeze(VCLK(T0B)) }) }),
+      'Date.now that is not the installed clock': diag({ dateNow: function now() { return 2; } }), 'a marker that is not frozen': diag({ marker: { ...mk() } }), 'a marker not installed': diag({ marker: mk({ installed: false }) }),
+      'a marker reporting another preload hash': diag({ marker: mk({ preloadSha256: '1'.repeat(64) }) }),
+      'an invalid clock input': diag({ input: { procedure: 'TIMING_DIAGNOSTIC', clock: { ...VCLK(), delayMs: 499 }, tracePath: 't' }, marker: mk({ config: Object.freeze({ ...VCLK(), delayMs: 499 }) }) }),
+      'no tracePath': diag({ input: { procedure: 'TIMING_DIAGNOSTIC', clock: VCLK() } }) };
+    for (const [n, ctx] of Object.entries(refusedD)) expect(`the diagnostic refuses ${n}`, P(ctx).length > 0);
+    const refusedN = { 'a clock input': norm({ input: { clock: VCLK() } }), 'a tracePath': norm({ input: { tracePath: 't' } }), 'a node flag (the preload)': norm({ execArgv: ['--import', PRELOAD_URL] }),
+      'a preload marker': norm({ marker: mk() }), 'a non-native Date.now': norm({ dateNow: function now() { return 3; } }), 'NODE_OPTIONS --import': norm({ nodeOptions: '--import x' }),
+      'a calibration procedure with a clock': norm({ input: { procedure: 'D2_ALIGNED_FALSE', clock: VCLK() } }), 'the swap-parity procedure under the preload': norm({ input: { procedure: 'SWAP_PARITY_OWNPATH' }, execArgv: ['--import', PRELOAD_URL] }) };
+    for (const [n, ctx] of Object.entries(refusedN)) expect(`a normal session refuses ${n}`, P(ctx).length > 0);
+    const Cf = G.clockConfigProblems, tr = { replayPath: 'x.json', replaySha256: 'a'.repeat(64) };
+    expect('the preregistered configurations are accepted', [VCLK(), VCLK(T0B), { mode: 'REAL_RECORD', t0: null, delayMs: 500 }, { mode: 'REPLAY_FULL', t0: null, delayMs: 500, ...tr }, { mode: 'REPLAY_SITE', t0: T0A, delayMs: 500, ...tr }].every(c => Cf(c).length === 0));
+    const badC = { 'an unpinned t0': VCLK(T0A + 1), 'delay 499': { ...VCLK(), delayMs: 499 }, 'an unknown key': { ...VCLK(), x: 1 }, 'an unknown mode': { ...VCLK(), mode: 'FROZEN' },
+      'an unknown mode with t0 null (refused by the mode rule alone)': { mode: 'FROZEN', t0: null, delayMs: 500 },
+      'a replay without its hash': { mode: 'REPLAY_FULL', t0: null, delayMs: 500, replayPath: 'x' }, 't0 in a real-clock mode': { mode: 'REAL_RECORD', t0: T0A, delayMs: 500 }, 'a replay source in a virtual mode': { ...VCLK(), ...tr }, 'not an object': null };
+    for (const [n, c] of Object.entries(badC)) expect(`the configuration rule refuses ${n}`, Cf(c).length > 0);
+    return fails;
+  };
+  const gs = guardSuite(CK);
+  check('G11.6b the driver\'s clock guard (pure): the timing diagnostic needs exactly --import <pinned preload>, no preload flag in NODE_OPTIONS, the pinned preload bytes, the frozen marker with the input\'s configuration and hash, the installed Date.now, a valid clock and a tracePath; every other session refuses a clock input, a tracePath, any node flag, a marker, a non-native Date.now and a preload flag in NODE_OPTIONS',
+    gs.length === 0, gs.join(' | '));
+  const drvSrc = fs.readFileSync(path.join(HERE, 'session.mjs'), 'utf8');
+  const GUARD_LINE = 'const cp = driverClockProblems({ input: IN, execArgv: process.execArgv, nodeOptions: process.env.NODE_OPTIONS, marker: globalThis.__CREDIT1_CLOCK__, dateNow: Date.now,';
+  const REFUSE_LINE = "if (cp.length) refuse(`clock: ${cp.join('; ')}`); }";
+  const wiring = (s) => {
+    const iU = s.indexOf('!KEYS.includes(k) && !CLOCK_INPUT_KEYS.includes(k)'), iG = s.indexOf(GUARD_LINE), iR = s.indexOf(REFUSE_LINE);
+    const iS = s.indexOf('assertSessionScope({ world: IN.world, cell: IN.cell, procedure: IN.procedure });'), iI = s.indexOf('await T(');
+    return iU > 0 && iU < iG && iG < iR && iR < iS && iS < iI && s.includes('preloadUrl: pathToFileURL(path.join(HERE, PRELOAD_FILE)).href, preloadBytes: fs.readFileSync(path.join(HERE, PRELOAD_FILE)) });')
+      && s.includes("import { driverClockProblems, recordedClockConfig, CLOCK_INPUT_KEYS, CLOCK_PROCEDURE, PRELOAD_FILE } from './clock.mjs';")
+      && s.includes('if (DIAG) {\n  out.clock = { config: recordedClockConfig(IN.clock), preloadSha256: CLK.preloadSha256, observed: CLK.observed() };') && (s.match(/out\.clock = /g) || []).length === 1
+      && s.includes("const schemaMod = DIAG ? await T('render/schemaMemory.js') : null;") && s.includes('if (TRACE) TRACE.boundary(calls - 1); },') && s.includes('if (TRACE) TRACE.boundary(calls - 1, 1); return true; },')
+      && s.includes('if (TRACE) TRACE.boundary(calls);') && s.includes('const CLK = DIAG ? globalThis.__CREDIT1_CLOCK__ : null;');
+  };
+  check('G11.6c driver wiring: the clock guard runs after the unknown-field check and before the scope check and any runtime module; the clock input fields are accepted only to reach the guard; the clock block is added only for the timing diagnostic; the trace observes every call start, every executed move and the end of the run', wiring(drvSrc));
+  { const i = drvSrc.indexOf('{ const cp = driverClockProblems('), j = drvSrc.indexOf(REFUSE_LINE) + REFUSE_LINE.length, block = drvSrc.slice(i, j);
+    const anchor = "const envmod = await T('experiments/m7/env.js');";
+    const moved = i > 0 && drvSrc.split(anchor).length === 2 ? (drvSrc.slice(0, i) + drvSrc.slice(j)).replace(anchor, () => `${anchor}\n${block}`) : null;
+    mutant('CKW1 the clock guard moved after the first runtime import is detected', moved !== null && !wiring(moved)); }
+  for (const [id, anchor, repl] of [
+    ['GM1 the exact node-flag check removed', "if (!Array.isArray(execArgv) || execArgv.length !== 2 || execArgv[0] !== '--import' || execArgv[1] !== preloadUrl) p.push(", 'if (false) p.push('],
+    ['GM2 the NODE_OPTIONS check removed', "if (typeof nodeOptions === 'string' && PRELOAD_FLAG.test(nodeOptions)) p.push(", 'if (false) p.push('],
+    ['GM3 the preload hash check removed', 'if (!preloadBytes || sha256(preloadBytes) !== PRELOAD_SHA256) p.push(', 'if (false) p.push('],
+    ['GM4 the Date.now identity check removed', 'if (dateNow !== marker.now) p.push(', 'if (false) p.push('],
+    ['GM5 the marker-configuration check removed', 'if (canonical(marker.config) !== canonical(input.clock)) p.push(', 'if (false) p.push('],
+    ['GM6 a normal session accepting a clock input', 'for (const k of CLOCK_INPUT_KEYS) if (input && input[k] !== undefined) p.push(', 'for (const k of CLOCK_INPUT_KEYS) if (false) p.push('],
+    ['GM7 a normal session accepting a node flag', 'if (!Array.isArray(execArgv) || execArgv.length !== 0) p.push(', 'if (false) p.push('],
+    ['GM8 a normal session accepting a marker', 'if (marker !== undefined) p.push(', 'if (false) p.push('],
+    ['GM9 a normal session accepting a non-native Date.now', 'if (!isNativeDateNow(dateNow)) p.push(', 'if (false) p.push('],
+    ['GM10 the diagnostic skipping clock validation', 'p.push(...clockConfigProblems(input.clock).map(x => `clock: ${x}`));', 'void 0;'],
+    ['GM11 the diagnostic without a tracePath', "if (typeof input.tracePath !== 'string' || !input.tracePath) p.push(", 'if (false) p.push('],
+    ['GM12 an unfrozen marker accepted', '!Object.isFrozen(marker) || ', ''],
+    ['GM13 the marker hash check removed', 'if (marker.preloadSha256 !== PRELOAD_SHA256) p.push(', 'if (false) p.push('],
+    ['CM-a an unpinned t0 accepted', 'if (!T0_VALUES.includes(cfg.t0)) p.push(', 'if (false) p.push('],
+    ['CM-b a delay other than 500 accepted', 'if (cfg.delayMs !== LOOP_DELAY_MS) p.push(', 'if (false) p.push('],
+    ['CM-c an unknown configuration key accepted', 'if (unknown.length) p.push(', 'if (false) p.push('],
+    ['CM-d an unknown mode accepted', 'if (!CLOCK_MODES.includes(cfg.mode)) p.push(', 'if (false) p.push('],
+    ['CM-e a replay without its hash accepted', "if (!/^[0-9a-f]{64}$/.test(String(cfg.replaySha256))) p.push(", 'if (false) p.push('],
+    ['CM-f t0 in a real-clock mode accepted', 'else if (cfg.t0 !== null) p.push(', 'else if (false) p.push('],
+  ]) { const m = await loadMutant(once(ckSrc, anchor, repl)); mutant(`${id} is detected`, m !== null && guardSuite(m).length > 0); }
+  for (const [id, anchor, repl] of [
+    ['PM1 the clock advancing on every read', "  if (cfg.mode === 'VIRTUAL') return virtual;", "  if (cfg.mode === 'VIRTUAL') return virtual++;"],
+    ['PM2 the clock advancing when the loop is scheduled', '    const fire = { [LOOP_CALLBACK_NAME](...a) { loopFired(delay); return target.apply(this, a); } }[LOOP_CALLBACK_NAME];', '    loopFired(delay); const fire = { [LOOP_CALLBACK_NAME](...a) { return target.apply(this, a); } }[LOOP_CALLBACK_NAME];'],
+    ['PM3 the clock advancing on any callback', '  return inner(fn, delay, ...rest);', "  if (cfg.mode === 'VIRTUAL') virtual += 1;\n  return inner(fn, delay, ...rest);"],
+    ['PM4 a loop delay of 500 +/- 1 accepted', "if (!(typeof delay === 'number' && delay === LOOP_DELAY_MS))", "if (!(typeof delay === 'number' && Math.abs(delay - LOOP_DELAY_MS) <= 1))"],
+    ['PM5 a non-number loop delay accepted', "if (!(typeof delay === 'number' && delay === LOOP_DELAY_MS))", 'if (!(Number(delay) === LOOP_DELAY_MS))'],
+    ['PM6 the first loop at t0 + 500', 'let virtual = cfg.t0;', 'let virtual = cfg.t0 + LOOP_DELAY_MS;'],
+    ['PM7 a fire wrapper not named runAgentLoop', '{ [LOOP_CALLBACK_NAME](...a) { loopFired(delay); return target.apply(this, a); } }[LOOP_CALLBACK_NAME]', '{ loop(...a) { loopFired(delay); return target.apply(this, a); } }.loop'],
+    ['PM8 a replay overrun falling back to the real clock', "    if (i >= REC.length) throw violation('replay-overrun', { read: i, site });", '    if (i >= REC.length) return realNow.call(Date);'],
+    ['PM9 a replay ignoring call sites', "    if (REC[i][0] !== site) throw violation('replay-site-mismatch', { read: i, expected: REC[i][0], got: site });\n", ''],
+    ['PM10 the throttle site matched by file only', '  if (site !== SCHEMA_SITE) return virtual;', "  if (!site.startsWith('render/schemaMemory.js:')) return virtual;"],
+    ['PM11 an invalid configuration installed anyway', "if (cfgProblems.length) fail(cfgProblems.join('; '));", 'void cfgProblems;'],
+    ['PM12 a marker that is not frozen', 'value: Object.freeze({\n  installed: true,', 'value: ({\n  installed: true,'],
+    ['PM13 a replay source whose hash is not checked', "  if (sha256(bytes) !== cfg.replaySha256) fail('the replay source does not match replaySha256');\n", ''],
+    ['PM14 REAL_RECORD recording nothing', 'recording.push([site, v]); ', ''],
+    ['PM15 a configurable, writable marker', 'enumerable: false, configurable: false, writable: false,', 'enumerable: false, configurable: true, writable: true,'],
+    ['PM16 a mutable recorded configuration', 'config: Object.freeze({ ...cfg }),', 'config: { ...cfg },'],
+  ]) { const u = preloadMutant(anchor, repl); mutant(`${id} is detected`, u !== null && fixtureSuite(u).some(x => !x.ok)); }
+
+  // G11.7 isolation: diagnostic modes cannot enter a normal, calibration, swap-parity or confirmatory run
+  const DREC = { ...JSON.parse(JSON.stringify(LOCK.TIMING_DIAGNOSTIC_SCOPE)), authorizedBy: 'gate-synthetic' };
+  const dIn = (a, i) => LOCK.timingDiagnosticScopeProblems(a, i).length === 0;
+  const dp = (world, cell) => ({ world, cell, procedure: 'TIMING_DIAGNOSTIC' });
+  const realRefuses = (() => { try { LOCK.assertSessionScope(dp(2, 'N1AX')); return LOCK.TIMING_DIAGNOSTIC_AUTHORIZATION !== null; } catch { return LOCK.TIMING_DIAGNOSTIC_AUTHORIZATION === null; } })();
+  const lockOk = realRefuses && LOCK.scopeProblems(LOCK.SESSION_AUTHORIZATION, dp(2, 'N1AX')).length > 0 && LOCK.swapScopeProblems(LOCK.SWAP_PARITY_AUTHORIZATION, dp(2, 'N1AX')).length > 0
+    && dIn(DREC, dp(2, 'N1AX')) && dIn(DREC, dp(26, 'T_A')) && dIn(DREC, dp(14, 'N0L')) && !dIn(null, dp(2, 'N1AX')) && !dIn(DREC, dp(4, 'N1AX')) && !dIn(DREC, dp(2032, 'N1AX')) && !dIn(DREC, dp(2, 'N1A_noQ'))
+    && !dIn(DREC, dp(2, 'N1AP')) && !dIn(DREC, { world: 2, cell: 'N1AX', procedure: 'MAP_ON_PARITY' }) && !dIn(DREC, { world: 2, cell: 'N1AX' })
+    && JSON.stringify(LOCK.CALIBRATION_SCOPE.procedures) === '["D2_ALIGNED_FALSE","MAP_ON_PARITY","D2_MAP_ON_PARITY"]' && JSON.stringify(LOCK.SWAP_PARITY_SCOPE.procedures) === '["SWAP_PARITY_OWNPATH"]'
+    && JSON.stringify(LOCK.TIMING_DIAGNOSTIC_SCOPE.worlds) === '[2,3,6,7,14,15,21,22,25,26]' && LOCK.TIMING_DIAGNOSTIC_SCOPE.aPlus === false;
+  check('G11.7 lock isolation: TIMING_DIAGNOSTIC runs only under the timing-diagnostic record (refused while it is null; never under the calibration or swap-parity record), only on its ten development worlds and eight cells; confirmatory territory, A+ cells and other procedures are refused; the calibration and swap-parity scopes are unchanged',
+    lockOk, LOCK.TIMING_DIAGNOSTIC_AUTHORIZATION === null ? 'timing-diagnostic lock null' : 'timing-diagnostic record');
+  const tdNull = LOCK.TIMING_DIAGNOSTIC_AUTHORIZATION === null, tdRec = !tdNull && LOCK.timingDiagnosticRecordProblems(LOCK.TIMING_DIAGNOSTIC_AUTHORIZATION).length === 0 && LOCK.TIMING_DIAGNOSTIC_AUTHORIZATION.authorizedBy === 'owner';
+  check('G11.7b the timing-diagnostic lock is null (the procedure and the run mode are refused) or exactly its record; the calibration record (2026-10-25) and the swap-parity record (2026-10-27) are unchanged; the A+ lock is null',
+    (tdNull || tdRec) && LOCK.calibrationRecordProblems(LOCK.SESSION_AUTHORIZATION).length === 0 && LOCK.SESSION_AUTHORIZATION.authorizedOn === '2026-10-25'
+    && LOCK.swapParityRecordProblems(LOCK.SWAP_PARITY_AUTHORIZATION).length === 0 && LOCK.SWAP_PARITY_AUTHORIZATION.authorizedOn === '2026-10-27' && LOCK.A_PLUS_MODULE_AUTHORIZATION === null, tdNull ? 'timing-diagnostic lock null' : tdRec ? 'timing-diagnostic record' : 'OTHER');
+  const dRecBad = (f) => { const r = JSON.parse(JSON.stringify(DREC)); f(r); return LOCK.timingDiagnosticRecordProblems(r).length > 0 && !dIn(r, dp(2, 'N1AX')); };
+  mutant('LD1 a timing-diagnostic record admitting world 4 is rejected', dRecBad(r => { r.worlds.push(4); }));
+  mutant('LD2 a timing-diagnostic record admitting world 2032 is rejected', dRecBad(r => { r.worlds.push(2032); }));
+  mutant('LD3 a timing-diagnostic record admitting N1A_noQ is rejected', dRecBad(r => { r.cells.push('N1A_noQ'); }));
+  mutant('LD4 a timing-diagnostic record with A+ enabled is rejected', dRecBad(r => { r.aPlus = true; }));
+  mutant('LD5 a timing-diagnostic record with an extra procedure is rejected', dRecBad(r => { r.procedures.push('D2_ALIGNED_FALSE'); }));
+  mutant('LD6 a timing-diagnostic record pinning another plan document is rejected', dRecBad(r => { r.planDocSha256 = '0'.repeat(64); }));
+  { const r = { ...JSON.parse(JSON.stringify(LOCK.CALIBRATION_SCOPE)), authorizedBy: 'gate-synthetic' }; r.procedures.push('TIMING_DIAGNOSTIC');
+    mutant('LD7 a calibration record admitting TIMING_DIAGNOSTIC is rejected', LOCK.calibrationRecordProblems(r).length > 0 && LOCK.scopeProblems(r, dp(2, 'N1AX')).length > 0); }
+  // the runners: only the timing-diagnostic runner starts sessions under the preload; the calibration and swap-parity runners pass no node flag
+  const cred = (f) => fs.readFileSync(path.join(HERE, f), 'utf8');
+  const learn0Files = []; { const walk = (p) => { for (const e of fs.readdirSync(p, { withFileTypes: true })) { const q = path.join(p, e.name); if (e.isDirectory()) walk(q); else if (/\.(mjs|js)$/.test(e.name)) learn0Files.push(q); } }; walk(path.join(ROOT, 'experiments', 'learn0')); }
+  const preloadRefs = [...fs.readdirSync(HERE).filter(f => f.endsWith('.mjs')).map(f => [f, cred(f)]), ...learn0Files.map(f => [rel(f), fs.readFileSync(f, 'utf8')])]
+    .filter(([, s]) => /clock_preload|PRELOAD_FILE|--import/.test(s)).map(([f]) => f).sort();
+  const runnersClean = (cal, swp) => !/--import|NODE_OPTIONS|clock_preload|PRELOAD_FILE/.test(cal) && !/--import|NODE_OPTIONS|clock_preload|PRELOAD_FILE/.test(swp)
+    && cal.includes('const c = spawn(process.execPath, [SESS[e.driver], JSON.stringify(input)], {') && swp.includes('const c = spawn(process.execPath, [SESS, JSON.stringify(driverInput(e, { tree: TREES, brain }))], {');
+  const rtd = cred('run_timing_diagnostic.mjs');
+  check('G11.7c runners: calibrate.mjs and run_swap_parity.mjs pass no node flag and no NODE_OPTIONS (their spawn lines unchanged); the preload is referenced only by clock.mjs, clock_preload.mjs, the driver, the timing-diagnostic runner and this gate (nothing in experiments/learn0); the timing-diagnostic runner starts every session with --import <the pinned preload> and without NODE_OPTIONS',
+    runnersClean(cred('calibrate.mjs'), cred('run_swap_parity.mjs')) && JSON.stringify(preloadRefs) === JSON.stringify(['clock.mjs', 'clock_preload.mjs', 'run_timing_diagnostic.mjs', 'session.mjs', 'verify_credit1.mjs'])
+    && rtd.includes("spawn(process.execPath, ['--import', PRELOAD_URL, SESS, JSON.stringify(diagnosticInput(e, PATHS, replay))], { cwd: ROOT, env: childEnv,") && rtd.includes("filter(([k]) => k !== 'NODE_OPTIONS')"),
+    preloadRefs.join(', '));
+  mutant('RM1 a calibration runner passing --import is detected', !runnersClean(cred('calibrate.mjs').replace('[SESS[e.driver], JSON.stringify(input)]', () => "['--import', 'x', SESS[e.driver], JSON.stringify(input)]"), cred('run_swap_parity.mjs')));
+  const okRec = { label: 'N0A-w3', outcome: { completed: true, crashed: false }, conditionIntegrity: { ok: true }, mapAudit: { ok: true } };
+  check('G11.7d calibration and swap-parity analyses refuse a timing-diagnostic record (a clock block or the TIMING_DIAGNOSTIC procedure); an ordinary valid record is unaffected',
+    K.sessionProblems(okRec).length === 0 && K.sessionProblems({ ...okRec, clock: {} }).length > 0 && K.sessionProblems({ ...okRec, procedure: 'TIMING_DIAGNOSTIC' }).length > 0);
+  // G8.1 for timing-diagnostic runs (synthetic)
+  const drec = (file, label, cell, world, extra = {}) => ({ rel: `diag-x/sessions/${file}.json`, json: { schema: 'credit1/1.session', label, cell, input: { world }, procedure: 'TIMING_DIAGNOSTIC', clock: { config: {} }, ...extra } });
+  const diagRun = (f) => { const S = { files: [{ rel: 'diag-x/summary.json', json: { schema: 'credit1/1.timing-diagnostic', head: 'd'.repeat(40), authorization: { ...JSON.parse(JSON.stringify(LOCK.TIMING_DIAGNOSTIC_SCOPE)), authorizedBy: 'owner' } } },
+    drec('R-LOW-1__N1AX-w2', 'N1AX-w2', 'N1AX', 2), { rel: 'diag-x/traces/R-LOW-1__N1AX-w2.json', json: null }, drec('TR-LOW__T_A-w3', 'T_A-w3', 'T_A', 3), { rel: 'diag-x/traces/TR-LOW__T_A-w3.json', json: null },
+    { rel: 'diag-x/brains/SRC__T_A-w3.json', json: null }, { rel: 'diag-x/brains/TR-LOW__T_A-w3.json', json: null }, { rel: 'diag-x/logs/c0_gate.log', json: null }, { rel: 'diag-x/report.json', json: null }],
+    tracked: ['experiments/credit1/data/.gitignore'], headCarriesLock: (h, kind) => h === 'd'.repeat(40) && kind === 'timing-diagnostic' }; if (f) f(S); return K.dataDirProblems(S).problems; };
+  const calRun = (rec) => K.dataDirProblems({ files: [{ rel: 'calib-y/summary.json', json: { schema: 'credit1/1.calibration', head: 'a'.repeat(40), authorization: { ...JSON.parse(JSON.stringify(LOCK.CALIBRATION_SCOPE)), authorizedBy: 'owner' } } },
+    { rel: 'calib-y/sessions/N0A-w3.json', json: { schema: 'credit1/1.session', label: 'N0A-w3', cell: 'N0A', input: { world: 3 }, ...rec } }], tracked: [], headCarriesLock: (h) => h === 'a'.repeat(40) }).problems;
+  const diagOk = diagRun();
+  check('G8.1e the G8.1 rule accepts a well-formed timing-diagnostic run under its own lock (synthetic: condition-keyed records with the clock block, traces, source copies, training exports, logs, the report)', diagOk.length === 0 && calRun({}).length === 0, diagOk.slice(0, 2).join(' | '));
+  mutant('DG17 a clock-bearing record inside a calibration run fails G8.1', calRun({ procedure: 'TIMING_DIAGNOSTIC', clock: {} }).length > 0);
+  mutant('DG18 a record without the clock block inside a timing-diagnostic run fails G8.1', diagRun(S => { delete S.files[1].json.clock; }).length > 0);
+  mutant('DG19 a trace inside a calibration run fails G8.1', K.dataDirProblems({ files: [{ rel: 'calib-y/summary.json', json: { schema: 'credit1/1.calibration', head: 'a'.repeat(40), authorization: { ...JSON.parse(JSON.stringify(LOCK.CALIBRATION_SCOPE)), authorizedBy: 'owner' } } },
+    { rel: 'calib-y/traces/N0A-w3.json', json: null }], tracked: [], headCarriesLock: (h) => h === 'a'.repeat(40) }).problems.length > 0);
+  mutant('DG20 a timing-diagnostic run whose commit carries only the calibration lock fails G8.1', diagRun(S => { S.headCarriesLock = (h, kind) => kind === 'calibration'; }).length > 0);
+  mutant('DG21 a trace that is not a planned session fails G8.1', diagRun(S => { S.files.push({ rel: 'diag-x/traces/R-LOW-9__N1AX-w2.json', json: null }); }).length > 0);
+  mutant('DG22 a store file that is not a planned copy or export fails G8.1', diagRun(S => { S.files.push({ rel: 'diag-x/brains/SRC__T_A-w4.json', json: null }); }).length > 0);
+  mutant('DG23 a record whose label carries the condition fails G8.1', diagRun(S => { S.files[1].json.label = 'R-LOW-1__N1AX-w2'; }).length > 0);
+  mutant('DG24 a timing-diagnostic run recorded under the swap-parity scope fails G8.1', diagRun(S => { S.files[0].json.authorization = { ...JSON.parse(JSON.stringify(LOCK.SWAP_PARITY_SCOPE)), authorizedBy: 'owner' }; }).length > 0);
+
+  // G11.8 plan, comparisons, localization, verdict, validity and report (pure) with their mutants
+  const diagSuite = (Dm) => {
+    const fails = [], expect = (n, ok) => { if (!ok) fails.push(n); };
+    const cfgOf = (mode, t0, sha = null) => ({ mode, t0, delayMs: 500, replaySha256: sha });
+    const rec = (over = {}, cfg = cfgOf('VIRTUAL', T0A), obs = { reads: 9, loopFires: 300, violations: [] }) => JSON.stringify({ label: 'N1AX-w2', reaches: { legal: 10, goal: 12 }, artifacts: { qSum: 1.5 }, ...over, clock: { config: cfg, observed: obs } });
+    expect('identical records', Dm.recordDiff(rec(), rec()).identical);
+    const one = Dm.recordDiff(rec(), rec({ reaches: { legal: 11, goal: 12 } }));
+    expect('one differing value, reported by path', !one.identical && one.paths.includes('reaches.legal'));
+    expect('a fractional difference', !Dm.recordDiff(rec(), rec({ artifacts: { qSum: 1.6 } })).identical);
+    expect('V_T0B allows t0 only', Dm.recordDiff(rec(), rec({}, cfgOf('VIRTUAL', T0B)), Dm.ALLOWED_CONFIG_DIFFS.V_T0B).identical && !Dm.recordDiff(rec(), rec({}, cfgOf('REAL_RECORD', T0A)), Dm.ALLOWED_CONFIG_DIFFS.V_T0B).identical);
+    expect('an allowed configuration key never hides an observed difference', !Dm.recordDiff(rec(), rec({}, cfgOf('VIRTUAL', T0B), { reads: 8, loopFires: 300, violations: [] }), ['t0']).identical);
+    expect('no exclusion means raw bytes', !Dm.recordDiff(rec(), rec({}, cfgOf('VIRTUAL', T0B))).identical);
+    expect('the allowed-difference table', JSON.stringify(Dm.ALLOWED_CONFIG_DIFFS) === JSON.stringify({ R: [], V: [], TR: [], V_T0B: ['t0'], P_FULL: ['mode', 'replaySha256'], P_SITE: ['mode', 't0', 'replaySha256'] }));
+    const ex = (id) => JSON.stringify({ Q: { a: 1 }, episodes: [{ id, timestamp: 5, nodes: [1, 2] }] });
+    expect('export bytes, episode ids included', Dm.exportDiff(ex('e1'), ex('e1')).identical && !Dm.exportDiff(ex('e1'), ex('e2')).identical);
+    const ARR = [[0, 1, 2], [1, 2, 3], [2, 3, 4], [3, 4, 5]], ARR_B = [[0, 1, 2], [1, 2, 3], [2, 3, 9], [3, 9, 5]];
+    const tr = (o) => JSON.stringify({ arrivals: ARR, schemaEvents: [[0, 0, 'd0', 1]], schemaReads: [], reads: null, ...o });
+    const A = tr({ schemaEvents: [[0, 0, 'd0', 1], [2, 0, 'd1', 1]], schemaReads: [[2, 0, 'main.js:5265']] }), B = tr({ arrivals: ARR_B, schemaReads: [[2, 0, 'main.js:5265']] });
+    expect('identical traces', Dm.traceDiff(A, A).identical && !Dm.traceDiff(A, B).identical && Dm.traceDiff(A, B).firstCall === 2);
+    expect('schema events are compared', !Dm.traceDiff(tr({}), tr({ schemaEvents: [[0, 0, 'dX', 1]] })).identical);
+    expect('recorded clock values are not compared', Dm.traceDiff(tr({ reads: [['a', 1]] }), tr({ reads: [['a', 2]] })).identical);
+    expect('localized: a throttled rebuild in one run before the first differing decision', Dm.localization(A, B).ok === true);
+    expect('not localized: a decision differs before the schema', Dm.localization(A, tr({ arrivals: [[0, 1, 2], [1, 2, 7], [2, 7, 4], [3, 4, 5]], schemaReads: [[2, 0, 'main.js:5265']] })).ok === false);
+    expect('not localized: only the forced (clock-free) caller', Dm.localization(tr({ schemaEvents: [[0, 0, 'd0', 1], [2, 0, 'd1', 1]], schemaReads: [[2, 0, 'render/episodeManager.js:1149']] }), tr({ arrivals: ARR_B, schemaReads: [[2, 0, 'render/episodeManager.js:1149']] })).ok === false);
+    expect('not localized: a schema-read difference first', Dm.localization(tr({ schemaEvents: [[0, 0, 'd0', 1], [2, 0, 'd1', 1]], schemaReads: [[1, 1, 'main.js:5265'], [2, 0, 'main.js:5265']] }), tr({ arrivals: ARR_B, schemaReads: [[2, 0, 'main.js:5265']] })).ok === false);
+    const src = rec({}, cfgOf('REAL_RECORD', null)), sha = 'a'.repeat(64);
+    const ro = (repRecord, repTrace, kind = 'P_FULL') => Dm.replayOutcome({ srcRecord: src, srcTrace: A, repRecord, repTrace, allowed: Dm.ALLOWED_CONFIG_DIFFS[kind] }).outcome;
+    expect('a full replay reproduces its source', ro(rec({}, cfgOf('REPLAY_FULL', null, sha)), A) === 'REPRODUCED');
+    expect('a schema-site replay reproduces its source', ro(rec({}, cfgOf('REPLAY_SITE', T0A, sha)), A, 'P_SITE') === 'REPRODUCED');
+    expect('a differing replay diverges', ro(rec({ reaches: { legal: 13, goal: 15 } }, cfgOf('REPLAY_FULL', null, sha)), A) === 'DIVERGED');
+    const viol = rec({}, cfgOf('REPLAY_FULL', null, sha), { reads: 4, loopFires: 1, violations: [{ kind: 'replay-site-mismatch', read: 3 }] });
+    expect('a clock violation with the decisions a prefix of the source: replay tooling', ro(viol, tr({ arrivals: [[0, 1, 2], [1, 2, 3]] })) === 'REPLAY_TOOLING');
+    expect('a clock violation after a differing decision: a divergence', ro(viol, tr({ arrivals: [[0, 1, 2], [1, 2, 8]] })) === 'DIVERGED');
+    const P = Dm.planTimingDiagnostic(), VE = P.find(e => e.file === 'V-LOW__N1AX-w2'), PE = P.find(e => e.file === 'PF-HIGH-from-R-LOW-1__N1AX-w2');
+    const vr = (over = {}, obs = {}, cfg = cfgOf('VIRTUAL', T0A)) => ({ label: 'N1AX-w2', procedure: 'TIMING_DIAGNOSTIC', outcome: { completed: true, crashed: false, loopsExecuted: 300 }, conditionIntegrity: { ok: true }, mapAudit: { ok: true },
+      clock: { config: cfg, observed: { reads: 10, readsBySite: {}, schemaReads: 0, loopFires: 300, delays: { 500: 300 }, violations: [], ...obs } }, ...over });
+    const SP = Dm.diagnosticSessionProblems;
+    expect('a valid session', SP(vr(), VE).length === 0);
+    expect('invalid: stderr', SP(vr(), VE, { stderr: 'warning' }).length > 0);
+    expect('invalid: a clock violation outside the replays', SP(vr({}, { violations: [{ kind: 'loop-delay' }] }), VE).length > 0);
+    expect('invalid: loop fires differ from loops executed', SP(vr({}, { loopFires: 299, delays: { 500: 299 } }), VE).length > 0);
+    expect('invalid: a delay other than 500', SP(vr({}, { delays: { 500: 299, 499: 1 } }), VE).length > 0);
+    expect('invalid: another t0', SP(vr({}, {}, cfgOf('VIRTUAL', T0B)), VE).length > 0);
+    expect('invalid: crashed', SP(vr({ outcome: { completed: false, crashed: true, loopsExecuted: 120 } }), VE).length > 0);
+    expect('invalid: not a timing-diagnostic record', SP(vr({ clock: undefined }), VE).length > 0);
+    const pr = (v) => vr({ outcome: { completed: false, crashed: true, loopsExecuted: 120 } }, { reads: 5, loopFires: 121, delays: { 500: 121 }, violations: v }, cfgOf('REPLAY_FULL', null, sha));
+    expect('a replay that crashed on a clock violation is a result', SP(pr([{ kind: 'replay-site-mismatch' }]), PE).length === 0);
+    expect('a replay that crashed without a clock violation is invalid', SP(pr([]), PE).length > 0);
+    expect('the escalation rule', Dm.escalationNeeded(Array.from({ length: 5 }, () => ({ varies: false }))) === true && Dm.escalationNeeded([{ varies: true }, ...Array.from({ length: 4 }, () => ({ varies: false }))]) === false);
+    const cnt = (cs) => cs.reduce((m, c) => ((m[c.kind] = (m[c.kind] || 0) + 1), m), {});
+    expect('the comparisons (125 sessions; 145 with the escalation)', JSON.stringify(cnt(Dm.diagnosticComparisons(P, new Set(P.filter(e => !e.conditional).map(e => e.file))))) === JSON.stringify({ R: 30, P_FULL: 10, P_SITE: 10, V: 25, V_T0B: 25, TR: 5 })
+      && cnt(Dm.diagnosticComparisons(P, new Set(P.map(e => e.file)))).R === 140);
+    const base = () => ({ r: Dm.SWAP_LABELS.map((label, i) => ({ label, varies: i === 0, sourcesDiffer: i === 0, pairs: i === 0 ? [{ identical: false, loc: { ok: true } }] : [{ identical: true, loc: null }] })), escalated: false,
+      p: Dm.SWAP_LABELS.flatMap(label => [{ label, kind: 'P_FULL', outcome: 'REPRODUCED' }, { label, kind: 'P_SITE', outcome: 'REPRODUCED' }]), v: [{ label: 'x', identical: true }], vb: [{ label: 'x', identical: true }], tr: [{ label: 'x', identical: true }] });
+    const cat = (f) => { const b = base(); if (f) f(b); try { return Dm.diagnosticVerdict(b).category; } catch { return 'THREW'; } };
+    expect('supports', cat() === 'SUPPORTS');
+    expect('a full-replay divergence: another source of nondeterminism', cat(b => { b.p[0].outcome = 'DIVERGED'; }) === 'OTHER_NONDETERMINISM');
+    expect('a V difference: another source', cat(b => { b.v[0].identical = false; }) === 'OTHER_NONDETERMINISM');
+    expect('a TR difference: another source', cat(b => { b.tr[0].identical = false; }) === 'OTHER_NONDETERMINISM');
+    expect('a schema-site replay divergence: against the specific hypothesis', cat(b => { b.p[1].outcome = 'DIVERGED'; }) === 'AGAINST_SPECIFIC_HYPOTHESIS');
+    expect('an unlocalized divergence: against', cat(b => { b.r[0].pairs[0].loc.ok = false; }) === 'AGAINST_SPECIFIC_HYPOTHESIS');
+    expect('t0 changes the record: against', cat(b => { b.vb[0].identical = false; }) === 'AGAINST_SPECIFIC_HYPOTHESIS');
+    expect('no variation after the escalation: inconclusive', cat(b => { b.r.forEach(s => { s.varies = false; s.sourcesDiffer = false; s.pairs = [{ identical: true }]; }); b.escalated = true; }) === 'INCONCLUSIVE');
+    expect('no variation without the escalation: refused', cat(b => { b.r.forEach(s => { s.varies = false; s.pairs = [{ identical: true }]; }); }) === 'THREW');
+    expect('replay sources never differ: inconclusive', cat(b => { b.r[0].sourcesDiffer = false; }) === 'INCONCLUSIVE');
+    expect('replay tooling: inconclusive', cat(b => { b.p[0].outcome = 'REPLAY_TOOLING'; }) === 'INCONCLUSIVE');
+    expect('precedence: another source over against, every reason reported', (() => { const b = base(); b.v[0].identical = false; b.p[1].outcome = 'DIVERGED'; const v = Dm.diagnosticVerdict(b); return v.category === 'OTHER_NONDETERMINISM' && v.reasons.length === 2; })());
+    const comps = [{ kind: 'R', label: 'N1AX-w2', a: 'R-LOW-1__N1AX-w2', b: 'R-HIGH-1__N1AX-w2', identical: false, paths: ['reaches.legal'], firstCall: 412, firstSchemaPos: 820, loc: { ok: true }, legal: 987654321, values: { legal: 987654321 } }];
+    const rp = JSON.stringify(Dm.diagnosticReport({ comparisons: comps, verdict: { category: 'SUPPORTS', reasons: [] } }));
+    expect('the report: identity verdicts, paths and call positions only, never an outcome value', !rp.includes('987654321') && rp.includes('reaches.legal') && rp.includes('"firstDivergentCall":412'));
+    return fails;
+  };
+  const ds = diagSuite(D);
+  check('G11.8 comparison rules, localization, replay outcome, session validity, escalation, comparisons, verdict and report on synthetic records: zero exclusions except the declared clock.config keys (V_T0B t0; P_FULL mode, replaySha256; P_SITE mode, t0, replaySha256); recorded clock values never compared; the verdict follows the preregistered table with its precedence; the report carries no outcome value',
+    ds.length === 0, ds.join(' | '));
+  for (const [id, anchor, repl] of [
+    ['DC1 an allowed key that also hides clock.observed', 'for (const R of [A, B]) for (const k of allowed) if (R && R.clock && R.clock.config) delete R.clock.config[k];', 'for (const R of [A, B]) for (const k of allowed) if (R && R.clock && R.clock.config) delete R.clock.config[k]; for (const R of [A, B]) if (R && R.clock) delete R.clock.observed;'],
+    ['DC2 a numeric tolerance', 'if (!allowed.length) { const identical = rawA === rawB;', 'if (!allowed.length) { const rnd = (s) => JSON.stringify(JSON.parse(s), (k, v) => (typeof v === \'number\' ? Math.round(v) : v)); const identical = rnd(rawA) === rnd(rawB);'],
+    ['DC3 V_T0B also allowing mode', "V_T0B: Object.freeze(['t0']),", "V_T0B: Object.freeze(['t0', 'mode']),"],
+    ['DC4 traces compared without the schema events', 'return { identical: ia === null && ie === null && ir === null,', 'return { identical: ia === null && ir === null,'],
+    ['DC5 exports compared without episode ids', "export const exportDiff = (rawA, rawB) => ({ identical: typeof rawA === 'string' && typeof rawB === 'string' && rawA === rawB });", "export const exportDiff = (rawA, rawB) => ({ identical: typeof rawA === 'string' && typeof rawB === 'string' && rawA.replace(/\"id\":\"[^\"]*\"/g, '') === rawB.replace(/\"id\":\"[^\"]*\"/g, '') });"],
+    ['DC6 localization ignoring the decision order', '(d.firstCall === null || p <= pos(d.firstCall, 1))', 'true'],
+    ['DC7 localization accepting the forced caller', "(viaClass(via) === 'L' || viaClass(via) === 'K')", '(viaClass(via) !== null)'],
+    ['DC8 any replay violation called tooling', 'if (viol.length && S && T && T.arrivals.length <= S.arrivals.length && T.arrivals.every((x, i) => JSON.stringify(x) === JSON.stringify(S.arrivals[i])))', 'if (viol.length)'],
+    ['DV1 a schema-site divergence called inconclusive', "reasons.AGAINST_SPECIFIC_HYPOTHESIS.push(`${x.label}: the schema-site replay", "reasons.INCONCLUSIVE.push(`${x.label}: the schema-site replay"],
+    ['DV2 a V difference called inconclusive', 'for (const x of v.filter(x => !x.identical)) reasons.OTHER_NONDETERMINISM.push(', 'for (const x of v.filter(x => !x.identical)) reasons.INCONCLUSIVE.push('],
+    ['DV3 unlocalized divergences ignored', 'for (const s of r) for (const q of s.pairs.filter(q => !q.identical && !(q.loc && q.loc.ok)))', 'for (const s of r) for (const q of s.pairs.filter(q => false))'],
+    ['DV4 TR differences ignored', 'for (const x of tr.filter(x => !x.identical)) reasons.OTHER_NONDETERMINISM.push(', 'for (const x of tr.filter(x => false)) reasons.OTHER_NONDETERMINISM.push('],
+    ['DV5 the escalation run while a session varies', 'rVariation.every(s => s.varies === false)', 'rVariation.some(s => s.varies === false)'],
+    ['DV6 replay tooling ignored', "for (const x of p.filter(x => x.outcome === 'REPLAY_TOOLING'))", 'for (const x of p.filter(x => false))'],
+    ['DV7 a t0 effect ignored', 'for (const x of vb.filter(x => !x.identical))', 'for (const x of vb.filter(x => false))'],
+    ['DV8 a full-replay divergence called against', "for (const x of p.filter(x => x.kind === 'P_FULL' && x.outcome === 'DIVERGED')) reasons.OTHER_NONDETERMINISM.push(", "for (const x of p.filter(x => x.kind === 'P_FULL' && x.outcome === 'DIVERGED')) reasons.AGAINST_SPECIFIC_HYPOTHESIS.push("],
+    ['DV9 identical replay sources not called inconclusive', '} else if (!r.some(s => s.varies && s.sourcesDiffer)) reasons.INCONCLUSIVE.push(', '} else if (false) reasons.INCONCLUSIVE.push('],
+    ['DR1 the report carrying an outcome value', "localized: c.loc ? c.loc.ok === true : null, replayOutcome: c.outcome || null })),", "localized: c.loc ? c.loc.ok === true : null, replayOutcome: c.outcome || null, legal: c.legal })),"],
+    ['DS1 loop fires not checked', 'if (!crashed && o.loopFires !== rec.outcome.loopsExecuted) p.push(', 'if (false) p.push('],
+    ['DS2 clock violations accepted outside the replays', 'if (o.violations.length && !replay) p.push(', 'if (false) p.push('],
+    ['DS3 stderr ignored', 'if (String(stderr).trim()) p.push(', 'if (false) p.push('],
+  ]) { const m = await loadMutant(once(dgSrc, anchor, repl)); mutant(`${id} is detected`, m !== null && diagSuite(m).length > 0); }
+
+  // G11.9 the plan, plan-only by default, and the run mode's refusals
+  const DP = D.planTimingDiagnostic(), dvp = D.validateDiagnosticPlan(DP);
+  const byBlock = DP.reduce((m, e) => ((m[e.block] = (m[e.block] || 0) + 1), m), {});
+  check('G11.9 the timing-diagnostic plan: 125 sessions + 20 conditional (R 20, R_ESC 20 conditional, P_FULL 10, P_SITE 10, V 50, V_T0B 25, TR 10) on the ten scope worlds; S5, P20 and TR5 exactly; the pinned 15 source stores; replay sources R-LOW-1 / R-HIGH-1 run earlier under the other load',
+    dvp.length === 0 && DP.length === 145 && JSON.stringify(byBlock) === JSON.stringify({ R: 20, R_ESC: 20, P_FULL: 10, P_SITE: 10, V: 50, V_T0B: 25, TR: 10 })
+    && JSON.stringify([...new Set(DP.filter(e => e.brainFrom).map(e => e.brainFrom))].sort()) === JSON.stringify(Object.keys(D.SOURCE_STORES).sort()) && Object.keys(D.SOURCE_STORES).length === 15
+    && DP.every(e => LOCK.TIMING_DIAGNOSTIC_SCOPE.worlds.includes(e.world)) && JSON.stringify(D.SWAP_LABELS) === '["N1AX-w2","N1AX-w6","N1AX-w25","N1LX-w14","N1LX-w21"]', dvp.slice(0, 2).join(' | ') || JSON.stringify(byBlock));
+  const tdJson = path.join(os.tmpdir(), 'mfw-credit1-gate-timingplan.json');
+  fs.rmSync(tdJson, { force: true });
+  const tpo = run(process.execPath, [path.join('experiments', 'credit1', 'run_timing_diagnostic.mjs'), '--json', tdJson]);
+  let tj = null, cj = null; try { tj = JSON.parse(fs.readFileSync(tdJson, 'utf8')); cj = JSON.parse(fs.readFileSync(path.join(os.tmpdir(), 'mfw-credit1-gate-plan.json'), 'utf8')); } catch { tj = tj || null; }
+  const tpOk = tpo.status === 0 && /plan only \(the default; no session is run\)/.test(tpo.stdout) && !!tj && !!cj && tj.total === 145 && tj.base === 125 && tj.planProblems.length === 0
+    && JSON.stringify(tj.plan.map(e => e.file)) === JSON.stringify(DP.map(e => e.file)) && D.validateDiagnosticPlan(tj.plan, cj.plan).length === 0;
+  check('G11.9b plan-only is the default (no flag, no lock, no session): 145 entries on the existing XFER-1 development configurations, every session equal to the calibration plan\'s session of its label (cell, world, configuration and agent seeds, ticks, store)',
+    tpOk, tj ? `${tj.total} entries` : tpo.stderr.trim().slice(0, 140));
+  if (tj && cj) {
+    const pm = (f) => { const Q = tj.plan.map(e => ({ ...e })); f(Q); return D.validateDiagnosticPlan(Q, cj.plan).length > 0; };
+    const at = (Q, file) => Q.find(e => e.file === file);
+    mutant('PD1 a session with another configuration seed is rejected', pm(Q => { at(Q, 'V-LOW__N1A-w14').configSeed += 1; }));
+    mutant('PD2 a session given another store is rejected', pm(Q => { at(Q, 'V-HIGH__N1AX-w6').brainFrom = 'T_A-w6'; }));
+    mutant('PD3 an unconditional escalation is rejected', pm(Q => { at(Q, 'R-HIGH-3__N1AX-w2').conditional = false; }));
+    mutant('PD4 a replay source chosen among the other runs is rejected', pm(Q => { at(Q, 'PS-HIGH-from-R-LOW-1__N1LX-w21').replayFrom = 'R-HIGH-2__N1LX-w21'; }));
+    mutant('PD5 a missing primary-cell session is rejected', pm(Q => { Q.splice(Q.findIndex(e => e.file === 'V-HIGH__N0A-w2'), 1); Q.forEach((e, i) => { e.seq = i + 1; }); }));
+    mutant('PD6 the t0b block on t0a is rejected', pm(Q => { at(Q, 'VB-HIGH__N1L-w25').clock = { mode: 'VIRTUAL', t0: T0A, delayMs: 500 }; }));
+    mutant('PD7 a session under the other load is rejected', pm(Q => { at(Q, 'V-HIGH__N0L-w21').load = 'LOW'; }));
+    mutant('PD8 a session on a world outside the scope is rejected', pm(Q => { at(Q, 'V-LOW__N0A-w6').world = 4; }));
+    mutant('PD9 an export from a test session is rejected', pm(Q => { at(Q, 'V-LOW__N1A-w2').export = true; }));
+  }
+  const tdRefused = path.join(os.tmpdir(), 'mfw-credit1-gate-timingrefusal');
+  fs.rmSync(tdRefused, { recursive: true, force: true });
+  const tr1 = run(process.execPath, [path.join('experiments', 'credit1', 'run_timing_diagnostic.mjs'), '--run', '--out', tdRefused]);
+  const tr2 = run(process.execPath, [path.join('experiments', 'credit1', 'run_timing_diagnostic.mjs'), '--out', tdRefused]);
+  const ordT = ['timingDiagnosticRecordProblems(LOCK.TIMING_DIAGNOSTIC_AUTHORIZATION)', 'calibrationRecordProblems(LOCK.SESSION_AUTHORIZATION)', 'swapParityRecordProblems(LOCK.SWAP_PARITY_AUTHORIZATION)', 'LOCK.TIMING_DIAGNOSTIC_SCOPE.planDocSha256',
+    'the output directory must be inside', "'diff', '--quiet', 'HEAD'", "imp('experiments/m7/env.js')", "step: 'C-0'", 'for (const [label, want] of Object.entries(SOURCE_STORES))', "await runEntries(plan.filter(e => e.block === 'R'))",
+    'escalationNeeded(rVariation())', "await runEntries(plan.filter(e => !['R', 'R_ESC'].includes(e.block)))", 'const verdict = diagnosticVerdict({'].map(s => rtd.indexOf(s));
+  check('G11.9c the run mode refuses an unauthorized run before anything is derived, built or spawned (null lock), and a run without --run; order: locks, plan document, output directory, clean tree, derivation, C-0, pinned source copies, R, the escalation rule, the remaining blocks, the verdict; the report is written only through diagnosticReport',
+    tr1.status === 2 && /timing diagnostic refused: the timing diagnostic is not authorized/.test(tr1.stderr) && tr2.status === 2 && /unknown arguments/.test(tr2.stderr) && !fs.existsSync(tdRefused)
+    && ordT.every(i => i > 0) && ordT.every((v, i) => i === 0 || ordT[i - 1] < v) && rtd.includes("JSON.stringify(diagnosticReport({ comparisons, verdict }), null, 2)") && (rtd.match(/writeFileSync\(path\.join\(OUT, 'report\.json'\)/g) || []).length === 1,
+    `${tr1.stderr.trim().slice(0, 90)} | ${tr2.stderr.trim().slice(0, 60)}`);
+
+  // G11.10 the clock-read census of tree A (the real-time sources a session loads)
+  const CLOCK_SITES = ['main.js:4959', 'main.js:5698', 'render/candidateAnalysis.js:348', 'render/episodeManager.js:512', 'render/episodeManager.js:513', 'render/episodeManager.js:663', 'render/episodeManager.js:688',
+    'render/episodeManager.js:789', 'render/episodicContextEngine.js:56', 'render/episodicContextEngine.js:118', 'render/episodicContextEngine.js:135', 'render/episodicContextEngine.js:285', 'render/episodicContextEngine.js:347',
+    'render/episodicContextEngine.js:358', 'render/episodicContextEngine.js:403', 'render/longTermConsolidation.js:54', 'render/neuronVisuals.js:318', 'render/neuronVisuals.js:328', 'render/neuronVisuals.js:383',
+    'render/neuronVisuals.js:387', 'render/neuronVisuals.js:424', 'render/neuronVisuals.js:427', 'render/predictionError.js:101', 'render/schemaMemory.js:133', 'render/schemaMemory.js:623',
+    'render/semanticMemoryLayer.js:58', 'render/semanticProvenance.js:180', 'render/semanticProvenance.js:211', 'render/semanticVitality.js:136', 'instrumentation/traceSchema.js:34'];
+  const censusFiles = ['main.js', ...fs.readdirSync(path.join(treeA, 'render')).filter(f => f.endsWith('.js')).map(f => `render/${f}`), ...fs.readdirSync(path.join(treeA, 'instrumentation')).filter(f => f.endsWith('.js')).map(f => `instrumentation/${f}`),
+    'experiments/m7/run.js', 'experiments/m7/env.js', 'experiments/m7/arms.js', 'experiments/phase1_0/_driver.js', 'benchmarks/harness/headlessShim.js'];
+  const census = (textOf) => { const s = [], nd = [], other = []; for (const f of censusFiles) textOf(f).split(/\r?\n/).forEach((l, i) => { const c = l.replace(/\/\/.*$/, '');
+    if (/Date\.now\(/.test(c)) s.push(`${f}:${i + 1}`); if (/new Date\(/.test(c)) nd.push(`${f}:${i + 1}`); if (/performance\.now|process\.hrtime/.test(c)) other.push(`${f}:${i + 1}`); }); return { s, nd, other }; };
+  const censusOk = (r) => JSON.stringify(r.s) === JSON.stringify(CLOCK_SITES) && JSON.stringify(r.nd) === '["instrumentation/sessionRecorder.js:38"]' && r.other.length === 0;
+  const realText = (f) => fs.readFileSync(path.join(treeA, ...f.split('/')), 'utf8');
+  const cr = census(realText);
+  check('G11.10 real-time census of tree A (main.js, render/, instrumentation/, the m7 runner, the phase1_0 driver, the harness shim): exactly the 30 known Date.now() sites (the throttle read render/schemaMemory.js:133 among them), new Date only in instrumentation/sessionRecorder.js:38, no performance.now or process.hrtime',
+    censusOk(cr), `${cr.s.length} Date.now sites, new Date ${cr.nd.join(', ')}`);
+  mutant('CN1 an added Date.now() site is detected', !censusOk(census((f) => (f === 'render/scoring.js' ? realText(f) + '\nexport const t = () => Date.now();\n' : realText(f)))));
+  mutant('CN2 a performance.now() source is detected', !censusOk(census((f) => (f === 'render/memory.js' ? realText(f) + '\nexport const p = () => performance.now();\n' : realText(f)))));
+
+  // G11.11 what T-build leaves unchanged, and its documentation
+  const unchanged = ['DESIGN.md', 'CALIBRATION_PROTOCOL.md', 'config.mjs', 'transform.mjs', 'calibrate.mjs', 'run_swap_parity.mjs', 'events.mjs', 'instruments.mjs', 'delivery.mjs', 'census.mjs', 'writecensus.mjs', 'fixtures.mjs', '.gitattributes', 'data/.gitignore', 'review', 'evidence', 'tools'].map(f => `experiments/credit1/${f}`);
+  const calPlanSha = (() => { try { return sha256(fs.readFileSync(path.join(os.tmpdir(), 'mfw-credit1-gate-plan.json'))); } catch { return null; } })();
+  const swapPlanSha = (() => { try { return sha256(fs.readFileSync(path.join(os.tmpdir(), 'mfw-credit1-gate-swapplan.json'))); } catch { return null; } })();
+  check('G11.11 T-build leaves unchanged since its base (cb7e015): DESIGN.md, CALIBRATION_PROTOCOL.md, config.mjs, the tree builder, the calibration and swap-parity runners, events, instruments, delivery, the censuses, fixtures, review, evidence, tools; the calibration plan-only JSON (ed57fb0e...) and the swap-parity plan-only JSON (0c3c4b9a...) are byte-identical to the approved plans',
+    git('diff', '--quiet', TB_BASE, '--', ...unchanged).status === 0 && calPlanSha === 'ed57fb0e7f76e39a1fb09224c328e39b634d3f6ddb32c678be1e2e4f4de42ed3' && swapPlanSha === '0c3c4b9ac20babf19126ee3279deaa66abdc1db969ab7fb0ea265f0860fcb460',
+    `calibration plan ${String(calPlanSha).slice(0, 16)}, swap plan ${String(swapPlanSha).slice(0, 16)}`);
+  const doc = fs.readFileSync(PLAN_DOC, 'utf8'), rdme = fs.readFileSync(path.join(HERE, 'README.md'), 'utf8');
+  const ROWS = ['| **Supports the timing hypothesis** | R varies in at least one session, **and** every P-full and every P-site replay reproduces its source (where a session\'s two sources differ, each P-site replay reproduces its *own* source), **and** the traces show a throttled rebuild present in only one run at or before the first decision difference, **and** V, V′ and TR are identical | report; go to step 3 below |',
+    '| **Against the specific hypothesis** | P-full reproduces but a P-site replay fails; or the decision diverges before any schema difference; or V′ differs beyond the T0 field (absolute time matters) | **STOP**: my list of clock sites is incomplete |',
+    '| **Another source of nondeterminism** | any P-full replay fails; any difference in V or TR | **STOP**; no recalibration |',
+    '| **Inconclusive** | R shows no variation even after escalation (hypothesis untested; V and TR still stand for these sessions); or every session\'s two sources are identical (site manipulation untested); or a replay mismatches before any decision differs (recorder defect or read-order nondeterminism) | report; you decide; no ad-hoc reruns |'];
+  check('G11.12 TIMING_DIAGNOSTIC_PLAN.md holds the interpretation table unchanged, the matrix and the comparison rules; it is NOT AUTHORIZED, NOT RUN; the README documents the harness, plan-only by default, the null lock and the claim limits',
+    ROWS.every(r => doc.includes(r)) && /\*\*Status: NOT AUTHORIZED, NOT RUN\.\*\*/.test(doc) && doc.includes('Total: 125 sessions, 145 with the escalation.') && doc.includes('No effect estimate, cell mean, P1/P2 value or other development-world outcome summary is computed or reported')
+    && ['run_timing_diagnostic.mjs', 'TIMING_DIAGNOSTIC_PLAN.md', 'TIMING_DIAGNOSTIC_AUTHORIZATION', 'clock_preload.mjs', 'Plan-only is the default', 'built, NOT AUTHORIZED, NOT RUN', 'No effect estimate'].every(s => rdme.includes(s)));
+}
+
 // ================= G8: session records only inside authorized calibration runs; this gate runs no session =================
 {
   const data = path.join(HERE, 'data');
@@ -752,7 +1246,8 @@ function s5(t, arm) {
   // a run's commit must be in this history and its lock.mjs must hold the calibration-only record
   // per run kind: the authorization line and scope kind its commit's lock.mjs must hold
   const LOCK_OF = { calibration: ['export const SESSION_AUTHORIZATION = Object.freeze({ ...CALIBRATION_SCOPE,', "kind: 'DEVELOPMENT_CALIBRATION'"],
-    'swap-parity': ['export const SWAP_PARITY_AUTHORIZATION = Object.freeze({ ...SWAP_PARITY_SCOPE,', "kind: 'SWAP_PARITY_CHECK'"] };
+    'swap-parity': ['export const SWAP_PARITY_AUTHORIZATION = Object.freeze({ ...SWAP_PARITY_SCOPE,', "kind: 'SWAP_PARITY_CHECK'"],
+    'timing-diagnostic': ['export const TIMING_DIAGNOSTIC_AUTHORIZATION = Object.freeze({ ...TIMING_DIAGNOSTIC_SCOPE,', "kind: 'TIMING_DIAGNOSTIC'"] };
   const headSeen = new Map();
   const headCarriesLock = (h, kind = 'calibration') => {
     if (typeof h !== 'string' || !/^[0-9a-f]{40}$/.test(h) || !LOCK_OF[kind]) return false;

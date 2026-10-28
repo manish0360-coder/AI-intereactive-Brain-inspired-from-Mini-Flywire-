@@ -17,6 +17,10 @@
 //   * calibration: the session scope is checked against the lock before any runtime module is loaded; the parent's observational
 //     fields (environment-draw log, traversal record, move counters, the full condition-integrity record, counters, endpoints, audit)
 //     are recorded under the same names so D-1 compares like with like; per-session event-class counts (events.mjs).
+//   * timing diagnostic (TIMING_DIAGNOSTIC_PLAN.md): the clock guard (clock.mjs driverClockProblems) runs before the scope check and
+//     before any runtime module; only the TIMING_DIAGNOSTIC procedure runs under the clock preload (node --import clock_preload.mjs),
+//     with the input fields clock and tracePath; it adds the record's clock block and writes a trace (decisions, schema rebuilds,
+//     rebuild callers; REAL_RECORD also every clock read).  Every other session refuses any of these.
 // OBSERVATIONAL like its parent: draws no random number, reads no clock, changes no store.
 // ==========================================================
 import { assertSessionAuthorized, assertAPlusAuthorized, assertSessionScope, PROCEDURES } from './lock.mjs';
@@ -24,7 +28,7 @@ assertSessionAuthorized();
 
 import path from 'node:path';
 import fs from 'node:fs';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { configSeed as typedConfigSeed, config as typedConfig } from '../registry/typed_v2.js';
 import { TICKS, HELDOUT_FLOOR, CONFIG_START, seedOk, trainSeed, testSeed, canonicalJson, sha256 } from '../xfer1/config.mjs';
 import { serializeBrain, componentHashes, componentSizes, brainHash } from '../xfer1/brain.mjs';
@@ -34,6 +38,7 @@ import { SCHEMA, MODES, CREDIT1_TREE, LEARN0_TREE } from './config.mjs';
 import { cellOf, deliveryFor, maskStore, pi } from './delivery.mjs';
 import { createTelemetry, checkCredit, createLedger, evaluateLedger, parseCaller, captureStack, pipelineCandidates } from './instruments.mjs';
 import { lineRolesOf, classifyEvents } from './events.mjs';
+import { driverClockProblems, recordedClockConfig, CLOCK_INPUT_KEYS, CLOCK_PROCEDURE, PRELOAD_FILE } from './clock.mjs';
 
 const IN = JSON.parse(process.argv[2]);
 const refuse = (m) => { throw new Error(`CREDIT-1 session refused: ${m}`); };
@@ -45,7 +50,14 @@ if (process.env.M7_RUN_WARMSTORE !== undefined) refuse('M7_RUN_WARMSTORE is set:
 // ---- argument guards (before anything is loaded) ----
 const KEYS = ['role', 'label', 'tree', 'world', 'configSeed', 'configIndex', 'agentSeed', 'ticks', 'cell', 'brainPath', 'brainWorld', 'exportPath', 'map', 'instrument', 'cond', 'ledger', 'procedure', 'storeSourceWorld'];
 if (IN === null || typeof IN !== 'object' || Array.isArray(IN)) refuse('the input must be a JSON object');
-{ const unknown = Object.keys(IN).filter(k => !KEYS.includes(k)); if (unknown.length) refuse(`unknown input field(s): ${unknown.join(', ')}`); }
+{ const unknown = Object.keys(IN).filter(k => !KEYS.includes(k) && !CLOCK_INPUT_KEYS.includes(k)); if (unknown.length) refuse(`unknown input field(s): ${unknown.join(', ')}`); }
+// ---- the clock (before the scope check and before any runtime module): only the timing diagnostic runs under the clock preload ----
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+{ const cp = driverClockProblems({ input: IN, execArgv: process.execArgv, nodeOptions: process.env.NODE_OPTIONS, marker: globalThis.__CREDIT1_CLOCK__, dateNow: Date.now,
+    preloadUrl: pathToFileURL(path.join(HERE, PRELOAD_FILE)).href, preloadBytes: fs.readFileSync(path.join(HERE, PRELOAD_FILE)) });
+  if (cp.length) refuse(`clock: ${cp.join('; ')}`); }
+const DIAG = IN.procedure === CLOCK_PROCEDURE;
+const CLK = DIAG ? globalThis.__CREDIT1_CLOCK__ : null;
 assertSessionScope({ world: IN.world, cell: IN.cell, procedure: IN.procedure });
 const PROC = IN.procedure === undefined ? null : PROCEDURES[IN.procedure];
 if (IN.cond !== CONFIRMATORY_STATE) refuse(`cond must be ${CONFIRMATORY_STATE}`);
@@ -112,6 +124,7 @@ const goalResets = [], resetsDiag = [], arrivals = [], draws = [], replayCalls =
 const num = (v) => (v === null || v === undefined ? null : Number(v));
 const oracle = { executed: Object.fromEntries(ORACLES.map(o => [o, 0])), blocked: Object.fromEntries(ORACLES.map(o => [o, 0])) };
 const [qmod, mem, epm, trust] = await Promise.all([T('render/qlearning.js'), T('render/memory.js'), T('render/episodeManager.js'), T('render/trustMemory.js')]);
+const schemaMod = DIAG ? await T('render/schemaMemory.js') : null;            // declarations only at its top level (no import-time effect)
 globalThis.__stores = () => ({ transitions: mem.transitions, rewards: mem.rewards, penalties: mem.penalties, signals: mem.signals, curiosity: mem.curiosityMap,
   Q: qmod.Q, confidence: mem.confidenceMap, episodes: epm.exportEpisodes() });
 const telemetry = createTelemetry({ callIndex: () => calls - 1 });
@@ -138,8 +151,20 @@ const bridgeEvidence = () => {
   bridgeScanFrom = ev.length;
   if (bridgeCalls.size) { const cands = pipelineCandidates(epm.exportEpisodes(), 'PIPELINE_BRIDGE'); for (const c of bridgeCalls) pipelineEvidence.PIPELINE_BRIDGE.set(c, cands); }
 };
+// timing-diagnostic trace (observational; TIMING_DIAGNOSTIC only).  Observation points: [k, 0] at the start of call k and [k, 1] at
+// its executed move.  At each point: the schema set if it was rebuilt since the previous point (digest without the clock-stamped
+// lastUpdated) and the rebuildSchemas callers that read the clock since then.
+const TRACE = DIAG ? (() => {
+  const seen = new Set(), events = [], reads = []; let lastLen = 0, viaFrom = 0;
+  const digest = (S) => sha256(JSON.stringify(S, (k, v) => (k === 'lastUpdated' ? undefined : v instanceof Map ? [...v] : v instanceof Set ? [...v] : v)));
+  return { events, reads, boundary(k, phase = 0) {
+    const S = schemaMod.getSchemas();
+    if (S.length !== lastLen || S.some(o => !seen.has(o))) { for (const o of S) seen.add(o); lastLen = S.length; events.push([k, phase, digest(S), S.length]); }
+    const via = CLK.schemaVia(viaFrom); viaFrom += via.length; for (const v of via) reads.push([k, phase, v]);
+  } };
+})() : null;
 globalThis.__M7_TEL__ = {
-  step() { bridgeEvidence(); calls++; lrAtStart = globalThis.lastReasoning; if (calls === 1) { const b = serializeBrain(globalThis.__stores()); startState = { hashes: componentHashes(b), sizes: componentSizes(b), brainHash: brainHash(b) }; } },
+  step() { bridgeEvidence(); calls++; lrAtStart = globalThis.lastReasoning; if (calls === 1) { const b = serializeBrain(globalThis.__stores()); startState = { hashes: componentHashes(b), sizes: componentSizes(b), brainHash: brainHash(b) }; } if (TRACE) TRACE.boundary(calls - 1); },
   replayBranch() { replayCalls.push(calls - 1); if (ledger) pipelineEvidence.PIPELINE_REPLAY.set(calls - 1, pipelineCandidates(epm.exportEpisodes(), 'PIPELINE_REPLAY')); },
 };
 globalThis.__GFB2__ = { goalReset(from, to, goal) {
@@ -149,7 +174,7 @@ globalThis.__GFB2__ = { goalReset(from, to, goal) {
 { const counters = { admittedGraph: 0, admitted: 0, nonGraphTrained: 0, nonGraphHuman: 0, nonGraphBoth: 0, maskedOut: 0, blockedIllegal: 0 };
   const legalOf = (a, b) => (a != null && b != null && Number(a) === Number(b)) || isEdge(a, b);
   globalThis.__GFGUARD__ = { get on() { return true; }, counters,
-    legalMove(a, b) { const r = globalThis.lastReasoning; arrivals.push({ call: calls - 1, a: num(a), to: num(b), rFrom: r ? num(r.from) : null, rTo: r ? num(r.to) : null, fresh: r !== lrAtStart, legal: legalOf(a, b), blocked: false }); return true; },
+    legalMove(a, b) { const r = globalThis.lastReasoning; arrivals.push({ call: calls - 1, a: num(a), to: num(b), rFrom: r ? num(r.from) : null, rTo: r ? num(r.to) : null, fresh: r !== lrAtStart, legal: legalOf(a, b), blocked: false }); if (TRACE) TRACE.boundary(calls - 1, 1); return true; },
     admit(from, k, graph, trained, human) { if (graph) { counters.admittedGraph++; return true; } if (trained && human) counters.nonGraphBoth++; else if (trained) counters.nonGraphTrained++; else if (human) counters.nonGraphHuman++; else return true; counters.admitted++; return true; } };
   globalThis.__GFGUARD_SNAP__ = () => ({ diag: true, mask: false, exec: false, counters: { ...counters } }); }
 const NO_MAP = IN.map === 'off';
@@ -174,6 +199,7 @@ process.chdir(path.join(IN.tree, 'experiments', 'm7'));
 const { runOnce } = await import(URLOF(IN.tree, 'experiments/m7/run.js'));
 const HK = HOOK_STATES[IN.cond];
 const rec = await runOnce({ configSeed: IN.configSeed, configIndex: IN.configIndex, agentSeed: IN.agentSeed, arm: HK.arm, envMode: HK.envMode, creditMode: HK.creditMode, pin: HK.pin, tickUnit: 'step', ticks: IN.ticks, crashAtTick: null, warmStore: false });
+if (TRACE) TRACE.boundary(calls);                                            // after the last call
 const A = rec.artifacts || {};
 const ec = A.envCounters || {};
 const TR = await T('render/traversalRecord.js');
@@ -270,5 +296,10 @@ const out = {
   artifacts: { cogDraws: A.cogDraws, visDraws: A.visDraws, envCounters: ec, qEntries: A.qEntries, qSum: A.qSum, attempts: A.attempts, successes: A.successes, slips: A.slips,
     creditKeys: (A.creditKeys || []).length, fingerprint: rec.fingerprint, writesSha256: sha256(JSON.stringify(A.writes || [])) },
 };
+if (DIAG) {
+  out.clock = { config: recordedClockConfig(IN.clock), preloadSha256: CLK.preloadSha256, observed: CLK.observed() };
+  fs.writeFileSync(IN.tracePath, JSON.stringify({ schema: `${SCHEMA}.timing-trace`, label: IN.label, mode: IN.clock.mode, arrivals: arrivals.map(x => [x.call, x.a, x.to]),
+    schemaEvents: TRACE.events, schemaReads: TRACE.reads, reads: IN.clock.mode === 'REAL_RECORD' ? CLK.recording() : null }));
+}
 process.stdout.write('\n@@RESULT@@' + JSON.stringify(out) + '@@END@@\n');
 process.exit(rec.outcome.crashed ? 1 : 0);
