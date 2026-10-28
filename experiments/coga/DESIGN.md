@@ -35,7 +35,7 @@ more often than without the change, and specifically rather than through general
 | agent | definition | parameters |
 |---|---|---|
 | Random walk | uniform over the current node's neighbours | none |
-| QB-1 | tabular one-step Q-learning exactly as `M1_AUDIT.md` §4 (Q = 0 initially; in-step update; terminal at the goal; truncation bootstraps; constant α, γ, ε; two fresh uniforms per decision; greedy ties by ascending node id) | γ = 0.95 fixed; α, ε tuned (§3.1) |
+| QB-1 | tabular one-step Q-learning as `M1_AUDIT.md` §4 (Q = 0 initially; in-step update; terminal at the goal; truncation bootstraps; constant α, γ, ε; two fresh uniforms per decision). **Deviation from M1 (development finding):** greedy ties are broken uniformly with the decision's second uniform u2, not by ascending node id; the deterministic tie-break trapped the zero-initialised agent in loops (1 goal arrival in 3,000 steps on development world 1). The proof is unaffected: A4 allows fresh draws | γ = 0.95 fixed; α, ε tuned (§3.1): **α = 0.5, ε = 0.10** (`evidence/tuning_dev.json`) |
 | Dyna-Q | QB-1 plus the classic tabular Dyna-Q planning loop (Sutton & Barto, *Reinforcement Learning*, 2nd ed., §8.2): a deterministic model storing the last observed (r, s') of every experienced (s, a); after each real step, k planning updates on (s, a) drawn uniformly from the experienced pairs | γ = 0.95; α, ε as tuned for QB-1; **k = 5** (initial preregistered cap; sensitivity k ∈ {1, 20} on development worlds only) |
 | MFW | the pinned LEARN-0 tree; map off (`__LEARN0__`, all four oracles blocked, I2 accounting); guard ON (`__GFGUARD__`: graph-only admission, execution guard); hook state P (`arm OFF, envMode off, creditMode off, pin off`) with the COG-A environment installed as `__M7_ENV__`; Variant C clock preload (VIRTUAL, t0 = 1767225600000, 500 ms per fired loop) | none (fixed runtime, not tuned) |
 
@@ -131,10 +131,12 @@ every range above and from the development and simulation seeds actually generat
 
 ## 10. Blinding of development outcomes
 
-Before δ and q_min are frozen, **no SWAP-condition choice outcome (Y_S or L_S) of any agent is computed or inspected.**
-Development runs may use: visitation (V in both conditions, AA structure), NO-SWAP outcomes, timings, invariants and instrument
-counters. The analysis code enforces this with an explicit `sealed` mode. Power simulation draws SWAP outcomes from assumed effect
-sizes, not from data.
+Before δ and q_min are frozen, **no SWAP-condition choice outcome of MFW or Dyna-Q is computed or inspected.** The two null
+instruments, QB-1 and the random walk, are exempt: their expectation is 0 by construction, and their SWAP outcomes are needed for
+the null calibration. Development runs may use visitation (V in both conditions, AA structure), NO-SWAP outcomes, pre-shift
+quantities, timings, invariants and instrument counters. The analysis code enforces this with an explicit `sealed` mode (MFW and
+Dyna-Q SWAP sessions), and a sealed outcome cannot reach the estimator. The power simulation draws SWAP outcomes from assumed
+effect sizes, not from data.
 
 ## 11. Static census (zero sessions) — result
 
