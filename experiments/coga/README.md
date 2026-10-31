@@ -17,9 +17,10 @@ concerns the procedure and budget, not what MFW can never do.
 | M-COGA-2 design and static census | done | `29216c9` | census FEASIBLE at γ 0.95, κ 0.10 |
 | M-COGA-3 environment, agents, instrumentation | done | `cba6352` | test_coga 21/21 + 5/5 mutants |
 | M-COGA-4 development validation (propagation) | done; P2 failed | `881c0dd` | `VERIFICATION_REPORT.md` |
-| M-COGA-5 acquisition design and audit | in progress | — | `acq1/` |
+| M-COGA-5 acquisition audit and design | done | `cd4841f` | test_acq1, test_mutants, `acq1/VERIFICATION_REPORT.md` |
 | M-COGA-6 mechanism change | **not made**: not shown necessary | — | `acq1/MECHANISM_AUDIT.md` |
-| M-COGA-7 … 10 | pending | — | — |
+| M-COGA-7 development validation and freeze | done | (this commit) | dev gates, byte identity 60/60, allocation with 0 collisions, analysis rehearsal |
+| M-COGA-8 … 10 | next | — | — |
 
 ## Ledger
 

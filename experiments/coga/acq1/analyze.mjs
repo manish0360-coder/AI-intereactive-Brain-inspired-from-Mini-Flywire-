@@ -67,14 +67,23 @@ if (arg('--dev')) {
   console.log(JSON.stringify({ worlds: rows.length, voids: voids.length, pc: [gates.positiveControl.est, gates.positiveControl.lo, gates.positiveControl.hi], rw: [gates.nullRW.est, gates.nullRW.lo, gates.nullRW.hi], determinism }));
 }
 
-if (arg('--confirmatory')) {
-  const { ACQ_AUTHORIZATION: LOCK } = await import('./lock.mjs');
-  const dir = arg('--confirmatory');
-  const worlds = LOCK.allocation.map(a => { const g = generateAccepted(a.configSeed, a.index); return describeAcq({ cfg: g.cfg, acceptedSeed: a.configSeed, configIndex: a.index, stream: 'study' }); });
-  const load = (w, v, e) => { const f = path.join(dir, `MFW${v}-w${w.index}-${e}.json`); return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : null; };
+// --rehearse P=<dir>,A=<dir>,H=<dir> [--dev-repeat <dir>]: the whole confirmatory analysis on DEVELOPMENT sessions, before the freeze,
+// so that no code path meets real data for the first time on confirmatory outcomes.  It is not evidence for the study.
+if (arg('--confirmatory') || arg('--rehearse')) {
+  let worlds, load, compared = 0, different = 0;
+  if (arg('--confirmatory')) {
+    const { ACQ_AUTHORIZATION: LOCK } = await import('./lock.mjs');
+    const dir = arg('--confirmatory');
+    worlds = LOCK.allocation.map(a => { const g = generateAccepted(a.configSeed, a.index); return describeAcq({ cfg: g.cfg, acceptedSeed: a.configSeed, configIndex: a.index, stream: 'study' }); });
+    load = (w, v, e) => { const f = path.join(dir, `MFW${v}-w${w.index}-${e}.json`); return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : null; };
+    for (const f of fs.readdirSync(dir).filter(x => x.endsWith('-repeat.json'))) { compared++; const a = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')), b = JSON.parse(fs.readFileSync(path.join(dir, f.replace('-repeat', '')), 'utf8')); if (hash(a.log) !== hash(b.log)) different++; }
+  } else {
+    const dirs = Object.fromEntries(arg('--rehearse').split(',').map(s => s.split('=')));
+    worlds = generateAcceptedStream(STUDY_STREAM_START, DEV_INDICES.hi + 1).map(w => describeAcq({ cfg: w.cfg, acceptedSeed: w.acceptedSeed, configIndex: w.acceptedConfigIndex, stream: 'study' }));
+    load = (w, v, e) => { const f = path.join(dirs[v], `MFW${v}-study${w.index}-${e}.json`); return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : null; };
+    for (const w of worlds) for (const e of ['E1', 'E2']) { const f = path.join(arg('--dev-repeat'), `MFWP-study${w.index}-${e}.json`); compared++; if (hash(JSON.parse(fs.readFileSync(f, 'utf8')).log) !== hash(load(w, 'P', e).log)) different++; }
+  }
   const { rows, voids, audit } = buildRows(worlds, MFW_VARIANTS, load);
-  let compared = 0, different = 0;
-  for (const f of fs.readdirSync(dir).filter(x => x.endsWith('-repeat.json'))) { compared++; const a = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')), b = JSON.parse(fs.readFileSync(path.join(dir, f.replace('-repeat', '')), 'utf8')); if (hash(a.log) !== hash(b.log)) different++; }
   const P = ci(rows, contrast('psi', 'P', 'RW'), 101), rw = ci(rows, contrast('psi', 'RW', null), 102), qb = ci(rows, contrast('psi', 'QB1', null), 103), dyna = ci(rows, contrast('psi', 'DYNA', null), 104);
   const voidShare = voids.length / worlds.length, determinismOk = compared > 0 && different === 0, nullOk = rw.lo > -DELTA && rw.hi < DELTA, pcOk = qb.lo > DELTA;
   const decision = decideAcq({ L: P.lo, U: P.hi, delta: DELTA, voidShare, determinismOk, nullOk, pcOk });

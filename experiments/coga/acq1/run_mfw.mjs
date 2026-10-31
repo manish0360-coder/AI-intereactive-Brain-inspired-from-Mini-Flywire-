@@ -24,9 +24,12 @@ fs.mkdirSync(out, { recursive: true });
 const worldsOf = () => { if (set === 'dev') return M7ENV.generateAcceptedStream(STUDY_STREAM_START, DEV_INDICES.hi + 1).map(w => ({ stream: 'study', index: w.acceptedConfigIndex, configSeed: w.acceptedSeed }));
   const [, f, n] = set.split(':').map(Number); return M7ENV.generateAcceptedStream(SIM_STREAM_START, f + n).slice(f).map(w => ({ stream: 'sim', index: w.acceptedConfigIndex, configSeed: w.acceptedSeed })); };
 const worlds = worldsOf();
-const tree = variant === 'A' ? buildCredit1Trees().trees.A.dir : buildLearn0Tree().dir;
+// --tree reuses a built tree.  The tree builders delete and rewrite a shared directory, so two runs must never build while either is
+// running: a rebuild under a live run failed 30 development sessions (ENOENT on env.js at session end).
+const tree = arg('--tree') || (variant === 'A' ? buildCredit1Trees().trees.A.dir : buildLearn0Tree().dir);
 const preload = pathToFileURL(path.join(ROOT, 'experiments', 'credit1', 'clock_preload.mjs')).href;
-const plan = worlds.flatMap(w => ['E1', 'E2'].map(e => { const label = `MFW${variant}-${w.stream}${w.index}-${e}`; return { label, input: { label, tree, world: w, env: e, clock: { ...CLOCK }, kind: 'development', variant, steps } }; }));
+const skipExisting = process.argv.includes('--skip-existing');
+const plan = worlds.flatMap(w => ['E1', 'E2'].map(e => { const label = `MFW${variant}-${w.stream}${w.index}-${e}`; return { label, input: { label, tree, world: w, env: e, clock: { ...CLOCK }, kind: 'development', variant, steps } }; })).filter(j => !(skipExisting && fs.existsSync(path.join(out, `${j.label}.json`))));
 const env = { ...process.env }; delete env.NODE_OPTIONS;
 const results = []; let next = 0; const t0 = Date.now();
 const runOne = (job) => new Promise((resolve) => {

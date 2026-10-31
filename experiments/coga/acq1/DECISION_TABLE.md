@@ -1,6 +1,6 @@
 # ACQ-1 — decision table (prespecified)
 
-One 95% goal-stratified bootstrap interval [L, U] of Δ = E_w[ψ_w(MFW-P) − ψ_w(RW)], window [9000, 12000), read against δ = 0.10:
+One 95% stratified t interval [L, U] of Δ = E_w[ψ_w(MFW-P) − ψ_w(RW)], window [9000, 12000), read against δ = 0.10:
 **difference from zero** (L > 0, U < 0) and **equivalence within ±δ** (−δ < L and U < δ), the standard superiority-plus-equivalence
 reading (Lakens, Scheel & Isager, *AMPPS* 2018). Rows are checked in this order; the first that applies decides.
 

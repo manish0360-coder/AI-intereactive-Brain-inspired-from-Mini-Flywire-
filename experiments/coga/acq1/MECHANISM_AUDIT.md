@@ -33,6 +33,9 @@ Readings, all conditional on being development data:
 3. **The credit repairs do not change the level at 12,000 steps.** Correct per-edge trust (H) and aligned credit (A) start earlier, by
    about 0.05–0.08 in the first 3,000 steps, and end level with P.
 4. **MFW is far slower than a minimal learner:** it needs about 10,000 steps for what QB-1 shows in its first 500 to 1,000.
+5. **MFW also plateaus low.** At 36,000 steps (`evidence/dev_diag_36000.json`), ψ(MFW-P) by 6,000-step bins is −0.002, 0.088, 0.163, 0.125,
+   0.155, 0.157; QB-1 is 0.426, 0.663, 0.714, 0.727, 0.724, 0.710. So the limit is not only speed: MFW settles near 0.15, about a fifth
+   of QB-1's level. 12,000 steps reaches that plateau, so the evaluation window does not understate a slow learner.
 
 ## 3. What is not established
 

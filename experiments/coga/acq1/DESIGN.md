@@ -101,15 +101,17 @@ estimates; raw agreement and mean p.
 
 ## 7. Analysis
 
-Goal-stratified world bootstrap, 10,000 replicates, fixed seed, 95% percentile interval [L, U]. Decision rules: `DECISION_TABLE.md`.
-The analysis is `analyze.mjs`, frozen before the confirmatory run.
+95% stratified t interval [L, U] of the equal-goal mean of Δ_w, with Welch–Satterthwaite degrees of freedom (`analysis.mjs`). The world is
+the unit. The percentile bootstrap failed its type I rule in simulation and is kept as a sensitivity analysis only (`POWER_ANALYSIS.md`).
+Decision rules: `DECISION_TABLE.md`. The analysis is `analyze.mjs`, frozen before the confirmatory run.
 
 ## 8. Horizon and minimum meaningful effect
 
 **Horizon.** 3,000 steps was the M7 budget, not a scientific choice. On development worlds ψ(MFW-P) is flat near 0 to about 6,000 steps,
 so a 3,000-step study would test a window in which a slow learner cannot yet show anything. 12,000 steps with the last quarter as the
 window gives a fair test without being open-ended. The horizon is chosen on development data and fixed before any confirmatory
-outcome. Whether ψ keeps rising later is recorded on development worlds (`evidence/dev_diag_36000.json`), not tested.
+outcome. On development worlds ψ(MFW-P) levels off near 0.15 from about 12,000 steps to 36,000 (`evidence/dev_diag_36000.json`), so the
+window sits at the plateau. That is a description, not a test.
 
 **δ = 0.10**, on the probability scale of ψ. Rationale, from the meaning of the metric and not from a sample size:
 1. **Consequence.** From an uninformed uniform policy, raising the reliability-optimal share at SWITCH states by 0.10 shortens the
@@ -124,7 +126,7 @@ for that reason. They do not change the decision.
 
 ## 9. Sample size
 
-Chosen by `POWER_ANALYSIS.md`, simulated on the actual unit (the world) with the frozen interval.
+**n = 100 worlds**, chosen by the rule in `POWER_ANALYSIS.md`, simulated on the actual unit (the world) with the frozen interval.
 
 ## 10. Separation of territories
 
@@ -133,7 +135,7 @@ Chosen by `POWER_ANALYSIS.md`, simulated on the actual unit (the world) with the
 | development diagnosis, tuning | accepted-stream indices 0–29 (already consumed by XFER-1, LEARN-0, CREDIT-1 development; never confirmatory) | `../config.mjs` |
 | QB-1 / random-walk null calibration (propagation study) | development-simulation stream from seed 150,000 | `../evidence/null_calibration_sim.json` |
 | power analysis | no configuration: resampled development values | `power.mjs` |
-| **confirmatory** | accepted-stream indices from **3240**, after CREDIT-1's reservation 2032–3239; equal per goal | `evidence/allocation.json` |
+| **confirmatory** | accepted-stream indices **3240–3339**, configuration seeds 365489–369480, 25 per goal, after CREDIT-1's reservation 2032–3239; 0 worlds skipped, 0 collisions | `evidence/allocation.json` (sha256 `04d89b73…`), `evidence/stream_2032_4039.json` |
 
 **Audit (FACT).**
 - The study stream is a chain: `generateAccepted(seed, index)`, next index resuming at accepted seed + 1, goal = `GOALS[index % 4]`, so acceptance
@@ -155,6 +157,9 @@ The propagation study's proposed confirmatory start moves past the ACQ-1 block i
   instance failure. Void worlds leave every comparison, are listed, and are not replaced. More than 5% void: result VOID.
 - A prespecified 10% of worlds repeat variant P; all logs must be byte-identical.
 - Fixed n, no interim look, no optional stopping. An implementation defect found after the freeze stops the study.
+- No tree builder runs while sessions are running: the builders delete and rewrite a shared directory, and a rebuild under a live
+  development run failed 30 sessions (ENOENT at session end; development only, re-run). A session that fails this way is void, never
+  silently replaced.
 
 ## 12. Parameters
 
@@ -165,7 +170,7 @@ The propagation study's proposed confirmatory start moves past the ACQ-1 block i
 | budget / window | 12,000 / [9000, 12000) | §8 |
 | δ | 0.10 | §8 |
 | α, ε, k | 0.5, 0.10, 5 | `../evidence/tuning_dev.json`, `../DESIGN.md` |
-| n | `POWER_ANALYSIS.md` | power rule |
+| n | 100 worlds | power rule, `POWER_ANALYSIS.md` |
 
 ## 13. Claim limits
 
