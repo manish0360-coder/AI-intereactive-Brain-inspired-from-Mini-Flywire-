@@ -126,6 +126,9 @@ the bootstrap, with nuisance parameters estimated on development worlds under th
 | confirmatory | accepted-stream indices from 3240 upward (after CREDIT-1's reserved 2032–3239), contiguous, after second-stage acceptance | PROPOSAL |
 | excluded | configuration seeds 886000–900499 (registry: consumed), ≥ 900500 (held-out) | FACT (registry) |
 
+**Note (2026-10-31).** The separate acquisition study ACQ-1 (`acq1/`) takes the accepted-stream indices from 3240 first. If this
+propagation study is ever run, its confirmatory territory starts after the ACQ-1 block.
+
 The registry is not modified (`M1_AUDIT.md` §7). A collision check proves the confirmatory configuration seeds are disjoint from
 every range above and from the development and simulation seeds actually generated.
 

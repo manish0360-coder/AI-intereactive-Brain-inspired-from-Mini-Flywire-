@@ -1,0 +1,26 @@
+raw manifest: 36 files, 0 hash mismatches, sessions ok 36/36
+worlds 18; MFW 0.3295 RW 0.3364 chance-at-MFW's-own-states 0.3384
+  w 0 goal  8 n 397 MFW 0.295 RW 0.342 chance@MFW-states 0.365 diff -0.047
+  w 1 goal 12 n 401 MFW 0.212 RW 0.280 chance@MFW-states 0.290 diff -0.068
+  w 2 goal 16 n 427 MFW 0.508 RW 0.348 chance@MFW-states 0.362 diff 0.160
+  w 3 goal 19 n 414 MFW 0.234 RW 0.246 chance@MFW-states 0.289 diff -0.012
+  w 4 goal  8 n 380 MFW 0.232 RW 0.366 chance@MFW-states 0.442 diff -0.134
+  w 6 goal 16 n 388 MFW 0.304 RW 0.382 chance@MFW-states 0.348 diff -0.078
+  w 7 goal 19 n 388 MFW 0.433 RW 0.344 chance@MFW-states 0.385 diff 0.089
+  w 8 goal  8 n 368 MFW 0.622 RW 0.348 chance@MFW-states 0.345 diff 0.274
+  w 9 goal 12 n 382 MFW 0.403 RW 0.324 chance@MFW-states 0.312 diff 0.079
+  w10 goal 16 n 421 MFW 0.302 RW 0.354 chance@MFW-states 0.304 diff -0.052
+  w13 goal 12 n 409 MFW 0.222 RW 0.306 chance@MFW-states 0.348 diff -0.084
+  w15 goal 19 n 401 MFW 0.319 RW 0.374 chance@MFW-states 0.320 diff -0.055
+  w18 goal 16 n 412 MFW 0.505 RW 0.326 chance@MFW-states 0.301 diff 0.179
+  w20 goal  8 n 401 MFW 0.142 RW 0.298 chance@MFW-states 0.394 diff -0.156
+  w21 goal 12 n 419 MFW 0.174 RW 0.346 chance@MFW-states 0.291 diff -0.172
+  w24 goal  8 n 412 MFW 0.325 RW 0.390 chance@MFW-states 0.358 diff -0.065
+  w28 goal  8 n 386 MFW 0.282 RW 0.330 chance@MFW-states 0.311 diff -0.048
+  w29 goal 12 n 351 MFW 0.416 RW 0.352 chance@MFW-states 0.326 diff 0.064
+  goal 8: worlds 6, mean MFW 0.316, RW 0.346, diff -0.029
+  goal 12: worlds 5, mean MFW 0.286, RW 0.322, diff -0.036
+  goal 16: worlds 4, mean MFW 0.405, RW 0.353, diff 0.052
+  goal 19: worlds 3, mean MFW 0.329, RW 0.321, diff 0.007
+independent bootstrap: diff -0.0069 [-0.0554, 0.0481]
+MFW minus chance at its own states: -0.0089 [-0.0623, 0.0505]

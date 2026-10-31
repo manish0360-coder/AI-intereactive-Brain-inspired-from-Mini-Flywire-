@@ -1,0 +1,155 @@
+{
+ "schema": "coga/acq1.dev-rows",
+ "rows": [
+  {
+   "world": "acq1:study:0",
+   "goal": 8,
+   "delta": -0.011745985620042742
+  },
+  {
+   "world": "acq1:study:1",
+   "goal": 12,
+   "delta": 0.4947407043192112
+  },
+  {
+   "world": "acq1:study:2",
+   "goal": 16,
+   "delta": 0.17307682310149505
+  },
+  {
+   "world": "acq1:study:3",
+   "goal": 19,
+   "delta": 0.33183965400822235
+  },
+  {
+   "world": "acq1:study:4",
+   "goal": 8,
+   "delta": -0.044202161172580294
+  },
+  {
+   "world": "acq1:study:5",
+   "goal": 12,
+   "delta": 0.23737849332414285
+  },
+  {
+   "world": "acq1:study:6",
+   "goal": 16,
+   "delta": 0.09890195434033829
+  },
+  {
+   "world": "acq1:study:7",
+   "goal": 19,
+   "delta": 0.2565180049739383
+  },
+  {
+   "world": "acq1:study:8",
+   "goal": 8,
+   "delta": 0.13225372236878985
+  },
+  {
+   "world": "acq1:study:9",
+   "goal": 12,
+   "delta": 0.00021451285667105618
+  },
+  {
+   "world": "acq1:study:10",
+   "goal": 16,
+   "delta": -0.2672521438479159
+  },
+  {
+   "world": "acq1:study:11",
+   "goal": 19,
+   "delta": 0.39227861191275387
+  },
+  {
+   "world": "acq1:study:12",
+   "goal": 8,
+   "delta": 0.3708408219062797
+  },
+  {
+   "world": "acq1:study:13",
+   "goal": 12,
+   "delta": 0.13538094755482974
+  },
+  {
+   "world": "acq1:study:14",
+   "goal": 16,
+   "delta": 0.11588199977416849
+  },
+  {
+   "world": "acq1:study:15",
+   "goal": 19,
+   "delta": -0.16477066558111492
+  },
+  {
+   "world": "acq1:study:16",
+   "goal": 8,
+   "delta": 0.08638146880558266
+  },
+  {
+   "world": "acq1:study:17",
+   "goal": 12,
+   "delta": 0.1158331375079362
+  },
+  {
+   "world": "acq1:study:18",
+   "goal": 16,
+   "delta": 0.0831566973103606
+  },
+  {
+   "world": "acq1:study:19",
+   "goal": 19,
+   "delta": 0.022082489649530135
+  },
+  {
+   "world": "acq1:study:20",
+   "goal": 8,
+   "delta": 0.17114978368577435
+  },
+  {
+   "world": "acq1:study:21",
+   "goal": 12,
+   "delta": 0.3830016927008861
+  },
+  {
+   "world": "acq1:study:22",
+   "goal": 16,
+   "delta": -0.06368443037825555
+  },
+  {
+   "world": "acq1:study:23",
+   "goal": 19,
+   "delta": 0.2736138955079319
+  },
+  {
+   "world": "acq1:study:24",
+   "goal": 8,
+   "delta": 0.35781109753024126
+  },
+  {
+   "world": "acq1:study:25",
+   "goal": 12,
+   "delta": 0.2245011810175246
+  },
+  {
+   "world": "acq1:study:26",
+   "goal": 16,
+   "delta": -0.0157689268153441
+  },
+  {
+   "world": "acq1:study:27",
+   "goal": 19,
+   "delta": -0.0375857139246578
+  },
+  {
+   "world": "acq1:study:28",
+   "goal": 8,
+   "delta": 0.2639111458199864
+  },
+  {
+   "world": "acq1:study:29",
+   "goal": 12,
+   "delta": -0.20481650059979578
+  }
+ ]
+}

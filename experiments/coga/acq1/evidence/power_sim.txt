@@ -1,0 +1,25 @@
+dev worlds 30, SD(Delta_w) 0.188
+n  40 primary                              type I 0.050  equivalence@0 0.888  power@delta 0.922  coverage 0.950/0.948
+n  40 sd x 1.25                            type I 0.050  equivalence@0 0.608  power@delta 0.767  coverage 0.950/0.951
+n  40 heterogeneity tau 0.10               type I 0.047  equivalence@0 0.732  power@delta 0.833  coverage 0.953/0.950
+n  40 sd x 1.25, tau 0.10, 5% worlds lost  type I 0.048  equivalence@0 0.396  power@delta 0.663  coverage 0.952/0.950
+n  60 primary                              type I 0.051  equivalence@0 0.984  power@delta 0.988  coverage 0.949/0.949
+n  60 sd x 1.25                            type I 0.047  equivalence@0 0.882  power@delta 0.911  coverage 0.953/0.949
+n  60 heterogeneity tau 0.10               type I 0.050  equivalence@0 0.933  power@delta 0.954  coverage 0.950/0.949
+n  60 sd x 1.25, tau 0.10, 5% worlds lost  type I 0.049  equivalence@0 0.745  power@delta 0.839  coverage 0.951/0.947
+n  80 primary                              type I 0.050  equivalence@0 0.998  power@delta 0.998  coverage 0.950/0.949
+n  80 sd x 1.25                            type I 0.051  equivalence@0 0.963  power@delta 0.972  coverage 0.949/0.947
+n  80 heterogeneity tau 0.10               type I 0.049  equivalence@0 0.986  power@delta 0.990  coverage 0.951/0.953
+n  80 sd x 1.25, tau 0.10, 5% worlds lost  type I 0.053  equivalence@0 0.895  power@delta 0.929  coverage 0.947/0.949
+n 100 primary                              type I 0.051  equivalence@0 1.000  power@delta 1.000  coverage 0.949/0.945
+n 100 sd x 1.25                            type I 0.052  equivalence@0 0.989  power@delta 0.992  coverage 0.948/0.949
+n 100 heterogeneity tau 0.10               type I 0.052  equivalence@0 0.997  power@delta 0.998  coverage 0.948/0.949
+n 100 sd x 1.25, tau 0.10, 5% worlds lost  type I 0.050  equivalence@0 0.962  power@delta 0.969  coverage 0.950/0.948
+n 120 primary                              type I 0.052  equivalence@0 1.000  power@delta 1.000  coverage 0.948/0.950
+n 120 sd x 1.25                            type I 0.053  equivalence@0 0.997  power@delta 0.997  coverage 0.947/0.946
+n 120 heterogeneity tau 0.10               type I 0.052  equivalence@0 0.999  power@delta 0.999  coverage 0.948/0.950
+n 120 sd x 1.25, tau 0.10, 5% worlds lost  type I 0.053  equivalence@0 0.985  power@delta 0.987  coverage 0.947/0.945
+n 160 primary                              type I 0.054  equivalence@0 1.000  power@delta 1.000  coverage 0.946/0.945
+n 160 sd x 1.25                            type I 0.054  equivalence@0 1.000  power@delta 1.000  coverage 0.946/0.947
+n 160 heterogeneity tau 0.10               type I 0.055  equivalence@0 1.000  power@delta 1.000  coverage 0.945/0.949
+n 160 sd x 1.25, tau 0.10, 5% worlds lost  type I 0.052  equivalence@0 0.998  power@delta 0.998  coverage 0.948/0.947

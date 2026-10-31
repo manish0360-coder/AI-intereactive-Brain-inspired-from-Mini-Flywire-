@@ -1,0 +1,42 @@
+{
+ "schema": "coga/acq1.consequence",
+ "basePolicy": "uniform",
+ "baseMeanSteps": 44.214672201816974,
+ "rows": [
+  {
+   "psiShift": 0.05,
+   "meanReduction": 0.07288076530824314,
+   "medianReduction": 0.06207732501156005,
+   "min": 0.027035628202247586,
+   "max": 0.1968043173196269
+  },
+  {
+   "psiShift": 0.1,
+   "meanReduction": 0.1341818245005731,
+   "medianReduction": 0.1155866556548083,
+   "min": 0.050015524072248185,
+   "max": 0.35395427339626884
+  },
+  {
+   "psiShift": 0.15,
+   "meanReduction": 0.18610347144504386,
+   "medianReduction": 0.164095405785589,
+   "min": 0.06978327022028341,
+   "max": 0.4729696421820043
+  },
+  {
+   "psiShift": 0.2,
+   "meanReduction": 0.23041964743444387,
+   "medianReduction": 0.21035765119240435,
+   "min": 0.08696259055691813,
+   "max": 0.5614521965218524
+  },
+  {
+   "psiShift": 0.3,
+   "meanReduction": 0.30160192637208655,
+   "medianReduction": 0.2767282640528782,
+   "min": 0.11533374178099065,
+   "max": 0.6770715645088425
+  }
+ ]
+}

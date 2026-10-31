@@ -108,6 +108,18 @@ Under the preregistered precondition P2 (DECISION_TABLE.md R7), a confirmatory r
 **NON-EVALUABLE** for θ_MFW. This is a failed scientific gate at the development stage, and it is referred to the Research
 Director (README.md).
 
+**Correction (2026-10-31).** The reading above, and the statements in `README.md` and in the report to the Director that MFW's choices
+are "not informed" by reliability and that acquisition is the binding limit, went further than the evidence. The P2 number itself is
+right: re-derived independently from the raw logs by exhaustive path enumeration and a fresh bootstrap, −0.0069 [−0.0554, 0.0481]
+(`acq1/evidence/p2_audit.txt`). What it means is narrower:
+- raw agreement is confounded by fixed preferences (MFW ranges 0.14–0.62 across worlds with a mean equal to the random walk's), and mean p
+  by visitation (`acq1/DESIGN.md` §5);
+- it measured the last 500 of 1,500 steps. A crossover diagnostic shows no signal up to about 6,000 steps, then a rise to 0.131
+  [0.065, 0.191] by 12,000 steps on development worlds (`acq1/MECHANISM_AUDIT.md`).
+
+P2 therefore shows that MFW has not acquired detectable reliability knowledge **by step 1,500**, which is still what the propagation design
+needs and still fails. It does not show that MFW cannot acquire it. The acquisition question is taken up by ACQ-1 in `acq1/`.
+
 ## 8. Power simulation
 
 `node experiments/coga/power.mjs --dev evidence/dev_analysis.json --out evidence/power_sim.json --R 500 --B 1000`
