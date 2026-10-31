@@ -1,0 +1,54 @@
+{
+ "schema": "coga/acq1.primary-audit",
+ "manifest": {
+  "head": "4fbba10de7f52b3dd8b1c5ffc2b3ddab317d9d04",
+  "lockFreeze": "4d1baff31373313a644253943af2897a0f860230",
+  "files": 621,
+  "hashMismatches": 0,
+  "sessions": 620,
+  "ok": 620
+ },
+ "provenance": {
+  "sessions": 620,
+  "confirmatoryKind": 620,
+  "mapOk": 620,
+  "oraclesExecuted": 0,
+  "refused": 0,
+  "clockViolations": 0,
+  "rngOk": 620,
+  "ticksOk": 620,
+  "seedMismatch": 0,
+  "trees": {
+   "A:e5c8a8b1063a": 200,
+   "H:3d3266fde38c": 200,
+   "P:3d3266fde38c": 220
+  }
+ },
+ "setsCompared": {
+  "worlds": 100,
+  "stateSetsDifferent": 0
+ },
+ "maxAbsDifferenceFromFrozen": {
+  "psiP": 1.1102230246251565e-16,
+  "psiRW": 1.3877787807814457e-17
+ },
+ "independent": {
+  "est": 0.13062705365800387,
+  "se": 0.02031841781692903,
+  "df": 88.64492494906882,
+  "t": 1.9870883718872392,
+  "lo": 0.09025256187883768,
+  "hi": 0.17100154543717005
+ },
+ "frozen": {
+  "est": 0.13062705365800387,
+  "lo": 0.09025256184833946,
+  "hi": 0.17100154546766827,
+  "df": 88.64492494906881
+ },
+ "signFlip": {
+  "flips": 200000,
+  "extreme": 0,
+  "p": 0.0000049999750001249995
+ }
+}

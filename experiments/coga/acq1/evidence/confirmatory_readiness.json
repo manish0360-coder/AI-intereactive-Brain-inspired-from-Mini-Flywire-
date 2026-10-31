@@ -1,0 +1,87 @@
+{
+ "schema": "coga/acq1.readiness",
+ "head": "4fbba10de7f52b3dd8b1c5ffc2b3ddab317d9d04",
+ "ok": true,
+ "gates": [
+  {
+   "name": "G1 no tracked change in the working tree",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G2 protected runtime, LEARN-0, CREDIT-1, M7, registry and harness paths are identical to 4122186",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G3 the lock is set and complete",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G4 the freeze commit is an ancestor of HEAD",
+   "ok": true,
+   "detail": "4d1baff31373313a644253943af2897a0f860230"
+  },
+  {
+   "name": "G5 only the lock changed since the freeze commit",
+   "ok": true,
+   "detail": "experiments/coga/acq1/lock.mjs"
+  },
+  {
+   "name": "G6 every protocol file matches its frozen hash",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G7 lock parameters equal the study constants",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G8 the stream file is intact and continues LEARN-0's chain",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G9 the allocation regenerates from the stream and equals the lock",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G10 no collision with any recorded territory, registry range or trajectory record",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G11 the chosen n meets the preregistered power rule in every scenario (power >= 0.90, equivalence >= 0.90, type I <= 0.06)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G12 development gates: positive control above delta, random walk inside +-delta, MFW instruments clean, determinism byte-identical",
+   "ok": true,
+   "detail": "{\"pc\":{\"est\":0.6854648253448972,\"lo\":0.6412997263569905,\"hi\":0.7296299243328038,\"level\":0.95,\"worlds\":30,\"df\":13.078250645403813,\"se\":0.02045576983339656},\"rw\":{\"est\":0.0005617409197508368,\"lo\":-0.005520804753661915,\"hi\":0.006644286593163589,\"level\":0.95,\"worlds\":30,\"df\":23.10625834038627,\"se\":0.002941083038318704}}"
+  },
+  {
+   "name": "G13 the pinned trees rebuild",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "G14 experiments/coga/acq1/test_acq1.mjs passes",
+   "ok": true,
+   "detail": "ACQ-1 tests: 27/27 checks passed; mutants caught 3/3"
+  },
+  {
+   "name": "G14 experiments/coga/acq1/test_mutants.mjs passes",
+   "ok": true,
+   "detail": "ACQ-1 source mutants: 12/12 (including the leak scan)"
+  },
+  {
+   "name": "G14 experiments/coga/test_coga.mjs passes",
+   "ok": true,
+   "detail": "COG-A tests: 21/21 checks passed; mutants caught 5/5"
+  }
+ ]
+}

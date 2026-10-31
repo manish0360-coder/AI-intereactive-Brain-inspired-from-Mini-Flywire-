@@ -55,3 +55,30 @@ all hashes). The failed sessions were re-run with `--skip-existing`, and the rep
 in `DESIGN.md` §11. All of this was development data.
 
 **Interval.** The percentile bootstrap failed its type I rule in simulation and was replaced before the freeze (`POWER_ANALYSIS.md`).
+
+## 6. Confirmatory run (2026-10-31)
+
+| check | result |
+|---|---|
+| `run_confirmatory.mjs` | readiness re-run first: 16/16 gates at `4fbba10` (`evidence/confirmatory_readiness.json`); 620/620 sessions ok, wall 100.3 min |
+| `analyze.mjs --confirmatory` | 100 worlds, 0 void; Δ 0.1306 [0.0903, 0.1710]; row A1; determinism 20/20 |
+| analysis repeated | `results.json` sha256 identical, `84d56d03…` |
+| `audit_primary.mjs` | manifest 621 files, 0 hash mismatches; 620 sessions all kind confirmatory; map audit 620/620, oracle executions 0; refusals 0; clock violations 0; RNG 620/620; ticks 620/620; seed mismatches 0; SWITCH counts agree in 100/100 worlds; max per-world difference from the frozen values 1.1e-16 (ψ P), 1.4e-17 (ψ RW); Δ 0.13062705, interval [0.09025256, 0.17100155] from separately written code; sign-flip 0 of 200,000 |
+| independent stream | `territory.mjs --to 4239`, chain from seed 200000 in a separate process: 2,008 rows of `stream_2032_4039.json` and all 100 allocated seeds, 0 mismatches |
+| protected paths against `4122186` | `git diff --stat` empty |
+| tracked files after the run | no change; new files are evidence, reports and the two post-outcome scripts |
+
+**Tests after the run** (log `../data/acq1/final_tests.log`): `test_distal` 11/11; `test_coga` 21/21 checks, 5/5 mutants; `test_acq1` 27/27 checks, 3/3
+mutants; `test_mutants` 12/12 including the leak scan.
+
+## 7. Failures and findings after the outcome
+
+**Audit script bug (mine, fixed).** The first `audit_primary.mjs` run printed t = 2.280 and a wider interval than the frozen one. The estimate, SE, df and
+every world value agreed, so I checked the quantile: `whole` integrates one half of the density, and the tail ratio was not halved. Corrected, t =
+1.98709 and the interval agrees to 8 decimals. The frozen code was not at fault.
+
+**Design omission.** A diagnostic counted zero goal arrivals in MFW logs. Cause: `main.js:5018` skips the environment on goal-entering choices. Not a
+code divergence from the protocol, and restoring those choices leaves the decision unchanged, but the design did not disclose it.
+`RESEARCH_REPORT.md` §5 has the evidence and the classification.
+
+**Withdrawn development reading.** `MECHANISM_AUDIT.md` said aligned credit starts earlier than P. MFW-A's confirmatory curve does not show it.

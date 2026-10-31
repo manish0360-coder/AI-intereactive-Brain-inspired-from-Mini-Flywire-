@@ -53,3 +53,12 @@ The Director's criterion for a change is that the audit establishes it is necess
 
 Therefore P stays the primary agent, and A and H stay as prespecified secondary arms. If ACQ-1 is not supported, or a faster acquirer is
 wanted, the next step is a channel ablation on development worlds, then a new versioned design. That is outside ACQ-1.
+
+## 5. Addendum after the confirmatory run (2026-10-31)
+
+Sections 1–4 are unchanged and describe what was known at the freeze. On 100 confirmatory worlds (`RESULTS.md`):
+- Reading 3 is partly withdrawn: H does lead P early, but MFW-A's early lead did not replicate, and A ended at 0.080 against P's 0.130.
+- Table §1 omits a fact recorded in `../M1_AUDIT.md` F8: goal-entering choices skip the environment (`main.js:5018`), so MFW's final hop never slips
+  and no channel can record a failure on it (`RESEARCH_REPORT.md` §5).
+- The channel of the late rise stays open. The exploratory checks reject chance, retry dynamics, the arrival mix and a reliability-blind goal gradient as
+  the explanation, but they identify no channel (`RESEARCH_REPORT.md` §6).
