@@ -7,6 +7,62 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-035 — ACQ-1: A8 clause 3 ruled MET; study VOID (documentation only)
+
+**Date:** 2026-11-01 · **Authority:** Research Director ruling of 2026-11-01 on ACQ-1 A8 clause 3 · **Status:** in force; no executable effect
+**Scope:** ACQ-1 only.
+- It changes no scientific design, protocol, analysis, instrument, registry, seed, raw record, hash or Git history.
+- It reports no scientific effect estimate.
+- It applies frozen row A8 as a separate record. It does not supersede, edit or relabel any frozen or historical file.
+
+### 1. Ruling
+A8 clause 3 is MET. ACQ-1 is **VOID (non-evaluable)** under row A8 of [`experiments/coga/acq1/DECISION_TABLE.md`](../experiments/coga/acq1/DECISION_TABLE.md).
+
+### 2. Frozen text applied
+- Row A8: "more than 5% of worlds void, or any repeat session not byte-identical, or an implementation defect found after the freeze".
+- Order of rows: "Rows are checked in this order; the first that applies decides."
+- Licence for VOID: "nothing about Δ" may be claimed.
+
+### 3. Record (FACT)
+- [`experiments/coga/acq1/DESIGN.md`](../experiments/coga/acq1/DESIGN.md) §3, "Environment (frozen)", defines E1 = `pPhase1` and E2 = `pPhase2`, each "for the whole session". It states no goal-entry exception.
+- In the pinned LEARN-0 tree used for MFW-P (`main.js` sha256 `3d3266fd…`), `_m7env.attempt` runs only when `!_goalResetJustHappened` holds, and that flag is true when `next` is the goal. Goal-entry moves therefore took no environment draw.
+- The baseline agents drew on every edge attempt, including attempts into the goal.
+- No frozen ACQ-1 file states this exception.
+- The branch was recorded before the freeze, in `experiments/coga/M1_AUDIT.md` F8.
+- `decideAcq` implements clauses 1 and 2 of A8 only. Those clauses were not met, and the computed row A1 did not evaluate clause 3.
+
+### 4. Basis of the ruling (JUDGMENT)
+The locked ACQ-1 environment specification says the probabilities apply for the whole session, while the executed runtime omitted environment draws on goal-entry moves. The Director rules that this falls within clause 3.
+
+### 5. Uncertainty
+- "Implementation defect found after the freeze" is ambiguous, and no frozen file defines it.
+- The branch was recorded before the freeze, and the code ran as built.
+- This is a Director judgment made with the outcome known. It is not a conclusion forced by the frozen text or by the effect estimate, and the effect estimate is not its basis.
+
+### 6. What this record does not claim
+- No scientific effect estimate is reported.
+- ACQ-1 is non-evaluable for its registered hypothesis; its results cannot be used to support or reject that hypothesis.
+- No claim is made that MFW does or does not acquire edge reliability.
+- D-016 is not extended beyond its H1-R scope.
+- No later code change repairs or validates ACQ-1.
+
+### 7. Claims no longer available
+- The SUPPORTED licence in the decision table is unavailable.
+- No claim about Δ may be drawn from these sessions. This includes size, timing, baseline comparisons, secondary contrasts, the learning curve, post-hoc diagnostics, and the report's use of these sessions to explain P2.
+- The development P2 failure and other development observations stand as development records only.
+
+### 8. Preservation
+- All ACQ-1 locked files, hashes, referenced design documents, raw sessions, logs, manifests, evidence files, reports and Git history stay unchanged.
+- Historical "SUPPORTED" and "A1" labels are not rewritten. They record what the frozen analysis computed before this ruling. ACQ-1's status is VOID under this entry.
+- Configuration indices 3240–3339 stay consumed.
+
+### 9. Consequences
+- Any new test is a new versioned study with fresh worlds, a frozen transition contract and separate authorization.
+- This entry decides nothing about Transition Contract U or TC-2.
+- The propagation study stays paused.
+
+---
+
 ## D-034 — Index of studies and rulings recorded after D-032 (documentation only)
 
 **Date:** 2026-10-25 · **Authority:** owner authorization of the documentation-only closure milestone (2026-10-25) · **Status:** index; no executable effect
