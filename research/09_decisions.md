@@ -7,6 +7,31 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-037 — TC-2: reconciliation rulings A to F recorded (documentation only)
+
+**Date:** 2026-11-01 · **Authority:** Research Director TC-2 end-to-end contract directive · **Status:** in force as a provisional design record; no executable effect
+**Scope:** TC-2 design only. Section 13 of `experiments/tc2/TRANSITION_CONTRACT.md` holds the full wording.
+
+**Decision.**
+- Ruling A: both existing Q-write paths stay for now, and the main TD write and the commit write stay distinct. This preserves behaviour and does not validate it. `[OPEN-DoubleGoal]` stays open.
+- Ruling B: M2, an explicit terminal input defaulting to `false`, is the preferred provisional design direction for T3. M1 is not adopted. T4 stays separate, replay stays distinguishable from live GOAL_OK, and the `[OPEN-T3]` closure rule is not amended. `[OPEN-T3]` stays open.
+- Ruling C: a fresh, pinned-baseline comparison of a baseline run and a guards-enabled run is the proposed AC23 parity target, with byte-identical logs as the candidate criterion. The contract lists what must still be defined, including the term "guards". AC23 stays open and not executable.
+- Ruling D: the proposed executed-code-closure method for AC38 is not approved yet. The contract records the evidence a future authorized feasibility study must supply. AC38 stays open and not executable.
+- Ruling E: `lastReasoning` object identity stays the leading freshness candidate, with its observation boundary and limits recorded. `[OPEN-FreshMech]` stays open.
+- Ruling F: `[OPEN-Budget]` and `[OPEN-A4]` stay open. Source trace accounts for the arithmetic of the reported five-call discrepancy, but it does not settle the budget unit and was not observed call by call at runtime. The A4 gap is listed without classifying any operation.
+
+**Limits.**
+- D-036 stays in force. Its statement that neither M1 nor M2 was approved describes the state at that date, and D-037 records the later preference without changing that entry.
+- M2 is not approved for implementation.
+- ACQ-1 remains VOID under D-035 and is not evidence for this contract.
+- TC-2 remains design-only and paused. The contract is not frozen.
+- No acceptance criterion has been run or passed. Parity has not been demonstrated.
+- This entry authorizes no implementation, test, experiment, instrumentation, feasibility study, build or runtime work.
+- It supports no claim about learning, reliability, transfer, planning, mechanism performance or cognition.
+- Source tracing is not runtime verification.
+
+---
+
 ## D-036 — TC-2: provisional transition contract recorded (documentation only)
 
 **Date:** 2026-11-01 · **Authority:** Research Director TC-2 rulings listed below · **Status:** in force as a provisional design record; no executable effect

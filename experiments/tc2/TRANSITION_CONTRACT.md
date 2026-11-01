@@ -43,7 +43,8 @@ Provenance note: Review Copy 2 and all rulings below were made in the design con
 | DB-Scope (b) | ACCEPTED DECISION |
 | D18 | APPROVED WORDING. No criterion has been run or passed |
 | CL-C, CL-D | ACCEPTED DECISION |
-| DT3 | DIRECTOR RULING: DEFER. [OPEN-T3] stays open |
+| DT3 | DIRECTOR RULING: DEFER. [OPEN-T3] stays open. Ruling B (Section 13) states a preferred design direction and closes nothing |
+| Rulings A to F (D-037) | DIRECTOR RULING, provisional. Section 13 holds them. Every open item they name stays open |
 | Gemini overall NOT READY verdict | Rejected as insufficiently supported. This does not independently prove the contract correct. Its useful verification ideas are preserved |
 
 ## 1. Baseline identity (PROVISIONAL APPROVAL, D6)
@@ -291,7 +292,7 @@ This section records provisionally approved contract text. CL-B, CL-C and CL-D c
 - Source trace: the commit write is conditional, because sealing can return null. It also writes earlier pairs in the episode; AC9 does not count those.
 - Source trace: `updateQ` has no terminal flag. The commit path passes `k(g)` as `S′`.
 - On the current source, a commit write entering `g` can include a bootstrap contribution if a Q entry with state `k(g)` exists. T4 alone does not exclude this. How T3 is met stays [OPEN-T3].
-- Neither write is removed. Keeping both for now follows Purpose A's hold on existing writers. It is not a ruling that both are correct, and [OPEN-DoubleGoal] stays open.
+- Neither write is removed. Keeping both for now follows Purpose A's hold on existing writers. It is not a ruling that both are correct, and [OPEN-DoubleGoal] stays open. Ruling A (Section 13) confirms this hold.
 
 Reading note, not ruled: in CL-A, "sealing" refers to `_sealBuffer`, not `sealCurrentEpisode`.
 
@@ -355,7 +356,7 @@ The "Note" column is not wholly carried forward. The notes for AC1, AC5, AC6, AC
 | AC20 | Start stream checks; first-call attempts follow Part D | U | None |
 | AC21 | Non-fresh calls count as steps; verdicts ≤ fresh decisions ≤ steps | R | [OPEN-Budget] |
 | AC22 | Same seed and fixture give identical logs, clock excluded | R | Needs deterministic replay cooldown |
-| AC23 | Guards-off parity and mutant suite | S, U, R | Parity target OPEN; not executable |
+| AC23 | Guards-off parity and mutant suite | S, U, R | Parity target OPEN; not executable. Candidate and gaps: Section 13, Ruling C |
 | AC24 | Every attempt maps to one same-call decision; each decision maps to at most one attempt | U | None |
 | AC25 | Slip on call t, replay on t+1: no attempt on t+1; edge attempt index unchanged | U | None |
 | AC26 | Success on call t, replay on t+1: the environment is not called, and no transition pass occurs for call t's move. Replay training and scheduled maintenance may still change Q | U | None |
@@ -370,7 +371,7 @@ The "Note" column is not wholly carried forward. The notes for AC1, AC5, AC6, AC
 | AC35 | EDGE_SLIP and GOAL_SLIP rows record reward `none`. No reward consumer receives a `rewardSignal` value for that attempt | U | None |
 | AC36 | No agent decision receives a D5 map-oracle output | S, R | None |
 | AC37 | On a replay-branch call, the replay pipeline performs only the operations specifically permitted by C4. C5 operations and `updateBehavior` are outside this check | U | None |
-| AC38 | See below | U, R | Executability OPEN; not executable |
+| AC38 | See below | U, R | Executability OPEN; not executable. See also Section 13, Ruling D |
 
 Type: S static, U unit or fixture, R runtime integration.
 
@@ -417,7 +418,7 @@ Must fail AC19: capped episode stored in both fixtures.
 
 AC5 and AC19 stay independent of AC38 and of each other. AC38 does not substitute for either.
 
-Recorded verification limitation. AC38 executability is OPEN. No complete write-observation mechanism has been established. AC38(a)'s coverage must not be narrowed to ease implementation. If the later feasibility review cannot meet it, the coverage boundary returns to the Director for a ruling. No test, experiment or runtime check has been run, and no claim of complete runtime verification or test success is authorized.
+Recorded verification limitation. AC38 executability is OPEN. No complete write-observation mechanism has been established. AC38(a)'s coverage must not be narrowed to ease implementation. If the later feasibility review cannot meet it, the coverage boundary returns to the Director for a ruling. No test, experiment or runtime check has been run, and no claim of complete runtime verification or test success is authorized. Section 13, Ruling D lists the evidence a future authorized feasibility study must supply.
 
 ### General mutants (CARRIED FORWARD, NOT SEPARATELY RULED)
 
@@ -494,15 +495,15 @@ Prohibited without new evidence:
 ## 11. Open limitations (OPEN LIMITATION)
 
 Open markers:
-- [OPEN-T3]: terminal-bootstrap mechanism. DT3 is DEFER. Neither M1 nor M2 is approved. Closure requires complete coverage of how a Q entry for `k(g)` could be created or become available, including replay, maintenance, persistence and restoration, other writers, and goal identity and lifecycle.
-- [OPEN-DoubleGoal]: whether the main TD write and the commit write should both persist on GOAL_OK. Neither is removed meanwhile, and CL-A does not decide this.
-- [OPEN-FreshMech]: how freshness is determined.
-- [OPEN-Budget]: budget unit and attempts-per-step asymmetry.
-- [OPEN-A4]: categories of operations D12b does not name.
+- [OPEN-T3]: terminal-bootstrap mechanism. DT3 is DEFER. Under Ruling B (Section 13), M2 is the preferred provisional design direction. M2 is not approved for implementation, and M1 is not adopted. Closure requires complete coverage of how a Q entry for `k(g)` could be created or become available, including replay, maintenance, persistence and restoration, other writers, and goal identity and lifecycle.
+- [OPEN-DoubleGoal]: whether the main TD write and the commit write should both persist on GOAL_OK, and which of them should own the goal edge. Neither is removed meanwhile, and neither CL-A nor Ruling A (Section 13) decides this.
+- [OPEN-FreshMech]: how freshness is determined. Under Ruling E (Section 13), `lastReasoning` object identity is the leading candidate. It is not approved.
+- [OPEN-Budget]: budget unit and attempts-per-step asymmetry. See Ruling F (Section 13).
+- [OPEN-A4]: categories of operations D12b does not name. Ruling F (Section 13) lists the gap.
 
 Recorded unresolved:
 - AC38 executability, including the test-access and stream-delta mechanisms.
-- AC23's parity target.
+- AC23's parity target, including the meaning of "guards" (Section 13, Ruling C).
 - The gate objective.
 - Whether unrealized nodes reach stored episodes in the current implementation.
 - Root behaviour and root-tree inventory.
@@ -532,3 +533,127 @@ Markers provisionally ruled, subject to final contract review:
 - It does not freeze the contract.
 - It does not change any ACQ-1 record, frozen file, hash, raw record or Git history.
 - It authorizes no new work.
+
+## 13. Reconciliation rulings A to F (DIRECTOR RULING, provisional; D-037)
+
+Rulings A to F come from the Research Director's TC-2 end-to-end contract directive. This section is their first repository copy.
+
+The paragraphs marked "Ruling" state the Director's rulings. Everything else in this section is reconciliation wording: it records how the rulings fit this contract, and it is not a further ruling. "Source trace" lines use the pinned tree unless stated, and they are not runtime evidence.
+
+This section changes no text of T1 to T9, the Part D table or any acceptance criterion. It closes no open marker. It authorizes no implementation, test, run, instrumentation or feasibility study. No criterion has been run or passed.
+
+### Ruling A: double-goal writes
+
+Ruling. Both existing Q-write paths stay for now. The main TD write and the commit write stay distinct operations. The final-pair commit write on live GOAL_OK is not suppressed.
+
+- This preserves existing behaviour. It does not validate it. No claim is made that keeping both writes is optimal or cognitively better, and the impact is unmeasured.
+- The commit operation stays distinct from the individual writes inside its pipeline. AC5 counts the operation. AC9 counts the main TD write and does not count commit writes. T3 and AC10 apply to each GOAL_OK write entering `g`.
+- Goal-edge ownership stays open under [OPEN-DoubleGoal].
+
+Disclosure, inferred from source trace: D13's gate does not gate the commit pipeline. The gate is read before the memory push (`P:4053-4073`, `P:4502`). The commit runs after the push (`P:4596`) and appends the goal node (`render/episodeManager.js:298-300`). So a GOAL_OK with gate reward 0, such as AC15's path `S,a,b,goal`, can still pass the seal gates and reach commit-pipeline writes to `transitions`, Q and `rewards`. Ruling A preserves this. It is disclosed here, not validated.
+
+### Ruling B: terminal handling
+
+Ruling. M2 is the preferred provisional design for T3. M2 means an explicit terminal input that defaults to `false`, rather than deriving terminal status from incidental Q-table state. This is a design direction, not implementation authorization.
+
+M1, the entry invariant under which the contract states that no `k(g)` entry exists, is not adopted. No runtime code changes under this ruling.
+
+Boundaries:
+- T4 stays a separate invariant. M2 does not replace it.
+- M2 does not by itself prove that no Q write reads a bootstrap value from the goal state. It acts only on writes that receive the input.
+- Because Ruling A keeps both writes, M2 would have to reach both the main TD write and any commit write entering `g`. Reaching only one would leave T3 unmet.
+- Replay behaviour must be preserved. Replay writes stay under C4 and are not terminal events (T3).
+
+Coverage review. M2 and the [OPEN-T3] coverage requirement can stand together. M2 is a candidate means for the two GOAL_OK writes. The coverage requirement is the closure condition for the marker, and it also bears on T4 and on any write that M2 does not touch. The two do not conflict, so the closure rule in Section 11 is not amended. [OPEN-T3] stays open because that coverage is not complete and no mechanism is implemented or verified.
+
+Identifying a live success, by source trace:
+- `terminal: true` does not identify one. The field is set on the final pair for every source, replay included (`render/episodeManager.js:771`), and no reader of it was found. Not every `terminal: true` final pair belongs to a live autonomous success.
+- `source === "autonomous_success"` (`render/episodeManager.js:322`) is not enough alone. `sealCurrentEpisode`'s bridge (`P:927`) calls the same function. CL-B forbids that effect, and the route is inert on current source because the context episode stays empty.
+- Replay episodes must stay distinguishable from live GOAL_OK handling. The exact identifier is not selected, and it is an item for implementation review.
+
+### Ruling C: AC23 parity
+
+Ruling. The proposed parity target is a fresh, pinned-baseline comparison of a fresh baseline run and a guards-enabled run, with the same driver, fixed clock, seeds, development worlds and Hook State P. Byte-identical logs are the candidate parity criterion. Static reverse-identity checks complement that comparison.
+
+AC23's wording stays unchanged. Its parity target stays OPEN and AC23 stays not executable. Parity has not been demonstrated, and neither run has been executed. ACQ-era logs are not parity evidence.
+
+| Must be defined before AC23 can execute | Known today | Gap |
+|---|---|---|
+| Logs and artifacts | The ACQ-1 driver's record fields exist (`experiments/coga/acq1/session_mfw.mjs:117-127`), including `log`, `goalResets`, `envCounters`, `guard`, `mapAudit` and `outcome` | No TC-2 artifact list exists. Whole-record identity cannot hold across different trees, because the record carries `mainSha256` and `wallMs` |
+| Driver | Two COG-A drivers exist and they differ (`experiments/coga/session_mfw.mjs`, `experiments/coga/acq1/session_mfw.mjs`) | No driver is selected. Both carry COG-A study conditions |
+| Pinned baseline | Section 1 gives the content identity | Pinned baseline reproducibility is not verified. Section 9 requires a hash match on a separately authorized rebuild |
+| Configuration | Hook State P and the fixed clock are `experiments/coga/config.mjs:32-33` | Hook State P has `creditMode: 'off'`, while D17b sets credit on as defined by D10. Parity under Hook State P does not test the D17b configuration. Step count is not set |
+| Seeds and worlds | Development territory is accepted-stream indices 0 to 29 (`experiments/coga/acq1/DESIGN.md:135`) | No world or seed list is selected |
+| "Guards" | AC23 says "Guards-off". Ruling C says "guards-enabled" | The term is undefined, and the two phrases are not reconciled here. The existing legality guard is on in the ACQ-1 driver's variant P (`experiments/coga/acq1/session_mfw.mjs:8`). Inferred: if TC-2 behaviour were active, byte identity would not be expected, because O1 reorders learning. The Director must define which state each run uses |
+| Mutant suite | AC38's section lists mutants with a must-fail target. Section 7 lists nine general mutants, carried forward and not ruled | AC23 names no suite. Membership is undefined. The general mutants have no stated target criterion or expected result |
+| Nondeterminism | AC22 excludes the clock and needs deterministic replay cooldown. `wallMs` is environment-dependent | No rule says which fields are excluded, normalized or compared |
+| Static reverse-identity checks | CREDIT-1's S-2 is a precedent for the method (`experiments/credit1/DESIGN.md:207`) | No TC-2 patch exists, so no mandatory check can be listed. Whether reverse identity can hold for reordered code is unknown |
+| Evidence and pass/fail | Any byte difference would fail the candidate criterion | Required evidence files, the pass rule for each mutant, and the handling of a partial failure are undefined |
+
+### Ruling D: AC38 method
+
+Ruling. The proposed executed-code-closure method is not approved yet. AC38 stays open.
+
+The contract keeps requiring evidence that the mechanism detects every write class:
+- transient writes;
+- same-value writes;
+- writes later overwritten or restored;
+- collection mutations;
+- array index and length mutations;
+- object-field changes;
+- module-private assignments;
+- any other class AC38(a) already requires.
+
+Final-state digests alone are insufficient. This contract does not claim that V8 block coverage, source inspection, allowlists, prototype instrumentation, or any combination of them gives complete write observation.
+
+Evidence a future authorized feasibility study must supply:
+- A positive control for each write class, showing detection of a planted write, including one restored before seal return.
+- A no-write control on the same window.
+- A coverage statement for every bridge-path inventory item, naming any item the method cannot observe. Source trace: the inventory includes module-private counters and caches, such as `_episodesStoredTotal` and `_lastRebuild`, that test code outside the module cannot reach directly.
+- Detection of every "must fail AC38" mutant.
+- A demonstration that the method adds no production reader, writer or decision path, preserves AC33, and leaves seal behaviour and RNG consumption unchanged.
+
+If the study cannot supply this, the existing verification limitation applies: coverage is not narrowed, and the boundary returns to the Director. No feasibility spike, instrumentation or runtime patch is authorized here.
+
+### Ruling E: freshness
+
+Ruling. Object-identity comparison for `lastReasoning` stays the leading candidate, subject to source-backed contract wording. No persistent flag is added, and runtime behaviour does not change. [OPEN-FreshMech] stays open.
+
+Observation boundary: the `lastReasoning` reference, read at the start of one `runAgent` call and again after the prediction or replay step of that same call. Under the candidate, a difference would mean a fresh decision. Both reads fall inside one synchronous call.
+
+What a changed reference is intended to prove, by source trace on the pinned tree: `P:2770` ran during this call. `P:2770` is the only assignment to `lastReasoning`, and `render/*.js` does not reference it. The assignment sits inside `if (step === 0)` in `runPrediction` (`P:2769`), it creates a new object literal on each write, and no field of that object is assigned, directly or through the reader alias at `P:3642`. That matches Section 5's definition of a fresh decision. The harness accessor keeps the same reference (`experiments/m7/run.js:233-240`).
+
+What it cannot prove:
+- That the decision is legal, correct or useful.
+- Anything about a changed tree. A second writer, a reused object or an in-place field write would break this reading.
+- Runtime behaviour. This reading comes from source trace only.
+
+Evidence still needed: a re-derived writer list for the tree under test; AC7, AC25 to AC29 and AC32 on that tree; and detection of the general mutants "Carried retry allowed" and "Origin check instead of freshness".
+
+### Ruling F: budget and A4
+
+Ruling. [OPEN-Budget] and [OPEN-A4] stay open unless existing repository evidence fully resolves them. The study's step budget stays distinct from actual `runAgent` attempts or other execution exposure. Neither issue authorizes runtime work.
+
+Review result: existing repository evidence does not fully resolve either marker. Both stay open.
+
+Budget. These measures stay distinct: the study's step budget, `runAgent` calls, fresh decisions, attempts, verdicts and any other execution exposure. E-2 defines a step as one `runAgent` call, and T7 says the cap counts steps. No ruling says which count governs a study's budget.
+
+The five-call discrepancy. The reported figures are harness counters from one git-ignored development record, `experiments/coga/data/acq-dev-P12k/MFWP-study0-E1.json`: `steps` 12000, `ticksExecuted` 12000, `calls` 12005, `loopFires` 2400. They identify the discrepancy only. They are not evidence for any contract requirement, and no ACQ-1 result is used.
+
+Source trace, with `experiments/m7/run.js` and `benchmarks/harness/headlessShim.js` byte-identical in root and the pinned tree:
+- The driver uses `tickUnit: 'step'` (`experiments/coga/acq1/session_mfw.mjs:114`).
+- `pressSpace` runs before the tick loop (`experiments/m7/run.js:248`). The Space handler calls `runAgentLoop()` directly (`P:5382`), which makes 5 `runAgent` calls (`P:5317-5319`).
+- The tick loop then runs `Math.ceil(12000 / 5)` = 2400 loops of 5 calls (`experiments/m7/run.js:115`, `benchmarks/harness/headlessShim.js:144`).
+- `ticksExecuted` counts only those loops (`experiments/m7/run.js:256`), and `loopFires` counts only timer fires (`experiments/credit1/clock_preload.mjs:69-79`).
+- So 5 + 12,000 = 12,005.
+
+Status: the repository's source accounts for the arithmetic. This has not been observed call by call at runtime. It does not settle the budget: under E-2 that session ran 12,005 steps against a requested 12,000, and whether the first 5 calls count against a budget is unruled. [OPEN-Budget] stays open.
+
+A4. D12b names `lastDecision`, `lastReasoning`, `generateExpectation` and `updateBehavior` as decision-time, decays as scheduled maintenance, and the replay pipeline as replay training. It names nothing else. The remaining gap is:
+- C5(a) step accounting, C5(b) the branch draw, C5(c) first start, C5(d) cap handling and C5(f) display output and instrumentation rows. C5 says these do not meet C2. It places none of them in a D12b category.
+- Any C5(e) scheduled operation that is not a decay.
+- Loop-level operations at `P:5222-5258` that are not decays. Source trace: that range includes a `liveRng` draw (`P:5238`), `rebuildSchemas` (`P:5254`) and `rebuildAdjacencyMemory` (`P:5258`). C5 states that its ruling does not reach them.
+- Any operation C5 does not name and that does not meet C2.
+- Candidate-evaluation writes on a prediction call with no fresh decision, on another tree (C6).
+
+This list records the gap. It classifies nothing.
