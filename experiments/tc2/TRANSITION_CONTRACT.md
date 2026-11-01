@@ -48,7 +48,8 @@ Provenance note: Review Copy 2 and all rulings below were made in the design con
 | SC-A to SC-E (D-038) | DIRECTOR RULING, provisional. Section 14 holds them and the source-closure record. Every open item they name stays open |
 | Freeze-readiness assessment (D-039) | PROPOSED, not ruled. Section 15 holds it. Verdict: NOT READY FOR FREEZE REVIEW |
 | FR-A to FR-G (D-040) | DIRECTOR RULING, provisional. Section 16 holds them and the acceptance traceability. Freeze-gate verdict: NOT READY FOR DOCUMENTATION FREEZE |
-| FC-1 to FC-7 (D-041) | DIRECTOR RULING, provisional. Section 17 holds them, the adopted criteria AC39 to AC48 and the current freeze verdict: NOT READY FOR DOCUMENTATION FREEZE |
+| FC-1 to FC-7 (D-041) | DIRECTOR RULING, provisional. Section 17 holds them, the adopted criteria AC39 to AC48 and the verdict at that date: NOT READY FOR DOCUMENTATION FREEZE |
+| FZ-1 to FZ-6 (D-042) | DIRECTOR RULING, provisional. Section 18 holds them, AC49 and the current verdict: READY WITH EXPLICIT LIMITATIONS. The contract is not frozen |
 | Gemini overall NOT READY verdict | Rejected as insufficiently supported. This does not independently prove the contract correct. Its useful verification ideas are preserved |
 
 ## 1. Baseline identity (PROVISIONAL APPROVAL, D6)
@@ -170,6 +171,8 @@ C5 only clarifies. It neither narrows nor widens C2, and it gives no permission 
 | D15 | Verdict is `u(e,j) < p_e`, where `u(e,j)` is the j-th uniform of the per-undirected-edge stream and `j` counts attempts on `e`. MFW starts stay on the cognitive stream | Difference from baselines' shared start stream documented |
 | D16 | (i) At a terminal verdict or cap, an append-only outcome record is created as instrumentation, unreadable by agent code. (ii) Stored episodes contain realized transitions only. (iii) `sealCurrentEpisode` has no contract role | No production freeze. Whether unrealized nodes can enter stored episodes under the current implementation stays unresolved |
 | D17b | Arm OFF, credit on as defined by D10, PE pin off. No separate `dampQ`-on-slip requirement is added. Slips receive no PE evaluation and no Q write derived from the slip | Eventual implementation verification is mandatory. Effects unmeasured |
+
+Reading note (D-041, D-042): D14's sentence "`rewardSignal` is the Q reward input" applies to the main TD write. Section 17.5 holds the governing wording for every Q-write path.
 
 ### D17a (PROVISIONAL APPROVAL)
 
@@ -382,6 +385,8 @@ The "Note" column is not wholly carried forward. The notes for AC1, AC5, AC6, AC
 Type: S static, U unit or fixture, R runtime integration.
 
 AC39 to AC48 are adopted by D-041 and set out in Section 17.8. They are UNRUN CRITERIA.
+
+AC49 is adopted by D-042 and set out in Section 18.5. It is an UNRUN CRITERION.
 
 ### AC38 (PROVISIONAL APPROVAL, DB; adopted by D18; UNRUN CRITERION)
 
@@ -1495,6 +1500,8 @@ The paragraphs marked "Ruling" state the Director's rulings. They are policy dir
 
 This section adds AC39 to AC48 and corrects T9. It changes no other text of T1 to T9, the Part D table, D12b or any existing criterion. It closes no open marker. It authorizes no implementation, test, run, instrumentation or feasibility study. No criterion has been run or passed, and the contract is not frozen. Line references follow Section 14's rule. Source trace is not runtime evidence.
 
+Later update: Section 18 (D-042) updates this section where the two differ. This applies to the guard recommendation, the T9 flag, the undecided parity fields, the phrase "the pinned tree's id", the scratch-gate limitation and the verdict. D-041 records the state at its own date.
+
 ### 17.1 FC-1: AC23 test parameters
 
 Ruling. 10 mutants, 10 development worlds and 12,000 study steps are approved as the proposed initial test plan, subject to confirming that they conflict with no binding requirement. They are initial test parameters only. They do not establish statistical sufficiency or prove cognitive improvement. Mutant selection requires a source-backed inventory. The world list, seeds and environment must be identified reproducibly. No run is executed.
@@ -1731,5 +1738,181 @@ The T4 criterion rests on `k(g)` being `g#g`. If T4 was meant to cover the goal 
 | Missing runtime evidence | Baseline rebuild match; AC23's runs; AC1 to AC48; budget confirmation; T3, M2 and T4 on a derived tree; freshness assumptions; D16 immutability and unreadability; Section 17.3's D17b evidence |
 | AC38 feasibility | Write observation, test access and stream deltas, then AC38 itself |
 | Other | M2 is not approved. [OPEN-DoubleGoal] stays undecided. A Node version pin is optional and undecided |
+
+Open markers: [OPEN-T3], [OPEN-DoubleGoal], [OPEN-FreshMech], [OPEN-Budget] and [OPEN-A4]. AC23 and AC38 stay open and non-executable. No criterion has been run or passed. TC-2 remains design-only and paused.
+
+## 18. Freeze rulings (DIRECTOR RULING, provisional; D-042)
+
+FZ-1 to FZ-6 come from the Research Director's TC-2 freeze directive. That directive numbers them 1 to 6. This section is their first repository copy. They settle configuration intent only. They do not authorize parity execution or establish a passing result.
+
+The paragraphs marked "Ruling" state the Director's rulings. Everything else is a source finding or reconciliation wording. Where this section differs from Sections 13 to 17, this section governs.
+
+This section adds AC49. It changes no text of T1 to T9, the Part D table, D12b or any existing criterion. It closes no open marker. It authorizes no implementation, test, run, instrumentation or feasibility study. No criterion has been run or passed, and the contract is not frozen. Line references follow Section 14's rule. Source trace is not runtime evidence.
+
+### 18.1 FZ-1: guard definition and D10
+
+Ruling. The narrow guard definition is approved in principle, with D10 credit behaviour controlled separately. The exact guard boundaries and D10 writer behaviour are traced to the pinned source. The separation is not claimed to be implemented.
+
+Section 17.2's guard table is the boundary approved in principle. The attribution clause list is now O1, O2, R3, C1, D3, D4, D8, D11, D13, D15, D16 and T3. Configuration V and Section 17.3's table stand.
+
+**D10 credit and trust, by source trace.**
+
+| Item | Pinned source | D10 requirement |
+|---|---|---|
+| Attempt writer | `P:4484`, inside the section, gated at `P:4479` and keyed from `agentLast` at `P:4482` | Does not run |
+| Success writer, path loop | `P:4681`, in the goal block, once per recent-memory pair | Does not run |
+| Success writer, commit | `render/episodeManager.js:1092`, reached only when `auth.trust` is above 0 (`:1084`). Only `autonomous_success` has that (`:62`) | Does not run |
+| Hook credit | `P:5048-5051` and `experiments/m7/run.js:151-162` | Not D10: it skips goal attempts. `creditMode` stays `'off'` |
+| Verdict-bound writer | None exists | `recordAttempt(u→v)` at the verdict for every attempted legal edge, goal edges included, and `recordSuccess(u→v)` if and only if the verdict is true |
+| `confidenceMap` writes | `P:4666`, `P:4697`, `render/episodeManager.js:1096` | Stay |
+
+**Legacy calls skipped as a side effect of the guard.** These apply to Run C, where credit stays legacy. No guard path edits a credit line. The calls are skipped because they sit inside guard-controlled code.
+
+| Legacy call | Pinned trigger | With guards on and legacy credit | Effect |
+|---|---|---|---|
+| `P:4484` | Every section pass, before the verdict, including later slips and carried non-fresh pairs | Not on a slip (D8) or a non-fresh call (C1) | Fewer attempts are recorded, so the trust ratio (`render/trustMemory.js:94`) changes |
+| `P:4681` | Whenever the section sees `current` equal to the goal, including a carried goal pair | Only on GOAL_OK | Fewer success calls |
+| `render/episodeManager.js:1092` | Through `P:4596`, on the same trigger | Only on GOAL_OK, when sealing stores an episode | Same |
+
+So Run C's trust values have no contract meaning, and Run C is not evidence about trust. Whether `P:4482`'s `agentLast` key survives O2 unchanged is an implementation question.
+
+| Kind | Items |
+|---|---|
+| Contractually specified | Section 17.2's guard behaviours, D10's writer rule, D17b's configuration, legacy credit in Runs A, B and C, no partial guard state, and no contract role for guards off with D10 on |
+| Implementation artifact, not yet existing | The guard switch, the credit switch, the derived tree, the verdict-bound writer, line tags and the TC-2 driver |
+| Validation obligation, not yet met | AC13, AC14, AC23, AC43, AC46, AC48 and Section 17.3's static audit |
+
+No separation is implemented, and none is claimed.
+
+### 18.2 FZ-2: parity reliability
+
+Ruling. E1 (`world.p1`) is selected as the provisional parity reliability configuration. Its exact value and source are recorded. Runs A, B and C must use the same value and relevant environment settings. Existing development records may justify this operationally, but they are not experimental evidence.
+
+E1 is not one number. It is one 39-entry vector per world, with one value per connection entry.
+
+**Source chain.**
+1. `pOf(world, 'E1')` returns `world.p1` (`experiments/coga/acq1/states.mjs:32`).
+2. `world.p1` is `cfg.pPhase1` (`experiments/coga/acq1/states.mjs:37`).
+3. `cfg.pPhase1` is `phaseP(1)` (`experiments/m7/env.js:195`).
+4. 13 entries come from `P_UNRELIABLE`, [0.25, 0.45], and the rest from `P_RELIABLE`, [0.90, 1.00] (`experiments/m7/env.js:39-41`).
+5. Every draw comes from `makeRng(configSeed)` (`experiments/m7/env.js:165`).
+
+**Exact values.** Each digest is the SHA-256 of `JSON.stringify(p1)`. They come from the pure generator `makeConfig`, which involves no agent or session. Each accepted seed needed no rejected candidate.
+
+| Index | World id | Configuration seed | Goal | Agent seed | `p1` digest |
+|---|---|---|---|---|---|
+| 0 | `acq1:study:0` | 200116 | 8 | 4116527659 | `3e8a7e202c7c35457684f2ac9300ac06b13634df63617c84662a0f1103715022` |
+| 1 | `acq1:study:1` | 200183 | 12 | 1642598397 | `2437217e3321f3dce4992a9ef8a64170b2351154f702a15ce32ba892657662bf` |
+| 2 | `acq1:study:2` | 200220 | 16 | 256277329 | `e138e5fb13208e856277e2da5316006749488bf195f51603975315cb4b1baee0` |
+| 3 | `acq1:study:3` | 200247 | 19 | 2520311170 | `3659be98a12796dd82433c78d0e2429d820f0f6460fbf60df66b40d821a7011f` |
+| 4 | `acq1:study:4` | 200316 | 8 | 2617527169 | `a2d0bae13c54ee5e4b0aca729033f804e63395835102a1aa2d53da63ac53681f` |
+| 5 | `acq1:study:5` | 200388 | 12 | 1555039877 | `1c4771d53c85a8ac0cc0eabf82a1453dec8fc71b48bd2128beeee7ac5d16393b` |
+| 6 | `acq1:study:6` | 200404 | 16 | 627950916 | `c78703a0bc8a21628a284d1f4f7aea2f2b858314aa8a27fe6e435e5324a22377` |
+| 7 | `acq1:study:7` | 200489 | 19 | 1954455128 | `deaa5237a8cd1d047f6dec94c001da342bcee040a9b5b117e74587629f732d93` |
+| 8 | `acq1:study:8` | 200531 | 8 | 1000534474 | `c35fa5c2c1ba43a61c646bb96dde1b832d8c17d9b3b82c80f382683e867a23b9` |
+| 9 | `acq1:study:9` | 200710 | 12 | 905587362 | `5543517f1c35339d04d41e2361bfdf129ddcdc2e524f30771b0f6d5a5b0ca92c` |
+
+**Runs A, B and C.** This is checked by reading source, not by a run. All three use the same `world.p1`, the same per-edge streams (`experiments/coga/rngid.mjs:35`), the same verdict form (`experiments/coga/acq1/env.mjs:29`) and Section 17.6's other fields. One difference is intended: goal edges reach the environment only in Run C (`P:5025`), which is why B against C compares `u(e,j)` only for pairs both runs reach.
+
+Limitation: this environment code is an ACQ-1 file and does not govern TC-2. A TC-2 driver must reproduce the same values and streams.
+
+### 18.3 FZ-3: parity agent id
+
+Ruling. `MFW-P` is selected provisionally. Its existence in the pinned tree is to be verified and its exact source recorded. All three runs must use the same agent id and equivalent relevant configuration.
+
+**Verification result: `MFW-P` does not exist in the pinned tree.** A search of the whole pinned tree finds no match, and its `experiments` folder holds only `exec_influence`, `m7` and `phase1_0`. The id is a driver input. It is built in the repository at `experiments/coga/acq1/session_mfw.mjs:93` from variant `P` (`:8`), and it is named at `experiments/coga/acq1/DESIGN.md:40`. The pinned tree neither defines nor reads it.
+
+Section 17.6's phrase "the pinned tree's id" was wrong, and this section corrects it. Variant P runs on the pinned tree, but the id is not part of that tree.
+
+The selection stands as ruled. The id's only role found is the agent stream identity (`experiments/coga/acq1/session_mfw.mjs:94`), whose fields are study `COG-A`, version 1, world, agent, condition `E1` and purpose `agent` (`experiments/coga/rngid.mjs:13-14`, `:37`). A TC-2 driver must keep those fields, or the seeds in Section 18.2 no longer apply. The Director's verification condition is not met as worded, so this is a recorded limitation.
+
+### 18.4 FZ-4: T9
+
+Ruling. The T9 correction is retained. It covers every applicable Q-write path and records the reward input each path actually uses. The original wording and traceability are preserved, and D14 stays consistent. No runtime validation is implied.
+
+**Why the correction is necessary.** T9's original wording names one reward input for all Q writes. Source has two: `rewardSignal` feeds the main TD write (`P:4176`, `P:4357`), and the causal reward feeds every write at `render/episodeManager.js:1003`. CL-A records that difference, C4 permits replay writes at that line, and Ruling A keeps the commit write. Read literally, the original T9 would contradict all three.
+
+**Status.** Section 17.5's corrected wording governs, and the flag raised in D-041 is lifted. The original wording stays in Section 6.2, Section 4's D14 row and D-041. D14's first sentence is unchanged, and its second sentence applies to the main TD write, as Section 4's reading note states. AC40 tests this and is unrun.
+
+### 18.5 FZ-5: D12a
+
+Ruling. The reported missing coverage is resolved before a documentation freeze is proposed. D12a is traced to its binding requirement and source evidence. Where a criterion is required, the smallest precise one is added, with the evidence that would satisfy it.
+
+**Trace.** D12a states: "`updateBehavior` stays at its existing place on every call where `lastDecision` exists". Section 6.1 places it at step 6. C7 leaves it to D12a, and AC37 excludes it. The only call is `P:3544`, under the condition at `P:3493`. `lastDecision` is written at `P:685`, `P:2532` and `P:4872`, so it persists across calls and also reaches replay-branch calls.
+
+**Why a criterion is required.** D12a is a behavioural requirement. Step 7 ends a non-fresh call immediately after step 6, so a derived tree could exit one step early and skip `updateBehavior`, and no criterion would notice. AC23's off-state parity says nothing about the guards-enabled path.
+
+| ID | Text | Type | Note |
+|---|---|---|---|
+| AC49 | On every call where `lastDecision` exists with a `best` entry, `updateBehavior` runs exactly once, at contract step 6, non-fresh calls included. On any other call it does not run | U | D12a. Runs in Configuration V |
+
+"With a `best` entry" mirrors the existing condition at `P:3493`, so D12a's scope does not change.
+
+**Evidence that would satisfy it.** Spy fixtures on a derived tree: a fresh call, a replay-branch call with a carried `lastDecision`, and a call after a goal reset with `lastDecision` null, each with its exact call count. AC49 says nothing about the effect of `updateBehavior`, which stays unmeasured.
+
+**D6.** No criterion is appropriate. D6 selects a baseline identity and is not a behaviour. Section 9's hash match checks it as a precondition before AC23.
+
+No reported coverage gap remains as wording. Coverage is not a result.
+
+### 18.6 FZ-6: verification reproducibility
+
+Ruling. Whether the scratch-only gate prevents a defensible documentation freeze is assessed. A repository-reproducible, read-only documentation check is preferred if it can be added without broadening scope. Otherwise the limitation is documented, and reproducibility is not claimed without demonstration.
+
+**Assessment.** It does weaken a freeze. Nobody else could rerun the checks, so the evidence rested on a report. Semantic review cannot be automated, but the mechanical part can be repeated.
+
+**Decision.** `experiments/tc2/verify_contract.mjs` is added, following the repository's `verify_` naming.
+- It uses Node built-ins only, opens files for reading only, writes nothing and uses no network or git.
+- By default it imports no application or experiment module.
+- `--pinned <dir>` adds the pinned hashes and hook lines.
+- `--derive` also recomputes Section 18.2's digests by calling the pure generator `makeConfig`.
+
+| Kind | Coverage |
+|---|---|
+| Mechanical, repeated by the script | Pinned decision and contract text, structure, `P:n` and file references, listed source claims, the Q-writer set, seeds, open markers, non-executable status, and no recorded pass |
+| Semantic, not repeated by the script | Whether a ruling is sensibly worded, whether an inference is sound, whether a criterion is adequate, and whether a source reading is complete |
+
+A pass is FC-7 Category 1 only. It is not a static source check, a runtime test or an experiment. Without `--pinned`, the script checks `P:n` lines through the repository's `main.js` and the Section 14 offsets, and it cannot see the seven hook lines.
+
+Section 17.7's statement that the gate is an uncommitted scratch script no longer applies to these mechanical checks. A clean-clone result belongs to the milestone report, because a commit cannot contain its own post-push result.
+
+### 18.7 Consistency review
+
+| Item | Finding |
+|---|---|
+| D-035 | Respected. No ACQ-1 result is used. Development metadata is used only to identify worlds and seeds |
+| D-036, D-037, D-038 | Unchanged and consistent. Run B is SC-A's "baseline run". M2 stays preferred and unapproved |
+| D-039 | Unchanged. Its proposals took effect only through later rulings |
+| D-040 | Unchanged. Section 16.1's clause list loses D10 |
+| D-041 | Unchanged. The T9 flag is lifted, and two parity fields are selected |
+| AC1 to AC48 | Text unchanged. AC49 is added |
+| [OPEN-T3], [OPEN-DoubleGoal], [OPEN-FreshMech], [OPEN-Budget], [OPEN-A4] | All stay open, because their evidence is missing |
+
+### 18.8 Freeze assessment
+
+**Verdict: READY WITH EXPLICIT LIMITATIONS.** The contract's mandatory definitions are now recorded, provisionally, and no reported coverage gap remains as wording. This verdict does not freeze the contract: that needs a separate Director decision. A documentation freeze would not be a claim of runtime correctness, acceptance or any improvement in the agent.
+
+**Explicit limitations.**
+1. Every ruling is provisional, and the guard definition is approved in principle only.
+2. `MFW-P` is not in the pinned tree, so FZ-3's verification condition is not met as worded.
+3. AC1 to AC49 are unrun, and none is passed. AC23 and AC38 stay non-executable.
+4. All five open markers stay open.
+5. A later AC38 result that returns the coverage boundary to the Director would reopen frozen text.
+6. Source findings apply to the pinned tree and must be re-derived on any derived tree.
+7. D13's objective stays a disclosed limitation. Section 15.9's unrealized-node finding awaits acceptance. A Node version pin stays undecided.
+8. Semantic review has had one reviewer, with no independent review.
+9. `verify_contract.mjs` is mechanical, and it needs `--pinned` to reach the hook lines.
+
+**Blockers to acceptance, not to documentation.**
+
+| Area | Blocker |
+|---|---|
+| Artifacts | Derived tree, guard switch, credit switch, verdict-bound writer, TC-2 driver, per-call rows, attribution table, mutants |
+| AC23 | Baseline rebuild match, all runs, static checks, mutant fixtures |
+| T3, M2, T4 | M2 not approved or implemented, inventory re-derivation, AC10, AC39 |
+| D17b | Section 17.3's evidence list |
+| Budget | Call-level confirmation, future driver, five-call re-derivation |
+| Freshness | Writer list on the tree under test, four assumptions, AC7, AC25 to AC29, AC32 |
+| D16 | Record immutability and unreadability |
+| AC38 | Feasibility study, then acceptance |
 
 Open markers: [OPEN-T3], [OPEN-DoubleGoal], [OPEN-FreshMech], [OPEN-Budget] and [OPEN-A4]. AC23 and AC38 stay open and non-executable. No criterion has been run or passed. TC-2 remains design-only and paused.

@@ -7,6 +7,37 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-042 — TC-2: freeze rulings recorded (documentation only)
+
+**Date:** 2026-11-01 · **Authority:** Research Director TC-2 freeze directive · **Status:** in force as provisional design rulings; no executable effect
+**Scope:** TC-2 design only. Section 18 of `experiments/tc2/TRANSITION_CONTRACT.md` holds the full wording. That directive's rulings 1 to 6 are recorded as FZ-1 to FZ-6.
+
+**Decision.**
+- FZ-1: the narrow guard definition is approved in principle, with D10 credit behaviour controlled separately. The separation is not implemented, and none is claimed.
+- FZ-2: E1 (`world.p1`) is the provisional parity reliability configuration. It is one 39-entry vector per world, recorded by digest with its source chain.
+- FZ-3: `MFW-P` is the provisional parity agent id. Verification found that it does not exist in the pinned tree. It is a driver input built at `experiments/coga/acq1/session_mfw.mjs:93`. This corrects the phrase "the pinned tree's id" in Section 17.6.
+- FZ-4: the T9 correction is retained, and the flag raised in D-041 is lifted. The original wording stays in the contract and in D-041.
+- FZ-5: AC49 is adopted for D12a. D6 gets no criterion, because it is an identity precondition and not a behaviour.
+- FZ-6: `experiments/tc2/verify_contract.mjs` is added as a read-only, mechanical documentation check.
+
+**Findings recorded.**
+- With guards on and legacy credit, the guard skips some legacy trust calls as a side effect, so Run C's trust values have no contract meaning.
+- Freeze verdict: READY WITH EXPLICIT LIMITATIONS. Section 18.8 lists them. This verdict does not freeze the contract.
+
+**Limits.**
+- D-035, D-036, D-037, D-038, D-039, D-040 and D-041 stay as written. Section 18 updates the contract's Sections 13 to 17 where they differ.
+- These rulings settle configuration intent only. They do not authorize parity execution or establish a passing result.
+- No open marker is closed. `[OPEN-T3]`, `[OPEN-DoubleGoal]`, `[OPEN-FreshMech]`, `[OPEN-Budget]` and `[OPEN-A4]` stay open.
+- AC23 and AC38 stay open and non-executable. No acceptance criterion has been run or passed.
+- Both existing Q-write paths stay unchanged. M2 is not approved for implementation. T4 stays distinct from T3.
+- ACQ-1 remains VOID under D-035 and is not evidence for this contract.
+- TC-2 remains design-only and paused. The contract is not frozen.
+- This entry authorizes no implementation, test, experiment, instrumentation, feasibility study, build or runtime work.
+- It supports no claim about learning, reliability, transfer, planning, mechanism performance or cognition.
+- Source tracing is not runtime verification.
+
+---
+
 ## D-041 — TC-2: clarification rulings and coverage amendments recorded (documentation only)
 
 **Date:** 2026-11-01 · **Authority:** Research Director TC-2 clarification directive · **Status:** in force as provisional design rulings; no executable effect
