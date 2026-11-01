@@ -7,6 +7,34 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-043 — TC-2: documentation freeze of the contract, with explicit limitations (documentation only)
+
+**Date:** 2026-11-01 · **Authority:** Research Director decision approving documentation freeze · **Status:** in force; no executable effect
+**Scope:** TC-2 design only. Section 19 of `experiments/tc2/TRANSITION_CONTRACT.md` holds the full wording.
+
+**Decision.**
+- The current TC-2 contract is frozen as a specification baseline, with explicit limitations. The baseline is the contract and this log at the commit that adds this entry.
+- This freezes the specification baseline only. New source evidence or runtime findings may require a documented amendment and renewed review.
+- E1 (`world.p1`) stays selected. Its derivation and digests are reproducibility metadata, not parity evidence.
+- `MFW-P` is the TC-2 driver-provided identifier. The pinned tree neither defines nor reads it, and the original pinned-tree verification condition did not pass. It affects seed derivation and not configuration.
+- AC49 stays adopted, open and unrun, and its derived-tree fixtures stay future evidence obligations.
+- Guard behaviour and D10 credit configuration stay distinct as a frozen design decision. The separation is not implemented, and legacy side effects stay validation obligations.
+- `experiments/tc2/verify_contract.mjs` stays the reproducible documentation check. Mechanical validation, semantic review and runtime evidence stay separate.
+
+**Limits.**
+- This is not runtime acceptance, experiment authorization, independent validation or a claim of cognitive improvement.
+- D-035, D-036, D-037, D-038, D-039, D-040, D-041 and D-042 stay as written. Their statements that the contract is not frozen record the state at their own date.
+- No open marker is closed. `[OPEN-T3]`, `[OPEN-DoubleGoal]`, `[OPEN-FreshMech]`, `[OPEN-Budget]` and `[OPEN-A4]` stay open.
+- AC1 to AC49 stay open and unrun. AC23 and AC38 stay open and non-executable. No acceptance criterion has been run or passed.
+- Both existing Q-write paths stay unchanged. M2 is not approved for implementation. T4 stays distinct from T3.
+- ACQ-1 remains VOID under D-035 and is not evidence for this contract.
+- TC-2 remains design-only and paused.
+- This entry authorizes no implementation, test, parity run, feasibility work, experiment, instrumentation, build or runtime work.
+- It supports no claim about learning, reliability, transfer, planning, mechanism performance or cognition.
+- Source tracing is not runtime verification.
+
+---
+
 ## D-042 — TC-2: freeze rulings recorded (documentation only)
 
 **Date:** 2026-11-01 · **Authority:** Research Director TC-2 freeze directive · **Status:** in force as provisional design rulings; no executable effect

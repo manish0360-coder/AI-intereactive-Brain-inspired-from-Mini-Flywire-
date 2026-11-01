@@ -1,6 +1,6 @@
 # TC-2 Transition Contract: Provisional Record
 
-**Status: PROVISIONAL. NOT FROZEN.** Subject to final contract review.
+**Status: DOCUMENTATION FROZEN AS A SPECIFICATION BASELINE, WITH EXPLICIT LIMITATIONS (D-043, Section 19).** This is not runtime acceptance, experiment authorization or independent validation.
 
 - ACQ-1 is VOID under D-035 and is not evidence for this contract.
 - TC-2 is design-only and paused.
@@ -49,7 +49,8 @@ Provenance note: Review Copy 2 and all rulings below were made in the design con
 | Freeze-readiness assessment (D-039) | PROPOSED, not ruled. Section 15 holds it. Verdict: NOT READY FOR FREEZE REVIEW |
 | FR-A to FR-G (D-040) | DIRECTOR RULING, provisional. Section 16 holds them and the acceptance traceability. Freeze-gate verdict: NOT READY FOR DOCUMENTATION FREEZE |
 | FC-1 to FC-7 (D-041) | DIRECTOR RULING, provisional. Section 17 holds them, the adopted criteria AC39 to AC48 and the verdict at that date: NOT READY FOR DOCUMENTATION FREEZE |
-| FZ-1 to FZ-6 (D-042) | DIRECTOR RULING, provisional. Section 18 holds them, AC49 and the current verdict: READY WITH EXPLICIT LIMITATIONS. The contract is not frozen |
+| FZ-1 to FZ-6 (D-042) | DIRECTOR RULING, provisional. Section 18 holds them, AC49 and the verdict at that date: READY WITH EXPLICIT LIMITATIONS |
+| Documentation freeze (D-043) | DIRECTOR DECISION. Section 19 holds it. Frozen as a specification baseline, with explicit limitations. No criterion or open marker is closed |
 | Gemini overall NOT READY verdict | Rejected as insufficiently supported. This does not independently prove the contract correct. Its useful verification ideas are preserved |
 
 ## 1. Baseline identity (PROVISIONAL APPROVAL, D6)
@@ -543,7 +544,7 @@ Markers provisionally ruled, subject to final contract review:
 
 ## 12. What this record does not do
 
-- It does not freeze the contract.
+- It does not freeze the contract. Later update: D-043 does, as a specification baseline only (Section 19).
 - It does not change any ACQ-1 record, frozen file, hash, raw record or Git history.
 - It authorizes no new work.
 
@@ -1749,6 +1750,8 @@ The paragraphs marked "Ruling" state the Director's rulings. Everything else is 
 
 This section adds AC49. It changes no text of T1 to T9, the Part D table, D12b or any existing criterion. It closes no open marker. It authorizes no implementation, test, run, instrumentation or feasibility study. No criterion has been run or passed, and the contract is not frozen. Line references follow Section 14's rule. Source trace is not runtime evidence.
 
+Later update: Section 19 (D-043) records the Director's documentation freeze and governs where the two differ. D-042 records the state at its own date.
+
 ### 18.1 FZ-1: guard definition and D10
 
 Ruling. The narrow guard definition is approved in principle, with D10 credit behaviour controlled separately. The exact guard boundaries and D10 writer behaviour are traced to the pinned source. The separation is not claimed to be implemented.
@@ -1916,3 +1919,52 @@ Section 17.7's statement that the gate is an uncommitted scratch script no longe
 | AC38 | Feasibility study, then acceptance |
 
 Open markers: [OPEN-T3], [OPEN-DoubleGoal], [OPEN-FreshMech], [OPEN-Budget] and [OPEN-A4]. AC23 and AC38 stay open and non-executable. No criterion has been run or passed. TC-2 remains design-only and paused.
+
+## 19. Documentation freeze (DIRECTOR DECISION; D-043)
+
+Decision. The Research Director approves documentation freeze of the current TC-2 contract as a specification baseline, with explicit limitations. This is not runtime acceptance, experiment authorization or a claim of cognitive improvement.
+
+The baseline is this contract and the decision log at the commit that adds D-043. `experiments/tc2/verify_contract.mjs` pins their text. Where this section differs from an earlier one, this section governs.
+
+### 19.1 Freeze semantics
+
+- This freezes the current specification baseline only.
+- New source evidence or runtime findings may require a documented amendment and renewed review. An amendment needs a new decision entry and updated pins.
+- The freeze authorizes no implementation, test, parity run, feasibility work or experiment.
+- It does not imply that the contract has been independently validated, or that it is correct.
+- Every item keeps its recorded status label. The freeze upgrades no provisional item.
+- Earlier statements that the contract is not frozen record the state at their own date.
+
+### 19.2 Frozen clarifications
+
+**E1.** E1 (`world.p1`) stays the selected parity reliability configuration. Section 18.2's derivation and digests are reproducibility metadata: they identify the values a run must use. They are not parity evidence.
+
+**`MFW-P`.** `MFW-P` is the TC-2 driver-provided identifier. No TC-2 driver exists yet, so it is a value a future driver must supply. The pinned application tree neither defines nor reads it, and the original pinned-tree verification condition did not pass.
+- Role in evidence records: it names the agent in each session record and in that record's stream identity, as the ACQ-1 driver does (`experiments/coga/acq1/session_mfw.mjs:118`, `:120`).
+- Seed derivation: yes. It is a field of the agent stream identity (`experiments/coga/acq1/session_mfw.mjs:94`), so a different id gives a different seed, and Section 18.2's seeds would no longer apply.
+- Configuration: no. The id selects no tree, hook state, credit, guard, world or reliability value. In the ACQ-1 driver those follow from the variant and world inputs, and the id is only derived from the variant (`experiments/coga/acq1/session_mfw.mjs:40`, `:93`).
+
+**AC49.** AC49 stays adopted, open and unrun. Its derived-tree fixtures stay future evidence obligations: a fresh call, a replay-branch call with a carried `lastDecision`, and a call after a goal reset.
+
+**Guard and D10.** The design decision is frozen: guard behaviour and D10 credit configuration are distinct. The separation is not implemented. Section 18.1's legacy side effects stay validation obligations, to be shown on a derived tree and not assumed.
+
+**Verification.** `experiments/tc2/verify_contract.mjs` stays the reproducible documentation check.
+
+| Check | Default | `--pinned <dir>` | `--derive` |
+|---|---|---|---|
+| Pinned text, structure, `P:n` lines through the repository's `main.js`, file references, listed source claims, Q-writer set, seed recomputation, status rules | Yes | Yes | Yes |
+| The seven hook lines, `P:n` equality with the pinned tree, pinned hashes, the two guard-hook claims, `MFW-P` absent from pinned `main.js`, no `coga` folder in the pinned tree | No | Yes | No |
+| Accepted seeds, goals and `p1` digests | No | No | Yes |
+| The git-ignored development record cited in Section 14.2 | No | No | No |
+
+| Kind | What it is | Status |
+|---|---|---|
+| Mechanical validation | What the script repeats. FC-7 Category 1 only | Repeatable from a clone |
+| Semantic review | Whether rulings, inferences and criteria are sound | One reviewer, not independent |
+| Runtime evidence | Any observation of the agent running | None exists |
+
+### 19.3 Preserved limitations
+
+Section 18.8's limitations and blockers all stand, apart from its statement that the contract is not yet frozen. All runtime, derived-tree and experimental prerequisites stay outstanding. This freeze closes no open marker and no acceptance criterion.
+
+Open markers: [OPEN-T3], [OPEN-DoubleGoal], [OPEN-FreshMech], [OPEN-Budget] and [OPEN-A4]. AC1 to AC49 stay open and unrun. AC23 and AC38 stay open and non-executable. No criterion has been run or passed. TC-2 remains design-only and paused.

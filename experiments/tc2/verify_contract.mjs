@@ -56,6 +56,7 @@ const PINS = {
   'decision:D-040': 'd03348d1a1545e63ffb06f533396dcba033f0c4bb15f10be36d57ac8d724cd59',
   'decision:D-041': '45ec787335edd310ed9a905ad5a88072ae8ea7d5622fe1e06ec1f39795b633ad',
   'decision:D-042': '5410b5a6731de4c04e8ea93c59d76b14bd4e2d10188071248bc8eca8326b3950',
+  'decision:D-043': '50b6c9289e303e3b8b1a1c302a618a20877d6012eb9b7a7f2b2843878d053fed',
   'section:1': '08519cbc1b9c6f3e1b3dfa8426d1dc35cb47dbd0453040bc503dedad1cae2314',
   'section:2': 'df2cda186661ba293b8ea12619b2befe0f408b7688de2998b5144d3dad54d815',
   'section:3': 'd608fab817fda53b3894632686db6ce9041325159b1233a1505f142ead93e38a',
@@ -67,13 +68,14 @@ const PINS = {
   'section:9': '3ba334ef9dc1fa6764dce4972381a35977f611f1e166afa7b745ce3d3ed69101',
   'section:10': '90c1fc4b10fb378d9804d2ff80b2aa8a631baf3b85b132d55da25a95a3f10fc2',
   'section:11': 'a7c6147383d6b30841a27a1e15cff80a8c1c918f76cde2bb5104da0e95782fae',
-  'section:12': '6ce076b8f0fc9bd28a34f62562bc25b432d7f748774432d52e444c812b82692b',
+  'section:12': '1e6bde285f6d838385ca8b4e93d7c37953531851e42f8e0ac1bfffc09913cee2',
   'section:13': 'c3a7f3a3af7547959687bcc9423a82317ec27cffdeb4b5d39cb5f53c589afe6e',
   'section:14': '754d71cedd94565baa7acb26771762e41c725367acd83e22a66edee46eca9e2a',
   'section:15': 'a6abebf9ce27a5b37cd7096e511d38042454b84201d3c5695d67dfbb9b0c939a',
   'section:16': '15f2bc91759f6faaf05e3f385ca001e9242c37420ec5ae3587ba7b2eef585a00',
   'section:17': '806483d8ed80c02b7a8cf4c4c4a45455d147a2ba455b07d42fc279cebece6f76',
-  'section:18': '8db43fa617f2e8dac7c275ae44d61e8c3c4c42f9a33a3597ca7c28b4c6cb0d66',
+  'section:18': '4c5a322a22a5130e4acb614b374c48a3fb285aa14a783d5174586b728706a22b',
+  'section:19': 'c4da4554533ade81e035e48dd07729260a57d9e604a4d4b5ae67894ebc77172a',
 };
 
 // ---- helpers ----
@@ -99,8 +101,8 @@ const decisionOf = (id) => {
   const i = decisions.indexOf(`## ${id} `); if (i < 0) return '';
   const j = decisions.indexOf('\n## D-', i + 1); return j < 0 ? decisions.slice(i) : decisions.slice(i, j + 1);
 };
-const DECISION_IDS = ['D-035', 'D-036', 'D-037', 'D-038', 'D-039', 'D-040', 'D-041', 'D-042'];
-const SECTION_IDS = Array.from({ length: 18 }, (_, i) => i + 1);
+const DECISION_IDS = ['D-035', 'D-036', 'D-037', 'D-038', 'D-039', 'D-040', 'D-041', 'D-042', 'D-043'];
+const SECTION_IDS = Array.from({ length: 19 }, (_, i) => i + 1);
 
 if (printPins) {
   const out = {};
@@ -122,12 +124,12 @@ const P = (n) => (hookSet.has(n) ? (pinMain ? pinMain[n - 1] : null) : rootMain[
 start('H');
 for (const id of DECISION_IDS) check(`${id} matches its pin`, PINS[`decision:${id}`] === sha(decisionOf(id)));
 for (const n of SECTION_IDS) check(`section ${n} matches its pin`, PINS[`section:${n}`] === sha(sectionOf(n)));
-check('contract header states not frozen', contract.includes('**Status: PROVISIONAL. NOT FROZEN.**'));
+check('contract header states the freeze and its limits', contract.includes('**Status: DOCUMENTATION FROZEN AS A SPECIFICATION BASELINE, WITH EXPLICIT LIMITATIONS (D-043, Section 19).** This is not runtime acceptance, experiment authorization or independent validation.'));
 
 // ---- S structure ----
 start('S');
 const heads = [...contract.matchAll(/^## (\d+)\. /gm)].map((m) => +m[1]);
-check('sections 1 to 18 in order', JSON.stringify(heads) === JSON.stringify(SECTION_IDS));
+check('sections 1 to 19 in order', JSON.stringify(heads) === JSON.stringify(SECTION_IDS));
 const ids = [...decisions.matchAll(/^## D-(\d{3})/gm)].map((m) => +m[1]);
 check('decision ids unique', new Set(ids).size === ids.length);
 check('newest decision first', ids[0] === Math.max(...ids));
@@ -137,7 +139,7 @@ check('AC1 to AC38 in Section 7', JSON.stringify(acNumbers(s7)) === JSON.stringi
 check('AC39 to AC48 in Section 17.8', JSON.stringify(acNumbers(between(contract, '### 17.8 Adopted criteria', '### 17.9 '))) === JSON.stringify(Array.from({ length: 10 }, (_, i) => i + 39)));
 check('AC49 in Section 18.5', JSON.stringify(acNumbers(between(contract, '### 18.5 FZ-5', '### 18.6 '))) === '[49]');
 check('no AC beyond AC49', !/\bAC(5\d|[6-9]\d)\b/.test(contract));
-for (const n of [14, 15, 16, 17, 18]) {
+for (const n of [14, 15, 16, 17, 18, 19]) {
   let bad = 0, cols = null;
   for (const l of sectionOf(n).split('\n')) { if (l.startsWith('|')) { const c = l.split('|').length; if (cols === null) cols = c; else if (cols !== c) bad++; } else cols = null; }
   check(`section ${n} tables have consistent columns`, bad === 0, `bad=${bad}`);
@@ -208,6 +210,7 @@ const claims = [
   ['reliability ranges', /N_UNRELIABLE += 13/.test(L(ENVF, 39)) && /P_UNRELIABLE += \[0\.25, 0\.45\]/.test(L(ENVF, 40)) && /P_RELIABLE += \[0\.90, 1\.00\]/.test(L(ENVF, 41)) && /makeRng\(configSeed >>> 0\)/.test(L(ENVF, 165))],
   ['verdict form', /this\.slip\[e\]\(\) < this\.p\[e\]/.test(L('experiments/coga/acq1/env.mjs', 29))],
   ['agent id', /agentId = `MFW-\$\{IN\.variant\}`/.test(L(ACQ, 93)) && /streamSeed\(agentStream\(world\.id, agentId, IN\.env\)\)/.test(L(ACQ, 94)) && /variant 'P'/.test(L(ACQ, 8)) && /\*\*MFW-P\*\*/.test(L('experiments/coga/acq1/DESIGN.md', 40))],
+  ['agent id in evidence records', /agent: agentId/.test(L(ACQ, 118)) && /identity: agentStream\(world\.id, agentId, IN\.env\)/.test(L(ACQ, 120)) && /const VARIANTS = \{ P: \{ hooks: MFW_HOOKS/.test(L(ACQ, 40)) && lines(ACQ).filter((l) => /\bagentId\b/.test(l)).length === 4],
   ['stream identity', /STUDY = 'COG-A'/.test(L('experiments/coga/rngid.mjs', 13)) && /VERSION = 1/.test(L('experiments/coga/rngid.mjs', 14)) && /agentStream = /.test(L('experiments/coga/rngid.mjs', 37)) && /envSlip = /.test(L('experiments/coga/rngid.mjs', 35))],
   ['clock and hook state', /VIRTUAL/.test(L('experiments/coga/config.mjs', 33)) && /creditMode: 'off'/.test(L('experiments/coga/config.mjs', 32))],
 ];
@@ -253,16 +256,16 @@ if (derive) {
 start('T');
 const markers = between(contract, 'Open markers:', 'Recorded unresolved:');
 const ruled = between(contract, 'Markers provisionally ruled', '## 12.');
-const s18 = sectionOf(18), d42 = decisionOf('D-042');
-const closing = s18.slice(s18.lastIndexOf('Open markers:'));
+const s18 = sectionOf(18), d42 = decisionOf('D-042'), s19 = sectionOf(19), d43 = decisionOf('D-043');
+const closing = s19.slice(s19.lastIndexOf('Open markers:'));
 for (const m of ['T3', 'DoubleGoal', 'FreshMech', 'Budget', 'A4']) {
-  check(`[OPEN-${m}] is listed open`, markers.includes(`- [OPEN-${m}]:`) && closing.includes(`[OPEN-${m}]`) && d42.includes(`[OPEN-${m}]`));
+  check(`[OPEN-${m}] is listed open`, markers.includes(`- [OPEN-${m}]:`) && closing.includes(`[OPEN-${m}]`) && d43.includes(`[OPEN-${m}]`));
   check(`[OPEN-${m}] is not in the ruled table`, !ruled.includes(`[OPEN-${m}]`));
 }
 check('AC23 and AC38 notes stay not executable', /^\| AC23 .*not executable/m.test(s7) && /^\| AC38 .*not executable/m.test(s7));
-check('AC23 and AC38 stay non-executable in the closing status', closing.includes('AC23 and AC38 stay open and non-executable') && d42.includes('AC23 and AC38 stay open and non-executable'));
-check('no criterion run or passed', closing.includes('No criterion has been run or passed') && d42.includes('No acceptance criterion has been run or passed'));
-const recorded = [13, 14, 15, 16, 17, 18].map(sectionOf).join('\n') + DECISION_IDS.slice(1).map(decisionOf).join('\n');
+check('AC23 and AC38 stay non-executable in the closing status', closing.includes('AC23 and AC38 stay open and non-executable') && d43.includes('AC23 and AC38 stay open and non-executable'));
+check('no criterion run or passed', closing.includes('No criterion has been run or passed') && closing.includes('AC1 to AC49 stay open and unrun') && d43.includes('No acceptance criterion has been run or passed'));
+const recorded = [13, 14, 15, 16, 17, 18, 19].map(sectionOf).join('\n') + DECISION_IDS.slice(1).map(decisionOf).join('\n');
 check('no criterion is recorded as passed', !/\bAC\d+\b[^.\n|]*\b(has passed|was passed|is passed)\b/.test(recorded.replaceAll('AC1 to AC49 are unrun, and none is passed', '')));
 check('verdict is consistent', s18.includes('**Verdict: READY WITH EXPLICIT LIMITATIONS.**') && d42.includes('READY WITH EXPLICIT LIMITATIONS') && /FZ-1 to FZ-6 \(D-042\).*READY WITH EXPLICIT LIMITATIONS/.test(contract));
 check('the verdict does not freeze the contract', s18.includes('This verdict does not freeze the contract') && d42.includes('The contract is not frozen'));
@@ -271,7 +274,13 @@ check('T9 history is preserved', contract.includes(`**T9.** ${t9}`) && decisionO
 check('T4 stays separate from T3', d42.includes('T4 stays distinct from T3'));
 check('both Q-write paths stay', d42.includes('Both existing Q-write paths stay unchanged'));
 check('no separation is claimed', s18.includes('No separation is implemented, and none is claimed'));
-check('MFW-P limitation is recorded', s18.includes('`MFW-P` does not exist in the pinned tree') && d42.includes('does not exist in the pinned tree'));
+check('MFW-P limitation is recorded', s18.includes('`MFW-P` does not exist in the pinned tree') && s19.includes('the original pinned-tree verification condition did not pass') && d43.includes('did not pass'));
+check('freeze is a specification baseline only', s19.includes('This freezes the current specification baseline only') && d43.includes('This freezes the specification baseline only'));
+check('freeze allows amendment', s19.includes('may require a documented amendment and renewed review') && d43.includes('may require a documented amendment and renewed review'));
+check('freeze authorizes nothing and validates nothing', s19.includes('The freeze authorizes no implementation, test, parity run, feasibility work or experiment') && s19.includes('independently validated') && d43.includes('This entry authorizes no implementation'));
+check('freeze closes nothing', s19.includes('This freeze closes no open marker and no acceptance criterion') && d43.includes('No open marker is closed'));
+check('E1 metadata is not parity evidence', s19.includes('reproducibility metadata') && s19.includes('They are not parity evidence') && d43.includes('reproducibility metadata, not parity evidence'));
+check('guard separation is not implemented', s19.includes('The separation is not implemented') && d43.includes('The separation is not implemented'));
 
 // ---- report ----
 for (const f of failures) console.log(`FAIL  ${f}`);
