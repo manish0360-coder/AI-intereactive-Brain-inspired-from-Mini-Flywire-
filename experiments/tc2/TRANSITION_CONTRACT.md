@@ -45,6 +45,7 @@ Provenance note: Review Copy 2 and all rulings below were made in the design con
 | CL-C, CL-D | ACCEPTED DECISION |
 | DT3 | DIRECTOR RULING: DEFER. [OPEN-T3] stays open. Ruling B (Section 13) states a preferred design direction and closes nothing |
 | Rulings A to F (D-037) | DIRECTOR RULING, provisional. Section 13 holds them. Every open item they name stays open |
+| SC-A to SC-E (D-038) | DIRECTOR RULING, provisional. Section 14 holds them and the source-closure record. Every open item they name stays open |
 | Gemini overall NOT READY verdict | Rejected as insufficiently supported. This does not independently prove the contract correct. Its useful verification ideas are preserved |
 
 ## 1. Baseline identity (PROVISIONAL APPROVAL, D6)
@@ -356,7 +357,7 @@ The "Note" column is not wholly carried forward. The notes for AC1, AC5, AC6, AC
 | AC20 | Start stream checks; first-call attempts follow Part D | U | None |
 | AC21 | Non-fresh calls count as steps; verdicts ≤ fresh decisions ≤ steps | R | [OPEN-Budget] |
 | AC22 | Same seed and fixture give identical logs, clock excluded | R | Needs deterministic replay cooldown |
-| AC23 | Guards-off parity and mutant suite | S, U, R | Parity target OPEN; not executable. Candidate and gaps: Section 13, Ruling C |
+| AC23 | Guards-off parity and mutant suite | S, U, R | Parity target OPEN; not executable. Candidate and gaps: Section 13, Ruling C and Section 14.1 |
 | AC24 | Every attempt maps to one same-call decision; each decision maps to at most one attempt | U | None |
 | AC25 | Slip on call t, replay on t+1: no attempt on t+1; edge attempt index unchanged | U | None |
 | AC26 | Success on call t, replay on t+1: the environment is not called, and no transition pass occurs for call t's move. Replay training and scheduled maintenance may still change Q | U | None |
@@ -371,7 +372,7 @@ The "Note" column is not wholly carried forward. The notes for AC1, AC5, AC6, AC
 | AC35 | EDGE_SLIP and GOAL_SLIP rows record reward `none`. No reward consumer receives a `rewardSignal` value for that attempt | U | None |
 | AC36 | No agent decision receives a D5 map-oracle output | S, R | None |
 | AC37 | On a replay-branch call, the replay pipeline performs only the operations specifically permitted by C4. C5 operations and `updateBehavior` are outside this check | U | None |
-| AC38 | See below | U, R | Executability OPEN; not executable. See also Section 13, Ruling D |
+| AC38 | See below | U, R | Executability OPEN; not executable. See also Section 13, Ruling D and Section 14.5 |
 
 Type: S static, U unit or fixture, R runtime integration.
 
@@ -495,15 +496,15 @@ Prohibited without new evidence:
 ## 11. Open limitations (OPEN LIMITATION)
 
 Open markers:
-- [OPEN-T3]: terminal-bootstrap mechanism. DT3 is DEFER. Under Ruling B (Section 13), M2 is the preferred provisional design direction. M2 is not approved for implementation, and M1 is not adopted. Closure requires complete coverage of how a Q entry for `k(g)` could be created or become available, including replay, maintenance, persistence and restoration, other writers, and goal identity and lifecycle.
+- [OPEN-T3]: terminal-bootstrap mechanism. DT3 is DEFER. Under Ruling B (Section 13), M2 is the preferred provisional design direction. M2 is not approved for implementation, and M1 is not adopted. Closure requires complete coverage of how a Q entry for `k(g)` could be created or become available, including replay, maintenance, persistence and restoration, other writers, and goal identity and lifecycle. Section 14.3 records that coverage at source level for the pinned tree. That does not close this marker, and the reasons it stays open are stated there.
 - [OPEN-DoubleGoal]: whether the main TD write and the commit write should both persist on GOAL_OK, and which of them should own the goal edge. Neither is removed meanwhile, and neither CL-A nor Ruling A (Section 13) decides this.
-- [OPEN-FreshMech]: how freshness is determined. Under Ruling E (Section 13), `lastReasoning` object identity is the leading candidate. It is not approved.
-- [OPEN-Budget]: budget unit and attempts-per-step asymmetry. See Ruling F (Section 13).
-- [OPEN-A4]: categories of operations D12b does not name. Ruling F (Section 13) lists the gap.
+- [OPEN-FreshMech]: how freshness is determined. Under Ruling E (Section 13) and SC-E (Section 14.5), `lastReasoning` object identity is the leading candidate. It is not approved.
+- [OPEN-Budget]: budget unit and attempts-per-step asymmetry. See Ruling F (Section 13). SC-B (Section 14.2) sets study steps as the primary unit and records what remains unresolved.
+- [OPEN-A4]: categories of operations D12b does not name. Ruling F (Section 13) lists the gap. Section 14.4 holds a proposed classification, which is not ruled.
 
 Recorded unresolved:
 - AC38 executability, including the test-access and stream-delta mechanisms.
-- AC23's parity target, including the meaning of "guards" (Section 13, Ruling C).
+- AC23's parity target, including what code the guard switch controls (Section 14.1).
 - The gate objective.
 - Whether unrealized nodes reach stored episodes in the current implementation.
 - Root behaviour and root-tree inventory.
@@ -541,6 +542,8 @@ Rulings A to F come from the Research Director's TC-2 end-to-end contract direct
 The paragraphs marked "Ruling" state the Director's rulings. Everything else in this section is reconciliation wording: it records how the rulings fit this contract, and it is not a further ruling. "Source trace" lines use the pinned tree unless stated, and they are not runtime evidence.
 
 This section changes no text of T1 to T9, the Part D table or any acceptance criterion. It closes no open marker. It authorizes no implementation, test, run, instrumentation or feasibility study. No criterion has been run or passed.
+
+Later update: Section 14 (D-038) updates this section where the two differ. This applies to the "Guards" and "Mutant suite" rows of Ruling C, and to Ruling F's statements that no ruling sets the budget unit. D-037 records the state at its own date.
 
 ### Ruling A: double-goal writes
 
@@ -657,3 +660,258 @@ A4. D12b names `lastDecision`, `lastReasoning`, `generateExpectation` and `updat
 - Candidate-evaluation writes on a prediction call with no fresh decision, on another tree (C6).
 
 This list records the gap. It classifies nothing.
+
+## 14. Source closure (DIRECTOR RULING, provisional; D-038)
+
+SC-A to SC-E come from the Research Director's TC-2 source-closure directive. That directive calls them Rulings A to E. This record calls them SC-A to SC-E so they are not confused with Section 13's Rulings A to F. This section is their first repository copy.
+
+The paragraphs marked "Ruling" state the Director's rulings. "Proposed" marks text that nobody has ruled on. Everything else in this section is a source finding or reconciliation wording, and it is not a further ruling.
+
+This section changes no text of T1 to T9, the Part D table or any acceptance criterion. It closes no open marker. It authorizes no implementation, test, run, instrumentation or feasibility study. No criterion has been run or passed, and the contract is not frozen. Source coverage is not runtime verification: no application code ran for this review.
+
+Line references. `P:n` is line n of the pinned `main.js`. The same line in the repository's `main.js` is n minus the offset below. `render/*.js` has the same line numbers in both trees, apart from `render/planning.js`, which this section does not cite.
+
+| `P:n` | Offset |
+|---|---|
+| Up to 1153 | 0 |
+| 1155 to 1278 | 1 |
+| 1280 to 1319 | 2 |
+| 1321 to 1791 | 3 |
+| 1793 to 2127 | 4 |
+| 2129 to 3645 | 5 |
+| 3647 to 4866 | 6 |
+| 4868 and above | 7 |
+
+The hook lines `P:1154`, `P:1279`, `P:1320`, `P:1792`, `P:2128`, `P:3646` and `P:4867` exist only in the pinned tree.
+
+### 14.1 SC-A: AC23 guard parity
+
+Ruling. The parity comparison is a baseline run with guards off against a candidate run with guards enabled. All other relevant inputs and configuration are identical, including driver, fixed clock, seeds, development worlds and Hook State P. The guard setting is the intended comparison variable, and no other configuration difference may contaminate the comparison. Parity under Hook State P does not validate the D17b credit-on configuration. Guard parity is not proof that the contract is correct.
+
+AC23's wording stays unchanged. AC23 stays open and not executable. No parity run is authorized, none has run, and parity has not been demonstrated.
+
+**Parity strata.**
+
+| Stratum | Baseline run | Candidate run | Status |
+|---|---|---|---|
+| P | Guards off, Hook State P | Guards enabled, Hook State P | The SC-A target. Not executable |
+| D17b, conditional | Guards off, credit as defined by D10 | Guards enabled, credit as defined by D10 | Applies only if the Director places D17b's configuration within AC23's scope. Neither run can be specified today. It has not run or passed |
+
+Neither stratum stands in for the other. Source trace on why no hook state supplies D10 credit:
+- Hook State P has `creditMode: 'off'` (`experiments/coga/config.mjs:32`), so `__M7_CREDIT__` stays unset (`experiments/m7/run.js:151`) and the legacy writers `P:4484` and `P:4681` stay live.
+- `creditMode: 'on'` is not D10 either. Its credit site skips goal attempts (`P:5048`), and `render/episodeManager.js:1092` still runs.
+
+**Open conflict, recorded and not resolved.** SC-A fixes the guard state of each run. It does not name the code that the guard switch controls. That choice decides whether Ruling C's byte-identity criterion can hold:
+
+| Reading of "guards" | Evidence | Consequence for byte identity |
+|---|---|---|
+| TC-2 behaviour behind a switch in a derived tree | AC23's origin: an early design draft read "Guards off: parity with `acq-dev-P12k` logs" | Inferred: not expected with guards enabled, because O1, R3, D8 and D10 change behaviour. The testable claim would be guards-off parity with the baseline |
+| The existing legality guard `__GFGUARD__` (`P:1792`, `P:3646`) | It is on in the ACQ-1 driver (`experiments/coga/acq1/session_mfw.mjs:103-105`) | Source does not support it: the guard masks candidates and blocks moves, so turning it on can change behaviour |
+| Checks with no behavioural effect | No such code exists | It could hold, but it would not test any TC-2 behaviour |
+
+Only AC23's expected result stops here. The precise missing decision is which code the guard switch controls, and whether byte identity applies to the guards-enabled run.
+
+**Inputs that must match, by source.**
+
+| Input | Source | Remaining gap |
+|---|---|---|
+| Tree | Section 1 | No guards-enabled tree exists. If the runs use two trees, `mainSha256` differs by design |
+| Driver | The ACQ-1 driver refuses any tree but the pinned one (`experiments/coga/acq1/session_mfw.mjs:76-77`) and sets `GUARD.on` to true (`:103`) | It cannot serve without a fork. No TC-2 driver exists |
+| Fixed clock | `CLOCK`, `experiments/coga/config.mjs:33`, with `experiments/credit1/clock_preload.mjs` | None for the definition |
+| Hook state | `experiments/coga/config.mjs:32` | Stratum P only |
+| Agent seed | Derived from world id, agent id and environment (`experiments/coga/acq1/session_mfw.mjs:94`) | The agent id embeds the variant name, so both runs must share one agent id |
+| Worlds | `DEV_INDICES` 0 to 29, `experiments/coga/config.mjs:19` | No world list or count is selected |
+| Step count | `steps`, with `tickUnit: 'step'` | Not set |
+| Harness switches | `__M7_EPISODE_CAP__` and `__M7_REPLAY_ONCE__` are unconditional (`experiments/m7/run.js:189`, `:207`) | None for the definition |
+| Process and store | One process per session; cold store asserted (`experiments/m7/run.js:223-231`) | None for the definition |
+
+**AC23 definition rows.**
+
+| Row | Status | Proposed or known content | Missing |
+|---|---|---|---|
+| Logs and artifacts | Proposed | Compare `log`, `goalResets`, `envCounters`, `mapAudit`, `outcome`, `clock.loopFires`, `clock.violations` and `provenance.fingerprint`. The fingerprint hashes run artifacts including `qEntries`, `qSum` and draw counts (`experiments/m7/run.js:278-289`, `:352`). Exclude `wallMs` and `label` | Director approval. `log` holds attempts only (`experiments/coga/acq1/session_mfw.mjs:127`), so no driver writes the per-call rows that Section 6 requires. The handling of `guard` counters depends on the open conflict |
+| Nondeterminism | Partly known | Clock: fixed by the preload. Replay cooldown: deterministic through `__M7_REPLAY_ONCE__` (`render/episodeManager.js:505-507`). `wallMs`: environment-dependent | A rule listing excluded, normalized and compared fields, and whether the Node version must match |
+| Static reverse-identity checks | Not defined | CREDIT-1's S-2 is a precedent (`experiments/credit1/DESIGN.md:207`) | No TC-2 patch exists, so no mandatory check can be listed. Whether reverse identity can hold for reordered code is unknown |
+| Evidence and pass/fail | Proposed | For each matched pair, record tree, driver and preload hashes and the compared bytes. Any byte difference in a compared field fails. A missing artifact fails | Director approval, and the rule for a partial failure |
+| Mutant suite | Partly known | See below | AC23 names no suite, so membership is undefined |
+
+| General mutant | Expected result | Origin of the target |
+|---|---|---|
+| Carried retry allowed | Fails AC25 | Design conversation, not ruled |
+| Origin check instead of freshness | Fails AC25 and AC28 | Design conversation, not ruled |
+| Reset clearing only | Fails AC25 | Design conversation, not ruled |
+| Stale self-pair reaching the environment | Fails AC26 | Design conversation, not ruled |
+| Replay moving the agent | Fails AC31 | Design conversation, not ruled |
+| Restored goal skip | Proposed: fails AC2 | Proposed here from the AC text |
+| Lagged `S` | Proposed: fails AC8 | Proposed here from the AC text |
+| Pre-verdict write | Proposed: fails AC1 | Proposed here from the AC text |
+| Terminal bootstrap | Proposed: fails AC10 | Proposed here from the AC text |
+
+An early draft of AC23 also named an "extra trust writer" mutant, which is not in Section 7's list. The DB mutants keep the targets stated in Section 7.
+
+Byte-identical logs would show only that the compared fields match. They would not show that the contract is correct, or that uncompared state matches.
+
+### 14.2 SC-B: budget accounting
+
+Ruling. The primary study budget unit is study steps. Actual `runAgent` attempts are recorded separately as execution exposure. All five direct calls from `runAgentLoop()` on Space are recorded in exposure accounting. They count as study steps only if they satisfy the contract's defined step boundary. [OPEN-Budget] stays open if the exact step boundary, the status of the direct calls, the call-level runtime confirmation or any other budget requirement stays unresolved. The existing development record may explain the arithmetic, but it is not automatically acceptance evidence.
+
+Naming. In this ruling, "`runAgent` attempts" means `runAgent` calls. It does not mean Attempt as Section 5 defines it. This section calls the measure call exposure.
+
+Step boundary, by source trace:
+- E-2 and Section 5 define a step as one `runAgent` call.
+- Step accounting begins at `P:3260`, the first statement of `runAgent` (`P:3254`). No exit comes before it.
+- The driver counts every entry (`experiments/coga/acq1/session_mfw.mjs:98`). It stamps attempts and goal resets with `calls - 1` (`:99`, `:101`).
+- The episode cap counts one per call (`P:3303`) and is armed before the first call (`experiments/m7/run.js:189`).
+- `ticksExecuted` counts timer loops (`experiments/m7/run.js:256`). It is not a step count.
+
+Finding on the direct calls. Each direct call enters `runAgent` exactly as a timer-loop call does, and reaches `P:3260` and `P:3303`. So under E-2 all five are study steps at source level, and the first has step index 0. By inference, a completed session with `tickUnit: 'step'` makes `5 + 5 × ceil(steps / 5)` calls. A session requesting 12,000 steps therefore runs 12,005 study steps under E-2, and `ticksExecuted` understates that by 5. The loop body also runs one more time than `loopFires` reports, including its RNG draws. This is source trace. Section 13's Ruling F holds the arithmetic and the record it explains.
+
+Accounting convention:
+
+| Measure | Meaning | Present field | Rule |
+|---|---|---|---|
+| Requested study steps | The budget, stated before a run | `steps` | The primary unit |
+| Executed study steps | `runAgent` calls that meet E-2 | `calls` | Reported against the request. Any overrun is reported |
+| Call exposure | Every `runAgent` call, direct calls included | `calls` | Recorded separately, even when equal to executed steps |
+| Contract Attempts | Attempts as defined in Section 5 | `envCounters.attempts` | Never a budget unit |
+| Harness ticks | Loop-based harness count | `ticksExecuted` | Never reported as steps |
+
+One counter serves two measures today. They stay separate fields so that a later boundary change cannot pass silently. A study must state its unit before it runs and must not switch between steps and attempts.
+
+Unresolved, so [OPEN-Budget] stays open:
+- Call-level runtime confirmation has not been made. Existing development records hold totals and attempt rows, with no row for every call.
+- No ruling says whether a driver must stop at the requested steps or may overrun and disclose it.
+- The existing attempts-per-step asymmetry stays open.
+
+### 14.3 SC-C: `[OPEN-T3]` route inventory
+
+Ruling. M2 stays the preferred provisional design: an explicit terminal input that defaults to `false`. Terminal status must not be inferred from incidental Q-table state. T4 stays a separate invariant. No runtime implementation is authorized. T3 must not be claimed to pass because M2 is documented.
+
+Meaning of `k(g)`. `Q` is the Map at `render/qlearning.js:12`, with keys of the form `state->action`. `makeStateKey(pos, goal)` returns `pos#goal` (`render/qlearning.js:40-50`). So `k(g)` is the string `g#g`, and a Q entry for `k(g)` is any key beginning `g#g->`.
+
+Search. Every reference to `Q`, `setQ`, `updateQ`, `dampQ` and `makeStateKey` was read in `main.js`, `render/*.js`, `instrumentation/*` and `index.html`.
+- `Q` is imported by `main.js` only. `render/embeddings.js` imports only `getQAny`, which reads.
+- `Q` is not placed on `window` or `globalThis`.
+- These files contain no `eval` or `new Function`. Their only dynamic imports are `node:fs` and `node:path` (`instrumentation/sessionRecorder.js:55-56`).
+- The harness reads `Q` and does not write it (`experiments/m7/run.js:59`, `:276`).
+
+| # | Route | Location | Effect on `k(g)` | Conditions | Relevance |
+|---|---|---|---|---|---|
+| 1 | Table creation | `render/qlearning.js:12` | Starts empty | Module load | Initialization |
+| 2 | Restore | `P:1124`, `P:756`, `P:803`, `P:773-778` | Can create any key, `g#g` included. Keys are not filtered. Clears the table first | A stored `brain` exists at boot | Restoration |
+| 3 | Save | `P:709-740`, `P:1148` | Writes nothing to `Q`. Makes entries available to route 2 | Browser timer. Inert in the harness (`benchmarks/harness/headlessShim.js:140`) | Persistence |
+| 4 | Main TD write | `P:4173`, `P:4354`, through `render/qlearning.js:143` and `:126` | Creates `g#g` only if `agentLast` is the goal. Reads `k(g)` as bootstrap only if `agentCurrent` is the goal (`P:4177`) | Inside the section guard `P:3975` | Live |
+| 5 | Explore write | `P:4966-4968`, `render/episodeManager.js:365`, `:893`, `:1003` | Creates `g#g` only if `prev` is the goal. Target is never the goal | Inside the section guard. Not a commit write as Section 5 defines it | Live |
+| 6 | Success commit | `P:4596`, `render/episodeManager.js:284`, `:344`, `:1003` | Creates `g#g` only if the goal is a non-final node. The final pair reads `g#g` as bootstrap if an entry exists | `current === goalNeuronId` (`P:4559`), and the seal gates pass | Live success |
+| 7 | Replay | `P:3483`, `render/episodeManager.js:517-525`, `:1003` | Neither creates nor reads `g#g`. `activeGoal` stays null (`:698`, `:808`), so keys are `x#0` (`render/qlearning.js:46`). Node ids are 1 to 20 | Replay branch, stored episode, cooldown | Replay |
+| 8 | Manual commit | `P:5460`, `render/episodeManager.js:211`, `:241`, `:263`, `:1003` | Can create `g#g`. A buffer keeps its opening goal (`:224`), while the goal click tests the current goal (`P:5453-5455`). A goal change during a teaching pass can leave the old goal mid-path | Human clicks | Teaching |
+| 9 | Seal bridge | `P:3276`, `P:4828`, `P:927`, `render/episodeManager.js:284` | Would use the context episode's last node as `activeGoal`, so it could create that node's own `k` entry | Inert on current source: `episodeRecordNode` has no caller (`render/episodicContextEngine.js:283`). CL-B forbids its effects | Forbidden route |
+| 10 | Decay | `P:3390-3394` | Scales any existing entry. Creates nothing and removes nothing, so an entry is retained | Each `runAgent` call | Maintenance |
+| 11 | `dampQ` | `P:4225`, `render/qlearning.js:319-335` | Lowers an existing positive entry. Creates nothing | Inside the section guard, composite error above 0.20 | Live |
+| 12 | Goal wraparound prune | `P:5532`, `P:1404`, `P:1423-1429` | None. It matches the bare prefix `g->`, which no composite key has | Shift-click | Goal lifecycle |
+| 13 | Wipe | `P:5356` | Removes every entry | Shift+R | Reset |
+| 14 | Consolidation pass | `P:5263`, `render/longTermConsolidation.js:101-121` | None. It receives `Q` and does not touch it | `liveRng` gate `P:5262` | Maintenance |
+| 15 | Goal writers | `P:820`, `P:1139`, `P:3440`, `P:4315`, `P:5368`, `P:5515` | Write no Q entry. They change which key is `k(g)`. An old `h#h` entry survives and becomes `k(g)` when the goal returns to `h` | `P:3440` and `P:4315` need `window.homeNeuronId`, written only by `P:817` and `P:5544` | Goal lifecycle |
+| 16 | Position writers | `agentCurrent`: `P:3298`, `P:3409`, `P:4868`, `P:5070`, `P:5366`. `agentLast`: `P:3299`, `P:4869`, `P:4974`, `P:5367` | Write no Q entry. They decide whether routes 4 and 5 can use the goal as a state | See S0 below | Goal lifecycle |
+| 17 | Readers | `P:1738`, `P:1928`, `P:2798`, `P:2815`, `P:3898`, `P:4421`, `P:5597`, `P:5665`, `render/qlearning.js:91`, `render/embeddings.js:199-200`, `:293-294`, `render/schemaMemory.js:399` | Mutate nothing. A `k(g)` entry that exists can reach scoring | Decision, display and embedding reads | Availability |
+
+What the source proves: this list of routes and the conditions in its table. What it does not prove: that any route did or did not fire in a real session, what a stored `brain` holds, or anything about a changed tree.
+
+**Scope S0.** The goal is set once at `P:1139`, before the loop, and is a node id of 1 or more. The `brain` store is empty at boot. The only input is one Space press. `window.homeNeuronId` stays undefined. Source trace: the harness meets these conditions (`experiments/m7/env.js:166`, `experiments/phase1_0/_driver.js:30`, `:41-44`, `experiments/m7/run.js:223-231`, `:248`), and it writes no `homeNeuronId`.
+
+Inference from source, within S0, on the pinned tree:
+1. `agentCurrent` is never the goal. `P:3298`, `P:3409` and `P:4868` exclude it, and `P:5001` with `P:5069` blocks `P:5070` whenever `next` is the goal. `P:3409` falls back to the full list only if the goal is the only node.
+2. `agentLast` copies `agentCurrent` at each of its writers, so it is never the goal. Routes 4 and 5 therefore never use `g#g` as `S`, and route 4 never reads it as `S′`.
+3. Candidate keys are numbers: they come from `neighbors` (`render/connections.js:120`, `:125`) and `transitions`, and `P:2594-2596` keeps semantic candidates out while a goal is set. So `P:4559` and `P:4723` match the goal. The section `P:3967-4970` has no `throw`, and its only `return` sits inside a `map` callback (`P:4577`), so nothing in it exits early. `P:4821` therefore clears `recentMemory` in the same call that pushes the goal at `P:4502`.
+4. So at route 6 the goal appears once, as the final node. Labels in `neurons.json` are unique, so the id mapping at `render/episodeManager.js:303-309` cannot move another node onto the goal.
+5. Routes 2, 8 and 9 and the goal changes in route 15 are excluded by S0. Route 7 uses `x#0`.
+
+So within S0 no source route creates a `g#g` entry, and route 6's final pair finds none to read.
+
+**Outside S0.** A `k(g)` entry can exist. Routes 2 and 8 can supply one. Route 6 can create one when the goal changes to a node still in `recentMemory`: the later success has that node mid-path. So M1's statement that no `k(g)` entry exists is not generally true of this source.
+
+**Closure status.**
+
+| Item | Status |
+|---|---|
+| Source inventory for the pinned tree | Complete, to the limit of static search. It is not runtime verification |
+| T3 | Not met by the pinned tree: the main TD write passes the pre-move position as `S′` (`P:4177`, Section 8). Not claimed to pass |
+| T4 | Separate from T3 and not inferred from it. Inferred from source: within S0 no route violates it, and outside S0 routes 6 and 8 can write `S=k(g)` |
+| M2 | Preferred direction only. It would have to reach `P:4173` or `P:4354` and the live final pair at `render/episodeManager.js:1003`. Default `false` would leave replay, explore and manual writes unchanged |
+| [OPEN-T3] | **Stays open.** No tree carries M2. The inventory must be re-derived on any tree that does. No ruling says whether TC-2 sessions are limited to S0. No runtime evidence exists |
+
+Both existing Q-write paths stay as Ruling A left them.
+
+### 14.4 SC-D: `[OPEN-A4]` proposed classification
+
+Ruling. Prepare a source-backed proposal for operations D12b does not name. Do not extend D12b's scope or declare the item resolved.
+
+Everything below is proposed. D12b is unchanged, and [OPEN-A4] stays open. D12b's classes are decision-time, scheduled maintenance and replay training. The proposal adds two classes that no ruling has created: **boundary** (step accounting, starts and resets) and **non-learning output**.
+
+| Operation | Location | Source fact | Proposed class | Why, or why not |
+|---|---|---|---|---|
+| Step hook | `P:3260` | Harness telemetry. One global read, no RNG | Boundary | Writes no agent state and is not a decision or a decay |
+| Episode step counter | `P:3303` | Integer counter read by the cap | Boundary | It drives the cap and makes no decision |
+| Cap handling | `P:3274-3302` | Seals, clears the path window and expectation, draws a start, writes position | Boundary | It has an RNG draw and a position write, so it fits none of D12b's classes |
+| First start | `P:3400-3409` | Draws a start and writes position | Boundary | Same reason |
+| `recentMemory` setup | `P:3312-3314` | Creates an empty array if absent | Boundary | No learning content |
+| Position bookkeeping | `P:4974` | `agentLast = agentCurrent`, on every call that reaches it. C3 and C5 do not name it | Unclassified | Under O2 `S` is bound at the decision, so its role on a changed tree is unknown |
+| Branch draw | `P:3460` | One draw from the cognitive stream that selects prediction or replay | Boundary, or decision-time | It comes before any decision, yet it decides whether one exists |
+| Survival goal override | `P:3431-3447` | Writes the goal if fatigue is above 80 and a home is set. C5 does not name it | Unclassified | It changes the goal and so bears on Section 14.3 |
+| Decay gates | `P:3316`, `P:3330`, `P:3358`, `P:5238` | RNG draws that gate decays | Scheduled maintenance | They exist only to schedule a decay. D12b names decays, not their draws |
+| Penalty pruning | `P:3344` | Deletes a penalty below 0.05 during decay | Scheduled maintenance | Part of that decay |
+| `P:3316-3394` remainder | `P:3316-3394` | Each remaining operation there is a decay. Source trace found no other kind | Scheduled maintenance | D12b already names decays, so C5(e) adds no further gap |
+| Schema rebuild | `P:5254` | Rebuilds `schemas` from stored episodes | Unclassified | Derived-store rebuild, not a decay |
+| Adjacency rebuild | `P:5258` | Rebuilds adjacency memory from stored episodes | Unclassified | Same reason |
+| Consolidation pass | `P:5262-5263` | One RNG gate, then raises stable `rewards` (`render/longTermConsolidation.js:112`) | Unclassified | It strengthens a store, so it is not a decay |
+| Drive update | `P:1692` | `updateMotivationalState` writes drive state during prediction | Decision-time | It runs inside the decision, but D12b's list is specific |
+| Biology update | `P:2957` | `regulateBiology` changes energy, stress and related state (`render/behavior.js:105`) | Decision-time | Same reason |
+| Candidate analysis | `P:1808` | A search of `render/candidateAnalysis.js` found no store write | None needed | Inferred to be a read, subject to review |
+| Display and diagnostics | `P:2791`, `P:2821`, `P:2831`, `P:3566-3948`, `P:5288` | HUD, stream, spotlight, reasoning text and diagnostic counters | Non-learning output | C5(f) names display output and instrumentation. Whether visual state counts needs checking |
+| Early exits | `P:3643`, `P:3646`, `P:3683` | Control flow, with the guard's `blockedIllegal` counter | Boundary | They map to Part D rows and write no learning state |
+| Candidate-evaluation writes on another tree | C6 | Not present as a non-fresh case on the pinned tree | Unclassified | Unresolved by C6 |
+
+Policy decisions needed:
+1. Does D12b gain a boundary class and a non-learning-output class?
+2. Is the branch draw boundary or decision-time?
+3. Do decay gate draws count as part of "decays"?
+4. Are the schema rebuild, adjacency rebuild and consolidation pass scheduled maintenance, or a separate class?
+5. Are `updateMotivationalState` and `regulateBiology` decision-time under D12b?
+6. May the goal change within a TC-2 session? This decides `P:3431-3447`, `P:4315` and Section 14.3's S0.
+7. Should `P:4974` run on a non-fresh call in TC-2?
+
+### 14.5 SC-E: freshness and AC38
+
+Ruling. The `lastReasoning` object-identity direction is preserved only as far as source evidence supports it. No freshness flag is added, and runtime behaviour does not change. AC38 stays open. No method, including executed-code closure, final-state digests, V8 coverage or allowlists, is approved as complete write observation. No instrumentation or feasibility experiment is authorized.
+
+Freshness, beyond Section 13's Ruling E. Source trace on the pinned tree:
+- `main.js` is the only production file that references `lastReasoning`. It has no initial writer.
+- The replay branch does not call `runPrediction` (`P:3472-3484`), so the reference stays unchanged and the call reads as non-fresh.
+- `runPrediction` can exit before `P:2770` at `P:1627`, `P:1677` and `P:2619`. Such an exit at step 0 writes nothing, so the call reads as non-fresh, as AC29 requires.
+- The click path calls `runPrediction` outside `runAgent` (`P:5658`). A write there falls outside the observation boundary, as AC32 requires.
+
+Limits stay as Ruling E states them. Object identity cannot prove that a decision is correct, and it says nothing about a changed tree or runtime behaviour. [OPEN-FreshMech] stays open.
+
+AC38, observation facts on the bridge-path inventory, by source trace:
+
+| Reach from outside the module | Items |
+|---|---|
+| Exported binding (7) | `Q`, `transitions`, `rewards`, `confidenceMap`, `momentumMemory`, `pathSuccesses`, `episodicStore` |
+| Module-private (12) | `provenanceLog`, `semanticStrength`, `_episodesStoredTotal`, `_episodesSinceConsolidation`, `consolidationRegistry`, `stableMemory`, `semanticEdges`, `conceptSchemas`, `schemas`, `_bonusCache`, `_lastMotifs`, `_lastRebuild` |
+| Field on a neuron object (1) | Neuron embeddings (`render/embeddings.js:236-237`, `:320`) |
+
+These facts say how an item is declared. They establish no method. The evidence a future authorized feasibility study must supply stays as Section 13's Ruling D lists it, and it must cover all 20 items. AC38 stays open and not executable.
+
+### 14.6 Status after this review
+
+| Item | Status |
+|---|---|
+| AC23 | Open, not executable |
+| AC38 | Open, not executable |
+| [OPEN-T3] | Open. Source inventory complete for the pinned tree |
+| [OPEN-DoubleGoal] | Open. Both Q-write paths unchanged |
+| [OPEN-FreshMech] | Open |
+| [OPEN-Budget] | Open. Primary unit set; runtime confirmation and overrun rule outstanding |
+| [OPEN-A4] | Open. Proposal awaits a ruling |
+
+No acceptance criterion has been run or passed. TC-2 remains design-only and paused.

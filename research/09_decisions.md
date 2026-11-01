@@ -7,6 +7,35 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-038 — TC-2: source-closure review recorded (documentation only)
+
+**Date:** 2026-11-01 · **Authority:** Research Director TC-2 source-closure directive · **Status:** in force as a provisional design record; no executable effect
+**Scope:** TC-2 design only. Section 14 of `experiments/tc2/TRANSITION_CONTRACT.md` holds the full wording. That directive's Rulings A to E are recorded as SC-A to SC-E, so they are not confused with D-037's Rulings A to F.
+
+**Decision.**
+- SC-A: AC23 compares a guards-off baseline run with a guards-enabled candidate run, with all other inputs matched and the guard setting as the comparison variable. Parity under Hook State P does not validate D17b's credit-on configuration. A separate D17b stratum applies only if the Director places it in scope. AC23 stays open and not executable.
+- SC-B: study steps are the primary budget unit, and `runAgent` calls are recorded separately as call exposure. The accounting convention is recorded. `[OPEN-Budget]` stays open.
+- SC-C: M2 stays the preferred provisional design and T4 stays separate. `[OPEN-T3]` stays open.
+- SC-D: a proposed classification of operations D12b does not name is recorded, with its policy questions. D12b is unchanged and `[OPEN-A4]` stays open.
+- SC-E: the `lastReasoning` identity direction is kept only as far as source supports it. `[OPEN-FreshMech]` stays open. AC38 stays open, and no write-observation method is approved.
+
+**Source findings recorded.**
+- The `k(g)` route inventory is complete at source level for the pinned tree, to the limit of static search. Within the contract's scope S0, no source route creates a `g#g` entry. Outside S0, one can exist.
+- Under E-2, all five direct calls on Space are study steps at source level. This was not observed call by call at runtime.
+- AC23 has an open conflict: SC-A does not name the code the guard switch controls, and that choice decides whether byte identity can hold. Only AC23's expected result stops on this.
+
+**Limits.**
+- D-035, D-036 and D-037 stay as written. Section 14 updates the contract's Section 13 where the two differ.
+- Both existing Q-write paths stay unchanged. M2 is not approved for implementation.
+- ACQ-1 remains VOID under D-035 and is not evidence for this contract.
+- TC-2 remains design-only and paused. The contract is not frozen.
+- No acceptance criterion has been run or passed. Parity has not been demonstrated.
+- This entry authorizes no implementation, test, experiment, instrumentation, feasibility study, build or runtime work.
+- It supports no claim about learning, reliability, transfer, planning, mechanism performance or cognition.
+- Source tracing is not runtime verification.
+
+---
+
 ## D-037 — TC-2: reconciliation rulings A to F recorded (documentation only)
 
 **Date:** 2026-11-01 · **Authority:** Research Director TC-2 end-to-end contract directive · **Status:** in force as a provisional design record; no executable effect
