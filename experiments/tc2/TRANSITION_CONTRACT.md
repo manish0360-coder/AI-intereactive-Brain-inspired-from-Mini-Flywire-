@@ -47,6 +47,7 @@ Provenance note: Review Copy 2 and all rulings below were made in the design con
 | Rulings A to F (D-037) | DIRECTOR RULING, provisional. Section 13 holds them. Every open item they name stays open |
 | SC-A to SC-E (D-038) | DIRECTOR RULING, provisional. Section 14 holds them and the source-closure record. Every open item they name stays open |
 | Freeze-readiness assessment (D-039) | PROPOSED, not ruled. Section 15 holds it. Verdict: NOT READY FOR FREEZE REVIEW |
+| FR-A to FR-G (D-040) | DIRECTOR RULING, provisional. Section 16 holds them and the acceptance traceability. Freeze-gate verdict: NOT READY FOR DOCUMENTATION FREEZE |
 | Gemini overall NOT READY verdict | Rejected as insufficiently supported. This does not independently prove the contract correct. Its useful verification ideas are preserved |
 
 ## 1. Baseline identity (PROVISIONAL APPROVAL, D6)
@@ -670,6 +671,8 @@ The paragraphs marked "Ruling" state the Director's rulings. "Proposed" marks te
 
 This section changes no text of T1 to T9, the Part D table or any acceptance criterion. It closes no open marker. It authorizes no implementation, test, run, instrumentation or feasibility study. No criterion has been run or passed, and the contract is not frozen. Source coverage is not runtime verification: no application code ran for this review.
 
+Later update: Section 16 (D-040) updates this section where the two differ. This applies to Section 14.1's guard definition and Section 14.2's open stopping rule. D-038 records the state at its own date.
+
 Line references. `P:n` is line n of the pinned `main.js`. The same line in the repository's `main.js` is n minus the offset below. `render/*.js` has the same line numbers in both trees, apart from `render/planning.js`, which this section does not cite.
 
 | `P:n` | Offset |
@@ -922,6 +925,8 @@ No acceptance criterion has been run or passed. TC-2 remains design-only and pau
 This section is the Chief Systems Engineer's assessment, requested by the project owner. Every recommendation in it is PROPOSED and has no force until the Research Director rules on it. The established rulings stay exactly as Sections 4, 13 and 14 record them.
 
 This section changes no text of T1 to T9, the Part D table, D12b or any acceptance criterion. It closes no open marker and approves no mechanism. No criterion has been run or passed, and the contract is not frozen. Line references follow Section 14's rule. Source trace is not runtime evidence.
+
+Later update: Section 16 (D-040) records the Director's rulings on these issues. Where the two differ, Section 16 governs. This section stays as the record of the assessment.
 
 Correction. Section 14.2 named `envCounters.attempts` as the field for contract Attempts. That field is `env.log.length`, which also counts SELF and REFUSED rows (`experiments/coga/acq1/session_mfw.mjs:123`, `experiments/coga/acq1/env.mjs:25-30`). The Section 14.2 row is corrected.
 
@@ -1176,3 +1181,301 @@ If the Director rules on every item in Category 1 below, the verdict would becom
 3. AC38 stream deltas.
 
 Open after this assessment: [OPEN-T3], [OPEN-DoubleGoal], [OPEN-FreshMech], [OPEN-Budget] and [OPEN-A4]. AC23 and AC38 stay not executable. Documentation completeness is not behavioural correctness or acceptance.
+
+## 16. Freeze-gate rulings (DIRECTOR RULING, provisional; D-040)
+
+FR-A to FR-G come from the Research Director's TC-2 freeze-gate directive. That directive calls them Rulings A to G. This record renames them so they are not confused with Section 13's Rulings A to F or Section 14's SC-A to SC-E. This section is their first repository copy.
+
+The paragraphs marked "Ruling" state the Director's rulings. They are policy directions and replace no required source or runtime evidence. "Proposed" marks text awaiting a ruling. Everything else is a source finding or reconciliation wording, and it is not a further ruling. Where this section differs from Sections 13, 14 or 15, this section governs.
+
+This section changes no text of T1 to T9, the Part D table, D12b or any acceptance criterion. It closes no open marker. It authorizes no implementation, test, run, instrumentation or feasibility study. No criterion has been run or passed, and the contract is not frozen. Line references follow Section 14's rule. Source trace is not runtime evidence.
+
+### 16.1 FR-A: AC23 structure
+
+Ruling. Adopt the three-run design as the proposed AC23 structure: Run A is a fresh pinned baseline, Run B is a derived tree with guards disabled, and Run C is the same derived tree with guards enabled. A against B requires byte identity over an explicitly enumerated comparison set. B against C requires equality on explicitly named invariants, with differences permitted only where attributable to a named guard-controlled clause. Unrestricted byte identity between B and C is not required if guards intentionally change behaviour. Static checks do not establish runtime equivalence. AC23 stays open and non-executable until every mandatory definition and prerequisite is satisfied.
+
+**Reconciliation with existing rulings.**
+
+| Existing item | Existing text | Effect of FR-A | Result |
+|---|---|---|---|
+| AC23 | "Guards-off parity and mutant suite" | A against B is that parity | Consistent. Wording unchanged |
+| D18(c) | Parity target OPEN, to be defined before AC23 can be executable or passed | FR-A sets the structure. The target stays open until its definitions are complete | Consistent |
+| Ruling C | A "proposed parity target" comparing a fresh baseline run and a guards-enabled run, with byte-identical logs as "the candidate parity criterion" | Byte identity moves from that pairing to A against B | Refinement, not an override. Ruling C's text is proposed and candidate, and D18(c) leaves the target OPEN, so no binding requirement is weakened. The literal pairing is not kept, and D-040 says so |
+| Ruling C's required definitions | Logs, baseline, suite, nondeterminism, static checks, evidence, pass and fail | All stay mandatory | Consistent |
+| SC-A | Guards off against guards enabled, all else identical, guard setting as the variable | B against C is that comparison, on one tree. SC-A's "baseline run" is Run B. FR-A's baseline is Run A | Consistent. Naming recorded |
+| SC-A's D17b limit | Parity under Hook State P does not validate D17b | Kept (Section 16.3) | Consistent |
+| Ruling A, Section 13 | Both Q-write paths stay | The guard set must keep both | Consistent |
+
+No conflict with a binding requirement was found, so FR-A is recorded.
+
+**Guard switch.**
+
+| Item | Definition |
+|---|---|
+| Controls | One switch for the whole TC-2 guard set: every code path a derived tree adds to implement this contract. No partial state is permitted |
+| Does not control | The legality guard, which is on in all runs. The D5 map block. Hook State P's four fields. The harness switches, RNG streams and clock |
+| Off | Every added path is skipped, so the derived tree follows its pinned lines only |
+| Enabled | Every added path runs |
+| Exists today | No. No derived tree exists |
+
+**Inputs that must match.** In every compared pair: world index and configuration seed, goal, environment, agent id, seed, requested steps, driver hash, preload hash, clock configuration, hook state, legality guard on, map block on, and Node binary. Runs B and C also share one tree hash.
+
+**Comparison set, A against B.** `log`, `goalResets`, `envCounters`, `mapAudit`, `guard`, `outcome`, `rng`, `clock.loopFires`, `clock.violations` and `provenance.fingerprint`. Excluded: `wallMs`, `label`, and `provenance.mainSha256`, which differs by design. Field names follow the ACQ-1 driver record (`experiments/coga/acq1/session_mfw.mjs:117-127`), and a TC-2 driver must carry the same fields. Per-call rows are outside this set, because Run A has none.
+
+**Named invariants, B against C.**
+1. The input record listed above.
+2. The first start.
+3. `u(e,j)` for every pair `(e,j)` that both runs reach.
+4. Requested steps, executed steps and call exposure.
+5. `mapAudit.ok` is true.
+6. `clock.violations` is zero.
+7. Neither run crashes.
+
+**Attribution rules.**
+1. Runs B and C write one row per call: call index, Part D event, `u`, `v` and verdict. Writing a row consumes no draw and reads no clock.
+2. The first differing call in a session is its divergence point.
+3. The divergence must match an entry in a closed attribution table, which maps each guard-controlled clause to the row change it can cause. The clause list is O1, O2, R3, C1, D3, D4, D8, D10, D11, D13, D15, D16 and T3.
+4. An unmatched divergence fails. A later difference is attributed to the clause of that divergence, provided every invariant holds.
+5. Limit: after a divergence the two states differ, so this comparison cannot show that each later difference is lawful. The other acceptance criteria and the mutants must cover that.
+
+The attribution table cannot be completed until a TC-2 patch exists.
+
+**Static checks.** All are mandatory, and CREDIT-1's S-1 to S-4 are the precedent (`experiments/credit1/DESIGN.md:206-209`).
+1. Removing tagged lines from the derived `main.js` gives the pinned `main.js` byte for byte, LF-normalised.
+2. Every other tree file is byte-identical to the pinned tree, or is a declared new file.
+3. The tagged line set equals the declared plan.
+4. Every tagged line is the switch declaration or sits behind the switch.
+
+Reordered code can stay additive only by wrapping pinned lines in added conditions, and this is unproven until a patch exists. These checks establish source containment. They do not establish runtime equivalence or correct guards-on behaviour.
+
+**Pass and fail.**
+- Preconditions: repeated Run A and repeated Run C are each byte-identical on the comparison set, in every world.
+- Pass: every world passes A against B, every invariant and attribution rule holds, all static checks pass, and every suite mutant fails its named criterion.
+- Fail: any compared byte difference, failed invariant, unmatched divergence, failed static check, missing artifact or surviving mutant fails AC23. There is no retry or world replacement, and the first differing row is reported.
+- A pass would show off-state inertness and a matched comparison only.
+
+**Numbers, reconciled and not approved.**
+
+| Number | Origin | Reconciliation | Status |
+|---|---|---|---|
+| 10 mutants | Section 7's nine general mutants, marked as not approved criteria, plus "extra trust writer" from an early draft | Each target in Section 14.1 fits its criterion's text, and AC13 fits the tenth. The count has no authority of its own: it is the length of an unruled list. An early draft wanted a mutant for each criterion, and no ruling kept that | Awaiting Director approval |
+| 10 worlds | A design-conversation count. No contract requirement | Indices 0 to 9 lie inside `DEV_INDICES` (`experiments/coga/config.mjs:19`) and cover goals 8, 12, 16 and 19 (`experiments/m7/env.js:166`). Whether ten are enough is unknown | Awaiting Director approval |
+| 12,000 steps | ACQ-1's budget (`experiments/coga/acq1/DESIGN.md:31`), borrowed as a scale only. ACQ-1 is VOID and is not evidence here | No contract requirement. Whether it reaches rare gated paths cannot be shown without a run | Awaiting Director approval |
+
+### 16.2 FR-B: initial scope
+
+Ruling. Adopt S0 as the proposed initial scope: fixed goal, cold store, one Space press and no home set. Restoration, saving, teaching, goal changes and the seal bridge are excluded from this initial scope. This does not prove that the implementation satisfies S0, and no conclusion is generalized beyond it. [OPEN-T3] stays open until the required terminal and bootstrap contract and evidence are satisfied. M2 is not claimed to exist in the pinned tree. T4 stays distinct from T3.
+
+**Conflict check against binding requirements.**
+
+| Requirement | Finding |
+|---|---|
+| CR-1 | No conflict. It has no row for any excluded item |
+| [OPEN-T3] closure rule | It requires coverage of restoration and goal lifecycle, which S0 excludes. S0 does not amend it. Section 14.3 supplies that coverage at source level |
+| CL-B | It applies to any seal, by any route. S0 does not relax it |
+| AC38 | Its fixtures populate the context episode, which S0 excludes. S0 does not narrow AC38's coverage |
+| Seal calls | S0 excludes the bridge route, not seals. `P:3276` and `P:4828` still call `sealCurrentEpisode` |
+| Forced fixtures | Criteria such as AC29 force states. They are fixtures, not S0 sessions |
+| Saving | `P:1148` runs in a browser, so the browser app is not S0. The harness stub makes it inert (`benchmarks/harness/headlessShim.js:140`) |
+
+No existing requirement needs to change for S0.
+
+### 16.3 FR-C: D17b
+
+Ruling. Hook State P parity is not claimed to prove D17b's credit-on behaviour. If D17b is mandatory in the existing contract, that obligation is preserved. A missing matched parity baseline is a verification gap, not evidence that the configuration is safe. No D17b test is run and no baseline is invented.
+
+Finding: D17b is mandatory. Section 4 states that eventual implementation verification is mandatory, and Section 9 has its row. The obligation stands.
+
+**Required configuration.** Arm OFF, credit as defined by D10, PE pin off.
+
+| Test | Configuration exercised | Supports | Does not support |
+|---|---|---|---|
+| Run A | Pinned tree, Hook State P, legacy writers `P:4484`, `P:4681` and `render/episodeManager.js:1092` | A reference for Run B | Anything about D10 |
+| Run B | Derived tree, guards off, Hook State P, same legacy writers | With Run A, off-state inertness under legacy credit | D10 or D17b |
+| Run C | Derived tree, guards enabled, Hook State P's four fields | With Run B, a matched comparison under the named invariants | D10 correctness, D17b validity or safety |
+| AC13, AC14 | Guards-enabled fixture with the D10 writer | Trust counts in that fixture | Whole-session behaviour |
+| Section 9's D17b row | Arm, credit and pin values, recorded and independently tested | Configuration identity | Behaviour |
+
+**Validation required for D17b, none of it done.** The arm, credit and pin values are recorded and independently tested. AC13 and AC14 pass. A static audit shows that `P:4484`, `P:4681` and `render/episodeManager.js:1092` do not run. AC12 and AC34 hold, as D17b's slip clause requires.
+
+**Verification gap.** No tree has D10 credit, so no matched parity baseline exists. That is a gap in verification. It is not evidence about D17b.
+
+### 16.4 FR-D: hard study budget
+
+Ruling. Adopt a hard budget for the defined study-step unit. Requested steps, executed study steps, `runAgent` call exposure, contract-level Attempts and harness timer ticks stay distinct. All qualifying `runAgent` calls, direct calls included, count toward the budget. Contract Attempts are not `envCounters.attempts`. A session that exceeds its declared budget is invalid. Session end is not a terminal learning event unless a separate contract requirement establishes that meaning. The driver adjustment `ticks = requested − 5` is a source-level proposal, and it must not be treated as universally valid. [OPEN-Budget] stays open while runtime confirmation is required.
+
+| Field | Definition | Present field |
+|---|---|---|
+| Requested steps | The hard budget, declared before the run | `steps` |
+| Executed study steps | `runAgent` calls reaching `P:3260`, from the session's first call, direct calls included | `calls` |
+| `runAgent` call exposure | Every `runAgent` entry, recorded separately. Equal to executed steps today | `calls`, cross-checked by `5 + 5 × loopFires` |
+| Contract Attempts | Legal edges presented to the environment | `log` rows of kind EDGE |
+| Harness timer ticks | Timer-driven loop fires. Never reported as steps | `clock.loopFires` |
+| Overrun | Executed steps above requested. The session is invalid | `calls` against `steps` |
+| Underrun | Executed steps below requested. The session is incomplete | `calls`, `outcome.completed` |
+| Session end | Not a terminal event. No existing requirement gives it learning meaning, and D16 names only terminal verdicts and the cap | None |
+
+**Five-call assumption, by source trace on the pinned tree.** It holds only when all of these hold:
+1. `agentRunning` is false at the press (`P:3197`, `P:5379`).
+2. There is one Space press. A second press stops the loop (`P:5383-5384`).
+3. `runAgentLoop` passes its only early return (`P:5209`).
+4. `P:5318` is the only `runAgent` call site.
+5. `P:5382` and the timer at `P:5321` are the only loop entries.
+6. `P:5328` is the only production keydown listener.
+
+It is not universal. A derived tree, a different driver or another tick unit must re-derive it, and no runtime observation confirms it.
+
+**Future driver requirement, not implemented.** Under those conditions a driver can pass `ticks = requested − 5` for a requested value that is a multiple of 5. For other values the current loop cannot stop exactly, because each loop makes 5 calls, so the driver must refuse them. It must also assert that `calls` does not exceed `steps`. `main.js` need not change for this.
+
+### 16.5 FR-E: A4 classification
+
+Ruling. Record the classification below with its rationale and limitations. D12b stays unchanged. [OPEN-A4] stays open until its full acceptance requirements are met.
+
+This table adds two labels, **boundary** and **non-learning output**, and no D12b amendment is needed: D12b says decays are scheduled maintenance, not that only decays are. Locations and effects are source facts. Classes are policy.
+
+| Operation | Location | Class | Rationale | Limitation |
+|---|---|---|---|---|
+| Branch draw | `P:3460` | Boundary | It runs before any decision and writes no decision state | Its draw still shapes the stream, so it stays in parity scope |
+| Decay gate draws | `P:3316`, `P:3330`, `P:3358`, `P:5238` | Scheduled maintenance | Each exists to schedule a decay, and C5(e) covers the first three | `P:5238` also gates the two rebuilds |
+| Schema rebuild | `P:5254`, `render/schemaMemory.js:129-167` | Scheduled maintenance, non-decay | It runs under Section 6.1's loop-level row and derives from stored episodes | It feeds scoring and is throttled by the clock. Effect unmeasured |
+| Adjacency rebuild | `P:5258`, `P:953-961` | Scheduled maintenance, non-decay | Same | It feeds `trajectoryConfidence`. Effect unmeasured |
+| Consolidation pass | `P:5262-5263`, `render/longTermConsolidation.js:101-115` | Scheduled maintenance, non-decay | It runs at loop level | It raises stable `rewards`, capped at 8. Effect unmeasured |
+| `updateMotivationalState` | `P:1692` | Decision-time, outside D12b's named list | It runs only inside `runPrediction`, once per imagined step | The click path also reaches it, outside S0 |
+| `regulateBiology` | `P:2957`, `render/behavior.js:105` | Decision-time, outside D12b's named list | It runs only inside `runPrediction`, after the step loop | An early exit at `P:2619` skips it, so it is not guaranteed on every prediction call |
+| Goal change under S0 | `P:820`, `P:3431-3447`, `P:4315`, `P:5515` | Not permitted | Each needs a stored brain, a home or a click, and S0 excludes all three | S0 does not prove an implementation meets it |
+| `P:4974` on non-fresh calls | `P:4974` | Not run on a non-fresh call in TC-2 | Section 6.1 step 7 ends such a call first | Pinned source runs it after the exits at `P:3576`, `P:3588`, `P:3643`, `P:3646`, `P:3653`, `P:3658` and `P:3690`. That is a nonconformance, and its role on a derived tree is unknown |
+| Step accounting | `P:3260`, `P:3303` | Boundary | Telemetry and the cap counter | None |
+| Cap handling and first start | `P:3274-3302`, `P:3400-3409` | Boundary | CL-C and Part D govern them | Each has a draw and a position write |
+| Display and diagnostics | `P:2791`, `P:2821`, `P:2831`, `P:3566-3947`, `P:5288` | Non-learning output | `render/hud.js` imports nothing, and `render/neuronVisuals.js` imports only `liveRng`, for the visual stream | Source-level only. Visual draws still count toward AC38(b) |
+
+[OPEN-A4] stays open. No evidence shows these classes hold on a derived tree, and C6's case on another tree is unresolved.
+
+### 16.6 FR-F: freshness
+
+Ruling. `lastReasoning` object identity stays the leading freshness-mechanism candidate. No persistent flag is added, runtime behaviour does not change, and correctness is not claimed from identity alone. [OPEN-FreshMech] stays open while required evidence is missing.
+
+**May establish.** On a tree where one writer always creates a new object: a difference between two reads around contract step 5, in one synchronous `runAgent` call, means the assignment ran between those reads.
+
+**Cannot establish.** That the decision is legal, correct or useful. That the attempt used that object's `to`. Anything about a tree with another writer, a reused object or an in-place write. Any runtime behaviour.
+
+Section 15.7's four assumptions still need runtime evidence, together with AC7, AC25 to AC29 and AC32 on the tree under test.
+
+### 16.7 FR-G: AC38 feasibility proposal
+
+Ruling. AC38 stays open and non-executable. A proposal for a separately authorized feasibility study is prepared. No implementation method is approved, no instrumentation is added and the study is not executed.
+
+This extends Section 15.8.
+
+| Item | Proposal |
+|---|---|
+| Required write classes | Transient, same-value, overwritten, restored, Map and Set operations, array index and length, object fields, module-private assignments, and any other class AC38(a) requires |
+| Module-private state | The method must observe all 12 module-private items without adding a production reader, writer or decision path |
+| Observation completeness | Complete means that, for every item in the re-derived inventory, every mutation of every class in the seal window is recorded, and controls prove it. One unobservable item makes the result incomplete |
+| Access to evidence | Journals are readable by test code only. Test access meets AC38's limits and avoids `episodeRecordNode` |
+| Stream deltas | Measured at seal entry and return, per window: cognitive stream 1, environment and visual streams 0 |
+| Limitations | A result applies only to the tree tested. Feasible does not pass AC38. Inventory re-derivation comes first |
+| Stop conditions | Any production edit, undetected write class, behaviour change, or new dependency that is not authorized |
+| Acceptance of the study | The protocol is frozen before outcomes. Every control and mutant is reported, failures included. Results repeat. An independent review checks them, and the Director accepts or rejects the report |
+
+Method families stay as Section 15.8 lists them, and none is approved.
+
+### 16.8 Acceptance traceability
+
+Coverage means a criterion exists. It is not a result. Every result below is UNRUN, and no criterion is passed. "Adequate" is a reading of the wording only.
+
+| Requirement | Definition | Criteria | Required evidence | Coverage |
+|---|---|---|---|---|
+| O1 | Section 2 | AC1, AC16 | Fixture, integration | Adequate |
+| O2, R2 | Section 2 | AC8 | Fixture | Adequate |
+| R3 | Section 2 | AC7, AC24 to AC30, AC32 | Fixture, mutants | Adequate |
+| Mechanism boundary | Section 2 | AC33, AC34 | Static, fixture | Partial: no criterion names rerouting (C11) |
+| C1, C2 | Section 4 | AC7, AC26 | Fixture | Adequate |
+| C4 | Section 4 | AC31, AC37 | Fixture | Adequate |
+| E-2, E-6 | Section 3 | AC11, AC21 | Fixture, integration | Adequate |
+| E-3 | Section 3 | AC2 for the verdict only | Fixture | Partial: Section 9's row has no criterion |
+| E-4, E-5 | Section 3 | AC2, AC3, AC14 | Fixture | Adequate |
+| E-7, D5 | Sections 3, 4 | AC36 | Static, integration | Adequate |
+| D3 | Section 4 | AC35 | Fixture | Adequate |
+| D4 | Section 4 | AC16, AC34 | Fixture | Adequate |
+| D6 | Section 1 | None. Section 9's hash match applies | Static on a rebuild | Partial: a prerequisite, not a criterion |
+| D7, D10 | Section 4 | AC13, AC14 | Fixture, spy | Adequate |
+| D8 | Section 4 | AC12 | Fixture | Adequate |
+| D9 | Section 4 | AC16 | Fixture | Adequate |
+| D11 | Section 4 | None | Static, integration | None: Section 9's row has no criterion |
+| D12a | Section 4 | None. AC37 excludes it | Static | Partial: static check 2 and the pinned lines cover it |
+| D13 | Section 4 | AC15 | Fixture | Adequate |
+| D14 | Section 4 | None | Fixture | None |
+| D15 | Section 4 | AC3 | Fixture, log reconstruction | Adequate |
+| D16 | Section 4 | AC17, AC18, AC19 | Static, fixture | Adequate |
+| D17b | Section 4 | AC12, AC13, AC14, AC34 in part | Static, integration | Partial: no criterion names the configuration |
+| T1 | Section 6.2 | AC4, AC5, AC11 | Fixture | Adequate |
+| T2 | Section 6.2 | AC4, AC35 | Fixture | Adequate |
+| T3 | Section 6.2 | AC10 | Fixture, spy | Adequate |
+| T4 | Section 6.2 | None | Spy on every Q write | None |
+| T5 | Section 6.2 | AC8 in part | Fixture | Partial |
+| T6 | Section 6.2 | AC11, AC19 | Fixture | Adequate |
+| T7 | Section 6.2 | AC21 | Fixture | Adequate |
+| T8 | Section 6.2 | AC11 in part | Fixture | Partial |
+| T9 | Section 6.2 | None | Fixture, spy | None |
+| Part D no-attempt rows | Section 6.3 | AC2, AC7 | Fixture | Adequate |
+| CL-A | Section 6.4 | AC5, AC9, AC10 | Fixture, spy | Adequate |
+| CL-B | Section 6.4 | AC38 | As AC38 specifies | Adequate as wording. Not executable |
+| CL-C | Section 6.4 | AC6, AC11, AC20 | Fixture | Adequate |
+| CL-D | Section 6.4 | AC17, AC33 | Static, fixture | Adequate |
+| FR-A | Section 16.1 | AC22, AC23 | Runs, static, mutants | Adequate as wording. Not executable |
+| FR-B | Section 16.2 | None | Recorded session conditions | None |
+| FR-D | Section 16.4 | AC21 in part | Recorded counts | Partial |
+
+**Findings on the reported gaps.**
+- T4: confirmed. AC10 tests bootstrap and AC8 tests the main TD write. Neither stops a Q write with `S=k(g)`, and Section 14.3 shows that route 6 and route 8 can write one outside S0.
+- T9: confirmed, and it has a wording problem. T9 says "The Q reward input is `rewardSignal`", but CL-A keeps a commit write whose reward is the procedural causal reward (`render/episodeManager.js:968`), and explore and replay writes use the same line. `rewardSignal` feeds only `P:4176` and `P:4357`. `rewardCurrentEpisode` only adds to the context episode (`render/episodicContextEngine.js:505`), and no Q writer reads it.
+- T5: partly covered. AC8 binds `S` for the main TD write. It does not bind `S′`, and no criterion names the post-reset position.
+- T8: partly covered. AC11 covers the cap. Section 9 has a step-150 row, but no criterion states it.
+
+**Proposed amendments, not adopted.** Each is the smallest text that closes its gap. None is added to Section 7.
+
+| Id | Closes | Proposed criterion | Type | Why it is needed |
+|---|---|---|---|---|
+| PA1 | T4 | No Q write has `S=k(g)`, commit writes included | U, R | T4 is a stand-alone invariant with no test |
+| PA2 | T9, D14 | Every main TD write takes its reward input from `rewardSignal`. No Q write reads a value set by `rewardCurrentEpisode` | U | D14 and T9 have no test |
+| PA3 | T5 | Every main TD write uses the bound `S` and `S′`. No Q write uses the post-reset position | U | AC8 stops short of `S′` and reset |
+| PA4 | T8 | GOAL_OK on step 150 is terminal. A slip on step 150 truncates at the next step start | U | Section 9's row has no criterion |
+| PA5 | D11 | The traversal record holds one entry per attempted legal edge, goal edges included, from a single writer | U, R | D11 has no test |
+| PA6 | E-3 | A forced non-edge pair is refused: the agent stays, the step is consumed and the event is counted | U | Section 9's row has no criterion |
+| PA7 | D17b, FR-B | Each TC-2 session records its S0 conditions, arm OFF, PE pin off and D10 credit active. A session that departs from them is refused | S, R | Neither has a criterion |
+| PA8 | FR-D | Requested steps, executed steps, call exposure, Attempts and timer ticks are recorded separately, and executed steps never exceed requested steps | R | AC21 does not state the hard budget |
+| PA9 | C11 | No writer gains a new call site to restore lost cadence | S | The mechanism boundary has no test for rerouting |
+
+### 16.9 Clarifications requested
+
+1. Approve, change or reject the AC23 numbers: the mutant suite, the worlds and the step count.
+2. Confirm that the D10 writer sits inside the guard set. Run C would then keep Hook State P's four fields while its effective credit is D10. The alternative is a separate credit switch and a fourth configuration.
+3. Decide whether a D17b stratum is within AC23's scope, given that no matched baseline exists.
+4. Approve, change or reject PA1 to PA9.
+5. Confirm T9's scope. The proposed reading is the main TD write, with commit, explore and replay writes staying as CL-A and C4 record them.
+6. Define the D15 environment for parity runs: the per-edge reliability values and their source.
+7. Rule on the gate objective, or accept it as a disclosed limitation.
+
+### 16.10 Freeze-gate verdict
+
+**Verdict: NOT READY FOR DOCUMENTATION FREEZE.** Mandatory definitions remain unresolved: items 1 to 6 of Section 16.9 all bear on the contract's definitions or its acceptance set. This verdict is about documentation. A documentation freeze, when reached, would not be a claim of behavioural correctness, runtime acceptance or any improvement in the agent.
+
+Remaining blockers:
+
+| Area | Blocker | Kind |
+|---|---|---|
+| Definitions | Section 16.9 items 1 to 7 | Director decision |
+| Acceptance coverage | T4, T9, D11, D14 and FR-B have no criterion. T5, T8, E-3, D17b, FR-D and C11 are partly covered | Director decision |
+| Derived tree and driver | No derived tree, TC-2 driver, per-call rows, attribution table or D15 environment exists | Artifact |
+| AC23 | Baseline rebuild, all runs, static checks and mutant fixtures | Runtime |
+| T3 and M2 | M2 is not implemented or approved. The inventory must be re-derived on a derived tree. AC10 is unrun | Runtime |
+| T4 | No criterion, no derived-tree inventory, no runtime evidence | Decision and runtime |
+| D17b | All validation in Section 16.3 | Runtime |
+| Budget | Call-level confirmation, the future driver, and the five-call re-derivation | Runtime |
+| Freshness | Writer list on the tree under test, four assumptions, AC7, AC25 to AC29, AC32 | Runtime |
+| AC38 | Feasibility study, then acceptance | Feasibility, then runtime |
+| D16 | Record immutability and unreadability: AC17, AC33 and Section 9's row | Runtime |
+| Source records | Unrealized nodes in stored episodes, where the source answer in Section 15.9 awaits acceptance. Non-fresh prediction calls on other trees | Director decision |
+| All criteria | AC1 to AC38 are unrun | Runtime |
+
+Open markers: [OPEN-T3], [OPEN-DoubleGoal], [OPEN-FreshMech], [OPEN-Budget] and [OPEN-A4]. AC23 and AC38 stay open and non-executable. TC-2 remains design-only and paused.

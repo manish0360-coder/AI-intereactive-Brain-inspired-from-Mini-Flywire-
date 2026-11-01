@@ -7,6 +7,40 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-040 — TC-2: freeze-gate rulings recorded (documentation only)
+
+**Date:** 2026-11-01 · **Authority:** Research Director TC-2 freeze-gate directive · **Status:** in force as provisional design rulings; no executable effect
+**Scope:** TC-2 design only. Section 16 of `experiments/tc2/TRANSITION_CONTRACT.md` holds the full wording. That directive's Rulings A to G are recorded as FR-A to FR-G, so they are not confused with D-037's Rulings A to F or D-038's SC-A to SC-E.
+
+**Decision.**
+- FR-A: the three-run design is the proposed AC23 structure. Run A against Run B requires byte identity on an enumerated comparison set. Run B against Run C requires named invariants, with differences attributable to a named guard-controlled clause. This refines Ruling C: its byte-identity candidate moves to A against B, and its literal pairing with a guards-enabled run is not kept. Ruling C's text was proposed and candidate, so no binding requirement is weakened. AC23 stays open and non-executable.
+- FR-B: S0 is the proposed initial scope, excluding restoration, saving, teaching, goal changes and the seal bridge. It narrows neither CL-B, nor AC38, nor the `[OPEN-T3]` closure rule. No conclusion is generalized beyond S0.
+- FR-C: D17b stays mandatory. Hook State P parity does not prove it, and the missing matched baseline is a verification gap.
+- FR-D: a hard budget for the study-step unit is adopted. A session that exceeds its declared budget is invalid. Session end is not a terminal learning event. `[OPEN-Budget]` stays open.
+- FR-E: the A4 classification is recorded with two new labels. D12b is unchanged, and `[OPEN-A4]` stays open.
+- FR-F: `lastReasoning` object identity stays the leading candidate. `[OPEN-FreshMech]` stays open.
+- FR-G: AC38 stays open and non-executable. A feasibility proposal is recorded, and no method is approved.
+
+**Findings recorded.**
+- Acceptance traceability shows no criterion for T4, T9, D11, D14 or FR-B, and partial coverage for T5, T8, E-3, D17b, FR-D and C11. Amendments PA1 to PA9 are proposed and not adopted.
+- T9's wording does not fit the commit, explore and replay Q writes, whose reward is not `rewardSignal`. Clarification is requested.
+- The 10 mutants, 10 worlds and 12,000 steps were reconciled and stay unapproved.
+- Freeze-gate verdict: NOT READY FOR DOCUMENTATION FREEZE, because mandatory definitions remain unresolved.
+
+**Limits.**
+- D-035, D-036, D-037, D-038 and D-039 stay as written. Section 16 updates the contract's Sections 13 to 15 where they differ.
+- These rulings are policy directions. They replace no required source or runtime evidence.
+- No open marker is closed. `[OPEN-T3]`, `[OPEN-DoubleGoal]`, `[OPEN-FreshMech]`, `[OPEN-Budget]` and `[OPEN-A4]` stay open.
+- No acceptance criterion has been run or passed. Coverage is not a result.
+- Both existing Q-write paths stay unchanged. M2 is not approved for implementation and is not claimed to exist in the pinned tree. T4 stays distinct from T3.
+- ACQ-1 remains VOID under D-035 and is not evidence for this contract.
+- TC-2 remains design-only and paused. The contract is not frozen.
+- This entry authorizes no implementation, test, experiment, instrumentation, feasibility study, build or runtime work.
+- It supports no claim about learning, reliability, transfer, planning, mechanism performance or cognition.
+- Source tracing is not runtime verification.
+
+---
+
 ## D-039 — TC-2: freeze-readiness assessment recorded (documentation only)
 
 **Date:** 2026-11-01 · **Authority:** Project owner's TC-2 freeze-readiness directive; Chief Systems Engineer assessment, not a Director ruling · **Status:** in force as an assessment record; its recommendations have no effect until ruled
