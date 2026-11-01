@@ -7,6 +7,43 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-041 — TC-2: clarification rulings and coverage amendments recorded (documentation only)
+
+**Date:** 2026-11-01 · **Authority:** Research Director TC-2 clarification directive · **Status:** in force as provisional design rulings; no executable effect
+**Scope:** TC-2 design only. Section 17 of `experiments/tc2/TRANSITION_CONTRACT.md` holds the full wording. That directive's Rulings 1 to 7 are recorded as FC-1 to FC-7.
+
+**Decision.**
+- FC-1: 10 mutants, 10 development worlds and 12,000 study steps are the proposed initial AC23 test plan. They are initial test parameters only, with no claim of statistical sufficiency or cognitive improvement. The conflict check found no binding conflict. Mutant 10 needs D10 active, so it runs outside the parity stratum.
+- FC-2: the D10 writer is not automatically placed in the guard set. No binding decision requires it there. A narrow guard definition, with D10 on a separate credit switch, is recommended and awaits a Director ruling.
+- FC-3: D17b is excluded from the initial AC23 parity stratum and stays a separate validation obligation.
+- FC-4: PA1 to PA9 were assessed one by one. AC39 to AC48 are adopted. PA2 was replaced under FC-5, PA7 was split, and other wording was tightened as Section 17.4 records.
+- FC-5: T9 now addresses every applicable Q-write path, and the Q-write reward inventory is recorded.
+- FC-6: the parity environment is enumerated field by field. The reliability values and the agent id still need a decision.
+- FC-7: the verification gate's objective is documented contract compliance, reproducibility requirements and evidence integrity, across four separate categories.
+
+**Historical wording preserved.**
+- T9 as approved under D17a: "The Q reward input is `rewardSignal`. `rewardCurrentEpisode(10)` has no contract role."
+- D14 as approved: "`rewardCurrentEpisode(10)` stays unchanged on GOAL_OK, has no contract role and is not the Q reward. `rewardSignal` is the Q reward input."
+- Both stay in the contract. The governing T9 wording is in Section 17.5. This correction is flagged for the Director, who may reverse it.
+
+**Findings recorded.**
+- FC-7 defines the verification gate. The contract's "gate objective" and D13's "objective unspecified" refer to D13's reward gate, which FC-7 does not address. That stays a disclosed limitation.
+- Freeze verdict: NOT READY FOR DOCUMENTATION FREEZE. Unresolved definitions: the guard definition and separate credit switch, the parity reliability values, and the parity agent id.
+
+**Limits.**
+- D-035, D-036, D-037, D-038, D-039 and D-040 stay as written. Section 17 updates the contract's Sections 13 to 16 where they differ.
+- These rulings are policy directions. They replace no required source or runtime evidence.
+- No open marker is closed. `[OPEN-T3]`, `[OPEN-DoubleGoal]`, `[OPEN-FreshMech]`, `[OPEN-Budget]` and `[OPEN-A4]` stay open.
+- AC23 and AC38 stay open and non-executable. No acceptance criterion has been run or passed.
+- Both existing Q-write paths stay unchanged. M2 is not approved for implementation. T4 stays distinct from T3. No Q-write behaviour changes.
+- ACQ-1 remains VOID under D-035 and is not evidence for this contract.
+- TC-2 remains design-only and paused. The contract is not frozen.
+- This entry authorizes no implementation, test, experiment, instrumentation, feasibility study, build or runtime work.
+- It supports no claim about learning, reliability, transfer, planning, mechanism performance or cognition.
+- Source tracing is not runtime verification.
+
+---
+
 ## D-040 — TC-2: freeze-gate rulings recorded (documentation only)
 
 **Date:** 2026-11-01 · **Authority:** Research Director TC-2 freeze-gate directive · **Status:** in force as provisional design rulings; no executable effect
