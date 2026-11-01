@@ -7,6 +7,39 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-039 — TC-2: freeze-readiness assessment recorded (documentation only)
+
+**Date:** 2026-11-01 · **Authority:** Project owner's TC-2 freeze-readiness directive; Chief Systems Engineer assessment, not a Director ruling · **Status:** in force as an assessment record; its recommendations have no effect until ruled
+**Scope:** TC-2 design only. Section 15 of `experiments/tc2/TRANSITION_CONTRACT.md` holds the full wording.
+
+**Recorded.**
+- Assessment verdict: NOT READY FOR FREEZE REVIEW, because the mandatory definitions are proposals and not rulings.
+- If the Director rules on every Category 1 item, the verdict would become READY FOR DOCUMENTATION FREEZE ONLY, WITH RUNTIME/ACCEPTANCE BLOCKERS.
+- A correction to the contract's Section 14.2: contract Attempts are `log` rows of kind EDGE, not `envCounters.attempts`. D-038 does not name that field and stays as written.
+
+**Proposed, pending a Director ruling.**
+- AC23: guards enforce behaviour, byte identity applies with guards off, and the guards-on comparison uses listed invariants.
+- S0 as the initial TC-2 session scope.
+- No D17b parity stratum in initial AC23, with D17b staying mandatory as TC-2's configuration.
+- A hard step budget, with no overrun permitted.
+- The A4 classes and two new labels, without changing D12b.
+- Object identity staying the leading freshness candidate, within a stated boundary.
+- A separately authorized AC38 feasibility study.
+- Coverage for T4 and T9, which no acceptance criterion names.
+
+**Limits.**
+- This entry records no new Director ruling. D-035, D-036, D-037 and D-038 stay as written.
+- No open marker is closed. `[OPEN-T3]`, `[OPEN-DoubleGoal]`, `[OPEN-FreshMech]`, `[OPEN-Budget]` and `[OPEN-A4]` stay open.
+- AC23 and AC38 stay open and not executable. No acceptance criterion has been run or passed.
+- Both existing Q-write paths stay unchanged. M2 is not approved for implementation.
+- ACQ-1 remains VOID under D-035 and is not evidence for this contract.
+- TC-2 remains design-only and paused. The contract is not frozen.
+- This entry authorizes no implementation, test, experiment, instrumentation, feasibility study, build or runtime work.
+- It supports no claim about learning, reliability, transfer, planning, mechanism performance or cognition.
+- Source tracing is not runtime verification.
+
+---
+
 ## D-038 — TC-2: source-closure review recorded (documentation only)
 
 **Date:** 2026-11-01 · **Authority:** Research Director TC-2 source-closure directive · **Status:** in force as a provisional design record; no executable effect

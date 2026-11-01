@@ -46,6 +46,7 @@ Provenance note: Review Copy 2 and all rulings below were made in the design con
 | DT3 | DIRECTOR RULING: DEFER. [OPEN-T3] stays open. Ruling B (Section 13) states a preferred design direction and closes nothing |
 | Rulings A to F (D-037) | DIRECTOR RULING, provisional. Section 13 holds them. Every open item they name stays open |
 | SC-A to SC-E (D-038) | DIRECTOR RULING, provisional. Section 14 holds them and the source-closure record. Every open item they name stays open |
+| Freeze-readiness assessment (D-039) | PROPOSED, not ruled. Section 15 holds it. Verdict: NOT READY FOR FREEZE REVIEW |
 | Gemini overall NOT READY verdict | Rejected as insufficiently supported. This does not independently prove the contract correct. Its useful verification ideas are preserved |
 
 ## 1. Baseline identity (PROVISIONAL APPROVAL, D6)
@@ -773,7 +774,7 @@ Accounting convention:
 | Requested study steps | The budget, stated before a run | `steps` | The primary unit |
 | Executed study steps | `runAgent` calls that meet E-2 | `calls` | Reported against the request. Any overrun is reported |
 | Call exposure | Every `runAgent` call, direct calls included | `calls` | Recorded separately, even when equal to executed steps |
-| Contract Attempts | Attempts as defined in Section 5 | `envCounters.attempts` | Never a budget unit |
+| Contract Attempts | Attempts as defined in Section 5 | `log` rows of kind EDGE (corrected by Section 15) | Never a budget unit |
 | Harness ticks | Loop-based harness count | `ticksExecuted` | Never reported as steps |
 
 One counter serves two measures today. They stay separate fields so that a later boundary change cannot pass silently. A study must state its unit before it runs and must not switch between steps and attempts.
@@ -915,3 +916,263 @@ These facts say how an item is declared. They establish no method. The evidence 
 | [OPEN-A4] | Open. Proposal awaits a ruling |
 
 No acceptance criterion has been run or passed. TC-2 remains design-only and paused.
+
+## 15. Freeze-readiness assessment (PROPOSED, not ruled; D-039)
+
+This section is the Chief Systems Engineer's assessment, requested by the project owner. Every recommendation in it is PROPOSED and has no force until the Research Director rules on it. The established rulings stay exactly as Sections 4, 13 and 14 record them.
+
+This section changes no text of T1 to T9, the Part D table, D12b or any acceptance criterion. It closes no open marker and approves no mechanism. No criterion has been run or passed, and the contract is not frozen. Line references follow Section 14's rule. Source trace is not runtime evidence.
+
+Correction. Section 14.2 named `envCounters.attempts` as the field for contract Attempts. That field is `env.log.length`, which also counts SELF and REFUSED rows (`experiments/coga/acq1/session_mfw.mjs:123`, `experiments/coga/acq1/env.mjs:25-30`). The Section 14.2 row is corrected.
+
+### 15.1 Summary
+
+| Issue | Established ruling | Recommendation | Basis | Evidence still needed |
+|---|---|---|---|---|
+| A. AC23 guards | SC-A, Ruling C | Guards enforce behaviour. Byte identity applies with guards off. The guards-on comparison uses listed invariants | Policy, resting on design records | Every gap in Section 15.2 |
+| B. Session scope | None | Adopt S0 as the initial session scope | Policy. S0's fit to the harness is source fact | M2 on a derived tree, re-derived inventory, runtime evidence |
+| C. D17b | D17b, SC-A's limit | No D17b parity stratum in initial AC23. D17b stays mandatory as TC-2's configuration | Policy. The missing baseline is source fact | AC13, AC14, Section 9's D17b row |
+| D. Budget | SC-B | Hard budget. Requested steps are a multiple of 5, and overrun is not permitted | Policy. The arithmetic is source fact | Driver change, call-level runtime confirmation |
+| E. A4 | D12b, SC-D | Classes in Section 15.6 | Policy. Locations and effects are source facts | Director ruling |
+| F. Freshness | Ruling E, SC-E | Keep object identity as the leading candidate, with the boundary in Section 15.7 | Source fact for the pinned tree. Adoption is policy | Re-derived writer list; AC7, AC25 to AC29, AC32 |
+| G. AC38 | Ruling D, SC-E | Authorize the study in Section 15.8 separately | Policy | Study results |
+
+### 15.2 Issue A: AC23 guard semantics
+
+**Question.** What does the guard switch control, and what must match between runs?
+
+**Existing record.** AC23 reads "Guards-off parity and mutant suite". D18(c) keeps that wording and leaves the parity target OPEN. Ruling C proposes a fresh pinned-baseline comparison, with byte-identical logs as the candidate criterion. SC-A sets guards off against guards enabled, with all else identical.
+
+**Evidence.**
+- Design record: an early AC23 read "Guards off: parity with `acq-dev-P12k` logs", on a derived tree built by a guarded transform.
+- Repository precedent: GATE-FLOOR required off-state neutrality on whole sessions, checked not assumed, and then tested determinism with the intervention on (`experiments/gate-floor-b2/PRISTINE_RUNTIME.md:70-77`, `experiments/gate-floor-head/DESIGN_REVIEW.md:46-49`).
+- Contract: O1, R3, D8 and D10 require behaviour to change. By inference, a switch carrying them cannot leave all outputs identical.
+- Source: the legality guard masks candidates (`P:1792`) and blocks moves (`P:3646`), and it is on in the ACQ-1 driver's variant P.
+
+| Option | Consequence and risk |
+|---|---|
+| 1. Guards are observational, so all outputs must match | Byte identity is testable, but the switch could not carry O1, R3, D8 or D10. AC23 would then say nothing about TC-2 behaviour |
+| 2. Guards enforce behaviour, so listed invariants must match | Fits the contract. Alone, it risks weak invariants and loses the off-state test |
+| 2 with off-state byte identity (recommended) | Keeps the strongest test where it can hold. Costs a third run and an additive-only derived tree |
+
+**Recommendation: Interpretation 2, with byte identity retained for the off state.** This is a policy choice resting on the design records and contract. It adds checks instead of removing them: a third run, repeat-run preconditions and an additive-only rule. It departs from Ruling C's literal pairing of byte identity with a guards-enabled run, so it needs an explicit Director ruling.
+
+| Term | Proposed definition |
+|---|---|
+| What the switch controls | One switch for the whole TC-2 guard set: every code path a derived tree adds to implement this contract. No partial state is permitted |
+| Not switched | The legality guard (on in all runs), the D5 map block, Hook State P and the harness switches |
+| Run A | Fresh pinned tree |
+| Run B | Derived tree, guards off |
+| Run C | Derived tree, guards enabled |
+| A against B | AC23's parity. Byte identity on the compare set. This is where Ruling C's criterion applies |
+| B against C | SC-A's comparison, with the guard setting as the only variable. It is not a parity claim, and byte identity is not required |
+| Compare set | `log`, `goalResets`, `envCounters`, `mapAudit`, `guard`, `outcome`, `rng`, `clock.loopFires`, `clock.violations`, `provenance.fingerprint` |
+| Excluded from compare | `wallMs`, `label`, and `provenance.mainSha256`, which differs by design between A and B |
+| Must match, B against C | The input record (tree, driver, preload, clock, hook state, world, goal, agent id, seed, environment, requested steps), the first start, `u(e,j)` for every pair both runs reach, executed steps, `mapAudit.ok`, zero clock violations, no crash |
+| Permitted differences, B against C | Any output downstream of a guard-controlled clause. In each session the first differing call must be attributed to a named clause. This needs per-call rows |
+| Static reverse-identity checks | The derived tree is additive only: removing tagged lines gives the pinned `main.js` byte for byte, and no other tree file differs. CREDIT-1's S-2 is the precedent. This establishes source containment. It does not establish runtime equivalence, correct guards-on behaviour or the absence of RNG or clock effects |
+| Suite membership | Section 14.1's nine general mutants, plus "extra trust writer" with a proposed target of AC13. The DB mutants stay with AC38, AC5 and AC19, so AC23 does not wait on AC38 |
+| World list | Accepted-stream development indices 0 to 9, with configuration seeds 200116, 200183, 200220, 200247, 200316, 200388, 200404, 200489, 200531 and 200710. Ten matches the design record's count |
+| Environment | One fixed per-edge environment that meets D15. It does not exist yet |
+| Step count | 12,000 requested steps, under Section 15.5. This is a harness-scale choice, not a scientific one. The ACQ-1 design notes that 3,000 was only the M7 budget (`experiments/coga/acq1/DESIGN.md:110`) |
+| Nondeterminism | None is permitted in the compare set. Fixed clock, `__M7_REPLAY_ONCE__`, a seeded RNG asserted at the first call (`instrumentation/rng.js:91`), one process per session, one Node binary. Preconditions: repeated Run A and repeated Run C are each byte-identical on the compare set |
+| Pass | All ten worlds pass A against B, all B against C items hold, the static checks pass, and every suite mutant fails its named criterion |
+| Fail | Any compared byte difference, failed item, missing artifact or surviving mutant fails AC23. No retry and no world replacement. The first differing row is reported |
+
+**Limit.** A pass would show off-state inertness and a matched comparison. It would not show correct guards-on behaviour. That belongs to the other acceptance criteria.
+
+**AC23 stays open and not executable.** Still missing: a Director ruling, a derived tree, a TC-2 driver, the D15 environment, per-call rows, and the fixtures that the mutants target.
+
+### 15.3 Issue B: session scope, T3 and M2
+
+**Question.** Is S0 the right initial TC-2 session scope?
+
+**Existing record.** Purpose A, CR-1, O3, Section 14.3 and SC-C. No ruling sets the session scope.
+
+**Evidence.** CR-1 has no row for restoration, teaching or goal change. The harness fixes the goal (`experiments/m7/run.js:210-212`), asserts a cold store (`:223-231`) and presses Space once (`:248`).
+
+| Option | Consequence and risk |
+|---|---|
+| S0 (recommended) | Fits Purpose A, CR-1 and the harness. Conclusions stop at S0 |
+| Broader scope | Must also cover routes 2, 3, 8, 12, 13 and 15, plus `P:3431-3447`, `P:4315` and route 6 after a goal change. CR-1 has no reference for them, so conformance would have no basis |
+
+**Recommendation: adopt S0 as the initial session scope.** This is a policy choice.
+- Includes: one goal set once before the loop, an empty `brain` store, one Space press, no home, one process, the episode cap and deterministic replay cooldown.
+- Excludes: restoration, saving, manual teaching, any goal change, home override, Shift+R and the seal bridge.
+- No conclusion may be generalized beyond S0.
+
+**T3 and M2.**
+- M2 does not exist in the pinned tree: `updateQ` has no terminal input (`render/qlearning.js:143-165`). No-bootstrap behaviour is not established there: `P:4177` passes the pre-move position.
+- Within S0, on a tree where `S′=k(g)`, the absence of `g#g` would give both GOAL_OK writes a zero bootstrap. That is the incidental Q-table state SC-C rules out relying on, so M2 stays the preferred design.
+- [OPEN-T3] stays open. It needs an S0 ruling, M2 on a derived tree, the inventory re-derived on that tree, AC10 fixtures and runtime evidence.
+- T4 stays separate, and no acceptance criterion names it (Section 15.9).
+
+### 15.4 Issue C: D17b scope
+
+**Question.** Is D17b's credit-on configuration mandatory for the initial TC-2 milestone?
+
+**Existing record.** D17b, D10, SC-A's limit and Section 9's D17b row.
+
+**Evidence.** No hook state supplies D10 credit (Section 14.1). A parity stratum needs a baseline that already has the behaviour, and no tree has D10 credit.
+
+| Option | Consequence and risk |
+|---|---|
+| D17b parity stratum in initial AC23 | No matched baseline exists, so it could not be a parity |
+| `creditMode: 'on'` off-parity stratum | Feasible, and it would cover the `__M7_CREDIT__` path. It is not D10, so it must not carry D17b's name |
+| Outside initial AC23, mandatory as TC-2's configuration (recommended) | Keeps D17b binding and keeps guard parity honest |
+
+**Recommendation.** Keep D17b mandatory as TC-2's configuration, and exclude a D17b parity stratum from initial AC23. The missing baseline is source fact, and the exclusion is a policy choice.
+- Proposed control: the D10 writer sits inside the TC-2 guard set, and `creditMode` stays `'off'` in Runs A, B and C. The guard setting then stays the only variable.
+- Limitation: AC23 says nothing about D10. Run C containing D10 code does not validate it, and Hook State P does not prove D17b behaviour.
+- Future requirement: AC13, AC14 and Section 9's D17b row must pass on the guards-enabled tree before any TC-2 behaviour is relied on.
+
+### 15.5 Issue D: budget and accounting
+
+**Question.** How are steps, exposure and overrun defined, so that a hard budget cannot be silently exceeded?
+
+**Existing record.** E-2, T7, AC21, SC-B and Section 14.2. These definitions are consistent with each other. None sets a stopping rule.
+
+**Evidence.** The five-call discrepancy is accounted for at source level (Section 13, Ruling F). The harness passes `ticks` as the step budget (`experiments/coga/acq1/session_mfw.mjs:114`), then adds the direct loop on top.
+
+| Option | Consequence and risk |
+|---|---|
+| Disclose overrun only | A requested budget can still be exceeded |
+| Exclude the five direct calls from steps | Conflicts with E-2, the step index and the episode cap |
+| Hard budget (recommended) | No overrun. Needs a driver change. `main.js` does not change |
+
+**Recommendation: a hard budget.** This is a policy choice. The arithmetic is source fact.
+
+| Term | Proposed definition | Field |
+|---|---|---|
+| Requested steps | A positive multiple of 5, declared before the run. The primary budget. Any other value is refused | `steps` |
+| Executed study steps | `runAgent` calls reaching `P:3260`, from the session's first call, direct calls included | `calls` |
+| `runAgent` call exposure | Every `runAgent` entry, recorded separately from executed steps | `calls`, cross-checked by `5 + 5 × loopFires` |
+| Contract Attempts | Legal edges presented to the environment. On the pinned tree goal attempts have no row (`P:5025`) | `log` rows of kind EDGE |
+| Harness timer ticks | Timer-driven loop fires. Never reported as steps. `ticksExecuted` is 5 times this count | `clock.loopFires` |
+| Stopping | The driver passes `ticks = requested − 5`. The direct loop plus `requested / 5 − 1` timer loops make exactly the requested calls | Future driver |
+| Overrun | Executed steps above requested. Not permitted: the session is invalid | `calls` |
+| Underrun | Executed steps below requested. The session is incomplete and reported as such | `calls`, `outcome.completed` |
+| Session end | Not a terminal event. It writes no reward, Q or commit and creates no D16 record. The open episode is treated as censored | None yet |
+
+For 12,000 requested steps, the driver passes 11,995, and 5 plus 2,399 loops of 5 make 12,000 calls.
+
+Future implementation requirement, not implemented: the TC-2 driver refuses other values, passes `ticks` as above and asserts that `calls` equals `steps`. Existing records stay as they are.
+
+[OPEN-Budget] stays open until the policy is ruled and call-level runtime confirmation exists. The attempts-per-step asymmetry also stays open.
+
+### 15.6 Issue E: A4 operation classification
+
+**Question.** Which class does each operation that D12b does not name belong to?
+
+**Existing record.** D12b, C5, Section 6.1's "Loop-level maintenance" row, SC-D and Section 14.4.
+
+**Options.** Extend D12b's wording, or leave D12b unchanged and rule classes in a new decision. Recommended: leave D12b unchanged. Add two labels by a new ruling: **boundary** (step accounting, starts, resets and call control) and **non-learning output**. Locations and effects below are source facts. Classes are policy.
+
+| Operation | Location | Observable effect | Proposed class | Rationale | Unresolved |
+|---|---|---|---|---|---|
+| Branch draw | `P:3460` | One draw from the cognitive stream; selects prediction or replay | Boundary | It runs before any decision and writes no decision state | Ruling |
+| Decay gate draws | `P:3316`, `P:3330`, `P:3358`, `P:5238` | One draw each; choose whether a decay runs | Scheduled maintenance | C5(e) already includes the first three as scheduled operations. Each exists to schedule a decay | Ruling. `P:5238` also gates rebuilds |
+| Schema rebuild | `P:5254`, `render/schemaMemory.js:129-167` | Rebuilds `schemas` and clears `_bonusCache`; throttled by the clock | Scheduled maintenance, non-decay | Runs under Section 6.1's loop-level row. Derived from stored episodes, and it feeds scoring | Whether D12b's class admits non-decay work |
+| Adjacency rebuild | `P:5258`, `P:953-961` | Rebuilds `adjacencyMemory` from stored episodes | Scheduled maintenance, non-decay | Same reason | Same |
+| Consolidation pass | `P:5262-5263`, `render/longTermConsolidation.js:101-115` | One draw; raises stable `rewards`, capped at 8 | Scheduled maintenance, non-decay | Loop-level, but it strengthens a store | Same. Effect unmeasured |
+| `updateMotivationalState` | `P:1692` | Writes drive state once per imagined step; no RNG use found in its file | Decision-time | Runs only inside `runPrediction` | D12b's list is specific, so a ruling is needed |
+| `regulateBiology` | `P:2957`, `render/behavior.js:105` | Writes energy, stress and exhaustion state; no RNG use found in its file | Decision-time | Runs only inside `runPrediction`, after the step loop | Same |
+| Goal change | `P:820`, `P:3431-3447`, `P:4315`, `P:5515` | Writes `goalNeuronId` | Not permitted in S0 | Each needs a stored brain, a home or a click, all excluded by S0 | Issue B ruling |
+| Position bookkeeping | `P:4974` | `agentLast = agentCurrent` | Not run on a non-fresh call | Pinned source: it runs on a non-fresh call that passes the exits at `P:3576`, `P:3588`, `P:3643`, `P:3646`, `P:3653`, `P:3658` and `P:3690`. Section 6.1 step 7 ends such a call first, so this is a nonconformance | Its role on a derived tree |
+| Step accounting | `P:3260`, `P:3303` | Telemetry and the cap counter | Boundary | Section 14.2 | Ruling |
+| Cap handling, first start | `P:3274-3302`, `P:3400-3409` | Draw and position write | Boundary | CL-C and Part D cover their behaviour | Ruling |
+| Display and diagnostics | `P:2791`, `P:2821`, `P:2831`, `P:3566-3947`, `P:5288` | HUD, stream, spotlight, text and counters | Non-learning output | C5(f) names them | Whether each read writes no learning state |
+
+D12b is unchanged, and [OPEN-A4] stays open.
+
+### 15.7 Issue F: freshness
+
+**Question.** Is object identity an adequate freshness mechanism?
+
+**Existing record.** Section 5, C6, AC7, AC25 to AC29, AC32, Ruling E and SC-E.
+
+| Option | Consequence and risk |
+|---|---|
+| Object identity (recommended as candidate) | Needs no stored state. Rests on one writer creating a new object |
+| Persistent flag | Excluded by Ruling E and SC-E |
+| `runPrediction` return value | Changes a function's contract at `P:3462` and `P:5658`. No ruling has considered it |
+| Origin check | Already a must-fail mutant |
+
+**Recommendation.** Keep object identity as the leading candidate. The pinned-tree reading is a source finding, and adoption is a policy choice.
+
+**Boundary it could support.** Read the `lastReasoning` reference immediately before and immediately after contract step 5, in one `runAgent` call, using a local variable. A difference supports exactly one statement: the assignment ran between those reads.
+
+**What it cannot prove.** That the decision is legal or correct. Anything about a changed tree. Anything about runtime behaviour.
+
+**Assumptions that need runtime evidence.**
+1. Nothing interleaves within the call. Source shows no `await` in `main.js`.
+2. A derived tree keeps one writer, and that writer always creates a new object.
+3. No wrapper or accessor changes reference behaviour (`experiments/m7/run.js:236-240` stores the assigned value).
+4. The attempt uses the `to` of that same object (`P:3955`).
+
+[OPEN-FreshMech] stays open. It needs a re-derived writer list, AC7, AC25 to AC29 and AC32 on the tree under test, and detection of the freshness mutants.
+
+### 15.8 Issue G: AC38
+
+**Why current evidence does not establish complete write observation.**
+- No observation mechanism exists, and none has run.
+- Final-state digests miss transient, same-value and overwritten or restored writes. AC38(c) already says so.
+- 12 of the 20 inventory items are module-private (Section 14.5). Some are `let` bindings such as `_lastRebuild` (`render/schemaMemory.js:81`), so they change by assignment.
+- Neuron embeddings change by field assignment (`render/embeddings.js:236-237`).
+- AC38(b) needs stream positions at seal entry and return. `instrumentation/rng.js` exports no position reader, and the existing recovery runs once, at session end (`experiments/m7/run.js:266-273`).
+- The context episode is module-private (`render/episodicContextEngine.js:51`), and the test-access mechanism is undefined.
+- Source search and code coverage show what exists or ran. Neither observes each write.
+
+**Proposal for a separately authorized feasibility study. Not authorized and not started.**
+
+| Item | Proposal |
+|---|---|
+| Question | Can a test-only method observe every AC38(a) write in the seal window, across all 20 items, without changing behaviour? |
+| Write classes | Transient, same-value, overwritten or restored, Map and Set operations, array index and length, object fields including neuron fields, module-private assignments, and any other class AC38(a) requires |
+| Required properties | A positive control per write class and item kind. A no-write control. A coverage statement for all 20 items. Detection of every "must fail AC38" mutant. Seal-window stream deltas. Test access that meets AC38's limits. No production reader, writer or decision path; AC33 preserved. Seal behaviour and RNG consumption unchanged, shown by comparing runs with the method present and absent |
+| Candidates | None approved or selected. Families to compare: a source-transformed test copy, wrappers on exported collections, and a static closure argument with coverage. A family that misses a property is rejected, and coverage is not narrowed to fit it |
+| Phases | 1. Freeze the protocol before outcomes. 2. Build a synthetic write-class corpus. 3. Run controls on a test-only copy. 4. Run the mutants. 5. Check neutrality. 6. Report |
+| Stop rules | Stop on any production edit, any undetected class, or any behaviour change |
+| Outcomes | Feasible, or not feasible. Not feasible returns the coverage boundary to the Director. Neither outcome passes AC38 |
+| Authorization needed | A Director ruling that names the test copy, the runs and any tooling |
+
+AC38 stays open and not executable.
+
+### 15.9 Freeze-readiness verdict
+
+**Verdict: NOT READY FOR FREEZE REVIEW.** The mandatory definitions above are proposals, not rulings.
+
+If the Director rules on every item in Category 1 below, the verdict would become READY FOR DOCUMENTATION FREEZE ONLY, WITH RUNTIME/ACCEPTANCE BLOCKERS. That would not mean TC-2 is correct or accepted. A later AC38 result that returns the coverage boundary to the Director would reopen the frozen text.
+
+**Category 1: policy decisions that documentation can settle.**
+1. Guard semantics and the three-run AC23 (Section 15.2).
+2. AC23 suite, worlds, environment, step count, nondeterminism and pass/fail rules (Section 15.2).
+3. S0 as the initial session scope (Section 15.3).
+4. D17b's place outside initial AC23 (Section 15.4).
+5. Hard budget, stopping and session-end rules (Section 15.5).
+6. A4 classes and the two new labels (Section 15.6).
+7. T-to-AC coverage. No criterion names T4 or T9, and T5 and T8 are only partly covered. Proposed new criterion, not added: "Within S0, no Q write has `S=k(g)`, commit writes included."
+8. The gate objective, already recorded as unresolved.
+
+**Category 2: source-level questions.**
+1. Whether unrealized nodes reach stored episodes. Source answer on the pinned tree: yes. The push at `P:4502` precedes the verdict at `P:5026`, no writer removes a slipped target, and `P:4596` commits `recentMemory`. Section 11 keeps the item until this is accepted.
+2. Re-derivation on a derived tree: the bridge-path inventory, the `k(g)` routes and the `lastReasoning` writers. This cannot start until a tree exists.
+3. Non-fresh prediction calls on any other tree (C6).
+4. Root behaviour and inventory. This is needed only if the governing baseline changes.
+
+**Category 3: runtime evidence still missing.**
+1. Pinned baseline hash match on a separately authorized rebuild.
+2. A derived tree, a TC-2 driver and a D15 environment.
+3. Every acceptance criterion: none has been run.
+4. AC23's runs.
+5. Call-level budget confirmation.
+6. M2, T3 and T4 on a derived tree.
+7. Freshness behaviour.
+8. D16 record immutability and unreadability.
+
+**Category 4: questions needing a separately authorized feasibility study.**
+1. AC38 write observation.
+2. AC38 test access.
+3. AC38 stream deltas.
+
+Open after this assessment: [OPEN-T3], [OPEN-DoubleGoal], [OPEN-FreshMech], [OPEN-Budget] and [OPEN-A4]. AC23 and AC38 stay not executable. Documentation completeness is not behavioural correctness or acceptance.
