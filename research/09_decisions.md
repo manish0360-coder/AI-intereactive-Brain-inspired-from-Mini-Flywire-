@@ -7,6 +7,30 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-036 — TC-2: provisional transition contract recorded (documentation only)
+
+**Date:** 2026-11-01 · **Authority:** Research Director TC-2 rulings listed below · **Status:** in force as a provisional design record; no executable effect
+**Scope:** TC-2 design only.
+
+**Decision.**
+- The provisional contract is recorded at `experiments/tc2/TRANSITION_CONTRACT.md`. That file holds the full wording and each item's exact status.
+- Provisional approvals, subject to final contract review: D1 to D16, E-7, D17a and DB.
+- Director ruling, provisional: D17b. Eventual implementation verification is mandatory.
+- Accepted decisions: DB-Scope (b), CL-C and CL-D.
+- Approved as contract wording only: D18. No acceptance criterion has been run or passed.
+- AC23's parity target and AC38's executability are OPEN.
+- DT3 is DEFER. `[OPEN-T3]` and `[OPEN-DoubleGoal]` stay open, and neither M1 nor M2 is approved.
+- The contract is not frozen. Both candidate trees remain nonconforming.
+
+**Limits.**
+- ACQ-1 remains VOID under D-035 and is not evidence for this contract.
+- TC-2 remains design-only and paused.
+- This entry authorizes no implementation, test, experiment, instrumentation, build, staging, commit or push.
+- It supports no claim about learning, reliability, transfer, planning, mechanism performance or cognition.
+- Source tracing is not runtime verification.
+
+---
+
 ## D-035 — ACQ-1: A8 clause 3 ruled MET; study VOID (documentation only)
 
 **Date:** 2026-11-01 · **Authority:** Research Director ruling of 2026-11-01 on ACQ-1 A8 clause 3 · **Status:** in force; no executable effect
