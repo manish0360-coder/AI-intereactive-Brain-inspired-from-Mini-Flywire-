@@ -1,0 +1,2536 @@
+{
+ "schema": "tc2/ac38.prototype.summary/1",
+ "status": "PROTOTYPE CONTROL ON THE PINNED TREE. Not an AC38 run. AC38 stays non-executable and is not passed.",
+ "tree": "learn0-8aa9ee4f39f4",
+ "tableSha256": "6a9dfd964d4d0d07f08dfaa4f66a85ec60c2c60719d7ea703f6a5d3b22560e51",
+ "scopeSha256": "c0aa0ccc81485876d125eaeac6b0f06e7ee42300694850e77e5a5957c14573a8",
+ "preloadSha256": "3dcdb2d046b2989a54b4964f86985a7e2b10b05e27a110b85588a6f33018ccfe",
+ "clockPreloadSha256": "07f51c08ebf5b3546dacdb4a51512a10eb9d55fc0562797721899e7425cd2576",
+ "mainSha256": "3d3266fde38c39ea0a38f3920b4a2384ef5998e88c748e0a0a53416ef62bccc3",
+ "planningSha256": "34e06c655b4f2b04d77b4db0b8db744568235865788177085510b5dd78cf46dc",
+ "transform": {
+  "applied": {
+   "wrapper": 1,
+   "probe": 5,
+   "let": 6,
+   "append": 34
+  },
+  "loaded": 44,
+  "targets": 34
+ },
+ "safety": {
+  "fsWriteDenied": true,
+  "childDenied": true,
+  "workerDenied": true,
+  "networkGuard": true,
+  "cwdAtStart": "mini-flywire"
+ },
+ "K": 2000,
+ "steps": 3000,
+ "processes": 106,
+ "digest": {
+  "bindings": 141,
+  "opaque": {
+   "function": 440379
+  },
+  "opaqueTop": [
+   [
+    "render/scene.js#scene",
+    146546
+   ],
+   [
+    "render/neuronVisuals.js#_group",
+    146540
+   ],
+   [
+    "render/scene.js#group",
+    146540
+   ],
+   [
+    "render/neuronVisuals.js#neuronVisuals",
+    320
+   ],
+   [
+    "render/connections.js#lines",
+    117
+   ],
+   [
+    "main.js#neuronMap",
+    60
+   ],
+   [
+    "render/connections.js#neuronMapRef",
+    60
+   ],
+   [
+    "render/embeddings.js#neuronMapRef",
+    60
+   ],
+   [
+    "render/search.js#neuronMapRef",
+    60
+   ],
+   [
+    "render/episodeManager.js#_sys",
+    12
+   ],
+   [
+    "render/hud.js#hudElement",
+    12
+   ],
+   [
+    "render/hud.js#speedElement",
+    12
+   ]
+  ],
+  "opaqueBindings": 20,
+  "absentGlobals": [
+   "homeNeuronId",
+   "lastClicked",
+   "lastNeuron"
+  ]
+ },
+ "networkAttempts": 0,
+ "realHitCoverage": {
+  "journalAndLetItems": [
+   "Q",
+   "_bonusCache",
+   "_episodesSinceConsolidation",
+   "_episodesStoredTotal",
+   "_lastMotifs",
+   "_lastRebuild",
+   "conceptSchemas",
+   "confidenceMap",
+   "consolidationRegistry",
+   "episodicStore",
+   "momentumMemory",
+   "pathSuccesses",
+   "provenanceLog",
+   "rewards",
+   "schemas",
+   "semanticEdges",
+   "semanticStrength",
+   "transitions"
+  ],
+  "inventoryItemsWithNoJournalOrLetHit": [
+   "neuron embeddings",
+   "stableMemory"
+  ],
+  "letSitesHit": [
+   "render/episodeManager.js:1115",
+   "render/episodeManager.js:873",
+   "render/episodeManager.js:876",
+   "render/schemaMemory.js:148",
+   "render/schemaMemory.js:160"
+  ],
+  "firstFieldWriteSites": [
+   "render/embeddings.js:236"
+  ]
+ },
+ "perWindow": [
+  {
+   "reason": "tick_cap",
+   "fixture": "empty",
+   "call": 2474,
+   "nodes": [],
+   "labels": [],
+   "returned": "null",
+   "seeded": true,
+   "journal": {
+    "inventoryWrites": 0,
+    "byItem": {},
+    "bySite": {},
+    "letWrites": {},
+    "unregisteredMutatorCalls": {
+     "clock_preload(render/episodicContextEngine.js:118)": 3,
+     "clock_preload(render/episodicContextEngine.js:347)": 4
+    },
+    "registeredObjects": 3817
+   },
+   "probes": {},
+   "logs": [],
+   "streams": {
+    "spy": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "drawSites": {
+     "cognitive render/episodicContextEngine.js:120": 1
+    },
+    "recovered": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "mathRandom": 0
+   },
+   "vaultDelta": 0,
+   "storeDelta": 0,
+   "canaries": {
+    "J": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     }
+    },
+    "T": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "tripOpen": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     },
+     "tripClose": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     }
+    }
+   },
+   "tripwire": {
+    "fired": false,
+    "detail": null,
+    "journalWritesBeforeTrip": 0,
+    "firstJournalledBeforeTrip": null
+   },
+   "fieldTripwire": null
+  },
+  {
+   "reason": "tick_cap",
+   "fixture": "two",
+   "call": 2474,
+   "nodes": [
+    1,
+    2
+   ],
+   "labels": [
+    "percept",
+    "signal"
+   ],
+   "returned": "sealed",
+   "seeded": true,
+   "journal": {
+    "inventoryWrites": 0,
+    "byItem": {},
+    "bySite": {},
+    "letWrites": {},
+    "unregisteredMutatorCalls": {
+     "clock_preload(render/episodicContextEngine.js:358)": 4,
+     "render/episodicContextEngine.js:477": 1,
+     "render/episodicContextEngine.js:366": 1,
+     "render/episodeManager.js:299": 1,
+     "render/episodeManager.js:304": 20,
+     "clock_preload(render/episodeManager.js:688)": 3,
+     "render/episodeManager.js:729": 2,
+     "render/episodeManager.js:730": 2,
+     "render/episodeManager.js:741": 2,
+     "clock_preload(render/episodicContextEngine.js:118)": 3,
+     "clock_preload(render/episodicContextEngine.js:403)": 4
+    },
+    "registeredObjects": 3817
+   },
+   "probes": {
+    "bridge_callback": 1,
+    "recordAutonomousSuccess": 1,
+    "_sealBuffer": 1
+   },
+   "logs": [
+    "📦 Episode sealed [tick_cap]: percept → signal | tag: percept",
+    "[EPISODE ATTEMPT] recordAutonomousSuccess source=autonomous_success nodeIds=[1,2] nodeCount=2",
+    "[EPISODE SEAL-CHECK] source=autonomous_success len=2 (min 3) unique=2 (min 3) diversity=1.00 (min 0.5) nodes=[1,2] → REJECT gate4:length",
+    "[EPISODE REJECTED] sealBuffer returned null (see SEAL-CHECK above)"
+   ],
+   "streams": {
+    "spy": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "drawSites": {
+     "cognitive render/episodicContextEngine.js:120": 1
+    },
+    "recovered": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "mathRandom": 0
+   },
+   "vaultDelta": 1,
+   "storeDelta": 0,
+   "canaries": {
+    "J": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     }
+    },
+    "T": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "tripOpen": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     },
+     "tripClose": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     }
+    }
+   },
+   "tripwire": {
+    "fired": false,
+    "detail": null,
+    "journalWritesBeforeTrip": 0,
+    "firstJournalledBeforeTrip": null
+   },
+   "fieldTripwire": null
+  },
+  {
+   "reason": "tick_cap",
+   "fixture": "three",
+   "call": 2474,
+   "nodes": [
+    1,
+    2,
+    3
+   ],
+   "labels": [
+    "percept",
+    "signal",
+    "context"
+   ],
+   "returned": "sealed",
+   "seeded": true,
+   "journal": {
+    "inventoryWrites": 19,
+    "byItem": {
+     "Q": 2,
+     "confidenceMap": 2,
+     "episodicStore": 1,
+     "momentumMemory": 1,
+     "pathSuccesses": 2,
+     "provenanceLog": 2,
+     "rewards": 2,
+     "semanticStrength": 3,
+     "transitions": 4
+    },
+    "bySite": {
+     "Array.push render/episodeManager.js:1110": 1,
+     "Array.push render/semanticProvenance.js:180": 1,
+     "Map.set render/episodeManager.js:1096": 2,
+     "Map.set render/episodeManager.js:974": 2,
+     "Map.set render/episodeManager.js:975": 2,
+     "Map.set render/momentumMemory.js:70": 1,
+     "Map.set render/qlearning.js:132": 2,
+     "Map.set render/semanticProvenance.js:128": 2,
+     "Map.set render/semanticProvenance.js:176": 1,
+     "Map.set render/semanticVitality.js:84": 3,
+     "Map.set render/trustMemory.js:65": 2
+    },
+    "letWrites": {
+     "_episodesSinceConsolidation render/episodeManager.js:873": 1,
+     "_episodesStoredTotal render/episodeManager.js:1115": 1
+    },
+    "unregisteredMutatorCalls": {
+     "clock_preload(render/episodicContextEngine.js:358)": 4,
+     "render/episodicContextEngine.js:477": 1,
+     "render/episodicContextEngine.js:366": 1,
+     "render/episodeManager.js:299": 1,
+     "render/episodeManager.js:304": 20,
+     "clock_preload(render/episodeManager.js:688)": 3,
+     "render/episodeManager.js:729": 3,
+     "render/episodeManager.js:730": 3,
+     "render/episodeManager.js:741": 3,
+     "render/episodeManager.js:767": 2,
+     "clock_preload(render/episodeManager.js:789)": 3,
+     "clock_preload(render/semanticProvenance.js:180)": 6,
+     "render/semanticProvenance.js:180": 1,
+     "clock_preload(render/episodicContextEngine.js:118)": 3,
+     "clock_preload(render/episodicContextEngine.js:403)": 4
+    },
+    "registeredObjects": 3817
+   },
+   "probes": {
+    "bridge_callback": 1,
+    "recordAutonomousSuccess": 1,
+    "_sealBuffer": 1,
+    "_runPipeline": 1,
+    "_storeEpisode": 1
+   },
+   "logs": [
+    "📦 Episode sealed [tick_cap]: percept → signal → context | tag: percept",
+    "[EPISODE ATTEMPT] recordAutonomousSuccess source=autonomous_success nodeIds=[1,2,3] nodeCount=3",
+    "[EPISODE SEAL-CHECK] source=autonomous_success len=3 (min 3) unique=3 (min 3) diversity=1.00 (min 0.5) nodes=[1,2,3] → PASS gates4-6",
+    "[EPISODE ACCEPTED] sealed id=autonomous_success_1767225847000_zrw2z nodes=[1,2,3] activeGoal=3 quality=1.00",
+    "[PIPELINE ENTER] source=autonomous_success transitions=2",
+    "[EPISODE STORED] id=autonomous_success_1767225847000_zrw2z source=autonomous_success store.length=262 total=262"
+   ],
+   "streams": {
+    "spy": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "drawSites": {
+     "cognitive render/episodeManager.js:789": 1,
+     "cognitive render/episodicContextEngine.js:120": 1
+    },
+    "recovered": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "mathRandom": 0
+   },
+   "vaultDelta": 1,
+   "storeDelta": 1,
+   "canaries": {
+    "J": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     }
+    },
+    "T": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "tripOpen": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     },
+     "tripClose": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     }
+    }
+   },
+   "tripwire": {
+    "fired": true,
+    "detail": {
+     "name": "TypeError",
+     "message": "Cannot add property 4, object is not extensible",
+     "site": "render/semanticProvenance.js:180"
+    },
+    "journalWritesBeforeTrip": 5,
+    "firstJournalledBeforeTrip": {
+     "item": "transitions",
+     "op": "Map.set",
+     "site": "render/episodeManager.js:974",
+     "key": "2"
+    }
+   },
+   "fieldTripwire": {
+    "detail": {
+     "name": "TypeError",
+     "message": "Cannot assign to read only property 'embedding' of object '#<Object>'",
+     "site": "render/embeddings.js:236"
+    },
+    "journalWritesBeforeTrip": 11
+   }
+  },
+  {
+   "reason": "goal_reached",
+   "fixture": "empty",
+   "call": 2088,
+   "nodes": [],
+   "labels": [],
+   "returned": "null",
+   "seeded": true,
+   "journal": {
+    "inventoryWrites": 0,
+    "byItem": {},
+    "bySite": {},
+    "letWrites": {},
+    "unregisteredMutatorCalls": {
+     "clock_preload(render/episodicContextEngine.js:118)": 3,
+     "clock_preload(render/episodicContextEngine.js:347)": 4
+    },
+    "registeredObjects": 3478
+   },
+   "probes": {},
+   "logs": [],
+   "streams": {
+    "spy": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "drawSites": {
+     "cognitive render/episodicContextEngine.js:120": 1
+    },
+    "recovered": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "mathRandom": 0
+   },
+   "vaultDelta": 0,
+   "storeDelta": 0,
+   "canaries": {
+    "J": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     }
+    },
+    "T": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "tripOpen": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     },
+     "tripClose": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     }
+    }
+   },
+   "tripwire": {
+    "fired": false,
+    "detail": null,
+    "journalWritesBeforeTrip": 0,
+    "firstJournalledBeforeTrip": null
+   },
+   "fieldTripwire": null
+  },
+  {
+   "reason": "goal_reached",
+   "fixture": "two",
+   "call": 2088,
+   "nodes": [
+    1,
+    2
+   ],
+   "labels": [
+    "percept",
+    "signal"
+   ],
+   "returned": "sealed",
+   "seeded": true,
+   "journal": {
+    "inventoryWrites": 0,
+    "byItem": {},
+    "bySite": {},
+    "letWrites": {},
+    "unregisteredMutatorCalls": {
+     "clock_preload(render/episodicContextEngine.js:358)": 4,
+     "render/episodicContextEngine.js:477": 1,
+     "render/episodicContextEngine.js:366": 1,
+     "render/episodeManager.js:299": 1,
+     "render/episodeManager.js:304": 20,
+     "clock_preload(render/episodeManager.js:688)": 3,
+     "render/episodeManager.js:729": 2,
+     "render/episodeManager.js:730": 2,
+     "render/episodeManager.js:741": 2,
+     "clock_preload(render/episodicContextEngine.js:118)": 3,
+     "clock_preload(render/episodicContextEngine.js:403)": 4
+    },
+    "registeredObjects": 3478
+   },
+   "probes": {
+    "bridge_callback": 1,
+    "recordAutonomousSuccess": 1,
+    "_sealBuffer": 1
+   },
+   "logs": [
+    "📦 Episode sealed [goal_reached]: percept → signal | tag: percept",
+    "[EPISODE ATTEMPT] recordAutonomousSuccess source=autonomous_success nodeIds=[1,2] nodeCount=2",
+    "[EPISODE SEAL-CHECK] source=autonomous_success len=2 (min 3) unique=2 (min 3) diversity=1.00 (min 0.5) nodes=[1,2] → REJECT gate4:length",
+    "[EPISODE REJECTED] sealBuffer returned null (see SEAL-CHECK above)"
+   ],
+   "streams": {
+    "spy": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "drawSites": {
+     "cognitive render/episodicContextEngine.js:120": 1
+    },
+    "recovered": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "mathRandom": 0
+   },
+   "vaultDelta": 1,
+   "storeDelta": 0,
+   "canaries": {
+    "J": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     }
+    },
+    "T": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "tripOpen": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     },
+     "tripClose": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     }
+    }
+   },
+   "tripwire": {
+    "fired": false,
+    "detail": null,
+    "journalWritesBeforeTrip": 0,
+    "firstJournalledBeforeTrip": null
+   },
+   "fieldTripwire": null
+  },
+  {
+   "reason": "goal_reached",
+   "fixture": "three",
+   "call": 2088,
+   "nodes": [
+    1,
+    2,
+    3
+   ],
+   "labels": [
+    "percept",
+    "signal",
+    "context"
+   ],
+   "returned": "sealed",
+   "seeded": true,
+   "journal": {
+    "inventoryWrites": 272,
+    "byItem": {
+     "Q": 2,
+     "_bonusCache": 156,
+     "conceptSchemas": 18,
+     "confidenceMap": 2,
+     "consolidationRegistry": 9,
+     "episodicStore": 1,
+     "momentumMemory": 1,
+     "pathSuccesses": 2,
+     "provenanceLog": 2,
+     "rewards": 2,
+     "schemas": 61,
+     "semanticEdges": 9,
+     "semanticStrength": 3,
+     "transitions": 4
+    },
+    "bySite": {
+     "Array.push render/episodeManager.js:1110": 1,
+     "Array.push render/schemaMemory.js:176": 61,
+     "Array.push render/semanticProvenance.js:180": 1,
+     "Map.clear render/schemaMemory.js:167": 1,
+     "Map.set render/episodeManager.js:1096": 2,
+     "Map.set render/episodeManager.js:974": 2,
+     "Map.set render/episodeManager.js:975": 2,
+     "Map.set render/longTermConsolidation.js:63": 9,
+     "Map.set render/momentumMemory.js:70": 1,
+     "Map.set render/qlearning.js:132": 2,
+     "Map.set render/schemaMemory.js:654": 115,
+     "Map.set render/schemaMemory.js:662": 15,
+     "Map.set render/schemaMemory.js:671": 25,
+     "Map.set render/semanticMemoryLayer.js:68": 9,
+     "Map.set render/semanticMemoryLayer.js:92": 9,
+     "Map.set render/semanticMemoryLayer.js:97": 9,
+     "Map.set render/semanticProvenance.js:128": 2,
+     "Map.set render/semanticProvenance.js:176": 1,
+     "Map.set render/semanticVitality.js:84": 3,
+     "Map.set render/trustMemory.js:65": 2
+    },
+    "letWrites": {
+     "_episodesSinceConsolidation render/episodeManager.js:873": 1,
+     "_episodesSinceConsolidation render/episodeManager.js:876": 1,
+     "_episodesStoredTotal render/episodeManager.js:1115": 1,
+     "_lastMotifs render/schemaMemory.js:148": 1,
+     "_lastRebuild render/schemaMemory.js:160": 1
+    },
+    "unregisteredMutatorCalls": {
+     "clock_preload(render/episodicContextEngine.js:358)": 4,
+     "render/episodicContextEngine.js:477": 1,
+     "render/episodicContextEngine.js:366": 1,
+     "render/episodeManager.js:299": 1,
+     "render/episodeManager.js:304": 20,
+     "clock_preload(render/episodeManager.js:688)": 3,
+     "render/episodeManager.js:729": 3,
+     "render/episodeManager.js:730": 3,
+     "render/episodeManager.js:741": 3,
+     "render/episodeManager.js:767": 2,
+     "clock_preload(render/episodeManager.js:789)": 3,
+     "clock_preload(render/semanticProvenance.js:180)": 6,
+     "render/semanticProvenance.js:180": 1,
+     "clock_preload(render/schemaMemory.js:133)": 8,
+     "render/schemaMemory.js:435": 4525,
+     "render/schemaMemory.js:440": 273,
+     "render/schemaMemory.js:449": 1510,
+     "render/schemaMemory.js:487": 126,
+     "render/schemaMemory.js:500": 1,
+     "render/schemaMemory.js:554": 3670,
+     "render/schemaMemory.js:573": 3670,
+     "render/schemaMemory.js:575": 374,
+     "render/schemaMemory.js:586": 198,
+     "render/schemaMemory.js:587": 198,
+     "render/schemaMemory.js:581": 176,
+     "render/schemaMemory.js:582": 176,
+     "clock_preload(render/schemaMemory.js:623)": 183,
+     "render/schemaMemory.js:598": 115,
+     "render/schemaMemory.js:205": 1,
+     "render/schemaMemory.js:206": 126,
+     "render/schemaMemory.js:209": 126,
+     "render/episodeManager.js:1252": 4423,
+     "render/episodeManager.js:1257": 264,
+     "render/episodeManager.js:1271": 1499,
+     "render/episodeManager.js:1280": 124,
+     "render/episodeManager.js:1291": 1,
+     "clock_preload(render/longTermConsolidation.js:54)": 27,
+     "clock_preload(render/semanticMemoryLayer.js:58)": 27,
+     "clock_preload(render/episodicContextEngine.js:118)": 3,
+     "clock_preload(render/episodicContextEngine.js:403)": 4
+    },
+    "registeredObjects": 3478
+   },
+   "probes": {
+    "bridge_callback": 1,
+    "recordAutonomousSuccess": 1,
+    "_sealBuffer": 1,
+    "_runPipeline": 1,
+    "_storeEpisode": 1
+   },
+   "logs": [
+    "📦 Episode sealed [goal_reached]: percept → signal → context | tag: percept",
+    "[EPISODE ATTEMPT] recordAutonomousSuccess source=autonomous_success nodeIds=[1,2,3] nodeCount=3",
+    "[EPISODE SEAL-CHECK] source=autonomous_success len=3 (min 3) unique=3 (min 3) diversity=1.00 (min 0.5) nodes=[1,2,3] → PASS gates4-6",
+    "[EPISODE ACCEPTED] sealed id=autonomous_success_1767225808500_fnjnf nodes=[1,2,3] activeGoal=3 quality=1.00",
+    "[PIPELINE ENTER] source=autonomous_success transitions=2",
+    "[EPISODE STORED] id=autonomous_success_1767225808500_fnjnf source=autonomous_success store.length=240 total=240"
+   ],
+   "streams": {
+    "spy": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "drawSites": {
+     "cognitive render/episodeManager.js:789": 1,
+     "cognitive render/episodicContextEngine.js:120": 1
+    },
+    "recovered": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "mathRandom": 0
+   },
+   "vaultDelta": 1,
+   "storeDelta": 1,
+   "canaries": {
+    "J": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     }
+    },
+    "T": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "tripOpen": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     },
+     "tripClose": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     }
+    }
+   },
+   "tripwire": {
+    "fired": true,
+    "detail": {
+     "name": "TypeError",
+     "message": "Cannot add property 4, object is not extensible",
+     "site": "render/semanticProvenance.js:180"
+    },
+    "journalWritesBeforeTrip": 5,
+    "firstJournalledBeforeTrip": {
+     "item": "transitions",
+     "op": "Map.set",
+     "site": "render/episodeManager.js:974",
+     "key": "2"
+    }
+   },
+   "fieldTripwire": {
+    "detail": {
+     "name": "TypeError",
+     "message": "Cannot assign to read only property 'embedding' of object '#<Object>'",
+     "site": "render/embeddings.js:236"
+    },
+    "journalWritesBeforeTrip": 11
+   }
+  },
+  {
+   "reason": "context_shift",
+   "fixture": "empty",
+   "call": 2000,
+   "nodes": [],
+   "labels": [],
+   "returned": "null",
+   "seeded": true,
+   "journal": {
+    "inventoryWrites": 0,
+    "byItem": {},
+    "bySite": {},
+    "letWrites": {},
+    "unregisteredMutatorCalls": {
+     "clock_preload(render/episodicContextEngine.js:118)": 3,
+     "clock_preload(render/episodicContextEngine.js:347)": 4
+    },
+    "registeredObjects": 3470
+   },
+   "probes": {},
+   "logs": [],
+   "streams": {
+    "spy": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "drawSites": {
+     "cognitive render/episodicContextEngine.js:120": 1
+    },
+    "recovered": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "mathRandom": 0
+   },
+   "vaultDelta": 0,
+   "storeDelta": 0,
+   "canaries": {
+    "J": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     }
+    },
+    "T": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "tripOpen": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     },
+     "tripClose": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     }
+    }
+   },
+   "tripwire": {
+    "fired": false,
+    "detail": null,
+    "journalWritesBeforeTrip": 0,
+    "firstJournalledBeforeTrip": null
+   },
+   "fieldTripwire": null
+  },
+  {
+   "reason": "context_shift",
+   "fixture": "two",
+   "call": 2000,
+   "nodes": [
+    1,
+    2
+   ],
+   "labels": [
+    "percept",
+    "signal"
+   ],
+   "returned": "sealed",
+   "seeded": true,
+   "journal": {
+    "inventoryWrites": 0,
+    "byItem": {},
+    "bySite": {},
+    "letWrites": {},
+    "unregisteredMutatorCalls": {
+     "clock_preload(render/episodicContextEngine.js:358)": 4,
+     "render/episodicContextEngine.js:477": 1,
+     "render/episodicContextEngine.js:366": 1,
+     "render/episodeManager.js:299": 1,
+     "render/episodeManager.js:304": 20,
+     "clock_preload(render/episodeManager.js:688)": 3,
+     "render/episodeManager.js:729": 2,
+     "render/episodeManager.js:730": 2,
+     "render/episodeManager.js:741": 2,
+     "clock_preload(render/episodicContextEngine.js:118)": 3,
+     "clock_preload(render/episodicContextEngine.js:403)": 4
+    },
+    "registeredObjects": 3470
+   },
+   "probes": {
+    "bridge_callback": 1,
+    "recordAutonomousSuccess": 1,
+    "_sealBuffer": 1
+   },
+   "logs": [
+    "📦 Episode sealed [context_shift]: percept → signal | tag: percept",
+    "[EPISODE ATTEMPT] recordAutonomousSuccess source=autonomous_success nodeIds=[1,2] nodeCount=2",
+    "[EPISODE SEAL-CHECK] source=autonomous_success len=2 (min 3) unique=2 (min 3) diversity=1.00 (min 0.5) nodes=[1,2] → REJECT gate4:length",
+    "[EPISODE REJECTED] sealBuffer returned null (see SEAL-CHECK above)"
+   ],
+   "streams": {
+    "spy": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "drawSites": {
+     "cognitive render/episodicContextEngine.js:120": 1
+    },
+    "recovered": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "mathRandom": 0
+   },
+   "vaultDelta": 1,
+   "storeDelta": 0,
+   "canaries": {
+    "J": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     }
+    },
+    "T": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "tripOpen": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     },
+     "tripClose": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     }
+    }
+   },
+   "tripwire": {
+    "fired": false,
+    "detail": null,
+    "journalWritesBeforeTrip": 0,
+    "firstJournalledBeforeTrip": null
+   },
+   "fieldTripwire": null
+  },
+  {
+   "reason": "context_shift",
+   "fixture": "three",
+   "call": 2000,
+   "nodes": [
+    1,
+    2,
+    3
+   ],
+   "labels": [
+    "percept",
+    "signal",
+    "context"
+   ],
+   "returned": "sealed",
+   "seeded": true,
+   "journal": {
+    "inventoryWrites": 19,
+    "byItem": {
+     "Q": 2,
+     "confidenceMap": 2,
+     "episodicStore": 1,
+     "momentumMemory": 1,
+     "pathSuccesses": 2,
+     "provenanceLog": 2,
+     "rewards": 2,
+     "semanticStrength": 3,
+     "transitions": 4
+    },
+    "bySite": {
+     "Array.push render/episodeManager.js:1110": 1,
+     "Array.push render/semanticProvenance.js:180": 1,
+     "Map.set render/episodeManager.js:1096": 2,
+     "Map.set render/episodeManager.js:974": 2,
+     "Map.set render/episodeManager.js:975": 2,
+     "Map.set render/momentumMemory.js:70": 1,
+     "Map.set render/qlearning.js:132": 2,
+     "Map.set render/semanticProvenance.js:128": 2,
+     "Map.set render/semanticProvenance.js:176": 1,
+     "Map.set render/semanticVitality.js:84": 3,
+     "Map.set render/trustMemory.js:65": 2
+    },
+    "letWrites": {
+     "_episodesSinceConsolidation render/episodeManager.js:873": 1,
+     "_episodesStoredTotal render/episodeManager.js:1115": 1
+    },
+    "unregisteredMutatorCalls": {
+     "clock_preload(render/episodicContextEngine.js:358)": 4,
+     "render/episodicContextEngine.js:477": 1,
+     "render/episodicContextEngine.js:366": 1,
+     "render/episodeManager.js:299": 1,
+     "render/episodeManager.js:304": 20,
+     "clock_preload(render/episodeManager.js:688)": 3,
+     "render/episodeManager.js:729": 3,
+     "render/episodeManager.js:730": 3,
+     "render/episodeManager.js:741": 3,
+     "render/episodeManager.js:767": 2,
+     "clock_preload(render/episodeManager.js:789)": 3,
+     "clock_preload(render/semanticProvenance.js:180)": 6,
+     "render/semanticProvenance.js:180": 1,
+     "clock_preload(render/episodicContextEngine.js:118)": 3,
+     "clock_preload(render/episodicContextEngine.js:403)": 4
+    },
+    "registeredObjects": 3470
+   },
+   "probes": {
+    "bridge_callback": 1,
+    "recordAutonomousSuccess": 1,
+    "_sealBuffer": 1,
+    "_runPipeline": 1,
+    "_storeEpisode": 1
+   },
+   "logs": [
+    "📦 Episode sealed [context_shift]: percept → signal → context | tag: percept",
+    "[EPISODE ATTEMPT] recordAutonomousSuccess source=autonomous_success nodeIds=[1,2,3] nodeCount=3",
+    "[EPISODE SEAL-CHECK] source=autonomous_success len=3 (min 3) unique=3 (min 3) diversity=1.00 (min 0.5) nodes=[1,2,3] → PASS gates4-6",
+    "[EPISODE ACCEPTED] sealed id=autonomous_success_1767225799500_ud9cc nodes=[1,2,3] activeGoal=3 quality=1.00",
+    "[PIPELINE ENTER] source=autonomous_success transitions=2",
+    "[EPISODE STORED] id=autonomous_success_1767225799500_ud9cc source=autonomous_success store.length=239 total=239"
+   ],
+   "streams": {
+    "spy": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "drawSites": {
+     "cognitive render/episodeManager.js:789": 1,
+     "cognitive render/episodicContextEngine.js:120": 1
+    },
+    "recovered": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "mathRandom": 0
+   },
+   "vaultDelta": 1,
+   "storeDelta": 1,
+   "canaries": {
+    "J": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     }
+    },
+    "T": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "tripOpen": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     },
+     "tripClose": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     }
+    }
+   },
+   "tripwire": {
+    "fired": true,
+    "detail": {
+     "name": "TypeError",
+     "message": "Cannot add property 4, object is not extensible",
+     "site": "render/semanticProvenance.js:180"
+    },
+    "journalWritesBeforeTrip": 5,
+    "firstJournalledBeforeTrip": {
+     "item": "transitions",
+     "op": "Map.set",
+     "site": "render/episodeManager.js:974",
+     "key": "2"
+    }
+   },
+   "fieldTripwire": {
+    "detail": {
+     "name": "TypeError",
+     "message": "Cannot assign to read only property 'embedding' of object '#<Object>'",
+     "site": "render/embeddings.js:236"
+    },
+    "journalWritesBeforeTrip": 11
+   }
+  },
+  {
+   "reason": "topic_switch",
+   "fixture": "empty",
+   "call": 2000,
+   "nodes": [],
+   "labels": [],
+   "returned": "null",
+   "seeded": true,
+   "journal": {
+    "inventoryWrites": 0,
+    "byItem": {},
+    "bySite": {},
+    "letWrites": {},
+    "unregisteredMutatorCalls": {
+     "clock_preload(render/episodicContextEngine.js:118)": 3,
+     "clock_preload(render/episodicContextEngine.js:347)": 4
+    },
+    "registeredObjects": 3470
+   },
+   "probes": {},
+   "logs": [],
+   "streams": {
+    "spy": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "drawSites": {
+     "cognitive render/episodicContextEngine.js:120": 1
+    },
+    "recovered": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "mathRandom": 0
+   },
+   "vaultDelta": 0,
+   "storeDelta": 0,
+   "canaries": {
+    "J": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     }
+    },
+    "T": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "tripOpen": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     },
+     "tripClose": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     }
+    }
+   },
+   "tripwire": {
+    "fired": false,
+    "detail": null,
+    "journalWritesBeforeTrip": 0,
+    "firstJournalledBeforeTrip": null
+   },
+   "fieldTripwire": null
+  },
+  {
+   "reason": "topic_switch",
+   "fixture": "two",
+   "call": 2000,
+   "nodes": [
+    1,
+    2
+   ],
+   "labels": [
+    "percept",
+    "signal"
+   ],
+   "returned": "sealed",
+   "seeded": true,
+   "journal": {
+    "inventoryWrites": 0,
+    "byItem": {},
+    "bySite": {},
+    "letWrites": {},
+    "unregisteredMutatorCalls": {
+     "clock_preload(render/episodicContextEngine.js:358)": 4,
+     "render/episodicContextEngine.js:477": 1,
+     "render/episodicContextEngine.js:366": 1,
+     "render/episodeManager.js:299": 1,
+     "render/episodeManager.js:304": 20,
+     "clock_preload(render/episodeManager.js:688)": 3,
+     "render/episodeManager.js:729": 2,
+     "render/episodeManager.js:730": 2,
+     "render/episodeManager.js:741": 2,
+     "clock_preload(render/episodicContextEngine.js:118)": 3,
+     "clock_preload(render/episodicContextEngine.js:403)": 4
+    },
+    "registeredObjects": 3470
+   },
+   "probes": {
+    "bridge_callback": 1,
+    "recordAutonomousSuccess": 1,
+    "_sealBuffer": 1
+   },
+   "logs": [
+    "📦 Episode sealed [topic_switch]: percept → signal | tag: percept",
+    "[EPISODE ATTEMPT] recordAutonomousSuccess source=autonomous_success nodeIds=[1,2] nodeCount=2",
+    "[EPISODE SEAL-CHECK] source=autonomous_success len=2 (min 3) unique=2 (min 3) diversity=1.00 (min 0.5) nodes=[1,2] → REJECT gate4:length",
+    "[EPISODE REJECTED] sealBuffer returned null (see SEAL-CHECK above)"
+   ],
+   "streams": {
+    "spy": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "drawSites": {
+     "cognitive render/episodicContextEngine.js:120": 1
+    },
+    "recovered": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "mathRandom": 0
+   },
+   "vaultDelta": 1,
+   "storeDelta": 0,
+   "canaries": {
+    "J": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     }
+    },
+    "T": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "tripOpen": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     },
+     "tripClose": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     }
+    }
+   },
+   "tripwire": {
+    "fired": false,
+    "detail": null,
+    "journalWritesBeforeTrip": 0,
+    "firstJournalledBeforeTrip": null
+   },
+   "fieldTripwire": null
+  },
+  {
+   "reason": "topic_switch",
+   "fixture": "three",
+   "call": 2000,
+   "nodes": [
+    1,
+    2,
+    3
+   ],
+   "labels": [
+    "percept",
+    "signal",
+    "context"
+   ],
+   "returned": "sealed",
+   "seeded": true,
+   "journal": {
+    "inventoryWrites": 19,
+    "byItem": {
+     "Q": 2,
+     "confidenceMap": 2,
+     "episodicStore": 1,
+     "momentumMemory": 1,
+     "pathSuccesses": 2,
+     "provenanceLog": 2,
+     "rewards": 2,
+     "semanticStrength": 3,
+     "transitions": 4
+    },
+    "bySite": {
+     "Array.push render/episodeManager.js:1110": 1,
+     "Array.push render/semanticProvenance.js:180": 1,
+     "Map.set render/episodeManager.js:1096": 2,
+     "Map.set render/episodeManager.js:974": 2,
+     "Map.set render/episodeManager.js:975": 2,
+     "Map.set render/momentumMemory.js:70": 1,
+     "Map.set render/qlearning.js:132": 2,
+     "Map.set render/semanticProvenance.js:128": 2,
+     "Map.set render/semanticProvenance.js:176": 1,
+     "Map.set render/semanticVitality.js:84": 3,
+     "Map.set render/trustMemory.js:65": 2
+    },
+    "letWrites": {
+     "_episodesSinceConsolidation render/episodeManager.js:873": 1,
+     "_episodesStoredTotal render/episodeManager.js:1115": 1
+    },
+    "unregisteredMutatorCalls": {
+     "clock_preload(render/episodicContextEngine.js:358)": 4,
+     "render/episodicContextEngine.js:477": 1,
+     "render/episodicContextEngine.js:366": 1,
+     "render/episodeManager.js:299": 1,
+     "render/episodeManager.js:304": 20,
+     "clock_preload(render/episodeManager.js:688)": 3,
+     "render/episodeManager.js:729": 3,
+     "render/episodeManager.js:730": 3,
+     "render/episodeManager.js:741": 3,
+     "render/episodeManager.js:767": 2,
+     "clock_preload(render/episodeManager.js:789)": 3,
+     "clock_preload(render/semanticProvenance.js:180)": 6,
+     "render/semanticProvenance.js:180": 1,
+     "clock_preload(render/episodicContextEngine.js:118)": 3,
+     "clock_preload(render/episodicContextEngine.js:403)": 4
+    },
+    "registeredObjects": 3470
+   },
+   "probes": {
+    "bridge_callback": 1,
+    "recordAutonomousSuccess": 1,
+    "_sealBuffer": 1,
+    "_runPipeline": 1,
+    "_storeEpisode": 1
+   },
+   "logs": [
+    "📦 Episode sealed [topic_switch]: percept → signal → context | tag: percept",
+    "[EPISODE ATTEMPT] recordAutonomousSuccess source=autonomous_success nodeIds=[1,2,3] nodeCount=3",
+    "[EPISODE SEAL-CHECK] source=autonomous_success len=3 (min 3) unique=3 (min 3) diversity=1.00 (min 0.5) nodes=[1,2,3] → PASS gates4-6",
+    "[EPISODE ACCEPTED] sealed id=autonomous_success_1767225799500_ud9cc nodes=[1,2,3] activeGoal=3 quality=1.00",
+    "[PIPELINE ENTER] source=autonomous_success transitions=2",
+    "[EPISODE STORED] id=autonomous_success_1767225799500_ud9cc source=autonomous_success store.length=239 total=239"
+   ],
+   "streams": {
+    "spy": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "drawSites": {
+     "cognitive render/episodeManager.js:789": 1,
+     "cognitive render/episodicContextEngine.js:120": 1
+    },
+    "recovered": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "mathRandom": 0
+   },
+   "vaultDelta": 1,
+   "storeDelta": 1,
+   "canaries": {
+    "J": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     }
+    },
+    "T": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "tripOpen": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     },
+     "tripClose": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     }
+    }
+   },
+   "tripwire": {
+    "fired": true,
+    "detail": {
+     "name": "TypeError",
+     "message": "Cannot add property 4, object is not extensible",
+     "site": "render/semanticProvenance.js:180"
+    },
+    "journalWritesBeforeTrip": 5,
+    "firstJournalledBeforeTrip": {
+     "item": "transitions",
+     "op": "Map.set",
+     "site": "render/episodeManager.js:974",
+     "key": "2"
+    }
+   },
+   "fieldTripwire": {
+    "detail": {
+     "name": "TypeError",
+     "message": "Cannot assign to read only property 'embedding' of object '#<Object>'",
+     "site": "render/embeddings.js:236"
+    },
+    "journalWritesBeforeTrip": 11
+   }
+  },
+  {
+   "reason": "manual",
+   "fixture": "empty",
+   "call": 2000,
+   "nodes": [],
+   "labels": [],
+   "returned": "null",
+   "seeded": true,
+   "journal": {
+    "inventoryWrites": 0,
+    "byItem": {},
+    "bySite": {},
+    "letWrites": {},
+    "unregisteredMutatorCalls": {
+     "clock_preload(render/episodicContextEngine.js:118)": 3,
+     "clock_preload(render/episodicContextEngine.js:347)": 4
+    },
+    "registeredObjects": 3470
+   },
+   "probes": {},
+   "logs": [],
+   "streams": {
+    "spy": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "drawSites": {
+     "cognitive render/episodicContextEngine.js:120": 1
+    },
+    "recovered": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "mathRandom": 0
+   },
+   "vaultDelta": 0,
+   "storeDelta": 0,
+   "canaries": {
+    "J": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     }
+    },
+    "T": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "tripOpen": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     },
+     "tripClose": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     }
+    }
+   },
+   "tripwire": {
+    "fired": false,
+    "detail": null,
+    "journalWritesBeforeTrip": 0,
+    "firstJournalledBeforeTrip": null
+   },
+   "fieldTripwire": null
+  },
+  {
+   "reason": "manual",
+   "fixture": "two",
+   "call": 2000,
+   "nodes": [
+    1,
+    2
+   ],
+   "labels": [
+    "percept",
+    "signal"
+   ],
+   "returned": "sealed",
+   "seeded": true,
+   "journal": {
+    "inventoryWrites": 0,
+    "byItem": {},
+    "bySite": {},
+    "letWrites": {},
+    "unregisteredMutatorCalls": {
+     "clock_preload(render/episodicContextEngine.js:358)": 4,
+     "render/episodicContextEngine.js:477": 1,
+     "render/episodicContextEngine.js:366": 1,
+     "render/episodeManager.js:299": 1,
+     "render/episodeManager.js:304": 20,
+     "clock_preload(render/episodeManager.js:688)": 3,
+     "render/episodeManager.js:729": 2,
+     "render/episodeManager.js:730": 2,
+     "render/episodeManager.js:741": 2,
+     "clock_preload(render/episodicContextEngine.js:118)": 3,
+     "clock_preload(render/episodicContextEngine.js:403)": 4
+    },
+    "registeredObjects": 3470
+   },
+   "probes": {
+    "bridge_callback": 1,
+    "recordAutonomousSuccess": 1,
+    "_sealBuffer": 1
+   },
+   "logs": [
+    "📦 Episode sealed [manual]: percept → signal | tag: percept",
+    "[EPISODE ATTEMPT] recordAutonomousSuccess source=autonomous_success nodeIds=[1,2] nodeCount=2",
+    "[EPISODE SEAL-CHECK] source=autonomous_success len=2 (min 3) unique=2 (min 3) diversity=1.00 (min 0.5) nodes=[1,2] → REJECT gate4:length",
+    "[EPISODE REJECTED] sealBuffer returned null (see SEAL-CHECK above)"
+   ],
+   "streams": {
+    "spy": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "drawSites": {
+     "cognitive render/episodicContextEngine.js:120": 1
+    },
+    "recovered": {
+     "cognitive": 1,
+     "visual": 0,
+     "environment": 0
+    },
+    "mathRandom": 0
+   },
+   "vaultDelta": 1,
+   "storeDelta": 0,
+   "canaries": {
+    "J": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     }
+    },
+    "T": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "tripOpen": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     },
+     "tripClose": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     }
+    }
+   },
+   "tripwire": {
+    "fired": false,
+    "detail": null,
+    "journalWritesBeforeTrip": 0,
+    "firstJournalledBeforeTrip": null
+   },
+   "fieldTripwire": null
+  },
+  {
+   "reason": "manual",
+   "fixture": "three",
+   "call": 2000,
+   "nodes": [
+    1,
+    2,
+    3
+   ],
+   "labels": [
+    "percept",
+    "signal",
+    "context"
+   ],
+   "returned": "sealed",
+   "seeded": true,
+   "journal": {
+    "inventoryWrites": 19,
+    "byItem": {
+     "Q": 2,
+     "confidenceMap": 2,
+     "episodicStore": 1,
+     "momentumMemory": 1,
+     "pathSuccesses": 2,
+     "provenanceLog": 2,
+     "rewards": 2,
+     "semanticStrength": 3,
+     "transitions": 4
+    },
+    "bySite": {
+     "Array.push render/episodeManager.js:1110": 1,
+     "Array.push render/semanticProvenance.js:180": 1,
+     "Map.set render/episodeManager.js:1096": 2,
+     "Map.set render/episodeManager.js:974": 2,
+     "Map.set render/episodeManager.js:975": 2,
+     "Map.set render/momentumMemory.js:70": 1,
+     "Map.set render/qlearning.js:132": 2,
+     "Map.set render/semanticProvenance.js:128": 2,
+     "Map.set render/semanticProvenance.js:176": 1,
+     "Map.set render/semanticVitality.js:84": 3,
+     "Map.set render/trustMemory.js:65": 2
+    },
+    "letWrites": {
+     "_episodesSinceConsolidation render/episodeManager.js:873": 1,
+     "_episodesStoredTotal render/episodeManager.js:1115": 1
+    },
+    "unregisteredMutatorCalls": {
+     "clock_preload(render/episodicContextEngine.js:358)": 4,
+     "render/episodicContextEngine.js:477": 1,
+     "render/episodicContextEngine.js:366": 1,
+     "render/episodeManager.js:299": 1,
+     "render/episodeManager.js:304": 20,
+     "clock_preload(render/episodeManager.js:688)": 3,
+     "render/episodeManager.js:729": 3,
+     "render/episodeManager.js:730": 3,
+     "render/episodeManager.js:741": 3,
+     "render/episodeManager.js:767": 2,
+     "clock_preload(render/episodeManager.js:789)": 3,
+     "clock_preload(render/semanticProvenance.js:180)": 6,
+     "render/semanticProvenance.js:180": 1,
+     "clock_preload(render/episodicContextEngine.js:118)": 3,
+     "clock_preload(render/episodicContextEngine.js:403)": 4
+    },
+    "registeredObjects": 3470
+   },
+   "probes": {
+    "bridge_callback": 1,
+    "recordAutonomousSuccess": 1,
+    "_sealBuffer": 1,
+    "_runPipeline": 1,
+    "_storeEpisode": 1
+   },
+   "logs": [
+    "📦 Episode sealed [manual]: percept → signal → context | tag: percept",
+    "[EPISODE ATTEMPT] recordAutonomousSuccess source=autonomous_success nodeIds=[1,2,3] nodeCount=3",
+    "[EPISODE SEAL-CHECK] source=autonomous_success len=3 (min 3) unique=3 (min 3) diversity=1.00 (min 0.5) nodes=[1,2,3] → PASS gates4-6",
+    "[EPISODE ACCEPTED] sealed id=autonomous_success_1767225799500_ud9cc nodes=[1,2,3] activeGoal=3 quality=1.00",
+    "[PIPELINE ENTER] source=autonomous_success transitions=2",
+    "[EPISODE STORED] id=autonomous_success_1767225799500_ud9cc source=autonomous_success store.length=239 total=239"
+   ],
+   "streams": {
+    "spy": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "drawSites": {
+     "cognitive render/episodeManager.js:789": 1,
+     "cognitive render/episodicContextEngine.js:120": 1
+    },
+    "recovered": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "mathRandom": 0
+   },
+   "vaultDelta": 1,
+   "storeDelta": 1,
+   "canaries": {
+    "J": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     }
+    },
+    "T": {
+     "open": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "close": {
+      "map": 1,
+      "set": 1,
+      "array": 1,
+      "let": 1,
+      "stream": 1
+     },
+     "tripOpen": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     },
+     "tripClose": {
+      "field": 1,
+      "index": 1,
+      "length": 1,
+      "push": 1
+     }
+    }
+   },
+   "tripwire": {
+    "fired": true,
+    "detail": {
+     "name": "TypeError",
+     "message": "Cannot add property 4, object is not extensible",
+     "site": "render/semanticProvenance.js:180"
+    },
+    "journalWritesBeforeTrip": 5,
+    "firstJournalledBeforeTrip": {
+     "item": "transitions",
+     "op": "Map.set",
+     "site": "render/episodeManager.js:974",
+     "key": "2"
+    }
+   },
+   "fieldTripwire": {
+    "detail": {
+     "name": "TypeError",
+     "message": "Cannot assign to read only property 'embedding' of object '#<Object>'",
+     "site": "render/embeddings.js:236"
+    },
+    "journalWritesBeforeTrip": 11
+   }
+  }
+ ],
+ "pairs": [
+  {
+   "reason": "tick_cap",
+   "emptyVsTwo": [
+    "render/episodicContextEngine.js#episodeVault"
+   ],
+   "emptyVsThree": [
+    "main.js#neuronMap",
+    "render/connections.js#neuronMapRef",
+    "render/embeddings.js#neuronMapRef",
+    "render/episodeManager.js#_episodesSinceConsolidation",
+    "render/episodeManager.js#_episodesStoredTotal",
+    "render/episodeManager.js#_sys",
+    "render/episodeManager.js#episodicStore",
+    "render/episodicContextEngine.js#currentEpisode",
+    "render/episodicContextEngine.js#episodeVault",
+    "render/memory.js#confidenceMap",
+    "render/memory.js#rewards",
+    "render/memory.js#transitions",
+    "render/momentumMemory.js#momentumMemory",
+    "render/neuronVisuals.js#_group",
+    "render/neuronVisuals.js#neuronVisuals",
+    "render/qlearning.js#Q",
+    "render/scene.js#group",
+    "render/scene.js#scene",
+    "render/search.js#neuronMapRef",
+    "render/semanticProvenance.js#provenanceLog",
+    "render/semanticVitality.js#semanticStrength",
+    "render/trustMemory.js#pathSuccesses"
+   ],
+   "outsideClosedList": {
+    "emptyVsTwo": [],
+    "emptyVsThree": [
+     "main.js#neuronMap",
+     "render/connections.js#neuronMapRef",
+     "render/embeddings.js#neuronMapRef",
+     "render/episodeManager.js#_episodesSinceConsolidation",
+     "render/episodeManager.js#_episodesStoredTotal",
+     "render/episodeManager.js#_sys",
+     "render/episodeManager.js#episodicStore",
+     "render/episodicContextEngine.js#currentEpisode",
+     "render/memory.js#confidenceMap",
+     "render/memory.js#rewards",
+     "render/memory.js#transitions",
+     "render/momentumMemory.js#momentumMemory",
+     "render/neuronVisuals.js#_group",
+     "render/neuronVisuals.js#neuronVisuals",
+     "render/qlearning.js#Q",
+     "render/scene.js#group",
+     "render/scene.js#scene",
+     "render/search.js#neuronMapRef",
+     "render/semanticProvenance.js#provenanceLog",
+     "render/semanticVitality.js#semanticStrength",
+     "render/trustMemory.js#pathSuccesses"
+    ]
+   }
+  },
+  {
+   "reason": "goal_reached",
+   "emptyVsTwo": [
+    "render/episodicContextEngine.js#episodeVault"
+   ],
+   "emptyVsThree": [
+    "main.js#neuronMap",
+    "render/connections.js#neuronMapRef",
+    "render/embeddings.js#neuronMapRef",
+    "render/episodeManager.js#_episodesSinceConsolidation",
+    "render/episodeManager.js#_episodesStoredTotal",
+    "render/episodeManager.js#_sys",
+    "render/episodeManager.js#episodicStore",
+    "render/episodicContextEngine.js#currentEpisode",
+    "render/episodicContextEngine.js#episodeVault",
+    "render/longTermConsolidation.js#consolidationRegistry",
+    "render/memory.js#confidenceMap",
+    "render/memory.js#rewards",
+    "render/memory.js#transitions",
+    "render/momentumMemory.js#momentumMemory",
+    "render/neuronVisuals.js#_group",
+    "render/neuronVisuals.js#neuronVisuals",
+    "render/qlearning.js#Q",
+    "render/scene.js#group",
+    "render/scene.js#scene",
+    "render/schemaMemory.js#_bonusCache",
+    "render/schemaMemory.js#_lastMotifs",
+    "render/schemaMemory.js#_lastRebuild",
+    "render/schemaMemory.js#schemas",
+    "render/search.js#neuronMapRef",
+    "render/semanticMemoryLayer.js#conceptSchemas",
+    "render/semanticMemoryLayer.js#semanticEdges",
+    "render/semanticProvenance.js#provenanceLog",
+    "render/semanticVitality.js#semanticStrength",
+    "render/trustMemory.js#pathSuccesses"
+   ],
+   "outsideClosedList": {
+    "emptyVsTwo": [],
+    "emptyVsThree": [
+     "main.js#neuronMap",
+     "render/connections.js#neuronMapRef",
+     "render/embeddings.js#neuronMapRef",
+     "render/episodeManager.js#_episodesSinceConsolidation",
+     "render/episodeManager.js#_episodesStoredTotal",
+     "render/episodeManager.js#_sys",
+     "render/episodeManager.js#episodicStore",
+     "render/episodicContextEngine.js#currentEpisode",
+     "render/longTermConsolidation.js#consolidationRegistry",
+     "render/memory.js#confidenceMap",
+     "render/memory.js#rewards",
+     "render/memory.js#transitions",
+     "render/momentumMemory.js#momentumMemory",
+     "render/neuronVisuals.js#_group",
+     "render/neuronVisuals.js#neuronVisuals",
+     "render/qlearning.js#Q",
+     "render/scene.js#group",
+     "render/scene.js#scene",
+     "render/schemaMemory.js#_bonusCache",
+     "render/schemaMemory.js#_lastMotifs",
+     "render/schemaMemory.js#_lastRebuild",
+     "render/schemaMemory.js#schemas",
+     "render/search.js#neuronMapRef",
+     "render/semanticMemoryLayer.js#conceptSchemas",
+     "render/semanticMemoryLayer.js#semanticEdges",
+     "render/semanticProvenance.js#provenanceLog",
+     "render/semanticVitality.js#semanticStrength",
+     "render/trustMemory.js#pathSuccesses"
+    ]
+   }
+  },
+  {
+   "reason": "context_shift",
+   "emptyVsTwo": [
+    "render/episodicContextEngine.js#episodeVault"
+   ],
+   "emptyVsThree": [
+    "main.js#neuronMap",
+    "render/connections.js#neuronMapRef",
+    "render/embeddings.js#neuronMapRef",
+    "render/episodeManager.js#_episodesSinceConsolidation",
+    "render/episodeManager.js#_episodesStoredTotal",
+    "render/episodeManager.js#_sys",
+    "render/episodeManager.js#episodicStore",
+    "render/episodicContextEngine.js#currentEpisode",
+    "render/episodicContextEngine.js#episodeVault",
+    "render/memory.js#confidenceMap",
+    "render/memory.js#rewards",
+    "render/memory.js#transitions",
+    "render/momentumMemory.js#momentumMemory",
+    "render/neuronVisuals.js#_group",
+    "render/neuronVisuals.js#neuronVisuals",
+    "render/qlearning.js#Q",
+    "render/scene.js#group",
+    "render/scene.js#scene",
+    "render/search.js#neuronMapRef",
+    "render/semanticProvenance.js#provenanceLog",
+    "render/semanticVitality.js#semanticStrength",
+    "render/trustMemory.js#pathSuccesses"
+   ],
+   "outsideClosedList": {
+    "emptyVsTwo": [],
+    "emptyVsThree": [
+     "main.js#neuronMap",
+     "render/connections.js#neuronMapRef",
+     "render/embeddings.js#neuronMapRef",
+     "render/episodeManager.js#_episodesSinceConsolidation",
+     "render/episodeManager.js#_episodesStoredTotal",
+     "render/episodeManager.js#_sys",
+     "render/episodeManager.js#episodicStore",
+     "render/episodicContextEngine.js#currentEpisode",
+     "render/memory.js#confidenceMap",
+     "render/memory.js#rewards",
+     "render/memory.js#transitions",
+     "render/momentumMemory.js#momentumMemory",
+     "render/neuronVisuals.js#_group",
+     "render/neuronVisuals.js#neuronVisuals",
+     "render/qlearning.js#Q",
+     "render/scene.js#group",
+     "render/scene.js#scene",
+     "render/search.js#neuronMapRef",
+     "render/semanticProvenance.js#provenanceLog",
+     "render/semanticVitality.js#semanticStrength",
+     "render/trustMemory.js#pathSuccesses"
+    ]
+   }
+  },
+  {
+   "reason": "topic_switch",
+   "emptyVsTwo": [
+    "render/episodicContextEngine.js#episodeVault"
+   ],
+   "emptyVsThree": [
+    "main.js#neuronMap",
+    "render/connections.js#neuronMapRef",
+    "render/embeddings.js#neuronMapRef",
+    "render/episodeManager.js#_episodesSinceConsolidation",
+    "render/episodeManager.js#_episodesStoredTotal",
+    "render/episodeManager.js#_sys",
+    "render/episodeManager.js#episodicStore",
+    "render/episodicContextEngine.js#currentEpisode",
+    "render/episodicContextEngine.js#episodeVault",
+    "render/memory.js#confidenceMap",
+    "render/memory.js#rewards",
+    "render/memory.js#transitions",
+    "render/momentumMemory.js#momentumMemory",
+    "render/neuronVisuals.js#_group",
+    "render/neuronVisuals.js#neuronVisuals",
+    "render/qlearning.js#Q",
+    "render/scene.js#group",
+    "render/scene.js#scene",
+    "render/search.js#neuronMapRef",
+    "render/semanticProvenance.js#provenanceLog",
+    "render/semanticVitality.js#semanticStrength",
+    "render/trustMemory.js#pathSuccesses"
+   ],
+   "outsideClosedList": {
+    "emptyVsTwo": [],
+    "emptyVsThree": [
+     "main.js#neuronMap",
+     "render/connections.js#neuronMapRef",
+     "render/embeddings.js#neuronMapRef",
+     "render/episodeManager.js#_episodesSinceConsolidation",
+     "render/episodeManager.js#_episodesStoredTotal",
+     "render/episodeManager.js#_sys",
+     "render/episodeManager.js#episodicStore",
+     "render/episodicContextEngine.js#currentEpisode",
+     "render/memory.js#confidenceMap",
+     "render/memory.js#rewards",
+     "render/memory.js#transitions",
+     "render/momentumMemory.js#momentumMemory",
+     "render/neuronVisuals.js#_group",
+     "render/neuronVisuals.js#neuronVisuals",
+     "render/qlearning.js#Q",
+     "render/scene.js#group",
+     "render/scene.js#scene",
+     "render/search.js#neuronMapRef",
+     "render/semanticProvenance.js#provenanceLog",
+     "render/semanticVitality.js#semanticStrength",
+     "render/trustMemory.js#pathSuccesses"
+    ]
+   }
+  },
+  {
+   "reason": "manual",
+   "emptyVsTwo": [
+    "render/episodicContextEngine.js#episodeVault"
+   ],
+   "emptyVsThree": [
+    "main.js#neuronMap",
+    "render/connections.js#neuronMapRef",
+    "render/embeddings.js#neuronMapRef",
+    "render/episodeManager.js#_episodesSinceConsolidation",
+    "render/episodeManager.js#_episodesStoredTotal",
+    "render/episodeManager.js#_sys",
+    "render/episodeManager.js#episodicStore",
+    "render/episodicContextEngine.js#currentEpisode",
+    "render/episodicContextEngine.js#episodeVault",
+    "render/memory.js#confidenceMap",
+    "render/memory.js#rewards",
+    "render/memory.js#transitions",
+    "render/momentumMemory.js#momentumMemory",
+    "render/neuronVisuals.js#_group",
+    "render/neuronVisuals.js#neuronVisuals",
+    "render/qlearning.js#Q",
+    "render/scene.js#group",
+    "render/scene.js#scene",
+    "render/search.js#neuronMapRef",
+    "render/semanticProvenance.js#provenanceLog",
+    "render/semanticVitality.js#semanticStrength",
+    "render/trustMemory.js#pathSuccesses"
+   ],
+   "outsideClosedList": {
+    "emptyVsTwo": [],
+    "emptyVsThree": [
+     "main.js#neuronMap",
+     "render/connections.js#neuronMapRef",
+     "render/embeddings.js#neuronMapRef",
+     "render/episodeManager.js#_episodesSinceConsolidation",
+     "render/episodeManager.js#_episodesStoredTotal",
+     "render/episodeManager.js#_sys",
+     "render/episodeManager.js#episodicStore",
+     "render/episodicContextEngine.js#currentEpisode",
+     "render/memory.js#confidenceMap",
+     "render/memory.js#rewards",
+     "render/memory.js#transitions",
+     "render/momentumMemory.js#momentumMemory",
+     "render/neuronVisuals.js#_group",
+     "render/neuronVisuals.js#neuronVisuals",
+     "render/qlearning.js#Q",
+     "render/scene.js#group",
+     "render/scene.js#scene",
+     "render/search.js#neuronMapRef",
+     "render/semanticProvenance.js#provenanceLog",
+     "render/semanticVitality.js#semanticStrength",
+     "render/trustMemory.js#pathSuccesses"
+    ]
+   }
+  }
+ ],
+ "breakage": [
+  {
+   "name": "wrong rewrite-table hash",
+   "exitCode": 1,
+   "refused": true,
+   "message": "AC38 REFUSED: ${m}`); };\r"
+  },
+  {
+   "name": "source hash mismatch, transformed",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: source hash mismatch on render/hud.js "
+  },
+  {
+   "name": "source hash mismatch, bare",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: source hash mismatch on render/hud.js "
+  },
+  {
+   "name": "broken anchor",
+   "exitCode": 1,
+   "refused": true,
+   "message": "AC38 REFUSED: ${m}`); };\r"
+  },
+  {
+   "name": "missing let rewrite",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: expected 6 let rewrites, applied 5 "
+  },
+  {
+   "name": "missing probe rewrite",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: expected 5 probe rewrites, applied 4 "
+  },
+  {
+   "name": "instrumentation target never loaded",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: instrumentation target render/not_there.js was never loaded "
+  },
+  {
+   "name": "digest scope altered",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: the digest scope does not match the rewrite table "
+  },
+  {
+   "name": "required binding missing from accessor",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: digest: bindings of render/memory.js differ from the scope "
+  },
+  {
+   "name": "required binding does not resolve",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: digest: binding unreadable in render/memory.js: __no_such_binding__ is not defined "
+  },
+  {
+   "name": "value unreadable",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: digest: global unreadable lastClicked: deliberately unreadable "
+  },
+  {
+   "name": "required global absent",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: digest: required global recentMemory is absent "
+  },
+  {
+   "name": "journal disabled",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: canary did not fire: [{\"map\":0,\"set\":0,\"array\":0,\"let\":1,\"stream\":1},{\"map\":0,\"set\":0,\"array\":0,\"let\":1,\"stream\":1}] "
+  },
+  {
+   "name": "stream spy disabled",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: canary did not fire: [{\"map\":1,\"set\":1,\"array\":1,\"let\":1,\"stream\":0},{\"map\":1,\"set\":1,\"array\":1,\"let\":1,\"stream\":0}] "
+  },
+  {
+   "name": "let journal disabled",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: canary did not fire: [{\"map\":1,\"set\":1,\"array\":1,\"let\":0,\"stream\":1},{\"map\":1,\"set\":1,\"array\":1,\"let\":0,\"stream\":1}] "
+  },
+  {
+   "name": "tripwire disabled",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: tripwire canary did not fire: [{\"field\":0,\"index\":0,\"length\":0,\"push\":0},{\"field\":0,\"index\":0,\"length\":0,\"push\":0}] "
+  }
+ ],
+ "fingerprints": {
+  "empty.tick_cap": {
+   "D": "7aed6fd1b1bda76d7e0c073554e7f351c28771c6ed8bc384a2707c694657d163",
+   "J": "7aed6fd1b1bda76d7e0c073554e7f351c28771c6ed8bc384a2707c694657d163",
+   "B": "7aed6fd1b1bda76d7e0c073554e7f351c28771c6ed8bc384a2707c694657d163",
+   "D2": "7aed6fd1b1bda76d7e0c073554e7f351c28771c6ed8bc384a2707c694657d163"
+  },
+  "two.tick_cap": {
+   "D": "7aed6fd1b1bda76d7e0c073554e7f351c28771c6ed8bc384a2707c694657d163",
+   "J": "7aed6fd1b1bda76d7e0c073554e7f351c28771c6ed8bc384a2707c694657d163"
+  },
+  "three.tick_cap": {
+   "D": "d65780662307120d3d3c80f2d6a204c29062ddd06ac6e44ababa55c18b6ad912",
+   "J": "d65780662307120d3d3c80f2d6a204c29062ddd06ac6e44ababa55c18b6ad912"
+  },
+  "empty.goal_reached": {
+   "D": "7aed6fd1b1bda76d7e0c073554e7f351c28771c6ed8bc384a2707c694657d163",
+   "J": "7aed6fd1b1bda76d7e0c073554e7f351c28771c6ed8bc384a2707c694657d163",
+   "B": "7aed6fd1b1bda76d7e0c073554e7f351c28771c6ed8bc384a2707c694657d163",
+   "D2": "7aed6fd1b1bda76d7e0c073554e7f351c28771c6ed8bc384a2707c694657d163"
+  },
+  "two.goal_reached": {
+   "D": "7aed6fd1b1bda76d7e0c073554e7f351c28771c6ed8bc384a2707c694657d163",
+   "J": "7aed6fd1b1bda76d7e0c073554e7f351c28771c6ed8bc384a2707c694657d163"
+  },
+  "three.goal_reached": {
+   "D": "cb2fb3be8a264479f0990996fa20be91f6dfa625d79353170e12ff9ac926878c",
+   "J": "cb2fb3be8a264479f0990996fa20be91f6dfa625d79353170e12ff9ac926878c"
+  },
+  "empty.context_shift": {
+   "D": "b9ec968f63163d614e58f47853e81875ffedd358b1fdce51f70a878328fdbb98",
+   "J": "b9ec968f63163d614e58f47853e81875ffedd358b1fdce51f70a878328fdbb98",
+   "B": "b9ec968f63163d614e58f47853e81875ffedd358b1fdce51f70a878328fdbb98",
+   "D2": "b9ec968f63163d614e58f47853e81875ffedd358b1fdce51f70a878328fdbb98"
+  },
+  "two.context_shift": {
+   "D": "b9ec968f63163d614e58f47853e81875ffedd358b1fdce51f70a878328fdbb98",
+   "J": "b9ec968f63163d614e58f47853e81875ffedd358b1fdce51f70a878328fdbb98"
+  },
+  "three.context_shift": {
+   "D": "ac713f8ea9f428e0a87b9acfd96b6e17da60d3d84174705537ec46edac09938c",
+   "J": "ac713f8ea9f428e0a87b9acfd96b6e17da60d3d84174705537ec46edac09938c"
+  },
+  "empty.topic_switch": {
+   "D": "b9ec968f63163d614e58f47853e81875ffedd358b1fdce51f70a878328fdbb98",
+   "J": "b9ec968f63163d614e58f47853e81875ffedd358b1fdce51f70a878328fdbb98",
+   "B": "b9ec968f63163d614e58f47853e81875ffedd358b1fdce51f70a878328fdbb98",
+   "D2": "b9ec968f63163d614e58f47853e81875ffedd358b1fdce51f70a878328fdbb98"
+  },
+  "two.topic_switch": {
+   "D": "b9ec968f63163d614e58f47853e81875ffedd358b1fdce51f70a878328fdbb98",
+   "J": "b9ec968f63163d614e58f47853e81875ffedd358b1fdce51f70a878328fdbb98"
+  },
+  "three.topic_switch": {
+   "D": "ac713f8ea9f428e0a87b9acfd96b6e17da60d3d84174705537ec46edac09938c",
+   "J": "ac713f8ea9f428e0a87b9acfd96b6e17da60d3d84174705537ec46edac09938c"
+  },
+  "empty.manual": {
+   "D": "b9ec968f63163d614e58f47853e81875ffedd358b1fdce51f70a878328fdbb98",
+   "J": "b9ec968f63163d614e58f47853e81875ffedd358b1fdce51f70a878328fdbb98",
+   "B": "b9ec968f63163d614e58f47853e81875ffedd358b1fdce51f70a878328fdbb98",
+   "D2": "b9ec968f63163d614e58f47853e81875ffedd358b1fdce51f70a878328fdbb98"
+  },
+  "two.manual": {
+   "D": "b9ec968f63163d614e58f47853e81875ffedd358b1fdce51f70a878328fdbb98",
+   "J": "b9ec968f63163d614e58f47853e81875ffedd358b1fdce51f70a878328fdbb98"
+  },
+  "three.manual": {
+   "D": "ac713f8ea9f428e0a87b9acfd96b6e17da60d3d84174705537ec46edac09938c",
+   "J": "ac713f8ea9f428e0a87b9acfd96b6e17da60d3d84174705537ec46edac09938c"
+  }
+ },
+ "problems": []
+}

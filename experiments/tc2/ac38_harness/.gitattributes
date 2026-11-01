@@ -1,0 +1,2 @@
+# The rewrite table and digest scope are hash-pinned, so their bytes must not vary by checkout.
+* text eol=lf

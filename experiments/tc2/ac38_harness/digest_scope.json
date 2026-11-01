@@ -1,0 +1,1348 @@
+{
+ "schema": "tc2/ac38.digest_scope/1",
+ "tree": "learn0-8aa9ee4f39f4",
+ "counts": {
+  "moduleGraphFiles": 39,
+  "topLevelNonFunctionBindings": 186,
+  "covered": 135,
+  "excluded": 51,
+  "topLevelFunctionsAndClasses": 236,
+  "windowGlobals": 6
+ },
+ "covered": [
+  {
+   "file": "main.js",
+   "name": "stars",
+   "line": 553,
+   "kind": "const"
+  },
+  {
+   "file": "main.js",
+   "name": "neuronPositions",
+   "line": 566,
+   "kind": "const"
+  },
+  {
+   "file": "main.js",
+   "name": "neuronMap",
+   "line": 567,
+   "kind": "const"
+  },
+  {
+   "file": "main.js",
+   "name": "lastDecision",
+   "line": 685,
+   "kind": "let"
+  },
+  {
+   "file": "main.js",
+   "name": "currentGoal",
+   "line": 831,
+   "kind": "let"
+  },
+  {
+   "file": "main.js",
+   "name": "chainMemory",
+   "line": 833,
+   "kind": "const"
+  },
+  {
+   "file": "main.js",
+   "name": "attentionMap",
+   "line": 939,
+   "kind": "const"
+  },
+  {
+   "file": "main.js",
+   "name": "adjacencyMemory",
+   "line": 951,
+   "kind": "const"
+  },
+  {
+   "file": "main.js",
+   "name": "timeMemory",
+   "line": 1040,
+   "kind": "const"
+  },
+  {
+   "file": "main.js",
+   "name": "goalNeuronId",
+   "line": 1042,
+   "kind": "let"
+  },
+  {
+   "file": "main.js",
+   "name": "_m7EpisodeTicks",
+   "line": 1056,
+   "kind": "let"
+  },
+  {
+   "file": "main.js",
+   "name": "_mfwLedger",
+   "line": 1098,
+   "kind": "const"
+  },
+  {
+   "file": "main.js",
+   "name": "agentRunning",
+   "line": 3197,
+   "kind": "let"
+  },
+  {
+   "file": "main.js",
+   "name": "agentSpeed",
+   "line": 3200,
+   "kind": "let"
+  },
+  {
+   "file": "main.js",
+   "name": "agentCurrent",
+   "line": 3203,
+   "kind": "let"
+  },
+  {
+   "file": "main.js",
+   "name": "agentLast",
+   "line": 3206,
+   "kind": "let"
+  },
+  {
+   "file": "main.js",
+   "name": "loopId",
+   "line": 3209,
+   "kind": "let"
+  },
+  {
+   "file": "main.js",
+   "name": "_diagVisits",
+   "line": 3239,
+   "kind": "const"
+  },
+  {
+   "file": "main.js",
+   "name": "_diagLoops",
+   "line": 3240,
+   "kind": "let"
+  },
+  {
+   "file": "main.js",
+   "name": "_diagCounters",
+   "line": 3246,
+   "kind": "const"
+  },
+  {
+   "file": "main.js",
+   "name": "raycaster",
+   "line": 5395,
+   "kind": "const"
+  },
+  {
+   "file": "main.js",
+   "name": "mouse",
+   "line": 5396,
+   "kind": "const"
+  },
+  {
+   "file": "main.js",
+   "name": "lastClicked",
+   "line": 5398,
+   "kind": "let"
+  },
+  {
+   "file": "render/activationCompetition.js",
+   "name": "activationState",
+   "line": 12,
+   "kind": "const"
+  },
+  {
+   "file": "render/activationCompetition.js",
+   "name": "inhibitionWeights",
+   "line": 13,
+   "kind": "const"
+  },
+  {
+   "file": "render/activationCompetition.js",
+   "name": "activationHistory",
+   "line": 14,
+   "kind": "const"
+  },
+  {
+   "file": "render/activationCompetition.js",
+   "name": "contextMask",
+   "line": 16,
+   "kind": "let"
+  },
+  {
+   "file": "render/behavior.js",
+   "name": "curiosityState",
+   "line": 14,
+   "kind": "let"
+  },
+  {
+   "file": "render/behavior.js",
+   "name": "confidenceState",
+   "line": 20,
+   "kind": "let"
+  },
+  {
+   "file": "render/behavior.js",
+   "name": "stressState",
+   "line": 26,
+   "kind": "let"
+  },
+  {
+   "file": "render/behavior.js",
+   "name": "fatigueState",
+   "line": 32,
+   "kind": "let"
+  },
+  {
+   "file": "render/behavior.js",
+   "name": "energyState",
+   "line": 65,
+   "kind": "let"
+  },
+  {
+   "file": "render/behavior.js",
+   "name": "exhaustionState",
+   "line": 68,
+   "kind": "let"
+  },
+  {
+   "file": "render/behavior.js",
+   "name": "restingState",
+   "line": 71,
+   "kind": "let"
+  },
+  {
+   "file": "render/behavior.js",
+   "name": "survivalState",
+   "line": 74,
+   "kind": "let"
+  },
+  {
+   "file": "render/behavior.js",
+   "name": "survivalPressure",
+   "line": 81,
+   "kind": "let"
+  },
+  {
+   "file": "render/behavior.js",
+   "name": "loopStressState",
+   "line": 90,
+   "kind": "let"
+  },
+  {
+   "file": "render/behavior.js",
+   "name": "focusState",
+   "line": 99,
+   "kind": "let"
+  },
+  {
+   "file": "render/behavior.js",
+   "name": "explorationMode",
+   "line": 345,
+   "kind": "let"
+  },
+  {
+   "file": "render/cognitiveAttention.js",
+   "name": "attentionFocus",
+   "line": 26,
+   "kind": "let"
+  },
+  {
+   "file": "render/cognitiveAttention.js",
+   "name": "focusDimension",
+   "line": 27,
+   "kind": "let"
+  },
+  {
+   "file": "render/cognitiveAttention.js",
+   "name": "attentionStrength",
+   "line": 32,
+   "kind": "let"
+  },
+  {
+   "file": "render/cognitiveAttention.js",
+   "name": "goalEmbedding",
+   "line": 39,
+   "kind": "let"
+  },
+  {
+   "file": "render/connections.js",
+   "name": "lines",
+   "line": 21,
+   "kind": "const"
+  },
+  {
+   "file": "render/connections.js",
+   "name": "neuronMapRef",
+   "line": 30,
+   "kind": "let"
+  },
+  {
+   "file": "render/embeddings.js",
+   "name": "neuronMapRef",
+   "line": 82,
+   "kind": "let"
+  },
+  {
+   "file": "render/emotionMap.js",
+   "name": "localEmotionMap",
+   "line": 11,
+   "kind": "const"
+  },
+  {
+   "file": "render/episodeManager.js",
+   "name": "AUTHORITY",
+   "line": 57,
+   "kind": "const"
+  },
+  {
+   "file": "render/episodeManager.js",
+   "name": "VALIDATION",
+   "line": 107,
+   "kind": "const"
+  },
+  {
+   "file": "render/episodeManager.js",
+   "name": "episodicStore",
+   "line": 134,
+   "kind": "const"
+  },
+  {
+   "file": "render/episodeManager.js",
+   "name": "_activeBuffer",
+   "line": 149,
+   "kind": "let"
+  },
+  {
+   "file": "render/episodeManager.js",
+   "name": "_sys",
+   "line": 152,
+   "kind": "let"
+  },
+  {
+   "file": "render/episodeManager.js",
+   "name": "_replayCooldown",
+   "line": 155,
+   "kind": "const"
+  },
+  {
+   "file": "render/episodeManager.js",
+   "name": "_episodesSinceConsolidation",
+   "line": 158,
+   "kind": "let"
+  },
+  {
+   "file": "render/episodeManager.js",
+   "name": "_episodesStoredTotal",
+   "line": 169,
+   "kind": "let"
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "name": "workingMemory",
+   "line": 37,
+   "kind": "const"
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "name": "currentEpisode",
+   "line": 51,
+   "kind": "let"
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "name": "_bridgeToEpisodeManager",
+   "line": 70,
+   "kind": "let"
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "name": "episodeVault",
+   "line": 83,
+   "kind": "const"
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "name": "contextWindow",
+   "line": 94,
+   "kind": "const"
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "name": "lastContextShiftTime",
+   "line": 96,
+   "kind": "let"
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "name": "_episodeBoundaryJustCrossed",
+   "line": 107,
+   "kind": "let"
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "name": "_conceptRelations",
+   "line": 429,
+   "kind": "let"
+  },
+  {
+   "file": "render/hud.js",
+   "name": "hudElement",
+   "line": 9,
+   "kind": "let"
+  },
+  {
+   "file": "render/hud.js",
+   "name": "streamElement",
+   "line": 10,
+   "kind": "let"
+  },
+  {
+   "file": "render/hud.js",
+   "name": "speedElement",
+   "line": 11,
+   "kind": "let"
+  },
+  {
+   "file": "render/hud.js",
+   "name": "_streamHistory",
+   "line": 14,
+   "kind": "const"
+  },
+  {
+   "file": "render/hud.js",
+   "name": "_CLUSTER_CSS",
+   "line": 18,
+   "kind": "const"
+  },
+  {
+   "file": "render/hud.js",
+   "name": "_DRIVE_COLORS",
+   "line": 27,
+   "kind": "const"
+  },
+  {
+   "file": "render/knowledge.js",
+   "name": "conceptRelations",
+   "line": 10,
+   "kind": "const"
+  },
+  {
+   "file": "render/longTermConsolidation.js",
+   "name": "consolidationRegistry",
+   "line": 25,
+   "kind": "const"
+  },
+  {
+   "file": "render/longTermConsolidation.js",
+   "name": "stableMemory",
+   "line": 29,
+   "kind": "const"
+  },
+  {
+   "file": "render/memory.js",
+   "name": "transitions",
+   "line": 8,
+   "kind": "const"
+  },
+  {
+   "file": "render/memory.js",
+   "name": "rewards",
+   "line": 13,
+   "kind": "const"
+  },
+  {
+   "file": "render/memory.js",
+   "name": "penalties",
+   "line": 18,
+   "kind": "const"
+  },
+  {
+   "file": "render/memory.js",
+   "name": "confidenceMap",
+   "line": 29,
+   "kind": "const"
+  },
+  {
+   "file": "render/memory.js",
+   "name": "signals",
+   "line": 34,
+   "kind": "const"
+  },
+  {
+   "file": "render/memory.js",
+   "name": "thoughtTrail",
+   "line": 39,
+   "kind": "const"
+  },
+  {
+   "file": "render/memory.js",
+   "name": "curiosityMap",
+   "line": 44,
+   "kind": "const"
+  },
+  {
+   "file": "render/momentumMemory.js",
+   "name": "momentumMemory",
+   "line": 17,
+   "kind": "const"
+  },
+  {
+   "file": "render/motivationalState.js",
+   "name": "hungerDrive",
+   "line": 25,
+   "kind": "let"
+  },
+  {
+   "file": "render/motivationalState.js",
+   "name": "boredomDrive",
+   "line": 29,
+   "kind": "let"
+  },
+  {
+   "file": "render/motivationalState.js",
+   "name": "stressDrive",
+   "line": 33,
+   "kind": "let"
+  },
+  {
+   "file": "render/motivationalState.js",
+   "name": "fatigueDrive",
+   "line": 37,
+   "kind": "let"
+  },
+  {
+   "file": "render/motivationalState.js",
+   "name": "socialDrive",
+   "line": 41,
+   "kind": "let"
+  },
+  {
+   "file": "render/motivationalState.js",
+   "name": "uncertaintyDrive",
+   "line": 45,
+   "kind": "let"
+  },
+  {
+   "file": "render/motivationalState.js",
+   "name": "recentOutcomes",
+   "line": 52,
+   "kind": "const"
+  },
+  {
+   "file": "render/neuronVisuals.js",
+   "name": "CLUSTER_COLORS",
+   "line": 23,
+   "kind": "const"
+  },
+  {
+   "file": "render/neuronVisuals.js",
+   "name": "neuronVisuals",
+   "line": 33,
+   "kind": "const"
+  },
+  {
+   "file": "render/neuronVisuals.js",
+   "name": "_group",
+   "line": 36,
+   "kind": "let"
+  },
+  {
+   "file": "render/neuronVisuals.js",
+   "name": "pulsePhases",
+   "line": 40,
+   "kind": "const"
+  },
+  {
+   "file": "render/neuronVisuals.js",
+   "name": "_animFrame",
+   "line": 41,
+   "kind": "let"
+  },
+  {
+   "file": "render/neuronVisuals.js",
+   "name": "_attentionTargets",
+   "line": 47,
+   "kind": "const"
+  },
+  {
+   "file": "render/neuronVisuals.js",
+   "name": "_tick",
+   "line": 255,
+   "kind": "let"
+  },
+  {
+   "file": "render/predictionError.js",
+   "name": "uncertaintyState",
+   "line": 39,
+   "kind": "let"
+  },
+  {
+   "file": "render/predictionError.js",
+   "name": "errorHistory",
+   "line": 52,
+   "kind": "const"
+  },
+  {
+   "file": "render/predictionError.js",
+   "name": "activeExpectation",
+   "line": 67,
+   "kind": "let"
+  },
+  {
+   "file": "render/predictionError.js",
+   "name": "transitionUncertaintyMap",
+   "line": 503,
+   "kind": "const"
+  },
+  {
+   "file": "render/predictionError.js",
+   "name": "sequenceBuffer",
+   "line": 618,
+   "kind": "const"
+  },
+  {
+   "file": "render/predictionError.js",
+   "name": "currentSequenceError",
+   "line": 620,
+   "kind": "let"
+  },
+  {
+   "file": "render/predictionError.js",
+   "name": "semanticExpectationConfidence",
+   "line": 674,
+   "kind": "const"
+  },
+  {
+   "file": "render/qlearning.js",
+   "name": "Q",
+   "line": 12,
+   "kind": "const"
+  },
+  {
+   "file": "render/render.js",
+   "name": "stars",
+   "line": 24,
+   "kind": "let"
+  },
+  {
+   "file": "render/scene.js",
+   "name": "scene",
+   "line": 6,
+   "kind": "const"
+  },
+  {
+   "file": "render/scene.js",
+   "name": "camera",
+   "line": 12,
+   "kind": "const"
+  },
+  {
+   "file": "render/scene.js",
+   "name": "renderer",
+   "line": 22,
+   "kind": "const"
+  },
+  {
+   "file": "render/scene.js",
+   "name": "group",
+   "line": 28,
+   "kind": "const"
+  },
+  {
+   "file": "render/schemaMemory.js",
+   "name": "schemas",
+   "line": 66,
+   "kind": "const"
+  },
+  {
+   "file": "render/schemaMemory.js",
+   "name": "_lastMotifs",
+   "line": 72,
+   "kind": "let"
+  },
+  {
+   "file": "render/schemaMemory.js",
+   "name": "_bonusCache",
+   "line": 76,
+   "kind": "const"
+  },
+  {
+   "file": "render/schemaMemory.js",
+   "name": "_lastRebuild",
+   "line": 81,
+   "kind": "let"
+  },
+  {
+   "file": "render/schemaMemory.js",
+   "name": "_sys",
+   "line": 108,
+   "kind": "let"
+  },
+  {
+   "file": "render/scoring.js",
+   "name": "liveFutureBonus",
+   "line": 58,
+   "kind": "let"
+  },
+  {
+   "file": "render/scoring.js",
+   "name": "lastArbitrationBreakdown",
+   "line": 67,
+   "kind": "let"
+  },
+  {
+   "file": "render/search.js",
+   "name": "neuronMapRef",
+   "line": 8,
+   "kind": "let"
+  },
+  {
+   "file": "render/semanticActivation.js",
+   "name": "activationStrength",
+   "line": 51,
+   "kind": "const"
+  },
+  {
+   "file": "render/semanticMemoryLayer.js",
+   "name": "semanticEdges",
+   "line": 24,
+   "kind": "const"
+  },
+  {
+   "file": "render/semanticMemoryLayer.js",
+   "name": "conceptSchemas",
+   "line": 29,
+   "kind": "const"
+  },
+  {
+   "file": "render/semanticProvenance.js",
+   "name": "PROVENANCE",
+   "line": 68,
+   "kind": "const"
+  },
+  {
+   "file": "render/semanticProvenance.js",
+   "name": "AUTHORITY",
+   "line": 87,
+   "kind": "const"
+  },
+  {
+   "file": "render/semanticProvenance.js",
+   "name": "provenanceLog",
+   "line": 169,
+   "kind": "const"
+  },
+  {
+   "file": "render/semanticVitality.js",
+   "name": "semanticStrength",
+   "line": 34,
+   "kind": "const"
+  },
+  {
+   "file": "render/semanticVitality.js",
+   "name": "semanticVitalityMap",
+   "line": 44,
+   "kind": "const"
+  },
+  {
+   "file": "render/semanticVitality.js",
+   "name": "lastAccessTime",
+   "line": 53,
+   "kind": "const"
+  },
+  {
+   "file": "render/stars.js",
+   "name": "stars",
+   "line": 23,
+   "kind": "let"
+  },
+  {
+   "file": "render/traversalRecord.js",
+   "name": "record",
+   "line": 40,
+   "kind": "const"
+  },
+  {
+   "file": "render/trustMemory.js",
+   "name": "pathSuccesses",
+   "line": 30,
+   "kind": "const"
+  },
+  {
+   "file": "render/trustMemory.js",
+   "name": "pathAttempts",
+   "line": 33,
+   "kind": "const"
+  },
+  {
+   "file": "render/ui.js",
+   "name": "reasoningBox",
+   "line": 7,
+   "kind": "const"
+  },
+  {
+   "file": "render/uncertaintyEngine.js",
+   "name": "predictionHistory",
+   "line": 29,
+   "kind": "const"
+  },
+  {
+   "file": "render/uncertaintyEngine.js",
+   "name": "surpriseMap",
+   "line": 39,
+   "kind": "const"
+  },
+  {
+   "file": "render/uncertaintyEngine.js",
+   "name": "inconsistencyMap",
+   "line": 48,
+   "kind": "const"
+  },
+  {
+   "file": "render/uncertaintyEngine.js",
+   "name": "visitCount",
+   "line": 57,
+   "kind": "const"
+  },
+  {
+   "file": "render/uncertaintyLedger.js",
+   "name": "proceduralLedger",
+   "line": 105,
+   "kind": "const"
+  },
+  {
+   "file": "render/uncertaintyLedger.js",
+   "name": "semanticLedger",
+   "line": 106,
+   "kind": "const"
+  }
+ ],
+ "excluded": [
+  {
+   "file": "instrumentation/rng.js",
+   "name": "streams",
+   "line": 30,
+   "kind": "const",
+   "class": "stream-closure",
+   "reason": "Values are mulberry32 closures, so a digest could only say \"function\". Stream positions are measured by the stream spy and the terminal recovery run instead."
+  },
+  {
+   "file": "instrumentation/rng.js",
+   "name": "cognitiveRng",
+   "line": 59,
+   "kind": "const",
+   "class": "function-binding",
+   "reason": "const bound to an arrow function with no state of its own."
+  },
+  {
+   "file": "instrumentation/rng.js",
+   "name": "visualRng",
+   "line": 60,
+   "kind": "const",
+   "class": "function-binding",
+   "reason": "const bound to an arrow function with no state of its own."
+  },
+  {
+   "file": "main.js",
+   "name": "M7_EPISODE_TICK_CAP",
+   "line": 1055,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/activationCompetition.js",
+   "name": "HISTORY_WINDOW",
+   "line": 15,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/cognitiveAttention.js",
+   "name": "FOCUS_ALPHA",
+   "line": 35,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/episodeManager.js",
+   "name": "MAX_STORE",
+   "line": 136,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/episodeManager.js",
+   "name": "MAX_REPLAYS",
+   "line": 137,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/episodeManager.js",
+   "name": "SCHEMA_MIN_EPISODES",
+   "line": 141,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/episodeManager.js",
+   "name": "SCHEMA_REBUILD_EVERY",
+   "line": 146,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/episodeManager.js",
+   "name": "CONSOLIDATION_INTERVAL",
+   "line": 159,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "name": "WORKING_MEMORY_DECAY",
+   "line": 40,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "name": "WORKING_MEMORY_THRESH",
+   "line": 41,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "name": "WORKING_MEMORY_CAP",
+   "line": 42,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "name": "VAULT_MAX",
+   "line": 84,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "name": "CONTEXT_WINDOW",
+   "line": 95,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "name": "CONTEXT_SHIFT_COOLDOWN",
+   "line": 97,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/hud.js",
+   "name": "_MAX_STREAM",
+   "line": 15,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/longTermConsolidation.js",
+   "name": "STABLE_THRESHOLD",
+   "line": 32,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/longTermConsolidation.js",
+   "name": "CONSOLIDATION_DECAY",
+   "line": 33,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/motivationalState.js",
+   "name": "OUTCOME_WINDOW",
+   "line": 53,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/neuronVisuals.js",
+   "name": "_LERP_SPEED",
+   "line": 48,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/planning.js",
+   "name": "H",
+   "line": 211,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/predictionError.js",
+   "name": "ERROR_WINDOW",
+   "line": 53,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/predictionError.js",
+   "name": "TRANSITION_UNCERTAINTY_LR",
+   "line": 505,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/predictionError.js",
+   "name": "TRANSITION_UNCERTAINTY_DECAY",
+   "line": 506,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/predictionError.js",
+   "name": "SEQUENCE_WINDOW",
+   "line": 619,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/predictionError.js",
+   "name": "SEMANTIC_CONFIDENCE_LR",
+   "line": 676,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/predictionError.js",
+   "name": "SEMANTIC_CONFIDENCE_FLOOR",
+   "line": 677,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/predictionError.js",
+   "name": "SEMANTIC_CONFIDENCE_INIT",
+   "line": 678,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/qlearning.js",
+   "name": "GOAL_NONE",
+   "line": 38,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/schemaMemory.js",
+   "name": "REBUILD_INTERVAL_MS",
+   "line": 80,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/schemaMemory.js",
+   "name": "MIN_SPREAD",
+   "line": 84,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/schemaMemory.js",
+   "name": "LAMBDA",
+   "line": 103,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/schemaMemory.js",
+   "name": "Q_NORM",
+   "line": 104,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/schemaMemory.js",
+   "name": "MIN_QKEY_VISITS",
+   "line": 105,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/semanticActivation.js",
+   "name": "DECAY_RATE",
+   "line": 79,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/semanticActivation.js",
+   "name": "ACTIVATION_INCREMENT",
+   "line": 80,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/semanticActivation.js",
+   "name": "MAX_STRENGTH",
+   "line": 81,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/semanticActivation.js",
+   "name": "INHIBITION_SLOPE",
+   "line": 82,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/semanticMemoryLayer.js",
+   "name": "NOISE_FLOOR",
+   "line": 33,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/semanticMemoryLayer.js",
+   "name": "CONSOLIDATION_THRESHOLD",
+   "line": 37,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/semanticProvenance.js",
+   "name": "LOG_WINDOW",
+   "line": 170,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/uncertaintyLedger.js",
+   "name": "PROC_PRIOR_ALPHA",
+   "line": 86,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/uncertaintyLedger.js",
+   "name": "PROC_PRIOR_BETA",
+   "line": 87,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/uncertaintyLedger.js",
+   "name": "SEM_PRIOR_ALPHA",
+   "line": 89,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/uncertaintyLedger.js",
+   "name": "SEM_PRIOR_BETA",
+   "line": 90,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/uncertaintyLedger.js",
+   "name": "OLLAMA_PRIOR_ALPHA",
+   "line": 92,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/uncertaintyLedger.js",
+   "name": "OLLAMA_PRIOR_BETA",
+   "line": 93,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/uncertaintyLedger.js",
+   "name": "PROPAGATION_F",
+   "line": 341,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  },
+  {
+   "file": "render/uncertaintyLedger.js",
+   "name": "DECAY_RATE",
+   "line": 406,
+   "kind": "const",
+   "class": "immutable-primitive",
+   "reason": "const bound to a primitive literal: neither the binding nor the value can change."
+  }
+ ],
+ "globals": [
+  "_predictionErrorEpsilonBoost",
+  "homeNeuronId",
+  "lastClicked",
+  "lastNeuron",
+  "lastReasoning",
+  "recentMemory"
+ ],
+ "inventory": [
+  {
+   "item": "transitions",
+   "file": "render/memory.js",
+   "binding": "transitions"
+  },
+  {
+   "item": "Q",
+   "file": "render/qlearning.js",
+   "binding": "Q"
+  },
+  {
+   "item": "rewards",
+   "file": "render/memory.js",
+   "binding": "rewards"
+  },
+  {
+   "item": "provenanceLog",
+   "file": "render/semanticProvenance.js",
+   "binding": "provenanceLog"
+  },
+  {
+   "item": "momentumMemory",
+   "file": "render/momentumMemory.js",
+   "binding": "momentumMemory"
+  },
+  {
+   "item": "neuron embeddings",
+   "file": "main.js",
+   "binding": "neuronMap"
+  },
+  {
+   "item": "semanticStrength",
+   "file": "render/semanticVitality.js",
+   "binding": "semanticStrength"
+  },
+  {
+   "item": "pathSuccesses",
+   "file": "render/trustMemory.js",
+   "binding": "pathSuccesses"
+  },
+  {
+   "item": "confidenceMap",
+   "file": "render/memory.js",
+   "binding": "confidenceMap"
+  },
+  {
+   "item": "episodicStore",
+   "file": "render/episodeManager.js",
+   "binding": "episodicStore"
+  },
+  {
+   "item": "_episodesStoredTotal",
+   "file": "render/episodeManager.js",
+   "binding": "_episodesStoredTotal"
+  },
+  {
+   "item": "_episodesSinceConsolidation",
+   "file": "render/episodeManager.js",
+   "binding": "_episodesSinceConsolidation"
+  },
+  {
+   "item": "consolidationRegistry",
+   "file": "render/longTermConsolidation.js",
+   "binding": "consolidationRegistry"
+  },
+  {
+   "item": "stableMemory",
+   "file": "render/longTermConsolidation.js",
+   "binding": "stableMemory"
+  },
+  {
+   "item": "semanticEdges",
+   "file": "render/semanticMemoryLayer.js",
+   "binding": "semanticEdges"
+  },
+  {
+   "item": "conceptSchemas",
+   "file": "render/semanticMemoryLayer.js",
+   "binding": "conceptSchemas"
+  },
+  {
+   "item": "schemas",
+   "file": "render/schemaMemory.js",
+   "binding": "schemas"
+  },
+  {
+   "item": "_bonusCache",
+   "file": "render/schemaMemory.js",
+   "binding": "_bonusCache"
+  },
+  {
+   "item": "_lastMotifs",
+   "file": "render/schemaMemory.js",
+   "binding": "_lastMotifs"
+  },
+  {
+   "item": "_lastRebuild",
+   "file": "render/schemaMemory.js",
+   "binding": "_lastRebuild"
+  }
+ ],
+ "staticChecks": {
+  "functionBindingsOrPropertiesWritten": [],
+  "immediatelyInvokedInitialisers": []
+ }
+}
