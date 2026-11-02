@@ -1,0 +1,90 @@
+{
+ "schema": "tc2/ac38.rehearsal_scope/1",
+ "covered": [
+  {
+   "file": "render/stores.js",
+   "name": "Q"
+  },
+  {
+   "file": "render/stores.js",
+   "name": "episodicStore"
+  },
+  {
+   "file": "render/stores.js",
+   "name": "_bonusCache"
+  },
+  {
+   "file": "render/stores.js",
+   "name": "stableMemory"
+  },
+  {
+   "file": "render/stores.js",
+   "name": "_episodesStoredTotal"
+  },
+  {
+   "file": "render/stores.js",
+   "name": "semanticEdges"
+  },
+  {
+   "file": "render/stores.js",
+   "name": "neuronMap"
+  },
+  {
+   "file": "render/engine.js",
+   "name": "workingMemory"
+  },
+  {
+   "file": "render/engine.js",
+   "name": "_bridge"
+  },
+  {
+   "file": "render/engine.js",
+   "name": "episodeVault"
+  },
+  {
+   "file": "render/engine.js",
+   "name": "currentEpisode"
+  }
+ ],
+ "globals": [
+  "lastReasoning",
+  "recentMemory"
+ ],
+ "inventory": [
+  {
+   "item": "Q",
+   "file": "render/stores.js",
+   "binding": "Q"
+  },
+  {
+   "item": "episodicStore",
+   "file": "render/stores.js",
+   "binding": "episodicStore"
+  },
+  {
+   "item": "_bonusCache",
+   "file": "render/stores.js",
+   "binding": "_bonusCache"
+  },
+  {
+   "item": "stableMemory",
+   "file": "render/stores.js",
+   "binding": "stableMemory"
+  },
+  {
+   "item": "_episodesStoredTotal",
+   "file": "render/stores.js",
+   "binding": "_episodesStoredTotal"
+  },
+  {
+   "item": "semanticEdges",
+   "file": "render/stores.js",
+   "binding": "semanticEdges"
+  },
+  {
+   "item": "neuron embeddings",
+   "file": "render/stores.js",
+   "binding": "neuronMap"
+  }
+ ]
+}

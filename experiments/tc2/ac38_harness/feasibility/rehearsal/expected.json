@@ -1,0 +1,3584 @@
+{
+ "schema": "tc2/ac38.feasibility_expected/1",
+ "profile": "synthetic-rehearsal",
+ "status": "SYNTHETIC REHEARSAL OF THE HARNESS. Test-owned modules only. Not pinned-tree evidence, not feasibility evidence and not an AC38 run.",
+ "defaults": {
+  "K": 30,
+  "steps": 60
+ },
+ "tableSha256": "7622edc49bc5a2e8021974fa73a4831f3a9abcdfb0a09699c89e8d1ae43240b6",
+ "closedList": {
+  "fresh": [
+   "contextTag",
+   "id",
+   "labels",
+   "nodes",
+   "reward",
+   "sealed",
+   "startTime"
+  ],
+  "outgoing": [
+   "contextTag",
+   "duration",
+   "endTime",
+   "id",
+   "labels",
+   "nodes",
+   "reward",
+   "sealReason",
+   "sealed",
+   "startTime"
+  ]
+ },
+ "inventoryKeys": [
+  "render/stores.js#Q",
+  "render/stores.js#_bonusCache",
+  "render/stores.js#_episodesStoredTotal",
+  "render/stores.js#episodicStore",
+  "render/stores.js#neuronMap",
+  "render/stores.js#semanticEdges",
+  "render/stores.js#stableMemory"
+ ],
+ "closedListKeys": [
+  "render/engine.js#currentEpisode",
+  "render/engine.js#episodeVault"
+ ],
+ "rows": [
+  {
+   "countsAsDetection": false,
+   "id": "C-0.manual",
+   "group": "C-0",
+   "role": "control",
+   "contract": "TC:627 no-write control",
+   "detector": "none: every mechanism silent",
+   "runs": [
+    {
+     "label": "C0.J.three.manual",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "C0.J.empty.manual",
+     "mode": "J",
+     "fixture": "empty",
+     "reason": "manual",
+     "variants": [
+      "bridge_off"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "C0.S.three.manual",
+     "mode": "J",
+     "superset": true,
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off"
+     ]
+    },
+    {
+     "label": "C0.T.three.manual",
+     "mode": "T",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off"
+     ]
+    },
+    {
+     "label": "C0.R0.three.manual",
+     "mode": "R0",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off"
+     ]
+    },
+    {
+     "label": "C0.R0.empty.manual",
+     "mode": "R0",
+     "fixture": "empty",
+     "reason": "manual",
+     "variants": [
+      "bridge_off"
+     ]
+    },
+    {
+     "label": "C0.R1.three.manual",
+     "mode": "R1",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off"
+     ]
+    },
+    {
+     "label": "C0.D.three.manual",
+     "mode": "D",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "C0.J.three.manual",
+     "fact": "verdict",
+     "eq": []
+    },
+    {
+     "run": "C0.J.empty.manual",
+     "fact": "verdict",
+     "eq": []
+    },
+    {
+     "run": "C0.S.three.manual",
+     "fact": "verdict",
+     "eq": []
+    },
+    {
+     "run": "C0.T.three.manual",
+     "fact": "tripped",
+     "eq": null
+    },
+    {
+     "recovered": [
+      "C0.R0.three.manual",
+      "C0.R1.three.manual"
+     ],
+     "eq": {
+      "cognitive": 1,
+      "visual": 0,
+      "environment": 0
+     }
+    },
+    {
+     "run": "C0.J.three.manual",
+     "fact": "draws",
+     "eq": {
+      "cognitive render/engine.js:11": 1
+     }
+    },
+    {
+     "run": "C0.J.three.manual",
+     "fact": "probes",
+     "eq": {
+      "bridge_suppressed": 1
+     }
+    },
+    {
+     "run": "C0.J.three.manual",
+     "fact": "storeDelta",
+     "eq": 0
+    },
+    {
+     "run": "C0.J.three.manual",
+     "fact": "closedListViolations",
+     "eq": []
+    },
+    {
+     "run": "C0.J.empty.manual",
+     "fact": "closedListViolations",
+     "eq": []
+    },
+    {
+     "pairDiff": [
+      "C0.J.empty.manual",
+      "C0.J.three.manual"
+     ],
+     "field": "digestReturn",
+     "eq": [
+      "render/engine.js#episodeVault"
+     ]
+    },
+    {
+     "run": "C0.R0.three.manual",
+     "fact": "positions",
+     "eqRun": "C0.R0.empty.manual"
+    },
+    {
+     "run": "C0.J.three.manual",
+     "fact": "digestBefore",
+     "eqRun": "C0.J.empty.manual"
+    },
+    {
+     "run": "C0.S.three.manual",
+     "fact": "digestBefore",
+     "eqRun": "C0.J.three.manual"
+    },
+    {
+     "run": "C0.T.three.manual",
+     "fact": "digestBefore",
+     "eqRun": "C0.J.three.manual"
+    },
+    {
+     "run": "C0.D.three.manual",
+     "fact": "digestBefore",
+     "eqRun": "C0.J.three.manual"
+    },
+    {
+     "run": "C0.D.three.manual",
+     "fact": "digestReturn",
+     "eqRun": "C0.J.three.manual"
+    },
+    {
+     "run": "C0.J.three.manual",
+     "fact": "call",
+     "eq": 30
+    },
+    {
+     "run": "C0.J.three.manual",
+     "fact": "mutantOutside",
+     "eq": 0
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "N-0.manual",
+   "group": "N-0",
+   "role": "control",
+   "contract": "scaffold neutrality",
+   "detector": "none: identical to C-0",
+   "runs": [
+    {
+     "label": "N0.J.three.manual",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "N-0"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "N0.D.three.manual",
+     "mode": "D",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "N-0"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "N0.J.three.manual",
+     "fact": "verdict",
+     "eq": []
+    },
+    {
+     "run": "N0.J.three.manual",
+     "fact": "mutantFired",
+     "eq": 1
+    },
+    {
+     "run": "N0.J.three.manual",
+     "fact": "digestReturn",
+     "eqRun": "C0.J.three.manual"
+    },
+    {
+     "outsideDiff": [
+      "N0.J.three.manual",
+      "C0.J.three.manual"
+     ],
+     "eq": []
+    },
+    {
+     "run": "N0.J.three.manual",
+     "fact": "fingerprint",
+     "eqRun": "C0.J.three.manual"
+    },
+    {
+     "run": "N0.D.three.manual",
+     "fact": "fingerprint",
+     "eqRun": "C0.D.three.manual"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "C-0.goal_reached",
+   "group": "C-0",
+   "role": "control",
+   "contract": "TC:627 no-write control",
+   "detector": "none: every mechanism silent",
+   "runs": [
+    {
+     "label": "C0.J.three.goal_reached",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "C0.J.empty.goal_reached",
+     "mode": "J",
+     "fixture": "empty",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "C0.S.three.goal_reached",
+     "mode": "J",
+     "superset": true,
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off"
+     ]
+    },
+    {
+     "label": "C0.T.three.goal_reached",
+     "mode": "T",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off"
+     ]
+    },
+    {
+     "label": "C0.R0.three.goal_reached",
+     "mode": "R0",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off"
+     ]
+    },
+    {
+     "label": "C0.R0.empty.goal_reached",
+     "mode": "R0",
+     "fixture": "empty",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off"
+     ]
+    },
+    {
+     "label": "C0.R1.three.goal_reached",
+     "mode": "R1",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off"
+     ]
+    },
+    {
+     "label": "C0.D.three.goal_reached",
+     "mode": "D",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "C0.J.three.goal_reached",
+     "fact": "verdict",
+     "eq": []
+    },
+    {
+     "run": "C0.J.empty.goal_reached",
+     "fact": "verdict",
+     "eq": []
+    },
+    {
+     "run": "C0.S.three.goal_reached",
+     "fact": "verdict",
+     "eq": []
+    },
+    {
+     "run": "C0.T.three.goal_reached",
+     "fact": "tripped",
+     "eq": null
+    },
+    {
+     "recovered": [
+      "C0.R0.three.goal_reached",
+      "C0.R1.three.goal_reached"
+     ],
+     "eq": {
+      "cognitive": 1,
+      "visual": 0,
+      "environment": 0
+     }
+    },
+    {
+     "run": "C0.J.three.goal_reached",
+     "fact": "draws",
+     "eq": {
+      "cognitive render/engine.js:11": 1
+     }
+    },
+    {
+     "run": "C0.J.three.goal_reached",
+     "fact": "probes",
+     "eq": {
+      "bridge_suppressed": 1
+     }
+    },
+    {
+     "run": "C0.J.three.goal_reached",
+     "fact": "storeDelta",
+     "eq": 0
+    },
+    {
+     "run": "C0.J.three.goal_reached",
+     "fact": "closedListViolations",
+     "eq": []
+    },
+    {
+     "run": "C0.J.empty.goal_reached",
+     "fact": "closedListViolations",
+     "eq": []
+    },
+    {
+     "pairDiff": [
+      "C0.J.empty.goal_reached",
+      "C0.J.three.goal_reached"
+     ],
+     "field": "digestReturn",
+     "eq": [
+      "render/engine.js#episodeVault"
+     ]
+    },
+    {
+     "run": "C0.R0.three.goal_reached",
+     "fact": "positions",
+     "eqRun": "C0.R0.empty.goal_reached"
+    },
+    {
+     "run": "C0.J.three.goal_reached",
+     "fact": "digestBefore",
+     "eqRun": "C0.J.empty.goal_reached"
+    },
+    {
+     "run": "C0.S.three.goal_reached",
+     "fact": "digestBefore",
+     "eqRun": "C0.J.three.goal_reached"
+    },
+    {
+     "run": "C0.T.three.goal_reached",
+     "fact": "digestBefore",
+     "eqRun": "C0.J.three.goal_reached"
+    },
+    {
+     "run": "C0.D.three.goal_reached",
+     "fact": "digestBefore",
+     "eqRun": "C0.J.three.goal_reached"
+    },
+    {
+     "run": "C0.D.three.goal_reached",
+     "fact": "digestReturn",
+     "eqRun": "C0.J.three.goal_reached"
+    },
+    {
+     "run": "C0.J.three.goal_reached",
+     "fact": "call",
+     "eq": 35
+    },
+    {
+     "run": "C0.J.three.goal_reached",
+     "fact": "mutantOutside",
+     "eq": 0
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "N-0.goal_reached",
+   "group": "N-0",
+   "role": "control",
+   "contract": "scaffold neutrality",
+   "detector": "none: identical to C-0",
+   "runs": [
+    {
+     "label": "N0.J.three.goal_reached",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "N-0"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "N0.D.three.goal_reached",
+     "mode": "D",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "N-0"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "N0.J.three.goal_reached",
+     "fact": "verdict",
+     "eq": []
+    },
+    {
+     "run": "N0.J.three.goal_reached",
+     "fact": "mutantFired",
+     "eq": 1
+    },
+    {
+     "run": "N0.J.three.goal_reached",
+     "fact": "digestReturn",
+     "eqRun": "C0.J.three.goal_reached"
+    },
+    {
+     "outsideDiff": [
+      "N0.J.three.goal_reached",
+      "C0.J.three.goal_reached"
+     ],
+     "eq": []
+    },
+    {
+     "run": "N0.J.three.goal_reached",
+     "fact": "fingerprint",
+     "eqRun": "C0.J.three.goal_reached"
+    },
+    {
+     "run": "N0.D.three.goal_reached",
+     "fact": "fingerprint",
+     "eqRun": "C0.D.three.goal_reached"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-1.manual",
+   "group": "MV-1",
+   "role": "mutant",
+   "contract": "TC:417",
+   "detector": "journal, let, stream, tripwire",
+   "runs": [
+    {
+     "label": "MV1.J.three.manual",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": []
+    },
+    {
+     "label": "MV1.T.three.manual",
+     "mode": "T",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": []
+    },
+    {
+     "label": "MV1.R0.three.manual",
+     "mode": "R0",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": []
+    },
+    {
+     "label": "MV1.R1.three.manual",
+     "mode": "R1",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": []
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV1.J.three.manual",
+     "fact": "verdict",
+     "eq": [
+      "journal",
+      "let",
+      "stream"
+     ]
+    },
+    {
+     "run": "MV1.J.three.manual",
+     "fact": "journalCount",
+     "eq": 2
+    },
+    {
+     "run": "MV1.J.three.manual",
+     "fact": "letCount",
+     "eq": 1
+    },
+    {
+     "run": "MV1.J.three.manual",
+     "fact": "draws",
+     "eq": {
+      "cognitive render/engine.js:11": 1,
+      "cognitive render/stores.js:27": 1
+     }
+    },
+    {
+     "run": "MV1.J.three.manual",
+     "fact": "probes",
+     "eq": {
+      "learnFromEpisode": 1
+     }
+    },
+    {
+     "run": "MV1.J.three.manual",
+     "fact": "storeDelta",
+     "eq": 1
+    },
+    {
+     "run": "MV1.T.three.manual",
+     "fact": "tripped",
+     "eq": {
+      "site": "render/stores.js:27",
+      "kind": "not_extensible"
+     }
+    },
+    {
+     "recovered": [
+      "MV1.R0.three.manual",
+      "MV1.R1.three.manual"
+     ],
+     "eq": {
+      "cognitive": 2,
+      "visual": 0,
+      "environment": 0
+     }
+    },
+    {
+     "run": "MV1.J.three.manual",
+     "fact": "call",
+     "eq": 30
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-1.goal_reached",
+   "group": "MV-1",
+   "role": "mutant",
+   "contract": "TC:417",
+   "detector": "journal, let, stream, tripwire",
+   "runs": [
+    {
+     "label": "MV1.J.three.goal_reached",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": []
+    },
+    {
+     "label": "MV1.T.three.goal_reached",
+     "mode": "T",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": []
+    },
+    {
+     "label": "MV1.R0.three.goal_reached",
+     "mode": "R0",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": []
+    },
+    {
+     "label": "MV1.R1.three.goal_reached",
+     "mode": "R1",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": []
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV1.J.three.goal_reached",
+     "fact": "verdict",
+     "eq": [
+      "journal",
+      "let",
+      "stream"
+     ]
+    },
+    {
+     "run": "MV1.J.three.goal_reached",
+     "fact": "journalCount",
+     "eq": 2
+    },
+    {
+     "run": "MV1.J.three.goal_reached",
+     "fact": "letCount",
+     "eq": 1
+    },
+    {
+     "run": "MV1.J.three.goal_reached",
+     "fact": "draws",
+     "eq": {
+      "cognitive render/engine.js:11": 1,
+      "cognitive render/stores.js:27": 1
+     }
+    },
+    {
+     "run": "MV1.J.three.goal_reached",
+     "fact": "probes",
+     "eq": {
+      "learnFromEpisode": 1
+     }
+    },
+    {
+     "run": "MV1.J.three.goal_reached",
+     "fact": "storeDelta",
+     "eq": 1
+    },
+    {
+     "run": "MV1.T.three.goal_reached",
+     "fact": "tripped",
+     "eq": {
+      "site": "render/stores.js:27",
+      "kind": "not_extensible"
+     }
+    },
+    {
+     "recovered": [
+      "MV1.R0.three.goal_reached",
+      "MV1.R1.three.goal_reached"
+     ],
+     "eq": {
+      "cognitive": 2,
+      "visual": 0,
+      "environment": 0
+     }
+    },
+    {
+     "run": "MV1.J.three.goal_reached",
+     "fact": "call",
+     "eq": 35
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "P-1.manual",
+   "group": "P-1",
+   "role": "positive_control",
+   "contract": "TC:618 array index, restored (TC:626)",
+   "detector": "tripwire",
+   "runs": [
+    {
+     "label": "P1.J.three.manual",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off"
+     ],
+     "plant": "index_restored",
+     "aliasProof": true
+    },
+    {
+     "label": "P1.T.three.manual",
+     "mode": "T",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off"
+     ],
+     "plant": "index_restored"
+    }
+   ],
+   "predicates": [
+    {
+     "run": "P1.T.three.manual",
+     "fact": "tripped",
+     "eq": {
+      "site": "render/engine.js:41",
+      "kind": "read_only"
+     }
+    },
+    {
+     "run": "P1.J.three.manual",
+     "fact": "verdict",
+     "eq": []
+    },
+    {
+     "run": "P1.J.three.manual",
+     "fact": "digestReturn",
+     "eqRun": "C0.J.three.manual"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "P-2.manual",
+   "group": "P-2",
+   "role": "positive_control",
+   "contract": "TC:616 restored schema-cache write (TC:626)",
+   "detector": "journal",
+   "runs": [
+    {
+     "label": "P2.J.three.manual",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off"
+     ],
+     "plant": "bonus_restored",
+     "aliasProof": true
+    },
+    {
+     "label": "P2.T.three.manual",
+     "mode": "T",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off"
+     ],
+     "plant": "bonus_restored"
+    }
+   ],
+   "predicates": [
+    {
+     "run": "P2.J.three.manual",
+     "fact": "verdict",
+     "eq": [
+      "journal"
+     ]
+    },
+    {
+     "run": "P2.J.three.manual",
+     "fact": "journal",
+     "eq": {
+      "Map.set render/engine.js:41 [_bonusCache]": 2
+     }
+    },
+    {
+     "run": "P2.J.three.manual",
+     "fact": "digestReturn",
+     "eqRun": "C0.J.three.manual"
+    },
+    {
+     "run": "P2.T.three.manual",
+     "fact": "tripped",
+     "eq": null
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-2a.manual",
+   "group": "MV-2a",
+   "role": "mutant",
+   "contract": "TC:418 Q written then restored",
+   "detector": "journal",
+   "runs": [
+    {
+     "label": "MV2a.J.three.manual",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-2a"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV2a.T.three.manual",
+     "mode": "T",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-2a"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV2a.J.three.manual",
+     "fact": "verdict",
+     "eq": [
+      "journal"
+     ]
+    },
+    {
+     "run": "MV2a.J.three.manual",
+     "fact": "journal",
+     "eq": {
+      "Map.set render/stores.js:51 [Q]": 2
+     }
+    },
+    {
+     "run": "MV2a.J.three.manual",
+     "fact": "mutantFired",
+     "eq": 1
+    },
+    {
+     "run": "MV2a.J.three.manual",
+     "fact": "digestReturn",
+     "eqRun": "C0.J.three.manual"
+    },
+    {
+     "run": "MV2a.T.three.manual",
+     "fact": "tripped",
+     "eq": null
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-2b.manual",
+   "group": "MV-2b",
+   "role": "mutant",
+   "contract": "TC:418 embedding written then restored",
+   "detector": "tripwire",
+   "runs": [
+    {
+     "label": "MV2b.J.three.manual",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-2b"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV2b.T.three.manual",
+     "mode": "T",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-2b"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV2b.T.three.manual",
+     "fact": "tripped",
+     "eq": {
+      "site": "render/stores.js:51",
+      "kind": "read_only"
+     }
+    },
+    {
+     "run": "MV2b.J.three.manual",
+     "fact": "verdict",
+     "eq": []
+    },
+    {
+     "run": "MV2b.J.three.manual",
+     "fact": "mutantFired",
+     "eq": 1
+    },
+    {
+     "run": "MV2b.J.three.manual",
+     "fact": "digestReturn",
+     "eqRun": "C0.J.three.manual"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-2c.manual",
+   "group": "MV-2c",
+   "role": "mutant",
+   "contract": "TC:418 schema cache written then restored",
+   "detector": "journal",
+   "runs": [
+    {
+     "label": "MV2c.J.three.manual",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-2c"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV2c.T.three.manual",
+     "mode": "T",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-2c"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV2c.J.three.manual",
+     "fact": "verdict",
+     "eq": [
+      "journal"
+     ]
+    },
+    {
+     "run": "MV2c.J.three.manual",
+     "fact": "journal",
+     "eq": {
+      "Map.set render/stores.js:51 [_bonusCache]": 2
+     }
+    },
+    {
+     "run": "MV2c.J.three.manual",
+     "fact": "mutantFired",
+     "eq": 1
+    },
+    {
+     "run": "MV2c.J.three.manual",
+     "fact": "digestReturn",
+     "eqRun": "C0.J.three.manual"
+    },
+    {
+     "run": "MV2c.T.three.manual",
+     "fact": "tripped",
+     "eq": null
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-3.manual",
+   "group": "MV-3",
+   "role": "mutant",
+   "contract": "TC:419 forbidden write by another route",
+   "detector": "journal",
+   "runs": [
+    {
+     "label": "MV3.J.three.manual",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-3"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV3.S.three.manual",
+     "mode": "J",
+     "superset": true,
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-3"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV3.J.three.manual",
+     "fact": "verdict",
+     "eq": [
+      "journal"
+     ]
+    },
+    {
+     "run": "MV3.J.three.manual",
+     "fact": "journalItems",
+     "includesAll": [
+      "semanticEdges",
+      "stableMemory"
+     ]
+    },
+    {
+     "run": "MV3.J.three.manual",
+     "fact": "journalItems",
+     "subsetOf": [
+      "semanticEdges",
+      "stableMemory"
+     ]
+    },
+    {
+     "run": "MV3.J.three.manual",
+     "fact": "probes",
+     "eq": {
+      "bridge_suppressed": 1
+     }
+    },
+    {
+     "run": "MV3.J.three.manual",
+     "fact": "mutantFired",
+     "eq": 1
+    },
+    {
+     "run": "MV3.J.three.manual",
+     "fact": "digestReturn",
+     "neqRun": "C0.J.three.manual"
+    },
+    {
+     "run": "MV3.S.three.manual",
+     "fact": "verdict",
+     "eq": [
+      "superset_journal"
+     ]
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-4.manual",
+   "group": "MV-4",
+   "role": "mutant",
+   "contract": "TC:420 extra cognitive sample in both fixtures",
+   "detector": "stream",
+   "runs": [
+    {
+     "label": "MV4.J.three.manual",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-4"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV4.R0.three.manual",
+     "mode": "R0",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-4"
+     ]
+    },
+    {
+     "label": "MV4.R1.three.manual",
+     "mode": "R1",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-4"
+     ]
+    },
+    {
+     "label": "MV4.J.empty.manual",
+     "mode": "J",
+     "fixture": "empty",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-4"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV4.R0.empty.manual",
+     "mode": "R0",
+     "fixture": "empty",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-4"
+     ]
+    },
+    {
+     "label": "MV4.R1.empty.manual",
+     "mode": "R1",
+     "fixture": "empty",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-4"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV4.J.three.manual",
+     "fact": "verdict",
+     "eq": [
+      "stream"
+     ]
+    },
+    {
+     "run": "MV4.J.three.manual",
+     "fact": "draws",
+     "eq": {
+      "cognitive render/engine.js:11": 1,
+      "cognitive render/engine.js:25": 1
+     }
+    },
+    {
+     "recovered": [
+      "MV4.R0.three.manual",
+      "MV4.R1.three.manual"
+     ],
+     "eq": {
+      "cognitive": 2,
+      "visual": 0,
+      "environment": 0
+     }
+    },
+    {
+     "run": "MV4.J.empty.manual",
+     "fact": "verdict",
+     "eq": [
+      "stream"
+     ]
+    },
+    {
+     "run": "MV4.J.empty.manual",
+     "fact": "draws",
+     "eq": {
+      "cognitive render/engine.js:11": 1,
+      "cognitive render/engine.js:25": 1
+     }
+    },
+    {
+     "recovered": [
+      "MV4.R0.empty.manual",
+      "MV4.R1.empty.manual"
+     ],
+     "eq": {
+      "cognitive": 2,
+      "visual": 0,
+      "environment": 0
+     }
+    },
+    {
+     "run": "MV4.J.three.manual",
+     "fact": "digestBefore",
+     "eqRun": "MV4.J.empty.manual"
+    },
+    {
+     "run": "MV4.R0.three.manual",
+     "fact": "positions",
+     "eqRun": "MV4.R0.empty.manual"
+    },
+    {
+     "pairDiff": [
+      "MV4.J.empty.manual",
+      "MV4.J.three.manual"
+     ],
+     "field": "digestReturn",
+     "eq": [
+      "render/engine.js#episodeVault"
+     ]
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-5a.manual",
+   "group": "MV-5a",
+   "role": "mutant",
+   "contract": "TC:421 visual sample during a seal",
+   "detector": "stream",
+   "runs": [
+    {
+     "label": "MV5a.J.three.manual",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-5a"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV5a.R0.three.manual",
+     "mode": "R0",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-5a"
+     ]
+    },
+    {
+     "label": "MV5a.R1.three.manual",
+     "mode": "R1",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-5a"
+     ]
+    },
+    {
+     "label": "MV5a.J.empty.manual",
+     "mode": "J",
+     "fixture": "empty",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-5a"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV5a.R0.empty.manual",
+     "mode": "R0",
+     "fixture": "empty",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-5a"
+     ]
+    },
+    {
+     "label": "MV5a.R1.empty.manual",
+     "mode": "R1",
+     "fixture": "empty",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-5a"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV5a.J.three.manual",
+     "fact": "verdict",
+     "eq": [
+      "stream"
+     ]
+    },
+    {
+     "run": "MV5a.J.three.manual",
+     "fact": "draws",
+     "eq": {
+      "cognitive render/engine.js:11": 1,
+      "visual render/engine.js:25": 1
+     }
+    },
+    {
+     "recovered": [
+      "MV5a.R0.three.manual",
+      "MV5a.R1.three.manual"
+     ],
+     "eq": {
+      "cognitive": 1,
+      "visual": 1,
+      "environment": 0
+     }
+    },
+    {
+     "run": "MV5a.J.empty.manual",
+     "fact": "verdict",
+     "eq": [
+      "stream"
+     ]
+    },
+    {
+     "run": "MV5a.J.empty.manual",
+     "fact": "draws",
+     "eq": {
+      "cognitive render/engine.js:11": 1,
+      "visual render/engine.js:25": 1
+     }
+    },
+    {
+     "recovered": [
+      "MV5a.R0.empty.manual",
+      "MV5a.R1.empty.manual"
+     ],
+     "eq": {
+      "cognitive": 1,
+      "visual": 1,
+      "environment": 0
+     }
+    },
+    {
+     "run": "MV5a.J.three.manual",
+     "fact": "digestBefore",
+     "eqRun": "MV5a.J.empty.manual"
+    },
+    {
+     "run": "MV5a.R0.three.manual",
+     "fact": "positions",
+     "eqRun": "MV5a.R0.empty.manual"
+    },
+    {
+     "pairDiff": [
+      "MV5a.J.empty.manual",
+      "MV5a.J.three.manual"
+     ],
+     "field": "digestReturn",
+     "eq": [
+      "render/engine.js#episodeVault"
+     ]
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-5b.manual",
+   "group": "MV-5b",
+   "role": "mutant",
+   "contract": "TC:421 environment sample during a seal",
+   "detector": "stream",
+   "runs": [
+    {
+     "label": "MV5b.J.three.manual",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-5b"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV5b.R0.three.manual",
+     "mode": "R0",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-5b"
+     ]
+    },
+    {
+     "label": "MV5b.R1.three.manual",
+     "mode": "R1",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-5b"
+     ]
+    },
+    {
+     "label": "MV5b.J.empty.manual",
+     "mode": "J",
+     "fixture": "empty",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-5b"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV5b.R0.empty.manual",
+     "mode": "R0",
+     "fixture": "empty",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-5b"
+     ]
+    },
+    {
+     "label": "MV5b.R1.empty.manual",
+     "mode": "R1",
+     "fixture": "empty",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-5b"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV5b.J.three.manual",
+     "fact": "verdict",
+     "eq": [
+      "stream"
+     ]
+    },
+    {
+     "run": "MV5b.J.three.manual",
+     "fact": "draws",
+     "eq": {
+      "cognitive render/engine.js:11": 1,
+      "environment render/engine.js:25": 1
+     }
+    },
+    {
+     "recovered": [
+      "MV5b.R0.three.manual",
+      "MV5b.R1.three.manual"
+     ],
+     "eq": {
+      "cognitive": 1,
+      "visual": 0,
+      "environment": 1
+     }
+    },
+    {
+     "run": "MV5b.J.empty.manual",
+     "fact": "verdict",
+     "eq": [
+      "stream"
+     ]
+    },
+    {
+     "run": "MV5b.J.empty.manual",
+     "fact": "draws",
+     "eq": {
+      "cognitive render/engine.js:11": 1,
+      "environment render/engine.js:25": 1
+     }
+    },
+    {
+     "recovered": [
+      "MV5b.R0.empty.manual",
+      "MV5b.R1.empty.manual"
+     ],
+     "eq": {
+      "cognitive": 1,
+      "visual": 0,
+      "environment": 1
+     }
+    },
+    {
+     "run": "MV5b.J.three.manual",
+     "fact": "digestBefore",
+     "eqRun": "MV5b.J.empty.manual"
+    },
+    {
+     "run": "MV5b.R0.three.manual",
+     "fact": "positions",
+     "eqRun": "MV5b.R0.empty.manual"
+    },
+    {
+     "pairDiff": [
+      "MV5b.J.empty.manual",
+      "MV5b.J.three.manual"
+     ],
+     "field": "digestReturn",
+     "eq": [
+      "render/engine.js#episodeVault"
+     ]
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-6a.manual",
+   "group": "MV-6a",
+   "role": "mutant",
+   "contract": "TC:426 bookkeeping beyond the closed list: second vault copy",
+   "detector": "closed-list check",
+   "runs": [
+    {
+     "label": "MV6a.J.three.manual",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-6a"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV6a.S.three.manual",
+     "mode": "J",
+     "superset": true,
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-6a"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV6a.J.three.manual",
+     "fact": "verdict",
+     "eq": [
+      "closed_list"
+     ]
+    },
+    {
+     "run": "MV6a.J.three.manual",
+     "fact": "closedListViolations",
+     "eq": [
+      "vault_delta"
+     ]
+    },
+    {
+     "run": "MV6a.S.three.manual",
+     "fact": "verdict",
+     "eq": [
+      "closed_list"
+     ]
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-6b.manual",
+   "group": "MV-6b",
+   "role": "mutant",
+   "contract": "TC:426 bookkeeping beyond the closed list: extra field",
+   "detector": "closed-list shape check",
+   "runs": [
+    {
+     "label": "MV6b.J.three.manual",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-6b"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV6b.S.three.manual",
+     "mode": "J",
+     "superset": true,
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-6b"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV6b.J.three.manual",
+     "fact": "verdict",
+     "eq": [
+      "closed_list"
+     ]
+    },
+    {
+     "run": "MV6b.J.three.manual",
+     "fact": "closedListViolations",
+     "eq": [
+      "vault_entry_keys"
+     ]
+    },
+    {
+     "run": "MV6b.S.three.manual",
+     "fact": "verdict",
+     "eq": [
+      "closed_list"
+     ]
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-6c.manual",
+   "group": "MV-6c",
+   "role": "mutant",
+   "contract": "TC:426 bookkeeping beyond the closed list: other module state",
+   "detector": "superset journal, outside-inventory digest",
+   "runs": [
+    {
+     "label": "MV6c.J.three.manual",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-6c"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV6c.S.three.manual",
+     "mode": "J",
+     "superset": true,
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-6c"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV6c.J.three.manual",
+     "fact": "verdict",
+     "eq": []
+    },
+    {
+     "outsideDiff": [
+      "MV6c.J.three.manual",
+      "C0.J.three.manual"
+     ],
+     "eq": [
+      "render/engine.js#workingMemory"
+     ]
+    },
+    {
+     "run": "MV6c.S.three.manual",
+     "fact": "verdict",
+     "eq": [
+      "superset_journal"
+     ]
+    },
+    {
+     "run": "MV6c.S.three.manual",
+     "fact": "journal",
+     "eq": {
+      "Map.set render/engine.js:45 [render/engine.js#workingMemory]": 1
+     }
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-7a.manual",
+   "group": "MV-7a",
+   "role": "mutant",
+   "contract": "TC:427 vault entry stored inside the window",
+   "detector": "journal, tripwire",
+   "runs": [
+    {
+     "label": "MV7a.J.three.manual",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-7a"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV7a.T.three.manual",
+     "mode": "T",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-7a"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV7a.J.three.manual",
+     "fact": "verdict",
+     "eq": [
+      "journal"
+     ]
+    },
+    {
+     "run": "MV7a.J.three.manual",
+     "fact": "journal",
+     "eq": {
+      "Array.push render/engine.js:45 [episodicStore]": 1
+     }
+    },
+    {
+     "run": "MV7a.J.three.manual",
+     "fact": "storeDelta",
+     "eq": 1
+    },
+    {
+     "run": "MV7a.T.three.manual",
+     "fact": "tripped",
+     "eq": {
+      "site": "render/engine.js:45",
+      "kind": "not_extensible"
+     }
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "MV-7b.manual",
+   "group": "MV-7b",
+   "role": "characterization",
+   "contract": "TC:427 deferred form, characterization only",
+   "detector": "none inside the window; downstream fingerprint only",
+   "runs": [
+    {
+     "label": "MV7b.J.three.manual",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-7b"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV7b.D.three.manual",
+     "mode": "D",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off",
+      "MV-7b"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV7b.J.three.manual",
+     "fact": "verdict",
+     "eq": []
+    },
+    {
+     "run": "MV7b.J.three.manual",
+     "fact": "storeDelta",
+     "eq": 0
+    },
+    {
+     "run": "MV7b.J.three.manual",
+     "fact": "mutantFired",
+     "eq": 1
+    },
+    {
+     "run": "MV7b.D.three.manual",
+     "fact": "deferredFired",
+     "eq": 1
+    },
+    {
+     "run": "MV7b.D.three.manual",
+     "fact": "fingerprint",
+     "neqRun": "C0.D.three.manual"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "P-1.goal_reached",
+   "group": "P-1",
+   "role": "positive_control",
+   "contract": "TC:618 array index, restored (TC:626)",
+   "detector": "tripwire",
+   "runs": [
+    {
+     "label": "P1.J.three.goal_reached",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off"
+     ],
+     "plant": "index_restored",
+     "aliasProof": true
+    },
+    {
+     "label": "P1.T.three.goal_reached",
+     "mode": "T",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off"
+     ],
+     "plant": "index_restored"
+    }
+   ],
+   "predicates": [
+    {
+     "run": "P1.T.three.goal_reached",
+     "fact": "tripped",
+     "eq": {
+      "site": "render/engine.js:41",
+      "kind": "read_only"
+     }
+    },
+    {
+     "run": "P1.J.three.goal_reached",
+     "fact": "verdict",
+     "eq": []
+    },
+    {
+     "run": "P1.J.three.goal_reached",
+     "fact": "digestReturn",
+     "eqRun": "C0.J.three.goal_reached"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "P-2.goal_reached",
+   "group": "P-2",
+   "role": "positive_control",
+   "contract": "TC:616 restored schema-cache write (TC:626)",
+   "detector": "journal",
+   "runs": [
+    {
+     "label": "P2.J.three.goal_reached",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off"
+     ],
+     "plant": "bonus_restored",
+     "aliasProof": true
+    },
+    {
+     "label": "P2.T.three.goal_reached",
+     "mode": "T",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off"
+     ],
+     "plant": "bonus_restored"
+    }
+   ],
+   "predicates": [
+    {
+     "run": "P2.J.three.goal_reached",
+     "fact": "verdict",
+     "eq": [
+      "journal"
+     ]
+    },
+    {
+     "run": "P2.J.three.goal_reached",
+     "fact": "journal",
+     "eq": {
+      "Map.set render/engine.js:41 [_bonusCache]": 2
+     }
+    },
+    {
+     "run": "P2.J.three.goal_reached",
+     "fact": "digestReturn",
+     "eqRun": "C0.J.three.goal_reached"
+    },
+    {
+     "run": "P2.T.three.goal_reached",
+     "fact": "tripped",
+     "eq": null
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-2a.goal_reached",
+   "group": "MV-2a",
+   "role": "mutant",
+   "contract": "TC:418 Q written then restored",
+   "detector": "journal",
+   "runs": [
+    {
+     "label": "MV2a.J.three.goal_reached",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-2a"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV2a.T.three.goal_reached",
+     "mode": "T",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-2a"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV2a.J.three.goal_reached",
+     "fact": "verdict",
+     "eq": [
+      "journal"
+     ]
+    },
+    {
+     "run": "MV2a.J.three.goal_reached",
+     "fact": "journal",
+     "eq": {
+      "Map.set render/stores.js:51 [Q]": 2
+     }
+    },
+    {
+     "run": "MV2a.J.three.goal_reached",
+     "fact": "mutantFired",
+     "eq": 1
+    },
+    {
+     "run": "MV2a.J.three.goal_reached",
+     "fact": "digestReturn",
+     "eqRun": "C0.J.three.goal_reached"
+    },
+    {
+     "run": "MV2a.T.three.goal_reached",
+     "fact": "tripped",
+     "eq": null
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-2b.goal_reached",
+   "group": "MV-2b",
+   "role": "mutant",
+   "contract": "TC:418 embedding written then restored",
+   "detector": "tripwire",
+   "runs": [
+    {
+     "label": "MV2b.J.three.goal_reached",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-2b"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV2b.T.three.goal_reached",
+     "mode": "T",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-2b"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV2b.T.three.goal_reached",
+     "fact": "tripped",
+     "eq": {
+      "site": "render/stores.js:51",
+      "kind": "read_only"
+     }
+    },
+    {
+     "run": "MV2b.J.three.goal_reached",
+     "fact": "verdict",
+     "eq": []
+    },
+    {
+     "run": "MV2b.J.three.goal_reached",
+     "fact": "mutantFired",
+     "eq": 1
+    },
+    {
+     "run": "MV2b.J.three.goal_reached",
+     "fact": "digestReturn",
+     "eqRun": "C0.J.three.goal_reached"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-2c.goal_reached",
+   "group": "MV-2c",
+   "role": "mutant",
+   "contract": "TC:418 schema cache written then restored",
+   "detector": "journal",
+   "runs": [
+    {
+     "label": "MV2c.J.three.goal_reached",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-2c"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV2c.T.three.goal_reached",
+     "mode": "T",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-2c"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV2c.J.three.goal_reached",
+     "fact": "verdict",
+     "eq": [
+      "journal"
+     ]
+    },
+    {
+     "run": "MV2c.J.three.goal_reached",
+     "fact": "journal",
+     "eq": {
+      "Map.set render/stores.js:51 [_bonusCache]": 2
+     }
+    },
+    {
+     "run": "MV2c.J.three.goal_reached",
+     "fact": "mutantFired",
+     "eq": 1
+    },
+    {
+     "run": "MV2c.J.three.goal_reached",
+     "fact": "digestReturn",
+     "eqRun": "C0.J.three.goal_reached"
+    },
+    {
+     "run": "MV2c.T.three.goal_reached",
+     "fact": "tripped",
+     "eq": null
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-3.goal_reached",
+   "group": "MV-3",
+   "role": "mutant",
+   "contract": "TC:419 forbidden write by another route",
+   "detector": "journal",
+   "runs": [
+    {
+     "label": "MV3.J.three.goal_reached",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-3"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV3.S.three.goal_reached",
+     "mode": "J",
+     "superset": true,
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-3"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV3.J.three.goal_reached",
+     "fact": "verdict",
+     "eq": [
+      "journal"
+     ]
+    },
+    {
+     "run": "MV3.J.three.goal_reached",
+     "fact": "journalItems",
+     "includesAll": [
+      "semanticEdges",
+      "stableMemory"
+     ]
+    },
+    {
+     "run": "MV3.J.three.goal_reached",
+     "fact": "journalItems",
+     "subsetOf": [
+      "semanticEdges",
+      "stableMemory"
+     ]
+    },
+    {
+     "run": "MV3.J.three.goal_reached",
+     "fact": "probes",
+     "eq": {
+      "bridge_suppressed": 1
+     }
+    },
+    {
+     "run": "MV3.J.three.goal_reached",
+     "fact": "mutantFired",
+     "eq": 1
+    },
+    {
+     "run": "MV3.J.three.goal_reached",
+     "fact": "digestReturn",
+     "neqRun": "C0.J.three.goal_reached"
+    },
+    {
+     "run": "MV3.S.three.goal_reached",
+     "fact": "verdict",
+     "eq": [
+      "superset_journal"
+     ]
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-4.goal_reached",
+   "group": "MV-4",
+   "role": "mutant",
+   "contract": "TC:420 extra cognitive sample in both fixtures",
+   "detector": "stream",
+   "runs": [
+    {
+     "label": "MV4.J.three.goal_reached",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-4"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV4.R0.three.goal_reached",
+     "mode": "R0",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-4"
+     ]
+    },
+    {
+     "label": "MV4.R1.three.goal_reached",
+     "mode": "R1",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-4"
+     ]
+    },
+    {
+     "label": "MV4.J.empty.goal_reached",
+     "mode": "J",
+     "fixture": "empty",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-4"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV4.R0.empty.goal_reached",
+     "mode": "R0",
+     "fixture": "empty",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-4"
+     ]
+    },
+    {
+     "label": "MV4.R1.empty.goal_reached",
+     "mode": "R1",
+     "fixture": "empty",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-4"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV4.J.three.goal_reached",
+     "fact": "verdict",
+     "eq": [
+      "stream"
+     ]
+    },
+    {
+     "run": "MV4.J.three.goal_reached",
+     "fact": "draws",
+     "eq": {
+      "cognitive render/engine.js:11": 1,
+      "cognitive render/engine.js:25": 1
+     }
+    },
+    {
+     "recovered": [
+      "MV4.R0.three.goal_reached",
+      "MV4.R1.three.goal_reached"
+     ],
+     "eq": {
+      "cognitive": 2,
+      "visual": 0,
+      "environment": 0
+     }
+    },
+    {
+     "run": "MV4.J.empty.goal_reached",
+     "fact": "verdict",
+     "eq": [
+      "stream"
+     ]
+    },
+    {
+     "run": "MV4.J.empty.goal_reached",
+     "fact": "draws",
+     "eq": {
+      "cognitive render/engine.js:11": 1,
+      "cognitive render/engine.js:25": 1
+     }
+    },
+    {
+     "recovered": [
+      "MV4.R0.empty.goal_reached",
+      "MV4.R1.empty.goal_reached"
+     ],
+     "eq": {
+      "cognitive": 2,
+      "visual": 0,
+      "environment": 0
+     }
+    },
+    {
+     "run": "MV4.J.three.goal_reached",
+     "fact": "digestBefore",
+     "eqRun": "MV4.J.empty.goal_reached"
+    },
+    {
+     "run": "MV4.R0.three.goal_reached",
+     "fact": "positions",
+     "eqRun": "MV4.R0.empty.goal_reached"
+    },
+    {
+     "pairDiff": [
+      "MV4.J.empty.goal_reached",
+      "MV4.J.three.goal_reached"
+     ],
+     "field": "digestReturn",
+     "eq": [
+      "render/engine.js#episodeVault"
+     ]
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-5a.goal_reached",
+   "group": "MV-5a",
+   "role": "mutant",
+   "contract": "TC:421 visual sample during a seal",
+   "detector": "stream",
+   "runs": [
+    {
+     "label": "MV5a.J.three.goal_reached",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-5a"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV5a.R0.three.goal_reached",
+     "mode": "R0",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-5a"
+     ]
+    },
+    {
+     "label": "MV5a.R1.three.goal_reached",
+     "mode": "R1",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-5a"
+     ]
+    },
+    {
+     "label": "MV5a.J.empty.goal_reached",
+     "mode": "J",
+     "fixture": "empty",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-5a"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV5a.R0.empty.goal_reached",
+     "mode": "R0",
+     "fixture": "empty",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-5a"
+     ]
+    },
+    {
+     "label": "MV5a.R1.empty.goal_reached",
+     "mode": "R1",
+     "fixture": "empty",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-5a"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV5a.J.three.goal_reached",
+     "fact": "verdict",
+     "eq": [
+      "stream"
+     ]
+    },
+    {
+     "run": "MV5a.J.three.goal_reached",
+     "fact": "draws",
+     "eq": {
+      "cognitive render/engine.js:11": 1,
+      "visual render/engine.js:25": 1
+     }
+    },
+    {
+     "recovered": [
+      "MV5a.R0.three.goal_reached",
+      "MV5a.R1.three.goal_reached"
+     ],
+     "eq": {
+      "cognitive": 1,
+      "visual": 1,
+      "environment": 0
+     }
+    },
+    {
+     "run": "MV5a.J.empty.goal_reached",
+     "fact": "verdict",
+     "eq": [
+      "stream"
+     ]
+    },
+    {
+     "run": "MV5a.J.empty.goal_reached",
+     "fact": "draws",
+     "eq": {
+      "cognitive render/engine.js:11": 1,
+      "visual render/engine.js:25": 1
+     }
+    },
+    {
+     "recovered": [
+      "MV5a.R0.empty.goal_reached",
+      "MV5a.R1.empty.goal_reached"
+     ],
+     "eq": {
+      "cognitive": 1,
+      "visual": 1,
+      "environment": 0
+     }
+    },
+    {
+     "run": "MV5a.J.three.goal_reached",
+     "fact": "digestBefore",
+     "eqRun": "MV5a.J.empty.goal_reached"
+    },
+    {
+     "run": "MV5a.R0.three.goal_reached",
+     "fact": "positions",
+     "eqRun": "MV5a.R0.empty.goal_reached"
+    },
+    {
+     "pairDiff": [
+      "MV5a.J.empty.goal_reached",
+      "MV5a.J.three.goal_reached"
+     ],
+     "field": "digestReturn",
+     "eq": [
+      "render/engine.js#episodeVault"
+     ]
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-5b.goal_reached",
+   "group": "MV-5b",
+   "role": "mutant",
+   "contract": "TC:421 environment sample during a seal",
+   "detector": "stream",
+   "runs": [
+    {
+     "label": "MV5b.J.three.goal_reached",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-5b"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV5b.R0.three.goal_reached",
+     "mode": "R0",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-5b"
+     ]
+    },
+    {
+     "label": "MV5b.R1.three.goal_reached",
+     "mode": "R1",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-5b"
+     ]
+    },
+    {
+     "label": "MV5b.J.empty.goal_reached",
+     "mode": "J",
+     "fixture": "empty",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-5b"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV5b.R0.empty.goal_reached",
+     "mode": "R0",
+     "fixture": "empty",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-5b"
+     ]
+    },
+    {
+     "label": "MV5b.R1.empty.goal_reached",
+     "mode": "R1",
+     "fixture": "empty",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-5b"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV5b.J.three.goal_reached",
+     "fact": "verdict",
+     "eq": [
+      "stream"
+     ]
+    },
+    {
+     "run": "MV5b.J.three.goal_reached",
+     "fact": "draws",
+     "eq": {
+      "cognitive render/engine.js:11": 1,
+      "environment render/engine.js:25": 1
+     }
+    },
+    {
+     "recovered": [
+      "MV5b.R0.three.goal_reached",
+      "MV5b.R1.three.goal_reached"
+     ],
+     "eq": {
+      "cognitive": 1,
+      "visual": 0,
+      "environment": 1
+     }
+    },
+    {
+     "run": "MV5b.J.empty.goal_reached",
+     "fact": "verdict",
+     "eq": [
+      "stream"
+     ]
+    },
+    {
+     "run": "MV5b.J.empty.goal_reached",
+     "fact": "draws",
+     "eq": {
+      "cognitive render/engine.js:11": 1,
+      "environment render/engine.js:25": 1
+     }
+    },
+    {
+     "recovered": [
+      "MV5b.R0.empty.goal_reached",
+      "MV5b.R1.empty.goal_reached"
+     ],
+     "eq": {
+      "cognitive": 1,
+      "visual": 0,
+      "environment": 1
+     }
+    },
+    {
+     "run": "MV5b.J.three.goal_reached",
+     "fact": "digestBefore",
+     "eqRun": "MV5b.J.empty.goal_reached"
+    },
+    {
+     "run": "MV5b.R0.three.goal_reached",
+     "fact": "positions",
+     "eqRun": "MV5b.R0.empty.goal_reached"
+    },
+    {
+     "pairDiff": [
+      "MV5b.J.empty.goal_reached",
+      "MV5b.J.three.goal_reached"
+     ],
+     "field": "digestReturn",
+     "eq": [
+      "render/engine.js#episodeVault"
+     ]
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-6a.goal_reached",
+   "group": "MV-6a",
+   "role": "mutant",
+   "contract": "TC:426 bookkeeping beyond the closed list: second vault copy",
+   "detector": "closed-list check",
+   "runs": [
+    {
+     "label": "MV6a.J.three.goal_reached",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-6a"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV6a.S.three.goal_reached",
+     "mode": "J",
+     "superset": true,
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-6a"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV6a.J.three.goal_reached",
+     "fact": "verdict",
+     "eq": [
+      "closed_list"
+     ]
+    },
+    {
+     "run": "MV6a.J.three.goal_reached",
+     "fact": "closedListViolations",
+     "eq": [
+      "vault_delta"
+     ]
+    },
+    {
+     "run": "MV6a.S.three.goal_reached",
+     "fact": "verdict",
+     "eq": [
+      "closed_list"
+     ]
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-6b.goal_reached",
+   "group": "MV-6b",
+   "role": "mutant",
+   "contract": "TC:426 bookkeeping beyond the closed list: extra field",
+   "detector": "closed-list shape check",
+   "runs": [
+    {
+     "label": "MV6b.J.three.goal_reached",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-6b"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV6b.S.three.goal_reached",
+     "mode": "J",
+     "superset": true,
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-6b"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV6b.J.three.goal_reached",
+     "fact": "verdict",
+     "eq": [
+      "closed_list"
+     ]
+    },
+    {
+     "run": "MV6b.J.three.goal_reached",
+     "fact": "closedListViolations",
+     "eq": [
+      "vault_entry_keys"
+     ]
+    },
+    {
+     "run": "MV6b.S.three.goal_reached",
+     "fact": "verdict",
+     "eq": [
+      "closed_list"
+     ]
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-6c.goal_reached",
+   "group": "MV-6c",
+   "role": "mutant",
+   "contract": "TC:426 bookkeeping beyond the closed list: other module state",
+   "detector": "superset journal, outside-inventory digest",
+   "runs": [
+    {
+     "label": "MV6c.J.three.goal_reached",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-6c"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV6c.S.three.goal_reached",
+     "mode": "J",
+     "superset": true,
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-6c"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV6c.J.three.goal_reached",
+     "fact": "verdict",
+     "eq": []
+    },
+    {
+     "outsideDiff": [
+      "MV6c.J.three.goal_reached",
+      "C0.J.three.goal_reached"
+     ],
+     "eq": [
+      "render/engine.js#workingMemory"
+     ]
+    },
+    {
+     "run": "MV6c.S.three.goal_reached",
+     "fact": "verdict",
+     "eq": [
+      "superset_journal"
+     ]
+    },
+    {
+     "run": "MV6c.S.three.goal_reached",
+     "fact": "journal",
+     "eq": {
+      "Map.set render/engine.js:45 [render/engine.js#workingMemory]": 1
+     }
+    }
+   ]
+  },
+  {
+   "countsAsDetection": true,
+   "id": "MV-7a.goal_reached",
+   "group": "MV-7a",
+   "role": "mutant",
+   "contract": "TC:427 vault entry stored inside the window",
+   "detector": "journal, tripwire",
+   "runs": [
+    {
+     "label": "MV7a.J.three.goal_reached",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-7a"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV7a.T.three.goal_reached",
+     "mode": "T",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-7a"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV7a.J.three.goal_reached",
+     "fact": "verdict",
+     "eq": [
+      "journal"
+     ]
+    },
+    {
+     "run": "MV7a.J.three.goal_reached",
+     "fact": "journal",
+     "eq": {
+      "Array.push render/engine.js:45 [episodicStore]": 1
+     }
+    },
+    {
+     "run": "MV7a.J.three.goal_reached",
+     "fact": "storeDelta",
+     "eq": 1
+    },
+    {
+     "run": "MV7a.T.three.goal_reached",
+     "fact": "tripped",
+     "eq": {
+      "site": "render/engine.js:45",
+      "kind": "not_extensible"
+     }
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "MV-7b.goal_reached",
+   "group": "MV-7b",
+   "role": "characterization",
+   "contract": "TC:427 deferred form, characterization only",
+   "detector": "none inside the window; downstream fingerprint only",
+   "runs": [
+    {
+     "label": "MV7b.J.three.goal_reached",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-7b"
+     ],
+     "aliasProof": true
+    },
+    {
+     "label": "MV7b.D.three.goal_reached",
+     "mode": "D",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [
+      "bridge_off",
+      "MV-7b"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "run": "MV7b.J.three.goal_reached",
+     "fact": "verdict",
+     "eq": []
+    },
+    {
+     "run": "MV7b.J.three.goal_reached",
+     "fact": "storeDelta",
+     "eq": 0
+    },
+    {
+     "run": "MV7b.J.three.goal_reached",
+     "fact": "mutantFired",
+     "eq": 1
+    },
+    {
+     "run": "MV7b.D.three.goal_reached",
+     "fact": "deferredFired",
+     "eq": 1
+    },
+    {
+     "run": "MV7b.D.three.goal_reached",
+     "fact": "fingerprint",
+     "neqRun": "C0.D.three.goal_reached"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "NW.manual",
+   "group": "NW",
+   "role": "neutrality",
+   "contract": "TC:630 seal behaviour and RNG unchanged, additional seed",
+   "detector": "comparison only",
+   "runs": [
+    {
+     "label": "NW.B.empty.manual",
+     "mode": "B",
+     "fixture": "empty",
+     "reason": "manual",
+     "variants": [],
+     "world": null,
+     "K": 30
+    },
+    {
+     "label": "NW.D.empty.manual",
+     "mode": "D",
+     "fixture": "empty",
+     "reason": "manual",
+     "variants": [],
+     "world": null,
+     "K": 30
+    },
+    {
+     "label": "NW.D2.empty.manual",
+     "mode": "D",
+     "fixture": "empty",
+     "reason": "manual",
+     "variants": [],
+     "world": null,
+     "K": 30
+    },
+    {
+     "label": "NW.J.empty.manual",
+     "mode": "J",
+     "fixture": "empty",
+     "reason": "manual",
+     "variants": [],
+     "world": null,
+     "K": 30
+    },
+    {
+     "label": "NW.D.three.manual",
+     "mode": "D",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [],
+     "world": null,
+     "K": 30
+    },
+    {
+     "label": "NW.J.three.manual",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [],
+     "world": null,
+     "K": 30
+    }
+   ],
+   "predicates": [
+    {
+     "run": "NW.B.empty.manual",
+     "fact": "fingerprint",
+     "eqRun": "NW.D.empty.manual"
+    },
+    {
+     "run": "NW.B.empty.manual",
+     "fact": "fingerprintM7",
+     "eqRun": "NW.D.empty.manual"
+    },
+    {
+     "run": "NW.D2.empty.manual",
+     "fact": "fingerprint",
+     "eqRun": "NW.D.empty.manual"
+    },
+    {
+     "run": "NW.D2.empty.manual",
+     "fact": "fingerprintM7",
+     "eqRun": "NW.D.empty.manual"
+    },
+    {
+     "run": "NW.J.empty.manual",
+     "fact": "fingerprint",
+     "eqRun": "NW.D.empty.manual"
+    },
+    {
+     "run": "NW.J.empty.manual",
+     "fact": "fingerprintM7",
+     "eqRun": "NW.D.empty.manual"
+    },
+    {
+     "run": "NW.J.three.manual",
+     "fact": "fingerprint",
+     "eqRun": "NW.D.three.manual"
+    },
+    {
+     "run": "NW.J.three.manual",
+     "fact": "fingerprintM7",
+     "eqRun": "NW.D.three.manual"
+    },
+    {
+     "run": "NW.J.three.manual",
+     "fact": "digestReturn",
+     "eqRun": "NW.D.three.manual"
+    },
+    {
+     "run": "NW.J.empty.manual",
+     "fact": "digestReturn",
+     "eqRun": "NW.D.empty.manual"
+    },
+    {
+     "run": "NW.D.empty.manual",
+     "fact": "seed",
+     "eq": 12345
+    },
+    {
+     "run": "NW.J.three.manual",
+     "fact": "call",
+     "eqRun": "NW.D.three.manual"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "NW.goal_reached",
+   "group": "NW",
+   "role": "neutrality",
+   "contract": "TC:630 seal behaviour and RNG unchanged, additional seed",
+   "detector": "comparison only",
+   "runs": [
+    {
+     "label": "NW.B.empty.goal_reached",
+     "mode": "B",
+     "fixture": "empty",
+     "reason": "goal_reached",
+     "variants": [],
+     "world": null,
+     "K": 30
+    },
+    {
+     "label": "NW.D.empty.goal_reached",
+     "mode": "D",
+     "fixture": "empty",
+     "reason": "goal_reached",
+     "variants": [],
+     "world": null,
+     "K": 30
+    },
+    {
+     "label": "NW.D2.empty.goal_reached",
+     "mode": "D",
+     "fixture": "empty",
+     "reason": "goal_reached",
+     "variants": [],
+     "world": null,
+     "K": 30
+    },
+    {
+     "label": "NW.J.empty.goal_reached",
+     "mode": "J",
+     "fixture": "empty",
+     "reason": "goal_reached",
+     "variants": [],
+     "world": null,
+     "K": 30
+    },
+    {
+     "label": "NW.D.three.goal_reached",
+     "mode": "D",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [],
+     "world": null,
+     "K": 30
+    },
+    {
+     "label": "NW.J.three.goal_reached",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "goal_reached",
+     "variants": [],
+     "world": null,
+     "K": 30
+    }
+   ],
+   "predicates": [
+    {
+     "run": "NW.B.empty.goal_reached",
+     "fact": "fingerprint",
+     "eqRun": "NW.D.empty.goal_reached"
+    },
+    {
+     "run": "NW.B.empty.goal_reached",
+     "fact": "fingerprintM7",
+     "eqRun": "NW.D.empty.goal_reached"
+    },
+    {
+     "run": "NW.D2.empty.goal_reached",
+     "fact": "fingerprint",
+     "eqRun": "NW.D.empty.goal_reached"
+    },
+    {
+     "run": "NW.D2.empty.goal_reached",
+     "fact": "fingerprintM7",
+     "eqRun": "NW.D.empty.goal_reached"
+    },
+    {
+     "run": "NW.J.empty.goal_reached",
+     "fact": "fingerprint",
+     "eqRun": "NW.D.empty.goal_reached"
+    },
+    {
+     "run": "NW.J.empty.goal_reached",
+     "fact": "fingerprintM7",
+     "eqRun": "NW.D.empty.goal_reached"
+    },
+    {
+     "run": "NW.J.three.goal_reached",
+     "fact": "fingerprint",
+     "eqRun": "NW.D.three.goal_reached"
+    },
+    {
+     "run": "NW.J.three.goal_reached",
+     "fact": "fingerprintM7",
+     "eqRun": "NW.D.three.goal_reached"
+    },
+    {
+     "run": "NW.J.three.goal_reached",
+     "fact": "digestReturn",
+     "eqRun": "NW.D.three.goal_reached"
+    },
+    {
+     "run": "NW.J.empty.goal_reached",
+     "fact": "digestReturn",
+     "eqRun": "NW.D.empty.goal_reached"
+    },
+    {
+     "run": "NW.D.empty.goal_reached",
+     "fact": "seed",
+     "eq": 12345
+    },
+    {
+     "run": "NW.J.three.goal_reached",
+     "fact": "call",
+     "eqRun": "NW.D.three.goal_reached"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "BK-01",
+   "group": "BK",
+   "role": "breakage",
+   "contract": "fail closed",
+   "detector": "refusal",
+   "runs": [
+    {
+     "label": "BK-01",
+     "fixture": "three",
+     "reason": "manual",
+     "mode": "J",
+     "variants": [
+      "bridge_off"
+     ],
+     "tableSha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+   ],
+   "predicates": [
+    {
+     "refusal": "BK-01",
+     "matches": "rewrite table does not match its pinned hash"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "BK-02",
+   "group": "BK",
+   "role": "breakage",
+   "contract": "fail closed",
+   "detector": "refusal",
+   "runs": [
+    {
+     "label": "BK-02",
+     "fixture": "three",
+     "reason": "manual",
+     "mode": "J",
+     "variants": [
+      "bridge_off",
+      "MV-6a"
+     ],
+     "tableEdit": {
+      "op": "anchor",
+      "variant": "MV-6a"
+     }
+    }
+   ],
+   "predicates": [
+    {
+     "refusal": "BK-02",
+     "matches": "anchor mismatch at render/engine.js:39"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "BK-03",
+   "group": "BK",
+   "role": "breakage",
+   "contract": "fail closed",
+   "detector": "refusal",
+   "runs": [
+    {
+     "label": "BK-03",
+     "fixture": "three",
+     "reason": "manual",
+     "mode": "J",
+     "variants": [
+      "bridge_off",
+      "MV-4"
+     ],
+     "tableEdit": {
+      "op": "dropRewrite",
+      "variant": "MV-4"
+     }
+    }
+   ],
+   "predicates": [
+    {
+     "refusal": "BK-03",
+     "matches": "variant MV-4 has no rewrite in the table"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "BK-04",
+   "group": "BK",
+   "role": "breakage",
+   "contract": "fail closed",
+   "detector": "refusal",
+   "runs": [
+    {
+     "label": "BK-04",
+     "fixture": "three",
+     "reason": "manual",
+     "mode": "J",
+     "variants": [
+      "bridge_off",
+      "MV-2a"
+     ],
+     "tableEdit": {
+      "op": "dropAppend",
+      "variant": "MV-2a"
+     }
+    }
+   ],
+   "predicates": [
+    {
+     "refusal": "BK-04",
+     "matches": "expected 1 variant appends for MV-2a, applied 0"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "BK-05",
+   "group": "BK",
+   "role": "breakage",
+   "contract": "fail closed",
+   "detector": "refusal",
+   "runs": [
+    {
+     "label": "BK-05",
+     "fixture": "three",
+     "reason": "manual",
+     "mode": "J",
+     "variants": [
+      "bridge_off",
+      "MV-99"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "refusal": "BK-05",
+     "matches": "variant MV-99 is not known"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "BK-06",
+   "group": "BK",
+   "role": "breakage",
+   "contract": "fail closed",
+   "detector": "refusal",
+   "runs": [
+    {
+     "label": "BK-06",
+     "fixture": "three",
+     "reason": "manual",
+     "mode": "J",
+     "variants": [
+      "bridge_off",
+      "MV-2a",
+      "MV-6c"
+     ]
+    }
+   ],
+   "predicates": [
+    {
+     "refusal": "BK-06",
+     "matches": "two rewrites on render/engine.js:45"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "BK-07",
+   "group": "BK",
+   "role": "breakage",
+   "contract": "fail closed",
+   "detector": "refusal",
+   "runs": [
+    {
+     "label": "BK-07",
+     "fixture": "three",
+     "reason": "manual",
+     "mode": "J",
+     "variants": [
+      "bridge_off",
+      "MV-2a"
+     ],
+     "breakKnob": "journal"
+    }
+   ],
+   "predicates": [
+    {
+     "refusal": "BK-07",
+     "matches": "canary did not fire"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "BK-08",
+   "group": "BK",
+   "role": "breakage",
+   "contract": "fail closed",
+   "detector": "refusal",
+   "runs": [
+    {
+     "label": "BK-08",
+     "fixture": "three",
+     "reason": "manual",
+     "mode": "J",
+     "variants": [
+      "bridge_off",
+      "MV-4"
+     ],
+     "breakKnob": "stream"
+    }
+   ],
+   "predicates": [
+    {
+     "refusal": "BK-08",
+     "matches": "canary did not fire"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "BK-09",
+   "group": "BK",
+   "role": "breakage",
+   "contract": "fail closed",
+   "detector": "refusal",
+   "runs": [
+    {
+     "label": "BK-09",
+     "fixture": "three",
+     "reason": "manual",
+     "mode": "T",
+     "variants": [
+      "bridge_off",
+      "MV-2b"
+     ],
+     "breakKnob": "tripwire"
+    }
+   ],
+   "predicates": [
+    {
+     "refusal": "BK-09",
+     "matches": "tripwire canary did not fire"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "BK-10",
+   "group": "BK",
+   "role": "breakage",
+   "contract": "fail closed",
+   "detector": "refusal",
+   "runs": [
+    {
+     "label": "BK-10",
+     "fixture": "three",
+     "reason": "manual",
+     "mode": "J",
+     "variants": [
+      "bridge_off"
+     ],
+     "brokenTree": true
+    }
+   ],
+   "predicates": [
+    {
+     "refusal": "BK-10",
+     "matches": "source hash mismatch on render/engine.js"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "BK-11",
+   "group": "BK",
+   "role": "breakage",
+   "contract": "fail closed",
+   "detector": "refusal",
+   "runs": [
+    {
+     "label": "BK-11",
+     "fixture": "three",
+     "reason": "manual",
+     "mode": "J",
+     "variants": [
+      "bridge_off"
+     ],
+     "plant": "bonus_restored",
+     "breakKnob": "precondition"
+    }
+   ],
+   "predicates": [
+    {
+     "refusal": "BK-11",
+     "matches": "precondition: _bonusCache needs at least one entry"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "BK-12",
+   "group": "BK",
+   "role": "breakage",
+   "contract": "redaction residual is flagged",
+   "detector": "residual scan",
+   "runs": [
+    {
+     "label": "BK-12",
+     "mode": "J",
+     "fixture": "three",
+     "reason": "manual",
+     "variants": [
+      "bridge_off"
+     ],
+     "breakKnob": "leakPath"
+    }
+   ],
+   "predicates": [
+    {
+     "residual": "BK-12",
+     "eq": true
+    },
+    {
+     "run": "BK-12",
+     "fact": "leakTest",
+     "eq": "<RESIDUAL>"
+    }
+   ]
+  },
+  {
+   "countsAsDetection": false,
+   "id": "BK-13",
+   "group": "BK",
+   "role": "breakage",
+   "contract": "fail closed",
+   "detector": "refusal",
+   "runs": [
+    {
+     "label": "BK-13",
+     "fixture": "three",
+     "reason": "manual",
+     "mode": "J",
+     "variants": [
+      "bridge_off"
+     ],
+     "breakKnob": "let"
+    }
+   ],
+   "predicates": [
+    {
+     "refusal": "BK-13",
+     "matches": "canary did not fire"
+    }
+   ]
+  }
+ ]
+}

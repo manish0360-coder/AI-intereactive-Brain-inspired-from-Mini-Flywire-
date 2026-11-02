@@ -1,0 +1,172 @@
+{
+ "schema": "tc2/ac38.rehearsal_table/1",
+ "tree": "synthetic_tree",
+ "scopeSha256": "ff07a1e42bee33285f9867c31d664905da26ae87ee88c8ff09596333c8b5807c",
+ "sources": {
+  "instrumentation/rng.js": "eb9b67ff0c63e2bb2cbc47479eee50a08b8582dd72604dd08f68077577f00267",
+  "render/engine.js": "b36e8131b974fbbde2489d31c5786d9127f0234b0d3c13e95fd307d90a3feaea",
+  "render/stores.js": "3d3073e74501b0b6c771db4dbd9eeca94f24bc17fe22d0e57308c409a6324d48"
+ },
+ "rewrites": [
+  {
+   "file": "render/engine.js",
+   "line": 24,
+   "kind": "wrapper",
+   "anchor": "export function sealCurrentEpisode(reason = \"manual\") {",
+   "replace": "export function sealCurrentEpisode(reason = \"manual\") { return globalThis.__AC38_SEAL__(__ac38_seal_inner__, reason); } function __ac38_seal_inner__(reason) {"
+  },
+  {
+   "file": "render/stores.js",
+   "line": 25,
+   "kind": "probe",
+   "name": "learnFromEpisode",
+   "anchor": "export function learnFromEpisode(ep) {",
+   "replace": "export function learnFromEpisode(ep) { globalThis.__AC38_PROBE__(\"learnFromEpisode\");"
+  },
+  {
+   "file": "render/stores.js",
+   "line": 28,
+   "kind": "let",
+   "name": "_episodesStoredTotal",
+   "anchor": "    _episodesStoredTotal++;",
+   "replace": "    globalThis.__AC38_LET__(\"_episodesStoredTotal\",\"render/stores.js:28\"); _episodesStoredTotal++;"
+  },
+  {
+   "file": "render/engine.js",
+   "line": 41,
+   "kind": "variant",
+   "variant": "bridge_off",
+   "anchor": "    if (_bridge) {",
+   "replace": "    globalThis.__AC38_PROBE__(_bridge ? \"bridge_suppressed\" : \"bridge_unset\"); if (false) {"
+  },
+  {
+   "file": "render/engine.js",
+   "line": 45,
+   "kind": "variant",
+   "variant": "N-0",
+   "anchor": "    // start fresh episode",
+   "replace": "    globalThis.__AC38_MUTANT__(\"N-0\", sealed); // start fresh episode"
+  },
+  {
+   "file": "render/engine.js",
+   "line": 45,
+   "kind": "variant",
+   "variant": "MV-2a",
+   "anchor": "    // start fresh episode",
+   "replace": "    globalThis.__AC38_MUTANT__(\"MV-2a\", sealed); // start fresh episode"
+  },
+  {
+   "file": "render/engine.js",
+   "line": 45,
+   "kind": "variant",
+   "variant": "MV-2b",
+   "anchor": "    // start fresh episode",
+   "replace": "    globalThis.__AC38_MUTANT__(\"MV-2b\", sealed); // start fresh episode"
+  },
+  {
+   "file": "render/engine.js",
+   "line": 45,
+   "kind": "variant",
+   "variant": "MV-2c",
+   "anchor": "    // start fresh episode",
+   "replace": "    globalThis.__AC38_MUTANT__(\"MV-2c\", sealed); // start fresh episode"
+  },
+  {
+   "file": "render/engine.js",
+   "line": 45,
+   "kind": "variant",
+   "variant": "MV-3",
+   "anchor": "    // start fresh episode",
+   "replace": "    globalThis.__AC38_MUTANT__(\"MV-3\", sealed); // start fresh episode"
+  },
+  {
+   "file": "render/engine.js",
+   "line": 45,
+   "kind": "variant",
+   "variant": "MV-7a",
+   "anchor": "    // start fresh episode",
+   "replace": "    globalThis.__AC38_MUTANT__(\"MV-7a\", sealed); // start fresh episode"
+  },
+  {
+   "file": "render/engine.js",
+   "line": 45,
+   "kind": "variant",
+   "variant": "MV-7b",
+   "anchor": "    // start fresh episode",
+   "replace": "    globalThis.__AC38_MUTANT__(\"MV-7b\", sealed); // start fresh episode"
+  },
+  {
+   "file": "render/engine.js",
+   "line": 45,
+   "kind": "variant",
+   "variant": "MV-6c",
+   "anchor": "    // start fresh episode",
+   "replace": "    workingMemory.set(\"__ac38__\", 1); // start fresh episode"
+  },
+  {
+   "file": "render/engine.js",
+   "line": 25,
+   "kind": "variant",
+   "variant": "MV-4",
+   "anchor": "",
+   "replace": "    liveRng();"
+  },
+  {
+   "file": "render/engine.js",
+   "line": 25,
+   "kind": "variant",
+   "variant": "MV-5a",
+   "anchor": "",
+   "replace": "    liveRng(\"visual\");"
+  },
+  {
+   "file": "render/engine.js",
+   "line": 25,
+   "kind": "variant",
+   "variant": "MV-5b",
+   "anchor": "",
+   "replace": "    liveRng(\"environment\");"
+  },
+  {
+   "file": "render/engine.js",
+   "line": 39,
+   "kind": "variant",
+   "variant": "MV-6a",
+   "anchor": "    episodeVault.push(sealed);",
+   "replace": "    episodeVault.push(sealed); episodeVault.push(sealed);"
+  },
+  {
+   "file": "render/engine.js",
+   "line": 34,
+   "kind": "variant",
+   "variant": "MV-6b",
+   "anchor": "    currentEpisode.sealReason = reason;",
+   "replace": "    currentEpisode.sealReason = reason; currentEpisode.ac38Extra = true;"
+  }
+ ],
+ "appends": {
+  "render/stores.js": "export function __ac38_read__() { return { Q, episodicStore, _bonusCache, stableMemory, _episodesStoredTotal, semanticEdges, neuronMap }; }\nlet __ac38_canary_let__ = 0;\nexport function __ac38_touch_let__() { globalThis.__AC38_LET__(\"__canary__\", \"appended\"); __ac38_canary_let__++; }\nexport function __ac38_plant_let__() { globalThis.__AC38_LET__(\"_episodesStoredTotal\", \"planted\"); _episodesStoredTotal = _episodesStoredTotal; }",
+  "render/engine.js": "export function __ac38_read__() { return { workingMemory, _bridge, episodeVault, currentEpisode }; }\nexport function __ac38_populate__(nodes, labels) { currentEpisode.nodes = nodes; currentEpisode.labels = labels; }",
+  "instrumentation/rng.js": "export function __ac38_streams__() { return streams; }"
+ },
+ "variantAppends": {
+  "MV-2a": {
+   "render/stores.js": {
+    "code": "export function __ac38_mut_q__() { const [k, v] = Q.entries().next().value; Q.set(k, v + 1); Q.set(k, v); }",
+    "line": 51
+   }
+  },
+  "MV-2b": {
+   "render/stores.js": {
+    "code": "export function __ac38_mut_embedding__() { const n = neuronMap.get(1); const e = n.userData.embedding; n.userData.embedding = e.slice(); n.userData.embedding = e; }",
+    "line": 51
+   }
+  },
+  "MV-2c": {
+   "render/stores.js": {
+    "code": "export function __ac38_mut_bonus__() { if (!_bonusCache.size) throw new Error(\"AC38 REFUSED: precondition: _bonusCache needs at least one entry\"); const [k, v] = _bonusCache.entries().next().value; _bonusCache.set(k, null); _bonusCache.set(k, v); }",
+    "line": 51
+   }
+  }
+ }
+}

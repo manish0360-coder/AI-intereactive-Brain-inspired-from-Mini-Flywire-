@@ -1,0 +1,46 @@
+{
+ "schema": "tc2/ac38.tree_identity/1",
+ "name": "learn0-8aa9ee4f39f4",
+ "digest": "7ced1c98041281191eba9bd18a876e90f08af0a1ae5a1ffb8c0355cde46df276",
+ "digestDefinition": "SHA-256 of the newline-terminated lines \"<path>  <sha256>\", one per file, sorted by path, paths relative to the tree root with forward slashes",
+ "files": 148,
+ "bytes": 5745011,
+ "baseCommit": "0df804c497e649affb9e7ebacb10fdc81ab6de8d",
+ "identicalToBaseCommit": 145,
+ "overlay": [
+  {
+   "path": "MANIFEST.json",
+   "sha256": "7b6d6926b131d1e0362790a369845c214d3a985093bf07654f9e4e5d8a399e50",
+   "bytes": 29849
+  },
+  {
+   "path": "main.js",
+   "sha256": "3d3266fde38c39ea0a38f3920b4a2384ef5998e88c748e0a0a53416ef62bccc3",
+   "bytes": 176355
+  },
+  {
+   "path": "render/planning.js",
+   "sha256": "34e06c655b4f2b04d77b4db0b8db744568235865788177085510b5dd78cf46dc",
+   "bytes": 9664
+  }
+ ],
+ "addedLines": {
+  "main.js": [
+   1154,
+   1279,
+   1320,
+   1792,
+   2128,
+   3646,
+   4867
+  ],
+  "render/planning.js": [
+   291
+  ]
+ },
+ "sources": 44,
+ "contractPins": {
+  "main.js": "3d3266fde38c39ea0a38f3920b4a2384ef5998e88c748e0a0a53416ef62bccc3",
+  "render/planning.js": "34e06c655b4f2b04d77b4db0b8db744568235865788177085510b5dd78cf46dc"
+ }
+}
