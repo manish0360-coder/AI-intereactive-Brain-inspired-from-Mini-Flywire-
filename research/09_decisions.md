@@ -7,6 +7,33 @@ supersede any frozen artifact, and carry no executable effect.
 
 ---
 
+## D-044 — AC38: limited feasibility study, preparation only (documentation only)
+
+**Date:** 2026-11-02 · **Authority:** Research Director decision approving preparation only for the AC38 limited feasibility study · **Status:** in force; preparation only; no execution authorized
+**Scope:** the AC38 observation harness under `experiments/tc2/ac38_harness/`, at commit `3dc0082`. This entry changes no text of `experiments/tc2/TRANSITION_CONTRACT.md`.
+
+**Decision.**
+- Preparation only is approved for a limited feasibility study of the AC38 observation harness. It is not complete method validation.
+- Preparation may proceed only within `experiments/tc2/ac38_harness/feasibility/`: static checks, a synthetic rehearsal on test-owned modules, and local construction and inspection of the tree overlay and hash manifests. The pinned application tree is not loaded during preparation.
+- Publication route P-2 is selected: the three-file tree overlay, hash manifests, inspected harness artifacts and approved evidence only. The full pinned-tree archive is not published.
+- The protocol and every report keep harness validation, limited feasibility evidence and AC38 acceptance separate.
+- No freeze commit, push, pinned-tree matrix run or evidence publication happens until a qualified independent reviewer is designated, passes the readiness gate and confirms reproducibility, and the publication-artifact inspection passes.
+- No reviewer is invented. If no suitable reviewer can be found, the study stops without execution or publication.
+- All stop conditions stay in force. No detector is weakened and no expected outcome is altered to obtain a passing result.
+- This entry is recorded with its pin in `experiments/tc2/verify_contract.mjs`, as a separate documentation-only change.
+
+**Limits.**
+- D-037 Ruling D stays in force, unchanged, including its fallback: coverage is not narrowed, and the boundary returns to the Director. This entry does not suspend, satisfy or amend it.
+- The four outcome-record mutants stay unresolved and are not waived. AC38 clauses (d) and (e) stay unresolved.
+- AC38 stays open, non-executable and unpassed. The observation method is not approved, and no result of this study can approve it or make AC38 executable. Results return to the Director for a separate decision.
+- D-035, D-036, D-037, D-038, D-039, D-040, D-041, D-042 and D-043 stay as written. The TC-2 contract is unchanged.
+- No derived tree, guard, D10, TC-2 driver, AC23 parity, outcome store, production-code change, pinned-tree modification or contract change is authorized.
+- The 43 untracked files and the existing stash stay untouched.
+- Earlier Director rulings on the AC38 feasibility study, the harness prototype (`2ca9fab`) and the harness closure (`3dc0082`) were made in the design conversation. This entry neither records nor re-rules them.
+- It supports no claim about learning, reliability, transfer, planning, mechanism performance or cognition.
+
+---
+
 ## D-043 — TC-2: documentation freeze of the contract, with explicit limitations (documentation only)
 
 **Date:** 2026-11-01 · **Authority:** Research Director decision approving documentation freeze · **Status:** in force; no executable effect

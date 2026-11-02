@@ -57,6 +57,7 @@ const PINS = {
   'decision:D-041': '45ec787335edd310ed9a905ad5a88072ae8ea7d5622fe1e06ec1f39795b633ad',
   'decision:D-042': '5410b5a6731de4c04e8ea93c59d76b14bd4e2d10188071248bc8eca8326b3950',
   'decision:D-043': '50b6c9289e303e3b8b1a1c302a618a20877d6012eb9b7a7f2b2843878d053fed',
+  'decision:D-044': '6e5954b8e7bfa567c531074932798fea36b24caf860670e9ef0037e2993c6763',
   'section:1': '08519cbc1b9c6f3e1b3dfa8426d1dc35cb47dbd0453040bc503dedad1cae2314',
   'section:2': 'df2cda186661ba293b8ea12619b2befe0f408b7688de2998b5144d3dad54d815',
   'section:3': 'd608fab817fda53b3894632686db6ce9041325159b1233a1505f142ead93e38a',
@@ -101,7 +102,7 @@ const decisionOf = (id) => {
   const i = decisions.indexOf(`## ${id} `); if (i < 0) return '';
   const j = decisions.indexOf('\n## D-', i + 1); return j < 0 ? decisions.slice(i) : decisions.slice(i, j + 1);
 };
-const DECISION_IDS = ['D-035', 'D-036', 'D-037', 'D-038', 'D-039', 'D-040', 'D-041', 'D-042', 'D-043'];
+const DECISION_IDS = ['D-035', 'D-036', 'D-037', 'D-038', 'D-039', 'D-040', 'D-041', 'D-042', 'D-043', 'D-044'];
 const SECTION_IDS = Array.from({ length: 19 }, (_, i) => i + 1);
 
 if (printPins) {
