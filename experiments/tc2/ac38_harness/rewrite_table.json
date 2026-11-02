@@ -2,6 +2,7 @@
  "schema": "tc2/ac38.rewrite_table/1",
  "tree": "learn0-8aa9ee4f39f4",
  "scopeSha256": "c0aa0ccc81485876d125eaeac6b0f06e7ee42300694850e77e5a5957c14573a8",
+ "traceSha256": "e3d0c5762444bcf5c70e0b746a67323c60d4a220a9235f933531afaeb9ddc328",
  "sources": {
   "benchmarks/harness/headlessShim.js": "834a610e0bf26e2fc789e25ba500f1cbc6c7d9d10049c4bda3572361c1b10970",
   "experiments/m7/arms.js": "913f265a09694d2f316e21bd8a72c42ad77991140c6d40669782d1c4b7b91f48",
@@ -97,6 +98,246 @@
    "replace": "function _storeEpisode(episode) { globalThis.__AC38_PROBE__(\"_storeEpisode\");"
   },
   {
+   "file": "render/episodicContextEngine.js",
+   "line": 394,
+   "kind": "variant",
+   "variant": "bridge_off",
+   "anchor": "    if (_bridgeToEpisodeManager) {",
+   "replace": "    globalThis.__AC38_PROBE__(_bridgeToEpisodeManager ? \"bridge_suppressed\" : \"bridge_unset\"); if (false) {"
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "line": 357,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "    currentEpisode.sealed    = true;",
+   "replace": "    globalThis.__AC38_SITE__(\"render/episodicContextEngine.js:357\", currentEpisode); currentEpisode.sealed    = true;"
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "line": 358,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "    currentEpisode.endTime   = Date.now();",
+   "replace": "    globalThis.__AC38_SITE__(\"render/episodicContextEngine.js:358\", currentEpisode); currentEpisode.endTime   = Date.now();"
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "line": 359,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "    currentEpisode.duration  = currentEpisode.endTime - currentEpisode.startTime;",
+   "replace": "    globalThis.__AC38_SITE__(\"render/episodicContextEngine.js:359\", currentEpisode); currentEpisode.duration  = currentEpisode.endTime - currentEpisode.startTime;"
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "line": 360,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "    currentEpisode.sealReason = reason;",
+   "replace": "    globalThis.__AC38_SITE__(\"render/episodicContextEngine.js:360\", currentEpisode); currentEpisode.sealReason = reason;"
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "line": 361,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "    currentEpisode.contextTag = inferContextTag(currentEpisode.labels);",
+   "replace": "    globalThis.__AC38_SITE__(\"render/episodicContextEngine.js:361\", currentEpisode); currentEpisode.contextTag = inferContextTag(currentEpisode.labels);"
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "line": 468,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "        if (score > 0) clusterScores[key] = score;",
+   "replace": "        globalThis.__AC38_SITE__(\"render/episodicContextEngine.js:468\", clusterScores); if (score > 0) clusterScores[key] = score;"
+  },
+  {
+   "file": "render/episodeManager.js",
+   "line": 323,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "    ep.nodes      = nodeIds;",
+   "replace": "    globalThis.__AC38_SITE__(\"render/episodeManager.js:323\", ep); ep.nodes      = nodeIds;"
+  },
+  {
+   "file": "render/episodeManager.js",
+   "line": 324,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "    ep.labels     = episodeWords;",
+   "replace": "    globalThis.__AC38_SITE__(\"render/episodeManager.js:324\", ep); ep.labels     = episodeWords;"
+  },
+  {
+   "file": "render/episodeManager.js",
+   "line": 325,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "    ep.predictionError = meta?.predictionError ?? 0;",
+   "replace": "    globalThis.__AC38_SITE__(\"render/episodeManager.js:325\", ep); ep.predictionError = meta?.predictionError ?? 0;"
+  },
+  {
+   "file": "render/episodeManager.js",
+   "line": 326,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "    ep.meta       = { ...meta };",
+   "replace": "    globalThis.__AC38_SITE__(\"render/episodeManager.js:326\", ep); ep.meta       = { ...meta };"
+  },
+  {
+   "file": "render/episodeManager.js",
+   "line": 331,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "    ep.activeGoal = (goalId != null) ? Number(goalId) : null;",
+   "replace": "    globalThis.__AC38_SITE__(\"render/episodeManager.js:331\", ep); ep.activeGoal = (goalId != null) ? Number(goalId) : null;"
+  },
+  {
+   "file": "render/qlearning.js",
+   "line": 272,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "        diag.mqfTotal++;",
+   "replace": "        globalThis.__AC38_SITE__(\"render/qlearning.js:272\", diag); diag.mqfTotal++;"
+  },
+  {
+   "file": "render/qlearning.js",
+   "line": 273,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "        if (maxFutureQ > 0) diag.mqfNonzero++;",
+   "replace": "        globalThis.__AC38_SITE__(\"render/qlearning.js:273\", diag); if (maxFutureQ > 0) diag.mqfNonzero++;"
+  },
+  {
+   "file": "render/embeddings.js",
+   "line": 230,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "        emb1[i] += diff * lr;   // n1 moves toward n2",
+   "replace": "        globalThis.__AC38_SITE__(\"render/embeddings.js:230\", emb1); emb1[i] += diff * lr;   // n1 moves toward n2"
+  },
+  {
+   "file": "render/embeddings.js",
+   "line": 231,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "        emb2[i] -= diff * lr;   // n2 moves toward n1",
+   "replace": "        globalThis.__AC38_SITE__(\"render/embeddings.js:231\", emb2); emb2[i] -= diff * lr;   // n2 moves toward n1"
+  },
+  {
+   "file": "render/embeddings.js",
+   "line": 236,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "    n1.userData.embedding = normalize(emb1);",
+   "replace": "    globalThis.__AC38_SITE__(\"render/embeddings.js:236\", n1.userData); n1.userData.embedding = normalize(emb1);"
+  },
+  {
+   "file": "render/embeddings.js",
+   "line": 237,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "    n2.userData.embedding = normalize(emb2);",
+   "replace": "    globalThis.__AC38_SITE__(\"render/embeddings.js:237\", n2.userData); n2.userData.embedding = normalize(emb2);"
+  },
+  {
+   "file": "render/embeddings.js",
+   "line": 316,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "            embOther[i] -= diff * 0.00015;",
+   "replace": "            globalThis.__AC38_SITE__(\"render/embeddings.js:316\", embOther); embOther[i] -= diff * 0.00015;"
+  },
+  {
+   "file": "render/embeddings.js",
+   "line": 320,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "        other.userData.embedding = normalize(embOther);",
+   "replace": "        globalThis.__AC38_SITE__(\"render/embeddings.js:320\", other.userData); other.userData.embedding = normalize(embOther);"
+  },
+  {
+   "file": "render/schemaMemory.js",
+   "line": 166,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "    schemas.length = 0;",
+   "replace": "    globalThis.__AC38_SITE__(\"render/schemaMemory.js:166\", schemas); schemas.length = 0;"
+  },
+  {
+   "file": "render/episodeManager.js",
+   "line": 1270,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "                m.count++;",
+   "replace": "                globalThis.__AC38_SITE__(\"render/episodeManager.js:1270\", m); m.count++;"
+  },
+  {
+   "file": "render/longTermConsolidation.js",
+   "line": 53,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "    entry.reinforcements += strength;",
+   "replace": "    globalThis.__AC38_SITE__(\"render/longTermConsolidation.js:53\", entry); entry.reinforcements += strength;"
+  },
+  {
+   "file": "render/longTermConsolidation.js",
+   "line": 54,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "    entry.lastConsolidated = Date.now();",
+   "replace": "    globalThis.__AC38_SITE__(\"render/longTermConsolidation.js:54\", entry); entry.lastConsolidated = Date.now();"
+  },
+  {
+   "file": "render/longTermConsolidation.js",
+   "line": 58,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "        entry.isStable = true;",
+   "replace": "        globalThis.__AC38_SITE__(\"render/longTermConsolidation.js:58\", entry); entry.isStable = true;"
+  },
+  {
+   "file": "render/helpers.js",
+   "line": 44,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "        vec[i] /= mag;",
+   "replace": "        globalThis.__AC38_SITE__(\"render/helpers.js:44\", vec); vec[i] /= mag;"
+  },
+  {
+   "file": "render/schemaMemory.js",
+   "line": 448,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "                m.count++;",
+   "replace": "                globalThis.__AC38_SITE__(\"render/schemaMemory.js:448\", m); m.count++;"
+  },
+  {
+   "file": "render/semanticMemoryLayer.js",
+   "line": 57,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "    entry.count++;",
+   "replace": "    globalThis.__AC38_SITE__(\"render/semanticMemoryLayer.js:57\", entry); entry.count++;"
+  },
+  {
+   "file": "render/semanticMemoryLayer.js",
+   "line": 58,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "    entry.lastSeen = Date.now();",
+   "replace": "    globalThis.__AC38_SITE__(\"render/semanticMemoryLayer.js:58\", entry); entry.lastSeen = Date.now();"
+  },
+  {
+   "file": "render/semanticMemoryLayer.js",
+   "line": 65,
+   "kind": "variant",
+   "variant": "site_probes",
+   "anchor": "        entry.strength = Math.min(entry.strength + semanticGain + (reward * 0.1), 10);",
+   "replace": "        globalThis.__AC38_SITE__(\"render/semanticMemoryLayer.js:65\", entry); entry.strength = Math.min(entry.strength + semanticGain + (reward * 0.1), 10);"
+  },
+  {
    "file": "render/episodeManager.js",
    "line": 579,
    "kind": "let",
@@ -153,7 +394,7 @@
   "render/connections.js": "export function __ac38_read__() { return { lines, neuronMapRef }; }",
   "render/embeddings.js": "export function __ac38_read__() { return { neuronMapRef }; }",
   "render/emotionMap.js": "export function __ac38_read__() { return { localEmotionMap }; }",
-  "render/episodeManager.js": "export function __ac38_read__() { return { AUTHORITY, VALIDATION, episodicStore, _activeBuffer, _sys, _replayCooldown, _episodesSinceConsolidation, _episodesStoredTotal }; }\nlet __ac38_canary_let__ = 0;\nexport function __ac38_touch_let__() { globalThis.__AC38_LET__(\"__canary__\", \"appended\"); __ac38_canary_let__++; }",
+  "render/episodeManager.js": "export function __ac38_read__() { return { AUTHORITY, VALIDATION, episodicStore, _activeBuffer, _sys, _replayCooldown, _episodesSinceConsolidation, _episodesStoredTotal }; }\nlet __ac38_canary_let__ = 0;\nexport function __ac38_touch_let__() { globalThis.__AC38_LET__(\"__canary__\", \"appended\"); __ac38_canary_let__++; }\nexport function __ac38_plant_let__() { globalThis.__AC38_LET__(\"_episodesStoredTotal\", \"planted\"); _episodesStoredTotal = _episodesStoredTotal; }",
   "render/episodicContextEngine.js": "export function __ac38_read__() { return { workingMemory, currentEpisode, _bridgeToEpisodeManager, episodeVault, contextWindow, lastContextShiftTime, _episodeBoundaryJustCrossed, _conceptRelations }; }\nexport function __ac38_populate__(nodes, labels) { currentEpisode.nodes = nodes; currentEpisode.labels = labels; }",
   "render/hud.js": "export function __ac38_read__() { return { hudElement, streamElement, speedElement, _streamHistory, _CLUSTER_CSS, _DRIVE_COLORS }; }",
   "render/knowledge.js": "export function __ac38_read__() { return { conceptRelations }; }",

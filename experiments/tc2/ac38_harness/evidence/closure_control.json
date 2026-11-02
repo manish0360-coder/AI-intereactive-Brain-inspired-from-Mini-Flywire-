@@ -1,0 +1,1689 @@
+{
+ "schema": "tc2/ac38.closure.summary/1",
+ "status": "HARNESS EVIDENCE ON THE PINNED TREE. Not an AC38 run. AC38 stays non-executable and is not passed. The bridge-off switch is an in-memory test control, not a derived tree or a guard.",
+ "tree": "learn0-8aa9ee4f39f4",
+ "tableSha256": "3dfd0b0650562e3af9040da41b7f84bd8d7e93aa77e4e5a5e1fb6920513eabb2",
+ "scopeSha256": "c0aa0ccc81485876d125eaeac6b0f06e7ee42300694850e77e5a5957c14573a8",
+ "traceSha256": "e3d0c5762444bcf5c70e0b746a67323c60d4a220a9235f933531afaeb9ddc328",
+ "preloadSha256": "fa2bd9b9038e40b6f18323b0b0680b0ae35d2128be3e6eaf47db87349f9c4f8c",
+ "mainSha256": "3d3266fde38c39ea0a38f3920b4a2384ef5998e88c748e0a0a53416ef62bccc3",
+ "planningSha256": "34e06c655b4f2b04d77b4db0b8db744568235865788177085510b5dd78cf46dc",
+ "safety": {
+  "fsWriteDenied": true,
+  "childDenied": true,
+  "workerDenied": true,
+  "networkGuard": true,
+  "cwdAtStart": "mini-flywire"
+ },
+ "stableContext": {
+  "world": {
+   "stream": "study",
+   "index": 15,
+   "configSeed": 201269
+  },
+  "K": 1698
+ },
+ "processes": 153,
+ "networkAttempts": 0,
+ "clean": [
+  {
+   "reason": "tick_cap",
+   "call": 2474,
+   "nodes": [
+    1,
+    2,
+    3
+   ],
+   "returned": "sealed",
+   "verdict": [],
+   "supersetTripped": null,
+   "vaultDelta": 1,
+   "storeDelta": 0,
+   "spy": {
+    "cognitive": 1,
+    "visual": 0,
+    "environment": 0
+   },
+   "recovered": {
+    "cognitive": 1,
+    "visual": 0,
+    "environment": 0
+   },
+   "probes": {
+    "bridge_suppressed": 1
+   },
+   "logs": [
+    "📦 Episode sealed [tick_cap]: percept → signal → context | tag: percept"
+   ],
+   "registered": {
+    "inventory": {
+     "objects": 3817,
+     "embeddings": 20
+    },
+    "superset": {
+     "objects": 491085,
+     "embeddings": 20
+    }
+   },
+   "finalStateDiffFromEmpty": [
+    "render/episodicContextEngine.js#episodeVault"
+   ],
+   "bridgeOn": {
+    "inventoryWrites": 19,
+    "lets": 2,
+    "spy": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "recovered": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "probes": {
+     "bridge_callback": 1,
+     "recordAutonomousSuccess": 1,
+     "_sealBuffer": 1,
+     "_runPipeline": 1,
+     "_storeEpisode": 1
+    },
+    "tripped": {
+     "name": "TypeError",
+     "message": "Cannot add property 4, object is not extensible",
+     "site": "render/semanticProvenance.js:180"
+    },
+    "storeDelta": 1
+   }
+  },
+  {
+   "reason": "goal_reached",
+   "call": 2088,
+   "nodes": [
+    1,
+    2,
+    3
+   ],
+   "returned": "sealed",
+   "verdict": [],
+   "supersetTripped": null,
+   "vaultDelta": 1,
+   "storeDelta": 0,
+   "spy": {
+    "cognitive": 1,
+    "visual": 0,
+    "environment": 0
+   },
+   "recovered": {
+    "cognitive": 1,
+    "visual": 0,
+    "environment": 0
+   },
+   "probes": {
+    "bridge_suppressed": 1
+   },
+   "logs": [
+    "📦 Episode sealed [goal_reached]: percept → signal → context | tag: percept"
+   ],
+   "registered": {
+    "inventory": {
+     "objects": 3478,
+     "embeddings": 20
+    },
+    "superset": {
+     "objects": 421882,
+     "embeddings": 20
+    }
+   },
+   "finalStateDiffFromEmpty": [
+    "render/episodicContextEngine.js#episodeVault"
+   ],
+   "bridgeOn": {
+    "inventoryWrites": 272,
+    "lets": 5,
+    "spy": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "recovered": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "probes": {
+     "bridge_callback": 1,
+     "recordAutonomousSuccess": 1,
+     "_sealBuffer": 1,
+     "_runPipeline": 1,
+     "_storeEpisode": 1
+    },
+    "tripped": {
+     "name": "TypeError",
+     "message": "Cannot add property 4, object is not extensible",
+     "site": "render/semanticProvenance.js:180"
+    },
+    "storeDelta": 1
+   }
+  },
+  {
+   "reason": "context_shift",
+   "call": 2000,
+   "nodes": [
+    1,
+    2,
+    3
+   ],
+   "returned": "sealed",
+   "verdict": [],
+   "supersetTripped": null,
+   "vaultDelta": 1,
+   "storeDelta": 0,
+   "spy": {
+    "cognitive": 1,
+    "visual": 0,
+    "environment": 0
+   },
+   "recovered": {
+    "cognitive": 1,
+    "visual": 0,
+    "environment": 0
+   },
+   "probes": {
+    "bridge_suppressed": 1
+   },
+   "logs": [
+    "📦 Episode sealed [context_shift]: percept → signal → context | tag: percept"
+   ],
+   "registered": {
+    "inventory": {
+     "objects": 3470,
+     "embeddings": 20
+    },
+    "superset": {
+     "objects": 406146,
+     "embeddings": 20
+    }
+   },
+   "finalStateDiffFromEmpty": [
+    "render/episodicContextEngine.js#episodeVault"
+   ],
+   "bridgeOn": {
+    "inventoryWrites": 19,
+    "lets": 2,
+    "spy": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "recovered": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "probes": {
+     "bridge_callback": 1,
+     "recordAutonomousSuccess": 1,
+     "_sealBuffer": 1,
+     "_runPipeline": 1,
+     "_storeEpisode": 1
+    },
+    "tripped": {
+     "name": "TypeError",
+     "message": "Cannot add property 4, object is not extensible",
+     "site": "render/semanticProvenance.js:180"
+    },
+    "storeDelta": 1
+   }
+  },
+  {
+   "reason": "topic_switch",
+   "call": 2000,
+   "nodes": [
+    1,
+    2,
+    3
+   ],
+   "returned": "sealed",
+   "verdict": [],
+   "supersetTripped": null,
+   "vaultDelta": 1,
+   "storeDelta": 0,
+   "spy": {
+    "cognitive": 1,
+    "visual": 0,
+    "environment": 0
+   },
+   "recovered": {
+    "cognitive": 1,
+    "visual": 0,
+    "environment": 0
+   },
+   "probes": {
+    "bridge_suppressed": 1
+   },
+   "logs": [
+    "📦 Episode sealed [topic_switch]: percept → signal → context | tag: percept"
+   ],
+   "registered": {
+    "inventory": {
+     "objects": 3470,
+     "embeddings": 20
+    },
+    "superset": {
+     "objects": 406146,
+     "embeddings": 20
+    }
+   },
+   "finalStateDiffFromEmpty": [
+    "render/episodicContextEngine.js#episodeVault"
+   ],
+   "bridgeOn": {
+    "inventoryWrites": 19,
+    "lets": 2,
+    "spy": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "recovered": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "probes": {
+     "bridge_callback": 1,
+     "recordAutonomousSuccess": 1,
+     "_sealBuffer": 1,
+     "_runPipeline": 1,
+     "_storeEpisode": 1
+    },
+    "tripped": {
+     "name": "TypeError",
+     "message": "Cannot add property 4, object is not extensible",
+     "site": "render/semanticProvenance.js:180"
+    },
+    "storeDelta": 1
+   }
+  },
+  {
+   "reason": "manual",
+   "call": 2000,
+   "nodes": [
+    1,
+    2,
+    3
+   ],
+   "returned": "sealed",
+   "verdict": [],
+   "supersetTripped": null,
+   "vaultDelta": 1,
+   "storeDelta": 0,
+   "spy": {
+    "cognitive": 1,
+    "visual": 0,
+    "environment": 0
+   },
+   "recovered": {
+    "cognitive": 1,
+    "visual": 0,
+    "environment": 0
+   },
+   "probes": {
+    "bridge_suppressed": 1
+   },
+   "logs": [
+    "📦 Episode sealed [manual]: percept → signal → context | tag: percept"
+   ],
+   "registered": {
+    "inventory": {
+     "objects": 3470,
+     "embeddings": 20
+    },
+    "superset": {
+     "objects": 406146,
+     "embeddings": 20
+    }
+   },
+   "finalStateDiffFromEmpty": [
+    "render/episodicContextEngine.js#episodeVault"
+   ],
+   "bridgeOn": {
+    "inventoryWrites": 19,
+    "lets": 2,
+    "spy": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "recovered": {
+     "cognitive": 2,
+     "visual": 0,
+     "environment": 0
+    },
+    "probes": {
+     "bridge_callback": 1,
+     "recordAutonomousSuccess": 1,
+     "_sealBuffer": 1,
+     "_runPipeline": 1,
+     "_storeEpisode": 1
+    },
+    "tripped": {
+     "name": "TypeError",
+     "message": "Cannot add property 4, object is not extensible",
+     "site": "render/semanticProvenance.js:180"
+    },
+    "storeDelta": 1
+   }
+  }
+ ],
+ "downstream": {
+  "tick_cap": {
+   "emptyBridgeOn": "7aed6fd1b1bda76d",
+   "threeBridgeOff": "7aed6fd1b1bda76d",
+   "threeBridgeOn": "d65780662307120d"
+  },
+  "goal_reached": {
+   "emptyBridgeOn": "7aed6fd1b1bda76d",
+   "threeBridgeOff": "7aed6fd1b1bda76d",
+   "threeBridgeOn": "cb2fb3be8a264479"
+  },
+  "context_shift": {
+   "emptyBridgeOn": "b9ec968f63163d61",
+   "threeBridgeOff": "b9ec968f63163d61",
+   "threeBridgeOn": "ac713f8ea9f428e0"
+  },
+  "topic_switch": {
+   "emptyBridgeOn": "b9ec968f63163d61",
+   "threeBridgeOff": "b9ec968f63163d61",
+   "threeBridgeOn": "ac713f8ea9f428e0"
+  },
+  "manual": {
+   "emptyBridgeOn": "b9ec968f63163d61",
+   "threeBridgeOff": "b9ec968f63163d61",
+   "threeBridgeOn": "ac713f8ea9f428e0"
+  }
+ },
+ "planted": [
+  {
+   "plant": "map_same_value",
+   "mode": "J",
+   "detectedBy": [
+    "journal"
+   ],
+   "expected": "journal",
+   "finalDigestUnchanged": true,
+   "trip": null
+  },
+  {
+   "plant": "map_restored",
+   "mode": "J",
+   "detectedBy": [
+    "journal"
+   ],
+   "expected": "journal",
+   "finalDigestUnchanged": true,
+   "trip": null
+  },
+  {
+   "plant": "array_restored",
+   "mode": "J",
+   "detectedBy": [
+    "journal"
+   ],
+   "expected": "journal",
+   "finalDigestUnchanged": true,
+   "trip": null
+  },
+  {
+   "plant": "array_shift_restored",
+   "mode": "J",
+   "detectedBy": [
+    "journal"
+   ],
+   "expected": "journal",
+   "finalDigestUnchanged": true,
+   "trip": null
+  },
+  {
+   "plant": "set_restored",
+   "mode": "J",
+   "detectedBy": [
+    "journal"
+   ],
+   "expected": "journal",
+   "finalDigestUnchanged": true,
+   "trip": null
+  },
+  {
+   "plant": "let_same_value",
+   "mode": "J",
+   "detectedBy": [
+    "let"
+   ],
+   "expected": "let",
+   "finalDigestUnchanged": true,
+   "trip": null
+  },
+  {
+   "plant": "draw_cognitive",
+   "mode": "J",
+   "detectedBy": [
+    "stream"
+   ],
+   "expected": "stream",
+   "finalDigestUnchanged": false,
+   "trip": null
+  },
+  {
+   "plant": "draw_visual",
+   "mode": "J",
+   "detectedBy": [
+    "stream"
+   ],
+   "expected": "stream",
+   "finalDigestUnchanged": true,
+   "trip": null
+  },
+  {
+   "plant": "draw_environment",
+   "mode": "J",
+   "detectedBy": [
+    "stream"
+   ],
+   "expected": "stream",
+   "finalDigestUnchanged": true,
+   "trip": null
+  },
+  {
+   "plant": "math_random",
+   "mode": "J",
+   "detectedBy": [
+    "math_random"
+   ],
+   "expected": "math_random",
+   "finalDigestUnchanged": true,
+   "trip": null
+  },
+  {
+   "plant": "field_same_value",
+   "mode": "T",
+   "detectedBy": [
+    "tripwire"
+   ],
+   "expected": "tripwire",
+   "finalDigestUnchanged": null,
+   "trip": "render/episodicContextEngine.js:394"
+  },
+  {
+   "plant": "embedding_same_value",
+   "mode": "T",
+   "detectedBy": [
+    "tripwire"
+   ],
+   "expected": "tripwire",
+   "finalDigestUnchanged": null,
+   "trip": "render/episodicContextEngine.js:394"
+  },
+  {
+   "plant": "array_restored",
+   "mode": "T",
+   "detectedBy": [
+    "tripwire"
+   ],
+   "expected": "tripwire",
+   "finalDigestUnchanged": null,
+   "trip": "render/episodicContextEngine.js:394"
+  },
+  {
+   "plant": "field_same_value",
+   "mode": "J",
+   "detectedBy": [],
+   "expected": null,
+   "finalDigestUnchanged": true,
+   "trip": null
+  }
+ ],
+ "plantedRecovered": {
+  "cognitive": 2,
+  "visual": 0,
+  "environment": 0
+ },
+ "ladders": [
+  {
+   "name": "goal",
+   "rungs": [
+    {
+     "rung": 0,
+     "site": "render/semanticProvenance.js:180",
+     "message": "Cannot add property 4, object is not extensible",
+     "unlock": {
+      "kind": "array",
+      "item": "render/semanticProvenance.js#provenanceLog",
+      "op": "Array.push",
+      "site": "render/semanticProvenance.js:180"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 1,
+     "site": "render/embeddings.js:236",
+     "message": "Cannot assign to read only property 'embedding' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "embedding",
+      "site": "render/embeddings.js:236"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 2,
+     "site": "render/embeddings.js:237",
+     "message": "Cannot assign to read only property 'embedding' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "embedding",
+      "site": "render/embeddings.js:237"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 3,
+     "site": "render/embeddings.js:320",
+     "message": "Cannot assign to read only property 'embedding' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "embedding",
+      "site": "render/embeddings.js:320"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 4,
+     "site": "render/episodeManager.js:1110",
+     "message": "Cannot add property 239, object is not extensible",
+     "unlock": {
+      "kind": "array",
+      "item": "render/episodeManager.js#episodicStore",
+      "op": "Array.push",
+      "site": "render/episodeManager.js:1110"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 5,
+     "site": "render/schemaMemory.js:166",
+     "message": "Cannot assign to read only property 'length' of object '[object Array]'",
+     "unlock": {
+      "kind": "array",
+      "item": "render/schemaMemory.js#schemas",
+      "op": "length",
+      "site": "render/schemaMemory.js:166"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 6,
+     "site": "render/longTermConsolidation.js:53",
+     "message": "Cannot assign to read only property 'reinforcements' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "reinforcements",
+      "site": "render/longTermConsolidation.js:53"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 7,
+     "site": "render/longTermConsolidation.js:54",
+     "message": "Cannot assign to read only property 'lastConsolidated' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "lastConsolidated",
+      "site": "render/longTermConsolidation.js:54"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 8,
+     "site": "render/semanticMemoryLayer.js:57",
+     "message": "Cannot assign to read only property 'count' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "count",
+      "site": "render/semanticMemoryLayer.js:57"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 9,
+     "site": "render/semanticMemoryLayer.js:58",
+     "message": "Cannot assign to read only property 'lastSeen' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "lastSeen",
+      "site": "render/semanticMemoryLayer.js:58"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 10,
+     "site": "render/semanticMemoryLayer.js:65",
+     "message": "Cannot assign to read only property 'strength' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "strength",
+      "site": "render/semanticMemoryLayer.js:65"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    }
+   ],
+   "finalRung": 11,
+   "finalReturned": "sealed",
+   "fieldHits": {
+    "embedding render/embeddings.js:236": 2,
+    "embedding render/embeddings.js:237": 2,
+    "embedding render/embeddings.js:320": 24,
+    "reinforcements render/longTermConsolidation.js:53": 9,
+    "lastConsolidated render/longTermConsolidation.js:54": 9,
+    "count render/semanticMemoryLayer.js:57": 9,
+    "lastSeen render/semanticMemoryLayer.js:58": 9,
+    "strength render/semanticMemoryLayer.js:65": 9
+   },
+   "registered": {
+    "objects": 421882,
+    "embeddings": 20
+   },
+   "stoppedBy": null
+  },
+  {
+   "name": "stable",
+   "rungs": [
+    {
+     "rung": 0,
+     "site": "render/semanticProvenance.js:180",
+     "message": "Cannot add property 1, object is not extensible",
+     "unlock": {
+      "kind": "array",
+      "item": "render/semanticProvenance.js#provenanceLog",
+      "op": "Array.push",
+      "site": "render/semanticProvenance.js:180"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 1,
+     "site": "render/embeddings.js:236",
+     "message": "Cannot assign to read only property 'embedding' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "embedding",
+      "site": "render/embeddings.js:236"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 2,
+     "site": "render/embeddings.js:237",
+     "message": "Cannot assign to read only property 'embedding' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "embedding",
+      "site": "render/embeddings.js:237"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 3,
+     "site": "render/embeddings.js:320",
+     "message": "Cannot assign to read only property 'embedding' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "embedding",
+      "site": "render/embeddings.js:320"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 4,
+     "site": "render/episodeManager.js:1110",
+     "message": "Cannot add property 44, object is not extensible",
+     "unlock": {
+      "kind": "array",
+      "item": "render/episodeManager.js#episodicStore",
+      "op": "Array.push",
+      "site": "render/episodeManager.js:1110"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 5,
+     "site": "render/longTermConsolidation.js:53",
+     "message": "Cannot assign to read only property 'reinforcements' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "reinforcements",
+      "site": "render/longTermConsolidation.js:53"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 6,
+     "site": "render/longTermConsolidation.js:54",
+     "message": "Cannot assign to read only property 'lastConsolidated' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "lastConsolidated",
+      "site": "render/longTermConsolidation.js:54"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 7,
+     "site": "render/semanticMemoryLayer.js:57",
+     "message": "Cannot assign to read only property 'count' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "count",
+      "site": "render/semanticMemoryLayer.js:57"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 8,
+     "site": "render/semanticMemoryLayer.js:58",
+     "message": "Cannot assign to read only property 'lastSeen' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "lastSeen",
+      "site": "render/semanticMemoryLayer.js:58"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 9,
+     "site": "render/semanticMemoryLayer.js:65",
+     "message": "Cannot assign to read only property 'strength' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "strength",
+      "site": "render/semanticMemoryLayer.js:65"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 10,
+     "site": "render/longTermConsolidation.js:58",
+     "message": "Cannot assign to read only property 'isStable' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "isStable",
+      "site": "render/longTermConsolidation.js:58"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    }
+   ],
+   "finalRung": 11,
+   "finalReturned": "sealed",
+   "fieldHits": {
+    "embedding render/embeddings.js:236": 2,
+    "embedding render/embeddings.js:237": 2,
+    "embedding render/embeddings.js:320": 25,
+    "reinforcements render/longTermConsolidation.js:53": 11,
+    "lastConsolidated render/longTermConsolidation.js:54": 11,
+    "count render/semanticMemoryLayer.js:57": 11,
+    "lastSeen render/semanticMemoryLayer.js:58": 11,
+    "strength render/semanticMemoryLayer.js:65": 11,
+    "isStable render/longTermConsolidation.js:58": 1
+   },
+   "registered": {
+    "objects": 263390,
+    "embeddings": 20
+   },
+   "stoppedBy": null
+  },
+  {
+   "name": "context",
+   "rungs": [
+    {
+     "rung": 0,
+     "site": "render/episodicContextEngine.js:357",
+     "message": "Cannot assign to read only property 'sealed' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "sealed",
+      "site": "render/episodicContextEngine.js:357"
+     },
+     "staticDecision": "closed-list",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 1,
+     "site": "render/episodicContextEngine.js:358",
+     "message": "Cannot add property endTime, object is not extensible",
+     "unlock": {
+      "kind": "extend",
+      "item": "render/episodicContextEngine.js#currentEpisode",
+      "key": "endTime",
+      "site": "render/episodicContextEngine.js:358"
+     },
+     "staticDecision": "closed-list",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 2,
+     "site": "render/episodicContextEngine.js:359",
+     "message": "Cannot add property duration, object is not extensible",
+     "unlock": {
+      "kind": "extend",
+      "item": "render/episodicContextEngine.js#currentEpisode",
+      "key": "duration",
+      "site": "render/episodicContextEngine.js:359"
+     },
+     "staticDecision": "closed-list",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 3,
+     "site": "render/episodicContextEngine.js:360",
+     "message": "Cannot add property sealReason, object is not extensible",
+     "unlock": {
+      "kind": "extend",
+      "item": "render/episodicContextEngine.js#currentEpisode",
+      "key": "sealReason",
+      "site": "render/episodicContextEngine.js:360"
+     },
+     "staticDecision": "closed-list",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 4,
+     "site": "render/episodicContextEngine.js:361",
+     "message": "Cannot assign to read only property 'contextTag' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "contextTag",
+      "site": "render/episodicContextEngine.js:361"
+     },
+     "staticDecision": "closed-list",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 5,
+     "site": "render/semanticProvenance.js:180",
+     "message": "Cannot add property 4, object is not extensible",
+     "unlock": {
+      "kind": "array",
+      "item": "render/semanticProvenance.js#provenanceLog",
+      "op": "Array.push",
+      "site": "render/semanticProvenance.js:180"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 6,
+     "site": "render/embeddings.js:236",
+     "message": "Cannot assign to read only property 'embedding' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "embedding",
+      "site": "render/embeddings.js:236"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 7,
+     "site": "render/embeddings.js:237",
+     "message": "Cannot assign to read only property 'embedding' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "embedding",
+      "site": "render/embeddings.js:237"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 8,
+     "site": "render/embeddings.js:320",
+     "message": "Cannot assign to read only property 'embedding' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "embedding",
+      "site": "render/embeddings.js:320"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 9,
+     "site": "render/episodeManager.js:1110",
+     "message": "Cannot add property 238, object is not extensible",
+     "unlock": {
+      "kind": "array",
+      "item": "render/episodeManager.js#episodicStore",
+      "op": "Array.push",
+      "site": "render/episodeManager.js:1110"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    }
+   ],
+   "finalRung": 10,
+   "finalReturned": "sealed",
+   "fieldHits": {
+    "sealed render/episodicContextEngine.js:357": 1,
+    "endTime render/episodicContextEngine.js:358": 1,
+    "duration render/episodicContextEngine.js:359": 1,
+    "sealReason render/episodicContextEngine.js:360": 1,
+    "contextTag render/episodicContextEngine.js:361": 1,
+    "embedding render/embeddings.js:236": 2,
+    "embedding render/embeddings.js:237": 2,
+    "embedding render/embeddings.js:320": 24
+   },
+   "registered": {
+    "objects": 406149,
+    "embeddings": 20
+   },
+   "stoppedBy": null
+  },
+  {
+   "name": "cap",
+   "rungs": [
+    {
+     "rung": 0,
+     "site": "render/semanticProvenance.js:180",
+     "message": "Cannot add property 4, object is not extensible",
+     "unlock": {
+      "kind": "array",
+      "item": "render/semanticProvenance.js#provenanceLog",
+      "op": "Array.push",
+      "site": "render/semanticProvenance.js:180"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 1,
+     "site": "render/embeddings.js:236",
+     "message": "Cannot assign to read only property 'embedding' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "embedding",
+      "site": "render/embeddings.js:236"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 2,
+     "site": "render/embeddings.js:237",
+     "message": "Cannot assign to read only property 'embedding' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "embedding",
+      "site": "render/embeddings.js:237"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 3,
+     "site": "render/embeddings.js:320",
+     "message": "Cannot assign to read only property 'embedding' of object '#<Object>'",
+     "unlock": {
+      "kind": "field",
+      "key": "embedding",
+      "site": "render/embeddings.js:320"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    },
+    {
+     "rung": 4,
+     "site": "render/episodeManager.js:1110",
+     "message": "Cannot add property 261, object is not extensible",
+     "unlock": {
+      "kind": "array",
+      "item": "render/episodeManager.js#episodicStore",
+      "op": "Array.push",
+      "site": "render/episodeManager.js:1110"
+     },
+     "staticDecision": "store",
+     "inStaticTrace": true
+    }
+   ],
+   "finalRung": 5,
+   "finalReturned": "sealed",
+   "fieldHits": {
+    "embedding render/embeddings.js:236": 2,
+    "embedding render/embeddings.js:237": 2,
+    "embedding render/embeddings.js:320": 24
+   },
+   "registered": {
+    "objects": 491085,
+    "embeddings": 20
+   },
+   "stoppedBy": null
+  }
+ ],
+ "fieldSites": [
+  {
+   "site": "render/episodicContextEngine.js:357",
+   "lhs": "currentEpisode.sealed",
+   "decision": "closed-list",
+   "trippedIn": [
+    "context"
+   ],
+   "executedInWindow": 10,
+   "onStoredObject": 1,
+   "executedOutsideWindow": 0,
+   "status": "REAL HIT"
+  },
+  {
+   "site": "render/episodicContextEngine.js:358",
+   "lhs": "currentEpisode.endTime",
+   "decision": "closed-list",
+   "trippedIn": [
+    "context"
+   ],
+   "executedInWindow": 10,
+   "onStoredObject": 1,
+   "executedOutsideWindow": 0,
+   "status": "REAL HIT"
+  },
+  {
+   "site": "render/episodicContextEngine.js:359",
+   "lhs": "currentEpisode.duration",
+   "decision": "closed-list",
+   "trippedIn": [
+    "context"
+   ],
+   "executedInWindow": 10,
+   "onStoredObject": 1,
+   "executedOutsideWindow": 0,
+   "status": "REAL HIT"
+  },
+  {
+   "site": "render/episodicContextEngine.js:360",
+   "lhs": "currentEpisode.sealReason",
+   "decision": "closed-list",
+   "trippedIn": [
+    "context"
+   ],
+   "executedInWindow": 10,
+   "onStoredObject": 1,
+   "executedOutsideWindow": 0,
+   "status": "REAL HIT"
+  },
+  {
+   "site": "render/episodicContextEngine.js:361",
+   "lhs": "currentEpisode.contextTag",
+   "decision": "closed-list",
+   "trippedIn": [
+    "context"
+   ],
+   "executedInWindow": 10,
+   "onStoredObject": 1,
+   "executedOutsideWindow": 0,
+   "status": "REAL HIT"
+  },
+  {
+   "site": "render/episodicContextEngine.js:468",
+   "lhs": "clusterScores[key]",
+   "decision": "fresh",
+   "trippedIn": [],
+   "executedInWindow": 200,
+   "onStoredObject": 0,
+   "executedOutsideWindow": 0,
+   "status": "EXCLUDED: runtime confirms a target created inside the call"
+  },
+  {
+   "site": "render/episodeManager.js:323",
+   "lhs": "ep.nodes",
+   "decision": "fresh",
+   "trippedIn": [],
+   "executedInWindow": 10,
+   "onStoredObject": 0,
+   "executedOutsideWindow": 374,
+   "status": "EXCLUDED: runtime confirms a target created inside the call"
+  },
+  {
+   "site": "render/episodeManager.js:324",
+   "lhs": "ep.labels",
+   "decision": "fresh",
+   "trippedIn": [],
+   "executedInWindow": 10,
+   "onStoredObject": 0,
+   "executedOutsideWindow": 374,
+   "status": "EXCLUDED: runtime confirms a target created inside the call"
+  },
+  {
+   "site": "render/episodeManager.js:325",
+   "lhs": "ep.predictionError",
+   "decision": "fresh",
+   "trippedIn": [],
+   "executedInWindow": 10,
+   "onStoredObject": 0,
+   "executedOutsideWindow": 374,
+   "status": "EXCLUDED: runtime confirms a target created inside the call"
+  },
+  {
+   "site": "render/episodeManager.js:326",
+   "lhs": "ep.meta",
+   "decision": "fresh",
+   "trippedIn": [],
+   "executedInWindow": 10,
+   "onStoredObject": 0,
+   "executedOutsideWindow": 374,
+   "status": "EXCLUDED: runtime confirms a target created inside the call"
+  },
+  {
+   "site": "render/episodeManager.js:331",
+   "lhs": "ep.activeGoal",
+   "decision": "fresh",
+   "trippedIn": [],
+   "executedInWindow": 10,
+   "onStoredObject": 0,
+   "executedOutsideWindow": 374,
+   "status": "EXCLUDED: runtime confirms a target created inside the call"
+  },
+  {
+   "site": "render/qlearning.js:272",
+   "lhs": "diag.mqfTotal",
+   "decision": "unreachable",
+   "trippedIn": [],
+   "executedInWindow": 0,
+   "onStoredObject": 0,
+   "executedOutsideWindow": 2120,
+   "status": "EXCLUDED: not reached in any window, and its probe is live outside them"
+  },
+  {
+   "site": "render/qlearning.js:273",
+   "lhs": "diag.mqfNonzero",
+   "decision": "unreachable",
+   "trippedIn": [],
+   "executedInWindow": 0,
+   "onStoredObject": 0,
+   "executedOutsideWindow": 2120,
+   "status": "EXCLUDED: not reached in any window, and its probe is live outside them"
+  },
+  {
+   "site": "render/embeddings.js:230",
+   "lhs": "emb1[i]",
+   "decision": "fresh",
+   "trippedIn": [],
+   "executedInWindow": 640,
+   "onStoredObject": 0,
+   "executedOutsideWindow": 20448,
+   "status": "EXCLUDED: runtime confirms a target created inside the call"
+  },
+  {
+   "site": "render/embeddings.js:231",
+   "lhs": "emb2[i]",
+   "decision": "fresh",
+   "trippedIn": [],
+   "executedInWindow": 640,
+   "onStoredObject": 0,
+   "executedOutsideWindow": 20448,
+   "status": "EXCLUDED: runtime confirms a target created inside the call"
+  },
+  {
+   "site": "render/embeddings.js:236",
+   "lhs": "n1.userData.embedding",
+   "decision": "store",
+   "trippedIn": [
+    "goal",
+    "stable",
+    "context",
+    "cap"
+   ],
+   "executedInWindow": 20,
+   "onStoredObject": 20,
+   "executedOutsideWindow": 639,
+   "status": "REAL HIT"
+  },
+  {
+   "site": "render/embeddings.js:237",
+   "lhs": "n2.userData.embedding",
+   "decision": "store",
+   "trippedIn": [
+    "goal",
+    "stable",
+    "context",
+    "cap"
+   ],
+   "executedInWindow": 20,
+   "onStoredObject": 20,
+   "executedOutsideWindow": 639,
+   "status": "REAL HIT"
+  },
+  {
+   "site": "render/embeddings.js:316",
+   "lhs": "embOther[i]",
+   "decision": "fresh",
+   "trippedIn": [],
+   "executedInWindow": 7744,
+   "onStoredObject": 0,
+   "executedOutsideWindow": 198080,
+   "status": "EXCLUDED: runtime confirms a target created inside the call"
+  },
+  {
+   "site": "render/embeddings.js:320",
+   "lhs": "other.userData.embedding",
+   "decision": "store",
+   "trippedIn": [
+    "goal",
+    "stable",
+    "context",
+    "cap"
+   ],
+   "executedInWindow": 242,
+   "onStoredObject": 242,
+   "executedOutsideWindow": 6190,
+   "status": "REAL HIT"
+  },
+  {
+   "site": "render/schemaMemory.js:166",
+   "lhs": "schemas.length",
+   "decision": "store",
+   "trippedIn": [
+    "goal"
+   ],
+   "executedInWindow": 2,
+   "onStoredObject": 2,
+   "executedOutsideWindow": 20,
+   "status": "REAL HIT"
+  },
+  {
+   "site": "render/episodeManager.js:1270",
+   "lhs": "m.count",
+   "decision": "fresh",
+   "trippedIn": [],
+   "executedInWindow": 3554,
+   "onStoredObject": 0,
+   "executedOutsideWindow": 42993,
+   "status": "EXCLUDED: runtime confirms a target created inside the call"
+  },
+  {
+   "site": "render/longTermConsolidation.js:53",
+   "lhs": "entry.reinforcements",
+   "decision": "store",
+   "trippedIn": [
+    "goal",
+    "stable"
+   ],
+   "executedInWindow": 40,
+   "onStoredObject": 40,
+   "executedOutsideWindow": 558,
+   "status": "REAL HIT"
+  },
+  {
+   "site": "render/longTermConsolidation.js:54",
+   "lhs": "entry.lastConsolidated",
+   "decision": "store",
+   "trippedIn": [
+    "goal",
+    "stable"
+   ],
+   "executedInWindow": 40,
+   "onStoredObject": 40,
+   "executedOutsideWindow": 558,
+   "status": "REAL HIT"
+  },
+  {
+   "site": "render/longTermConsolidation.js:58",
+   "lhs": "entry.isStable",
+   "decision": "store",
+   "trippedIn": [
+    "stable"
+   ],
+   "executedInWindow": 2,
+   "onStoredObject": 2,
+   "executedOutsideWindow": 8,
+   "status": "REAL HIT"
+  },
+  {
+   "site": "render/helpers.js:44",
+   "lhs": "vec[i]",
+   "decision": "fresh",
+   "trippedIn": [],
+   "executedInWindow": 9024,
+   "onStoredObject": 0,
+   "executedOutsideWindow": 239616,
+   "status": "EXCLUDED: runtime confirms a target created inside the call"
+  },
+  {
+   "site": "render/schemaMemory.js:448",
+   "lhs": "m.count",
+   "decision": "fresh",
+   "trippedIn": [],
+   "executedInWindow": 3020,
+   "onStoredObject": 0,
+   "executedOutsideWindow": 18281,
+   "status": "EXCLUDED: runtime confirms a target created inside the call"
+  },
+  {
+   "site": "render/semanticMemoryLayer.js:57",
+   "lhs": "entry.count",
+   "decision": "store",
+   "trippedIn": [
+    "goal",
+    "stable"
+   ],
+   "executedInWindow": 40,
+   "onStoredObject": 40,
+   "executedOutsideWindow": 683,
+   "status": "REAL HIT"
+  },
+  {
+   "site": "render/semanticMemoryLayer.js:58",
+   "lhs": "entry.lastSeen",
+   "decision": "store",
+   "trippedIn": [
+    "goal",
+    "stable"
+   ],
+   "executedInWindow": 40,
+   "onStoredObject": 40,
+   "executedOutsideWindow": 683,
+   "status": "REAL HIT"
+  },
+  {
+   "site": "render/semanticMemoryLayer.js:65",
+   "lhs": "entry.strength",
+   "decision": "store",
+   "trippedIn": [
+    "goal",
+    "stable"
+   ],
+   "executedInWindow": 40,
+   "onStoredObject": 40,
+   "executedOutsideWindow": 564,
+   "status": "REAL HIT"
+  }
+ ],
+ "inventory": {
+  "staticComparison": {
+   "monitored": 20,
+   "derived": 20,
+   "omissions": [],
+   "notDerived": [],
+   "unresolved": [],
+   "aliases": [
+    {
+     "site": "render/embeddings.js:236",
+     "written": "n1.userData.embedding",
+     "store": "main.js#neuronMap"
+    },
+    {
+     "site": "render/embeddings.js:237",
+     "written": "n2.userData.embedding",
+     "store": "main.js#neuronMap"
+    },
+    {
+     "site": "render/embeddings.js:320",
+     "written": "other.userData.embedding",
+     "store": "main.js#neuronMap"
+    },
+    {
+     "site": "render/episodeManager.js:1096",
+     "written": "sys.confidenceMap",
+     "store": "render/memory.js#confidenceMap"
+    },
+    {
+     "site": "render/episodeManager.js:974",
+     "written": "tMap",
+     "store": "render/memory.js#transitions"
+    },
+    {
+     "site": "render/episodeManager.js:975",
+     "written": "sys.transitions",
+     "store": "render/memory.js#transitions"
+    },
+    {
+     "site": "render/longTermConsolidation.js:53",
+     "written": "entry.reinforcements",
+     "store": "render/longTermConsolidation.js#consolidationRegistry"
+    },
+    {
+     "site": "render/longTermConsolidation.js:54",
+     "written": "entry.lastConsolidated",
+     "store": "render/longTermConsolidation.js#consolidationRegistry"
+    },
+    {
+     "site": "render/longTermConsolidation.js:58",
+     "written": "entry.isStable",
+     "store": "render/longTermConsolidation.js#consolidationRegistry"
+    },
+    {
+     "site": "render/semanticMemoryLayer.js:57",
+     "written": "entry.count",
+     "store": "render/semanticMemoryLayer.js#semanticEdges"
+    },
+    {
+     "site": "render/semanticMemoryLayer.js:58",
+     "written": "entry.lastSeen",
+     "store": "render/semanticMemoryLayer.js#semanticEdges"
+    },
+    {
+     "site": "render/semanticMemoryLayer.js:65",
+     "written": "entry.strength",
+     "store": "render/semanticMemoryLayer.js#semanticEdges"
+    },
+    {
+     "site": "render/semanticMemoryLayer.js:92",
+     "written": "schema.relatedConcepts",
+     "store": "render/semanticMemoryLayer.js#conceptSchemas"
+    },
+    {
+     "site": "render/semanticProvenance.js:128",
+     "written": "rewardsMap",
+     "store": "render/memory.js#rewards"
+    },
+    {
+     "site": "render/semanticProvenance.js:180",
+     "written": "log",
+     "store": "render/semanticProvenance.js#provenanceLog"
+    },
+    {
+     "site": "render/semanticProvenance.js:183",
+     "written": "log",
+     "store": "render/semanticProvenance.js#provenanceLog"
+    }
+   ]
+  },
+  "runtime": {
+   "writtenByItem": {
+    "main.js#neuronMap": 12,
+    "render/episodeManager.js#_episodesSinceConsolidation": 8,
+    "render/episodeManager.js#_episodesStoredTotal": 6,
+    "render/episodeManager.js#episodicStore": 6,
+    "render/longTermConsolidation.js#consolidationRegistry": 20,
+    "render/longTermConsolidation.js#stableMemory": 1,
+    "render/memory.js#confidenceMap": 12,
+    "render/memory.js#rewards": 12,
+    "render/memory.js#transitions": 24,
+    "render/momentumMemory.js#momentumMemory": 6,
+    "render/qlearning.js#Q": 12,
+    "render/schemaMemory.js#_bonusCache": 156,
+    "render/schemaMemory.js#_lastMotifs": 1,
+    "render/schemaMemory.js#_lastRebuild": 1,
+    "render/schemaMemory.js#schemas": 61,
+    "render/semanticMemoryLayer.js#conceptSchemas": 38,
+    "render/semanticMemoryLayer.js#semanticEdges": 20,
+    "render/semanticProvenance.js#provenanceLog": 12,
+    "render/semanticVitality.js#semanticStrength": 18,
+    "render/trustMemory.js#pathSuccesses": 12
+   },
+   "outsideMonitored": [],
+   "mutatorSitesUnknownToStaticTrace": [],
+   "constructorAdds": [
+    "render/episodeManager.js:1252",
+    "render/episodeManager.js:741",
+    "render/schemaMemory.js:206",
+    "render/schemaMemory.js:209",
+    "render/schemaMemory.js:435"
+   ]
+  },
+  "outsideInventoryDigest": [
+   {
+    "context": "tick_cap",
+    "changedOutsideInventory": [
+     "render/episodicContextEngine.js#currentEpisode",
+     "render/episodicContextEngine.js#episodeVault"
+    ]
+   },
+   {
+    "context": "goal_reached",
+    "changedOutsideInventory": [
+     "render/episodicContextEngine.js#currentEpisode",
+     "render/episodicContextEngine.js#episodeVault"
+    ]
+   },
+   {
+    "context": "context_shift",
+    "changedOutsideInventory": [
+     "render/episodicContextEngine.js#currentEpisode",
+     "render/episodicContextEngine.js#episodeVault"
+    ]
+   },
+   {
+    "context": "topic_switch",
+    "changedOutsideInventory": [
+     "render/episodicContextEngine.js#currentEpisode",
+     "render/episodicContextEngine.js#episodeVault"
+    ]
+   },
+   {
+    "context": "manual",
+    "changedOutsideInventory": [
+     "render/episodicContextEngine.js#currentEpisode",
+     "render/episodicContextEngine.js#episodeVault"
+    ]
+   },
+   {
+    "context": "stable",
+    "changedOutsideInventory": [
+     "render/episodicContextEngine.js#currentEpisode",
+     "render/episodicContextEngine.js#episodeVault"
+    ]
+   }
+  ],
+  "neverWrittenAtRuntime": [],
+  "storeMutatorSitesNotHit": [
+   "render/episodeManager.js:1125 episodicStore.shift",
+   "render/semanticProvenance.js:183 log.shift"
+  ]
+ },
+ "breakage": [
+  {
+   "name": "switch anchor broken",
+   "exitCode": 1,
+   "refused": true,
+   "message": "AC38 REFUSED: ${m}`); };\r"
+  },
+  {
+   "name": "switch missing from the table",
+   "exitCode": 1,
+   "refused": true,
+   "message": "AC38 REFUSED: ${m}`); };\r"
+  },
+  {
+   "name": "unknown variant",
+   "exitCode": 1,
+   "refused": true,
+   "message": "AC38 REFUSED: ${m}`); };\r"
+  },
+  {
+   "name": "site probe missing",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: expected 29 variant rewrites, applied 28 "
+  },
+  {
+   "name": "clean control, journal disabled",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: canary did not fire: [{\"map\":0,\"set\":0,\"array\":0,\"let\":1,\"stream\":1},{\"map\":0,\"set\":0,\"array\":0,\"let\":1,\"stream\":1}] "
+  },
+  {
+   "name": "clean control, stream spy disabled",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: canary did not fire: [{\"map\":1,\"set\":1,\"array\":1,\"let\":1,\"stream\":0},{\"map\":1,\"set\":1,\"array\":1,\"let\":1,\"stream\":0}] "
+  },
+  {
+   "name": "clean control, let journal disabled",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: canary did not fire: [{\"map\":1,\"set\":1,\"array\":1,\"let\":0,\"stream\":1},{\"map\":1,\"set\":1,\"array\":1,\"let\":0,\"stream\":1}] "
+  },
+  {
+   "name": "clean control, tripwire disabled",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: tripwire canary did not fire: [{\"field\":0,\"index\":0,\"length\":0,\"push\":0},{\"field\":0,\"index\":0,\"length\":0,\"push\":0}] "
+  },
+  {
+   "name": "unknown planted write",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: unknown planted write nope "
+  },
+  {
+   "name": "ladder unlock key matches nothing",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: ladder unlock key __nope__ matched no registered object "
+  },
+  {
+   "name": "target seal never reached",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: the target seal (manual at or after call 99999) was not reached "
+  },
+  {
+   "name": "process without the permission model",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: safety: the process is not running under the required permission set "
+  },
+  {
+   "name": "process without the network guard",
+   "exitCode": 3,
+   "refused": true,
+   "message": "AC38 REFUSED: safety: the network guard is not active "
+  }
+ ],
+ "wrongSiteUnlock": {
+  "name": "TypeError",
+  "message": "Cannot assign to read only property 'embedding' of object '#<Object>'",
+  "site": "render/embeddings.js:236"
+ },
+ "problems": []
+}

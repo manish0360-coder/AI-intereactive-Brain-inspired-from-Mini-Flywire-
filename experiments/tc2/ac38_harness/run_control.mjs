@@ -5,62 +5,20 @@
 // Spawns one disposable process per fixture and writes only into <out-dir>.  This is a prototype
 // control on the pinned tree.  It is not an AC38 run and it does not make AC38 executable.
 // ==========================================================
-import { spawn } from 'node:child_process';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { pathToFileURL } from 'node:url';
+import { ROOT, TREE, TABLE_SHA256, STEPS, K, REASONS, tablePath, scopePath, outDir, makeRun, pool } from './runner.mjs';
 
-const HERE = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(HERE, '..', '..', '..');
-const TREE = path.join(os.tmpdir(), 'mfw-credit1', 'learn0base', 'learn0-8aa9ee4f39f4');
-const TABLE_SHA256 = '6a9dfd964d4d0d07f08dfaa4f66a85ec60c2c60719d7ea703f6a5d3b22560e51';
-const CLOCK = { mode: 'VIRTUAL', t0: 1767225600000, delayMs: 500 };
-const STEPS = 3000, K = 2000;
-const REASONS = ['tick_cap', 'goal_reached', 'context_shift', 'topic_switch', 'manual'];
 const FIXTURES = ['empty', 'two', 'three'];
 const CLB_ALLOWED = ['render/episodicContextEngine.js#episodeVault'];
 const INSTRUMENTATION_FIXTURE = ['render/episodicContextEngine.js#currentEpisode'];
 
-const OUT = path.resolve(process.argv[2] ?? '');
-const insideRepo = !path.relative(ROOT, OUT).startsWith('..') && !path.isAbsolute(path.relative(ROOT, OUT));
-if (!process.argv[2] || insideRepo) { console.error('usage: run_control.mjs <out-dir-outside-the-repo> [--calibrate]'); process.exit(2); }
-if (!fs.existsSync(TREE)) { console.error(`pinned tree missing: ${TREE}`); process.exit(2); }
-fs.mkdirSync(path.join(OUT, 'runs'), { recursive: true });
-
+const OUT = outDir('run_control.mjs');
+const run = makeRun(OUT);
 const sha256 = (b) => crypto.createHash('sha256').update(b).digest('hex');
 const url = (f) => pathToFileURL(f).href;
-const tablePath = path.join(HERE, 'rewrite_table.json'), scopePath = path.join(HERE, 'digest_scope.json');
-const clockPreload = path.join(ROOT, 'experiments', 'credit1', 'clock_preload.mjs');
-
-function run(input, opts = {}) {
-  const mode = input.mode, tree = input.tree ?? TREE;
-  const body = { tree, clock: CLOCK, tablePath, tableSha256: TABLE_SHA256, scopePath, steps: STEPS, K, denyProbe: path.join(OUT, 'deny_probe.txt'), ...input };
-  const args = ['--permission', `--allow-fs-read=${ROOT}${path.sep}*`, `--allow-fs-read=${tree}${path.sep}*`, `--allow-fs-read=${OUT}${path.sep}*`,
-    '--import', url(path.join(HERE, 'guard.mjs')), '--import', url(clockPreload), ...(mode === 'B' ? [] : ['--import', url(path.join(HERE, 'preload.mjs'))]),
-    path.join(HERE, 'fixture.mjs'), JSON.stringify(body)];
-  return new Promise((resolve) => {
-    const child = spawn(process.execPath, args, { cwd: ROOT, env: { SystemRoot: process.env.SystemRoot }, stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true });
-    let stdout = '', stderr = '';
-    child.stdout.on('data', (d) => { stdout += d; });
-    child.stderr.on('data', (d) => { stderr += d; });
-    const timer = setTimeout(() => child.kill(), opts.timeout ?? 300000);
-    child.on('close', (code) => {
-      clearTimeout(timer);
-      const m = /@@AC38@@(.*)@@END@@/s.exec(stdout);
-      let result = null;
-      try { result = m ? JSON.parse(m[1]) : null; } catch { result = null; }
-      resolve({ label: input.label, code, result, stderr: stderr.slice(0, 1200) });
-    });
-  });
-}
-
-async function pool(tasks, width = 6) {
-  const results = new Array(tasks.length); let next = 0;
-  await Promise.all(Array.from({ length: width }, async () => { while (next < tasks.length) { const i = next++; results[i] = await tasks[i](); } }));
-  return results;
-}
 
 if (process.argv.includes('--calibrate')) {
   const r = await run({ label: 'calibrate', mode: 'D', fixture: 'empty', reason: 'manual', calibrate: true });

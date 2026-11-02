@@ -72,6 +72,23 @@ for (const [file, n, name] of [['main.js', 924, 'bridge_callback'], ['render/epi
   if (!a.trimEnd().endsWith('{')) die(`${file}:${n} is not a block opener`);
   rewrites.push({ file, line: n, kind: 'probe', name, anchor: a, replace: `${a} globalThis.__AC38_PROBE__("${name}");` });
 }
+// The clean control's switch.  Applied only when a fixture names this variant, so bridge-on source is untouched.
+const bridgeIf = line('render/episodicContextEngine.js', 394);
+if (bridgeIf.trim() !== 'if (_bridgeToEpisodeManager) {') die('the bridge guard is not at line 394');
+rewrites.push({ file: 'render/episodicContextEngine.js', line: 394, kind: 'variant', variant: 'bridge_off', anchor: bridgeIf,
+  replace: '    globalThis.__AC38_PROBE__(_bridgeToEpisodeManager ? "bridge_suppressed" : "bridge_unset"); if (false) {' });
+// One probe per field-write site, for the ladder.  Each must sit at the start of a statement in a block.
+const trace = JSON.parse(fs.readFileSync(path.join(HERE, 'seal_path_trace.json'), 'utf8'));
+for (const s of trace.fieldSites) {
+  const [file, n] = [s.site.slice(0, s.site.lastIndexOf(':')), Number(s.site.slice(s.site.lastIndexOf(':') + 1))];
+  const a = line(file, n);
+  if (!a.includes(s.lhs)) die(`${s.site} does not contain ${s.lhs}`);
+  const masked = mask(read(file)).split('\n');
+  let p = n - 2; while (p >= 0 && !masked[p].trim()) p--;
+  if (!/[{};]$/.test(masked[p].trim())) die(`${s.site} is not at the start of a statement`);
+  const target = s.lhs.replace(/(\??\.[A-Za-z_$][\w$]*|\[[^\]]*\])$/, '');
+  rewrites.push({ file, line: n, kind: 'variant', variant: 'site_probes', anchor: a, replace: a.replace(/^(\s*)/, `$1globalThis.__AC38_SITE__(${JSON.stringify(s.site)}, ${target}); `) });
+}
 const PRIVATE_LETS = { 'render/episodeManager.js': ['_episodesStoredTotal', '_episodesSinceConsolidation'], 'render/schemaMemory.js': ['_lastMotifs', '_lastRebuild'] };
 for (const [file, names] of Object.entries(PRIVATE_LETS)) {
   const masked = mask(read(file)).split('\n');
@@ -95,6 +112,7 @@ for (const file of [...new Set(covered.map((c) => c.file))]) {
 appends['render/episodicContextEngine.js'] += '\nexport function __ac38_populate__(nodes, labels) { currentEpisode.nodes = nodes; currentEpisode.labels = labels; }';
 appends['instrumentation/rng.js'] = 'export function __ac38_streams__() { return streams; }';
 appends['render/episodeManager.js'] += '\nlet __ac38_canary_let__ = 0;\nexport function __ac38_touch_let__() { globalThis.__AC38_LET__("__canary__", "appended"); __ac38_canary_let__++; }';
+appends['render/episodeManager.js'] += '\nexport function __ac38_plant_let__() { globalThis.__AC38_LET__("_episodesStoredTotal", "planted"); _episodesStoredTotal = _episodesStoredTotal; }';
 
 const sources = {};
 for (const f of [...new Set([...S.files, ...graph(TREE, 'experiments/m7/run.js')])].sort()) sources[f] = sha256(fs.readFileSync(path.join(TREE, f)));
@@ -110,7 +128,7 @@ const scope = {
   staticChecks: { functionBindingsOrPropertiesWritten: functionWrites, immediatelyInvokedInitialisers: iife },
 };
 const scopeText = `${JSON.stringify(scope, null, 1)}\n`;
-const table = { schema: 'tc2/ac38.rewrite_table/1', tree: path.basename(TREE), scopeSha256: sha256(scopeText), sources, rewrites, appends };
+const table = { schema: 'tc2/ac38.rewrite_table/1', tree: path.basename(TREE), scopeSha256: sha256(scopeText), traceSha256: sha256(fs.readFileSync(path.join(HERE, 'seal_path_trace.json'))), sources, rewrites, appends };
 const tableText = `${JSON.stringify(table, null, 1)}\n`;
 fs.writeFileSync(path.join(HERE, 'digest_scope.json'), scopeText);
 fs.writeFileSync(path.join(HERE, 'rewrite_table.json'), tableText);

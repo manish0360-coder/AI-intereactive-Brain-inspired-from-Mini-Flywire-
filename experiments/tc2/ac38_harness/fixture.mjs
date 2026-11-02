@@ -10,6 +10,9 @@
 //       (fieldsOnly leaves arrays writable, so the run reaches the first field write)
 //   R0  stream positions at seal entry; terminal
 //   R1  stream positions at seal return; terminal
+// Options: variant (bridge_off), plant (a deliberate write inside the clean control's window),
+// superset (lock everything reachable from every covered binding), unlock (the ladder's list),
+// lockContext (also lock the outgoing context episode), aliasProof, stopAtReturn.
 // Not an acceptance test.  AC38 stays non-executable.
 // ==========================================================
 import fs from 'node:fs';
@@ -44,9 +47,10 @@ function safetyChecks() {
   let denied = false;
   try { fs.writeFileSync(IN.denyProbe, 'x'); } catch (e) { denied = e.code === 'ERR_ACCESS_DENIED'; }
   if (!denied) refuse('safety: a file write was not denied');
+  if (!globalThis.__AC38_NET__) refuse('safety: the network guard is not active');
   let netDenied = false;
   try { new net.Socket().connect(9, '127.0.0.1'); } catch (e) { netDenied = /network guard/.test(e.message); }
-  if (!netDenied || !globalThis.__AC38_NET__) refuse('safety: the network guard is not active');
+  if (!netDenied) refuse('safety: the network guard is not active');
   for (const v of ['H1R_STAGE_AUTHORISED', 'M7_RUN_WARMSTORE', 'M7_RUN_CRASH', 'NODE_OPTIONS']) if (process.env[v] !== undefined) refuse(`safety: ${v} is set`);
   return { fsWriteDenied: true, childDenied: true, workerDenied: true, networkGuard: true, cwdAtStart: path.basename(process.cwd()) };
 }
@@ -93,7 +97,7 @@ async function main() {
   const ids = [...ADJ.keys()].sort((x, y) => x - y);
   let walk = null;
   for (const a of ids) { if (walk) break; if (a === world.goal) continue; for (const b of [...ADJ.get(a)].sort((x, y) => x - y)) { if (walk) break; if (b === world.goal) continue; for (const c of [...ADJ.get(b)].sort((x, y) => x - y)) if (c !== a && c !== world.goal) { walk = [a, b, c]; break; } } }
-  const NODES = { empty: [], two: walk.slice(0, 2), three: walk }[IN.fixture];
+  const NODES = IN.fixture === 'three' && IN.nodes ? IN.nodes : { empty: [], two: walk.slice(0, 2), three: walk }[IN.fixture];
   if (!NODES) refuse(`unknown fixture ${IN.fixture}`);
   if (IN.mode === 'B' && IN.fixture !== 'empty') refuse('bare mode cannot populate a context');
 
@@ -129,7 +133,59 @@ async function main() {
   const naturalSeals = [];
   let target = null;
   const probes = {};
+  const sitesInside = {}, sitesOutside = {}, crossings = [], priorEntry = new WeakMap();
+  let windowObs = null;
+  // A site probe runs before its write.  registered means the target existed at window entry and is
+  // reachable from a covered binding, so a write there is a write to stored state.
+  if (CTL) CTL.handlers.site = (site, obj) => {
+    if (!windowObs) {
+      sitesOutside[site] = (sitesOutside[site] || 0) + 1;
+      if (IN.calibrate && site === 'render/longTermConsolidation.js:53') priorEntry.set(obj, [obj.lastConsolidated, obj.reinforcements]);
+      if (IN.calibrate && site === 'render/longTermConsolidation.js:58') { const p = priorEntry.get(obj); crossings.push([calls, !!p && p[0] !== 0 && p[0] < Date.now(), new Error().stack.includes('_maybeConsolidate'), obj.fromLabel, obj.toLabel, p?.[1] ?? null, obj.reinforcements]); }
+      return;
+    }
+    const row = (sitesInside[site] ||= { executed: 0, registered: 0 });
+    row.executed++;
+    if (windowObs.isRegistered(obj)) row.registered++;
+  };
   const readers = () => Object.fromEntries(Object.keys(scope.byFile).map((f) => [f, mods.ns[f].__ac38_read__]));
+  // Everything reachable from every covered binding.  Inventory bindings go first so a shared object
+  // keeps its inventory name.  The closed list stays writable unless lockContext asks for the context.
+  const supersetRows = (scopeJson) => {
+    const first = new Set(scopeJson.inventory.map((i) => `${i.file}#${i.binding}`));
+    const rows = [];
+    const closed = new Set(['render/episodicContextEngine.js#episodeVault', ...(IN.lockContext ? [] : ['render/episodicContextEngine.js#currentEpisode'])]);
+    for (const [file, names] of Object.entries(scope.byFile)) {
+      const values = mods.ns[file].__ac38_read__();
+      for (const n of names) { const key = `${file}#${n}`; if (!closed.has(key)) rows.push([key, values[n]]); }
+    }
+    rows.sort(([a], [b]) => (first.has(b) ? 1 : 0) - (first.has(a) ? 1 : 0) || (a < b ? -1 : 1));
+    for (const g of scope.globals) if (g in globalThis) rows.push([`window#${g}`, globalThis[g]]);
+    return rows;
+  };
+
+  // Deliberate writes for the clean control: each must be caught by the named mechanism.
+  const plants = () => {
+    const read = (file) => mods.ns[file].__ac38_read__();
+    const Q = read('render/qlearning.js').Q, store = read('render/episodeManager.js').episodicStore, stable = read('render/longTermConsolidation.js').stableMemory;
+    const edge = read('render/semanticMemoryLayer.js').semanticEdges.values().next().value;
+    const neuron = mods.search.findNeuronById(walk[0]);
+    return {
+      map_same_value() { const [k, val] = Q.entries().next().value; Q.set(k, val); },
+      map_restored() { const [k, val] = Q.entries().next().value; Q.set(k, val + 1); Q.set(k, val); },
+      array_restored() { const e = store[0]; store.push(e); store.pop(); },
+      array_shift_restored() { const e = store.shift(); store.unshift(e); },
+      set_restored() { stable.add('__ac38_plant__'); stable.delete('__ac38_plant__'); },
+      field_same_value() { edge.count = edge.count; },
+      embedding_same_value() { neuron.userData.embedding = neuron.userData.embedding; },
+      let_same_value() { mods.em.__ac38_plant_let__(); },
+      draw_cognitive() { rngMod.liveRng(); },
+      draw_visual() { rngMod.liveRng('visual'); },
+      draw_environment() { rngMod.liveRng('environment'); },
+      math_random() { Math.random(); },
+    };
+  };
+
   const windowOf = (inner, reason) => {
     const out = { reason, call: calls, seeded: rngMod.isSeeded(), breakKnob: IN.breakKnob ?? null };
     if (!out.seeded) refuse('the fixture is not seeded');
@@ -137,6 +193,10 @@ async function main() {
     if (IN.breakKnob === 'absentGlobal') delete globalThis.recentMemory;
     const R = readers();
     out.digestBefore = digestAll(scope, R);
+    const scopeJson = JSON.parse(scopeBytes.toString('utf8'));
+    const inventoryRows = scopeJson.inventory.filter((i) => i.item !== 'neuron embeddings').map((i) => [i.item, mods.ns[i.file].__ac38_read__()[i.binding]]);
+    const view = IN.aliasProof ? { stopAt: new WeakMap(inventoryRows.filter(([, val]) => val !== null && typeof val === 'object').map(([item, val]) => [val, item])), skipKeys: new Set(['embedding']) } : null;
+    if (view) out.outsideInventoryBefore = digestAll(scope, R, view);
     const ece = mods.ece.__ac38_read__();
     out.episodeRestBefore = sha256(canon({ ...ece.currentEpisode, nodes: null, labels: null }));
     const labels = NODES.map((id) => { const n = mods.search.findNeuronById(id); if (!n) refuse(`fixture node ${id} is not a valid neuron`); return n.userData.label; });
@@ -151,31 +211,37 @@ async function main() {
     if (IN.mode === 'R0') { result = { ...out, positions: positions(streams, rngMod.makeRng, seed) }; throw TERMINAL; }
 
     const observing = IN.mode === 'J' || IN.mode === 'T';
-    const obs = observing ? makeObserver({ base: path.basename(tree), streams, touchLet: mods.em.__ac38_touch_let__, breakKnob: IN.breakKnob }) : null;
+    const obs = observing ? makeObserver({ base: path.basename(tree), streams, touchLet: mods.em.__ac38_touch_let__, breakKnob: IN.breakKnob, superset: IN.superset === true }) : null;
+    const plant = IN.plant ? plants()[IN.plant] : null;
+    if (IN.plant && !plant) refuse(`unknown planted write ${IN.plant}`);
+    if (plant) CTL.handlers.probe = (n) => { probes[n] = (probes[n] || 0) + 1; if (n === 'bridge_suppressed') plant(); };
     const logs = [];
     const savedLog = console.log;
     if (observing) {
       const v = mods.ns;
-      const inv = JSON.parse(scopeBytes.toString('utf8')).inventory.filter((i) => i.item !== 'neuron embeddings').map((i) => [i.item, v[i.file].__ac38_read__()[i.binding]]);
-      out.registered = obs.register(inv, v['main.js'].__ac38_read__().neuronMap);
+      out.registered = obs.register(IN.superset ? supersetRows(scopeJson) : inventoryRows, v['main.js'].__ac38_read__().neuronMap);
       CTL.handlers.let = obs.letHook;
-      CTL.handlers.probe = (n) => { probes[n] = (probes[n] || 0) + 1; };
-      if (IN.mode === 'T') obs.protect(IN.fieldsOnly === true);
+      if (!plant) CTL.handlers.probe = (n) => { probes[n] = (probes[n] || 0) + 1; };
+      if (IN.mode === 'T') obs.protect({ fieldsOnly: IN.fieldsOnly === true, unlock: IN.unlock ?? { fields: [], arrays: [] } });
       if (IN.mode === 'J') console.log = (...a) => { logs[logs.length] = a.map(String).join(' ').slice(0, 220); };
       obs.arm();
+      windowObs = obs;
       out.canaryOpen = obs.canaries();
       if (IN.mode === 'T') out.tripCanaryOpen = obs.tripCanaries();
     }
     let ret = null, err = null;
     try { ret = inner(reason); } catch (e) { err = e; }
+    if (plant && !observing) { CTL.handlers.probe = null; out.probes = { ...probes }; }
     if (observing) {
       out.canaryClose = obs.canaries();
       if (IN.mode === 'T') out.tripCanaryClose = obs.tripCanaries();
+      windowObs = null;
       obs.disarm();
       console.log = savedLog;
       CTL.handlers.let = null; CTL.handlers.probe = null;
       out.observed = obs.report();
       out.probes = { ...probes };
+      out.sites = sitesInside;
       out.logs = logs.filter((l) => /EPISODE|PIPELINE|Episode sealed/.test(l));
       const ok = (c) => Object.values(c).every((n) => n === 1);
       if (!ok(out.canaryOpen) || !ok(out.canaryClose)) refuse(`canary did not fire: ${JSON.stringify([out.canaryOpen, out.canaryClose])}`);
@@ -191,8 +257,10 @@ async function main() {
     out.vaultDelta = mods.ece.__ac38_read__().episodeVault.length - vault0;
     out.storeDelta = mods.em.episodicStore.length - store0;
     out.digestReturn = digestAll(scope, R);
+    if (view) out.outsideInventoryReturn = digestAll(scope, R, view);
     if (IN.mode === 'R1') { result = { ...out, positions: positions(streams, rngMod.makeRng, seed) }; throw TERMINAL; }
     result = out;
+    if (IN.stopAtReturn) throw TERMINAL;
     return ret;
   };
 
@@ -205,6 +273,7 @@ async function main() {
         for (const [k, f] of [['Q', 'render/qlearning.js'], ['transitions', 'render/memory.js'], ['rewards', 'render/memory.js'], ['provenanceLog', 'render/semanticProvenance.js'], ['momentumMemory', 'render/momentumMemory.js'], ['semanticStrength', 'render/semanticVitality.js'], ['pathSuccesses', 'render/trustMemory.js'], ['confidenceMap', 'render/memory.js'], ['episodicStore', 'render/episodeManager.js'], ['consolidationRegistry', 'render/longTermConsolidation.js'], ['stableMemory', 'render/longTermConsolidation.js'], ['semanticEdges', 'render/semanticMemoryLayer.js'], ['conceptSchemas', 'render/semanticMemoryLayer.js'], ['schemas', 'render/schemaMemory.js'], ['_bonusCache', 'render/schemaMemory.js'], ['_lastMotifs', 'render/schemaMemory.js']]) {
           const val = v[f].__ac38_read__()[k]; sizes[k] = val.size ?? val.length;
         }
+        sizes.episodesSinceConsolidation = v['render/episodeManager.js'].__ac38_read__()._episodesSinceConsolidation;
         row.push(sizes);
       }
       naturalSeals.push(row);
@@ -240,13 +309,13 @@ async function main() {
   if (!IN.calibrate && !target && hooked) refuse(`the target seal (${IN.reason} at or after call ${IN.K}) was not reached`);
   if (!IN.calibrate && !hooked && direct && attempts !== 1) refuse('the direct seal did not run');
 
-  const terminal = ['T', 'R0', 'R1'].includes(IN.mode);
+  const terminal = ['T', 'R0', 'R1'].includes(IN.mode) || IN.stopAtReturn === true;
   const out = {
     schema: 'tc2/ac38.prototype.run', label: IN.label, mode: IN.mode, fixture: IN.fixture, reason: IN.reason, steps: IN.steps, K: IN.K,
     inputDigest: sha256(canonical(inputs)), inputs, safety,
     provenance: { mainSha256: mainSha, planningSha256: planningSha, clockPreloadSha256: mk.preloadSha256, ac38PreloadSha256: CTL?.preloadSha256 ?? null, tableSha256: IN.tableSha256 ?? null, transform: CTL ? CTL.status() : null },
     network: { guardAttempts: globalThis.__AC38_NET__.attempts() - 1 },
-    naturalSeals, window: result, oracleBlocks: Object.values(oracle).reduce((a, b) => a + b, 0),
+    naturalSeals, sitesOutsideWindow: sitesOutside, crossings, window: result, oracleBlocks: Object.values(oracle).reduce((a, b) => a + b, 0),
   };
   if (!terminal) {
     const m = mods.ns;

@@ -1,0 +1,2531 @@
+{
+ "schema": "tc2/ac38.seal_path_trace/1",
+ "tree": "learn0-8aa9ee4f39f4",
+ "functions": [
+  {
+   "key": "instrumentation/rng.js#liveRng",
+   "start": 89,
+   "end": 92,
+   "calledFrom": [
+    "instrumentation/rng.js#liveRng:89",
+    "render/episodicContextEngine.js#generateEpisodeId:120"
+   ]
+  },
+  {
+   "key": "main.js#(bridge callback)",
+   "start": 924,
+   "end": 933,
+   "calledFrom": [
+    "render/episodicContextEngine.js#sealCurrentEpisode:395"
+   ]
+  },
+  {
+   "key": "render/embeddings.js#similarity",
+   "start": 340,
+   "end": 345,
+   "calledFrom": [
+    "render/embeddings.js#similarity:340",
+    "render/embeddings.js#trainEmbedding:172",
+    "render/embeddings.js#trainEmbedding:240"
+   ]
+  },
+  {
+   "key": "render/embeddings.js#trainEmbedding",
+   "start": 153,
+   "end": 331,
+   "calledFrom": [
+    "render/embeddings.js#trainEmbedding:153",
+    "render/episodeManager.js#_learnSemantic:1044"
+   ]
+  },
+  {
+   "key": "render/episodeManager.js#_createBuffer",
+   "start": 681,
+   "end": 700,
+   "calledFrom": [
+    "render/episodeManager.js#_createBuffer:681",
+    "render/episodeManager.js#recordAutonomousSuccess:322"
+   ]
+  },
+  {
+   "key": "render/episodeManager.js#_detectMotifs",
+   "start": 1237,
+   "end": 1293,
+   "calledFrom": [
+    "render/episodeManager.js#_detectMotifs:1237",
+    "render/episodeManager.js#_maybeConsolidate:1169"
+   ]
+  },
+  {
+   "key": "render/episodeManager.js#_learnProcedural",
+   "start": 911,
+   "end": 1024,
+   "calledFrom": [
+    "render/episodeManager.js#_learnProcedural:911",
+    "render/episodeManager.js#_runPipeline:840"
+   ]
+  },
+  {
+   "key": "render/episodeManager.js#_learnSemantic",
+   "start": 1033,
+   "end": 1073,
+   "calledFrom": [
+    "render/episodeManager.js#_learnSemantic:1033",
+    "render/episodeManager.js#_runPipeline:848"
+   ]
+  },
+  {
+   "key": "render/episodeManager.js#_maybeConsolidate",
+   "start": 1166,
+   "end": 1227,
+   "calledFrom": [
+    "render/episodeManager.js#_maybeConsolidate:1166",
+    "render/episodeManager.js#_runPipeline:875"
+   ]
+  },
+  {
+   "key": "render/episodeManager.js#_runPipeline",
+   "start": 820,
+   "end": 885,
+   "calledFrom": [
+    "render/episodeManager.js#_runPipeline:820",
+    "render/episodeManager.js#recordAutonomousSuccess:344"
+   ]
+  },
+  {
+   "key": "render/episodeManager.js#_sealBuffer",
+   "start": 710,
+   "end": 811,
+   "calledFrom": [
+    "render/episodeManager.js#_sealBuffer:710",
+    "render/episodeManager.js#recordAutonomousSuccess:333"
+   ]
+  },
+  {
+   "key": "render/episodeManager.js#_storeEpisode",
+   "start": 1108,
+   "end": 1152,
+   "calledFrom": [
+    "render/episodeManager.js#_runPipeline:865",
+    "render/episodeManager.js#_storeEpisode:1108"
+   ]
+  },
+  {
+   "key": "render/episodeManager.js#_updateTrust",
+   "start": 1082,
+   "end": 1102,
+   "calledFrom": [
+    "render/episodeManager.js#_runPipeline:856",
+    "render/episodeManager.js#_updateTrust:1082"
+   ]
+  },
+  {
+   "key": "render/episodeManager.js#recordAutonomousSuccess",
+   "start": 284,
+   "end": 349,
+   "calledFrom": [
+    "main.js#(bridge callback):927",
+    "render/episodeManager.js#recordAutonomousSuccess:284"
+   ]
+  },
+  {
+   "key": "render/episodicContextEngine.js#generateEpisodeId",
+   "start": 115,
+   "end": 121,
+   "calledFrom": [
+    "render/episodicContextEngine.js#generateEpisodeId:115",
+    "render/episodicContextEngine.js#sealCurrentEpisode:344",
+    "render/episodicContextEngine.js#sealCurrentEpisode:400"
+   ]
+  },
+  {
+   "key": "render/episodicContextEngine.js#inferContextTag",
+   "start": 436,
+   "end": 480,
+   "calledFrom": [
+    "render/episodicContextEngine.js#inferContextTag:436",
+    "render/episodicContextEngine.js#sealCurrentEpisode:361"
+   ]
+  },
+  {
+   "key": "render/episodicContextEngine.js#sealCurrentEpisode",
+   "start": 338,
+   "end": 410,
+   "calledFrom": [
+    "ROOT",
+    "render/episodicContextEngine.js#sealCurrentEpisode:338"
+   ]
+  },
+  {
+   "key": "render/helpers.js#dot",
+   "start": 60,
+   "end": 82,
+   "calledFrom": [
+    "render/embeddings.js#similarity:343",
+    "render/helpers.js#dot:60"
+   ]
+  },
+  {
+   "key": "render/helpers.js#growReward",
+   "start": 104,
+   "end": 112,
+   "calledFrom": [
+    "render/helpers.js#growReward:104",
+    "render/semanticProvenance.js#writeReward:126"
+   ]
+  },
+  {
+   "key": "render/helpers.js#normalize",
+   "start": 11,
+   "end": 52,
+   "calledFrom": [
+    "render/embeddings.js#trainEmbedding:236",
+    "render/embeddings.js#trainEmbedding:237",
+    "render/embeddings.js#trainEmbedding:320",
+    "render/helpers.js#normalize:11"
+   ]
+  },
+  {
+   "key": "render/longTermConsolidation.js#reinforcePath",
+   "start": 42,
+   "end": 67,
+   "calledFrom": [
+    "render/episodeManager.js#_maybeConsolidate:1193",
+    "render/longTermConsolidation.js#reinforcePath:42"
+   ]
+  },
+  {
+   "key": "render/momentumMemory.js#learnMomentum",
+   "start": 26,
+   "end": 84,
+   "calledFrom": [
+    "render/episodeManager.js#_learnProcedural:1019",
+    "render/momentumMemory.js#learnMomentum:26"
+   ]
+  },
+  {
+   "key": "render/qlearning.js#getQ",
+   "start": 58,
+   "end": 66,
+   "calledFrom": [
+    "render/qlearning.js#getQ:58",
+    "render/qlearning.js#updateQ:173",
+    "render/schemaMemory.js#_motifAvgQ:366",
+    "render/schemaMemory.js#_motifAvgQ:399"
+   ]
+  },
+  {
+   "key": "render/qlearning.js#getQAny",
+   "start": 91,
+   "end": 117,
+   "calledFrom": [
+    "render/embeddings.js#trainEmbedding:199",
+    "render/embeddings.js#trainEmbedding:200",
+    "render/embeddings.js#trainEmbedding:293",
+    "render/embeddings.js#trainEmbedding:294"
+   ]
+  },
+  {
+   "key": "render/qlearning.js#setQ",
+   "start": 126,
+   "end": 134,
+   "calledFrom": [
+    "render/qlearning.js#setQ:126",
+    "render/qlearning.js#updateQ:252"
+   ]
+  },
+  {
+   "key": "render/qlearning.js#updateQ",
+   "start": 143,
+   "end": 281,
+   "calledFrom": [
+    "render/episodeManager.js#_learnProcedural:1003",
+    "render/qlearning.js#updateQ:143"
+   ]
+  },
+  {
+   "key": "render/schemaMemory.js#_cacheSchemaBonus",
+   "start": 639,
+   "end": 675,
+   "calledFrom": [
+    "render/schemaMemory.js#_cacheSchemaBonus:639",
+    "render/schemaMemory.js#rebuildSchemas:177"
+   ]
+  },
+  {
+   "key": "render/schemaMemory.js#_detectMotifsForSchema",
+   "start": 420,
+   "end": 501,
+   "calledFrom": [
+    "render/schemaMemory.js#_detectMotifsForSchema:420",
+    "render/schemaMemory.js#rebuildSchemas:141"
+   ]
+  },
+  {
+   "key": "render/schemaMemory.js#_extractSchema",
+   "start": 525,
+   "end": 625,
+   "calledFrom": [
+    "render/schemaMemory.js#_extractSchema:525",
+    "render/schemaMemory.js#rebuildSchemas:174"
+   ]
+  },
+  {
+   "key": "render/schemaMemory.js#_motifAvgQ",
+   "start": 363,
+   "end": 412,
+   "calledFrom": [
+    "render/schemaMemory.js#_detectMotifsForSchema:483",
+    "render/schemaMemory.js#_motifAvgQ:363"
+   ]
+  },
+  {
+   "key": "render/schemaMemory.js#rebuildSchemas",
+   "start": 129,
+   "end": 242,
+   "calledFrom": [
+    "render/episodeManager.js#_maybeConsolidate:1223",
+    "render/episodeManager.js#_maybeConsolidate:1224",
+    "render/episodeManager.js#_storeEpisode:1146",
+    "render/episodeManager.js#_storeEpisode:1149"
+   ]
+  },
+  {
+   "key": "render/search.js#findNeuronById",
+   "start": 28,
+   "end": 32,
+   "calledFrom": [
+    "render/embeddings.js#trainEmbedding:155",
+    "render/embeddings.js#trainEmbedding:156",
+    "render/episodeManager.js#_detectMotifs:1261",
+    "render/episodeManager.js#_maybeConsolidate:1187"
+   ]
+  },
+  {
+   "key": "render/semanticMemoryLayer.js#recordSemanticEdge",
+   "start": 46,
+   "end": 74,
+   "calledFrom": [
+    "render/longTermConsolidation.js#reinforcePath:66",
+    "render/semanticMemoryLayer.js#recordSemanticEdge:46"
+   ]
+  },
+  {
+   "key": "render/semanticMemoryLayer.js#updateConceptSchema",
+   "start": 83,
+   "end": 98,
+   "calledFrom": [
+    "render/semanticMemoryLayer.js#recordSemanticEdge:72",
+    "render/semanticMemoryLayer.js#updateConceptSchema:83"
+   ]
+  },
+  {
+   "key": "render/semanticProvenance.js#getProvenanceAuthority",
+   "start": 98,
+   "end": 100,
+   "calledFrom": [
+    "render/semanticProvenance.js#getProvenanceAuthority:98",
+    "render/semanticProvenance.js#writeReward:119"
+   ]
+  },
+  {
+   "key": "render/semanticProvenance.js#logActivation",
+   "start": 173,
+   "end": 186,
+   "calledFrom": [
+    "render/episodeManager.js#_learnProcedural:1014",
+    "render/semanticProvenance.js#logActivation:173"
+   ]
+  },
+  {
+   "key": "render/semanticProvenance.js#writeReward",
+   "start": 117,
+   "end": 132,
+   "calledFrom": [
+    "render/episodeManager.js#_learnProcedural:1013",
+    "render/semanticProvenance.js#writeReward:117"
+   ]
+  },
+  {
+   "key": "render/semanticVitality.js#reinforceEpisodeSemantics",
+   "start": 279,
+   "end": 304,
+   "calledFrom": [
+    "render/episodeManager.js#_learnSemantic:1057",
+    "render/semanticVitality.js#reinforceEpisodeSemantics:279"
+   ]
+  },
+  {
+   "key": "render/semanticVitality.js#reinforceSemanticStrength",
+   "start": 66,
+   "end": 94,
+   "calledFrom": [
+    "render/episodeManager.js#_learnSemantic:1066",
+    "render/semanticVitality.js#reinforceEpisodeSemantics:297",
+    "render/semanticVitality.js#reinforceSemanticStrength:66"
+   ]
+  },
+  {
+   "key": "render/trustMemory.js#recordSuccess",
+   "start": 63,
+   "end": 73,
+   "calledFrom": [
+    "render/episodeManager.js#_updateTrust:1092",
+    "render/trustMemory.js#recordSuccess:63"
+   ]
+  }
+ ],
+ "fieldSites": [
+  {
+   "site": "render/episodicContextEngine.js:357",
+   "lhs": "currentEpisode.sealed",
+   "op": "=",
+   "decision": "closed-list",
+   "store": "render/episodicContextEngine.js#currentEpisode",
+   "why": null
+  },
+  {
+   "site": "render/episodicContextEngine.js:358",
+   "lhs": "currentEpisode.endTime",
+   "op": "=",
+   "decision": "closed-list",
+   "store": "render/episodicContextEngine.js#currentEpisode",
+   "why": null
+  },
+  {
+   "site": "render/episodicContextEngine.js:359",
+   "lhs": "currentEpisode.duration",
+   "op": "=",
+   "decision": "closed-list",
+   "store": "render/episodicContextEngine.js#currentEpisode",
+   "why": null
+  },
+  {
+   "site": "render/episodicContextEngine.js:360",
+   "lhs": "currentEpisode.sealReason",
+   "op": "=",
+   "decision": "closed-list",
+   "store": "render/episodicContextEngine.js#currentEpisode",
+   "why": null
+  },
+  {
+   "site": "render/episodicContextEngine.js:361",
+   "lhs": "currentEpisode.contextTag",
+   "op": "=",
+   "decision": "closed-list",
+   "store": "render/episodicContextEngine.js#currentEpisode",
+   "why": null
+  },
+  {
+   "site": "render/episodicContextEngine.js:468",
+   "lhs": "clusterScores[key]",
+   "op": "=",
+   "decision": "fresh",
+   "store": null,
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/episodeManager.js:323",
+   "lhs": "ep.nodes",
+   "op": "=",
+   "decision": "fresh",
+   "store": null,
+   "why": "ep is the object literal returned by _createBuffer"
+  },
+  {
+   "site": "render/episodeManager.js:324",
+   "lhs": "ep.labels",
+   "op": "=",
+   "decision": "fresh",
+   "store": null,
+   "why": "ep is the object literal returned by _createBuffer"
+  },
+  {
+   "site": "render/episodeManager.js:325",
+   "lhs": "ep.predictionError",
+   "op": "=",
+   "decision": "fresh",
+   "store": null,
+   "why": "ep is the object literal returned by _createBuffer"
+  },
+  {
+   "site": "render/episodeManager.js:326",
+   "lhs": "ep.meta",
+   "op": "=",
+   "decision": "fresh",
+   "store": null,
+   "why": "ep is the object literal returned by _createBuffer"
+  },
+  {
+   "site": "render/episodeManager.js:331",
+   "lhs": "ep.activeGoal",
+   "op": "=",
+   "decision": "fresh",
+   "store": null,
+   "why": "ep is the object literal returned by _createBuffer"
+  },
+  {
+   "site": "render/qlearning.js:272",
+   "lhs": "diag.mqfTotal",
+   "op": "++",
+   "decision": "unreachable",
+   "store": "main.js#_diagCounters",
+   "why": "inside if (diag): the only seal-path caller, episodeManager.js:1003, passes no diag"
+  },
+  {
+   "site": "render/qlearning.js:273",
+   "lhs": "diag.mqfNonzero",
+   "op": "++",
+   "decision": "unreachable",
+   "store": "main.js#_diagCounters",
+   "why": "inside if (diag): the only seal-path caller, episodeManager.js:1003, passes no diag"
+  },
+  {
+   "site": "render/embeddings.js:230",
+   "lhs": "emb1[i]",
+   "op": "+=",
+   "decision": "fresh",
+   "store": null,
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/embeddings.js:231",
+   "lhs": "emb2[i]",
+   "op": "-=",
+   "decision": "fresh",
+   "store": null,
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/embeddings.js:236",
+   "lhs": "n1.userData.embedding",
+   "op": "=",
+   "decision": "store",
+   "store": "main.js#neuronMap",
+   "why": "n1 comes from findNeuronById, a neuron held in neuronMap"
+  },
+  {
+   "site": "render/embeddings.js:237",
+   "lhs": "n2.userData.embedding",
+   "op": "=",
+   "decision": "store",
+   "store": "main.js#neuronMap",
+   "why": "n2 comes from findNeuronById, a neuron held in neuronMap"
+  },
+  {
+   "site": "render/embeddings.js:316",
+   "lhs": "embOther[i]",
+   "op": "-=",
+   "decision": "fresh",
+   "store": null,
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/embeddings.js:320",
+   "lhs": "other.userData.embedding",
+   "op": "=",
+   "decision": "store",
+   "store": "main.js#neuronMap",
+   "why": "other is a neuronMapRef.forEach value, the same Map as neuronMap"
+  },
+  {
+   "site": "render/schemaMemory.js:166",
+   "lhs": "schemas.length",
+   "op": "=",
+   "decision": "store",
+   "store": "render/schemaMemory.js#schemas",
+   "why": null
+  },
+  {
+   "site": "render/episodeManager.js:1270",
+   "lhs": "m.count",
+   "op": "++",
+   "decision": "fresh",
+   "store": null,
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/longTermConsolidation.js:53",
+   "lhs": "entry.reinforcements",
+   "op": "+=",
+   "decision": "store",
+   "store": "render/longTermConsolidation.js#consolidationRegistry",
+   "why": null
+  },
+  {
+   "site": "render/longTermConsolidation.js:54",
+   "lhs": "entry.lastConsolidated",
+   "op": "=",
+   "decision": "store",
+   "store": "render/longTermConsolidation.js#consolidationRegistry",
+   "why": null
+  },
+  {
+   "site": "render/longTermConsolidation.js:58",
+   "lhs": "entry.isStable",
+   "op": "=",
+   "decision": "store",
+   "store": "render/longTermConsolidation.js#consolidationRegistry",
+   "why": null
+  },
+  {
+   "site": "render/helpers.js:44",
+   "lhs": "vec[i]",
+   "op": "/=",
+   "decision": "fresh",
+   "store": null,
+   "why": "normalize parameter: its seal-path callers, embeddings.js:236, 237 and 320, pass spread copies"
+  },
+  {
+   "site": "render/schemaMemory.js:448",
+   "lhs": "m.count",
+   "op": "++",
+   "decision": "fresh",
+   "store": null,
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/semanticMemoryLayer.js:57",
+   "lhs": "entry.count",
+   "op": "++",
+   "decision": "store",
+   "store": "render/semanticMemoryLayer.js#semanticEdges",
+   "why": null
+  },
+  {
+   "site": "render/semanticMemoryLayer.js:58",
+   "lhs": "entry.lastSeen",
+   "op": "=",
+   "decision": "store",
+   "store": "render/semanticMemoryLayer.js#semanticEdges",
+   "why": null
+  },
+  {
+   "site": "render/semanticMemoryLayer.js:65",
+   "lhs": "entry.strength",
+   "op": "=",
+   "decision": "store",
+   "store": "render/semanticMemoryLayer.js#semanticEdges",
+   "why": null
+  }
+ ],
+ "derivedStores": {
+  "main.js#neuronMap": [
+   "render/embeddings.js:236 field",
+   "render/embeddings.js:237 field",
+   "render/embeddings.js:320 field"
+  ],
+  "render/episodeManager.js#_episodesSinceConsolidation": [
+   "render/episodeManager.js:873 binding",
+   "render/episodeManager.js:876 binding"
+  ],
+  "render/episodeManager.js#_episodesStoredTotal": [
+   "render/episodeManager.js:1115 binding"
+  ],
+  "render/episodeManager.js#episodicStore": [
+   "render/episodeManager.js:1110 push",
+   "render/episodeManager.js:1125 shift"
+  ],
+  "render/longTermConsolidation.js#consolidationRegistry": [
+   "render/longTermConsolidation.js:53 field",
+   "render/longTermConsolidation.js:54 field",
+   "render/longTermConsolidation.js:58 field",
+   "render/longTermConsolidation.js:63 set"
+  ],
+  "render/longTermConsolidation.js#stableMemory": [
+   "render/longTermConsolidation.js:59 add"
+  ],
+  "render/memory.js#confidenceMap": [
+   "render/episodeManager.js:1096 set"
+  ],
+  "render/memory.js#rewards": [
+   "render/semanticProvenance.js:128 set"
+  ],
+  "render/memory.js#transitions": [
+   "render/episodeManager.js:974 set",
+   "render/episodeManager.js:975 set"
+  ],
+  "render/momentumMemory.js#momentumMemory": [
+   "render/momentumMemory.js:70 set"
+  ],
+  "render/qlearning.js#Q": [
+   "render/qlearning.js:132 set"
+  ],
+  "render/schemaMemory.js#_bonusCache": [
+   "render/schemaMemory.js:167 clear",
+   "render/schemaMemory.js:654 set",
+   "render/schemaMemory.js:662 set",
+   "render/schemaMemory.js:671 set"
+  ],
+  "render/schemaMemory.js#_lastMotifs": [
+   "render/schemaMemory.js:148 binding"
+  ],
+  "render/schemaMemory.js#_lastRebuild": [
+   "render/schemaMemory.js:160 binding"
+  ],
+  "render/schemaMemory.js#schemas": [
+   "render/schemaMemory.js:166 length",
+   "render/schemaMemory.js:176 push"
+  ],
+  "render/semanticMemoryLayer.js#conceptSchemas": [
+   "render/semanticMemoryLayer.js:92 set",
+   "render/semanticMemoryLayer.js:97 set"
+  ],
+  "render/semanticMemoryLayer.js#semanticEdges": [
+   "render/semanticMemoryLayer.js:57 field",
+   "render/semanticMemoryLayer.js:58 field",
+   "render/semanticMemoryLayer.js:65 field",
+   "render/semanticMemoryLayer.js:68 set"
+  ],
+  "render/semanticProvenance.js#provenanceLog": [
+   "render/semanticProvenance.js:176 set",
+   "render/semanticProvenance.js:180 push",
+   "render/semanticProvenance.js:183 shift"
+  ],
+  "render/semanticVitality.js#semanticStrength": [
+   "render/semanticVitality.js:84 set"
+  ],
+  "render/trustMemory.js#pathSuccesses": [
+   "render/trustMemory.js:65 set"
+  ]
+ },
+ "comparison": {
+  "monitored": 20,
+  "omissions": [],
+  "notDerived": [],
+  "aliases": [
+   {
+    "site": "render/embeddings.js:236",
+    "written": "n1.userData.embedding",
+    "store": "main.js#neuronMap"
+   },
+   {
+    "site": "render/embeddings.js:237",
+    "written": "n2.userData.embedding",
+    "store": "main.js#neuronMap"
+   },
+   {
+    "site": "render/embeddings.js:320",
+    "written": "other.userData.embedding",
+    "store": "main.js#neuronMap"
+   },
+   {
+    "site": "render/episodeManager.js:1096",
+    "written": "sys.confidenceMap",
+    "store": "render/memory.js#confidenceMap"
+   },
+   {
+    "site": "render/episodeManager.js:974",
+    "written": "tMap",
+    "store": "render/memory.js#transitions"
+   },
+   {
+    "site": "render/episodeManager.js:975",
+    "written": "sys.transitions",
+    "store": "render/memory.js#transitions"
+   },
+   {
+    "site": "render/longTermConsolidation.js:53",
+    "written": "entry.reinforcements",
+    "store": "render/longTermConsolidation.js#consolidationRegistry"
+   },
+   {
+    "site": "render/longTermConsolidation.js:54",
+    "written": "entry.lastConsolidated",
+    "store": "render/longTermConsolidation.js#consolidationRegistry"
+   },
+   {
+    "site": "render/longTermConsolidation.js:58",
+    "written": "entry.isStable",
+    "store": "render/longTermConsolidation.js#consolidationRegistry"
+   },
+   {
+    "site": "render/semanticMemoryLayer.js:57",
+    "written": "entry.count",
+    "store": "render/semanticMemoryLayer.js#semanticEdges"
+   },
+   {
+    "site": "render/semanticMemoryLayer.js:58",
+    "written": "entry.lastSeen",
+    "store": "render/semanticMemoryLayer.js#semanticEdges"
+   },
+   {
+    "site": "render/semanticMemoryLayer.js:65",
+    "written": "entry.strength",
+    "store": "render/semanticMemoryLayer.js#semanticEdges"
+   },
+   {
+    "site": "render/semanticMemoryLayer.js:92",
+    "written": "schema.relatedConcepts",
+    "store": "render/semanticMemoryLayer.js#conceptSchemas"
+   },
+   {
+    "site": "render/semanticProvenance.js:128",
+    "written": "rewardsMap",
+    "store": "render/memory.js#rewards"
+   },
+   {
+    "site": "render/semanticProvenance.js:180",
+    "written": "log",
+    "store": "render/semanticProvenance.js#provenanceLog"
+   },
+   {
+    "site": "render/semanticProvenance.js:183",
+    "written": "log",
+    "store": "render/semanticProvenance.js#provenanceLog"
+   }
+  ],
+  "unresolved": [],
+  "adjudicated": {
+   "render/semanticProvenance.js:128": "writeReward parameter: its only seal-path caller, episodeManager.js:1013, passes sys.rewards",
+   "render/qlearning.js:269": "inside if (diag): the only seal-path caller, episodeManager.js:1003, passes no diag",
+   "render/qlearning.js:272": "inside if (diag): the only seal-path caller, episodeManager.js:1003, passes no diag",
+   "render/qlearning.js:273": "inside if (diag): the only seal-path caller, episodeManager.js:1003, passes no diag",
+   "render/embeddings.js:236": "n1 comes from findNeuronById, a neuron held in neuronMap",
+   "render/embeddings.js:237": "n2 comes from findNeuronById, a neuron held in neuronMap",
+   "render/embeddings.js:320": "other is a neuronMapRef.forEach value, the same Map as neuronMap",
+   "render/helpers.js:44": "normalize parameter: its seal-path callers, embeddings.js:236, 237 and 320, pass spread copies",
+   "render/episodeManager.js:299": "episodeWords is the array returned by recentMemory.map",
+   "render/episodeManager.js:323": "ep is the object literal returned by _createBuffer",
+   "render/episodeManager.js:324": "ep is the object literal returned by _createBuffer",
+   "render/episodeManager.js:325": "ep is the object literal returned by _createBuffer",
+   "render/episodeManager.js:326": "ep is the object literal returned by _createBuffer",
+   "render/episodeManager.js:331": "ep is the object literal returned by _createBuffer",
+   "render/episodicContextEngine.js:456": "sorts the spread copy of a new Set",
+   "render/episodicContextEngine.js:477": "sorts the array returned by Object.entries(clusterScores)",
+   "render/schemaMemory.js:205": "sorts a spread copy of motifs",
+   "render/schemaMemory.js:554": "positionNodes is built inside _extractSchema",
+   "render/schemaMemory.js:575": "sorts a spread copy of freq.entries()"
+  }
+ },
+ "readsOutsideInventory": [
+  "instrumentation/rng.js#streams",
+  "render/behavior.js#confidenceState",
+  "render/behavior.js#curiosityState",
+  "render/behavior.js#fatigueState",
+  "render/behavior.js#stressState",
+  "render/embeddings.js#neuronMapRef",
+  "render/episodeManager.js#AUTHORITY",
+  "render/episodeManager.js#CONSOLIDATION_INTERVAL",
+  "render/episodeManager.js#MAX_STORE",
+  "render/episodeManager.js#SCHEMA_MIN_EPISODES",
+  "render/episodeManager.js#SCHEMA_REBUILD_EVERY",
+  "render/episodeManager.js#VALIDATION",
+  "render/episodeManager.js#_sys",
+  "render/episodicContextEngine.js#VAULT_MAX",
+  "render/episodicContextEngine.js#_bridgeToEpisodeManager",
+  "render/episodicContextEngine.js#_conceptRelations",
+  "render/episodicContextEngine.js#currentEpisode",
+  "render/episodicContextEngine.js#episodeVault",
+  "render/longTermConsolidation.js#STABLE_THRESHOLD",
+  "render/schemaMemory.js#LAMBDA",
+  "render/schemaMemory.js#MIN_QKEY_VISITS",
+  "render/schemaMemory.js#MIN_SPREAD",
+  "render/schemaMemory.js#Q_NORM",
+  "render/schemaMemory.js#REBUILD_INTERVAL_MS",
+  "render/schemaMemory.js#_sys",
+  "render/search.js#neuronMapRef",
+  "render/semanticMemoryLayer.js#CONSOLIDATION_THRESHOLD",
+  "render/semanticMemoryLayer.js#NOISE_FLOOR",
+  "render/semanticProvenance.js#AUTHORITY",
+  "render/semanticProvenance.js#LOG_WINDOW"
+ ],
+ "writes": [
+  {
+   "site": "render/episodicContextEngine.js:343",
+   "fn": "sealCurrentEpisode",
+   "class": "binding",
+   "op": "=",
+   "lhs": "currentEpisode",
+   "root": {
+    "kind": "module",
+    "name": "currentEpisode",
+    "file": "render/episodicContextEngine.js",
+    "bindingKind": "let"
+   },
+   "raw": "currentEpisode = {",
+   "decision": "closed-list",
+   "store": "render/episodicContextEngine.js#currentEpisode"
+  },
+  {
+   "site": "render/episodicContextEngine.js:357",
+   "fn": "sealCurrentEpisode",
+   "class": "field",
+   "op": "=",
+   "lhs": "currentEpisode.sealed",
+   "root": {
+    "kind": "module",
+    "name": "currentEpisode",
+    "file": "render/episodicContextEngine.js",
+    "bindingKind": "let"
+   },
+   "raw": "currentEpisode.sealed    = true;",
+   "decision": "closed-list",
+   "store": "render/episodicContextEngine.js#currentEpisode"
+  },
+  {
+   "site": "render/episodicContextEngine.js:358",
+   "fn": "sealCurrentEpisode",
+   "class": "field",
+   "op": "=",
+   "lhs": "currentEpisode.endTime",
+   "root": {
+    "kind": "module",
+    "name": "currentEpisode",
+    "file": "render/episodicContextEngine.js",
+    "bindingKind": "let"
+   },
+   "raw": "currentEpisode.endTime   = Date.now();",
+   "decision": "closed-list",
+   "store": "render/episodicContextEngine.js#currentEpisode"
+  },
+  {
+   "site": "render/episodicContextEngine.js:359",
+   "fn": "sealCurrentEpisode",
+   "class": "field",
+   "op": "=",
+   "lhs": "currentEpisode.duration",
+   "root": {
+    "kind": "module",
+    "name": "currentEpisode",
+    "file": "render/episodicContextEngine.js",
+    "bindingKind": "let"
+   },
+   "raw": "currentEpisode.duration  = currentEpisode.endTime - currentEpisode.startTime;",
+   "decision": "closed-list",
+   "store": "render/episodicContextEngine.js#currentEpisode"
+  },
+  {
+   "site": "render/episodicContextEngine.js:360",
+   "fn": "sealCurrentEpisode",
+   "class": "field",
+   "op": "=",
+   "lhs": "currentEpisode.sealReason",
+   "root": {
+    "kind": "module",
+    "name": "currentEpisode",
+    "file": "render/episodicContextEngine.js",
+    "bindingKind": "let"
+   },
+   "raw": "currentEpisode.sealReason = reason;",
+   "decision": "closed-list",
+   "store": "render/episodicContextEngine.js#currentEpisode"
+  },
+  {
+   "site": "render/episodicContextEngine.js:361",
+   "fn": "sealCurrentEpisode",
+   "class": "field",
+   "op": "=",
+   "lhs": "currentEpisode.contextTag",
+   "root": {
+    "kind": "module",
+    "name": "currentEpisode",
+    "file": "render/episodicContextEngine.js",
+    "bindingKind": "let"
+   },
+   "raw": "currentEpisode.contextTag = inferContextTag(currentEpisode.labels);",
+   "decision": "closed-list",
+   "store": "render/episodicContextEngine.js#currentEpisode"
+  },
+  {
+   "site": "render/episodicContextEngine.js:366",
+   "fn": "sealCurrentEpisode",
+   "class": "mutator",
+   "op": "push",
+   "lhs": "episodeVault",
+   "root": {
+    "kind": "module",
+    "name": "episodeVault",
+    "file": "render/episodicContextEngine.js",
+    "bindingKind": "const"
+   },
+   "raw": "episodeVault.push(sealed);",
+   "decision": "closed-list",
+   "store": "render/episodicContextEngine.js#episodeVault"
+  },
+  {
+   "site": "render/episodicContextEngine.js:369",
+   "fn": "sealCurrentEpisode",
+   "class": "mutator",
+   "op": "shift",
+   "lhs": "episodeVault",
+   "root": {
+    "kind": "module",
+    "name": "episodeVault",
+    "file": "render/episodicContextEngine.js",
+    "bindingKind": "const"
+   },
+   "raw": "episodeVault.shift();",
+   "decision": "closed-list",
+   "store": "render/episodicContextEngine.js#episodeVault"
+  },
+  {
+   "site": "render/episodicContextEngine.js:399",
+   "fn": "sealCurrentEpisode",
+   "class": "binding",
+   "op": "=",
+   "lhs": "currentEpisode",
+   "root": {
+    "kind": "module",
+    "name": "currentEpisode",
+    "file": "render/episodicContextEngine.js",
+    "bindingKind": "let"
+   },
+   "raw": "currentEpisode = {",
+   "decision": "closed-list",
+   "store": "render/episodicContextEngine.js#currentEpisode"
+  },
+  {
+   "site": "render/episodicContextEngine.js:456",
+   "fn": "inferContextTag",
+   "class": "computed-receiver",
+   "op": "sort",
+   "lhs": "(computed)",
+   "root": {
+    "kind": "expression"
+   },
+   "raw": "const unique = [...new Set(labels)].sort();",
+   "decision": "fresh",
+   "why": "sorts the spread copy of a new Set"
+  },
+  {
+   "site": "render/episodicContextEngine.js:468",
+   "fn": "inferContextTag",
+   "class": "index",
+   "op": "=",
+   "lhs": "clusterScores[key]",
+   "root": {
+    "kind": "fresh",
+    "via": "{}[key]",
+    "path": "clusterScores <- {}[key]"
+   },
+   "raw": "if (score > 0) clusterScores[key] = score;",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/episodicContextEngine.js:477",
+   "fn": "inferContextTag",
+   "class": "computed-receiver",
+   "op": "sort",
+   "lhs": "(computed)",
+   "root": {
+    "kind": "expression"
+   },
+   "raw": ".sort((a, b) => b[1] - a[1])[0][0];",
+   "decision": "fresh",
+   "why": "sorts the array returned by Object.entries(clusterScores)"
+  },
+  {
+   "site": "render/episodeManager.js:299",
+   "fn": "recordAutonomousSuccess",
+   "class": "mutator",
+   "op": "push",
+   "lhs": "episodeWords",
+   "root": {
+    "kind": "param",
+    "name": "recentMemory",
+    "path": "episodeWords <- recentMemory"
+   },
+   "raw": "episodeWords.push(goalLabel);",
+   "decision": "fresh",
+   "why": "episodeWords is the array returned by recentMemory.map"
+  },
+  {
+   "site": "render/episodeManager.js:304",
+   "fn": "recordAutonomousSuccess",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "labelToId",
+   "root": {
+    "kind": "fresh",
+    "via": "new Map()",
+    "path": "labelToId <- new Map()"
+   },
+   "raw": "neuronMap.forEach((n, id) => labelToId.set(n.userData.label, id));",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/episodeManager.js:323",
+   "fn": "recordAutonomousSuccess",
+   "class": "field",
+   "op": "=",
+   "lhs": "ep.nodes",
+   "root": {
+    "kind": "function",
+    "name": "_createBuffer",
+    "path": "ep <- _createBuffer"
+   },
+   "raw": "ep.nodes      = nodeIds;",
+   "decision": "fresh",
+   "why": "ep is the object literal returned by _createBuffer"
+  },
+  {
+   "site": "render/episodeManager.js:324",
+   "fn": "recordAutonomousSuccess",
+   "class": "field",
+   "op": "=",
+   "lhs": "ep.labels",
+   "root": {
+    "kind": "function",
+    "name": "_createBuffer",
+    "path": "ep <- _createBuffer"
+   },
+   "raw": "ep.labels     = episodeWords;",
+   "decision": "fresh",
+   "why": "ep is the object literal returned by _createBuffer"
+  },
+  {
+   "site": "render/episodeManager.js:325",
+   "fn": "recordAutonomousSuccess",
+   "class": "field",
+   "op": "=",
+   "lhs": "ep.predictionError",
+   "root": {
+    "kind": "function",
+    "name": "_createBuffer",
+    "path": "ep <- _createBuffer"
+   },
+   "raw": "ep.predictionError = meta?.predictionError ?? 0;",
+   "decision": "fresh",
+   "why": "ep is the object literal returned by _createBuffer"
+  },
+  {
+   "site": "render/episodeManager.js:326",
+   "fn": "recordAutonomousSuccess",
+   "class": "field",
+   "op": "=",
+   "lhs": "ep.meta",
+   "root": {
+    "kind": "function",
+    "name": "_createBuffer",
+    "path": "ep <- _createBuffer"
+   },
+   "raw": "ep.meta       = { ...meta };",
+   "decision": "fresh",
+   "why": "ep is the object literal returned by _createBuffer"
+  },
+  {
+   "site": "render/episodeManager.js:331",
+   "fn": "recordAutonomousSuccess",
+   "class": "field",
+   "op": "=",
+   "lhs": "ep.activeGoal",
+   "root": {
+    "kind": "function",
+    "name": "_createBuffer",
+    "path": "ep <- _createBuffer"
+   },
+   "raw": "ep.activeGoal = (goalId != null) ? Number(goalId) : null;",
+   "decision": "fresh",
+   "why": "ep is the object literal returned by _createBuffer"
+  },
+  {
+   "site": "render/episodeManager.js:729",
+   "fn": "_sealBuffer",
+   "class": "mutator",
+   "op": "push",
+   "lhs": "nodes",
+   "root": {
+    "kind": "fresh",
+    "via": "[]",
+    "path": "nodes <- []"
+   },
+   "raw": "nodes.push(id);",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/episodeManager.js:730",
+   "fn": "_sealBuffer",
+   "class": "mutator",
+   "op": "push",
+   "lhs": "labels",
+   "root": {
+    "kind": "fresh",
+    "via": "[]",
+    "path": "labels <- []"
+   },
+   "raw": "labels.push(buf.labels[i] || String(id));",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/episodeManager.js:767",
+   "fn": "_sealBuffer",
+   "class": "mutator",
+   "op": "push",
+   "lhs": "transitions",
+   "root": {
+    "kind": "fresh",
+    "via": "[]",
+    "path": "transitions <- []"
+   },
+   "raw": "transitions.push({",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/episodeManager.js:873",
+   "fn": "_runPipeline",
+   "class": "binding",
+   "op": "++",
+   "lhs": "_episodesSinceConsolidation",
+   "root": {
+    "kind": "module",
+    "name": "_episodesSinceConsolidation",
+    "file": "render/episodeManager.js",
+    "bindingKind": "let"
+   },
+   "raw": "_episodesSinceConsolidation++;",
+   "decision": "store",
+   "store": "render/episodeManager.js#_episodesSinceConsolidation"
+  },
+  {
+   "site": "render/episodeManager.js:876",
+   "fn": "_runPipeline",
+   "class": "binding",
+   "op": "=",
+   "lhs": "_episodesSinceConsolidation",
+   "root": {
+    "kind": "module",
+    "name": "_episodesSinceConsolidation",
+    "file": "render/episodeManager.js",
+    "bindingKind": "let"
+   },
+   "raw": "_episodesSinceConsolidation = 0;",
+   "decision": "store",
+   "store": "render/episodeManager.js#_episodesSinceConsolidation"
+  },
+  {
+   "site": "render/episodeManager.js:974",
+   "fn": "_learnProcedural",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "tMap",
+   "root": {
+    "kind": "injected",
+    "name": "transitions",
+    "target": {
+     "file": "render/memory.js",
+     "name": "transitions"
+    },
+    "path": "tMap <- sys <- transitions"
+   },
+   "raw": "tMap.set(to, (tMap.get(to) || 0) + 20 * gain * (1 + causalBonus * 0.5));",
+   "decision": "store",
+   "store": "render/memory.js#transitions"
+  },
+  {
+   "site": "render/episodeManager.js:975",
+   "fn": "_learnProcedural",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "sys.transitions",
+   "root": {
+    "kind": "injected",
+    "name": "transitions",
+    "target": {
+     "file": "render/memory.js",
+     "name": "transitions"
+    },
+    "path": "sys <- transitions"
+   },
+   "raw": "sys.transitions.set(from, tMap);",
+   "decision": "store",
+   "store": "render/memory.js#transitions"
+  },
+  {
+   "site": "render/episodeManager.js:1096",
+   "fn": "_updateTrust",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "sys.confidenceMap",
+   "root": {
+    "kind": "injected",
+    "name": "confidenceMap",
+    "target": {
+     "file": "render/memory.js",
+     "name": "confidenceMap"
+    },
+    "path": "sys <- confidenceMap"
+   },
+   "raw": "sys.confidenceMap.set(",
+   "decision": "store",
+   "store": "render/memory.js#confidenceMap"
+  },
+  {
+   "site": "render/episodeManager.js:1110",
+   "fn": "_storeEpisode",
+   "class": "mutator",
+   "op": "push",
+   "lhs": "episodicStore",
+   "root": {
+    "kind": "module",
+    "name": "episodicStore",
+    "file": "render/episodeManager.js",
+    "bindingKind": "const"
+   },
+   "raw": "episodicStore.push(episode);",
+   "decision": "store",
+   "store": "render/episodeManager.js#episodicStore"
+  },
+  {
+   "site": "render/episodeManager.js:1115",
+   "fn": "_storeEpisode",
+   "class": "binding",
+   "op": "++",
+   "lhs": "_episodesStoredTotal",
+   "root": {
+    "kind": "module",
+    "name": "_episodesStoredTotal",
+    "file": "render/episodeManager.js",
+    "bindingKind": "let"
+   },
+   "raw": "_episodesStoredTotal++;",
+   "decision": "store",
+   "store": "render/episodeManager.js#_episodesStoredTotal"
+  },
+  {
+   "site": "render/episodeManager.js:1125",
+   "fn": "_storeEpisode",
+   "class": "mutator",
+   "op": "shift",
+   "lhs": "episodicStore",
+   "root": {
+    "kind": "module",
+    "name": "episodicStore",
+    "file": "render/episodeManager.js",
+    "bindingKind": "const"
+   },
+   "raw": "episodicStore.shift();",
+   "decision": "store",
+   "store": "render/episodeManager.js#episodicStore"
+  },
+  {
+   "site": "render/qlearning.js:269",
+   "fn": "updateQ",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "diag.visits",
+   "root": {
+    "kind": "param",
+    "name": "diag"
+   },
+   "raw": "diag.visits.set(visitKey, (diag.visits.get(visitKey) || 0) + 1);",
+   "decision": "unreachable",
+   "store": "main.js#_diagCounters",
+   "why": "inside if (diag): the only seal-path caller, episodeManager.js:1003, passes no diag"
+  },
+  {
+   "site": "render/qlearning.js:272",
+   "fn": "updateQ",
+   "class": "field",
+   "op": "++",
+   "lhs": "diag.mqfTotal",
+   "root": {
+    "kind": "param",
+    "name": "diag"
+   },
+   "raw": "diag.mqfTotal++;",
+   "decision": "unreachable",
+   "store": "main.js#_diagCounters",
+   "why": "inside if (diag): the only seal-path caller, episodeManager.js:1003, passes no diag"
+  },
+  {
+   "site": "render/qlearning.js:273",
+   "fn": "updateQ",
+   "class": "field",
+   "op": "++",
+   "lhs": "diag.mqfNonzero",
+   "root": {
+    "kind": "param",
+    "name": "diag"
+   },
+   "raw": "if (maxFutureQ > 0) diag.mqfNonzero++;",
+   "decision": "unreachable",
+   "store": "main.js#_diagCounters",
+   "why": "inside if (diag): the only seal-path caller, episodeManager.js:1003, passes no diag"
+  },
+  {
+   "site": "render/semanticProvenance.js:128",
+   "fn": "writeReward",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "rewardsMap",
+   "root": {
+    "kind": "param",
+    "name": "rewardsMap"
+   },
+   "raw": "rewardsMap.set(key, newVal);",
+   "decision": "store",
+   "store": "render/memory.js#rewards",
+   "why": "writeReward parameter: its only seal-path caller, episodeManager.js:1013, passes sys.rewards"
+  },
+  {
+   "site": "render/semanticProvenance.js:176",
+   "fn": "logActivation",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "provenanceLog",
+   "root": {
+    "kind": "module",
+    "name": "provenanceLog",
+    "file": "render/semanticProvenance.js",
+    "bindingKind": "const"
+   },
+   "raw": "provenanceLog.set(key, []);",
+   "decision": "store",
+   "store": "render/semanticProvenance.js#provenanceLog"
+  },
+  {
+   "site": "render/semanticProvenance.js:180",
+   "fn": "logActivation",
+   "class": "mutator",
+   "op": "push",
+   "lhs": "log",
+   "root": {
+    "kind": "module",
+    "name": "provenanceLog",
+    "file": "render/semanticProvenance.js",
+    "bindingKind": "const",
+    "path": "log <- provenanceLog"
+   },
+   "raw": "log.push({ source, ts: Date.now() });",
+   "decision": "store",
+   "store": "render/semanticProvenance.js#provenanceLog"
+  },
+  {
+   "site": "render/semanticProvenance.js:183",
+   "fn": "logActivation",
+   "class": "mutator",
+   "op": "shift",
+   "lhs": "log",
+   "root": {
+    "kind": "module",
+    "name": "provenanceLog",
+    "file": "render/semanticProvenance.js",
+    "bindingKind": "const",
+    "path": "log <- provenanceLog"
+   },
+   "raw": "log.shift();",
+   "decision": "store",
+   "store": "render/semanticProvenance.js#provenanceLog"
+  },
+  {
+   "site": "render/momentumMemory.js:70",
+   "fn": "learnMomentum",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "momentumMemory",
+   "root": {
+    "kind": "module",
+    "name": "momentumMemory",
+    "file": "render/momentumMemory.js",
+    "bindingKind": "const"
+   },
+   "raw": "momentumMemory.set(",
+   "decision": "store",
+   "store": "render/momentumMemory.js#momentumMemory"
+  },
+  {
+   "site": "render/embeddings.js:230",
+   "fn": "trainEmbedding",
+   "class": "index",
+   "op": "+=",
+   "lhs": "emb1[i]",
+   "root": {
+    "kind": "fresh",
+    "via": "[...n1.userData.embedding][i]",
+    "path": "emb1 <- [...n1.userData.embedding][i]"
+   },
+   "raw": "emb1[i] += diff * lr;   // n1 moves toward n2",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/embeddings.js:231",
+   "fn": "trainEmbedding",
+   "class": "index",
+   "op": "-=",
+   "lhs": "emb2[i]",
+   "root": {
+    "kind": "fresh",
+    "via": "[...n2.userData.embedding][i]",
+    "path": "emb2 <- [...n2.userData.embedding][i]"
+   },
+   "raw": "emb2[i] -= diff * lr;   // n2 moves toward n1",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/embeddings.js:236",
+   "fn": "trainEmbedding",
+   "class": "field",
+   "op": "=",
+   "lhs": "n1.userData.embedding",
+   "root": {
+    "kind": "imported",
+    "name": "findNeuronById",
+    "target": {
+     "file": "render/search.js",
+     "name": "findNeuronById"
+    },
+    "path": "n1 <- findNeuronById"
+   },
+   "raw": "n1.userData.embedding = normalize(emb1);",
+   "decision": "store",
+   "store": "main.js#neuronMap",
+   "why": "n1 comes from findNeuronById, a neuron held in neuronMap"
+  },
+  {
+   "site": "render/embeddings.js:237",
+   "fn": "trainEmbedding",
+   "class": "field",
+   "op": "=",
+   "lhs": "n2.userData.embedding",
+   "root": {
+    "kind": "imported",
+    "name": "findNeuronById",
+    "target": {
+     "file": "render/search.js",
+     "name": "findNeuronById"
+    },
+    "path": "n2 <- findNeuronById"
+   },
+   "raw": "n2.userData.embedding = normalize(emb2);",
+   "decision": "store",
+   "store": "main.js#neuronMap",
+   "why": "n2 comes from findNeuronById, a neuron held in neuronMap"
+  },
+  {
+   "site": "render/embeddings.js:316",
+   "fn": "trainEmbedding",
+   "class": "index",
+   "op": "-=",
+   "lhs": "embOther[i]",
+   "root": {
+    "kind": "fresh",
+    "via": "[...other.userData.embedding][i]",
+    "path": "embOther <- [...other.userData.embedding][i]"
+   },
+   "raw": "embOther[i] -= diff * 0.00015;",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/embeddings.js:320",
+   "fn": "trainEmbedding",
+   "class": "field",
+   "op": "=",
+   "lhs": "other.userData.embedding",
+   "root": {
+    "kind": "param",
+    "name": "other"
+   },
+   "raw": "other.userData.embedding = normalize(embOther);",
+   "decision": "store",
+   "store": "main.js#neuronMap",
+   "why": "other is a neuronMapRef.forEach value, the same Map as neuronMap"
+  },
+  {
+   "site": "render/semanticVitality.js:84",
+   "fn": "reinforceSemanticStrength",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "semanticStrength",
+   "root": {
+    "kind": "module",
+    "name": "semanticStrength",
+    "file": "render/semanticVitality.js",
+    "bindingKind": "const"
+   },
+   "raw": "semanticStrength.set(",
+   "decision": "store",
+   "store": "render/semanticVitality.js#semanticStrength"
+  },
+  {
+   "site": "render/trustMemory.js:65",
+   "fn": "recordSuccess",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "pathSuccesses",
+   "root": {
+    "kind": "module",
+    "name": "pathSuccesses",
+    "file": "render/trustMemory.js",
+    "bindingKind": "const"
+   },
+   "raw": "pathSuccesses.set(",
+   "decision": "store",
+   "store": "render/trustMemory.js#pathSuccesses"
+  },
+  {
+   "site": "render/schemaMemory.js:148",
+   "fn": "rebuildSchemas",
+   "class": "binding",
+   "op": "=",
+   "lhs": "_lastMotifs",
+   "root": {
+    "kind": "module",
+    "name": "_lastMotifs",
+    "file": "render/schemaMemory.js",
+    "bindingKind": "let"
+   },
+   "raw": "_lastMotifs = motifs;",
+   "decision": "store",
+   "store": "render/schemaMemory.js#_lastMotifs"
+  },
+  {
+   "site": "render/schemaMemory.js:160",
+   "fn": "rebuildSchemas",
+   "class": "binding",
+   "op": "=",
+   "lhs": "_lastRebuild",
+   "root": {
+    "kind": "module",
+    "name": "_lastRebuild",
+    "file": "render/schemaMemory.js",
+    "bindingKind": "let"
+   },
+   "raw": "_lastRebuild = now;",
+   "decision": "store",
+   "store": "render/schemaMemory.js#_lastRebuild"
+  },
+  {
+   "site": "render/schemaMemory.js:166",
+   "fn": "rebuildSchemas",
+   "class": "length",
+   "op": "=",
+   "lhs": "schemas.length",
+   "root": {
+    "kind": "module",
+    "name": "schemas",
+    "file": "render/schemaMemory.js",
+    "bindingKind": "const"
+   },
+   "raw": "schemas.length = 0;",
+   "decision": "store",
+   "store": "render/schemaMemory.js#schemas"
+  },
+  {
+   "site": "render/schemaMemory.js:167",
+   "fn": "rebuildSchemas",
+   "class": "mutator",
+   "op": "clear",
+   "lhs": "_bonusCache",
+   "root": {
+    "kind": "module",
+    "name": "_bonusCache",
+    "file": "render/schemaMemory.js",
+    "bindingKind": "const"
+   },
+   "raw": "_bonusCache.clear();",
+   "decision": "store",
+   "store": "render/schemaMemory.js#_bonusCache"
+  },
+  {
+   "site": "render/schemaMemory.js:176",
+   "fn": "rebuildSchemas",
+   "class": "mutator",
+   "op": "push",
+   "lhs": "schemas",
+   "root": {
+    "kind": "module",
+    "name": "schemas",
+    "file": "render/schemaMemory.js",
+    "bindingKind": "const"
+   },
+   "raw": "schemas.push(schema);",
+   "decision": "store",
+   "store": "render/schemaMemory.js#schemas"
+  },
+  {
+   "site": "render/schemaMemory.js:205",
+   "fn": "rebuildSchemas",
+   "class": "computed-receiver",
+   "op": "sort",
+   "lhs": "(computed)",
+   "root": {
+    "kind": "expression"
+   },
+   "raw": "const freqRanked  = [...motifs].sort((a,b) => b.freqStrength - a.freqStrength);",
+   "decision": "fresh",
+   "why": "sorts a spread copy of motifs"
+  },
+  {
+   "site": "render/episodeManager.js:1257",
+   "fn": "_detectMotifs",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "motifMap",
+   "root": {
+    "kind": "fresh",
+    "via": "new Map()",
+    "path": "motifMap <- new Map()"
+   },
+   "raw": "motifMap.set(key, {",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/episodeManager.js:1270",
+   "fn": "_detectMotifs",
+   "class": "field",
+   "op": "++",
+   "lhs": "m.count",
+   "root": {
+    "kind": "fresh",
+    "via": "new Map().get(key).count",
+    "path": "m <- motifMap <- new Map().get(key).count"
+   },
+   "raw": "m.count++;",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/episodeManager.js:1271",
+   "fn": "_detectMotifs",
+   "class": "mutator",
+   "op": "add",
+   "lhs": "m.episodes",
+   "root": {
+    "kind": "fresh",
+    "via": "new Map().get(key).episodes",
+    "path": "m <- motifMap <- new Map().get(key).episodes"
+   },
+   "raw": "m.episodes.add(epIndex);",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/episodeManager.js:1280",
+   "fn": "_detectMotifs",
+   "class": "mutator",
+   "op": "push",
+   "lhs": "motifs",
+   "root": {
+    "kind": "fresh",
+    "via": "[]",
+    "path": "motifs <- []"
+   },
+   "raw": "motifs.push({",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/episodeManager.js:1291",
+   "fn": "_detectMotifs",
+   "class": "mutator",
+   "op": "sort",
+   "lhs": "motifs",
+   "root": {
+    "kind": "fresh",
+    "via": "[]",
+    "path": "motifs <- []"
+   },
+   "raw": "return motifs.sort((a, b) => b.strength - a.strength);",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/longTermConsolidation.js:53",
+   "fn": "reinforcePath",
+   "class": "field",
+   "op": "+=",
+   "lhs": "entry.reinforcements",
+   "root": {
+    "kind": "module",
+    "name": "consolidationRegistry",
+    "file": "render/longTermConsolidation.js",
+    "bindingKind": "const",
+    "path": "entry <- consolidationRegistry"
+   },
+   "raw": "entry.reinforcements += strength;",
+   "decision": "store",
+   "store": "render/longTermConsolidation.js#consolidationRegistry"
+  },
+  {
+   "site": "render/longTermConsolidation.js:54",
+   "fn": "reinforcePath",
+   "class": "field",
+   "op": "=",
+   "lhs": "entry.lastConsolidated",
+   "root": {
+    "kind": "module",
+    "name": "consolidationRegistry",
+    "file": "render/longTermConsolidation.js",
+    "bindingKind": "const",
+    "path": "entry <- consolidationRegistry"
+   },
+   "raw": "entry.lastConsolidated = Date.now();",
+   "decision": "store",
+   "store": "render/longTermConsolidation.js#consolidationRegistry"
+  },
+  {
+   "site": "render/longTermConsolidation.js:58",
+   "fn": "reinforcePath",
+   "class": "field",
+   "op": "=",
+   "lhs": "entry.isStable",
+   "root": {
+    "kind": "module",
+    "name": "consolidationRegistry",
+    "file": "render/longTermConsolidation.js",
+    "bindingKind": "const",
+    "path": "entry <- consolidationRegistry"
+   },
+   "raw": "entry.isStable = true;",
+   "decision": "store",
+   "store": "render/longTermConsolidation.js#consolidationRegistry"
+  },
+  {
+   "site": "render/longTermConsolidation.js:59",
+   "fn": "reinforcePath",
+   "class": "mutator",
+   "op": "add",
+   "lhs": "stableMemory",
+   "root": {
+    "kind": "module",
+    "name": "stableMemory",
+    "file": "render/longTermConsolidation.js",
+    "bindingKind": "const"
+   },
+   "raw": "stableMemory.add(key);",
+   "decision": "store",
+   "store": "render/longTermConsolidation.js#stableMemory"
+  },
+  {
+   "site": "render/longTermConsolidation.js:63",
+   "fn": "reinforcePath",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "consolidationRegistry",
+   "root": {
+    "kind": "module",
+    "name": "consolidationRegistry",
+    "file": "render/longTermConsolidation.js",
+    "bindingKind": "const"
+   },
+   "raw": "consolidationRegistry.set(key, entry);",
+   "decision": "store",
+   "store": "render/longTermConsolidation.js#consolidationRegistry"
+  },
+  {
+   "site": "render/qlearning.js:132",
+   "fn": "setQ",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "Q",
+   "root": {
+    "kind": "module",
+    "name": "Q",
+    "file": "render/qlearning.js",
+    "bindingKind": "const"
+   },
+   "raw": "Q.set(key, value);",
+   "decision": "store",
+   "store": "render/qlearning.js#Q"
+  },
+  {
+   "site": "render/helpers.js:44",
+   "fn": "normalize",
+   "class": "index",
+   "op": "/=",
+   "lhs": "vec[i]",
+   "root": {
+    "kind": "param",
+    "name": "vec"
+   },
+   "raw": "vec[i] /= mag;",
+   "decision": "fresh",
+   "why": "normalize parameter: its seal-path callers, embeddings.js:236, 237 and 320, pass spread copies"
+  },
+  {
+   "site": "render/schemaMemory.js:440",
+   "fn": "_detectMotifsForSchema",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "motifMap",
+   "root": {
+    "kind": "fresh",
+    "via": "new Map()",
+    "path": "motifMap <- new Map()"
+   },
+   "raw": "motifMap.set(key, {",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/schemaMemory.js:448",
+   "fn": "_detectMotifsForSchema",
+   "class": "field",
+   "op": "++",
+   "lhs": "m.count",
+   "root": {
+    "kind": "fresh",
+    "via": "new Map().get(key).count",
+    "path": "m <- motifMap <- new Map().get(key).count"
+   },
+   "raw": "m.count++;",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/schemaMemory.js:449",
+   "fn": "_detectMotifsForSchema",
+   "class": "mutator",
+   "op": "add",
+   "lhs": "m.episodes",
+   "root": {
+    "kind": "fresh",
+    "via": "new Map().get(key).episodes",
+    "path": "m <- motifMap <- new Map().get(key).episodes"
+   },
+   "raw": "m.episodes.add(epIndex);",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/schemaMemory.js:487",
+   "fn": "_detectMotifsForSchema",
+   "class": "mutator",
+   "op": "push",
+   "lhs": "result",
+   "root": {
+    "kind": "fresh",
+    "via": "[]",
+    "path": "result <- []"
+   },
+   "raw": "result.push({",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/schemaMemory.js:500",
+   "fn": "_detectMotifsForSchema",
+   "class": "mutator",
+   "op": "sort",
+   "lhs": "result",
+   "root": {
+    "kind": "fresh",
+    "via": "[]",
+    "path": "result <- []"
+   },
+   "raw": "return result.sort((a, b) => b.strength - a.strength);",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/schemaMemory.js:554",
+   "fn": "_extractSchema",
+   "class": "mutator",
+   "op": "push",
+   "lhs": "positionNodes[j]",
+   "root": {
+    "kind": "builtin",
+    "name": "Array",
+    "path": "positionNodes <- Array"
+   },
+   "raw": "positionNodes[j].push(ep.nodes[start + j]);",
+   "decision": "fresh",
+   "why": "positionNodes is built inside _extractSchema"
+  },
+  {
+   "site": "render/schemaMemory.js:554",
+   "fn": "_extractSchema",
+   "class": "computed-receiver",
+   "op": "push",
+   "lhs": "(computed)",
+   "root": {
+    "kind": "expression"
+   },
+   "raw": "positionNodes[j].push(ep.nodes[start + j]);",
+   "decision": "fresh",
+   "why": "positionNodes is built inside _extractSchema"
+  },
+  {
+   "site": "render/schemaMemory.js:573",
+   "fn": "_extractSchema",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "freq",
+   "root": {
+    "kind": "fresh",
+    "via": "new Map()",
+    "path": "freq <- new Map()"
+   },
+   "raw": "seen.forEach(id => freq.set(id, (freq.get(id) || 0) + 1));",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/schemaMemory.js:575",
+   "fn": "_extractSchema",
+   "class": "computed-receiver",
+   "op": "sort",
+   "lhs": "(computed)",
+   "root": {
+    "kind": "expression"
+   },
+   "raw": "const mostCommonId    = [...freq.entries()].sort((a,b)=>b[1]-a[1])[0][0];",
+   "decision": "fresh",
+   "why": "sorts a spread copy of freq.entries()"
+  },
+  {
+   "site": "render/schemaMemory.js:581",
+   "fn": "_extractSchema",
+   "class": "mutator",
+   "op": "add",
+   "lhs": "anchors",
+   "root": {
+    "kind": "fresh",
+    "via": "new Set()",
+    "path": "anchors <- new Set()"
+   },
+   "raw": "anchors.add(mostCommonId);",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/schemaMemory.js:582",
+   "fn": "_extractSchema",
+   "class": "mutator",
+   "op": "push",
+   "lhs": "slots",
+   "root": {
+    "kind": "fresh",
+    "via": "[]",
+    "path": "slots <- []"
+   },
+   "raw": "slots.push({ type: \"anchor\", nodeId: mostCommonId });",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/schemaMemory.js:586",
+   "fn": "_extractSchema",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "variables",
+   "root": {
+    "kind": "fresh",
+    "via": "new Map()",
+    "path": "variables <- new Map()"
+   },
+   "raw": "variables.set(j, candidates);",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/schemaMemory.js:587",
+   "fn": "_extractSchema",
+   "class": "mutator",
+   "op": "push",
+   "lhs": "slots",
+   "root": {
+    "kind": "fresh",
+    "via": "[]",
+    "path": "slots <- []"
+   },
+   "raw": "slots.push({ type: \"variable\", candidates });",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/schemaMemory.js:598",
+   "fn": "_extractSchema",
+   "class": "mutator",
+   "op": "push",
+   "lhs": "transitions",
+   "root": {
+    "kind": "fresh",
+    "via": "[]",
+    "path": "transitions <- []"
+   },
+   "raw": "transitions.push(",
+   "decision": "fresh",
+   "why": "root is created inside the call"
+  },
+  {
+   "site": "render/schemaMemory.js:654",
+   "fn": "_cacheSchemaBonus",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "_bonusCache",
+   "root": {
+    "kind": "module",
+    "name": "_bonusCache",
+    "file": "render/schemaMemory.js",
+    "bindingKind": "const"
+   },
+   "raw": "_bonusCache.set(key, schemaWeight * 1.0);",
+   "decision": "store",
+   "store": "render/schemaMemory.js#_bonusCache"
+  },
+  {
+   "site": "render/schemaMemory.js:662",
+   "fn": "_cacheSchemaBonus",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "_bonusCache",
+   "root": {
+    "kind": "module",
+    "name": "_bonusCache",
+    "file": "render/schemaMemory.js",
+    "bindingKind": "const"
+   },
+   "raw": "_bonusCache.set(key, Math.max(existing, schemaWeight * 0.5));",
+   "decision": "store",
+   "store": "render/schemaMemory.js#_bonusCache"
+  },
+  {
+   "site": "render/schemaMemory.js:671",
+   "fn": "_cacheSchemaBonus",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "_bonusCache",
+   "root": {
+    "kind": "module",
+    "name": "_bonusCache",
+    "file": "render/schemaMemory.js",
+    "bindingKind": "const"
+   },
+   "raw": "_bonusCache.set(key, Math.max(existing, schemaWeight * 0.5));",
+   "decision": "store",
+   "store": "render/schemaMemory.js#_bonusCache"
+  },
+  {
+   "site": "render/semanticMemoryLayer.js:57",
+   "fn": "recordSemanticEdge",
+   "class": "field",
+   "op": "++",
+   "lhs": "entry.count",
+   "root": {
+    "kind": "module",
+    "name": "semanticEdges",
+    "file": "render/semanticMemoryLayer.js",
+    "bindingKind": "const",
+    "path": "entry <- semanticEdges"
+   },
+   "raw": "entry.count++;",
+   "decision": "store",
+   "store": "render/semanticMemoryLayer.js#semanticEdges"
+  },
+  {
+   "site": "render/semanticMemoryLayer.js:58",
+   "fn": "recordSemanticEdge",
+   "class": "field",
+   "op": "=",
+   "lhs": "entry.lastSeen",
+   "root": {
+    "kind": "module",
+    "name": "semanticEdges",
+    "file": "render/semanticMemoryLayer.js",
+    "bindingKind": "const",
+    "path": "entry <- semanticEdges"
+   },
+   "raw": "entry.lastSeen = Date.now();",
+   "decision": "store",
+   "store": "render/semanticMemoryLayer.js#semanticEdges"
+  },
+  {
+   "site": "render/semanticMemoryLayer.js:65",
+   "fn": "recordSemanticEdge",
+   "class": "field",
+   "op": "=",
+   "lhs": "entry.strength",
+   "root": {
+    "kind": "module",
+    "name": "semanticEdges",
+    "file": "render/semanticMemoryLayer.js",
+    "bindingKind": "const",
+    "path": "entry <- semanticEdges"
+   },
+   "raw": "entry.strength = Math.min(entry.strength + semanticGain + (reward * 0.1), 10);",
+   "decision": "store",
+   "store": "render/semanticMemoryLayer.js#semanticEdges"
+  },
+  {
+   "site": "render/semanticMemoryLayer.js:68",
+   "fn": "recordSemanticEdge",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "semanticEdges",
+   "root": {
+    "kind": "module",
+    "name": "semanticEdges",
+    "file": "render/semanticMemoryLayer.js",
+    "bindingKind": "const"
+   },
+   "raw": "semanticEdges.set(key, entry);",
+   "decision": "store",
+   "store": "render/semanticMemoryLayer.js#semanticEdges"
+  },
+  {
+   "site": "render/semanticMemoryLayer.js:92",
+   "fn": "updateConceptSchema",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "schema.relatedConcepts",
+   "root": {
+    "kind": "module",
+    "name": "conceptSchemas",
+    "file": "render/semanticMemoryLayer.js",
+    "bindingKind": "const",
+    "path": "schema <- conceptSchemas"
+   },
+   "raw": "schema.relatedConcepts.set(",
+   "decision": "store",
+   "store": "render/semanticMemoryLayer.js#conceptSchemas"
+  },
+  {
+   "site": "render/semanticMemoryLayer.js:97",
+   "fn": "updateConceptSchema",
+   "class": "mutator",
+   "op": "set",
+   "lhs": "conceptSchemas",
+   "root": {
+    "kind": "module",
+    "name": "conceptSchemas",
+    "file": "render/semanticMemoryLayer.js",
+    "bindingKind": "const"
+   },
+   "raw": "conceptSchemas.set(fromLabel, schema);",
+   "decision": "store",
+   "store": "render/semanticMemoryLayer.js#conceptSchemas"
+  }
+ ],
+ "reads": [
+  {
+   "fn": "render/episodicContextEngine.js#sealCurrentEpisode",
+   "reads": [
+    "render/episodicContextEngine.js#VAULT_MAX",
+    "render/episodicContextEngine.js#_bridgeToEpisodeManager",
+    "render/episodicContextEngine.js#currentEpisode",
+    "render/episodicContextEngine.js#episodeVault"
+   ]
+  },
+  {
+   "fn": "main.js#(bridge callback)",
+   "reads": [
+    "main.js#neuronMap",
+    "render/behavior.js#confidenceState",
+    "render/behavior.js#curiosityState",
+    "render/behavior.js#fatigueState",
+    "render/behavior.js#stressState"
+   ]
+  },
+  {
+   "fn": "render/episodicContextEngine.js#generateEpisodeId",
+   "reads": []
+  },
+  {
+   "fn": "render/episodicContextEngine.js#inferContextTag",
+   "reads": [
+    "render/episodicContextEngine.js#_conceptRelations"
+   ]
+  },
+  {
+   "fn": "render/episodeManager.js#recordAutonomousSuccess",
+   "reads": [
+    "render/episodeManager.js#_sys"
+   ]
+  },
+  {
+   "fn": "instrumentation/rng.js#liveRng",
+   "reads": [
+    "instrumentation/rng.js#streams"
+   ]
+  },
+  {
+   "fn": "render/episodeManager.js#_createBuffer",
+   "reads": []
+  },
+  {
+   "fn": "render/episodeManager.js#_sealBuffer",
+   "reads": [
+    "render/episodeManager.js#AUTHORITY",
+    "render/episodeManager.js#VALIDATION"
+   ]
+  },
+  {
+   "fn": "render/episodeManager.js#_runPipeline",
+   "reads": [
+    "render/episodeManager.js#AUTHORITY",
+    "render/episodeManager.js#CONSOLIDATION_INTERVAL",
+    "render/episodeManager.js#_episodesSinceConsolidation",
+    "render/episodeManager.js#_sys"
+   ]
+  },
+  {
+   "fn": "render/episodeManager.js#_learnProcedural",
+   "reads": [
+    "render/episodeManager.js#_sys"
+   ]
+  },
+  {
+   "fn": "render/episodeManager.js#_learnSemantic",
+   "reads": [
+    "render/episodeManager.js#_sys"
+   ]
+  },
+  {
+   "fn": "render/episodeManager.js#_updateTrust",
+   "reads": [
+    "render/episodeManager.js#_sys"
+   ]
+  },
+  {
+   "fn": "render/episodeManager.js#_storeEpisode",
+   "reads": [
+    "render/episodeManager.js#MAX_STORE",
+    "render/episodeManager.js#SCHEMA_MIN_EPISODES",
+    "render/episodeManager.js#SCHEMA_REBUILD_EVERY",
+    "render/episodeManager.js#_episodesStoredTotal",
+    "render/episodeManager.js#_sys",
+    "render/episodeManager.js#episodicStore"
+   ]
+  },
+  {
+   "fn": "render/episodeManager.js#_maybeConsolidate",
+   "reads": [
+    "render/episodeManager.js#_sys",
+    "render/episodeManager.js#episodicStore"
+   ]
+  },
+  {
+   "fn": "render/qlearning.js#updateQ",
+   "reads": [
+    "render/qlearning.js#Q"
+   ]
+  },
+  {
+   "fn": "render/semanticProvenance.js#writeReward",
+   "reads": []
+  },
+  {
+   "fn": "render/semanticProvenance.js#logActivation",
+   "reads": [
+    "render/semanticProvenance.js#LOG_WINDOW",
+    "render/semanticProvenance.js#provenanceLog"
+   ]
+  },
+  {
+   "fn": "render/momentumMemory.js#learnMomentum",
+   "reads": [
+    "render/momentumMemory.js#momentumMemory"
+   ]
+  },
+  {
+   "fn": "render/embeddings.js#trainEmbedding",
+   "reads": [
+    "render/embeddings.js#neuronMapRef"
+   ]
+  },
+  {
+   "fn": "render/semanticVitality.js#reinforceEpisodeSemantics",
+   "reads": []
+  },
+  {
+   "fn": "render/semanticVitality.js#reinforceSemanticStrength",
+   "reads": [
+    "render/semanticVitality.js#semanticStrength"
+   ]
+  },
+  {
+   "fn": "render/trustMemory.js#recordSuccess",
+   "reads": [
+    "render/trustMemory.js#pathSuccesses"
+   ]
+  },
+  {
+   "fn": "render/schemaMemory.js#rebuildSchemas",
+   "reads": [
+    "render/schemaMemory.js#MIN_SPREAD",
+    "render/schemaMemory.js#REBUILD_INTERVAL_MS",
+    "render/schemaMemory.js#_bonusCache",
+    "render/schemaMemory.js#_lastMotifs",
+    "render/schemaMemory.js#_lastRebuild",
+    "render/schemaMemory.js#_sys",
+    "render/schemaMemory.js#schemas"
+   ]
+  },
+  {
+   "fn": "render/episodeManager.js#_detectMotifs",
+   "reads": [
+    "render/episodeManager.js#_sys"
+   ]
+  },
+  {
+   "fn": "render/search.js#findNeuronById",
+   "reads": [
+    "render/search.js#neuronMapRef"
+   ]
+  },
+  {
+   "fn": "render/longTermConsolidation.js#reinforcePath",
+   "reads": [
+    "render/longTermConsolidation.js#STABLE_THRESHOLD",
+    "render/longTermConsolidation.js#consolidationRegistry",
+    "render/longTermConsolidation.js#stableMemory"
+   ]
+  },
+  {
+   "fn": "render/qlearning.js#getQ",
+   "reads": [
+    "render/qlearning.js#Q"
+   ]
+  },
+  {
+   "fn": "render/qlearning.js#setQ",
+   "reads": [
+    "render/qlearning.js#Q"
+   ]
+  },
+  {
+   "fn": "render/semanticProvenance.js#getProvenanceAuthority",
+   "reads": [
+    "render/semanticProvenance.js#AUTHORITY"
+   ]
+  },
+  {
+   "fn": "render/helpers.js#growReward",
+   "reads": []
+  },
+  {
+   "fn": "render/embeddings.js#similarity",
+   "reads": []
+  },
+  {
+   "fn": "render/qlearning.js#getQAny",
+   "reads": [
+    "render/qlearning.js#Q"
+   ]
+  },
+  {
+   "fn": "render/helpers.js#normalize",
+   "reads": []
+  },
+  {
+   "fn": "render/schemaMemory.js#_detectMotifsForSchema",
+   "reads": [
+    "render/schemaMemory.js#LAMBDA",
+    "render/schemaMemory.js#MIN_SPREAD",
+    "render/schemaMemory.js#Q_NORM"
+   ]
+  },
+  {
+   "fn": "render/schemaMemory.js#_extractSchema",
+   "reads": [
+    "render/schemaMemory.js#_sys"
+   ]
+  },
+  {
+   "fn": "render/schemaMemory.js#_cacheSchemaBonus",
+   "reads": [
+    "render/schemaMemory.js#_bonusCache"
+   ]
+  },
+  {
+   "fn": "render/semanticMemoryLayer.js#recordSemanticEdge",
+   "reads": [
+    "render/semanticMemoryLayer.js#CONSOLIDATION_THRESHOLD",
+    "render/semanticMemoryLayer.js#NOISE_FLOOR",
+    "render/semanticMemoryLayer.js#semanticEdges"
+   ]
+  },
+  {
+   "fn": "render/helpers.js#dot",
+   "reads": []
+  },
+  {
+   "fn": "render/schemaMemory.js#_motifAvgQ",
+   "reads": [
+    "render/schemaMemory.js#MIN_QKEY_VISITS",
+    "render/schemaMemory.js#_sys"
+   ]
+  },
+  {
+   "fn": "render/semanticMemoryLayer.js#updateConceptSchema",
+   "reads": [
+    "render/semanticMemoryLayer.js#conceptSchemas"
+   ]
+  }
+ ],
+ "special": [
+  {
+   "site": "render/episodicContextEngine.js:347",
+   "fn": "sealCurrentEpisode",
+   "raw": "startTime: Date.now(),"
+  },
+  {
+   "site": "render/episodicContextEngine.js:358",
+   "fn": "sealCurrentEpisode",
+   "raw": "currentEpisode.endTime   = Date.now();"
+  },
+  {
+   "site": "render/episodicContextEngine.js:403",
+   "fn": "sealCurrentEpisode",
+   "raw": "startTime: Date.now(),"
+  },
+  {
+   "site": "render/episodicContextEngine.js:118",
+   "fn": "generateEpisodeId",
+   "raw": "Date.now().toString(36) +"
+  },
+  {
+   "site": "render/episodicContextEngine.js:120",
+   "fn": "generateEpisodeId",
+   "raw": "liveRng().toString(36).slice(2, 6);"
+  },
+  {
+   "site": "instrumentation/rng.js:89",
+   "fn": "liveRng",
+   "raw": "export function liveRng(stream = \"cognitive\") {"
+  },
+  {
+   "site": "instrumentation/rng.js:91",
+   "fn": "liveRng",
+   "raw": "return s ? s() : Math.random();"
+  },
+  {
+   "site": "render/episodeManager.js:688",
+   "fn": "_createBuffer",
+   "raw": "timestamp:     Date.now(),"
+  },
+  {
+   "site": "render/semanticProvenance.js:180",
+   "fn": "logActivation",
+   "raw": "log.push({ source, ts: Date.now() });"
+  },
+  {
+   "site": "render/schemaMemory.js:133",
+   "fn": "rebuildSchemas",
+   "raw": "const now = Date.now();"
+  },
+  {
+   "site": "render/longTermConsolidation.js:54",
+   "fn": "reinforcePath",
+   "raw": "entry.lastConsolidated = Date.now();"
+  },
+  {
+   "site": "render/schemaMemory.js:623",
+   "fn": "_extractSchema",
+   "raw": "lastUpdated: Date.now()"
+  },
+  {
+   "site": "render/semanticMemoryLayer.js:58",
+   "fn": "recordSemanticEdge",
+   "raw": "entry.lastSeen = Date.now();"
+  }
+ ],
+ "unresolvedCalls": [
+  {
+   "site": "render/episodicContextEngine.js:395",
+   "name": "_bridgeToEpisodeManager",
+   "raw": "_bridgeToEpisodeManager(sealed);"
+  }
+ ]
+}

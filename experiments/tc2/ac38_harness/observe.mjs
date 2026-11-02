@@ -14,7 +14,8 @@ export const refuse = (m) => { throw new Error(`AC38 REFUSED: ${m}`); };
 // Arrays and Map/Set keep their order (order changes behaviour).  Object keys are sorted.  Accessors
 // are not invoked.  Functions, symbols, accessors and weak or promise values cannot be compared by
 // content: they become $opaque tokens and are counted, never skipped silently.
-export function canon(root, opaque = {}) {
+// A view replaces named objects and keys with tokens, to digest what lies outside them.
+export function canon(root, opaque = {}, view = null) {
   const seen = new Map();
   const mark = (type, detail) => { opaque[type] = (opaque[type] || 0) + 1; return `$opaque:${type}:${detail ?? ''}`; };
   const walk = (v) => {
@@ -34,6 +35,7 @@ export function canon(root, opaque = {}) {
       default:
     }
     if (v === null) return 'null';
+    if (view?.stopAt.has(v)) return `$inventory:${view.stopAt.get(v)}`;
     if (seen.has(v)) return `$ref:${seen.get(v)}`;
     seen.set(v, seen.size);
     if (Array.isArray(v)) {
@@ -51,6 +53,7 @@ export function canon(root, opaque = {}) {
     if (symbols) opaque.symbolKey = (opaque.symbolKey || 0) + symbols;
     const parts = [];
     for (const k of Object.keys(v).sort()) {
+      if (view?.skipKeys.has(k)) { parts.push(`${JSON.stringify(k)}:$inventory`); continue; }
       const d = Object.getOwnPropertyDescriptor(v, k);
       parts.push(`${JSON.stringify(k)}:${'value' in d ? walk(d.value) : mark('accessor', k)}`);
     }
@@ -71,11 +74,11 @@ export function digestScope(scope) {
 // runs, so losing one refuses too; any other window global that was never assigned is named as absent.
 const REQUIRED_GLOBALS = new Set(['recentMemory', 'lastReasoning']);
 
-export function digestAll({ byFile, globals }, readers) {
+export function digestAll({ byFile, globals }, readers, view = null) {
   const rows = {}, opaque = {}, absentGlobals = [], opaqueByBinding = {};
   const measured = (key, value) => {
     const before = Object.values(opaque).reduce((a, b) => a + b, 0);
-    const digest = sha256(canon(value, opaque));
+    const digest = sha256(canon(value, opaque, view));
     const added = Object.values(opaque).reduce((a, b) => a + b, 0) - before;
     if (added) opaqueByBinding[key] = added;
     return digest;
@@ -112,8 +115,9 @@ const MUTATORS = [
   [Array.prototype, 'Array', ['push', 'pop', 'shift', 'unshift', 'splice', 'sort', 'reverse', 'fill', 'copyWithin']],
 ];
 
-export function makeObserver({ base, streams, touchLet, breakKnob = null }) {
+export function makeObserver({ base, streams, touchLet, breakKnob = null, superset = false }) {
   const marker = `${base}/`;
+  const fieldHits = {};
   const targets = new WeakMap();
   const objects = [], fieldLocks = [];
   const visited = new WeakSet();
@@ -172,14 +176,40 @@ export function makeObserver({ base, streams, touchLet, breakKnob = null }) {
     return { objects: objects.length, embeddings: fieldLocks.length };
   }
 
+  // An unlocked field stays locked everywhere except at its named site, so a second site writing the
+  // same key still trips.  The key must exist on a registered object, or the ladder would pass silently.
+  function trap(o, k, sites, adding = false) {
+    let cell = o[k];
+    Object.defineProperty(o, k, { enumerable: adding || Object.prototype.propertyIsEnumerable.call(o, k), configurable: false,
+      get() { return cell; },
+      set(v) {
+        const site = here();
+        if (!sites.has(site)) throw new TypeError(`Cannot assign to read only property '${k}' of object '#<Object>'`);
+        const id = `${k} ${site}`;
+        fieldHits[id] = (fieldHits[id] || 0) + 1;
+        cell = v;
+      } });
+  }
+
   // Terminal runs only: this cannot be undone, so the process ends at seal return.  A run stops at its
   // first frozen write, and the first one is an array push, so fieldsOnly leaves arrays writable to let
-  // the same seal reach its first application field write.
-  function protect(fieldsOnly = false) {
+  // the same seal reach its first application field write.  The ladder uses unlock instead.
+  function protect({ fieldsOnly = false, unlock = { fields: [], arrays: [], extend: [] } } = {}) {
     if (breakKnob === 'tripwire') return;
     Object.freeze(canary.frozen); Object.freeze(canary.frozenArr);
-    for (const o of objects) if (!(o instanceof Map) && !(o instanceof Set) && !(fieldsOnly && Array.isArray(o))) Object.freeze(o);
-    for (const u of fieldLocks) Object.defineProperty(u, 'embedding', { writable: false });
+    const byKey = new Map();
+    for (const { key, site } of unlock.fields) { if (!byKey.has(key)) byKey.set(key, new Set()); byKey.get(key).add(site); }
+    const matched = new Set();
+    for (const o of objects) {
+      if (o instanceof Map || o instanceof Set) continue;
+      if (Array.isArray(o)) { if (!fieldsOnly && !unlock.arrays.includes(targets.get(o))) Object.freeze(o); continue; }
+      for (const [k, sites] of byKey) if (Object.hasOwn(o, k)) { trap(o, k, sites); matched.add(k); }
+      // a key this seal adds to the object: it starts undefined, and only the named site may set it
+      for (const u of unlock.extend ?? []) if (targets.get(o) === u.item && !Object.hasOwn(o, u.key)) { trap(o, u.key, new Set([u.site]), true); matched.add(u.key); }
+      Object.freeze(o);
+    }
+    for (const k of [...byKey.keys(), ...(unlock.extend ?? []).map((u) => u.key)]) if (!matched.has(k)) refuse(`ladder unlock key ${k} matched no registered object`);
+    if (!superset) for (const u of fieldLocks) Object.defineProperty(u, 'embedding', { writable: false });
   }
 
   function arm() {
@@ -246,9 +276,11 @@ export function makeObserver({ base, streams, touchLet, breakKnob = null }) {
     mathRandom: random,
     unregistered,
     registeredObjects: objects.length,
+    fieldHits,
   });
 
-  return { register, protect, arm, disarm, letHook, canaries, tripCanaries, report, siteOf };
+  const isRegistered = (o) => o !== null && typeof o === 'object' && targets.has(o);
+  return { register, protect, arm, disarm, letHook, canaries, tripCanaries, report, siteOf, isRegistered };
 }
 
 // Terminal only: reading a position consumes samples.  Three consecutive values locate the stream.
