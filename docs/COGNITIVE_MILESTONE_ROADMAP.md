@@ -38,6 +38,8 @@ flowchart LR
 | Risks / rollback | Tasks may not discriminate: record PARTIAL, redesign the task in CF-01b, keep the infrastructure. Rollback = revert the new directories (no shared state) |
 | Exit decision | PASS → CF-03 (and CF-02 in parallel). PARTIAL → CF-01b task redesign before CF-03. FAIL → fix the infrastructure first |
 | **Result (2026-11-07)** | **CF-01 PASS:** E1 and E3 admitted, E2 not admitted ([results](../experiments/cf01/results/RESULTS.md)). Next: CF-03 on E1/E3; E2′ redesign (CD-010) on a fresh domain alongside CF-03 |
+| **CF-01b result (2026-11-07)** | **PASS:** E2′ admitted, +318.3 [236.4, 398.8] ([results](../experiments/cf01b/results/RESULTS.md)) |
+| **CF-03 result (2026-11-07)** | **FAIL (A4 calibration):** dev ECE 0.101 > 0.05. A1 E3 +220.4 [86.6, 372.8], A2 non-inferiority on E1 and A3 model log-likelihood all held ([results](../experiments/cf03/results/RESULTS.md)) |
 
 ## CF-02 — MiniFlyWire-legacy adapter (characterisation, not improvement)
 
