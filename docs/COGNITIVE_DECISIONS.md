@@ -80,3 +80,13 @@ Each record gives the context, the decision, the alternatives and the consequenc
   - E2′ must pass its own admission gate on a fresh domain (`gate2`) before use.
   - The spent `gate` domain is not re-used, and E2 is not re-run on it.
 - **Consequence.** No detour claim is possible until E2′ is admitted.
+
+### CD-011 — MBVI models reward and termination as functions of the arrival state, with a global reward change-point
+
+- **Context.** CF-03 needs a learned reward model for uncued tasks. If reward is keyed by (s, a, s′), extinction after the reward relocates (E3) is slow, because every entry into the old goal must be relearned separately.
+- **Decision.** MBVI uses three declared structural priors:
+  1. Reward and termination depend only on the arrival state s′ (the standard state-based MDP reward).
+  2. A failed move carries no reward information.
+  3. A confident reward prediction that is contradicted triggers a change-point for the whole reward function, so every state's reward belief returns to its optimistic prior.
+- **Testing.** Each prior is an explicit, testable assumption. The global change-point is ablated as `MBVI_LOCALRESET` in the CF-03 gate.
+- **Consequence.** MBVI's E3 performance depends partly on these declared priors. The ablation reports how much.
