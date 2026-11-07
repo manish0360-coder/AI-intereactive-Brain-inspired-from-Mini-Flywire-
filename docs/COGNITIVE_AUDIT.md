@@ -15,6 +15,28 @@ This audit replaces nothing. The Phase 0 audit (`research/cognitive-audit/05_VER
 
 ---
 
+## 0. Coverage (added 2026-11-07 after Director review)
+
+**This is a runtime audit of the 39 production files, not a full-repository audit.** The inventory below comes from `git ls-files` at `9dd1adc`.
+
+| Item | Count | Basis |
+|---|---|---|
+| Total tracked files | 1,394 | `git ls-files` |
+| Individually inspected | 58 | Production files, runtime entry and data, and supporting reads (rows below) |
+| Runtime source (`main.js` + 38 `render/*.js`) | 39 / 39 | Full-text static profile (exports, state, imports, headers); V8 call counts; CF-00 runtime probe; manual reads of about 10 |
+| Runtime entry and data | 4 / 7 | `index.html`, `neurons.json`, `connections.json` and `instrumentation/rng.js` were inspected. `instrumentation/sessionRecorder.js`, `telemetryBus.js` and `traceSchema.js` were not; coverage shows the runtime does not load them |
+| Supporting files read | 15 | Headless driver and shim, `experiments/m7/run.js`, 6 COG-A files, 2 credit1 clock files, `experiments/tc2/verify_contract.mjs`, `docs/VERIFICATION_STATUS.md`, `research/cognitive-audit/05_VERDICT.md`, `README.md` |
+| Classified with a status label | 43 | The 39 production files, `instrumentation/rng.js`, and 3 entry/data files |
+| Experiment and test code | 10 of 418 | Includes 93 `test_`/`verify_` files, and 27 more verify scripts sit in `research/preregistrations`. Inventoried, not audited |
+| Experiment data and evidence | 0 of 564 | Not audited |
+| Documentation and research records | 3 of 206 docs, 1 of 81 experiment docs | Not audited |
+| Configuration | 0 of 26 | 6 `.gitattributes` and 20 `.gitignore`; no build or package files exist |
+| Portfolio assets | 0 of 11 | Not audited |
+| Authored in this mandate | 40 | Tested, not audited |
+| Unaudited | about 1,336 | Study code, data, research records, configuration and assets |
+
+---
+
 ## 1. Repository truth
 
 | Item | Value |
@@ -219,7 +241,7 @@ The full table, covering all 39 production files plus `instrumentation/rng.js`, 
 | `motivationalState.js` | drives → weights | Drives; dominant drive; executive weights | 8 drives | **0** (drive terms 0; weights feed the inert blend) | yes | none | `driveGoalBoost` never non-zero | INERT |
 | `uncertaintyEngine.js` | uncertainty | Surprise/inconsistency/novelty score | 4 Maps | only via the inert blend and a semantic damp | yes | none | — | INERT |
 | `uncertaintyLedger.js` | epistemic Beta ledger | Beta evidence mass per edge | 10 | none (spread into `...rest`) | yes | none | `registerOllamaPair` never called | INERT |
-| `episodicContextEngine.js` | working memory, context | WM and episode vault; `episodeRecordNode` never called | 14 | none | no | gated by `verify_determinism.js` [P] | Working memory is dead code | INERT |
+| `episodicContextEngine.js` | working memory, context | WM and episode vault; `episodeRecordNode` never called | 14 | none | no | gated by `verify_determinism.js` [P; not re-inspected 2026-11-07] | Working memory is dead code | INERT |
 | `activationCompetition.js` | lateral inhibition | Writes activations; no reader | 5 | none | — | none | Write-only | INERT |
 | `momentumMemory.js` | thought momentum | Learns momentum; the reader is never called | 1 | none | — | none | Write-only | INERT |
 | `semantic.js` | semantic map | `buildSemanticMap` never called | — | none | — | none | Dead export | INERT |
@@ -266,7 +288,7 @@ The full table, covering all 39 production files plus `instrumentation/rng.js`, 
 | L7 | Goal-entering move skips the environment | `main.js:4992-5018` | The goal edge never fails, whatever its reliability | Dynamics bypass (also why ACQ-1 is void, D-035) |
 | L8 | Non-graph moves | candidates from memory and similarity maps | 2.7–12.4% of moves teleport between non-adjacent nodes | Physics violation |
 | L9 | Agent owns its start and reset positions | `main.js:3403` (`agentCurrent = _pool[...]`) | The environment does not own its state | Separation violation |
-| L10 | Arm A7 delivers true `p_e` | `experiments/m7/arms.js` | True reliability | Privileged (experiments only; labelled) |
+| L10 | Arm A7 delivers true `p_e` | `experiments/m7/arms.js` [not re-inspected 2026-11-07] | True reliability | Privileged (experiments only; labelled) |
 | L11 | `localStorage` brain restore | `saveBrain`/`loadBrain` | Cross-session state carried silently | Uncontrolled carry-over (controlled only by drivers) |
 | L12 | Wall-clock reads | `schemaMemory.js:133` and others | Behaviour depends on real time | Reproducibility leak (handled by the CREDIT-1 clock only in studies) |
 | L13 | Visual state as agent state | `userData` on meshes | Render objects are the agent's world model | Separation violation |

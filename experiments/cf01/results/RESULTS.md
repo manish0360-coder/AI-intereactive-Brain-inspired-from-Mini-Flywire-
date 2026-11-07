@@ -78,3 +78,11 @@ A plausible reading, not tested: the last-outcome model keeps stale "reward 1" e
 2. **E2 must be redesigned before use** (proposal CD-010: E2′ adds an unrewarded pre-exposure phase, so the map is known before the block, as in the classical detour paradigm). It needs a new gate domain. This gate domain is spent.
 3. **The comparison bar for CF-03 is DYNAQ, not QL.** On E1 and E3 a learned-model agent must beat DYNAQ for any claim (`COGNITIVE_METRICS.md` §5).
 4. **Not shown.** No claim about MiniFlyWire's own agent, which did not take part. No claim on worlds outside this generator family, and none about stochastic dynamics.
+
+## Provenance note (added 2026-11-07 after Director review; the content above is unchanged)
+
+This result is bound to commit `465f0b6`: its gate inputs, and `GATE_SPEC.md` (SHA-256 `8e93ad88...`, which this record cites).
+
+Later commits may add files under `cognitive/`. They do not alter this result. Reproduce the result from `465f0b6`.
+
+The sentence in `GATE_SPEC.md` saying that later changes "invalidate the run" means only this: a run at a different commit is not this run. `GATE_SPEC.md` itself is not edited.

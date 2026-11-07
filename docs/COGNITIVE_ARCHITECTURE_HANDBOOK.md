@@ -1,7 +1,7 @@
 # MiniFlyWire Cognitive Architecture Handbook
 
 **Status 2026-11-07:**
-- Audit complete.
+- Runtime audit complete for the 39 production files (`main.js`, `render/*.js`). This is not a full-repository audit: 58 of 1,394 tracked files were inspected; coverage is in [`COGNITIVE_AUDIT.md`](COGNITIVE_AUDIT.md) §0.
 - Target architecture specified.
 - CF-01 (testbed) is the first implementation milestone. It passed its development gate on 2026-11-07, with E1 and E3 admitted and E2 not admitted; see [`experiments/cf01/results/RESULTS.md`](../experiments/cf01/results/RESULTS.md).
 - Nothing in this package claims that MiniFlyWire is cognitive today.

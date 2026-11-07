@@ -144,7 +144,7 @@ This section was committed before any gate-domain run. The exact parameter value
 | Gate | Pass rule |
 |---|---|
 | G1 Determinism | The whole gate run, done twice, gives byte-identical result records (SHA-256 equal) |
-| G2 Isolation | All isolation tests pass: schema, freeze, globals, imports, forbidden APIs, label permutation, privileged channel. Every mutant is caught by its named check (handbook §13) |
+| G2 Isolation | All isolation tests pass: schema, freeze, globals, imports, forbidden APIs, label permutation, privileged channel. Every mutant is caught by its named check (handbook §13). *Note (2026-11-07):* `run_gate.mjs` counts the real-world label-permutation test (`test_worlds.mjs`) under G3; only its mutant is counted under G2. Both passed, so the CF-01 verdict is unaffected |
 | G3 Environment correctness | Unit tests pass: the reset/step contract; empirical success rate inside the binomial 99.9% interval for p ∈ {0.3, 0.7}; blocked edges never traversed; goal entry obeys dynamics; truncation ≠ done; invalid action rejected; CRN invariance |
 | G4 Task discriminability | For each of E1, E2 and E3 on 20 `gate` worlds: the primary contrast's mean > 0 **and** its 95% bootstrap CI lower bound > 0. A task that fails is **not admitted** to the battery; it is recorded and redesigned in a later milestone |
 | G5 Reference sanity | Mean ORACLE steps ≤ mean steps of every learner on every task. A failure means a bug and stops the gate |
