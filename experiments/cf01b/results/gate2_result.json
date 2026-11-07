@@ -1,0 +1,13343 @@
+{
+ "evidence": "CF-01b E2′ task-admission gate (development, not confirmatory)",
+ "domain": "gate2",
+ "worlds": 20,
+ "environment": {
+  "node": "v24.15.0",
+  "platform": "win32-x64",
+  "head": "d66f75c07b6ade5cac6912c3102d76bf20a2c909",
+  "filesClean": true
+ },
+ "specSha256": "101200046c949385345595b9cad62a44f7ded5ca21014aa98ba4f2ba1ce96193",
+ "parameters": {
+  "task": {
+   "exploreSteps": 600,
+   "exploreEpisodeLength": 50,
+   "trainEpisodes": 40,
+   "testEpisodes": 3,
+   "cap": 200,
+   "minDistance": 3
+  },
+  "arms": [
+   "PRE",
+   "NOPRE",
+   "SHAM",
+   "NOBLOCK"
+  ],
+  "QL": {
+   "alpha": 0.5,
+   "gamma": 0.95,
+   "epsilon": 0.1
+  },
+  "DYNAQ": {
+   "alpha": 0.5,
+   "gamma": 0.95,
+   "epsilon": 0.1,
+   "k": 20
+  },
+  "bootstrapResamples": 10000,
+  "world": {
+   "nodes": 24,
+   "edges": 30,
+   "maxDegree": 4
+  }
+ },
+ "gates": {
+  "G1_determinism": {
+   "pass": true,
+   "hashA": "0dd53b459364307e003d44657f5b289bcedaa56f6a07a1a1c7083921cd52f97d",
+   "hashB": "0dd53b459364307e003d44657f5b289bcedaa56f6a07a1a1c7083921cd52f97d"
+  },
+  "G2G3_tests": {
+   "pass": true,
+   "passed": 63,
+   "total": 63,
+   "failed": []
+  },
+  "G4_admission": {
+   "admitted": true
+  },
+  "G5_reference": {
+   "pass": true,
+   "violations": []
+  }
+ },
+ "verdict": "CF-01b PASS (E2′ admitted)",
+ "analysis": {
+  "primary": {
+   "contrast": "QL.PRE - DYNAQ.PRE",
+   "sd": 190.71772335050562,
+   "n": 20,
+   "mean": 318.25,
+   "lo": 236.4,
+   "hi": 398.8,
+   "B": 10000
+  },
+  "reported": {
+   "DYNAQ_preExposureBenefit": {
+    "contrast": "DYNAQ.NOPRE - DYNAQ.PRE",
+    "sd": 176.07471500234752,
+    "n": 20,
+    "mean": 69.9,
+    "lo": 5.1,
+    "hi": 153.1,
+    "B": 10000
+   },
+   "QL_preExposureNull": {
+    "contrast": "QL.NOPRE - QL.PRE",
+    "sd": 208.985368412543,
+    "n": 20,
+    "mean": 34.4,
+    "lo": -53.75,
+    "hi": 127.1,
+    "B": 10000
+   },
+   "QL_shamDisruption": {
+    "contrast": "QL.SHAM - QL.NOBLOCK",
+    "sd": 1.3416407864998738,
+    "n": 20,
+    "mean": -0.3,
+    "lo": -0.9,
+    "hi": 0,
+    "B": 10000
+   },
+   "DYNAQ_shamDisruption": {
+    "contrast": "DYNAQ.SHAM - DYNAQ.NOBLOCK",
+    "sd": 0,
+    "n": 20,
+    "mean": 0,
+    "lo": 0,
+    "hi": 0,
+    "B": 10000
+   },
+   "NOPRE_QL_minus_DYNAQ": {
+    "contrast": "QL.NOPRE - DYNAQ.NOPRE",
+    "sd": 264.18272683484577,
+    "n": 20,
+    "mean": 282.75,
+    "lo": 170.2,
+    "hi": 394.6,
+    "B": 10000
+   }
+  },
+  "means": {
+   "PRE.RANDOM": 254.65,
+   "PRE.QL": 346.2,
+   "PRE.DYNAQ": 27.95,
+   "PRE.ORACLE": 16.8,
+   "NOPRE.RANDOM": 217.05,
+   "NOPRE.QL": 380.6,
+   "NOPRE.DYNAQ": 97.85,
+   "NOPRE.ORACLE": 16.8,
+   "SHAM.RANDOM": 176.85,
+   "SHAM.QL": 13.8,
+   "SHAM.DYNAQ": 13.4,
+   "SHAM.ORACLE": 11.7,
+   "NOBLOCK.RANDOM": 163.2,
+   "NOBLOCK.QL": 14.1,
+   "NOBLOCK.DYNAQ": 13.4,
+   "NOBLOCK.ORACLE": 11.7
+  },
+  "censoring": {
+   "PRE.RANDOM": 0.08333333333333333,
+   "PRE.QL": 0.38333333333333336,
+   "PRE.DYNAQ": 0,
+   "PRE.ORACLE": 0,
+   "NOPRE.RANDOM": 0.03333333333333333,
+   "NOPRE.QL": 0.4666666666666667,
+   "NOPRE.DYNAQ": 0.11666666666666667,
+   "NOPRE.ORACLE": 0,
+   "SHAM.RANDOM": 0.06666666666666667,
+   "SHAM.QL": 0,
+   "SHAM.DYNAQ": 0,
+   "SHAM.ORACLE": 0,
+   "NOBLOCK.RANDOM": 0.016666666666666666,
+   "NOBLOCK.QL": 0,
+   "NOBLOCK.DYNAQ": 0,
+   "NOBLOCK.ORACLE": 0
+  },
+  "secondary": {
+   "PRE.RANDOM.coverage": 1,
+   "PRE.RANDOM.blockedAttempts": 7.55,
+   "PRE.QL.coverage": 1,
+   "PRE.QL.blockedAttempts": 59.3,
+   "PRE.DYNAQ.coverage": 1,
+   "PRE.DYNAQ.blockedAttempts": 4.15,
+   "PRE.ORACLE.coverage": 1,
+   "PRE.ORACLE.blockedAttempts": 0,
+   "NOPRE.RANDOM.blockedAttempts": 6.85,
+   "NOPRE.QL.blockedAttempts": 59.15,
+   "NOPRE.DYNAQ.blockedAttempts": 9.65,
+   "NOPRE.ORACLE.blockedAttempts": 0,
+   "SHAM.RANDOM.coverage": 1,
+   "SHAM.QL.coverage": 1,
+   "SHAM.DYNAQ.coverage": 1,
+   "SHAM.ORACLE.coverage": 1,
+   "NOBLOCK.RANDOM.coverage": 1,
+   "NOBLOCK.QL.coverage": 1,
+   "NOBLOCK.DYNAQ.coverage": 1,
+   "NOBLOCK.ORACLE.coverage": 1
+  },
+  "excludedWorlds": []
+ },
+ "referenceWorld": {
+  "world": "mfw-graph (reported only)",
+  "rows": [
+   {
+    "arm": "PRE",
+    "kind": "RANDOM",
+    "metric": 333,
+    "excluded": false
+   },
+   {
+    "arm": "PRE",
+    "kind": "QL",
+    "metric": 83,
+    "excluded": false
+   },
+   {
+    "arm": "PRE",
+    "kind": "DYNAQ",
+    "metric": 17,
+    "excluded": false
+   },
+   {
+    "arm": "PRE",
+    "kind": "ORACLE",
+    "metric": 12,
+    "excluded": false
+   },
+   {
+    "arm": "NOPRE",
+    "kind": "RANDOM",
+    "metric": 218,
+    "excluded": false
+   },
+   {
+    "arm": "NOPRE",
+    "kind": "QL",
+    "metric": 443,
+    "excluded": false
+   },
+   {
+    "arm": "NOPRE",
+    "kind": "DYNAQ",
+    "metric": 26,
+    "excluded": false
+   },
+   {
+    "arm": "NOPRE",
+    "kind": "ORACLE",
+    "metric": 12,
+    "excluded": false
+   },
+   {
+    "arm": "SHAM",
+    "kind": "RANDOM",
+    "metric": 171,
+    "excluded": false
+   },
+   {
+    "arm": "SHAM",
+    "kind": "QL",
+    "metric": 9,
+    "excluded": false
+   },
+   {
+    "arm": "SHAM",
+    "kind": "DYNAQ",
+    "metric": 9,
+    "excluded": false
+   },
+   {
+    "arm": "SHAM",
+    "kind": "ORACLE",
+    "metric": 9,
+    "excluded": false
+   },
+   {
+    "arm": "NOBLOCK",
+    "kind": "RANDOM",
+    "metric": 333,
+    "excluded": false
+   },
+   {
+    "arm": "NOBLOCK",
+    "kind": "QL",
+    "metric": 9,
+    "excluded": false
+   },
+   {
+    "arm": "NOBLOCK",
+    "kind": "DYNAQ",
+    "metric": 9,
+    "excluded": false
+   },
+   {
+    "arm": "NOBLOCK",
+    "kind": "ORACLE",
+    "metric": 9,
+    "excluded": false
+   }
+  ]
+ },
+ "rowsSha256": "0dd53b459364307e003d44657f5b289bcedaa56f6a07a1a1c7083921cd52f97d",
+ "rows": [
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|0",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 23,
+    "goal": 9,
+    "blocked": [
+     9,
+     12
+    ],
+    "sham": [
+     7,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "3-8",
+     "3-15",
+     "6-9",
+     "6-11",
+     "7-11",
+     "7-20",
+     "8-9",
+     "10-15",
+     "10-17",
+     "14-20",
+     "14-23",
+     "17-23"
+    ]
+   },
+   "testSteps": [
+    103,
+    60,
+    106
+   ],
+   "metric": 269,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 3
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|0",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 23,
+    "goal": 9,
+    "blocked": [
+     9,
+     12
+    ],
+    "sham": [
+     7,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "3-8",
+     "3-15",
+     "6-9",
+     "6-11",
+     "7-11",
+     "7-20",
+     "8-9",
+     "10-15",
+     "10-17",
+     "14-20",
+     "14-23",
+     "17-23"
+    ]
+   },
+   "testSteps": [
+    200,
+    39,
+    166
+   ],
+   "metric": 405,
+   "censored": 1,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 72
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|0",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 23,
+    "goal": 9,
+    "blocked": [
+     9,
+     12
+    ],
+    "sham": [
+     7,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "3-8",
+     "3-15",
+     "6-9",
+     "6-11",
+     "7-11",
+     "7-20",
+     "8-9",
+     "10-15",
+     "10-17",
+     "14-20",
+     "14-23",
+     "17-23"
+    ]
+   },
+   "testSteps": [
+    19,
+    10,
+    6
+   ],
+   "metric": 35,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 3
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|0",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 23,
+    "goal": 9,
+    "blocked": [
+     9,
+     12
+    ],
+    "sham": [
+     7,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "3-8",
+     "3-15",
+     "6-9",
+     "6-11",
+     "7-11",
+     "7-20",
+     "8-9",
+     "10-15",
+     "10-17",
+     "14-20",
+     "14-23",
+     "17-23"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|0",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 23,
+    "goal": 9,
+    "blocked": [
+     9,
+     12
+    ],
+    "sham": [
+     7,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "3-8",
+     "3-15",
+     "6-9",
+     "6-11",
+     "7-11",
+     "7-20",
+     "8-9",
+     "10-15",
+     "10-17",
+     "14-20",
+     "14-23",
+     "17-23"
+    ]
+   },
+   "testSteps": [
+    28,
+    78,
+    46
+   ],
+   "metric": 152,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 2
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|0",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 23,
+    "goal": 9,
+    "blocked": [
+     9,
+     12
+    ],
+    "sham": [
+     7,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "3-8",
+     "3-15",
+     "6-9",
+     "6-11",
+     "7-11",
+     "7-20",
+     "8-9",
+     "10-15",
+     "10-17",
+     "14-20",
+     "14-23",
+     "17-23"
+    ]
+   },
+   "testSteps": [
+    200,
+    200,
+    200
+   ],
+   "metric": 600,
+   "censored": 3,
+   "secondary": {
+    "blockedAttempts": 74
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|0",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 23,
+    "goal": 9,
+    "blocked": [
+     9,
+     12
+    ],
+    "sham": [
+     7,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "3-8",
+     "3-15",
+     "6-9",
+     "6-11",
+     "7-11",
+     "7-20",
+     "8-9",
+     "10-15",
+     "10-17",
+     "14-20",
+     "14-23",
+     "17-23"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|0",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 23,
+    "goal": 9,
+    "blocked": [
+     9,
+     12
+    ],
+    "sham": [
+     7,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "3-8",
+     "3-15",
+     "6-9",
+     "6-11",
+     "7-11",
+     "7-20",
+     "8-9",
+     "10-15",
+     "10-17",
+     "14-20",
+     "14-23",
+     "17-23"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|0",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 23,
+    "goal": 9,
+    "blocked": [
+     9,
+     12
+    ],
+    "sham": [
+     7,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "3-8",
+     "3-15",
+     "6-9",
+     "6-11",
+     "7-11",
+     "7-20",
+     "8-9",
+     "10-15",
+     "10-17",
+     "14-20",
+     "14-23",
+     "17-23"
+    ]
+   },
+   "testSteps": [
+    84,
+    13,
+    167
+   ],
+   "metric": 264,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|0",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 23,
+    "goal": 9,
+    "blocked": [
+     9,
+     12
+    ],
+    "sham": [
+     7,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "3-8",
+     "3-15",
+     "6-9",
+     "6-11",
+     "7-11",
+     "7-20",
+     "8-9",
+     "10-15",
+     "10-17",
+     "14-20",
+     "14-23",
+     "17-23"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|0",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 23,
+    "goal": 9,
+    "blocked": [
+     9,
+     12
+    ],
+    "sham": [
+     7,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "3-8",
+     "3-15",
+     "6-9",
+     "6-11",
+     "7-11",
+     "7-20",
+     "8-9",
+     "10-15",
+     "10-17",
+     "14-20",
+     "14-23",
+     "17-23"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|0",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 23,
+    "goal": 9,
+    "blocked": [
+     9,
+     12
+    ],
+    "sham": [
+     7,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "3-8",
+     "3-15",
+     "6-9",
+     "6-11",
+     "7-11",
+     "7-20",
+     "8-9",
+     "10-15",
+     "10-17",
+     "14-20",
+     "14-23",
+     "17-23"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|0",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 23,
+    "goal": 9,
+    "blocked": [
+     9,
+     12
+    ],
+    "sham": [
+     7,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "3-8",
+     "3-15",
+     "6-9",
+     "6-11",
+     "7-11",
+     "7-20",
+     "8-9",
+     "10-15",
+     "10-17",
+     "14-20",
+     "14-23",
+     "17-23"
+    ]
+   },
+   "testSteps": [
+    73,
+    15,
+    24
+   ],
+   "metric": 112,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|0",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 23,
+    "goal": 9,
+    "blocked": [
+     9,
+     12
+    ],
+    "sham": [
+     7,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "3-8",
+     "3-15",
+     "6-9",
+     "6-11",
+     "7-11",
+     "7-20",
+     "8-9",
+     "10-15",
+     "10-17",
+     "14-20",
+     "14-23",
+     "17-23"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|0",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 23,
+    "goal": 9,
+    "blocked": [
+     9,
+     12
+    ],
+    "sham": [
+     7,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "3-8",
+     "3-15",
+     "6-9",
+     "6-11",
+     "7-11",
+     "7-20",
+     "8-9",
+     "10-15",
+     "10-17",
+     "14-20",
+     "14-23",
+     "17-23"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|0",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 23,
+    "goal": 9,
+    "blocked": [
+     9,
+     12
+    ],
+    "sham": [
+     7,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "3-8",
+     "3-15",
+     "6-9",
+     "6-11",
+     "7-11",
+     "7-20",
+     "8-9",
+     "10-15",
+     "10-17",
+     "14-20",
+     "14-23",
+     "17-23"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|1",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 17,
+    "goal": 22,
+    "blocked": [
+     19,
+     22
+    ],
+    "sham": [
+     10,
+     23
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-11",
+     "4-19",
+     "5-9",
+     "5-19",
+     "7-19",
+     "7-22",
+     "9-10",
+     "10-11",
+     "10-17"
+    ]
+   },
+   "testSteps": [
+    195,
+    33,
+    200
+   ],
+   "metric": 428,
+   "censored": 1,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 6
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|1",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 17,
+    "goal": 22,
+    "blocked": [
+     19,
+     22
+    ],
+    "sham": [
+     10,
+     23
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-11",
+     "4-19",
+     "5-9",
+     "5-19",
+     "7-19",
+     "7-22",
+     "9-10",
+     "10-11",
+     "10-17"
+    ]
+   },
+   "testSteps": [
+    74,
+    146,
+    117
+   ],
+   "metric": 337,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 46
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|1",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 17,
+    "goal": 22,
+    "blocked": [
+     19,
+     22
+    ],
+    "sham": [
+     10,
+     23
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-11",
+     "4-19",
+     "5-9",
+     "5-19",
+     "7-19",
+     "7-22",
+     "9-10",
+     "10-11",
+     "10-17"
+    ]
+   },
+   "testSteps": [
+    9,
+    6,
+    8
+   ],
+   "metric": 23,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 3
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|1",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 17,
+    "goal": 22,
+    "blocked": [
+     19,
+     22
+    ],
+    "sham": [
+     10,
+     23
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-11",
+     "4-19",
+     "5-9",
+     "5-19",
+     "7-19",
+     "7-22",
+     "9-10",
+     "10-11",
+     "10-17"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|1",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 17,
+    "goal": 22,
+    "blocked": [
+     19,
+     22
+    ],
+    "sham": [
+     10,
+     23
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-11",
+     "4-19",
+     "5-9",
+     "5-19",
+     "7-19",
+     "7-22",
+     "9-10",
+     "10-11",
+     "10-17"
+    ]
+   },
+   "testSteps": [
+    98,
+    71,
+    116
+   ],
+   "metric": 285,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 4
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|1",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 17,
+    "goal": 22,
+    "blocked": [
+     19,
+     22
+    ],
+    "sham": [
+     10,
+     23
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-11",
+     "4-19",
+     "5-9",
+     "5-19",
+     "7-19",
+     "7-22",
+     "9-10",
+     "10-11",
+     "10-17"
+    ]
+   },
+   "testSteps": [
+    200,
+    153,
+    16
+   ],
+   "metric": 369,
+   "censored": 1,
+   "secondary": {
+    "blockedAttempts": 47
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|1",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 17,
+    "goal": 22,
+    "blocked": [
+     19,
+     22
+    ],
+    "sham": [
+     10,
+     23
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-11",
+     "4-19",
+     "5-9",
+     "5-19",
+     "7-19",
+     "7-22",
+     "9-10",
+     "10-11",
+     "10-17"
+    ]
+   },
+   "testSteps": [
+    14,
+    10,
+    8
+   ],
+   "metric": 32,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 3
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|1",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 17,
+    "goal": 22,
+    "blocked": [
+     19,
+     22
+    ],
+    "sham": [
+     10,
+     23
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-11",
+     "4-19",
+     "5-9",
+     "5-19",
+     "7-19",
+     "7-22",
+     "9-10",
+     "10-11",
+     "10-17"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|1",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 17,
+    "goal": 22,
+    "blocked": [
+     19,
+     22
+    ],
+    "sham": [
+     10,
+     23
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-11",
+     "4-19",
+     "5-9",
+     "5-19",
+     "7-19",
+     "7-22",
+     "9-10",
+     "10-11",
+     "10-17"
+    ]
+   },
+   "testSteps": [
+    28,
+    114,
+    53
+   ],
+   "metric": 195,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|1",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 17,
+    "goal": 22,
+    "blocked": [
+     19,
+     22
+    ],
+    "sham": [
+     10,
+     23
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-11",
+     "4-19",
+     "5-9",
+     "5-19",
+     "7-19",
+     "7-22",
+     "9-10",
+     "10-11",
+     "10-17"
+    ]
+   },
+   "testSteps": [
+    5,
+    9,
+    5
+   ],
+   "metric": 19,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|1",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 17,
+    "goal": 22,
+    "blocked": [
+     19,
+     22
+    ],
+    "sham": [
+     10,
+     23
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-11",
+     "4-19",
+     "5-9",
+     "5-19",
+     "7-19",
+     "7-22",
+     "9-10",
+     "10-11",
+     "10-17"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    7
+   ],
+   "metric": 17,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|1",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 17,
+    "goal": 22,
+    "blocked": [
+     19,
+     22
+    ],
+    "sham": [
+     10,
+     23
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-11",
+     "4-19",
+     "5-9",
+     "5-19",
+     "7-19",
+     "7-22",
+     "9-10",
+     "10-11",
+     "10-17"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|1",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 17,
+    "goal": 22,
+    "blocked": [
+     19,
+     22
+    ],
+    "sham": [
+     10,
+     23
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-11",
+     "4-19",
+     "5-9",
+     "5-19",
+     "7-19",
+     "7-22",
+     "9-10",
+     "10-11",
+     "10-17"
+    ]
+   },
+   "testSteps": [
+    28,
+    167,
+    29
+   ],
+   "metric": 224,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|1",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 17,
+    "goal": 22,
+    "blocked": [
+     19,
+     22
+    ],
+    "sham": [
+     10,
+     23
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-11",
+     "4-19",
+     "5-9",
+     "5-19",
+     "7-19",
+     "7-22",
+     "9-10",
+     "10-11",
+     "10-17"
+    ]
+   },
+   "testSteps": [
+    5,
+    9,
+    5
+   ],
+   "metric": 19,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|1",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 17,
+    "goal": 22,
+    "blocked": [
+     19,
+     22
+    ],
+    "sham": [
+     10,
+     23
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-11",
+     "4-19",
+     "5-9",
+     "5-19",
+     "7-19",
+     "7-22",
+     "9-10",
+     "10-11",
+     "10-17"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    7
+   ],
+   "metric": 17,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|1",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 17,
+    "goal": 22,
+    "blocked": [
+     19,
+     22
+    ],
+    "sham": [
+     10,
+     23
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-11",
+     "4-19",
+     "5-9",
+     "5-19",
+     "7-19",
+     "7-22",
+     "9-10",
+     "10-11",
+     "10-17"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|2",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 23,
+    "goal": 1,
+    "blocked": [
+     1,
+     4
+    ],
+    "sham": [
+     7,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-2",
+     "1-9",
+     "2-5",
+     "5-7",
+     "5-10",
+     "7-19",
+     "7-22",
+     "9-19",
+     "10-22",
+     "22-23"
+    ]
+   },
+   "testSteps": [
+    85,
+    22,
+    93
+   ],
+   "metric": 200,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 7
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|2",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 23,
+    "goal": 1,
+    "blocked": [
+     1,
+     4
+    ],
+    "sham": [
+     7,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-2",
+     "1-9",
+     "2-5",
+     "5-7",
+     "5-10",
+     "7-19",
+     "7-22",
+     "9-19",
+     "10-22",
+     "22-23"
+    ]
+   },
+   "testSteps": [
+    200,
+    200,
+    200
+   ],
+   "metric": 600,
+   "censored": 3,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 61
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|2",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 23,
+    "goal": 1,
+    "blocked": [
+     1,
+     4
+    ],
+    "sham": [
+     7,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-2",
+     "1-9",
+     "2-5",
+     "5-7",
+     "5-10",
+     "7-19",
+     "7-22",
+     "9-19",
+     "10-22",
+     "22-23"
+    ]
+   },
+   "testSteps": [
+    32,
+    5,
+    7
+   ],
+   "metric": 44,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 5
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|2",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 23,
+    "goal": 1,
+    "blocked": [
+     1,
+     4
+    ],
+    "sham": [
+     7,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-2",
+     "1-9",
+     "2-5",
+     "5-7",
+     "5-10",
+     "7-19",
+     "7-22",
+     "9-19",
+     "10-22",
+     "22-23"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|2",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 23,
+    "goal": 1,
+    "blocked": [
+     1,
+     4
+    ],
+    "sham": [
+     7,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-2",
+     "1-9",
+     "2-5",
+     "5-7",
+     "5-10",
+     "7-19",
+     "7-22",
+     "9-19",
+     "10-22",
+     "22-23"
+    ]
+   },
+   "testSteps": [
+    29,
+    9,
+    37
+   ],
+   "metric": 75,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|2",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 23,
+    "goal": 1,
+    "blocked": [
+     1,
+     4
+    ],
+    "sham": [
+     7,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-2",
+     "1-9",
+     "2-5",
+     "5-7",
+     "5-10",
+     "7-19",
+     "7-22",
+     "9-19",
+     "10-22",
+     "22-23"
+    ]
+   },
+   "testSteps": [
+    200,
+    200,
+    200
+   ],
+   "metric": 600,
+   "censored": 3,
+   "secondary": {
+    "blockedAttempts": 68
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|2",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 23,
+    "goal": 1,
+    "blocked": [
+     1,
+     4
+    ],
+    "sham": [
+     7,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-2",
+     "1-9",
+     "2-5",
+     "5-7",
+     "5-10",
+     "7-19",
+     "7-22",
+     "9-19",
+     "10-22",
+     "22-23"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|2",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 23,
+    "goal": 1,
+    "blocked": [
+     1,
+     4
+    ],
+    "sham": [
+     7,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-2",
+     "1-9",
+     "2-5",
+     "5-7",
+     "5-10",
+     "7-19",
+     "7-22",
+     "9-19",
+     "10-22",
+     "22-23"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|2",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 23,
+    "goal": 1,
+    "blocked": [
+     1,
+     4
+    ],
+    "sham": [
+     7,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-2",
+     "1-9",
+     "2-5",
+     "5-7",
+     "5-10",
+     "7-19",
+     "7-22",
+     "9-19",
+     "10-22",
+     "22-23"
+    ]
+   },
+   "testSteps": [
+    3,
+    19,
+    13
+   ],
+   "metric": 35,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|2",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 23,
+    "goal": 1,
+    "blocked": [
+     1,
+     4
+    ],
+    "sham": [
+     7,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-2",
+     "1-9",
+     "2-5",
+     "5-7",
+     "5-10",
+     "7-19",
+     "7-22",
+     "9-19",
+     "10-22",
+     "22-23"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|2",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 23,
+    "goal": 1,
+    "blocked": [
+     1,
+     4
+    ],
+    "sham": [
+     7,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-2",
+     "1-9",
+     "2-5",
+     "5-7",
+     "5-10",
+     "7-19",
+     "7-22",
+     "9-19",
+     "10-22",
+     "22-23"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|2",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 23,
+    "goal": 1,
+    "blocked": [
+     1,
+     4
+    ],
+    "sham": [
+     7,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-2",
+     "1-9",
+     "2-5",
+     "5-7",
+     "5-10",
+     "7-19",
+     "7-22",
+     "9-19",
+     "10-22",
+     "22-23"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|2",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 23,
+    "goal": 1,
+    "blocked": [
+     1,
+     4
+    ],
+    "sham": [
+     7,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-2",
+     "1-9",
+     "2-5",
+     "5-7",
+     "5-10",
+     "7-19",
+     "7-22",
+     "9-19",
+     "10-22",
+     "22-23"
+    ]
+   },
+   "testSteps": [
+    3,
+    19,
+    13
+   ],
+   "metric": 35,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|2",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 23,
+    "goal": 1,
+    "blocked": [
+     1,
+     4
+    ],
+    "sham": [
+     7,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-2",
+     "1-9",
+     "2-5",
+     "5-7",
+     "5-10",
+     "7-19",
+     "7-22",
+     "9-19",
+     "10-22",
+     "22-23"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|2",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 23,
+    "goal": 1,
+    "blocked": [
+     1,
+     4
+    ],
+    "sham": [
+     7,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-2",
+     "1-9",
+     "2-5",
+     "5-7",
+     "5-10",
+     "7-19",
+     "7-22",
+     "9-19",
+     "10-22",
+     "22-23"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|2",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 23,
+    "goal": 1,
+    "blocked": [
+     1,
+     4
+    ],
+    "sham": [
+     7,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-2",
+     "1-9",
+     "2-5",
+     "5-7",
+     "5-10",
+     "7-19",
+     "7-22",
+     "9-19",
+     "10-22",
+     "22-23"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|3",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 0,
+    "goal": 3,
+    "blocked": [
+     3,
+     23
+    ],
+    "sham": [
+     13,
+     17
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-22",
+     "3-14",
+     "14-16",
+     "15-16",
+     "15-22"
+    ]
+   },
+   "testSteps": [
+    127,
+    200,
+    139
+   ],
+   "metric": 466,
+   "censored": 1,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 11
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|3",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 0,
+    "goal": 3,
+    "blocked": [
+     3,
+     23
+    ],
+    "sham": [
+     13,
+     17
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-22",
+     "3-14",
+     "14-16",
+     "15-16",
+     "15-22"
+    ]
+   },
+   "testSteps": [
+    108,
+    71,
+    31
+   ],
+   "metric": 210,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 45
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|3",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 0,
+    "goal": 3,
+    "blocked": [
+     3,
+     23
+    ],
+    "sham": [
+     13,
+     17
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-22",
+     "3-14",
+     "14-16",
+     "15-16",
+     "15-22"
+    ]
+   },
+   "testSteps": [
+    21,
+    5,
+    7
+   ],
+   "metric": 33,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 6
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|3",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 0,
+    "goal": 3,
+    "blocked": [
+     3,
+     23
+    ],
+    "sham": [
+     13,
+     17
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-22",
+     "3-14",
+     "14-16",
+     "15-16",
+     "15-22"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|3",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 0,
+    "goal": 3,
+    "blocked": [
+     3,
+     23
+    ],
+    "sham": [
+     13,
+     17
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-22",
+     "3-14",
+     "14-16",
+     "15-16",
+     "15-22"
+    ]
+   },
+   "testSteps": [
+    5,
+    11,
+    70
+   ],
+   "metric": 86,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|3",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 0,
+    "goal": 3,
+    "blocked": [
+     3,
+     23
+    ],
+    "sham": [
+     13,
+     17
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-22",
+     "3-14",
+     "14-16",
+     "15-16",
+     "15-22"
+    ]
+   },
+   "testSteps": [
+    200,
+    150,
+    200
+   ],
+   "metric": 550,
+   "censored": 2,
+   "secondary": {
+    "blockedAttempts": 73
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|3",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 0,
+    "goal": 3,
+    "blocked": [
+     3,
+     23
+    ],
+    "sham": [
+     13,
+     17
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-22",
+     "3-14",
+     "14-16",
+     "15-16",
+     "15-22"
+    ]
+   },
+   "testSteps": [
+    200,
+    200,
+    200
+   ],
+   "metric": 600,
+   "censored": 3,
+   "secondary": {
+    "blockedAttempts": 52
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|3",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 0,
+    "goal": 3,
+    "blocked": [
+     3,
+     23
+    ],
+    "sham": [
+     13,
+     17
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-22",
+     "3-14",
+     "14-16",
+     "15-16",
+     "15-22"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|3",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 0,
+    "goal": 3,
+    "blocked": [
+     3,
+     23
+    ],
+    "sham": [
+     13,
+     17
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-22",
+     "3-14",
+     "14-16",
+     "15-16",
+     "15-22"
+    ]
+   },
+   "testSteps": [
+    200,
+    3,
+    17
+   ],
+   "metric": 220,
+   "censored": 1,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|3",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 0,
+    "goal": 3,
+    "blocked": [
+     3,
+     23
+    ],
+    "sham": [
+     13,
+     17
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-22",
+     "3-14",
+     "14-16",
+     "15-16",
+     "15-22"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|3",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 0,
+    "goal": 3,
+    "blocked": [
+     3,
+     23
+    ],
+    "sham": [
+     13,
+     17
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-22",
+     "3-14",
+     "14-16",
+     "15-16",
+     "15-22"
+    ]
+   },
+   "testSteps": [
+    5,
+    3,
+    3
+   ],
+   "metric": 11,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|3",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 0,
+    "goal": 3,
+    "blocked": [
+     3,
+     23
+    ],
+    "sham": [
+     13,
+     17
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-22",
+     "3-14",
+     "14-16",
+     "15-16",
+     "15-22"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|3",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 0,
+    "goal": 3,
+    "blocked": [
+     3,
+     23
+    ],
+    "sham": [
+     13,
+     17
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-22",
+     "3-14",
+     "14-16",
+     "15-16",
+     "15-22"
+    ]
+   },
+   "testSteps": [
+    55,
+    47,
+    25
+   ],
+   "metric": 127,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|3",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 0,
+    "goal": 3,
+    "blocked": [
+     3,
+     23
+    ],
+    "sham": [
+     13,
+     17
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-22",
+     "3-14",
+     "14-16",
+     "15-16",
+     "15-22"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|3",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 0,
+    "goal": 3,
+    "blocked": [
+     3,
+     23
+    ],
+    "sham": [
+     13,
+     17
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-22",
+     "3-14",
+     "14-16",
+     "15-16",
+     "15-22"
+    ]
+   },
+   "testSteps": [
+    5,
+    3,
+    3
+   ],
+   "metric": 11,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|3",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 0,
+    "goal": 3,
+    "blocked": [
+     3,
+     23
+    ],
+    "sham": [
+     13,
+     17
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-22",
+     "3-14",
+     "14-16",
+     "15-16",
+     "15-22"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|4",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 10,
+    "goal": 19,
+    "blocked": [
+     10,
+     14
+    ],
+    "sham": [
+     7,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-6",
+     "0-18",
+     "6-10",
+     "7-18",
+     "7-19"
+    ]
+   },
+   "testSteps": [
+    47,
+    44,
+    65
+   ],
+   "metric": 156,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 17
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|4",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 10,
+    "goal": 19,
+    "blocked": [
+     10,
+     14
+    ],
+    "sham": [
+     7,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-6",
+     "0-18",
+     "6-10",
+     "7-18",
+     "7-19"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|4",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 10,
+    "goal": 19,
+    "blocked": [
+     10,
+     14
+    ],
+    "sham": [
+     7,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-6",
+     "0-18",
+     "6-10",
+     "7-18",
+     "7-19"
+    ]
+   },
+   "testSteps": [
+    8,
+    5,
+    5
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 3
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|4",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 10,
+    "goal": 19,
+    "blocked": [
+     10,
+     14
+    ],
+    "sham": [
+     7,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-6",
+     "0-18",
+     "6-10",
+     "7-18",
+     "7-19"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|4",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 10,
+    "goal": 19,
+    "blocked": [
+     10,
+     14
+    ],
+    "sham": [
+     7,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-6",
+     "0-18",
+     "6-10",
+     "7-18",
+     "7-19"
+    ]
+   },
+   "testSteps": [
+    74,
+    21,
+    21
+   ],
+   "metric": 116,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 11
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|4",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 10,
+    "goal": 19,
+    "blocked": [
+     10,
+     14
+    ],
+    "sham": [
+     7,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-6",
+     "0-18",
+     "6-10",
+     "7-18",
+     "7-19"
+    ]
+   },
+   "testSteps": [
+    200,
+    200,
+    106
+   ],
+   "metric": 506,
+   "censored": 2,
+   "secondary": {
+    "blockedAttempts": 149
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|4",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 10,
+    "goal": 19,
+    "blocked": [
+     10,
+     14
+    ],
+    "sham": [
+     7,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-6",
+     "0-18",
+     "6-10",
+     "7-18",
+     "7-19"
+    ]
+   },
+   "testSteps": [
+    32,
+    10,
+    16
+   ],
+   "metric": 58,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 10
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|4",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 10,
+    "goal": 19,
+    "blocked": [
+     10,
+     14
+    ],
+    "sham": [
+     7,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-6",
+     "0-18",
+     "6-10",
+     "7-18",
+     "7-19"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|4",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 10,
+    "goal": 19,
+    "blocked": [
+     10,
+     14
+    ],
+    "sham": [
+     7,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-6",
+     "0-18",
+     "6-10",
+     "7-18",
+     "7-19"
+    ]
+   },
+   "testSteps": [
+    47,
+    50,
+    71
+   ],
+   "metric": 168,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|4",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 10,
+    "goal": 19,
+    "blocked": [
+     10,
+     14
+    ],
+    "sham": [
+     7,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-6",
+     "0-18",
+     "6-10",
+     "7-18",
+     "7-19"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|4",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 10,
+    "goal": 19,
+    "blocked": [
+     10,
+     14
+    ],
+    "sham": [
+     7,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-6",
+     "0-18",
+     "6-10",
+     "7-18",
+     "7-19"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|4",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 10,
+    "goal": 19,
+    "blocked": [
+     10,
+     14
+    ],
+    "sham": [
+     7,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-6",
+     "0-18",
+     "6-10",
+     "7-18",
+     "7-19"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|4",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 10,
+    "goal": 19,
+    "blocked": [
+     10,
+     14
+    ],
+    "sham": [
+     7,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-6",
+     "0-18",
+     "6-10",
+     "7-18",
+     "7-19"
+    ]
+   },
+   "testSteps": [
+    47,
+    50,
+    71
+   ],
+   "metric": 168,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|4",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 10,
+    "goal": 19,
+    "blocked": [
+     10,
+     14
+    ],
+    "sham": [
+     7,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-6",
+     "0-18",
+     "6-10",
+     "7-18",
+     "7-19"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|4",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 10,
+    "goal": 19,
+    "blocked": [
+     10,
+     14
+    ],
+    "sham": [
+     7,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-6",
+     "0-18",
+     "6-10",
+     "7-18",
+     "7-19"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|4",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 10,
+    "goal": 19,
+    "blocked": [
+     10,
+     14
+    ],
+    "sham": [
+     7,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-6",
+     "0-18",
+     "6-10",
+     "7-18",
+     "7-19"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|5",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 13,
+    "goal": 0,
+    "blocked": [
+     16,
+     19
+    ],
+    "sham": [
+     8,
+     15
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-17",
+     "5-17",
+     "5-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    121,
+    129,
+    8
+   ],
+   "metric": 258,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 4
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|5",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 13,
+    "goal": 0,
+    "blocked": [
+     16,
+     19
+    ],
+    "sham": [
+     8,
+     15
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-17",
+     "5-17",
+     "5-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    200,
+    200,
+    200
+   ],
+   "metric": 600,
+   "censored": 3,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 89
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|5",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 13,
+    "goal": 0,
+    "blocked": [
+     16,
+     19
+    ],
+    "sham": [
+     8,
+     15
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-17",
+     "5-17",
+     "5-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    6,
+    8,
+    4
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 2
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|5",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 13,
+    "goal": 0,
+    "blocked": [
+     16,
+     19
+    ],
+    "sham": [
+     8,
+     15
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-17",
+     "5-17",
+     "5-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|5",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 13,
+    "goal": 0,
+    "blocked": [
+     16,
+     19
+    ],
+    "sham": [
+     8,
+     15
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-17",
+     "5-17",
+     "5-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    32,
+    39,
+    132
+   ],
+   "metric": 203,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|5",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 13,
+    "goal": 0,
+    "blocked": [
+     16,
+     19
+    ],
+    "sham": [
+     8,
+     15
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-17",
+     "5-17",
+     "5-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    157,
+    108,
+    114
+   ],
+   "metric": 379,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 91
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|5",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 13,
+    "goal": 0,
+    "blocked": [
+     16,
+     19
+    ],
+    "sham": [
+     8,
+     15
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-17",
+     "5-17",
+     "5-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    17,
+    7,
+    7
+   ],
+   "metric": 31,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 4
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|5",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 13,
+    "goal": 0,
+    "blocked": [
+     16,
+     19
+    ],
+    "sham": [
+     8,
+     15
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-17",
+     "5-17",
+     "5-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|5",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 13,
+    "goal": 0,
+    "blocked": [
+     16,
+     19
+    ],
+    "sham": [
+     8,
+     15
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-17",
+     "5-17",
+     "5-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    61,
+    60,
+    3
+   ],
+   "metric": 124,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|5",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 13,
+    "goal": 0,
+    "blocked": [
+     16,
+     19
+    ],
+    "sham": [
+     8,
+     15
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-17",
+     "5-17",
+     "5-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|5",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 13,
+    "goal": 0,
+    "blocked": [
+     16,
+     19
+    ],
+    "sham": [
+     8,
+     15
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-17",
+     "5-17",
+     "5-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    7
+   ],
+   "metric": 13,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|5",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 13,
+    "goal": 0,
+    "blocked": [
+     16,
+     19
+    ],
+    "sham": [
+     8,
+     15
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-17",
+     "5-17",
+     "5-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|5",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 13,
+    "goal": 0,
+    "blocked": [
+     16,
+     19
+    ],
+    "sham": [
+     8,
+     15
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-17",
+     "5-17",
+     "5-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    61,
+    60,
+    3
+   ],
+   "metric": 124,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|5",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 13,
+    "goal": 0,
+    "blocked": [
+     16,
+     19
+    ],
+    "sham": [
+     8,
+     15
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-17",
+     "5-17",
+     "5-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|5",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 13,
+    "goal": 0,
+    "blocked": [
+     16,
+     19
+    ],
+    "sham": [
+     8,
+     15
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-17",
+     "5-17",
+     "5-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    7
+   ],
+   "metric": 13,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|5",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 13,
+    "goal": 0,
+    "blocked": [
+     16,
+     19
+    ],
+    "sham": [
+     8,
+     15
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-17",
+     "5-17",
+     "5-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|6",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 18,
+    "goal": 0,
+    "blocked": [
+     1,
+     17
+    ],
+    "sham": [
+     14,
+     23
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-11",
+     "0-17",
+     "2-11",
+     "2-19",
+     "3-6",
+     "3-19",
+     "5-13",
+     "5-17",
+     "5-19",
+     "6-12",
+     "6-18",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    57,
+    25,
+    23
+   ],
+   "metric": 105,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 3
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|6",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 18,
+    "goal": 0,
+    "blocked": [
+     1,
+     17
+    ],
+    "sham": [
+     14,
+     23
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-11",
+     "0-17",
+     "2-11",
+     "2-19",
+     "3-6",
+     "3-19",
+     "5-13",
+     "5-17",
+     "5-19",
+     "6-12",
+     "6-18",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    23,
+    43,
+    200
+   ],
+   "metric": 266,
+   "censored": 1,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 49
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|6",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 18,
+    "goal": 0,
+    "blocked": [
+     1,
+     17
+    ],
+    "sham": [
+     14,
+     23
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-11",
+     "0-17",
+     "2-11",
+     "2-19",
+     "3-6",
+     "3-19",
+     "5-13",
+     "5-17",
+     "5-19",
+     "6-12",
+     "6-18",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    15,
+    6,
+    8
+   ],
+   "metric": 29,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 5
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|6",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 18,
+    "goal": 0,
+    "blocked": [
+     1,
+     17
+    ],
+    "sham": [
+     14,
+     23
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-11",
+     "0-17",
+     "2-11",
+     "2-19",
+     "3-6",
+     "3-19",
+     "5-13",
+     "5-17",
+     "5-19",
+     "6-12",
+     "6-18",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|6",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 18,
+    "goal": 0,
+    "blocked": [
+     1,
+     17
+    ],
+    "sham": [
+     14,
+     23
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-11",
+     "0-17",
+     "2-11",
+     "2-19",
+     "3-6",
+     "3-19",
+     "5-13",
+     "5-17",
+     "5-19",
+     "6-12",
+     "6-18",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    24,
+    37,
+    49
+   ],
+   "metric": 110,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 2
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|6",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 18,
+    "goal": 0,
+    "blocked": [
+     1,
+     17
+    ],
+    "sham": [
+     14,
+     23
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-11",
+     "0-17",
+     "2-11",
+     "2-19",
+     "3-6",
+     "3-19",
+     "5-13",
+     "5-17",
+     "5-19",
+     "6-12",
+     "6-18",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    200,
+    200,
+    70
+   ],
+   "metric": 470,
+   "censored": 2,
+   "secondary": {
+    "blockedAttempts": 48
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|6",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 18,
+    "goal": 0,
+    "blocked": [
+     1,
+     17
+    ],
+    "sham": [
+     14,
+     23
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-11",
+     "0-17",
+     "2-11",
+     "2-19",
+     "3-6",
+     "3-19",
+     "5-13",
+     "5-17",
+     "5-19",
+     "6-12",
+     "6-18",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|6",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 18,
+    "goal": 0,
+    "blocked": [
+     1,
+     17
+    ],
+    "sham": [
+     14,
+     23
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-11",
+     "0-17",
+     "2-11",
+     "2-19",
+     "3-6",
+     "3-19",
+     "5-13",
+     "5-17",
+     "5-19",
+     "6-12",
+     "6-18",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|6",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 18,
+    "goal": 0,
+    "blocked": [
+     1,
+     17
+    ],
+    "sham": [
+     14,
+     23
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-11",
+     "0-17",
+     "2-11",
+     "2-19",
+     "3-6",
+     "3-19",
+     "5-13",
+     "5-17",
+     "5-19",
+     "6-12",
+     "6-18",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    77,
+    24,
+    38
+   ],
+   "metric": 139,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|6",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 18,
+    "goal": 0,
+    "blocked": [
+     1,
+     17
+    ],
+    "sham": [
+     14,
+     23
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-11",
+     "0-17",
+     "2-11",
+     "2-19",
+     "3-6",
+     "3-19",
+     "5-13",
+     "5-17",
+     "5-19",
+     "6-12",
+     "6-18",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|6",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 18,
+    "goal": 0,
+    "blocked": [
+     1,
+     17
+    ],
+    "sham": [
+     14,
+     23
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-11",
+     "0-17",
+     "2-11",
+     "2-19",
+     "3-6",
+     "3-19",
+     "5-13",
+     "5-17",
+     "5-19",
+     "6-12",
+     "6-18",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|6",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 18,
+    "goal": 0,
+    "blocked": [
+     1,
+     17
+    ],
+    "sham": [
+     14,
+     23
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-11",
+     "0-17",
+     "2-11",
+     "2-19",
+     "3-6",
+     "3-19",
+     "5-13",
+     "5-17",
+     "5-19",
+     "6-12",
+     "6-18",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|6",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 18,
+    "goal": 0,
+    "blocked": [
+     1,
+     17
+    ],
+    "sham": [
+     14,
+     23
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-11",
+     "0-17",
+     "2-11",
+     "2-19",
+     "3-6",
+     "3-19",
+     "5-13",
+     "5-17",
+     "5-19",
+     "6-12",
+     "6-18",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    82,
+    23,
+    78
+   ],
+   "metric": 183,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|6",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 18,
+    "goal": 0,
+    "blocked": [
+     1,
+     17
+    ],
+    "sham": [
+     14,
+     23
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-11",
+     "0-17",
+     "2-11",
+     "2-19",
+     "3-6",
+     "3-19",
+     "5-13",
+     "5-17",
+     "5-19",
+     "6-12",
+     "6-18",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|6",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 18,
+    "goal": 0,
+    "blocked": [
+     1,
+     17
+    ],
+    "sham": [
+     14,
+     23
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-11",
+     "0-17",
+     "2-11",
+     "2-19",
+     "3-6",
+     "3-19",
+     "5-13",
+     "5-17",
+     "5-19",
+     "6-12",
+     "6-18",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|6",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 18,
+    "goal": 0,
+    "blocked": [
+     1,
+     17
+    ],
+    "sham": [
+     14,
+     23
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-11",
+     "0-17",
+     "2-11",
+     "2-19",
+     "3-6",
+     "3-19",
+     "5-13",
+     "5-17",
+     "5-19",
+     "6-12",
+     "6-18",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|7",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 1,
+    "goal": 4,
+    "blocked": [
+     4,
+     14
+    ],
+    "sham": [
+     4,
+     8
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-12",
+     "4-17",
+     "9-11",
+     "9-12",
+     "11-21",
+     "17-21"
+    ]
+   },
+   "testSteps": [
+    125,
+    185,
+    98
+   ],
+   "metric": 408,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 9
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|7",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 1,
+    "goal": 4,
+    "blocked": [
+     4,
+     14
+    ],
+    "sham": [
+     4,
+     8
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-12",
+     "4-17",
+     "9-11",
+     "9-12",
+     "11-21",
+     "17-21"
+    ]
+   },
+   "testSteps": [
+    200,
+    200,
+    154
+   ],
+   "metric": 554,
+   "censored": 2,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 53
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|7",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 1,
+    "goal": 4,
+    "blocked": [
+     4,
+     14
+    ],
+    "sham": [
+     4,
+     8
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-12",
+     "4-17",
+     "9-11",
+     "9-12",
+     "11-21",
+     "17-21"
+    ]
+   },
+   "testSteps": [
+    11,
+    6,
+    6
+   ],
+   "metric": 23,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 3
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|7",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 1,
+    "goal": 4,
+    "blocked": [
+     4,
+     14
+    ],
+    "sham": [
+     4,
+     8
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-12",
+     "4-17",
+     "9-11",
+     "9-12",
+     "11-21",
+     "17-21"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|7",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 1,
+    "goal": 4,
+    "blocked": [
+     4,
+     14
+    ],
+    "sham": [
+     4,
+     8
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-12",
+     "4-17",
+     "9-11",
+     "9-12",
+     "11-21",
+     "17-21"
+    ]
+   },
+   "testSteps": [
+    200,
+    187,
+    84
+   ],
+   "metric": 471,
+   "censored": 1,
+   "secondary": {
+    "blockedAttempts": 10
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|7",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 1,
+    "goal": 4,
+    "blocked": [
+     4,
+     14
+    ],
+    "sham": [
+     4,
+     8
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-12",
+     "4-17",
+     "9-11",
+     "9-12",
+     "11-21",
+     "17-21"
+    ]
+   },
+   "testSteps": [
+    200,
+    200,
+    200
+   ],
+   "metric": 600,
+   "censored": 3,
+   "secondary": {
+    "blockedAttempts": 60
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|7",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 1,
+    "goal": 4,
+    "blocked": [
+     4,
+     14
+    ],
+    "sham": [
+     4,
+     8
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-12",
+     "4-17",
+     "9-11",
+     "9-12",
+     "11-21",
+     "17-21"
+    ]
+   },
+   "testSteps": [
+    6,
+    11,
+    6
+   ],
+   "metric": 23,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|7",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 1,
+    "goal": 4,
+    "blocked": [
+     4,
+     14
+    ],
+    "sham": [
+     4,
+     8
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-12",
+     "4-17",
+     "9-11",
+     "9-12",
+     "11-21",
+     "17-21"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|7",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 1,
+    "goal": 4,
+    "blocked": [
+     4,
+     14
+    ],
+    "sham": [
+     4,
+     8
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-12",
+     "4-17",
+     "9-11",
+     "9-12",
+     "11-21",
+     "17-21"
+    ]
+   },
+   "testSteps": [
+    45,
+    91,
+    140
+   ],
+   "metric": 276,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|7",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 1,
+    "goal": 4,
+    "blocked": [
+     4,
+     14
+    ],
+    "sham": [
+     4,
+     8
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-12",
+     "4-17",
+     "9-11",
+     "9-12",
+     "11-21",
+     "17-21"
+    ]
+   },
+   "testSteps": [
+    6,
+    8,
+    6
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|7",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 1,
+    "goal": 4,
+    "blocked": [
+     4,
+     14
+    ],
+    "sham": [
+     4,
+     8
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-12",
+     "4-17",
+     "9-11",
+     "9-12",
+     "11-21",
+     "17-21"
+    ]
+   },
+   "testSteps": [
+    5,
+    7,
+    5
+   ],
+   "metric": 17,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|7",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 1,
+    "goal": 4,
+    "blocked": [
+     4,
+     14
+    ],
+    "sham": [
+     4,
+     8
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-12",
+     "4-17",
+     "9-11",
+     "9-12",
+     "11-21",
+     "17-21"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|7",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 1,
+    "goal": 4,
+    "blocked": [
+     4,
+     14
+    ],
+    "sham": [
+     4,
+     8
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-12",
+     "4-17",
+     "9-11",
+     "9-12",
+     "11-21",
+     "17-21"
+    ]
+   },
+   "testSteps": [
+    45,
+    80,
+    151
+   ],
+   "metric": 276,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|7",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 1,
+    "goal": 4,
+    "blocked": [
+     4,
+     14
+    ],
+    "sham": [
+     4,
+     8
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-12",
+     "4-17",
+     "9-11",
+     "9-12",
+     "11-21",
+     "17-21"
+    ]
+   },
+   "testSteps": [
+    6,
+    8,
+    6
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|7",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 1,
+    "goal": 4,
+    "blocked": [
+     4,
+     14
+    ],
+    "sham": [
+     4,
+     8
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-12",
+     "4-17",
+     "9-11",
+     "9-12",
+     "11-21",
+     "17-21"
+    ]
+   },
+   "testSteps": [
+    5,
+    7,
+    5
+   ],
+   "metric": 17,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|7",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 1,
+    "goal": 4,
+    "blocked": [
+     4,
+     14
+    ],
+    "sham": [
+     4,
+     8
+    ],
+    "distance": 5,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-12",
+     "4-17",
+     "9-11",
+     "9-12",
+     "11-21",
+     "17-21"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|8",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 13,
+    "goal": 6,
+    "blocked": [
+     3,
+     13
+    ],
+    "sham": [
+     9,
+     13
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "6-7",
+     "7-22",
+     "10-12",
+     "10-22",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    200,
+    27,
+    7
+   ],
+   "metric": 234,
+   "censored": 1,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 9
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|8",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 13,
+    "goal": 6,
+    "blocked": [
+     3,
+     13
+    ],
+    "sham": [
+     9,
+     13
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "6-7",
+     "7-22",
+     "10-12",
+     "10-22",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    200,
+    200,
+    200
+   ],
+   "metric": 600,
+   "censored": 3,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 98
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|8",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 13,
+    "goal": 6,
+    "blocked": [
+     3,
+     13
+    ],
+    "sham": [
+     9,
+     13
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "6-7",
+     "7-22",
+     "10-12",
+     "10-22",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    9,
+    6,
+    9
+   ],
+   "metric": 24,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 4
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|8",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 13,
+    "goal": 6,
+    "blocked": [
+     3,
+     13
+    ],
+    "sham": [
+     9,
+     13
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "6-7",
+     "7-22",
+     "10-12",
+     "10-22",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|8",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 13,
+    "goal": 6,
+    "blocked": [
+     3,
+     13
+    ],
+    "sham": [
+     9,
+     13
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "6-7",
+     "7-22",
+     "10-12",
+     "10-22",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    136,
+    181,
+    193
+   ],
+   "metric": 510,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 12
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|8",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 13,
+    "goal": 6,
+    "blocked": [
+     3,
+     13
+    ],
+    "sham": [
+     9,
+     13
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "6-7",
+     "7-22",
+     "10-12",
+     "10-22",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    108,
+    200,
+    200
+   ],
+   "metric": 508,
+   "censored": 2,
+   "secondary": {
+    "blockedAttempts": 101
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|8",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 13,
+    "goal": 6,
+    "blocked": [
+     3,
+     13
+    ],
+    "sham": [
+     9,
+     13
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "6-7",
+     "7-22",
+     "10-12",
+     "10-22",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    24,
+    9,
+    9
+   ],
+   "metric": 42,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 4
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|8",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 13,
+    "goal": 6,
+    "blocked": [
+     3,
+     13
+    ],
+    "sham": [
+     9,
+     13
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "6-7",
+     "7-22",
+     "10-12",
+     "10-22",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|8",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 13,
+    "goal": 6,
+    "blocked": [
+     3,
+     13
+    ],
+    "sham": [
+     9,
+     13
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "6-7",
+     "7-22",
+     "10-12",
+     "10-22",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    19,
+    55,
+    3
+   ],
+   "metric": 77,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|8",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 13,
+    "goal": 6,
+    "blocked": [
+     3,
+     13
+    ],
+    "sham": [
+     9,
+     13
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "6-7",
+     "7-22",
+     "10-12",
+     "10-22",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    4,
+    5,
+    3
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|8",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 13,
+    "goal": 6,
+    "blocked": [
+     3,
+     13
+    ],
+    "sham": [
+     9,
+     13
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "6-7",
+     "7-22",
+     "10-12",
+     "10-22",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|8",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 13,
+    "goal": 6,
+    "blocked": [
+     3,
+     13
+    ],
+    "sham": [
+     9,
+     13
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "6-7",
+     "7-22",
+     "10-12",
+     "10-22",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|8",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 13,
+    "goal": 6,
+    "blocked": [
+     3,
+     13
+    ],
+    "sham": [
+     9,
+     13
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "6-7",
+     "7-22",
+     "10-12",
+     "10-22",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    19,
+    105,
+    103
+   ],
+   "metric": 227,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|8",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 13,
+    "goal": 6,
+    "blocked": [
+     3,
+     13
+    ],
+    "sham": [
+     9,
+     13
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "6-7",
+     "7-22",
+     "10-12",
+     "10-22",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    5,
+    10,
+    3
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|8",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 13,
+    "goal": 6,
+    "blocked": [
+     3,
+     13
+    ],
+    "sham": [
+     9,
+     13
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "6-7",
+     "7-22",
+     "10-12",
+     "10-22",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|8",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 13,
+    "goal": 6,
+    "blocked": [
+     3,
+     13
+    ],
+    "sham": [
+     9,
+     13
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "6-7",
+     "7-22",
+     "10-12",
+     "10-22",
+     "12-13"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|9",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 14,
+    "goal": 4,
+    "blocked": [
+     1,
+     13
+    ],
+    "sham": [
+     5,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-6",
+     "1-11",
+     "2-11",
+     "2-16",
+     "4-6",
+     "5-16",
+     "5-19",
+     "6-12",
+     "12-19",
+     "14-16"
+    ]
+   },
+   "testSteps": [
+    98,
+    81,
+    73
+   ],
+   "metric": 252,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 6
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|9",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 14,
+    "goal": 4,
+    "blocked": [
+     1,
+     13
+    ],
+    "sham": [
+     5,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-6",
+     "1-11",
+     "2-11",
+     "2-16",
+     "4-6",
+     "5-16",
+     "5-19",
+     "6-12",
+     "12-19",
+     "14-16"
+    ]
+   },
+   "testSteps": [
+    114,
+    120,
+    200
+   ],
+   "metric": 434,
+   "censored": 1,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 63
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|9",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 14,
+    "goal": 4,
+    "blocked": [
+     1,
+     13
+    ],
+    "sham": [
+     5,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-6",
+     "1-11",
+     "2-11",
+     "2-16",
+     "4-6",
+     "5-16",
+     "5-19",
+     "6-12",
+     "12-19",
+     "14-16"
+    ]
+   },
+   "testSteps": [
+    23,
+    6,
+    7
+   ],
+   "metric": 36,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 6
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|9",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 14,
+    "goal": 4,
+    "blocked": [
+     1,
+     13
+    ],
+    "sham": [
+     5,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-6",
+     "1-11",
+     "2-11",
+     "2-16",
+     "4-6",
+     "5-16",
+     "5-19",
+     "6-12",
+     "12-19",
+     "14-16"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|9",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 14,
+    "goal": 4,
+    "blocked": [
+     1,
+     13
+    ],
+    "sham": [
+     5,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-6",
+     "1-11",
+     "2-11",
+     "2-16",
+     "4-6",
+     "5-16",
+     "5-19",
+     "6-12",
+     "12-19",
+     "14-16"
+    ]
+   },
+   "testSteps": [
+    110,
+    200,
+    139
+   ],
+   "metric": 449,
+   "censored": 1,
+   "secondary": {
+    "blockedAttempts": 19
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|9",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 14,
+    "goal": 4,
+    "blocked": [
+     1,
+     13
+    ],
+    "sham": [
+     5,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-6",
+     "1-11",
+     "2-11",
+     "2-16",
+     "4-6",
+     "5-16",
+     "5-19",
+     "6-12",
+     "12-19",
+     "14-16"
+    ]
+   },
+   "testSteps": [
+    126,
+    200,
+    200
+   ],
+   "metric": 526,
+   "censored": 2,
+   "secondary": {
+    "blockedAttempts": 99
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|9",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 14,
+    "goal": 4,
+    "blocked": [
+     1,
+     13
+    ],
+    "sham": [
+     5,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-6",
+     "1-11",
+     "2-11",
+     "2-16",
+     "4-6",
+     "5-16",
+     "5-19",
+     "6-12",
+     "12-19",
+     "14-16"
+    ]
+   },
+   "testSteps": [
+    24,
+    6,
+    8
+   ],
+   "metric": 38,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 5
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|9",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 14,
+    "goal": 4,
+    "blocked": [
+     1,
+     13
+    ],
+    "sham": [
+     5,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-6",
+     "1-11",
+     "2-11",
+     "2-16",
+     "4-6",
+     "5-16",
+     "5-19",
+     "6-12",
+     "12-19",
+     "14-16"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|9",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 14,
+    "goal": 4,
+    "blocked": [
+     1,
+     13
+    ],
+    "sham": [
+     5,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-6",
+     "1-11",
+     "2-11",
+     "2-16",
+     "4-6",
+     "5-16",
+     "5-19",
+     "6-12",
+     "12-19",
+     "14-16"
+    ]
+   },
+   "testSteps": [
+    89,
+    200,
+    200
+   ],
+   "metric": 489,
+   "censored": 2,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|9",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 14,
+    "goal": 4,
+    "blocked": [
+     1,
+     13
+    ],
+    "sham": [
+     5,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-6",
+     "1-11",
+     "2-11",
+     "2-16",
+     "4-6",
+     "5-16",
+     "5-19",
+     "6-12",
+     "12-19",
+     "14-16"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    6
+   ],
+   "metric": 14,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|9",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 14,
+    "goal": 4,
+    "blocked": [
+     1,
+     13
+    ],
+    "sham": [
+     5,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-6",
+     "1-11",
+     "2-11",
+     "2-16",
+     "4-6",
+     "5-16",
+     "5-19",
+     "6-12",
+     "12-19",
+     "14-16"
+    ]
+   },
+   "testSteps": [
+    4,
+    6,
+    4
+   ],
+   "metric": 14,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|9",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 14,
+    "goal": 4,
+    "blocked": [
+     1,
+     13
+    ],
+    "sham": [
+     5,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-6",
+     "1-11",
+     "2-11",
+     "2-16",
+     "4-6",
+     "5-16",
+     "5-19",
+     "6-12",
+     "12-19",
+     "14-16"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|9",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 14,
+    "goal": 4,
+    "blocked": [
+     1,
+     13
+    ],
+    "sham": [
+     5,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-6",
+     "1-11",
+     "2-11",
+     "2-16",
+     "4-6",
+     "5-16",
+     "5-19",
+     "6-12",
+     "12-19",
+     "14-16"
+    ]
+   },
+   "testSteps": [
+    98,
+    14,
+    200
+   ],
+   "metric": 312,
+   "censored": 1,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|9",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 14,
+    "goal": 4,
+    "blocked": [
+     1,
+     13
+    ],
+    "sham": [
+     5,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-6",
+     "1-11",
+     "2-11",
+     "2-16",
+     "4-6",
+     "5-16",
+     "5-19",
+     "6-12",
+     "12-19",
+     "14-16"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    6
+   ],
+   "metric": 14,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|9",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 14,
+    "goal": 4,
+    "blocked": [
+     1,
+     13
+    ],
+    "sham": [
+     5,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-6",
+     "1-11",
+     "2-11",
+     "2-16",
+     "4-6",
+     "5-16",
+     "5-19",
+     "6-12",
+     "12-19",
+     "14-16"
+    ]
+   },
+   "testSteps": [
+    4,
+    6,
+    4
+   ],
+   "metric": 14,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|9",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 14,
+    "goal": 4,
+    "blocked": [
+     1,
+     13
+    ],
+    "sham": [
+     5,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-6",
+     "1-11",
+     "2-11",
+     "2-16",
+     "4-6",
+     "5-16",
+     "5-19",
+     "6-12",
+     "12-19",
+     "14-16"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|10",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 9,
+    "goal": 16,
+    "blocked": [
+     6,
+     17
+    ],
+    "sham": [
+     11,
+     12
+    ],
+    "distance": 8,
+    "detourDistance": 9,
+    "detourEdges": [
+     "0-2",
+     "0-20",
+     "2-8",
+     "3-11",
+     "3-21",
+     "6-11",
+     "6-23",
+     "8-16",
+     "9-10",
+     "10-13",
+     "11-20",
+     "13-19",
+     "16-21",
+     "19-23",
+     "20-23"
+    ]
+   },
+   "testSteps": [
+    23,
+    57,
+    140
+   ],
+   "metric": 220,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 2
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|10",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 9,
+    "goal": 16,
+    "blocked": [
+     6,
+     17
+    ],
+    "sham": [
+     11,
+     12
+    ],
+    "distance": 8,
+    "detourDistance": 9,
+    "detourEdges": [
+     "0-2",
+     "0-20",
+     "2-8",
+     "3-11",
+     "3-21",
+     "6-11",
+     "6-23",
+     "8-16",
+     "9-10",
+     "10-13",
+     "11-20",
+     "13-19",
+     "16-21",
+     "19-23",
+     "20-23"
+    ]
+   },
+   "testSteps": [
+    9,
+    9,
+    9
+   ],
+   "metric": 27,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|10",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 9,
+    "goal": 16,
+    "blocked": [
+     6,
+     17
+    ],
+    "sham": [
+     11,
+     12
+    ],
+    "distance": 8,
+    "detourDistance": 9,
+    "detourEdges": [
+     "0-2",
+     "0-20",
+     "2-8",
+     "3-11",
+     "3-21",
+     "6-11",
+     "6-23",
+     "8-16",
+     "9-10",
+     "10-13",
+     "11-20",
+     "13-19",
+     "16-21",
+     "19-23",
+     "20-23"
+    ]
+   },
+   "testSteps": [
+    14,
+    9,
+    9
+   ],
+   "metric": 32,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 3
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|10",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 9,
+    "goal": 16,
+    "blocked": [
+     6,
+     17
+    ],
+    "sham": [
+     11,
+     12
+    ],
+    "distance": 8,
+    "detourDistance": 9,
+    "detourEdges": [
+     "0-2",
+     "0-20",
+     "2-8",
+     "3-11",
+     "3-21",
+     "6-11",
+     "6-23",
+     "8-16",
+     "9-10",
+     "10-13",
+     "11-20",
+     "13-19",
+     "16-21",
+     "19-23",
+     "20-23"
+    ]
+   },
+   "testSteps": [
+    9,
+    9,
+    9
+   ],
+   "metric": 27,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|10",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 9,
+    "goal": 16,
+    "blocked": [
+     6,
+     17
+    ],
+    "sham": [
+     11,
+     12
+    ],
+    "distance": 8,
+    "detourDistance": 9,
+    "detourEdges": [
+     "0-2",
+     "0-20",
+     "2-8",
+     "3-11",
+     "3-21",
+     "6-11",
+     "6-23",
+     "8-16",
+     "9-10",
+     "10-13",
+     "11-20",
+     "13-19",
+     "16-21",
+     "19-23",
+     "20-23"
+    ]
+   },
+   "testSteps": [
+    40,
+    54,
+    145
+   ],
+   "metric": 239,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 15
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|10",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 9,
+    "goal": 16,
+    "blocked": [
+     6,
+     17
+    ],
+    "sham": [
+     11,
+     12
+    ],
+    "distance": 8,
+    "detourDistance": 9,
+    "detourEdges": [
+     "0-2",
+     "0-20",
+     "2-8",
+     "3-11",
+     "3-21",
+     "6-11",
+     "6-23",
+     "8-16",
+     "9-10",
+     "10-13",
+     "11-20",
+     "13-19",
+     "16-21",
+     "19-23",
+     "20-23"
+    ]
+   },
+   "testSteps": [
+    13,
+    163,
+    93
+   ],
+   "metric": 269,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 49
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|10",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 9,
+    "goal": 16,
+    "blocked": [
+     6,
+     17
+    ],
+    "sham": [
+     11,
+     12
+    ],
+    "distance": 8,
+    "detourDistance": 9,
+    "detourEdges": [
+     "0-2",
+     "0-20",
+     "2-8",
+     "3-11",
+     "3-21",
+     "6-11",
+     "6-23",
+     "8-16",
+     "9-10",
+     "10-13",
+     "11-20",
+     "13-19",
+     "16-21",
+     "19-23",
+     "20-23"
+    ]
+   },
+   "testSteps": [
+    11,
+    9,
+    9
+   ],
+   "metric": 29,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|10",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 9,
+    "goal": 16,
+    "blocked": [
+     6,
+     17
+    ],
+    "sham": [
+     11,
+     12
+    ],
+    "distance": 8,
+    "detourDistance": 9,
+    "detourEdges": [
+     "0-2",
+     "0-20",
+     "2-8",
+     "3-11",
+     "3-21",
+     "6-11",
+     "6-23",
+     "8-16",
+     "9-10",
+     "10-13",
+     "11-20",
+     "13-19",
+     "16-21",
+     "19-23",
+     "20-23"
+    ]
+   },
+   "testSteps": [
+    9,
+    9,
+    9
+   ],
+   "metric": 27,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|10",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 9,
+    "goal": 16,
+    "blocked": [
+     6,
+     17
+    ],
+    "sham": [
+     11,
+     12
+    ],
+    "distance": 8,
+    "detourDistance": 9,
+    "detourEdges": [
+     "0-2",
+     "0-20",
+     "2-8",
+     "3-11",
+     "3-21",
+     "6-11",
+     "6-23",
+     "8-16",
+     "9-10",
+     "10-13",
+     "11-20",
+     "13-19",
+     "16-21",
+     "19-23",
+     "20-23"
+    ]
+   },
+   "testSteps": [
+    19,
+    66,
+    49
+   ],
+   "metric": 134,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|10",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 9,
+    "goal": 16,
+    "blocked": [
+     6,
+     17
+    ],
+    "sham": [
+     11,
+     12
+    ],
+    "distance": 8,
+    "detourDistance": 9,
+    "detourEdges": [
+     "0-2",
+     "0-20",
+     "2-8",
+     "3-11",
+     "3-21",
+     "6-11",
+     "6-23",
+     "8-16",
+     "9-10",
+     "10-13",
+     "11-20",
+     "13-19",
+     "16-21",
+     "19-23",
+     "20-23"
+    ]
+   },
+   "testSteps": [
+    9,
+    9,
+    9
+   ],
+   "metric": 27,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|10",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 9,
+    "goal": 16,
+    "blocked": [
+     6,
+     17
+    ],
+    "sham": [
+     11,
+     12
+    ],
+    "distance": 8,
+    "detourDistance": 9,
+    "detourEdges": [
+     "0-2",
+     "0-20",
+     "2-8",
+     "3-11",
+     "3-21",
+     "6-11",
+     "6-23",
+     "8-16",
+     "9-10",
+     "10-13",
+     "11-20",
+     "13-19",
+     "16-21",
+     "19-23",
+     "20-23"
+    ]
+   },
+   "testSteps": [
+    10,
+    8,
+    10
+   ],
+   "metric": 28,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|10",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 9,
+    "goal": 16,
+    "blocked": [
+     6,
+     17
+    ],
+    "sham": [
+     11,
+     12
+    ],
+    "distance": 8,
+    "detourDistance": 9,
+    "detourEdges": [
+     "0-2",
+     "0-20",
+     "2-8",
+     "3-11",
+     "3-21",
+     "6-11",
+     "6-23",
+     "8-16",
+     "9-10",
+     "10-13",
+     "11-20",
+     "13-19",
+     "16-21",
+     "19-23",
+     "20-23"
+    ]
+   },
+   "testSteps": [
+    8,
+    8,
+    8
+   ],
+   "metric": 24,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|10",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 9,
+    "goal": 16,
+    "blocked": [
+     6,
+     17
+    ],
+    "sham": [
+     11,
+     12
+    ],
+    "distance": 8,
+    "detourDistance": 9,
+    "detourEdges": [
+     "0-2",
+     "0-20",
+     "2-8",
+     "3-11",
+     "3-21",
+     "6-11",
+     "6-23",
+     "8-16",
+     "9-10",
+     "10-13",
+     "11-20",
+     "13-19",
+     "16-21",
+     "19-23",
+     "20-23"
+    ]
+   },
+   "testSteps": [
+    19,
+    66,
+    40
+   ],
+   "metric": 125,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|10",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 9,
+    "goal": 16,
+    "blocked": [
+     6,
+     17
+    ],
+    "sham": [
+     11,
+     12
+    ],
+    "distance": 8,
+    "detourDistance": 9,
+    "detourEdges": [
+     "0-2",
+     "0-20",
+     "2-8",
+     "3-11",
+     "3-21",
+     "6-11",
+     "6-23",
+     "8-16",
+     "9-10",
+     "10-13",
+     "11-20",
+     "13-19",
+     "16-21",
+     "19-23",
+     "20-23"
+    ]
+   },
+   "testSteps": [
+    9,
+    9,
+    9
+   ],
+   "metric": 27,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|10",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 9,
+    "goal": 16,
+    "blocked": [
+     6,
+     17
+    ],
+    "sham": [
+     11,
+     12
+    ],
+    "distance": 8,
+    "detourDistance": 9,
+    "detourEdges": [
+     "0-2",
+     "0-20",
+     "2-8",
+     "3-11",
+     "3-21",
+     "6-11",
+     "6-23",
+     "8-16",
+     "9-10",
+     "10-13",
+     "11-20",
+     "13-19",
+     "16-21",
+     "19-23",
+     "20-23"
+    ]
+   },
+   "testSteps": [
+    10,
+    8,
+    10
+   ],
+   "metric": 28,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|10",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 9,
+    "goal": 16,
+    "blocked": [
+     6,
+     17
+    ],
+    "sham": [
+     11,
+     12
+    ],
+    "distance": 8,
+    "detourDistance": 9,
+    "detourEdges": [
+     "0-2",
+     "0-20",
+     "2-8",
+     "3-11",
+     "3-21",
+     "6-11",
+     "6-23",
+     "8-16",
+     "9-10",
+     "10-13",
+     "11-20",
+     "13-19",
+     "16-21",
+     "19-23",
+     "20-23"
+    ]
+   },
+   "testSteps": [
+    8,
+    8,
+    8
+   ],
+   "metric": 24,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|11",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 7,
+    "goal": 19,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "1-9",
+     "1-13",
+     "7-9",
+     "9-20",
+     "13-19",
+     "14-19",
+     "14-20"
+    ]
+   },
+   "testSteps": [
+    92,
+    10,
+    52
+   ],
+   "metric": 154,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 4
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|11",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 7,
+    "goal": 19,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "1-9",
+     "1-13",
+     "7-9",
+     "9-20",
+     "13-19",
+     "14-19",
+     "14-20"
+    ]
+   },
+   "testSteps": [
+    190,
+    18,
+    69
+   ],
+   "metric": 277,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 57
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|11",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 7,
+    "goal": 19,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "1-9",
+     "1-13",
+     "7-9",
+     "9-20",
+     "13-19",
+     "14-19",
+     "14-20"
+    ]
+   },
+   "testSteps": [
+    11,
+    5,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 4
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|11",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 7,
+    "goal": 19,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "1-9",
+     "1-13",
+     "7-9",
+     "9-20",
+     "13-19",
+     "14-19",
+     "14-20"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|11",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 7,
+    "goal": 19,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "1-9",
+     "1-13",
+     "7-9",
+     "9-20",
+     "13-19",
+     "14-19",
+     "14-20"
+    ]
+   },
+   "testSteps": [
+    118,
+    45,
+    26
+   ],
+   "metric": 189,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|11",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 7,
+    "goal": 19,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "1-9",
+     "1-13",
+     "7-9",
+     "9-20",
+     "13-19",
+     "14-19",
+     "14-20"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|11",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 7,
+    "goal": 19,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "1-9",
+     "1-13",
+     "7-9",
+     "9-20",
+     "13-19",
+     "14-19",
+     "14-20"
+    ]
+   },
+   "testSteps": [
+    24,
+    8,
+    6
+   ],
+   "metric": 38,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 8
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|11",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 7,
+    "goal": 19,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "1-9",
+     "1-13",
+     "7-9",
+     "9-20",
+     "13-19",
+     "14-19",
+     "14-20"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|11",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 7,
+    "goal": 19,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "1-9",
+     "1-13",
+     "7-9",
+     "9-20",
+     "13-19",
+     "14-19",
+     "14-20"
+    ]
+   },
+   "testSteps": [
+    71,
+    21,
+    10
+   ],
+   "metric": 102,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|11",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 7,
+    "goal": 19,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "1-9",
+     "1-13",
+     "7-9",
+     "9-20",
+     "13-19",
+     "14-19",
+     "14-20"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    5
+   ],
+   "metric": 11,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|11",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 7,
+    "goal": 19,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "1-9",
+     "1-13",
+     "7-9",
+     "9-20",
+     "13-19",
+     "14-19",
+     "14-20"
+    ]
+   },
+   "testSteps": [
+    5,
+    3,
+    3
+   ],
+   "metric": 11,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|11",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 7,
+    "goal": 19,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "1-9",
+     "1-13",
+     "7-9",
+     "9-20",
+     "13-19",
+     "14-19",
+     "14-20"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|11",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 7,
+    "goal": 19,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "1-9",
+     "1-13",
+     "7-9",
+     "9-20",
+     "13-19",
+     "14-19",
+     "14-20"
+    ]
+   },
+   "testSteps": [
+    71,
+    21,
+    10
+   ],
+   "metric": 102,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|11",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 7,
+    "goal": 19,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "1-9",
+     "1-13",
+     "7-9",
+     "9-20",
+     "13-19",
+     "14-19",
+     "14-20"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    5
+   ],
+   "metric": 11,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|11",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 7,
+    "goal": 19,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "1-9",
+     "1-13",
+     "7-9",
+     "9-20",
+     "13-19",
+     "14-19",
+     "14-20"
+    ]
+   },
+   "testSteps": [
+    5,
+    3,
+    3
+   ],
+   "metric": 11,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|11",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 7,
+    "goal": 19,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "1-9",
+     "1-13",
+     "7-9",
+     "9-20",
+     "13-19",
+     "14-19",
+     "14-20"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|12",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 1,
+    "goal": 23,
+    "blocked": [
+     1,
+     21
+    ],
+    "sham": [
+     2,
+     3
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-4",
+     "4-7",
+     "6-10",
+     "6-23",
+     "7-10"
+    ]
+   },
+   "testSteps": [
+    37,
+    200,
+    26
+   ],
+   "metric": 263,
+   "censored": 1,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 22
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|12",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 1,
+    "goal": 23,
+    "blocked": [
+     1,
+     21
+    ],
+    "sham": [
+     2,
+     3
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-4",
+     "4-7",
+     "6-10",
+     "6-23",
+     "7-10"
+    ]
+   },
+   "testSteps": [
+    19,
+    18,
+    11
+   ],
+   "metric": 48,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 25
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|12",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 1,
+    "goal": 23,
+    "blocked": [
+     1,
+     21
+    ],
+    "sham": [
+     2,
+     3
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-4",
+     "4-7",
+     "6-10",
+     "6-23",
+     "7-10"
+    ]
+   },
+   "testSteps": [
+    10,
+    7,
+    5
+   ],
+   "metric": 22,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 3
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|12",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 1,
+    "goal": 23,
+    "blocked": [
+     1,
+     21
+    ],
+    "sham": [
+     2,
+     3
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-4",
+     "4-7",
+     "6-10",
+     "6-23",
+     "7-10"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|12",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 1,
+    "goal": 23,
+    "blocked": [
+     1,
+     21
+    ],
+    "sham": [
+     2,
+     3
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-4",
+     "4-7",
+     "6-10",
+     "6-23",
+     "7-10"
+    ]
+   },
+   "testSteps": [
+    74,
+    77,
+    18
+   ],
+   "metric": 169,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 12
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|12",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 1,
+    "goal": 23,
+    "blocked": [
+     1,
+     21
+    ],
+    "sham": [
+     2,
+     3
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-4",
+     "4-7",
+     "6-10",
+     "6-23",
+     "7-10"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|12",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 1,
+    "goal": 23,
+    "blocked": [
+     1,
+     21
+    ],
+    "sham": [
+     2,
+     3
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-4",
+     "4-7",
+     "6-10",
+     "6-23",
+     "7-10"
+    ]
+   },
+   "testSteps": [
+    6,
+    5,
+    5
+   ],
+   "metric": 16,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|12",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 1,
+    "goal": 23,
+    "blocked": [
+     1,
+     21
+    ],
+    "sham": [
+     2,
+     3
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-4",
+     "4-7",
+     "6-10",
+     "6-23",
+     "7-10"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|12",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 1,
+    "goal": 23,
+    "blocked": [
+     1,
+     21
+    ],
+    "sham": [
+     2,
+     3
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-4",
+     "4-7",
+     "6-10",
+     "6-23",
+     "7-10"
+    ]
+   },
+   "testSteps": [
+    48,
+    10,
+    9
+   ],
+   "metric": 67,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|12",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 1,
+    "goal": 23,
+    "blocked": [
+     1,
+     21
+    ],
+    "sham": [
+     2,
+     3
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-4",
+     "4-7",
+     "6-10",
+     "6-23",
+     "7-10"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    11
+   ],
+   "metric": 19,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|12",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 1,
+    "goal": 23,
+    "blocked": [
+     1,
+     21
+    ],
+    "sham": [
+     2,
+     3
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-4",
+     "4-7",
+     "6-10",
+     "6-23",
+     "7-10"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|12",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 1,
+    "goal": 23,
+    "blocked": [
+     1,
+     21
+    ],
+    "sham": [
+     2,
+     3
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-4",
+     "4-7",
+     "6-10",
+     "6-23",
+     "7-10"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|12",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 1,
+    "goal": 23,
+    "blocked": [
+     1,
+     21
+    ],
+    "sham": [
+     2,
+     3
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-4",
+     "4-7",
+     "6-10",
+     "6-23",
+     "7-10"
+    ]
+   },
+   "testSteps": [
+    57,
+    10,
+    178
+   ],
+   "metric": 245,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|12",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 1,
+    "goal": 23,
+    "blocked": [
+     1,
+     21
+    ],
+    "sham": [
+     2,
+     3
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-4",
+     "4-7",
+     "6-10",
+     "6-23",
+     "7-10"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    11
+   ],
+   "metric": 19,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|12",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 1,
+    "goal": 23,
+    "blocked": [
+     1,
+     21
+    ],
+    "sham": [
+     2,
+     3
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-4",
+     "4-7",
+     "6-10",
+     "6-23",
+     "7-10"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|12",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 1,
+    "goal": 23,
+    "blocked": [
+     1,
+     21
+    ],
+    "sham": [
+     2,
+     3
+    ],
+    "distance": 4,
+    "detourDistance": 5,
+    "detourEdges": [
+     "1-4",
+     "4-7",
+     "6-10",
+     "6-23",
+     "7-10"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|13",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 15,
+    "goal": 22,
+    "blocked": [
+     19,
+     23
+    ],
+    "sham": [
+     10,
+     21
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-2",
+     "0-23",
+     "2-22",
+     "3-15",
+     "3-16",
+     "9-16",
+     "9-22",
+     "15-23",
+     "16-18",
+     "18-22"
+    ]
+   },
+   "testSteps": [
+    50,
+    37,
+    34
+   ],
+   "metric": 121,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|13",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 15,
+    "goal": 22,
+    "blocked": [
+     19,
+     23
+    ],
+    "sham": [
+     10,
+     21
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-2",
+     "0-23",
+     "2-22",
+     "3-15",
+     "3-16",
+     "9-16",
+     "9-22",
+     "15-23",
+     "16-18",
+     "18-22"
+    ]
+   },
+   "testSteps": [
+    22,
+    131,
+    15
+   ],
+   "metric": 168,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 48
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|13",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 15,
+    "goal": 22,
+    "blocked": [
+     19,
+     23
+    ],
+    "sham": [
+     10,
+     21
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-2",
+     "0-23",
+     "2-22",
+     "3-15",
+     "3-16",
+     "9-16",
+     "9-22",
+     "15-23",
+     "16-18",
+     "18-22"
+    ]
+   },
+   "testSteps": [
+    7,
+    4,
+    6
+   ],
+   "metric": 17,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|13",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 15,
+    "goal": 22,
+    "blocked": [
+     19,
+     23
+    ],
+    "sham": [
+     10,
+     21
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-2",
+     "0-23",
+     "2-22",
+     "3-15",
+     "3-16",
+     "9-16",
+     "9-22",
+     "15-23",
+     "16-18",
+     "18-22"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|13",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 15,
+    "goal": 22,
+    "blocked": [
+     19,
+     23
+    ],
+    "sham": [
+     10,
+     21
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-2",
+     "0-23",
+     "2-22",
+     "3-15",
+     "3-16",
+     "9-16",
+     "9-22",
+     "15-23",
+     "16-18",
+     "18-22"
+    ]
+   },
+   "testSteps": [
+    7,
+    17,
+    8
+   ],
+   "metric": 32,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 2
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|13",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 15,
+    "goal": 22,
+    "blocked": [
+     19,
+     23
+    ],
+    "sham": [
+     10,
+     21
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-2",
+     "0-23",
+     "2-22",
+     "3-15",
+     "3-16",
+     "9-16",
+     "9-22",
+     "15-23",
+     "16-18",
+     "18-22"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|13",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 15,
+    "goal": 22,
+    "blocked": [
+     19,
+     23
+    ],
+    "sham": [
+     10,
+     21
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-2",
+     "0-23",
+     "2-22",
+     "3-15",
+     "3-16",
+     "9-16",
+     "9-22",
+     "15-23",
+     "16-18",
+     "18-22"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|13",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 15,
+    "goal": 22,
+    "blocked": [
+     19,
+     23
+    ],
+    "sham": [
+     10,
+     21
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-2",
+     "0-23",
+     "2-22",
+     "3-15",
+     "3-16",
+     "9-16",
+     "9-22",
+     "15-23",
+     "16-18",
+     "18-22"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|13",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 15,
+    "goal": 22,
+    "blocked": [
+     19,
+     23
+    ],
+    "sham": [
+     10,
+     21
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-2",
+     "0-23",
+     "2-22",
+     "3-15",
+     "3-16",
+     "9-16",
+     "9-22",
+     "15-23",
+     "16-18",
+     "18-22"
+    ]
+   },
+   "testSteps": [
+    50,
+    37,
+    21
+   ],
+   "metric": 108,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|13",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 15,
+    "goal": 22,
+    "blocked": [
+     19,
+     23
+    ],
+    "sham": [
+     10,
+     21
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-2",
+     "0-23",
+     "2-22",
+     "3-15",
+     "3-16",
+     "9-16",
+     "9-22",
+     "15-23",
+     "16-18",
+     "18-22"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|13",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 15,
+    "goal": 22,
+    "blocked": [
+     19,
+     23
+    ],
+    "sham": [
+     10,
+     21
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-2",
+     "0-23",
+     "2-22",
+     "3-15",
+     "3-16",
+     "9-16",
+     "9-22",
+     "15-23",
+     "16-18",
+     "18-22"
+    ]
+   },
+   "testSteps": [
+    5,
+    3,
+    3
+   ],
+   "metric": 11,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|13",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 15,
+    "goal": 22,
+    "blocked": [
+     19,
+     23
+    ],
+    "sham": [
+     10,
+     21
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-2",
+     "0-23",
+     "2-22",
+     "3-15",
+     "3-16",
+     "9-16",
+     "9-22",
+     "15-23",
+     "16-18",
+     "18-22"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|13",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 15,
+    "goal": 22,
+    "blocked": [
+     19,
+     23
+    ],
+    "sham": [
+     10,
+     21
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-2",
+     "0-23",
+     "2-22",
+     "3-15",
+     "3-16",
+     "9-16",
+     "9-22",
+     "15-23",
+     "16-18",
+     "18-22"
+    ]
+   },
+   "testSteps": [
+    50,
+    37,
+    34
+   ],
+   "metric": 121,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|13",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 15,
+    "goal": 22,
+    "blocked": [
+     19,
+     23
+    ],
+    "sham": [
+     10,
+     21
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-2",
+     "0-23",
+     "2-22",
+     "3-15",
+     "3-16",
+     "9-16",
+     "9-22",
+     "15-23",
+     "16-18",
+     "18-22"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|13",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 15,
+    "goal": 22,
+    "blocked": [
+     19,
+     23
+    ],
+    "sham": [
+     10,
+     21
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-2",
+     "0-23",
+     "2-22",
+     "3-15",
+     "3-16",
+     "9-16",
+     "9-22",
+     "15-23",
+     "16-18",
+     "18-22"
+    ]
+   },
+   "testSteps": [
+    5,
+    3,
+    3
+   ],
+   "metric": 11,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|13",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 15,
+    "goal": 22,
+    "blocked": [
+     19,
+     23
+    ],
+    "sham": [
+     10,
+     21
+    ],
+    "distance": 3,
+    "detourDistance": 4,
+    "detourEdges": [
+     "0-2",
+     "0-23",
+     "2-22",
+     "3-15",
+     "3-16",
+     "9-16",
+     "9-22",
+     "15-23",
+     "16-18",
+     "18-22"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|14",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 16,
+    "goal": 5,
+    "blocked": [
+     13,
+     16
+    ],
+    "sham": [
+     3,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7,
+    "detourEdges": [
+     "0-8",
+     "0-21",
+     "3-8",
+     "3-9",
+     "3-18",
+     "5-23",
+     "7-12",
+     "7-18",
+     "8-17",
+     "9-16",
+     "12-23",
+     "17-21",
+     "21-23"
+    ]
+   },
+   "testSteps": [
+    101,
+    200,
+    155
+   ],
+   "metric": 456,
+   "censored": 1,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 25
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|14",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 16,
+    "goal": 5,
+    "blocked": [
+     13,
+     16
+    ],
+    "sham": [
+     3,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7,
+    "detourEdges": [
+     "0-8",
+     "0-21",
+     "3-8",
+     "3-9",
+     "3-18",
+     "5-23",
+     "7-12",
+     "7-18",
+     "8-17",
+     "9-16",
+     "12-23",
+     "17-21",
+     "21-23"
+    ]
+   },
+   "testSteps": [
+    200,
+    20,
+    73
+   ],
+   "metric": 293,
+   "censored": 1,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 117
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|14",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 16,
+    "goal": 5,
+    "blocked": [
+     13,
+     16
+    ],
+    "sham": [
+     3,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7,
+    "detourEdges": [
+     "0-8",
+     "0-21",
+     "3-8",
+     "3-9",
+     "3-18",
+     "5-23",
+     "7-12",
+     "7-18",
+     "8-17",
+     "9-16",
+     "12-23",
+     "17-21",
+     "21-23"
+    ]
+   },
+   "testSteps": [
+    13,
+    7,
+    7
+   ],
+   "metric": 27,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 4
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|14",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 16,
+    "goal": 5,
+    "blocked": [
+     13,
+     16
+    ],
+    "sham": [
+     3,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7,
+    "detourEdges": [
+     "0-8",
+     "0-21",
+     "3-8",
+     "3-9",
+     "3-18",
+     "5-23",
+     "7-12",
+     "7-18",
+     "8-17",
+     "9-16",
+     "12-23",
+     "17-21",
+     "21-23"
+    ]
+   },
+   "testSteps": [
+    7,
+    7,
+    7
+   ],
+   "metric": 21,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|14",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 16,
+    "goal": 5,
+    "blocked": [
+     13,
+     16
+    ],
+    "sham": [
+     3,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7,
+    "detourEdges": [
+     "0-8",
+     "0-21",
+     "3-8",
+     "3-9",
+     "3-18",
+     "5-23",
+     "7-12",
+     "7-18",
+     "8-17",
+     "9-16",
+     "12-23",
+     "17-21",
+     "21-23"
+    ]
+   },
+   "testSteps": [
+    40,
+    40,
+    31
+   ],
+   "metric": 111,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 10
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|14",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 16,
+    "goal": 5,
+    "blocked": [
+     13,
+     16
+    ],
+    "sham": [
+     3,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7,
+    "detourEdges": [
+     "0-8",
+     "0-21",
+     "3-8",
+     "3-9",
+     "3-18",
+     "5-23",
+     "7-12",
+     "7-18",
+     "8-17",
+     "9-16",
+     "12-23",
+     "17-21",
+     "21-23"
+    ]
+   },
+   "testSteps": [
+    70,
+    46,
+    7
+   ],
+   "metric": 123,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 50
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|14",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 16,
+    "goal": 5,
+    "blocked": [
+     13,
+     16
+    ],
+    "sham": [
+     3,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7,
+    "detourEdges": [
+     "0-8",
+     "0-21",
+     "3-8",
+     "3-9",
+     "3-18",
+     "5-23",
+     "7-12",
+     "7-18",
+     "8-17",
+     "9-16",
+     "12-23",
+     "17-21",
+     "21-23"
+    ]
+   },
+   "testSteps": [
+    200,
+    39,
+    8
+   ],
+   "metric": 247,
+   "censored": 1,
+   "secondary": {
+    "blockedAttempts": 65
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|14",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 16,
+    "goal": 5,
+    "blocked": [
+     13,
+     16
+    ],
+    "sham": [
+     3,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7,
+    "detourEdges": [
+     "0-8",
+     "0-21",
+     "3-8",
+     "3-9",
+     "3-18",
+     "5-23",
+     "7-12",
+     "7-18",
+     "8-17",
+     "9-16",
+     "12-23",
+     "17-21",
+     "21-23"
+    ]
+   },
+   "testSteps": [
+    7,
+    7,
+    7
+   ],
+   "metric": 21,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|14",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 16,
+    "goal": 5,
+    "blocked": [
+     13,
+     16
+    ],
+    "sham": [
+     3,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7,
+    "detourEdges": [
+     "0-8",
+     "0-21",
+     "3-8",
+     "3-9",
+     "3-18",
+     "5-23",
+     "7-12",
+     "7-18",
+     "8-17",
+     "9-16",
+     "12-23",
+     "17-21",
+     "21-23"
+    ]
+   },
+   "testSteps": [
+    200,
+    78,
+    45
+   ],
+   "metric": 323,
+   "censored": 1,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|14",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 16,
+    "goal": 5,
+    "blocked": [
+     13,
+     16
+    ],
+    "sham": [
+     3,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7,
+    "detourEdges": [
+     "0-8",
+     "0-21",
+     "3-8",
+     "3-9",
+     "3-18",
+     "5-23",
+     "7-12",
+     "7-18",
+     "8-17",
+     "9-16",
+     "12-23",
+     "17-21",
+     "21-23"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|14",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 16,
+    "goal": 5,
+    "blocked": [
+     13,
+     16
+    ],
+    "sham": [
+     3,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7,
+    "detourEdges": [
+     "0-8",
+     "0-21",
+     "3-8",
+     "3-9",
+     "3-18",
+     "5-23",
+     "7-12",
+     "7-18",
+     "8-17",
+     "9-16",
+     "12-23",
+     "17-21",
+     "21-23"
+    ]
+   },
+   "testSteps": [
+    7,
+    5,
+    5
+   ],
+   "metric": 17,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|14",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 16,
+    "goal": 5,
+    "blocked": [
+     13,
+     16
+    ],
+    "sham": [
+     3,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7,
+    "detourEdges": [
+     "0-8",
+     "0-21",
+     "3-8",
+     "3-9",
+     "3-18",
+     "5-23",
+     "7-12",
+     "7-18",
+     "8-17",
+     "9-16",
+     "12-23",
+     "17-21",
+     "21-23"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|14",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 16,
+    "goal": 5,
+    "blocked": [
+     13,
+     16
+    ],
+    "sham": [
+     3,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7,
+    "detourEdges": [
+     "0-8",
+     "0-21",
+     "3-8",
+     "3-9",
+     "3-18",
+     "5-23",
+     "7-12",
+     "7-18",
+     "8-17",
+     "9-16",
+     "12-23",
+     "17-21",
+     "21-23"
+    ]
+   },
+   "testSteps": [
+    101,
+    64,
+    61
+   ],
+   "metric": 226,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|14",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 16,
+    "goal": 5,
+    "blocked": [
+     13,
+     16
+    ],
+    "sham": [
+     3,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7,
+    "detourEdges": [
+     "0-8",
+     "0-21",
+     "3-8",
+     "3-9",
+     "3-18",
+     "5-23",
+     "7-12",
+     "7-18",
+     "8-17",
+     "9-16",
+     "12-23",
+     "17-21",
+     "21-23"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|14",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 16,
+    "goal": 5,
+    "blocked": [
+     13,
+     16
+    ],
+    "sham": [
+     3,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7,
+    "detourEdges": [
+     "0-8",
+     "0-21",
+     "3-8",
+     "3-9",
+     "3-18",
+     "5-23",
+     "7-12",
+     "7-18",
+     "8-17",
+     "9-16",
+     "12-23",
+     "17-21",
+     "21-23"
+    ]
+   },
+   "testSteps": [
+    7,
+    5,
+    5
+   ],
+   "metric": 17,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|14",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 16,
+    "goal": 5,
+    "blocked": [
+     13,
+     16
+    ],
+    "sham": [
+     3,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7,
+    "detourEdges": [
+     "0-8",
+     "0-21",
+     "3-8",
+     "3-9",
+     "3-18",
+     "5-23",
+     "7-12",
+     "7-18",
+     "8-17",
+     "9-16",
+     "12-23",
+     "17-21",
+     "21-23"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|15",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 16,
+    "goal": 8,
+    "blocked": [
+     7,
+     18
+    ],
+    "sham": [
+     6,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-6",
+     "4-8",
+     "6-17",
+     "7-15",
+     "7-17",
+     "8-18",
+     "10-12",
+     "10-21",
+     "12-15",
+     "15-16",
+     "18-21"
+    ]
+   },
+   "testSteps": [
+    32,
+    38,
+    104
+   ],
+   "metric": 174,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 4
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|15",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 16,
+    "goal": 8,
+    "blocked": [
+     7,
+     18
+    ],
+    "sham": [
+     6,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-6",
+     "4-8",
+     "6-17",
+     "7-15",
+     "7-17",
+     "8-18",
+     "10-12",
+     "10-21",
+     "12-15",
+     "15-16",
+     "18-21"
+    ]
+   },
+   "testSteps": [
+    93,
+    200,
+    65
+   ],
+   "metric": 358,
+   "censored": 1,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 60
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|15",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 16,
+    "goal": 8,
+    "blocked": [
+     7,
+     18
+    ],
+    "sham": [
+     6,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-6",
+     "4-8",
+     "6-17",
+     "7-15",
+     "7-17",
+     "8-18",
+     "10-12",
+     "10-21",
+     "12-15",
+     "15-16",
+     "18-21"
+    ]
+   },
+   "testSteps": [
+    14,
+    6,
+    6
+   ],
+   "metric": 26,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 4
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|15",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 16,
+    "goal": 8,
+    "blocked": [
+     7,
+     18
+    ],
+    "sham": [
+     6,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-6",
+     "4-8",
+     "6-17",
+     "7-15",
+     "7-17",
+     "8-18",
+     "10-12",
+     "10-21",
+     "12-15",
+     "15-16",
+     "18-21"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|15",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 16,
+    "goal": 8,
+    "blocked": [
+     7,
+     18
+    ],
+    "sham": [
+     6,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-6",
+     "4-8",
+     "6-17",
+     "7-15",
+     "7-17",
+     "8-18",
+     "10-12",
+     "10-21",
+     "12-15",
+     "15-16",
+     "18-21"
+    ]
+   },
+   "testSteps": [
+    21,
+    10,
+    13
+   ],
+   "metric": 44,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 2
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|15",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 16,
+    "goal": 8,
+    "blocked": [
+     7,
+     18
+    ],
+    "sham": [
+     6,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-6",
+     "4-8",
+     "6-17",
+     "7-15",
+     "7-17",
+     "8-18",
+     "10-12",
+     "10-21",
+     "12-15",
+     "15-16",
+     "18-21"
+    ]
+   },
+   "testSteps": [
+    200,
+    200,
+    200
+   ],
+   "metric": 600,
+   "censored": 3,
+   "secondary": {
+    "blockedAttempts": 73
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|15",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 16,
+    "goal": 8,
+    "blocked": [
+     7,
+     18
+    ],
+    "sham": [
+     6,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-6",
+     "4-8",
+     "6-17",
+     "7-15",
+     "7-17",
+     "8-18",
+     "10-12",
+     "10-21",
+     "12-15",
+     "15-16",
+     "18-21"
+    ]
+   },
+   "testSteps": [
+    17,
+    17,
+    11
+   ],
+   "metric": 45,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 3
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|15",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 16,
+    "goal": 8,
+    "blocked": [
+     7,
+     18
+    ],
+    "sham": [
+     6,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-6",
+     "4-8",
+     "6-17",
+     "7-15",
+     "7-17",
+     "8-18",
+     "10-12",
+     "10-21",
+     "12-15",
+     "15-16",
+     "18-21"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|15",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 16,
+    "goal": 8,
+    "blocked": [
+     7,
+     18
+    ],
+    "sham": [
+     6,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-6",
+     "4-8",
+     "6-17",
+     "7-15",
+     "7-17",
+     "8-18",
+     "10-12",
+     "10-21",
+     "12-15",
+     "15-16",
+     "18-21"
+    ]
+   },
+   "testSteps": [
+    32,
+    38,
+    29
+   ],
+   "metric": 99,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|15",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 16,
+    "goal": 8,
+    "blocked": [
+     7,
+     18
+    ],
+    "sham": [
+     6,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-6",
+     "4-8",
+     "6-17",
+     "7-15",
+     "7-17",
+     "8-18",
+     "10-12",
+     "10-21",
+     "12-15",
+     "15-16",
+     "18-21"
+    ]
+   },
+   "testSteps": [
+    6,
+    4,
+    4
+   ],
+   "metric": 14,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|15",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 16,
+    "goal": 8,
+    "blocked": [
+     7,
+     18
+    ],
+    "sham": [
+     6,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-6",
+     "4-8",
+     "6-17",
+     "7-15",
+     "7-17",
+     "8-18",
+     "10-12",
+     "10-21",
+     "12-15",
+     "15-16",
+     "18-21"
+    ]
+   },
+   "testSteps": [
+    6,
+    4,
+    6
+   ],
+   "metric": 16,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|15",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 16,
+    "goal": 8,
+    "blocked": [
+     7,
+     18
+    ],
+    "sham": [
+     6,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-6",
+     "4-8",
+     "6-17",
+     "7-15",
+     "7-17",
+     "8-18",
+     "10-12",
+     "10-21",
+     "12-15",
+     "15-16",
+     "18-21"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|15",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 16,
+    "goal": 8,
+    "blocked": [
+     7,
+     18
+    ],
+    "sham": [
+     6,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-6",
+     "4-8",
+     "6-17",
+     "7-15",
+     "7-17",
+     "8-18",
+     "10-12",
+     "10-21",
+     "12-15",
+     "15-16",
+     "18-21"
+    ]
+   },
+   "testSteps": [
+    32,
+    38,
+    29
+   ],
+   "metric": 99,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|15",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 16,
+    "goal": 8,
+    "blocked": [
+     7,
+     18
+    ],
+    "sham": [
+     6,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-6",
+     "4-8",
+     "6-17",
+     "7-15",
+     "7-17",
+     "8-18",
+     "10-12",
+     "10-21",
+     "12-15",
+     "15-16",
+     "18-21"
+    ]
+   },
+   "testSteps": [
+    6,
+    4,
+    4
+   ],
+   "metric": 14,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|15",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 16,
+    "goal": 8,
+    "blocked": [
+     7,
+     18
+    ],
+    "sham": [
+     6,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-6",
+     "4-8",
+     "6-17",
+     "7-15",
+     "7-17",
+     "8-18",
+     "10-12",
+     "10-21",
+     "12-15",
+     "15-16",
+     "18-21"
+    ]
+   },
+   "testSteps": [
+    6,
+    4,
+    6
+   ],
+   "metric": 16,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|15",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 16,
+    "goal": 8,
+    "blocked": [
+     7,
+     18
+    ],
+    "sham": [
+     6,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "4-6",
+     "4-8",
+     "6-17",
+     "7-15",
+     "7-17",
+     "8-18",
+     "10-12",
+     "10-21",
+     "12-15",
+     "15-16",
+     "18-21"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|16",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 1,
+    "goal": 21,
+    "blocked": [
+     8,
+     20
+    ],
+    "sham": [
+     11,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-13",
+     "3-14",
+     "3-21",
+     "4-14",
+     "4-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    61,
+    191,
+    37
+   ],
+   "metric": 289,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 8
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|16",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 1,
+    "goal": 21,
+    "blocked": [
+     8,
+     20
+    ],
+    "sham": [
+     11,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-13",
+     "3-14",
+     "3-21",
+     "4-14",
+     "4-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    200,
+    132,
+    200
+   ],
+   "metric": 532,
+   "censored": 2,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 76
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|16",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 1,
+    "goal": 21,
+    "blocked": [
+     8,
+     20
+    ],
+    "sham": [
+     11,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-13",
+     "3-14",
+     "3-21",
+     "4-14",
+     "4-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    23,
+    10,
+    10
+   ],
+   "metric": 43,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 7
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|16",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 1,
+    "goal": 21,
+    "blocked": [
+     8,
+     20
+    ],
+    "sham": [
+     11,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-13",
+     "3-14",
+     "3-21",
+     "4-14",
+     "4-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|16",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 1,
+    "goal": 21,
+    "blocked": [
+     8,
+     20
+    ],
+    "sham": [
+     11,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-13",
+     "3-14",
+     "3-21",
+     "4-14",
+     "4-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    112,
+    168,
+    122
+   ],
+   "metric": 402,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 15
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|16",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 1,
+    "goal": 21,
+    "blocked": [
+     8,
+     20
+    ],
+    "sham": [
+     11,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-13",
+     "3-14",
+     "3-21",
+     "4-14",
+     "4-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    200,
+    200,
+    200
+   ],
+   "metric": 600,
+   "censored": 3,
+   "secondary": {
+    "blockedAttempts": 85
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|16",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 1,
+    "goal": 21,
+    "blocked": [
+     8,
+     20
+    ],
+    "sham": [
+     11,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-13",
+     "3-14",
+     "3-21",
+     "4-14",
+     "4-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    23,
+    8,
+    8
+   ],
+   "metric": 39,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 4
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|16",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 1,
+    "goal": 21,
+    "blocked": [
+     8,
+     20
+    ],
+    "sham": [
+     11,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-13",
+     "3-14",
+     "3-21",
+     "4-14",
+     "4-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|16",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 1,
+    "goal": 21,
+    "blocked": [
+     8,
+     20
+    ],
+    "sham": [
+     11,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-13",
+     "3-14",
+     "3-21",
+     "4-14",
+     "4-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    11,
+    12,
+    70
+   ],
+   "metric": 93,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|16",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 1,
+    "goal": 21,
+    "blocked": [
+     8,
+     20
+    ],
+    "sham": [
+     11,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-13",
+     "3-14",
+     "3-21",
+     "4-14",
+     "4-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|16",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 1,
+    "goal": 21,
+    "blocked": [
+     8,
+     20
+    ],
+    "sham": [
+     11,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-13",
+     "3-14",
+     "3-21",
+     "4-14",
+     "4-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    5,
+    7,
+    3
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|16",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 1,
+    "goal": 21,
+    "blocked": [
+     8,
+     20
+    ],
+    "sham": [
+     11,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-13",
+     "3-14",
+     "3-21",
+     "4-14",
+     "4-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|16",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 1,
+    "goal": 21,
+    "blocked": [
+     8,
+     20
+    ],
+    "sham": [
+     11,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-13",
+     "3-14",
+     "3-21",
+     "4-14",
+     "4-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    11,
+    12,
+    39
+   ],
+   "metric": 62,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|16",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 1,
+    "goal": 21,
+    "blocked": [
+     8,
+     20
+    ],
+    "sham": [
+     11,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-13",
+     "3-14",
+     "3-21",
+     "4-14",
+     "4-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|16",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 1,
+    "goal": 21,
+    "blocked": [
+     8,
+     20
+    ],
+    "sham": [
+     11,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-13",
+     "3-14",
+     "3-21",
+     "4-14",
+     "4-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    5,
+    7,
+    3
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|16",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 1,
+    "goal": 21,
+    "blocked": [
+     8,
+     20
+    ],
+    "sham": [
+     11,
+     19
+    ],
+    "distance": 3,
+    "detourDistance": 6,
+    "detourEdges": [
+     "1-13",
+     "3-14",
+     "3-21",
+     "4-14",
+     "4-19",
+     "13-19"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|17",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 0,
+    "goal": 7,
+    "blocked": [
+     0,
+     17
+    ],
+    "sham": [
+     11,
+     22
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-21",
+     "7-15",
+     "11-15",
+     "11-16",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    17,
+    34,
+    76
+   ],
+   "metric": 127,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 6
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|17",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 0,
+    "goal": 7,
+    "blocked": [
+     0,
+     17
+    ],
+    "sham": [
+     11,
+     22
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-21",
+     "7-15",
+     "11-15",
+     "11-16",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    200,
+    82,
+    37
+   ],
+   "metric": 319,
+   "censored": 1,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 104
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|17",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 0,
+    "goal": 7,
+    "blocked": [
+     0,
+     17
+    ],
+    "sham": [
+     11,
+     22
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-21",
+     "7-15",
+     "11-15",
+     "11-16",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    11,
+    7,
+    5
+   ],
+   "metric": 23,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 6
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|17",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 0,
+    "goal": 7,
+    "blocked": [
+     0,
+     17
+    ],
+    "sham": [
+     11,
+     22
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-21",
+     "7-15",
+     "11-15",
+     "11-16",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|17",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 0,
+    "goal": 7,
+    "blocked": [
+     0,
+     17
+    ],
+    "sham": [
+     11,
+     22
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-21",
+     "7-15",
+     "11-15",
+     "11-16",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    141,
+    176,
+    71
+   ],
+   "metric": 388,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 17
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|17",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 0,
+    "goal": 7,
+    "blocked": [
+     0,
+     17
+    ],
+    "sham": [
+     11,
+     22
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-21",
+     "7-15",
+     "11-15",
+     "11-16",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    7,
+    5,
+    5
+   ],
+   "metric": 17,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|17",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 0,
+    "goal": 7,
+    "blocked": [
+     0,
+     17
+    ],
+    "sham": [
+     11,
+     22
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-21",
+     "7-15",
+     "11-15",
+     "11-16",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    9,
+    18,
+    9
+   ],
+   "metric": 36,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 3
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|17",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 0,
+    "goal": 7,
+    "blocked": [
+     0,
+     17
+    ],
+    "sham": [
+     11,
+     22
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-21",
+     "7-15",
+     "11-15",
+     "11-16",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|17",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 0,
+    "goal": 7,
+    "blocked": [
+     0,
+     17
+    ],
+    "sham": [
+     11,
+     22
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-21",
+     "7-15",
+     "11-15",
+     "11-16",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    86,
+    41,
+    179
+   ],
+   "metric": 306,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|17",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 0,
+    "goal": 7,
+    "blocked": [
+     0,
+     17
+    ],
+    "sham": [
+     11,
+     22
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-21",
+     "7-15",
+     "11-15",
+     "11-16",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|17",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 0,
+    "goal": 7,
+    "blocked": [
+     0,
+     17
+    ],
+    "sham": [
+     11,
+     22
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-21",
+     "7-15",
+     "11-15",
+     "11-16",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    5,
+    3,
+    3
+   ],
+   "metric": 11,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|17",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 0,
+    "goal": 7,
+    "blocked": [
+     0,
+     17
+    ],
+    "sham": [
+     11,
+     22
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-21",
+     "7-15",
+     "11-15",
+     "11-16",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|17",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 0,
+    "goal": 7,
+    "blocked": [
+     0,
+     17
+    ],
+    "sham": [
+     11,
+     22
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-21",
+     "7-15",
+     "11-15",
+     "11-16",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    74,
+    5,
+    7
+   ],
+   "metric": 86,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|17",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 0,
+    "goal": 7,
+    "blocked": [
+     0,
+     17
+    ],
+    "sham": [
+     11,
+     22
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-21",
+     "7-15",
+     "11-15",
+     "11-16",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|17",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 0,
+    "goal": 7,
+    "blocked": [
+     0,
+     17
+    ],
+    "sham": [
+     11,
+     22
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-21",
+     "7-15",
+     "11-15",
+     "11-16",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    5,
+    3,
+    3
+   ],
+   "metric": 11,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|17",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 0,
+    "goal": 7,
+    "blocked": [
+     0,
+     17
+    ],
+    "sham": [
+     11,
+     22
+    ],
+    "distance": 3,
+    "detourDistance": 5,
+    "detourEdges": [
+     "0-21",
+     "7-15",
+     "11-15",
+     "11-16",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    3,
+    3,
+    3
+   ],
+   "metric": 9,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|18",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 8,
+    "goal": 12,
+    "blocked": [
+     12,
+     20
+    ],
+    "sham": [
+     2,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-8",
+     "0-15",
+     "6-16",
+     "6-19",
+     "12-19",
+     "15-16"
+    ]
+   },
+   "testSteps": [
+    162,
+    45,
+    133
+   ],
+   "metric": 340,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 4
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|18",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 8,
+    "goal": 12,
+    "blocked": [
+     12,
+     20
+    ],
+    "sham": [
+     2,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-8",
+     "0-15",
+     "6-16",
+     "6-19",
+     "12-19",
+     "15-16"
+    ]
+   },
+   "testSteps": [
+    200,
+    200,
+    200
+   ],
+   "metric": 600,
+   "censored": 3,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 89
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|18",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 8,
+    "goal": 12,
+    "blocked": [
+     12,
+     20
+    ],
+    "sham": [
+     2,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-8",
+     "0-15",
+     "6-16",
+     "6-19",
+     "12-19",
+     "15-16"
+    ]
+   },
+   "testSteps": [
+    18,
+    15,
+    8
+   ],
+   "metric": 41,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 6
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|18",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 8,
+    "goal": 12,
+    "blocked": [
+     12,
+     20
+    ],
+    "sham": [
+     2,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-8",
+     "0-15",
+     "6-16",
+     "6-19",
+     "12-19",
+     "15-16"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|18",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 8,
+    "goal": 12,
+    "blocked": [
+     12,
+     20
+    ],
+    "sham": [
+     2,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-8",
+     "0-15",
+     "6-16",
+     "6-19",
+     "12-19",
+     "15-16"
+    ]
+   },
+   "testSteps": [
+    28,
+    40,
+    71
+   ],
+   "metric": 139,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 2
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|18",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 8,
+    "goal": 12,
+    "blocked": [
+     12,
+     20
+    ],
+    "sham": [
+     2,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-8",
+     "0-15",
+     "6-16",
+     "6-19",
+     "12-19",
+     "15-16"
+    ]
+   },
+   "testSteps": [
+    195,
+    200,
+    112
+   ],
+   "metric": 507,
+   "censored": 1,
+   "secondary": {
+    "blockedAttempts": 64
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|18",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 8,
+    "goal": 12,
+    "blocked": [
+     12,
+     20
+    ],
+    "sham": [
+     2,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-8",
+     "0-15",
+     "6-16",
+     "6-19",
+     "12-19",
+     "15-16"
+    ]
+   },
+   "testSteps": [
+    200,
+    200,
+    200
+   ],
+   "metric": 600,
+   "censored": 3,
+   "secondary": {
+    "blockedAttempts": 31
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|18",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 8,
+    "goal": 12,
+    "blocked": [
+     12,
+     20
+    ],
+    "sham": [
+     2,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-8",
+     "0-15",
+     "6-16",
+     "6-19",
+     "12-19",
+     "15-16"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|18",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 8,
+    "goal": 12,
+    "blocked": [
+     12,
+     20
+    ],
+    "sham": [
+     2,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-8",
+     "0-15",
+     "6-16",
+     "6-19",
+     "12-19",
+     "15-16"
+    ]
+   },
+   "testSteps": [
+    56,
+    106,
+    45
+   ],
+   "metric": 207,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|18",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 8,
+    "goal": 12,
+    "blocked": [
+     12,
+     20
+    ],
+    "sham": [
+     2,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-8",
+     "0-15",
+     "6-16",
+     "6-19",
+     "12-19",
+     "15-16"
+    ]
+   },
+   "testSteps": [
+    6,
+    4,
+    4
+   ],
+   "metric": 14,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|18",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 8,
+    "goal": 12,
+    "blocked": [
+     12,
+     20
+    ],
+    "sham": [
+     2,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-8",
+     "0-15",
+     "6-16",
+     "6-19",
+     "12-19",
+     "15-16"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|18",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 8,
+    "goal": 12,
+    "blocked": [
+     12,
+     20
+    ],
+    "sham": [
+     2,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-8",
+     "0-15",
+     "6-16",
+     "6-19",
+     "12-19",
+     "15-16"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|18",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 8,
+    "goal": 12,
+    "blocked": [
+     12,
+     20
+    ],
+    "sham": [
+     2,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-8",
+     "0-15",
+     "6-16",
+     "6-19",
+     "12-19",
+     "15-16"
+    ]
+   },
+   "testSteps": [
+    56,
+    106,
+    45
+   ],
+   "metric": 207,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|18",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 8,
+    "goal": 12,
+    "blocked": [
+     12,
+     20
+    ],
+    "sham": [
+     2,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-8",
+     "0-15",
+     "6-16",
+     "6-19",
+     "12-19",
+     "15-16"
+    ]
+   },
+   "testSteps": [
+    6,
+    4,
+    4
+   ],
+   "metric": 14,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|18",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 8,
+    "goal": 12,
+    "blocked": [
+     12,
+     20
+    ],
+    "sham": [
+     2,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-8",
+     "0-15",
+     "6-16",
+     "6-19",
+     "12-19",
+     "15-16"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|18",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 8,
+    "goal": 12,
+    "blocked": [
+     12,
+     20
+    ],
+    "sham": [
+     2,
+     19
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-8",
+     "0-15",
+     "6-16",
+     "6-19",
+     "12-19",
+     "15-16"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|19",
+   "kind": "RANDOM",
+   "arm": "PRE",
+   "layout": {
+    "start": 5,
+    "goal": 9,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     6,
+     15
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-4",
+     "0-12",
+     "0-16",
+     "1-5",
+     "1-21",
+     "4-6",
+     "4-8",
+     "5-20",
+     "5-22",
+     "6-20",
+     "6-22",
+     "8-13",
+     "9-12",
+     "9-13",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    140,
+    16,
+    17
+   ],
+   "metric": 173,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|19",
+   "kind": "QL",
+   "arm": "PRE",
+   "layout": {
+    "start": 5,
+    "goal": 9,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     6,
+     15
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-4",
+     "0-12",
+     "0-16",
+     "1-5",
+     "1-21",
+     "4-6",
+     "4-8",
+     "5-20",
+     "5-22",
+     "6-20",
+     "6-22",
+     "8-13",
+     "9-12",
+     "9-13",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    20,
+    200,
+    58
+   ],
+   "metric": 278,
+   "censored": 1,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 34
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|19",
+   "kind": "DYNAQ",
+   "arm": "PRE",
+   "layout": {
+    "start": 5,
+    "goal": 9,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     6,
+     15
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-4",
+     "0-12",
+     "0-16",
+     "1-5",
+     "1-21",
+     "4-6",
+     "4-8",
+     "5-20",
+     "5-22",
+     "6-20",
+     "6-22",
+     "8-13",
+     "9-12",
+     "9-13",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    13,
+    6,
+    6
+   ],
+   "metric": 25,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 5
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|19",
+   "kind": "ORACLE",
+   "arm": "PRE",
+   "layout": {
+    "start": 5,
+    "goal": 9,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     6,
+     15
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-4",
+     "0-12",
+     "0-16",
+     "1-5",
+     "1-21",
+     "4-6",
+     "4-8",
+     "5-20",
+     "5-22",
+     "6-20",
+     "6-22",
+     "8-13",
+     "9-12",
+     "9-13",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1,
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|19",
+   "kind": "RANDOM",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 5,
+    "goal": 9,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     6,
+     15
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-4",
+     "0-12",
+     "0-16",
+     "1-5",
+     "1-21",
+     "4-6",
+     "4-8",
+     "5-20",
+     "5-22",
+     "6-20",
+     "6-22",
+     "8-13",
+     "9-12",
+     "9-13",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    123,
+    34,
+    14
+   ],
+   "metric": 171,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|19",
+   "kind": "QL",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 5,
+    "goal": 9,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     6,
+     15
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-4",
+     "0-12",
+     "0-16",
+     "1-5",
+     "1-21",
+     "4-6",
+     "4-8",
+     "5-20",
+     "5-22",
+     "6-20",
+     "6-22",
+     "8-13",
+     "9-12",
+     "9-13",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    94,
+    200,
+    55
+   ],
+   "metric": 349,
+   "censored": 1,
+   "secondary": {
+    "blockedAttempts": 52
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|19",
+   "kind": "DYNAQ",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 5,
+    "goal": 9,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     6,
+     15
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-4",
+     "0-12",
+     "0-16",
+     "1-5",
+     "1-21",
+     "4-6",
+     "4-8",
+     "5-20",
+     "5-22",
+     "6-20",
+     "6-22",
+     "8-13",
+     "9-12",
+     "9-13",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    6,
+    8,
+    6
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|19",
+   "kind": "ORACLE",
+   "arm": "NOPRE",
+   "layout": {
+    "start": 5,
+    "goal": 9,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     6,
+     15
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-4",
+     "0-12",
+     "0-16",
+     "1-5",
+     "1-21",
+     "4-6",
+     "4-8",
+     "5-20",
+     "5-22",
+     "6-20",
+     "6-22",
+     "8-13",
+     "9-12",
+     "9-13",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|19",
+   "kind": "RANDOM",
+   "arm": "SHAM",
+   "layout": {
+    "start": 5,
+    "goal": 9,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     6,
+     15
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-4",
+     "0-12",
+     "0-16",
+     "1-5",
+     "1-21",
+     "4-6",
+     "4-8",
+     "5-20",
+     "5-22",
+     "6-20",
+     "6-22",
+     "8-13",
+     "9-12",
+     "9-13",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    35,
+    36,
+    40
+   ],
+   "metric": 111,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|19",
+   "kind": "QL",
+   "arm": "SHAM",
+   "layout": {
+    "start": 5,
+    "goal": 9,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     6,
+     15
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-4",
+     "0-12",
+     "0-16",
+     "1-5",
+     "1-21",
+     "4-6",
+     "4-8",
+     "5-20",
+     "5-22",
+     "6-20",
+     "6-22",
+     "8-13",
+     "9-12",
+     "9-13",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|19",
+   "kind": "DYNAQ",
+   "arm": "SHAM",
+   "layout": {
+    "start": 5,
+    "goal": 9,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     6,
+     15
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-4",
+     "0-12",
+     "0-16",
+     "1-5",
+     "1-21",
+     "4-6",
+     "4-8",
+     "5-20",
+     "5-22",
+     "6-20",
+     "6-22",
+     "8-13",
+     "9-12",
+     "9-13",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|19",
+   "kind": "ORACLE",
+   "arm": "SHAM",
+   "layout": {
+    "start": 5,
+    "goal": 9,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     6,
+     15
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-4",
+     "0-12",
+     "0-16",
+     "1-5",
+     "1-21",
+     "4-6",
+     "4-8",
+     "5-20",
+     "5-22",
+     "6-20",
+     "6-22",
+     "8-13",
+     "9-12",
+     "9-13",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|19",
+   "kind": "RANDOM",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 5,
+    "goal": 9,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     6,
+     15
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-4",
+     "0-12",
+     "0-16",
+     "1-5",
+     "1-21",
+     "4-6",
+     "4-8",
+     "5-20",
+     "5-22",
+     "6-20",
+     "6-22",
+     "8-13",
+     "9-12",
+     "9-13",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    140,
+    16,
+    47
+   ],
+   "metric": 203,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|19",
+   "kind": "QL",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 5,
+    "goal": 9,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     6,
+     15
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-4",
+     "0-12",
+     "0-16",
+     "1-5",
+     "1-21",
+     "4-6",
+     "4-8",
+     "5-20",
+     "5-22",
+     "6-20",
+     "6-22",
+     "8-13",
+     "9-12",
+     "9-13",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|19",
+   "kind": "DYNAQ",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 5,
+    "goal": 9,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     6,
+     15
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-4",
+     "0-12",
+     "0-16",
+     "1-5",
+     "1-21",
+     "4-6",
+     "4-8",
+     "5-20",
+     "5-22",
+     "6-20",
+     "6-22",
+     "8-13",
+     "9-12",
+     "9-13",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  },
+  {
+   "task": "E2P",
+   "world": "cf|gate2|world|19",
+   "kind": "ORACLE",
+   "arm": "NOBLOCK",
+   "layout": {
+    "start": 5,
+    "goal": 9,
+    "blocked": [
+     19,
+     21
+    ],
+    "sham": [
+     6,
+     15
+    ],
+    "distance": 4,
+    "detourDistance": 6,
+    "detourEdges": [
+     "0-4",
+     "0-12",
+     "0-16",
+     "1-5",
+     "1-21",
+     "4-6",
+     "4-8",
+     "5-20",
+     "5-22",
+     "6-20",
+     "6-22",
+     "8-13",
+     "9-12",
+     "9-13",
+     "16-21"
+    ]
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "coverage": 1
+   }
+  }
+ ]
+}
