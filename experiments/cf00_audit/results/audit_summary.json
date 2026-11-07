@@ -1,0 +1,1652 @@
+{
+ "what": "CF-00 runtime audit of the unmodified production agent under in-memory instrumentation (experiments/cf00_audit/README.md)",
+ "environment": {
+  "node": "v24.15.0",
+  "platform": "win32-x64",
+  "head": "6b7bac08e009816e247f1ac10c01389b50051b77",
+  "productionDigest": "9b8407c33afcc967d4344cf4316734b1404439d19497d7dad982d835f8d86731",
+  "productionFiles": 39
+ },
+ "design": {
+  "seeds": [
+   101,
+   202,
+   303
+  ],
+  "goal": 16,
+  "loopsPerSession": 600,
+  "runAgentStepsPerSession": 3000,
+  "conditions": {
+   "BASE": {},
+   "NOGG": {
+    "CF00_NOGG": "1"
+   },
+   "NOREACH": {
+    "CF00_NOREACH": "1"
+   },
+   "NOFUT": {
+    "CF00_ZERO": "futureBonus"
+   },
+   "NOQ": {
+    "CF00_ZERO": "qValue,repetitionFatigue"
+   },
+   "NOEPI": {
+    "CF00_ZERO": "trajectoryIntegrity"
+   },
+   "NOSEM": {
+    "CF00_ZERO": "schemaBonus,semanticVitalityScore,consolidationBonus,meaningBoost,noiseSuppressedScore"
+   },
+   "NOATT": {
+    "CF00_ZERO": "attentionAmplifiedScore"
+   },
+   "NOTRUST": {
+    "CF00_ZERO": "trustBonus"
+   },
+   "NOAFFECT": {
+    "CF00_ZERO": "localConfidence,localStress,localFatigue,localTrust,localFear,curiosityState,confidenceState,stressState,fatigueState,fatigueOverload,dynamicFocus,drift,driveRewardBoost,driveCuriosityBoost,driveGoalBoost"
+   },
+   "NOORACLE": {
+    "CF00_NOGG": "1",
+    "CF00_NOREACH": "1",
+    "CF00_ZERO": "futureBonus"
+   },
+   "NOLEARNGOAL": {
+    "CF00_NOGG": "1",
+    "CF00_ZERO": "qValue,repetitionFatigue,reward,dangerPenalty"
+   },
+   "NOORACLE_NOQR": {
+    "CF00_NOGG": "1",
+    "CF00_NOREACH": "1",
+    "CF00_ZERO": "futureBonus,qValue,repetitionFatigue,reward,dangerPenalty"
+   }
+  }
+ },
+ "sessions": [
+  {
+   "label": "BASE_g16_s101",
+   "exit": 0,
+   "recordSha256": "06ddee8e1cff12b0e1d4e39b3658fc8ba5617c4512c845e490ad66076ffa5323",
+   "stdout": "{\"seed\":101,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":848,\"moves\":2157}"
+  },
+  {
+   "label": "BASE_g16_s202",
+   "exit": 0,
+   "recordSha256": "6357fdbe07a58434f1ee6b3c7dd3f05e98a47a58d39f082b0f3c27109405312a",
+   "stdout": "{\"seed\":202,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":761,\"moves\":2244}"
+  },
+  {
+   "label": "BASE_g16_s303",
+   "exit": 0,
+   "recordSha256": "14942ea12860b57059a63ade7bccde16ff2564def17884301139d34ae0150453",
+   "stdout": "{\"seed\":303,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":738,\"moves\":2267}"
+  },
+  {
+   "label": "COVERAGE_g16_s404",
+   "exit": 0,
+   "recordSha256": "12e8be0faaca39aa0913b628b67d2f5628b2ff4bd2830bfd69a9649cc1f3125c",
+   "stdout": "{\"seed\":404,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":1098,\"moves\":1907}"
+  },
+  {
+   "label": "NOAFFECT_g16_s101",
+   "exit": 0,
+   "recordSha256": "f003975f0dc7fae45c5c61a3f37d2e56c364964d59ff5150ca0326ccb807d1a2",
+   "stdout": "{\"seed\":101,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":772,\"moves\":2233}"
+  },
+  {
+   "label": "NOAFFECT_g16_s202",
+   "exit": 0,
+   "recordSha256": "66654fd97d0d39d5e0b76f026d1cc9ee98e1bc9f2b326b0e9a71fea74299c78e",
+   "stdout": "{\"seed\":202,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":904,\"moves\":2101}"
+  },
+  {
+   "label": "NOAFFECT_g16_s303",
+   "exit": 0,
+   "recordSha256": "9a3809d732fe7ecc01015871b2832dbda0bd201661be67afcfa7f30ac64c09da",
+   "stdout": "{\"seed\":303,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":962,\"moves\":2043}"
+  },
+  {
+   "label": "NOATT_g16_s101",
+   "exit": 0,
+   "recordSha256": "4a437af46541aa646255fce282ca9ec949b94081e361e6cd6142b2ac427668a6",
+   "stdout": "{\"seed\":101,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":924,\"moves\":2081}"
+  },
+  {
+   "label": "NOATT_g16_s202",
+   "exit": 0,
+   "recordSha256": "236c77dc17bdddebe90895da93f6e32aa61421b082f698d9999c4e1c214d0a4d",
+   "stdout": "{\"seed\":202,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":908,\"moves\":2097}"
+  },
+  {
+   "label": "NOATT_g16_s303",
+   "exit": 0,
+   "recordSha256": "39037ce694ac8dd1606a36db2059b8dbec827c5111e07354653972398bfb4e55",
+   "stdout": "{\"seed\":303,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":805,\"moves\":2200}"
+  },
+  {
+   "label": "NOEPI_g16_s101",
+   "exit": 0,
+   "recordSha256": "ea40730705318cd3c1fdf38d6c48668433720f5bf186e0fa3033e15b5d9a9908",
+   "stdout": "{\"seed\":101,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":941,\"moves\":2064}"
+  },
+  {
+   "label": "NOEPI_g16_s202",
+   "exit": 0,
+   "recordSha256": "49921137c7a3c91b7c75a9c93057bc14eaa85b885e3ccd07d00e0851439ce67d",
+   "stdout": "{\"seed\":202,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":926,\"moves\":2079}"
+  },
+  {
+   "label": "NOEPI_g16_s303",
+   "exit": 0,
+   "recordSha256": "e47af40d47984de735de4cd7a520a27ace4c8803e0077692df59fbfc8eb2a250",
+   "stdout": "{\"seed\":303,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":789,\"moves\":2216}"
+  },
+  {
+   "label": "NOFUT_g16_s101",
+   "exit": 0,
+   "recordSha256": "ba2072ca3545e3a331f3a026b9df9fda8df4d87bce0f7f1d89b6c023ee1976e3",
+   "stdout": "{\"seed\":101,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":778,\"moves\":2227}"
+  },
+  {
+   "label": "NOFUT_g16_s202",
+   "exit": 0,
+   "recordSha256": "e8f10f0685c8c112ce996cf085466cb84c7e5f77877acdd2a8618493a502cc6f",
+   "stdout": "{\"seed\":202,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":881,\"moves\":2124}"
+  },
+  {
+   "label": "NOFUT_g16_s303",
+   "exit": 0,
+   "recordSha256": "e819f528dda346ee88167438061438ad9a2742b01995e3016cd5b9669bfecb8f",
+   "stdout": "{\"seed\":303,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":584,\"moves\":2421}"
+  },
+  {
+   "label": "NOGG_g16_s101",
+   "exit": 0,
+   "recordSha256": "d13cf21dd37e542bd00b969a03ed31d1d708f90b1ca1b67ee75b0ba98c2c7637",
+   "stdout": "{\"seed\":101,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":823,\"moves\":2182}"
+  },
+  {
+   "label": "NOGG_g16_s202",
+   "exit": 0,
+   "recordSha256": "600428258499ac71a24a3e47e96a35b737da020b380647d9b06538fa3e4a68ad",
+   "stdout": "{\"seed\":202,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":714,\"moves\":2291}"
+  },
+  {
+   "label": "NOGG_g16_s303",
+   "exit": 0,
+   "recordSha256": "f6265f6bf3a95e323e7080bbd172d3fdc0c632679f85e8cecd361ef863de10d3",
+   "stdout": "{\"seed\":303,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":538,\"moves\":2467}"
+  },
+  {
+   "label": "NOGOAL_s101",
+   "exit": 0,
+   "recordSha256": "429ffb6b81eebf3d1b550ac35a2d2dae961136d144f00750b9c7c6e7f8575b68",
+   "stdout": "{\"seed\":101,\"goal\":null,\"fired\":600,\"crash\":null,\"arrivals\":0,\"moves\":3005}"
+  },
+  {
+   "label": "NOGOAL_s202",
+   "exit": 0,
+   "recordSha256": "5aa58e3a247de9395f6c524e3fc8a917a3a24eef12f6d9bdc0bd91a159c9bf0e",
+   "stdout": "{\"seed\":202,\"goal\":null,\"fired\":600,\"crash\":null,\"arrivals\":0,\"moves\":3005}"
+  },
+  {
+   "label": "NOGOAL_s303",
+   "exit": 0,
+   "recordSha256": "aedcf4d0f22c019a66575f675d6f63fc65ffbb6a9e948a1f6b46c6d97676e027",
+   "stdout": "{\"seed\":303,\"goal\":null,\"fired\":600,\"crash\":null,\"arrivals\":0,\"moves\":3005}"
+  },
+  {
+   "label": "NOLEARNGOAL_g16_s101",
+   "exit": 0,
+   "recordSha256": "e99855a0f22f56aceddb509fde0232815d8af3f98514b5d03660cf7f3e6cb302",
+   "stdout": "{\"seed\":101,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":726,\"moves\":2279}"
+  },
+  {
+   "label": "NOLEARNGOAL_g16_s202",
+   "exit": 0,
+   "recordSha256": "8a84b83c66aea54f6dd2cc79c98f05984403c48109baab40d32768bfa59d8f9b",
+   "stdout": "{\"seed\":202,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":916,\"moves\":2089}"
+  },
+  {
+   "label": "NOLEARNGOAL_g16_s303",
+   "exit": 0,
+   "recordSha256": "92dad791c1ba6b092d3a5ff4ab70cc4aa5f7e98a64bb8e5301f066b1e280c4ef",
+   "stdout": "{\"seed\":303,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":661,\"moves\":2344}"
+  },
+  {
+   "label": "NOORACLE_g16_s101",
+   "exit": 0,
+   "recordSha256": "7e026e60152eaf9ddc7ba75eae9156d0323cb651d20b752429122d7ab49b9218",
+   "stdout": "{\"seed\":101,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":813,\"moves\":2192}"
+  },
+  {
+   "label": "NOORACLE_g16_s202",
+   "exit": 0,
+   "recordSha256": "891446ea5756d49012f6246fed3dbcbc574b004c429d4472750466ca21969950",
+   "stdout": "{\"seed\":202,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":671,\"moves\":2334}"
+  },
+  {
+   "label": "NOORACLE_g16_s303",
+   "exit": 0,
+   "recordSha256": "ffca034786d06356e6776e7db8594bd2c5235ee84a5dd9ff86fbbe70ba68b5ae",
+   "stdout": "{\"seed\":303,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":613,\"moves\":2392}"
+  },
+  {
+   "label": "NOORACLE_NOQR_g16_s101",
+   "exit": 0,
+   "recordSha256": "95dedd5d156292c3531cdf0dba52c1e1eb07ed0937c7922368074008f962c631",
+   "stdout": "{\"seed\":101,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":785,\"moves\":2220}"
+  },
+  {
+   "label": "NOORACLE_NOQR_g16_s202",
+   "exit": 0,
+   "recordSha256": "a297531691b9aed7f55dfccf4384cd2405dbd4211ab773bf5971e46e331ca6a9",
+   "stdout": "{\"seed\":202,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":655,\"moves\":2350}"
+  },
+  {
+   "label": "NOORACLE_NOQR_g16_s303",
+   "exit": 0,
+   "recordSha256": "ea612634679d21f26d4af399de71fe46ea46874866e0853ea89306df84ed44d7",
+   "stdout": "{\"seed\":303,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":437,\"moves\":2568}"
+  },
+  {
+   "label": "NOQ_g16_s101",
+   "exit": 0,
+   "recordSha256": "b9a47164f5c7a67e5b5b0b395fbdbbd193162067425ac7557c15c456146cc069",
+   "stdout": "{\"seed\":101,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":867,\"moves\":2138}"
+  },
+  {
+   "label": "NOQ_g16_s202",
+   "exit": 0,
+   "recordSha256": "2eed0c54b3e9913e628733c2ac4b5d351be25eaec8d5d9026b485dd9bcb07618",
+   "stdout": "{\"seed\":202,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":1067,\"moves\":1938}"
+  },
+  {
+   "label": "NOQ_g16_s303",
+   "exit": 0,
+   "recordSha256": "3e1f66eb804536b2cb22c00266a434fff7d2c7125ff187b7f5a2d82d3e314820",
+   "stdout": "{\"seed\":303,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":748,\"moves\":2257}"
+  },
+  {
+   "label": "NOREACH_g16_s101",
+   "exit": 0,
+   "recordSha256": "ed10c1e6c793f84cc3abe905738860b6076cf719da29f1dfcc734437149e71ad",
+   "stdout": "{\"seed\":101,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":847,\"moves\":2158}"
+  },
+  {
+   "label": "NOREACH_g16_s202",
+   "exit": 0,
+   "recordSha256": "778423d922d07da4c145a57af0b69926ec678c2e371ef7ed73ba23361e4653af",
+   "stdout": "{\"seed\":202,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":1129,\"moves\":1876}"
+  },
+  {
+   "label": "NOREACH_g16_s303",
+   "exit": 0,
+   "recordSha256": "2feaa82e73b147586733ece3d8d91304dbf922a6a05a8f045d1992bdc66f1714",
+   "stdout": "{\"seed\":303,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":1134,\"moves\":1871}"
+  },
+  {
+   "label": "NOSEM_g16_s101",
+   "exit": 0,
+   "recordSha256": "4c30c4d901a3873774cce2b01fda1d443caad4e7452d5d2f79993cd24d412ca9",
+   "stdout": "{\"seed\":101,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":923,\"moves\":2082}"
+  },
+  {
+   "label": "NOSEM_g16_s202",
+   "exit": 0,
+   "recordSha256": "72338272df1e042809ea1086efcdb3114e0420e3fb5a64cbdc87c48e03a75afb",
+   "stdout": "{\"seed\":202,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":768,\"moves\":2237}"
+  },
+  {
+   "label": "NOSEM_g16_s303",
+   "exit": 0,
+   "recordSha256": "ca78272f4239db8872e04c519cf40ad7753976778c2666a9fae9e8a0cf238957",
+   "stdout": "{\"seed\":303,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":921,\"moves\":2084}"
+  },
+  {
+   "label": "NOTRUST_g16_s101",
+   "exit": 0,
+   "recordSha256": "7835aceaa46515ded3de7d3cff011a2bbb00f1a6bd354ba3d0737008a04f8cfe",
+   "stdout": "{\"seed\":101,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":919,\"moves\":2086}"
+  },
+  {
+   "label": "NOTRUST_g16_s202",
+   "exit": 0,
+   "recordSha256": "8390395f4d1bdbfeacf3cf98505ce0dac16b9f65611cf869154b9bcec1eb972f",
+   "stdout": "{\"seed\":202,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":952,\"moves\":2053}"
+  },
+  {
+   "label": "NOTRUST_g16_s303",
+   "exit": 0,
+   "recordSha256": "490afc7b1471f82e593977b847677e4d647fa7a84b9a0ca4de0456d58201ee25",
+   "stdout": "{\"seed\":303,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":1016,\"moves\":1989}"
+  },
+  {
+   "label": "REPEAT_BASE_g16_s101",
+   "exit": 0,
+   "recordSha256": "06ddee8e1cff12b0e1d4e39b3658fc8ba5617c4512c845e490ad66076ffa5323",
+   "stdout": "{\"seed\":101,\"goal\":16,\"fired\":600,\"crash\":null,\"arrivals\":848,\"moves\":2157}"
+  }
+ ],
+ "determinism": {
+  "repeatOf": "BASE_g16_s101",
+  "identical": true
+ },
+ "decisionChannels": {
+  "goal16": {
+   "step0Decisions": 8304,
+   "greedyMultiCandidate": 6908,
+   "meanCandidates": 4.683,
+   "imaginedStepsNotExecuted": 24912,
+   "exploreDraws": 1287,
+   "epsilon": {
+    "min": 0.1509,
+    "mean": 0.1544,
+    "max": 0.2
+   },
+   "arbitrationActiveDecisions": 6908,
+   "arbitrationChangedArgmax": 0,
+   "candidateScoresAtClamp": 1818,
+   "termSumMismatches": 0,
+   "envMoves": 6668,
+   "movesMatchingStep0Choice": "6132/6668",
+   "movesMatchingGreedyArgmax": "5164/6668"
+  },
+  "noGoal": {
+   "step0Decisions": 8263,
+   "greedyMultiCandidate": 7198,
+   "meanCandidates": 4.208,
+   "imaginedStepsNotExecuted": 17712,
+   "exploreDraws": 1065,
+   "epsilon": {
+    "min": 0.0879,
+    "mean": 0.125,
+    "max": 0.2
+   },
+   "arbitrationActiveDecisions": 7198,
+   "arbitrationChangedArgmax": 1,
+   "candidateScoresAtClamp": 0,
+   "termSumMismatches": 0,
+   "envMoves": 9015,
+   "movesMatchingStep0Choice": "8079/9015",
+   "movesMatchingGreedyArgmax": "7282/9015"
+  }
+ },
+ "termKnockouts": {
+  "goal16": {
+   "goalGradientBoost": {
+    "knockoutFlipRate": 0.0281,
+    "variesAcrossCandidates": 0.977,
+    "nonzeroShare": 0.9942,
+    "meanAbs": 26.917
+   },
+   "qValue": {
+    "knockoutFlipRate": 0.0185,
+    "variesAcrossCandidates": 0.9913,
+    "nonzeroShare": 0.8646,
+    "meanAbs": 40.044
+   },
+   "attentionAmplifiedScore": {
+    "knockoutFlipRate": 0.0109,
+    "variesAcrossCandidates": 0.9916,
+    "nonzeroShare": 0.8647,
+    "meanAbs": 24.285
+   },
+   "trustBonus": {
+    "knockoutFlipRate": 0.01,
+    "variesAcrossCandidates": 0.9916,
+    "nonzeroShare": 0.8647,
+    "meanAbs": 17.362
+   },
+   "repetitionPenalty": {
+    "knockoutFlipRate": 0.0049,
+    "variesAcrossCandidates": 0.7545,
+    "nonzeroShare": 0.1896,
+    "meanAbs": 7.387
+   },
+   "trajectoryIntegrity": {
+    "knockoutFlipRate": 0.0035,
+    "variesAcrossCandidates": 0.9498,
+    "nonzeroShare": 0.716,
+    "meanAbs": 17.94
+   },
+   "transitionBoost": {
+    "knockoutFlipRate": 0.003,
+    "variesAcrossCandidates": 0.9913,
+    "nonzeroShare": 0.8646,
+    "meanAbs": 12.12
+   },
+   "futureBonus": {
+    "knockoutFlipRate": 0.0022,
+    "variesAcrossCandidates": 0.9396,
+    "nonzeroShare": 1,
+    "meanAbs": 16.398
+   },
+   "schemaBonus": {
+    "knockoutFlipRate": 0.0016,
+    "variesAcrossCandidates": 0.8882,
+    "nonzeroShare": 0.4016,
+    "meanAbs": 5.287
+   },
+   "localConfidence": {
+    "knockoutFlipRate": 0.001,
+    "variesAcrossCandidates": 0.9783,
+    "nonzeroShare": 0.7785,
+    "meanAbs": 1.917
+   },
+   "habitBoost": {
+    "knockoutFlipRate": 0.0009,
+    "variesAcrossCandidates": 0.9812,
+    "nonzeroShare": 0.7865,
+    "meanAbs": 3.388
+   },
+   "consolidationBonus": {
+    "knockoutFlipRate": 0.0007,
+    "variesAcrossCandidates": 0.8662,
+    "nonzeroShare": 0.3379,
+    "meanAbs": 0.599
+   },
+   "localFatigue": {
+    "knockoutFlipRate": 0.0007,
+    "variesAcrossCandidates": 0.9644,
+    "nonzeroShare": 0.6252,
+    "meanAbs": 1.054
+   },
+   "dynamicFocus": {
+    "knockoutFlipRate": 0.0007,
+    "variesAcrossCandidates": 0.9916,
+    "nonzeroShare": 0.9998,
+    "meanAbs": 3.179
+   },
+   "repetitionFatigue": {
+    "knockoutFlipRate": 0.0007,
+    "variesAcrossCandidates": 0.9867,
+    "nonzeroShare": 0.802,
+    "meanAbs": 7.599
+   },
+   "semanticVitalityScore": {
+    "knockoutFlipRate": 0.0006,
+    "variesAcrossCandidates": 0.9642,
+    "nonzeroShare": 0.7557,
+    "meanAbs": 1.113
+   },
+   "noiseSuppressedScore": {
+    "knockoutFlipRate": 0.0006,
+    "variesAcrossCandidates": 0.6325,
+    "nonzeroShare": 0.1384,
+    "meanAbs": 1.185
+   },
+   "drift": {
+    "knockoutFlipRate": 0.0006,
+    "variesAcrossCandidates": 1,
+    "nonzeroShare": 1,
+    "meanAbs": 0.004
+   },
+   "reward": {
+    "knockoutFlipRate": 0.0003,
+    "variesAcrossCandidates": 0.9915,
+    "nonzeroShare": 0.8647,
+    "meanAbs": 5.2
+   },
+   "localTrust": {
+    "knockoutFlipRate": 0.0003,
+    "variesAcrossCandidates": 0.9783,
+    "nonzeroShare": 0.7785,
+    "meanAbs": 0.92
+   },
+   "boredomPenalty": {
+    "knockoutFlipRate": 0.0003,
+    "variesAcrossCandidates": 0.9812,
+    "nonzeroShare": 0.7865,
+    "meanAbs": 0.595
+   },
+   "meaningBoost": {
+    "knockoutFlipRate": 0.0001,
+    "variesAcrossCandidates": 0.9983,
+    "nonzeroShare": 0.6917,
+    "meanAbs": 0
+   },
+   "curiosityBoost": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0.9812,
+    "nonzeroShare": 1,
+    "meanAbs": 0.126
+   },
+   "chainReward": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 0,
+    "meanAbs": 0
+   },
+   "driveGoalBoost": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 0,
+    "meanAbs": 0
+   },
+   "localStress": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0.9742,
+    "nonzeroShare": 0.6858,
+    "meanAbs": 0.426
+   },
+   "localFear": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0.8036,
+    "nonzeroShare": 0.3471,
+    "meanAbs": 0.057
+   },
+   "driveRewardBoost": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0.0103,
+    "nonzeroShare": 0.0033,
+    "meanAbs": 0.006
+   },
+   "driveCuriosityBoost": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0.9745,
+    "nonzeroShare": 0.9829,
+    "meanAbs": 0.092
+   },
+   "curiosityState": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 1,
+    "meanAbs": 0.238
+   },
+   "confidenceState": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 0.9995,
+    "meanAbs": 4.747
+   },
+   "stressState": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 0.9998,
+    "meanAbs": 0.153
+   },
+   "fatigueState": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 0.9998,
+    "meanAbs": 8.008
+   },
+   "fatigueOverload": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 0,
+    "meanAbs": 0
+   },
+   "dangerPenalty": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0.308,
+    "nonzeroShare": 0.0672,
+    "meanAbs": 0.163
+   },
+   "selfLoopPenalty": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 0,
+    "meanAbs": 0
+   }
+  },
+  "noGoal": {
+   "repetitionPenalty": {
+    "knockoutFlipRate": 0.101,
+    "variesAcrossCandidates": 0.9807,
+    "nonzeroShare": 0.2419,
+    "meanAbs": 9.425
+   },
+   "attentionAmplifiedScore": {
+    "knockoutFlipRate": 0.0263,
+    "variesAcrossCandidates": 0.9685,
+    "nonzeroShare": 0.6762,
+    "meanAbs": 6.057
+   },
+   "drift": {
+    "knockoutFlipRate": 0.024,
+    "variesAcrossCandidates": 1,
+    "nonzeroShare": 1,
+    "meanAbs": 0.004
+   },
+   "transitionBoost": {
+    "knockoutFlipRate": 0.0222,
+    "variesAcrossCandidates": 0.9685,
+    "nonzeroShare": 0.6762,
+    "meanAbs": 5.567
+   },
+   "qValue": {
+    "knockoutFlipRate": 0.0144,
+    "variesAcrossCandidates": 0.9685,
+    "nonzeroShare": 0.6762,
+    "meanAbs": 4.756
+   },
+   "reward": {
+    "knockoutFlipRate": 0.0089,
+    "variesAcrossCandidates": 0.9685,
+    "nonzeroShare": 0.6762,
+    "meanAbs": 2.647
+   },
+   "habitBoost": {
+    "knockoutFlipRate": 0.004,
+    "variesAcrossCandidates": 0.9685,
+    "nonzeroShare": 0.6762,
+    "meanAbs": 1.962
+   },
+   "meaningBoost": {
+    "knockoutFlipRate": 0.004,
+    "variesAcrossCandidates": 0.9978,
+    "nonzeroShare": 0.7219,
+    "meanAbs": 0.001
+   },
+   "trustBonus": {
+    "knockoutFlipRate": 0.0039,
+    "variesAcrossCandidates": 0.9685,
+    "nonzeroShare": 0.6762,
+    "meanAbs": 2.506
+   },
+   "dynamicFocus": {
+    "knockoutFlipRate": 0.0028,
+    "variesAcrossCandidates": 0.9685,
+    "nonzeroShare": 0.9997,
+    "meanAbs": 10.658
+   },
+   "consolidationBonus": {
+    "knockoutFlipRate": 0.0014,
+    "variesAcrossCandidates": 0.5,
+    "nonzeroShare": 0.1428,
+    "meanAbs": 0.117
+   },
+   "boredomPenalty": {
+    "knockoutFlipRate": 0.0008,
+    "variesAcrossCandidates": 0.9685,
+    "nonzeroShare": 0.6762,
+    "meanAbs": 0.299
+   },
+   "localConfidence": {
+    "knockoutFlipRate": 0.0006,
+    "variesAcrossCandidates": 0.9685,
+    "nonzeroShare": 0.6755,
+    "meanAbs": 0.185
+   },
+   "localFear": {
+    "knockoutFlipRate": 0.0006,
+    "variesAcrossCandidates": 0.8593,
+    "nonzeroShare": 0.4261,
+    "meanAbs": 0.284
+   },
+   "noiseSuppressedScore": {
+    "knockoutFlipRate": 0.0004,
+    "variesAcrossCandidates": 0.4146,
+    "nonzeroShare": 0.0985,
+    "meanAbs": 0.566
+   },
+   "localTrust": {
+    "knockoutFlipRate": 0.0004,
+    "variesAcrossCandidates": 0.9685,
+    "nonzeroShare": 0.6755,
+    "meanAbs": 0.089
+   },
+   "localStress": {
+    "knockoutFlipRate": 0.0004,
+    "variesAcrossCandidates": 0.9537,
+    "nonzeroShare": 0.6065,
+    "meanAbs": 0.167
+   },
+   "localFatigue": {
+    "knockoutFlipRate": 0.0004,
+    "variesAcrossCandidates": 0.9214,
+    "nonzeroShare": 0.5028,
+    "meanAbs": 0.352
+   },
+   "driveRewardBoost": {
+    "knockoutFlipRate": 0.0004,
+    "variesAcrossCandidates": 0.0892,
+    "nonzeroShare": 0.0651,
+    "meanAbs": 0.1
+   },
+   "semanticVitalityScore": {
+    "knockoutFlipRate": 0.0001,
+    "variesAcrossCandidates": 0.4797,
+    "nonzeroShare": 0.1365,
+    "meanAbs": 0.02
+   },
+   "dangerPenalty": {
+    "knockoutFlipRate": 0.0001,
+    "variesAcrossCandidates": 0.4134,
+    "nonzeroShare": 0.106,
+    "meanAbs": 0.038
+   },
+   "repetitionFatigue": {
+    "knockoutFlipRate": 0.0001,
+    "variesAcrossCandidates": 0.6211,
+    "nonzeroShare": 0.1618,
+    "meanAbs": 0.347
+   },
+   "curiosityBoost": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0.9685,
+    "nonzeroShare": 1,
+    "meanAbs": 0.139
+   },
+   "chainReward": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 0,
+    "meanAbs": 0
+   },
+   "futureBonus": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 0,
+    "meanAbs": 0
+   },
+   "goalGradientBoost": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 0,
+    "meanAbs": 0
+   },
+   "driveGoalBoost": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 0,
+    "meanAbs": 0
+   },
+   "schemaBonus": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 0,
+    "meanAbs": 0
+   },
+   "trajectoryIntegrity": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 0,
+    "meanAbs": 0
+   },
+   "driveCuriosityBoost": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0.7391,
+    "nonzeroShare": 0.7582,
+    "meanAbs": 0.08
+   },
+   "curiosityState": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 1,
+    "meanAbs": 0.237
+   },
+   "confidenceState": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 0.9991,
+    "meanAbs": 1.648
+   },
+   "stressState": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 0.9997,
+    "meanAbs": 4.065
+   },
+   "fatigueState": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 0.9997,
+    "meanAbs": 17.966
+   },
+   "fatigueOverload": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 0,
+    "meanAbs": 0
+   },
+   "selfLoopPenalty": {
+    "knockoutFlipRate": 0,
+    "variesAcrossCandidates": 0,
+    "nonzeroShare": 0,
+    "meanAbs": 0
+   }
+  }
+ },
+ "groupKnockouts": {
+  "goal16": {
+   "oracle goal gradient (goalDistance BFS x adjacency gate)": 0.0281,
+   "attention amplification (cognitiveAttention.js)": 0.0109,
+   "Q-learning (qlearning.js)": 0.0101,
+   "Bayesian trust (trustMemory.js)": 0.01,
+   "visit/transition counts and recency (memory.js maps)": 0.0059,
+   "schema/semantic/consolidation (schemaMemory, semanticVitality, longTermConsolidation, candidateAnalysis, semanticMemoryLayer)": 0.0059,
+   "episodic trajectory integrity (episodeManager store)": 0.0035,
+   "FutureScore look-ahead (planning.js, true-graph BFS)": 0.0022,
+   "global behaviour states (behavior.js) and drift": 0.0013,
+   "local emotion map (emotionMap.js)": 0.0012,
+   "reward/penalty maps (memory.js)": 0.0004,
+   "motivational drives (motivationalState.js)": 0
+  },
+  "noGoal": {
+   "visit/transition counts and recency (memory.js maps)": 0.1173,
+   "global behaviour states (behavior.js) and drift": 0.0265,
+   "attention amplification (cognitiveAttention.js)": 0.0263,
+   "Q-learning (qlearning.js)": 0.0122,
+   "reward/penalty maps (memory.js)": 0.0089,
+   "schema/semantic/consolidation (schemaMemory, semanticVitality, longTermConsolidation, candidateAnalysis, semanticMemoryLayer)": 0.006,
+   "Bayesian trust (trustMemory.js)": 0.0039,
+   "local emotion map (emotionMap.js)": 0.0028,
+   "motivational drives (motivationalState.js)": 0.0004,
+   "oracle goal gradient (goalDistance BFS x adjacency gate)": 0,
+   "FutureScore look-ahead (planning.js, true-graph BFS)": 0,
+   "episodic trajectory integrity (episodeManager store)": 0
+  }
+ },
+ "closedLoop": {
+  "BASE": {
+   "sessions": [
+    {
+     "seed": 101,
+     "arrivals": 848,
+     "envMoves": 2157,
+     "nonGraphMoves": 46,
+     "selfMoves": 177,
+     "firstArrivalAtEnvMove": 2,
+     "meanEnvMovesBetweenArrivals": 2.54,
+     "meanTrueDistanceAtRestart": 2.66
+    },
+    {
+     "seed": 202,
+     "arrivals": 761,
+     "envMoves": 2244,
+     "nonGraphMoves": 48,
+     "selfMoves": 180,
+     "firstArrivalAtEnvMove": 3,
+     "meanEnvMovesBetweenArrivals": 2.94,
+     "meanTrueDistanceAtRestart": 2.77
+    },
+    {
+     "seed": 303,
+     "arrivals": 738,
+     "envMoves": 2267,
+     "nonGraphMoves": 88,
+     "selfMoves": 178,
+     "firstArrivalAtEnvMove": 6,
+     "meanEnvMovesBetweenArrivals": 3.07,
+     "meanTrueDistanceAtRestart": 2.65
+    }
+   ],
+   "totalArrivals": 2347
+  },
+  "NOGG": {
+   "sessions": [
+    {
+     "seed": 101,
+     "arrivals": 823,
+     "envMoves": 2182,
+     "nonGraphMoves": 98,
+     "selfMoves": 176,
+     "firstArrivalAtEnvMove": 2,
+     "meanEnvMovesBetweenArrivals": 2.65,
+     "meanTrueDistanceAtRestart": 2.62
+    },
+    {
+     "seed": 202,
+     "arrivals": 714,
+     "envMoves": 2291,
+     "nonGraphMoves": 278,
+     "selfMoves": 173,
+     "firstArrivalAtEnvMove": 3,
+     "meanEnvMovesBetweenArrivals": 3.21,
+     "meanTrueDistanceAtRestart": 2.62
+    },
+    {
+     "seed": 303,
+     "arrivals": 538,
+     "envMoves": 2467,
+     "nonGraphMoves": 137,
+     "selfMoves": 179,
+     "firstArrivalAtEnvMove": 6,
+     "meanEnvMovesBetweenArrivals": 4.58,
+     "meanTrueDistanceAtRestart": 2.6
+    }
+   ],
+   "totalArrivals": 2075
+  },
+  "NOREACH": {
+   "sessions": [
+    {
+     "seed": 101,
+     "arrivals": 847,
+     "envMoves": 2158,
+     "nonGraphMoves": 504,
+     "selfMoves": 158,
+     "firstArrivalAtEnvMove": 2,
+     "meanEnvMovesBetweenArrivals": 2.55,
+     "meanTrueDistanceAtRestart": 2.66
+    },
+    {
+     "seed": 202,
+     "arrivals": 1129,
+     "envMoves": 1876,
+     "nonGraphMoves": 185,
+     "selfMoves": 159,
+     "firstArrivalAtEnvMove": 3,
+     "meanEnvMovesBetweenArrivals": 1.66,
+     "meanTrueDistanceAtRestart": 2.8
+    },
+    {
+     "seed": 303,
+     "arrivals": 1134,
+     "envMoves": 1871,
+     "nonGraphMoves": 42,
+     "selfMoves": 155,
+     "firstArrivalAtEnvMove": 3,
+     "meanEnvMovesBetweenArrivals": 1.65,
+     "meanTrueDistanceAtRestart": 2.82
+    }
+   ],
+   "totalArrivals": 3110
+  },
+  "NOFUT": {
+   "sessions": [
+    {
+     "seed": 101,
+     "arrivals": 778,
+     "envMoves": 2227,
+     "nonGraphMoves": 60,
+     "selfMoves": 173,
+     "firstArrivalAtEnvMove": 151,
+     "meanEnvMovesBetweenArrivals": 2.86,
+     "meanTrueDistanceAtRestart": 2.61
+    },
+    {
+     "seed": 202,
+     "arrivals": 881,
+     "envMoves": 2124,
+     "nonGraphMoves": 194,
+     "selfMoves": 179,
+     "firstArrivalAtEnvMove": 62,
+     "meanEnvMovesBetweenArrivals": 2.41,
+     "meanTrueDistanceAtRestart": 2.68
+    },
+    {
+     "seed": 303,
+     "arrivals": 584,
+     "envMoves": 2421,
+     "nonGraphMoves": 85,
+     "selfMoves": 203,
+     "firstArrivalAtEnvMove": 29,
+     "meanEnvMovesBetweenArrivals": 4.15,
+     "meanTrueDistanceAtRestart": 2.53
+    }
+   ],
+   "totalArrivals": 2243
+  },
+  "NOQ": {
+   "sessions": [
+    {
+     "seed": 101,
+     "arrivals": 867,
+     "envMoves": 2138,
+     "nonGraphMoves": 78,
+     "selfMoves": 168,
+     "firstArrivalAtEnvMove": 2,
+     "meanEnvMovesBetweenArrivals": 2.46,
+     "meanTrueDistanceAtRestart": 2.72
+    },
+    {
+     "seed": 202,
+     "arrivals": 1067,
+     "envMoves": 1938,
+     "nonGraphMoves": 166,
+     "selfMoves": 140,
+     "firstArrivalAtEnvMove": 3,
+     "meanEnvMovesBetweenArrivals": 1.81,
+     "meanTrueDistanceAtRestart": 2.78
+    },
+    {
+     "seed": 303,
+     "arrivals": 748,
+     "envMoves": 2257,
+     "nonGraphMoves": 72,
+     "selfMoves": 195,
+     "firstArrivalAtEnvMove": 6,
+     "meanEnvMovesBetweenArrivals": 3.01,
+     "meanTrueDistanceAtRestart": 2.7
+    }
+   ],
+   "totalArrivals": 2682
+  },
+  "NOEPI": {
+   "sessions": [
+    {
+     "seed": 101,
+     "arrivals": 941,
+     "envMoves": 2064,
+     "nonGraphMoves": 68,
+     "selfMoves": 172,
+     "firstArrivalAtEnvMove": 2,
+     "meanEnvMovesBetweenArrivals": 2.19,
+     "meanTrueDistanceAtRestart": 2.66
+    },
+    {
+     "seed": 202,
+     "arrivals": 926,
+     "envMoves": 2079,
+     "nonGraphMoves": 30,
+     "selfMoves": 161,
+     "firstArrivalAtEnvMove": 3,
+     "meanEnvMovesBetweenArrivals": 2.25,
+     "meanTrueDistanceAtRestart": 2.79
+    },
+    {
+     "seed": 303,
+     "arrivals": 789,
+     "envMoves": 2216,
+     "nonGraphMoves": 97,
+     "selfMoves": 167,
+     "firstArrivalAtEnvMove": 6,
+     "meanEnvMovesBetweenArrivals": 2.8,
+     "meanTrueDistanceAtRestart": 2.73
+    }
+   ],
+   "totalArrivals": 2656
+  },
+  "NOSEM": {
+   "sessions": [
+    {
+     "seed": 101,
+     "arrivals": 923,
+     "envMoves": 2082,
+     "nonGraphMoves": 64,
+     "selfMoves": 170,
+     "firstArrivalAtEnvMove": 2,
+     "meanEnvMovesBetweenArrivals": 2.26,
+     "meanTrueDistanceAtRestart": 2.78
+    },
+    {
+     "seed": 202,
+     "arrivals": 768,
+     "envMoves": 2237,
+     "nonGraphMoves": 129,
+     "selfMoves": 164,
+     "firstArrivalAtEnvMove": 3,
+     "meanEnvMovesBetweenArrivals": 2.91,
+     "meanTrueDistanceAtRestart": 2.73
+    },
+    {
+     "seed": 303,
+     "arrivals": 921,
+     "envMoves": 2084,
+     "nonGraphMoves": 371,
+     "selfMoves": 168,
+     "firstArrivalAtEnvMove": 6,
+     "meanEnvMovesBetweenArrivals": 2.26,
+     "meanTrueDistanceAtRestart": 2.69
+    }
+   ],
+   "totalArrivals": 2612
+  },
+  "NOATT": {
+   "sessions": [
+    {
+     "seed": 101,
+     "arrivals": 924,
+     "envMoves": 2081,
+     "nonGraphMoves": 138,
+     "selfMoves": 149,
+     "firstArrivalAtEnvMove": 2,
+     "meanEnvMovesBetweenArrivals": 2.25,
+     "meanTrueDistanceAtRestart": 2.69
+    },
+    {
+     "seed": 202,
+     "arrivals": 908,
+     "envMoves": 2097,
+     "nonGraphMoves": 300,
+     "selfMoves": 156,
+     "firstArrivalAtEnvMove": 3,
+     "meanEnvMovesBetweenArrivals": 2.31,
+     "meanTrueDistanceAtRestart": 2.79
+    },
+    {
+     "seed": 303,
+     "arrivals": 805,
+     "envMoves": 2200,
+     "nonGraphMoves": 63,
+     "selfMoves": 170,
+     "firstArrivalAtEnvMove": 6,
+     "meanEnvMovesBetweenArrivals": 2.73,
+     "meanTrueDistanceAtRestart": 2.64
+    }
+   ],
+   "totalArrivals": 2637
+  },
+  "NOTRUST": {
+   "sessions": [
+    {
+     "seed": 101,
+     "arrivals": 919,
+     "envMoves": 2086,
+     "nonGraphMoves": 38,
+     "selfMoves": 179,
+     "firstArrivalAtEnvMove": 2,
+     "meanEnvMovesBetweenArrivals": 2.27,
+     "meanTrueDistanceAtRestart": 2.67
+    },
+    {
+     "seed": 202,
+     "arrivals": 952,
+     "envMoves": 2053,
+     "nonGraphMoves": 147,
+     "selfMoves": 184,
+     "firstArrivalAtEnvMove": 3,
+     "meanEnvMovesBetweenArrivals": 2.16,
+     "meanTrueDistanceAtRestart": 2.78
+    },
+    {
+     "seed": 303,
+     "arrivals": 1016,
+     "envMoves": 1989,
+     "nonGraphMoves": 92,
+     "selfMoves": 148,
+     "firstArrivalAtEnvMove": 6,
+     "meanEnvMovesBetweenArrivals": 1.96,
+     "meanTrueDistanceAtRestart": 2.7
+    }
+   ],
+   "totalArrivals": 2887
+  },
+  "NOAFFECT": {
+   "sessions": [
+    {
+     "seed": 101,
+     "arrivals": 772,
+     "envMoves": 2233,
+     "nonGraphMoves": 50,
+     "selfMoves": 169,
+     "firstArrivalAtEnvMove": 2,
+     "meanEnvMovesBetweenArrivals": 2.89,
+     "meanTrueDistanceAtRestart": 2.73
+    },
+    {
+     "seed": 202,
+     "arrivals": 904,
+     "envMoves": 2101,
+     "nonGraphMoves": 79,
+     "selfMoves": 191,
+     "firstArrivalAtEnvMove": 3,
+     "meanEnvMovesBetweenArrivals": 2.32,
+     "meanTrueDistanceAtRestart": 2.73
+    },
+    {
+     "seed": 303,
+     "arrivals": 962,
+     "envMoves": 2043,
+     "nonGraphMoves": 229,
+     "selfMoves": 157,
+     "firstArrivalAtEnvMove": 10,
+     "meanEnvMovesBetweenArrivals": 2.12,
+     "meanTrueDistanceAtRestart": 2.69
+    }
+   ],
+   "totalArrivals": 2638
+  },
+  "NOORACLE": {
+   "sessions": [
+    {
+     "seed": 101,
+     "arrivals": 813,
+     "envMoves": 2192,
+     "nonGraphMoves": 443,
+     "selfMoves": 177,
+     "firstArrivalAtEnvMove": 5,
+     "meanEnvMovesBetweenArrivals": 2.69,
+     "meanTrueDistanceAtRestart": 2.55
+    },
+    {
+     "seed": 202,
+     "arrivals": 671,
+     "envMoves": 2334,
+     "nonGraphMoves": 177,
+     "selfMoves": 203,
+     "firstArrivalAtEnvMove": 8,
+     "meanEnvMovesBetweenArrivals": 3.48,
+     "meanTrueDistanceAtRestart": 2.51
+    },
+    {
+     "seed": 303,
+     "arrivals": 613,
+     "envMoves": 2392,
+     "nonGraphMoves": 126,
+     "selfMoves": 187,
+     "firstArrivalAtEnvMove": 7,
+     "meanEnvMovesBetweenArrivals": 3.89,
+     "meanTrueDistanceAtRestart": 2.62
+    }
+   ],
+   "totalArrivals": 2097
+  },
+  "NOLEARNGOAL": {
+   "sessions": [
+    {
+     "seed": 101,
+     "arrivals": 726,
+     "envMoves": 2279,
+     "nonGraphMoves": 28,
+     "selfMoves": 203,
+     "firstArrivalAtEnvMove": 2,
+     "meanEnvMovesBetweenArrivals": 3.14,
+     "meanTrueDistanceAtRestart": 2.7
+    },
+    {
+     "seed": 202,
+     "arrivals": 916,
+     "envMoves": 2089,
+     "nonGraphMoves": 78,
+     "selfMoves": 152,
+     "firstArrivalAtEnvMove": 3,
+     "meanEnvMovesBetweenArrivals": 2.28,
+     "meanTrueDistanceAtRestart": 2.69
+    },
+    {
+     "seed": 303,
+     "arrivals": 661,
+     "envMoves": 2344,
+     "nonGraphMoves": 57,
+     "selfMoves": 209,
+     "firstArrivalAtEnvMove": 6,
+     "meanEnvMovesBetweenArrivals": 3.54,
+     "meanTrueDistanceAtRestart": 2.55
+    }
+   ],
+   "totalArrivals": 2303
+  },
+  "NOORACLE_NOQR": {
+   "sessions": [
+    {
+     "seed": 101,
+     "arrivals": 785,
+     "envMoves": 2220,
+     "nonGraphMoves": 82,
+     "selfMoves": 181,
+     "firstArrivalAtEnvMove": 5,
+     "meanEnvMovesBetweenArrivals": 2.82,
+     "meanTrueDistanceAtRestart": 2.79
+    },
+    {
+     "seed": 202,
+     "arrivals": 655,
+     "envMoves": 2350,
+     "nonGraphMoves": 165,
+     "selfMoves": 205,
+     "firstArrivalAtEnvMove": 8,
+     "meanEnvMovesBetweenArrivals": 3.57,
+     "meanTrueDistanceAtRestart": 2.53
+    },
+    {
+     "seed": 303,
+     "arrivals": 437,
+     "envMoves": 2568,
+     "nonGraphMoves": 258,
+     "selfMoves": 209,
+     "firstArrivalAtEnvMove": 7,
+     "meanEnvMovesBetweenArrivals": 5.87,
+     "meanTrueDistanceAtRestart": 2.49
+    }
+   ],
+   "totalArrivals": 1877
+  }
+ },
+ "randomWalkArrivalsPer3000Steps": 88.6,
+ "goalDirection": {
+  "BASE": {
+   "decisions": 4934,
+   "winnerIsDistanceMinimiser": 0.615,
+   "uniformChoiceWouldGive": 0.235,
+   "meanAdvantageOfMinimiserByTerm": {
+    "goalGradientBoost": 85.335,
+    "trustBonus": 27.423,
+    "trajectoryIntegrity": 16.597,
+    "transitionBoost": 11.164,
+    "attentionAmplifiedScore": 9.66,
+    "qValue": 6.524,
+    "futureBonus": 6.159,
+    "schemaBonus": 5.404,
+    "localConfidence": 4.895,
+    "habitBoost": 4.432,
+    "repetitionPenalty": 4.105,
+    "noiseSuppressedScore": 2.481
+   }
+  },
+  "NOORACLE_NOQR": {
+   "decisions": 4734,
+   "winnerIsDistanceMinimiser": 0.573,
+   "uniformChoiceWouldGive": 0.234,
+   "meanAdvantageOfMinimiserByTerm": {
+    "trustBonus": 33.255,
+    "localConfidence": 20.426,
+    "trajectoryIntegrity": 17.501,
+    "attentionAmplifiedScore": 13.924,
+    "transitionBoost": 12.19,
+    "localTrust": 9.804,
+    "schemaBonus": 5.883,
+    "localFatigue": -5.511,
+    "habitBoost": 5.055,
+    "repetitionPenalty": 4.853,
+    "localStress": -4.208,
+    "noiseSuppressedScore": 3.126
+   }
+  }
+ },
+ "coverage": [
+  {
+   "file": "instrumentation/rng.js",
+   "namedFunctionsExecuted": "4/8",
+   "calls": 158754,
+   "exportedFunctionsNeverCalled": [
+    "rng",
+    "isSeeded"
+   ]
+  },
+  {
+   "file": "main.js",
+   "namedFunctionsExecuted": "13/18",
+   "calls": 7392746,
+   "exportedFunctionsNeverCalled": []
+  },
+  {
+   "file": "render/activationCompetition.js",
+   "namedFunctionsExecuted": "3/12",
+   "calls": 3223,
+   "exportedFunctionsNeverCalled": [
+    "computeLateralInhibition",
+    "getCompetitionScore",
+    "setContextMask",
+    "clearContextMask",
+    "isContextEligible",
+    "getActivationVolatility",
+    "getActivation",
+    "getTopActiveNeurons"
+   ]
+  },
+  {
+   "file": "render/behavior.js",
+   "namedFunctionsExecuted": "6/6",
+   "calls": 42428,
+   "exportedFunctionsNeverCalled": []
+  },
+  {
+   "file": "render/candidateAnalysis.js",
+   "namedFunctionsExecuted": "1/1",
+   "calls": 45617,
+   "exportedFunctionsNeverCalled": []
+  },
+  {
+   "file": "render/cognitiveAttention.js",
+   "namedFunctionsExecuted": "7/9",
+   "calls": 140912,
+   "exportedFunctionsNeverCalled": [
+    "setGoalAttention",
+    "weakenAttention"
+   ]
+  },
+  {
+   "file": "render/connections.js",
+   "namedFunctionsExecuted": "2/2",
+   "calls": 40,
+   "exportedFunctionsNeverCalled": []
+  },
+  {
+   "file": "render/embeddings.js",
+   "namedFunctionsExecuted": "4/4",
+   "calls": 82575,
+   "exportedFunctionsNeverCalled": []
+  },
+  {
+   "file": "render/emotionMap.js",
+   "namedFunctionsExecuted": "3/3",
+   "calls": 99850,
+   "exportedFunctionsNeverCalled": []
+  },
+  {
+   "file": "render/episodeManager.js",
+   "namedFunctionsExecuted": "15/22",
+   "calls": 60434,
+   "exportedFunctionsNeverCalled": [
+    "recordManualClick",
+    "getEpisodesForBuildMap",
+    "getEpisodeStats",
+    "clearAllEpisodes",
+    "getActiveGoalCoverage",
+    "exportEpisodes",
+    "loadEpisodes"
+   ]
+  },
+  {
+   "file": "render/episodicContextEngine.js",
+   "namedFunctionsExecuted": "8/19",
+   "calls": 9968,
+   "exportedFunctionsNeverCalled": [
+    "wmAddNode",
+    "wmGetActivation",
+    "episodeRecordNode",
+    "isLearningGated",
+    "getEpisodeVaultForReplay",
+    "resetManualSession",
+    "getEpisodesByTag",
+    "getVaultSize"
+   ]
+  },
+  {
+   "file": "render/executiveController.js",
+   "namedFunctionsExecuted": "4/5",
+   "calls": 638638,
+   "exportedFunctionsNeverCalled": [
+    "explainArbitration"
+   ]
+  },
+  {
+   "file": "render/helpers.js",
+   "namedFunctionsExecuted": "3/3",
+   "calls": 94208,
+   "exportedFunctionsNeverCalled": []
+  },
+  {
+   "file": "render/hud.js",
+   "namedFunctionsExecuted": "8/8",
+   "calls": 27696,
+   "exportedFunctionsNeverCalled": []
+  },
+  {
+   "file": "render/knowledge.js",
+   "namedFunctionsExecuted": "0/0",
+   "calls": 0,
+   "exportedFunctionsNeverCalled": []
+  },
+  {
+   "file": "render/longTermConsolidation.js",
+   "namedFunctionsExecuted": "6/7",
+   "calls": 52464,
+   "exportedFunctionsNeverCalled": [
+    "isStableMemory"
+   ]
+  },
+  {
+   "file": "render/memory.js",
+   "namedFunctionsExecuted": "0/0",
+   "calls": 0,
+   "exportedFunctionsNeverCalled": []
+  },
+  {
+   "file": "render/momentumMemory.js",
+   "namedFunctionsExecuted": "1/2",
+   "calls": 1110,
+   "exportedFunctionsNeverCalled": [
+    "getMomentumBonus"
+   ]
+  },
+  {
+   "file": "render/motivationalState.js",
+   "namedFunctionsExecuted": "7/7",
+   "calls": 200053,
+   "exportedFunctionsNeverCalled": []
+  },
+  {
+   "file": "render/neuronVisuals.js",
+   "namedFunctionsExecuted": "8/12",
+   "calls": 33086,
+   "exportedFunctionsNeverCalled": [
+    "flashNeuronClick",
+    "setNeuronHighlight",
+    "getNeuronCluster"
+   ]
+  },
+  {
+   "file": "render/planning.js",
+   "namedFunctionsExecuted": "5/6",
+   "calls": 5611697,
+   "exportedFunctionsNeverCalled": [
+    "lookAheadScore"
+   ]
+  },
+  {
+   "file": "render/predictionError.js",
+   "namedFunctionsExecuted": "10/12",
+   "calls": 113180,
+   "exportedFunctionsNeverCalled": [
+    "peekTransitionUncertainty",
+    "getSemanticExpectationConfidence"
+   ]
+  },
+  {
+   "file": "render/qlearning.js",
+   "namedFunctionsExecuted": "6/6",
+   "calls": 354611,
+   "exportedFunctionsNeverCalled": []
+  },
+  {
+   "file": "render/render.js",
+   "namedFunctionsExecuted": "2/2",
+   "calls": 2,
+   "exportedFunctionsNeverCalled": []
+  },
+  {
+   "file": "render/scene.js",
+   "namedFunctionsExecuted": "0/1",
+   "calls": 0,
+   "exportedFunctionsNeverCalled": []
+  },
+  {
+   "file": "render/schemaMemory.js",
+   "namedFunctionsExecuted": "7/9",
+   "calls": 62117,
+   "exportedFunctionsNeverCalled": [
+    "getSchemas",
+    "getSchemaDiagnostics"
+   ]
+  },
+  {
+   "file": "render/scoring.js",
+   "namedFunctionsExecuted": "1/1",
+   "calls": 45617,
+   "exportedFunctionsNeverCalled": []
+  },
+  {
+   "file": "render/search.js",
+   "namedFunctionsExecuted": "2/2",
+   "calls": 5784261,
+   "exportedFunctionsNeverCalled": []
+  },
+  {
+   "file": "render/semantic.js",
+   "namedFunctionsExecuted": "0/1",
+   "calls": 0,
+   "exportedFunctionsNeverCalled": [
+    "buildSemanticMap"
+   ]
+  },
+  {
+   "file": "render/semanticActivation.js",
+   "namedFunctionsExecuted": "3/4",
+   "calls": 39448,
+   "exportedFunctionsNeverCalled": [
+    "getActivationStrength"
+   ]
+  },
+  {
+   "file": "render/semanticMemoryLayer.js",
+   "namedFunctionsExecuted": "7/8",
+   "calls": 141995,
+   "exportedFunctionsNeverCalled": [
+    "isNoiseEdge"
+   ]
+  },
+  {
+   "file": "render/semanticProvenance.js",
+   "namedFunctionsExecuted": "3/6",
+   "calls": 13407,
+   "exportedFunctionsNeverCalled": [
+    "writeTransition",
+    "getActivationDominance",
+    "shouldTrainEmbedding"
+   ]
+  },
+  {
+   "file": "render/semanticVitality.js",
+   "namedFunctionsExecuted": "6/8",
+   "calls": 51496,
+   "exportedFunctionsNeverCalled": [
+    "getSemanticStrength",
+    "getSemanticVitalityLevel"
+   ]
+  },
+  {
+   "file": "render/stars.js",
+   "namedFunctionsExecuted": "1/1",
+   "calls": 1,
+   "exportedFunctionsNeverCalled": []
+  },
+  {
+   "file": "render/traversalRecord.js",
+   "namedFunctionsExecuted": "4/5",
+   "calls": 4155260,
+   "exportedFunctionsNeverCalled": [
+    "clear"
+   ]
+  },
+  {
+   "file": "render/trustMemory.js",
+   "namedFunctionsExecuted": "4/6",
+   "calls": 51567,
+   "exportedFunctionsNeverCalled": [
+    "getTrustUncertainty",
+    "getTrustSnapshot"
+   ]
+  },
+  {
+   "file": "render/ui.js",
+   "namedFunctionsExecuted": "0/0",
+   "calls": 0,
+   "exportedFunctionsNeverCalled": []
+  },
+  {
+   "file": "render/uncertaintyEngine.js",
+   "namedFunctionsExecuted": "3/7",
+   "calls": 49266,
+   "exportedFunctionsNeverCalled": [
+    "getPredictionCalibration",
+    "getGlobalUncertaintyPressure",
+    "getUncertaintySnapshot"
+   ]
+  },
+  {
+   "file": "render/uncertaintyLedger.js",
+   "namedFunctionsExecuted": "10/13",
+   "calls": 212924,
+   "exportedFunctionsNeverCalled": [
+    "registerOllamaPair",
+    "getCombinedUncertainty",
+    "getLedgerSummary"
+   ]
+  }
+ ]
+}

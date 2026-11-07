@@ -16,6 +16,13 @@ marked *Updated 2026-10-25*:
 
 No gate was re-run for this update. Results dated 2026-09-15 stand as recorded.
 
+**Update 2026-11-07 (documentation and audit evidence).** The runtime was re-audited with new measurements:
+- the audit itself: [`COGNITIVE_AUDIT.md`](COGNITIVE_AUDIT.md);
+- the regenerating script: `experiments/cf00_audit/`;
+- the package entry point: [`COGNITIVE_ARCHITECTURE_HANDBOOK.md`](COGNITIVE_ARCHITECTURE_HANDBOOK.md).
+
+The Phase 0 verdict stands. Nothing on this page was changed by that audit.
+
 ---
 
 ## 1. Status vocabulary
