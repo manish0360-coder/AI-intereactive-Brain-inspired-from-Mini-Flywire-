@@ -3,7 +3,7 @@
 **Status 2026-11-07:**
 - Audit complete.
 - Target architecture specified.
-- CF-01 (testbed) is the first implementation milestone; its record is created by the CF-01 commits in `experiments/cf01/`.
+- CF-01 (testbed) is the first implementation milestone. It passed its development gate on 2026-11-07, with E1 and E3 admitted and E2 not admitted; see [`experiments/cf01/results/RESULTS.md`](../experiments/cf01/results/RESULTS.md).
 - Nothing in this package claims that MiniFlyWire is cognitive today.
 
 | Document | Holds |

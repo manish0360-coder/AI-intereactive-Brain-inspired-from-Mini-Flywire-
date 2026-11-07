@@ -1,0 +1,7854 @@
+{
+ "evidence": "CF-01 development gate (not confirmatory)",
+ "domain": "gate",
+ "worlds": 20,
+ "environment": {
+  "node": "v24.15.0",
+  "platform": "win32-x64",
+  "head": "465f0b696b590a4e9d19ddccc345f0b9b5284260",
+  "cf01FilesClean": true
+ },
+ "specSha256": "8e93ad888c85306c2a9d7e7eed306e1128a8e17cccb29622d6fe55e53f2bfb2f",
+ "parameters": {
+  "tasks": {
+   "E1": {
+    "exploreSteps": 600,
+    "exploreEpisodeLength": 50,
+    "testEpisodes": 5,
+    "cap": 200,
+    "minDistance": 3
+   },
+   "E2": {
+    "trainEpisodes": 40,
+    "testEpisodes": 3,
+    "cap": 200,
+    "minDistance": 3
+   },
+   "E3": {
+    "trainEpisodes": 30,
+    "testEpisodes": 5,
+    "cap": 200,
+    "minDistanceG1": 2,
+    "minDistanceG2": 3
+   }
+  },
+  "QL": {
+   "alpha": 0.5,
+   "gamma": 0.95,
+   "epsilon": 0.1
+  },
+  "DYNAQ": {
+   "alpha": 0.5,
+   "gamma": 0.95,
+   "epsilon": 0.1,
+   "k": 20
+  },
+  "bootstrapResamples": 10000,
+  "world": {
+   "nodes": 24,
+   "edges": 30,
+   "maxDegree": 4
+  }
+ },
+ "tests": {
+  "passed": 57,
+  "total": 57
+ },
+ "gates": {
+  "G1_determinism": {
+   "pass": true,
+   "hashA": "6d3affcc5818a2d86baa78d1dbdf605159c451d42dc05fcdf523aed08ba9a6f1",
+   "hashB": "6d3affcc5818a2d86baa78d1dbdf605159c451d42dc05fcdf523aed08ba9a6f1"
+  },
+  "G2_isolation": {
+   "pass": true,
+   "passed": 22,
+   "total": 22,
+   "failed": []
+  },
+  "G3_environment": {
+   "pass": true,
+   "passed": 35,
+   "total": 35,
+   "failed": []
+  },
+  "G4_discriminability": {
+   "admitted": {
+    "E1": true,
+    "E2": false,
+    "E3": true
+   },
+   "admittedCount": 2
+  },
+  "G5_reference": {
+   "pass": true,
+   "violations": []
+  }
+ },
+ "verdict": "CF-01 PASS",
+ "analysis": {
+  "primary": {
+   "E1": {
+    "contrast": "QL.EXPLORED - DYNAQ.EXPLORED",
+    "n": 20,
+    "mean": 149.15,
+    "lo": 104.85,
+    "hi": 203.1,
+    "B": 10000
+   },
+   "E2": {
+    "contrast": "QL.STD - DYNAQ.STD",
+    "n": 20,
+    "mean": 121.2,
+    "lo": -2.95,
+    "hi": 236.15,
+    "B": 10000
+   },
+   "E3": {
+    "contrast": "QL.STD - DYNAQ.STD",
+    "n": 20,
+    "mean": 269.15,
+    "lo": 113.25,
+    "hi": 424.25,
+    "B": 10000
+   }
+  },
+  "reported": {
+   "E1_QL_negativeControl": {
+    "contrast": "QL.EXPLORED - QL.NAIVE",
+    "n": 20,
+    "mean": 7.15,
+    "lo": -32.1,
+    "hi": 50.25,
+    "B": 10000
+   },
+   "E1_DYNAQ_latentBenefit": {
+    "contrast": "DYNAQ.NAIVE - DYNAQ.EXPLORED",
+    "n": 20,
+    "mean": 64.95,
+    "lo": 42.35,
+    "hi": 93.4,
+    "B": 10000
+   }
+  },
+  "means": {
+   "E1.EXPLORED.RANDOM": 304.45,
+   "E1.EXPLORED.QL": 178.8,
+   "E1.EXPLORED.DYNAQ": 29.65,
+   "E1.EXPLORED.ORACLE": 19.5,
+   "E1.NAIVE.RANDOM": 302.65,
+   "E1.NAIVE.QL": 171.65,
+   "E1.NAIVE.DYNAQ": 94.6,
+   "E1.NAIVE.ORACLE": 19.5,
+   "E2.STD.RANDOM": 282.55,
+   "E2.STD.QL": 239.05,
+   "E2.STD.DYNAQ": 117.85,
+   "E2.STD.ORACLE": 17.7,
+   "E3.STD.RANDOM": 326.2,
+   "E3.STD.QL": 545.8,
+   "E3.STD.DYNAQ": 276.65,
+   "E3.STD.ORACLE": 21
+  },
+  "censoring": {
+   "E1.EXPLORED.RANDOM": 0.03,
+   "E1.EXPLORED.QL": 0.03,
+   "E1.EXPLORED.DYNAQ": 0,
+   "E1.EXPLORED.ORACLE": 0,
+   "E1.NAIVE.RANDOM": 0.08,
+   "E1.NAIVE.QL": 0.01,
+   "E1.NAIVE.DYNAQ": 0.01,
+   "E1.NAIVE.ORACLE": 0,
+   "E2.STD.RANDOM": 0.21666666666666667,
+   "E2.STD.QL": 0.25,
+   "E2.STD.DYNAQ": 0.11666666666666667,
+   "E2.STD.ORACLE": 0,
+   "E3.STD.RANDOM": 0.09,
+   "E3.STD.QL": 0.42,
+   "E3.STD.DYNAQ": 0.16,
+   "E3.STD.ORACLE": 0
+  },
+  "secondary": {
+   "E2.STD.RANDOM.blockedAttempts": 11.3,
+   "E2.STD.QL.blockedAttempts": 46.65,
+   "E2.STD.DYNAQ.blockedAttempts": 10.9,
+   "E2.STD.ORACLE.blockedAttempts": 0,
+   "E3.STD.RANDOM.oldGoalArrivals": 12.45,
+   "E3.STD.QL.oldGoalArrivals": 62.1,
+   "E3.STD.DYNAQ.oldGoalArrivals": 14.05,
+   "E3.STD.ORACLE.oldGoalArrivals": 0
+  },
+  "excludedWorlds": {
+   "E1": [],
+   "E2": [],
+   "E3": []
+  }
+ },
+ "referenceWorld": {
+  "world": "mfw-graph (connections.json; reported only)",
+  "rows": [
+   {
+    "task": "E1",
+    "arm": "EXPLORED",
+    "kind": "RANDOM",
+    "metric": 265,
+    "excluded": false,
+    "layout": {
+     "start": 13,
+     "goal": 2,
+     "distance": 4
+    }
+   },
+   {
+    "task": "E1",
+    "arm": "EXPLORED",
+    "kind": "QL",
+    "metric": 131,
+    "excluded": false,
+    "layout": {
+     "start": 13,
+     "goal": 2,
+     "distance": 4
+    }
+   },
+   {
+    "task": "E1",
+    "arm": "EXPLORED",
+    "kind": "DYNAQ",
+    "metric": 33,
+    "excluded": false,
+    "layout": {
+     "start": 13,
+     "goal": 2,
+     "distance": 4
+    }
+   },
+   {
+    "task": "E1",
+    "arm": "EXPLORED",
+    "kind": "ORACLE",
+    "metric": 20,
+    "excluded": false,
+    "layout": {
+     "start": 13,
+     "goal": 2,
+     "distance": 4
+    }
+   },
+   {
+    "task": "E1",
+    "arm": "NAIVE",
+    "kind": "RANDOM",
+    "metric": 341,
+    "excluded": false,
+    "layout": {
+     "start": 13,
+     "goal": 2,
+     "distance": 4
+    }
+   },
+   {
+    "task": "E1",
+    "arm": "NAIVE",
+    "kind": "QL",
+    "metric": 128,
+    "excluded": false,
+    "layout": {
+     "start": 13,
+     "goal": 2,
+     "distance": 4
+    }
+   },
+   {
+    "task": "E1",
+    "arm": "NAIVE",
+    "kind": "DYNAQ",
+    "metric": 72,
+    "excluded": false,
+    "layout": {
+     "start": 13,
+     "goal": 2,
+     "distance": 4
+    }
+   },
+   {
+    "task": "E1",
+    "arm": "NAIVE",
+    "kind": "ORACLE",
+    "metric": 20,
+    "excluded": false,
+    "layout": {
+     "start": 13,
+     "goal": 2,
+     "distance": 4
+    }
+   },
+   {
+    "task": "E2",
+    "arm": "STD",
+    "kind": "RANDOM",
+    "metric": 108,
+    "excluded": false,
+    "layout": {
+     "start": 13,
+     "goal": 4,
+     "blocked": [
+      4,
+      7
+     ],
+     "distance": 3,
+     "detourDistance": 4
+    }
+   },
+   {
+    "task": "E2",
+    "arm": "STD",
+    "kind": "QL",
+    "metric": 229,
+    "excluded": false,
+    "layout": {
+     "start": 13,
+     "goal": 4,
+     "blocked": [
+      4,
+      7
+     ],
+     "distance": 3,
+     "detourDistance": 4
+    }
+   },
+   {
+    "task": "E2",
+    "arm": "STD",
+    "kind": "DYNAQ",
+    "metric": 22,
+    "excluded": false,
+    "layout": {
+     "start": 13,
+     "goal": 4,
+     "blocked": [
+      4,
+      7
+     ],
+     "distance": 3,
+     "detourDistance": 4
+    }
+   },
+   {
+    "task": "E2",
+    "arm": "STD",
+    "kind": "ORACLE",
+    "metric": 12,
+    "excluded": false,
+    "layout": {
+     "start": 13,
+     "goal": 4,
+     "blocked": [
+      4,
+      7
+     ],
+     "distance": 3,
+     "detourDistance": 4
+    }
+   },
+   {
+    "task": "E3",
+    "arm": "STD",
+    "kind": "RANDOM",
+    "metric": 36,
+    "excluded": false,
+    "layout": {
+     "start": 2,
+     "goal1": 0,
+     "goal2": 19,
+     "distance1": 2,
+     "distance2": 3
+    }
+   },
+   {
+    "task": "E3",
+    "arm": "STD",
+    "kind": "QL",
+    "metric": 68,
+    "excluded": false,
+    "layout": {
+     "start": 2,
+     "goal1": 0,
+     "goal2": 19,
+     "distance1": 2,
+     "distance2": 3
+    }
+   },
+   {
+    "task": "E3",
+    "arm": "STD",
+    "kind": "DYNAQ",
+    "metric": 636,
+    "excluded": false,
+    "layout": {
+     "start": 2,
+     "goal1": 0,
+     "goal2": 19,
+     "distance1": 2,
+     "distance2": 3
+    }
+   },
+   {
+    "task": "E3",
+    "arm": "STD",
+    "kind": "ORACLE",
+    "metric": 15,
+    "excluded": false,
+    "layout": {
+     "start": 2,
+     "goal1": 0,
+     "goal2": 19,
+     "distance1": 2,
+     "distance2": 3
+    }
+   }
+  ]
+ },
+ "rowsSha256": "6d3affcc5818a2d86baa78d1dbdf605159c451d42dc05fcdf523aed08ba9a6f1",
+ "rows": [
+  {
+   "task": "E1",
+   "world": "cf|gate|world|0",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 13,
+    "goal": 7,
+    "distance": 3
+   },
+   "testSteps": [
+    9,
+    42,
+    11,
+    48,
+    43
+   ],
+   "metric": 153,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|0",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 13,
+    "goal": 7,
+    "distance": 3
+   },
+   "testSteps": [
+    57,
+    13,
+    27,
+    91,
+    5
+   ],
+   "metric": 193,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|0",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 13,
+    "goal": 7,
+    "distance": 3
+   },
+   "testSteps": [
+    5,
+    3,
+    3,
+    7,
+    3
+   ],
+   "metric": 21,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|0",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 13,
+    "goal": 7,
+    "distance": 3
+   },
+   "testSteps": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|0",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 13,
+    "goal": 7,
+    "distance": 3
+   },
+   "testSteps": [
+    8,
+    14,
+    57,
+    8,
+    103
+   ],
+   "metric": 190,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|0",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 13,
+    "goal": 7,
+    "distance": 3
+   },
+   "testSteps": [
+    182,
+    13,
+    3,
+    17,
+    18
+   ],
+   "metric": 233,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|0",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 13,
+    "goal": 7,
+    "distance": 3
+   },
+   "testSteps": [
+    92,
+    6,
+    3,
+    5,
+    3
+   ],
+   "metric": 109,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|0",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 13,
+    "goal": 7,
+    "distance": 3
+   },
+   "testSteps": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|0",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 0,
+    "goal": 9,
+    "blocked": [
+     0,
+     2
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    53,
+    134,
+    91
+   ],
+   "metric": 278,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 34
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|0",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 0,
+    "goal": 9,
+    "blocked": [
+     0,
+     2
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    9,
+    64,
+    9
+   ],
+   "metric": 82,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 37
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|0",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 0,
+    "goal": 9,
+    "blocked": [
+     0,
+     2
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    12,
+    7,
+    7
+   ],
+   "metric": 26,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 3
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|0",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 0,
+    "goal": 9,
+    "blocked": [
+     0,
+     2
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    7,
+    7,
+    7
+   ],
+   "metric": 21,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|0",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 2,
+    "goal1": 12,
+    "goal2": 20,
+    "distance1": 4,
+    "distance2": 5
+   },
+   "testSteps": [
+    186,
+    46,
+    25,
+    175,
+    68
+   ],
+   "metric": 500,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 33
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|0",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 2,
+    "goal1": 12,
+    "goal2": 20,
+    "distance1": 4,
+    "distance2": 5
+   },
+   "testSteps": [
+    200,
+    68,
+    192,
+    34,
+    12
+   ],
+   "metric": 506,
+   "censored": 1,
+   "secondary": {
+    "oldGoalArrivals": 77
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|0",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 2,
+    "goal1": 12,
+    "goal2": 20,
+    "distance1": 4,
+    "distance2": 5
+   },
+   "testSteps": [
+    110,
+    10,
+    7,
+    5,
+    10
+   ],
+   "metric": 142,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 16
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|0",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 2,
+    "goal1": 12,
+    "goal2": 20,
+    "distance1": 4,
+    "distance2": 5
+   },
+   "testSteps": [
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "metric": 25,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|1",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 15,
+    "goal": 11,
+    "distance": 3
+   },
+   "testSteps": [
+    200,
+    56,
+    112,
+    37,
+    10
+   ],
+   "metric": 415,
+   "censored": 1,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|1",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 15,
+    "goal": 11,
+    "distance": 3
+   },
+   "testSteps": [
+    17,
+    31,
+    160,
+    3,
+    5
+   ],
+   "metric": 216,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|1",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 15,
+    "goal": 11,
+    "distance": 3
+   },
+   "testSteps": [
+    10,
+    4,
+    6,
+    3,
+    3
+   ],
+   "metric": 26,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|1",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 15,
+    "goal": 11,
+    "distance": 3
+   },
+   "testSteps": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|1",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 15,
+    "goal": 11,
+    "distance": 3
+   },
+   "testSteps": [
+    97,
+    81,
+    13,
+    21,
+    112
+   ],
+   "metric": 324,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|1",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 15,
+    "goal": 11,
+    "distance": 3
+   },
+   "testSteps": [
+    130,
+    109,
+    10,
+    12,
+    10
+   ],
+   "metric": 271,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|1",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 15,
+    "goal": 11,
+    "distance": 3
+   },
+   "testSteps": [
+    34,
+    8,
+    11,
+    6,
+    4
+   ],
+   "metric": 63,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|1",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 15,
+    "goal": 11,
+    "distance": 3
+   },
+   "testSteps": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|1",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 19,
+    "goal": 7,
+    "blocked": [
+     14,
+     18
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    33,
+    32,
+    11
+   ],
+   "metric": 76,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 2
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|1",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 19,
+    "goal": 7,
+    "blocked": [
+     14,
+     18
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    13,
+    8,
+    10
+   ],
+   "metric": 31,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|1",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 19,
+    "goal": 7,
+    "blocked": [
+     14,
+     18
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    11,
+    8,
+    9
+   ],
+   "metric": 28,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 4
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|1",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 19,
+    "goal": 7,
+    "blocked": [
+     14,
+     18
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    7,
+    7,
+    7
+   ],
+   "metric": 21,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|1",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 2,
+    "goal1": 17,
+    "goal2": 10,
+    "distance1": 4,
+    "distance2": 3
+   },
+   "testSteps": [
+    12,
+    13,
+    50,
+    34,
+    16
+   ],
+   "metric": 125,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 4
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|1",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 2,
+    "goal1": 17,
+    "goal2": 10,
+    "distance1": 4,
+    "distance2": 3
+   },
+   "testSteps": [
+    200,
+    200,
+    200,
+    200,
+    48
+   ],
+   "metric": 848,
+   "censored": 4,
+   "secondary": {
+    "oldGoalArrivals": 30
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|1",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 2,
+    "goal1": 17,
+    "goal2": 10,
+    "distance1": 4,
+    "distance2": 3
+   },
+   "testSteps": [
+    26,
+    3,
+    3,
+    7,
+    3
+   ],
+   "metric": 42,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 1
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|1",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 2,
+    "goal1": 17,
+    "goal2": 10,
+    "distance1": 4,
+    "distance2": 3
+   },
+   "testSteps": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|2",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 16,
+    "goal": 21,
+    "distance": 4
+   },
+   "testSteps": [
+    34,
+    10,
+    79,
+    49,
+    69
+   ],
+   "metric": 241,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|2",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 16,
+    "goal": 21,
+    "distance": 4
+   },
+   "testSteps": [
+    28,
+    12,
+    33,
+    29,
+    12
+   ],
+   "metric": 114,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|2",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 16,
+    "goal": 21,
+    "distance": 4
+   },
+   "testSteps": [
+    8,
+    4,
+    4,
+    4,
+    6
+   ],
+   "metric": 26,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|2",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 16,
+    "goal": 21,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|2",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 16,
+    "goal": 21,
+    "distance": 4
+   },
+   "testSteps": [
+    16,
+    53,
+    12,
+    23,
+    7
+   ],
+   "metric": 111,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|2",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 16,
+    "goal": 21,
+    "distance": 4
+   },
+   "testSteps": [
+    12,
+    17,
+    8,
+    41,
+    7
+   ],
+   "metric": 85,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|2",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 16,
+    "goal": 21,
+    "distance": 4
+   },
+   "testSteps": [
+    12,
+    8,
+    6,
+    8,
+    6
+   ],
+   "metric": 40,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|2",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 16,
+    "goal": 21,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|2",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 11,
+    "goal": 10,
+    "blocked": [
+     0,
+     13
+    ],
+    "distance": 4,
+    "detourDistance": 6
+   },
+   "testSteps": [
+    94,
+    200,
+    173
+   ],
+   "metric": 467,
+   "censored": 1,
+   "secondary": {
+    "blockedAttempts": 10
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|2",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 11,
+    "goal": 10,
+    "blocked": [
+     0,
+     13
+    ],
+    "distance": 4,
+    "detourDistance": 6
+   },
+   "testSteps": [
+    200,
+    200,
+    200
+   ],
+   "metric": 600,
+   "censored": 3,
+   "secondary": {
+    "blockedAttempts": 72
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|2",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 11,
+    "goal": 10,
+    "blocked": [
+     0,
+     13
+    ],
+    "distance": 4,
+    "detourDistance": 6
+   },
+   "testSteps": [
+    63,
+    6,
+    6
+   ],
+   "metric": 75,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 7
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|2",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 11,
+    "goal": 10,
+    "blocked": [
+     0,
+     13
+    ],
+    "distance": 4,
+    "detourDistance": 6
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|2",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 4,
+    "goal1": 1,
+    "goal2": 20,
+    "distance1": 4,
+    "distance2": 5
+   },
+   "testSteps": [
+    40,
+    61,
+    36,
+    18,
+    67
+   ],
+   "metric": 222,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 18
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|2",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 4,
+    "goal1": 1,
+    "goal2": 20,
+    "distance1": 4,
+    "distance2": 5
+   },
+   "testSteps": [
+    200,
+    60,
+    151,
+    23,
+    17
+   ],
+   "metric": 451,
+   "censored": 1,
+   "secondary": {
+    "oldGoalArrivals": 29
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|2",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 4,
+    "goal1": 1,
+    "goal2": 20,
+    "distance1": 4,
+    "distance2": 5
+   },
+   "testSteps": [
+    200,
+    200,
+    200,
+    200,
+    200
+   ],
+   "metric": 1000,
+   "censored": 5,
+   "secondary": {
+    "oldGoalArrivals": 44
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|2",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 4,
+    "goal1": 1,
+    "goal2": 20,
+    "distance1": 4,
+    "distance2": 5
+   },
+   "testSteps": [
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "metric": 25,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|3",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 7,
+    "goal": 15,
+    "distance": 6
+   },
+   "testSteps": [
+    95,
+    35,
+    39,
+    108,
+    135
+   ],
+   "metric": 412,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|3",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 7,
+    "goal": 15,
+    "distance": 6
+   },
+   "testSteps": [
+    35,
+    47,
+    12,
+    48,
+    33
+   ],
+   "metric": 175,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|3",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 7,
+    "goal": 15,
+    "distance": 6
+   },
+   "testSteps": [
+    7,
+    7,
+    7,
+    9,
+    11
+   ],
+   "metric": 41,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|3",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 7,
+    "goal": 15,
+    "distance": 6
+   },
+   "testSteps": [
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "metric": 30,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|3",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 7,
+    "goal": 15,
+    "distance": 6
+   },
+   "testSteps": [
+    200,
+    151,
+    77,
+    200,
+    67
+   ],
+   "metric": 695,
+   "censored": 2,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|3",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 7,
+    "goal": 15,
+    "distance": 6
+   },
+   "testSteps": [
+    68,
+    48,
+    52,
+    8,
+    10
+   ],
+   "metric": 186,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|3",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 7,
+    "goal": 15,
+    "distance": 6
+   },
+   "testSteps": [
+    91,
+    14,
+    6,
+    6,
+    10
+   ],
+   "metric": 127,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|3",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 7,
+    "goal": 15,
+    "distance": 6
+   },
+   "testSteps": [
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "metric": 30,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|3",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 0,
+    "goal": 14,
+    "blocked": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    200,
+    200,
+    200
+   ],
+   "metric": 600,
+   "censored": 3,
+   "secondary": {
+    "blockedAttempts": 28
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|3",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 0,
+    "goal": 14,
+    "blocked": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    200,
+    200,
+    166
+   ],
+   "metric": 566,
+   "censored": 2,
+   "secondary": {
+    "blockedAttempts": 92
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|3",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 0,
+    "goal": 14,
+    "blocked": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    18,
+    5,
+    5
+   ],
+   "metric": 28,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 5
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|3",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 0,
+    "goal": 14,
+    "blocked": [
+     1,
+     18
+    ],
+    "distance": 3,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|3",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 5,
+    "goal1": 12,
+    "goal2": 8,
+    "distance1": 3,
+    "distance2": 3
+   },
+   "testSteps": [
+    45,
+    21,
+    38,
+    63,
+    70
+   ],
+   "metric": 237,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 5
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|3",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 5,
+    "goal1": 12,
+    "goal2": 8,
+    "distance1": 3,
+    "distance2": 3
+   },
+   "testSteps": [
+    89,
+    200,
+    111,
+    7,
+    3
+   ],
+   "metric": 410,
+   "censored": 1,
+   "secondary": {
+    "oldGoalArrivals": 54
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|3",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 5,
+    "goal1": 12,
+    "goal2": 8,
+    "distance1": 3,
+    "distance2": 3
+   },
+   "testSteps": [
+    200,
+    75,
+    6,
+    3,
+    5
+   ],
+   "metric": 289,
+   "censored": 1,
+   "secondary": {
+    "oldGoalArrivals": 7
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|3",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 5,
+    "goal1": 12,
+    "goal2": 8,
+    "distance1": 3,
+    "distance2": 3
+   },
+   "testSteps": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|4",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 19,
+    "goal": 15,
+    "distance": 4
+   },
+   "testSteps": [
+    56,
+    30,
+    40,
+    150,
+    18
+   ],
+   "metric": 294,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|4",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 19,
+    "goal": 15,
+    "distance": 4
+   },
+   "testSteps": [
+    63,
+    45,
+    4,
+    4,
+    4
+   ],
+   "metric": 120,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|4",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 19,
+    "goal": 15,
+    "distance": 4
+   },
+   "testSteps": [
+    9,
+    8,
+    4,
+    4,
+    7
+   ],
+   "metric": 32,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|4",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 19,
+    "goal": 15,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|4",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 19,
+    "goal": 15,
+    "distance": 4
+   },
+   "testSteps": [
+    23,
+    13,
+    87,
+    11,
+    23
+   ],
+   "metric": 157,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|4",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 19,
+    "goal": 15,
+    "distance": 4
+   },
+   "testSteps": [
+    84,
+    33,
+    41,
+    8,
+    79
+   ],
+   "metric": 245,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|4",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 19,
+    "goal": 15,
+    "distance": 4
+   },
+   "testSteps": [
+    44,
+    10,
+    8,
+    8,
+    21
+   ],
+   "metric": 91,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|4",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 19,
+    "goal": 15,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|4",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 6,
+    "goal": 15,
+    "blocked": [
+     2,
+     8
+    ],
+    "distance": 4,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    35,
+    40,
+    27
+   ],
+   "metric": 102,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 1
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|4",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 6,
+    "goal": 15,
+    "blocked": [
+     2,
+     8
+    ],
+    "distance": 4,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|4",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 6,
+    "goal": 15,
+    "blocked": [
+     2,
+     8
+    ],
+    "distance": 4,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    20,
+    11,
+    10
+   ],
+   "metric": 41,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 2
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|4",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 6,
+    "goal": 15,
+    "blocked": [
+     2,
+     8
+    ],
+    "distance": 4,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|4",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 3,
+    "goal1": 20,
+    "goal2": 10,
+    "distance1": 3,
+    "distance2": 3
+   },
+   "testSteps": [
+    53,
+    7,
+    33,
+    80,
+    56
+   ],
+   "metric": 229,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 3
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|4",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 3,
+    "goal1": 20,
+    "goal2": 10,
+    "distance1": 3,
+    "distance2": 3
+   },
+   "testSteps": [
+    200,
+    200,
+    200,
+    200,
+    200
+   ],
+   "metric": 1000,
+   "censored": 5,
+   "secondary": {
+    "oldGoalArrivals": 79
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|4",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 3,
+    "goal1": 20,
+    "goal2": 10,
+    "distance1": 3,
+    "distance2": 3
+   },
+   "testSteps": [
+    200,
+    20,
+    4,
+    4,
+    4
+   ],
+   "metric": 232,
+   "censored": 1,
+   "secondary": {
+    "oldGoalArrivals": 4
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|4",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 3,
+    "goal1": 20,
+    "goal2": 10,
+    "distance1": 3,
+    "distance2": 3
+   },
+   "testSteps": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|5",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 10,
+    "goal": 20,
+    "distance": 4
+   },
+   "testSteps": [
+    194,
+    23,
+    21,
+    103,
+    8
+   ],
+   "metric": 349,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|5",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 10,
+    "goal": 20,
+    "distance": 4
+   },
+   "testSteps": [
+    50,
+    136,
+    9,
+    30,
+    31
+   ],
+   "metric": 256,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|5",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 10,
+    "goal": 20,
+    "distance": 4
+   },
+   "testSteps": [
+    15,
+    5,
+    5,
+    4,
+    4
+   ],
+   "metric": 33,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|5",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 10,
+    "goal": 20,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|5",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 10,
+    "goal": 20,
+    "distance": 4
+   },
+   "testSteps": [
+    57,
+    40,
+    39,
+    31,
+    185
+   ],
+   "metric": 352,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|5",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 10,
+    "goal": 20,
+    "distance": 4
+   },
+   "testSteps": [
+    63,
+    8,
+    10,
+    8,
+    4
+   ],
+   "metric": 93,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|5",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 10,
+    "goal": 20,
+    "distance": 4
+   },
+   "testSteps": [
+    42,
+    6,
+    4,
+    4,
+    6
+   ],
+   "metric": 62,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|5",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 10,
+    "goal": 20,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|5",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 4,
+    "goal": 17,
+    "blocked": [
+     0,
+     4
+    ],
+    "distance": 3,
+    "detourDistance": 6
+   },
+   "testSteps": [
+    106,
+    200,
+    24
+   ],
+   "metric": 330,
+   "censored": 1,
+   "secondary": {
+    "blockedAttempts": 13
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|5",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 4,
+    "goal": 17,
+    "blocked": [
+     0,
+     4
+    ],
+    "distance": 3,
+    "detourDistance": 6
+   },
+   "testSteps": [
+    6,
+    6,
+    8
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|5",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 4,
+    "goal": 17,
+    "blocked": [
+     0,
+     4
+    ],
+    "distance": 3,
+    "detourDistance": 6
+   },
+   "testSteps": [
+    16,
+    24,
+    10
+   ],
+   "metric": 50,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 6
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|5",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 4,
+    "goal": 17,
+    "blocked": [
+     0,
+     4
+    ],
+    "distance": 3,
+    "detourDistance": 6
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|5",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 18,
+    "goal1": 0,
+    "goal2": 15,
+    "distance1": 4,
+    "distance2": 5
+   },
+   "testSteps": [
+    56,
+    55,
+    21,
+    67,
+    21
+   ],
+   "metric": 220,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 9
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|5",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 18,
+    "goal1": 0,
+    "goal2": 15,
+    "distance1": 4,
+    "distance2": 5
+   },
+   "testSteps": [
+    33,
+    200,
+    200,
+    200,
+    196
+   ],
+   "metric": 829,
+   "censored": 3,
+   "secondary": {
+    "oldGoalArrivals": 73
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|5",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 18,
+    "goal1": 0,
+    "goal2": 15,
+    "distance1": 4,
+    "distance2": 5
+   },
+   "testSteps": [
+    105,
+    7,
+    5,
+    5,
+    5
+   ],
+   "metric": 127,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 16
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|5",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 18,
+    "goal1": 0,
+    "goal2": 15,
+    "distance1": 4,
+    "distance2": 5
+   },
+   "testSteps": [
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "metric": 25,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|6",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 2,
+    "goal": 15,
+    "distance": 3
+   },
+   "testSteps": [
+    6,
+    26,
+    53,
+    3,
+    20
+   ],
+   "metric": 108,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|6",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 2,
+    "goal": 15,
+    "distance": 3
+   },
+   "testSteps": [
+    96,
+    25,
+    12,
+    9,
+    28
+   ],
+   "metric": 170,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|6",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 2,
+    "goal": 15,
+    "distance": 3
+   },
+   "testSteps": [
+    4,
+    6,
+    3,
+    6,
+    4
+   ],
+   "metric": 23,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|6",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 2,
+    "goal": 15,
+    "distance": 3
+   },
+   "testSteps": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|6",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 2,
+    "goal": 15,
+    "distance": 3
+   },
+   "testSteps": [
+    92,
+    8,
+    3,
+    28,
+    7
+   ],
+   "metric": 138,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|6",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 2,
+    "goal": 15,
+    "distance": 3
+   },
+   "testSteps": [
+    50,
+    57,
+    33,
+    5,
+    7
+   ],
+   "metric": 152,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|6",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 2,
+    "goal": 15,
+    "distance": 3
+   },
+   "testSteps": [
+    64,
+    3,
+    5,
+    3,
+    3
+   ],
+   "metric": 78,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|6",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 2,
+    "goal": 15,
+    "distance": 3
+   },
+   "testSteps": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|6",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 19,
+    "goal": 17,
+    "blocked": [
+     3,
+     19
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    200,
+    145,
+    27
+   ],
+   "metric": 372,
+   "censored": 1,
+   "secondary": {
+    "blockedAttempts": 13
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|6",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 19,
+    "goal": 17,
+    "blocked": [
+     3,
+     19
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    9,
+    7,
+    7
+   ],
+   "metric": 23,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|6",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 19,
+    "goal": 17,
+    "blocked": [
+     3,
+     19
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    13,
+    10,
+    8
+   ],
+   "metric": 31,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 5
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|6",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 19,
+    "goal": 17,
+    "blocked": [
+     3,
+     19
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    7,
+    7,
+    7
+   ],
+   "metric": 21,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|6",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 22,
+    "goal1": 2,
+    "goal2": 15,
+    "distance1": 4,
+    "distance2": 5
+   },
+   "testSteps": [
+    22,
+    173,
+    26,
+    49,
+    32
+   ],
+   "metric": 302,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 7
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|6",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 22,
+    "goal1": 2,
+    "goal2": 15,
+    "distance1": 4,
+    "distance2": 5
+   },
+   "testSteps": [
+    200,
+    200,
+    200,
+    160,
+    24
+   ],
+   "metric": 784,
+   "censored": 3,
+   "secondary": {
+    "oldGoalArrivals": 88
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|6",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 22,
+    "goal1": 2,
+    "goal2": 15,
+    "distance1": 4,
+    "distance2": 5
+   },
+   "testSteps": [
+    126,
+    6,
+    6,
+    6,
+    8
+   ],
+   "metric": 152,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 6
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|6",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 22,
+    "goal1": 2,
+    "goal2": 15,
+    "distance1": 4,
+    "distance2": 5
+   },
+   "testSteps": [
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "metric": 25,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|7",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 17,
+    "goal": 11,
+    "distance": 4
+   },
+   "testSteps": [
+    47,
+    14,
+    36,
+    86,
+    77
+   ],
+   "metric": 260,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|7",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 17,
+    "goal": 11,
+    "distance": 4
+   },
+   "testSteps": [
+    66,
+    95,
+    38,
+    24,
+    12
+   ],
+   "metric": 235,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|7",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 17,
+    "goal": 11,
+    "distance": 4
+   },
+   "testSteps": [
+    11,
+    5,
+    5,
+    9,
+    5
+   ],
+   "metric": 35,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|7",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 17,
+    "goal": 11,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|7",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 17,
+    "goal": 11,
+    "distance": 4
+   },
+   "testSteps": [
+    44,
+    86,
+    54,
+    58,
+    106
+   ],
+   "metric": 348,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|7",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 17,
+    "goal": 11,
+    "distance": 4
+   },
+   "testSteps": [
+    20,
+    54,
+    20,
+    20,
+    6
+   ],
+   "metric": 120,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|7",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 17,
+    "goal": 11,
+    "distance": 4
+   },
+   "testSteps": [
+    39,
+    11,
+    5,
+    5,
+    7
+   ],
+   "metric": 67,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|7",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 17,
+    "goal": 11,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|7",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 23,
+    "goal": 11,
+    "blocked": [
+     15,
+     23
+    ],
+    "distance": 3,
+    "detourDistance": 4
+   },
+   "testSteps": [
+    24,
+    47,
+    8
+   ],
+   "metric": 79,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 1
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|7",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 23,
+    "goal": 11,
+    "blocked": [
+     15,
+     23
+    ],
+    "distance": 3,
+    "detourDistance": 4
+   },
+   "testSteps": [
+    10,
+    7,
+    51
+   ],
+   "metric": 68,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 31
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|7",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 23,
+    "goal": 11,
+    "blocked": [
+     15,
+     23
+    ],
+    "distance": 3,
+    "detourDistance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|7",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 23,
+    "goal": 11,
+    "blocked": [
+     15,
+     23
+    ],
+    "distance": 3,
+    "detourDistance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|7",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 16,
+    "goal1": 14,
+    "goal2": 6,
+    "distance1": 2,
+    "distance2": 3
+   },
+   "testSteps": [
+    58,
+    58,
+    15,
+    58,
+    41
+   ],
+   "metric": 230,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 13
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|7",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 16,
+    "goal1": 14,
+    "goal2": 6,
+    "distance1": 2,
+    "distance2": 3
+   },
+   "testSteps": [
+    200,
+    200,
+    200,
+    200,
+    200
+   ],
+   "metric": 1000,
+   "censored": 5,
+   "secondary": {
+    "oldGoalArrivals": 49
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|7",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 16,
+    "goal1": 14,
+    "goal2": 6,
+    "distance1": 2,
+    "distance2": 3
+   },
+   "testSteps": [
+    200,
+    200,
+    200,
+    200,
+    184
+   ],
+   "metric": 984,
+   "censored": 4,
+   "secondary": {
+    "oldGoalArrivals": 64
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|7",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 16,
+    "goal1": 14,
+    "goal2": 6,
+    "distance1": 2,
+    "distance2": 3
+   },
+   "testSteps": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|8",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 23,
+    "goal": 10,
+    "distance": 4
+   },
+   "testSteps": [
+    13,
+    56,
+    66,
+    21,
+    147
+   ],
+   "metric": 303,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|8",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 23,
+    "goal": 10,
+    "distance": 4
+   },
+   "testSteps": [
+    14,
+    16,
+    10,
+    12,
+    4
+   ],
+   "metric": 56,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|8",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 23,
+    "goal": 10,
+    "distance": 4
+   },
+   "testSteps": [
+    16,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 32,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|8",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 23,
+    "goal": 10,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|8",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 23,
+    "goal": 10,
+    "distance": 4
+   },
+   "testSteps": [
+    6,
+    20,
+    75,
+    5,
+    21
+   ],
+   "metric": 127,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|8",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 23,
+    "goal": 10,
+    "distance": 4
+   },
+   "testSteps": [
+    39,
+    60,
+    58,
+    13,
+    6
+   ],
+   "metric": 176,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|8",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 23,
+    "goal": 10,
+    "distance": 4
+   },
+   "testSteps": [
+    32,
+    12,
+    7,
+    7,
+    7
+   ],
+   "metric": 65,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|8",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 23,
+    "goal": 10,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|8",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 18,
+    "goal": 17,
+    "blocked": [
+     19,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    16,
+    26,
+    30
+   ],
+   "metric": 72,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 4
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|8",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 18,
+    "goal": 17,
+    "blocked": [
+     19,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    7,
+    5,
+    5
+   ],
+   "metric": 17,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|8",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 18,
+    "goal": 17,
+    "blocked": [
+     19,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    200,
+    191,
+    5
+   ],
+   "metric": 396,
+   "censored": 1,
+   "secondary": {
+    "blockedAttempts": 40
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|8",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 18,
+    "goal": 17,
+    "blocked": [
+     19,
+     20
+    ],
+    "distance": 4,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|8",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 16,
+    "goal1": 9,
+    "goal2": 7,
+    "distance1": 5,
+    "distance2": 4
+   },
+   "testSteps": [
+    20,
+    58,
+    11,
+    32,
+    53
+   ],
+   "metric": 174,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 10
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|8",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 16,
+    "goal1": 9,
+    "goal2": 7,
+    "distance1": 5,
+    "distance2": 4
+   },
+   "testSteps": [
+    139,
+    18,
+    4,
+    4,
+    4
+   ],
+   "metric": 169,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 6
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|8",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 16,
+    "goal1": 9,
+    "goal2": 7,
+    "distance1": 5,
+    "distance2": 4
+   },
+   "testSteps": [
+    64,
+    8,
+    4,
+    6,
+    4
+   ],
+   "metric": 86,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 1
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|8",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 16,
+    "goal1": 9,
+    "goal2": 7,
+    "distance1": 5,
+    "distance2": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|9",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 4,
+    "goal": 16,
+    "distance": 5
+   },
+   "testSteps": [
+    25,
+    134,
+    30,
+    112,
+    17
+   ],
+   "metric": 318,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|9",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 4,
+    "goal": 16,
+    "distance": 5
+   },
+   "testSteps": [
+    80,
+    15,
+    26,
+    5,
+    23
+   ],
+   "metric": 149,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|9",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 4,
+    "goal": 16,
+    "distance": 5
+   },
+   "testSteps": [
+    17,
+    5,
+    5,
+    5,
+    5
+   ],
+   "metric": 37,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|9",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 4,
+    "goal": 16,
+    "distance": 5
+   },
+   "testSteps": [
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "metric": 25,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|9",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 4,
+    "goal": 16,
+    "distance": 5
+   },
+   "testSteps": [
+    51,
+    47,
+    29,
+    36,
+    79
+   ],
+   "metric": 242,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|9",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 4,
+    "goal": 16,
+    "distance": 5
+   },
+   "testSteps": [
+    34,
+    9,
+    32,
+    74,
+    13
+   ],
+   "metric": 162,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|9",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 4,
+    "goal": 16,
+    "distance": 5
+   },
+   "testSteps": [
+    200,
+    91,
+    7,
+    5,
+    5
+   ],
+   "metric": 308,
+   "censored": 1,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|9",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 4,
+    "goal": 16,
+    "distance": 5
+   },
+   "testSteps": [
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "metric": 25,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|9",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 10,
+    "goal": 12,
+    "blocked": [
+     8,
+     14
+    ],
+    "distance": 5,
+    "detourDistance": 6
+   },
+   "testSteps": [
+    159,
+    69,
+    25
+   ],
+   "metric": 253,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 12
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|9",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 10,
+    "goal": 12,
+    "blocked": [
+     8,
+     14
+    ],
+    "distance": 5,
+    "detourDistance": 6
+   },
+   "testSteps": [
+    200,
+    200,
+    138
+   ],
+   "metric": 538,
+   "censored": 2,
+   "secondary": {
+    "blockedAttempts": 117
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|9",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 10,
+    "goal": 12,
+    "blocked": [
+     8,
+     14
+    ],
+    "distance": 5,
+    "detourDistance": 6
+   },
+   "testSteps": [
+    110,
+    15,
+    14
+   ],
+   "metric": 139,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 29
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|9",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 10,
+    "goal": 12,
+    "blocked": [
+     8,
+     14
+    ],
+    "distance": 5,
+    "detourDistance": 6
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|9",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 18,
+    "goal1": 11,
+    "goal2": 4,
+    "distance1": 2,
+    "distance2": 5
+   },
+   "testSteps": [
+    31,
+    21,
+    200,
+    152,
+    57
+   ],
+   "metric": 461,
+   "censored": 1,
+   "secondary": {
+    "oldGoalArrivals": 22
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|9",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 18,
+    "goal1": 11,
+    "goal2": 4,
+    "distance1": 2,
+    "distance2": 5
+   },
+   "testSteps": [
+    200,
+    200,
+    200,
+    200,
+    200
+   ],
+   "metric": 1000,
+   "censored": 5,
+   "secondary": {
+    "oldGoalArrivals": 236
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|9",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 18,
+    "goal1": 11,
+    "goal2": 4,
+    "distance1": 2,
+    "distance2": 5
+   },
+   "testSteps": [
+    181,
+    7,
+    7,
+    9,
+    5
+   ],
+   "metric": 209,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 13
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|9",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 18,
+    "goal1": 11,
+    "goal2": 4,
+    "distance1": 2,
+    "distance2": 5
+   },
+   "testSteps": [
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "metric": 25,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|10",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 20,
+    "goal": 15,
+    "distance": 3
+   },
+   "testSteps": [
+    200,
+    52,
+    67,
+    106,
+    34
+   ],
+   "metric": 459,
+   "censored": 1,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|10",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 20,
+    "goal": 15,
+    "distance": 3
+   },
+   "testSteps": [
+    14,
+    78,
+    19,
+    3,
+    3
+   ],
+   "metric": 117,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|10",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 20,
+    "goal": 15,
+    "distance": 3
+   },
+   "testSteps": [
+    10,
+    5,
+    5,
+    7,
+    3
+   ],
+   "metric": 30,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|10",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 20,
+    "goal": 15,
+    "distance": 3
+   },
+   "testSteps": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|10",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 20,
+    "goal": 15,
+    "distance": 3
+   },
+   "testSteps": [
+    103,
+    88,
+    23,
+    41,
+    35
+   ],
+   "metric": 290,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|10",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 20,
+    "goal": 15,
+    "distance": 3
+   },
+   "testSteps": [
+    58,
+    51,
+    16,
+    78,
+    16
+   ],
+   "metric": 219,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|10",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 20,
+    "goal": 15,
+    "distance": 3
+   },
+   "testSteps": [
+    104,
+    3,
+    3,
+    3,
+    3
+   ],
+   "metric": 116,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|10",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 20,
+    "goal": 15,
+    "distance": 3
+   },
+   "testSteps": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|10",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 9,
+    "goal": 11,
+    "blocked": [
+     1,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 4
+   },
+   "testSteps": [
+    31,
+    200,
+    200
+   ],
+   "metric": 431,
+   "censored": 2,
+   "secondary": {
+    "blockedAttempts": 18
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|10",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 9,
+    "goal": 11,
+    "blocked": [
+     1,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 4
+   },
+   "testSteps": [
+    23,
+    115,
+    5
+   ],
+   "metric": 143,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 55
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|10",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 9,
+    "goal": 11,
+    "blocked": [
+     1,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 4
+   },
+   "testSteps": [
+    114,
+    4,
+    4
+   ],
+   "metric": 122,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 14
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|10",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 9,
+    "goal": 11,
+    "blocked": [
+     1,
+     20
+    ],
+    "distance": 3,
+    "detourDistance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|10",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 10,
+    "goal1": 12,
+    "goal2": 19,
+    "distance1": 4,
+    "distance2": 4
+   },
+   "testSteps": [
+    20,
+    9,
+    107,
+    61,
+    35
+   ],
+   "metric": 232,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 2
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|10",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 10,
+    "goal1": 12,
+    "goal2": 19,
+    "distance1": 4,
+    "distance2": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|10",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 10,
+    "goal1": 12,
+    "goal2": 19,
+    "distance1": 4,
+    "distance2": 4
+   },
+   "testSteps": [
+    4,
+    6,
+    4,
+    4,
+    4
+   ],
+   "metric": 22,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|10",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 10,
+    "goal1": 12,
+    "goal2": 19,
+    "distance1": 4,
+    "distance2": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|11",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 3,
+    "goal": 12,
+    "distance": 4
+   },
+   "testSteps": [
+    200,
+    93,
+    41,
+    176,
+    47
+   ],
+   "metric": 557,
+   "censored": 1,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|11",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 3,
+    "goal": 12,
+    "distance": 4
+   },
+   "testSteps": [
+    30,
+    109,
+    20,
+    11,
+    13
+   ],
+   "metric": 183,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|11",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 3,
+    "goal": 12,
+    "distance": 4
+   },
+   "testSteps": [
+    11,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 27,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|11",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 3,
+    "goal": 12,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|11",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 3,
+    "goal": 12,
+    "distance": 4
+   },
+   "testSteps": [
+    22,
+    85,
+    67,
+    72,
+    154
+   ],
+   "metric": 400,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|11",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 3,
+    "goal": 12,
+    "distance": 4
+   },
+   "testSteps": [
+    37,
+    58,
+    19,
+    69,
+    37
+   ],
+   "metric": 220,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|11",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 3,
+    "goal": 12,
+    "distance": 4
+   },
+   "testSteps": [
+    25,
+    7,
+    5,
+    5,
+    5
+   ],
+   "metric": 47,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|11",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 3,
+    "goal": 12,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|11",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 10,
+    "goal": 2,
+    "blocked": [
+     0,
+     8
+    ],
+    "distance": 7,
+    "detourDistance": 8
+   },
+   "testSteps": [
+    143,
+    11,
+    200
+   ],
+   "metric": 354,
+   "censored": 1,
+   "secondary": {
+    "blockedAttempts": 12
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|11",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 10,
+    "goal": 2,
+    "blocked": [
+     0,
+     8
+    ],
+    "distance": 7,
+    "detourDistance": 8
+   },
+   "testSteps": [
+    200,
+    200,
+    30
+   ],
+   "metric": 430,
+   "censored": 2,
+   "secondary": {
+    "blockedAttempts": 69
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|11",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 10,
+    "goal": 2,
+    "blocked": [
+     0,
+     8
+    ],
+    "distance": 7,
+    "detourDistance": 8
+   },
+   "testSteps": [
+    31,
+    10,
+    9
+   ],
+   "metric": 50,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 4
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|11",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 10,
+    "goal": 2,
+    "blocked": [
+     0,
+     8
+    ],
+    "distance": 7,
+    "detourDistance": 8
+   },
+   "testSteps": [
+    8,
+    8,
+    8
+   ],
+   "metric": 24,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|11",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 12,
+    "goal1": 23,
+    "goal2": 9,
+    "distance1": 4,
+    "distance2": 4
+   },
+   "testSteps": [
+    15,
+    6,
+    73,
+    18,
+    8
+   ],
+   "metric": 120,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 5
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|11",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 12,
+    "goal1": 23,
+    "goal2": 9,
+    "distance1": 4,
+    "distance2": 4
+   },
+   "testSteps": [
+    200,
+    141,
+    10,
+    4,
+    4
+   ],
+   "metric": 359,
+   "censored": 1,
+   "secondary": {
+    "oldGoalArrivals": 42
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|11",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 12,
+    "goal1": 23,
+    "goal2": 9,
+    "distance1": 4,
+    "distance2": 4
+   },
+   "testSteps": [
+    15,
+    8,
+    5,
+    5,
+    5
+   ],
+   "metric": 38,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 2
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|11",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 12,
+    "goal1": 23,
+    "goal2": 9,
+    "distance1": 4,
+    "distance2": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|12",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 9,
+    "goal": 12,
+    "distance": 4
+   },
+   "testSteps": [
+    67,
+    75,
+    121,
+    147,
+    24
+   ],
+   "metric": 434,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|12",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 9,
+    "goal": 12,
+    "distance": 4
+   },
+   "testSteps": [
+    76,
+    200,
+    37,
+    44,
+    8
+   ],
+   "metric": 365,
+   "censored": 1,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|12",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 9,
+    "goal": 12,
+    "distance": 4
+   },
+   "testSteps": [
+    13,
+    4,
+    4,
+    4,
+    6
+   ],
+   "metric": 31,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|12",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 9,
+    "goal": 12,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|12",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 9,
+    "goal": 12,
+    "distance": 4
+   },
+   "testSteps": [
+    10,
+    141,
+    86,
+    200,
+    200
+   ],
+   "metric": 637,
+   "censored": 2,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|12",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 9,
+    "goal": 12,
+    "distance": 4
+   },
+   "testSteps": [
+    200,
+    26,
+    149,
+    34,
+    13
+   ],
+   "metric": 422,
+   "censored": 1,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|12",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 9,
+    "goal": 12,
+    "distance": 4
+   },
+   "testSteps": [
+    100,
+    16,
+    4,
+    4,
+    4
+   ],
+   "metric": 128,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|12",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 9,
+    "goal": 12,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|12",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 23,
+    "goal": 11,
+    "blocked": [
+     9,
+     17
+    ],
+    "distance": 4,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    25,
+    200,
+    93
+   ],
+   "metric": 318,
+   "censored": 1,
+   "secondary": {
+    "blockedAttempts": 20
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|12",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 23,
+    "goal": 11,
+    "blocked": [
+     9,
+     17
+    ],
+    "distance": 4,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    200,
+    200,
+    33
+   ],
+   "metric": 433,
+   "censored": 2,
+   "secondary": {
+    "blockedAttempts": 54
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|12",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 23,
+    "goal": 11,
+    "blocked": [
+     9,
+     17
+    ],
+    "distance": 4,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    25,
+    7,
+    7
+   ],
+   "metric": 39,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 6
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|12",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 23,
+    "goal": 11,
+    "blocked": [
+     9,
+     17
+    ],
+    "distance": 4,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    7,
+    7,
+    7
+   ],
+   "metric": 21,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|12",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 11,
+    "goal1": 19,
+    "goal2": 14,
+    "distance1": 3,
+    "distance2": 3
+   },
+   "testSteps": [
+    45,
+    129,
+    200,
+    86,
+    158
+   ],
+   "metric": 618,
+   "censored": 1,
+   "secondary": {
+    "oldGoalArrivals": 4
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|12",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 11,
+    "goal1": 19,
+    "goal2": 14,
+    "distance1": 3,
+    "distance2": 3
+   },
+   "testSteps": [
+    200,
+    200,
+    200,
+    200,
+    200
+   ],
+   "metric": 1000,
+   "censored": 5,
+   "secondary": {
+    "oldGoalArrivals": 61
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|12",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 11,
+    "goal1": 19,
+    "goal2": 14,
+    "distance1": 3,
+    "distance2": 3
+   },
+   "testSteps": [
+    200,
+    159,
+    14,
+    3,
+    3
+   ],
+   "metric": 379,
+   "censored": 1,
+   "secondary": {
+    "oldGoalArrivals": 7
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|12",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 11,
+    "goal1": 19,
+    "goal2": 14,
+    "distance1": 3,
+    "distance2": 3
+   },
+   "testSteps": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|13",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 12,
+    "goal": 20,
+    "distance": 3
+   },
+   "testSteps": [
+    4,
+    5,
+    12,
+    103,
+    28
+   ],
+   "metric": 152,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|13",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 12,
+    "goal": 20,
+    "distance": 3
+   },
+   "testSteps": [
+    7,
+    38,
+    3,
+    3,
+    3
+   ],
+   "metric": 54,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|13",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 12,
+    "goal": 20,
+    "distance": 3
+   },
+   "testSteps": [
+    19,
+    4,
+    3,
+    3,
+    3
+   ],
+   "metric": 32,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|13",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 12,
+    "goal": 20,
+    "distance": 3
+   },
+   "testSteps": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|13",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 12,
+    "goal": 20,
+    "distance": 3
+   },
+   "testSteps": [
+    9,
+    7,
+    13,
+    5,
+    3
+   ],
+   "metric": 37,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|13",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 12,
+    "goal": 20,
+    "distance": 3
+   },
+   "testSteps": [
+    14,
+    20,
+    3,
+    3,
+    3
+   ],
+   "metric": 43,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|13",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 12,
+    "goal": 20,
+    "distance": 3
+   },
+   "testSteps": [
+    63,
+    12,
+    5,
+    7,
+    5
+   ],
+   "metric": 92,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|13",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 12,
+    "goal": 20,
+    "distance": 3
+   },
+   "testSteps": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|13",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 4,
+    "goal": 13,
+    "blocked": [
+     22,
+     23
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    55,
+    90,
+    99
+   ],
+   "metric": 244,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 8
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|13",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 4,
+    "goal": 13,
+    "blocked": [
+     22,
+     23
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    102,
+    187,
+    71
+   ],
+   "metric": 360,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 68
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|13",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 4,
+    "goal": 13,
+    "blocked": [
+     22,
+     23
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    7,
+    7,
+    7
+   ],
+   "metric": 21,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|13",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 4,
+    "goal": 13,
+    "blocked": [
+     22,
+     23
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    7,
+    7,
+    7
+   ],
+   "metric": 21,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|13",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 1,
+    "goal1": 13,
+    "goal2": 21,
+    "distance1": 4,
+    "distance2": 6
+   },
+   "testSteps": [
+    66,
+    193,
+    200,
+    200,
+    26
+   ],
+   "metric": 685,
+   "censored": 2,
+   "secondary": {
+    "oldGoalArrivals": 7
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|13",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 1,
+    "goal1": 13,
+    "goal2": 21,
+    "distance1": 4,
+    "distance2": 6
+   },
+   "testSteps": [
+    106,
+    12,
+    200,
+    6,
+    188
+   ],
+   "metric": 512,
+   "censored": 1,
+   "secondary": {
+    "oldGoalArrivals": 80
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|13",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 1,
+    "goal1": 13,
+    "goal2": 21,
+    "distance1": 4,
+    "distance2": 6
+   },
+   "testSteps": [
+    153,
+    16,
+    6,
+    8,
+    6
+   ],
+   "metric": 189,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 7
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|13",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 1,
+    "goal1": 13,
+    "goal2": 21,
+    "distance1": 4,
+    "distance2": 6
+   },
+   "testSteps": [
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "metric": 30,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|14",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 8,
+    "goal": 21,
+    "distance": 4
+   },
+   "testSteps": [
+    191,
+    104,
+    135,
+    48,
+    52
+   ],
+   "metric": 530,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|14",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 8,
+    "goal": 21,
+    "distance": 4
+   },
+   "testSteps": [
+    73,
+    103,
+    8,
+    8,
+    4
+   ],
+   "metric": 196,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|14",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 8,
+    "goal": 21,
+    "distance": 4
+   },
+   "testSteps": [
+    17,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 33,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|14",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 8,
+    "goal": 21,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|14",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 8,
+    "goal": 21,
+    "distance": 4
+   },
+   "testSteps": [
+    11,
+    132,
+    200,
+    200,
+    200
+   ],
+   "metric": 743,
+   "censored": 3,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|14",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 8,
+    "goal": 21,
+    "distance": 4
+   },
+   "testSteps": [
+    6,
+    24,
+    6,
+    4,
+    4
+   ],
+   "metric": 44,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|14",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 8,
+    "goal": 21,
+    "distance": 4
+   },
+   "testSteps": [
+    158,
+    8,
+    4,
+    4,
+    4
+   ],
+   "metric": 178,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|14",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 8,
+    "goal": 21,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|14",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 12,
+    "goal": 8,
+    "blocked": [
+     10,
+     12
+    ],
+    "distance": 4,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    126,
+    47,
+    34
+   ],
+   "metric": 207,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 10
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|14",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 12,
+    "goal": 8,
+    "blocked": [
+     10,
+     12
+    ],
+    "distance": 4,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    67,
+    78,
+    82
+   ],
+   "metric": 227,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 106
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|14",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 12,
+    "goal": 8,
+    "blocked": [
+     10,
+     12
+    ],
+    "distance": 4,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    10,
+    5,
+    11
+   ],
+   "metric": 26,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 3
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|14",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 12,
+    "goal": 8,
+    "blocked": [
+     10,
+     12
+    ],
+    "distance": 4,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|14",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 1,
+    "goal1": 18,
+    "goal2": 19,
+    "distance1": 2,
+    "distance2": 4
+   },
+   "testSteps": [
+    58,
+    200,
+    8,
+    57,
+    200
+   ],
+   "metric": 523,
+   "censored": 2,
+   "secondary": {
+    "oldGoalArrivals": 30
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|14",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 1,
+    "goal1": 18,
+    "goal2": 19,
+    "distance1": 2,
+    "distance2": 4
+   },
+   "testSteps": [
+    200,
+    200,
+    200,
+    200,
+    200
+   ],
+   "metric": 1000,
+   "censored": 5,
+   "secondary": {
+    "oldGoalArrivals": 227
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|14",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 1,
+    "goal1": 18,
+    "goal2": 19,
+    "distance1": 2,
+    "distance2": 4
+   },
+   "testSteps": [
+    200,
+    200,
+    200,
+    200,
+    153
+   ],
+   "metric": 953,
+   "censored": 4,
+   "secondary": {
+    "oldGoalArrivals": 35
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|14",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 1,
+    "goal1": 18,
+    "goal2": 19,
+    "distance1": 2,
+    "distance2": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|15",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 20,
+    "goal": 2,
+    "distance": 4
+   },
+   "testSteps": [
+    13,
+    21,
+    104,
+    10,
+    22
+   ],
+   "metric": 170,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|15",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 20,
+    "goal": 2,
+    "distance": 4
+   },
+   "testSteps": [
+    33,
+    10,
+    11,
+    12,
+    6
+   ],
+   "metric": 72,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|15",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 20,
+    "goal": 2,
+    "distance": 4
+   },
+   "testSteps": [
+    9,
+    4,
+    5,
+    5,
+    5
+   ],
+   "metric": 28,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|15",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 20,
+    "goal": 2,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|15",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 20,
+    "goal": 2,
+    "distance": 4
+   },
+   "testSteps": [
+    5,
+    5,
+    46,
+    37,
+    9
+   ],
+   "metric": 102,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|15",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 20,
+    "goal": 2,
+    "distance": 4
+   },
+   "testSteps": [
+    15,
+    24,
+    6,
+    14,
+    5
+   ],
+   "metric": 64,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|15",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 20,
+    "goal": 2,
+    "distance": 4
+   },
+   "testSteps": [
+    7,
+    5,
+    5,
+    5,
+    7
+   ],
+   "metric": 29,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|15",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 20,
+    "goal": 2,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|15",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 18,
+    "goal": 16,
+    "blocked": [
+     3,
+     23
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    200,
+    107,
+    200
+   ],
+   "metric": 507,
+   "censored": 2,
+   "secondary": {
+    "blockedAttempts": 11
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|15",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 18,
+    "goal": 16,
+    "blocked": [
+     3,
+     23
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    19,
+    55,
+    138
+   ],
+   "metric": 212,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 34
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|15",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 18,
+    "goal": 16,
+    "blocked": [
+     3,
+     23
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    15,
+    7,
+    7
+   ],
+   "metric": 29,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 4
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|15",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 18,
+    "goal": 16,
+    "blocked": [
+     3,
+     23
+    ],
+    "distance": 6,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    7,
+    7,
+    7
+   ],
+   "metric": 21,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|15",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 12,
+    "goal1": 0,
+    "goal2": 5,
+    "distance1": 5,
+    "distance2": 5
+   },
+   "testSteps": [
+    76,
+    123,
+    83,
+    74,
+    89
+   ],
+   "metric": 445,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 16
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|15",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 12,
+    "goal1": 0,
+    "goal2": 5,
+    "distance1": 5,
+    "distance2": 5
+   },
+   "testSteps": [
+    6,
+    8,
+    6,
+    6,
+    8
+   ],
+   "metric": 34,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 5
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|15",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 12,
+    "goal1": 0,
+    "goal2": 5,
+    "distance1": 5,
+    "distance2": 5
+   },
+   "testSteps": [
+    80,
+    6,
+    8,
+    8,
+    8
+   ],
+   "metric": 110,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 36
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|15",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 12,
+    "goal1": 0,
+    "goal2": 5,
+    "distance1": 5,
+    "distance2": 5
+   },
+   "testSteps": [
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "metric": 25,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|16",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 2,
+    "goal": 12,
+    "distance": 3
+   },
+   "testSteps": [
+    45,
+    21,
+    51,
+    33,
+    99
+   ],
+   "metric": 249,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|16",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 2,
+    "goal": 12,
+    "distance": 3
+   },
+   "testSteps": [
+    61,
+    43,
+    14,
+    7,
+    8
+   ],
+   "metric": 133,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|16",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 2,
+    "goal": 12,
+    "distance": 3
+   },
+   "testSteps": [
+    7,
+    3,
+    3,
+    3,
+    3
+   ],
+   "metric": 19,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|16",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 2,
+    "goal": 12,
+    "distance": 3
+   },
+   "testSteps": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|16",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 2,
+    "goal": 12,
+    "distance": 3
+   },
+   "testSteps": [
+    34,
+    5,
+    3,
+    36,
+    29
+   ],
+   "metric": 107,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|16",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 2,
+    "goal": 12,
+    "distance": 3
+   },
+   "testSteps": [
+    37,
+    7,
+    9,
+    5,
+    3
+   ],
+   "metric": 61,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|16",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 2,
+    "goal": 12,
+    "distance": 3
+   },
+   "testSteps": [
+    52,
+    13,
+    6,
+    9,
+    8
+   ],
+   "metric": 88,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|16",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 2,
+    "goal": 12,
+    "distance": 3
+   },
+   "testSteps": [
+    3,
+    3,
+    3,
+    3,
+    3
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|16",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 16,
+    "goal": 22,
+    "blocked": [
+     15,
+     16
+    ],
+    "distance": 3,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    38,
+    26,
+    103
+   ],
+   "metric": 167,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 7
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|16",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 16,
+    "goal": 22,
+    "blocked": [
+     15,
+     16
+    ],
+    "distance": 3,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    98,
+    200,
+    18
+   ],
+   "metric": 316,
+   "censored": 1,
+   "secondary": {
+    "blockedAttempts": 91
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|16",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 16,
+    "goal": 22,
+    "blocked": [
+     15,
+     16
+    ],
+    "distance": 3,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    9,
+    6,
+    6
+   ],
+   "metric": 21,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 3
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|16",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 16,
+    "goal": 22,
+    "blocked": [
+     15,
+     16
+    ],
+    "distance": 3,
+    "detourDistance": 5
+   },
+   "testSteps": [
+    5,
+    5,
+    5
+   ],
+   "metric": 15,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|16",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 2,
+    "goal1": 23,
+    "goal2": 5,
+    "distance1": 4,
+    "distance2": 4
+   },
+   "testSteps": [
+    200,
+    21,
+    6,
+    86,
+    16
+   ],
+   "metric": 329,
+   "censored": 1,
+   "secondary": {
+    "oldGoalArrivals": 4
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|16",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 2,
+    "goal1": 23,
+    "goal2": 5,
+    "distance1": 4,
+    "distance2": 4
+   },
+   "testSteps": [
+    200,
+    25,
+    68,
+    174,
+    10
+   ],
+   "metric": 477,
+   "censored": 1,
+   "secondary": {
+    "oldGoalArrivals": 17
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|16",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 2,
+    "goal1": 23,
+    "goal2": 5,
+    "distance1": 4,
+    "distance2": 4
+   },
+   "testSteps": [
+    73,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 89,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 1
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|16",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 2,
+    "goal1": 23,
+    "goal2": 5,
+    "distance1": 4,
+    "distance2": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|17",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 7,
+    "goal": 5,
+    "distance": 4
+   },
+   "testSteps": [
+    73,
+    4,
+    18,
+    47,
+    22
+   ],
+   "metric": 164,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|17",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 7,
+    "goal": 5,
+    "distance": 4
+   },
+   "testSteps": [
+    16,
+    22,
+    8,
+    18,
+    4
+   ],
+   "metric": 68,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|17",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 7,
+    "goal": 5,
+    "distance": 4
+   },
+   "testSteps": [
+    11,
+    4,
+    4,
+    6,
+    4
+   ],
+   "metric": 29,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|17",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 7,
+    "goal": 5,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|17",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 7,
+    "goal": 5,
+    "distance": 4
+   },
+   "testSteps": [
+    56,
+    8,
+    27,
+    165,
+    34
+   ],
+   "metric": 290,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|17",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 7,
+    "goal": 5,
+    "distance": 4
+   },
+   "testSteps": [
+    95,
+    10,
+    8,
+    12,
+    4
+   ],
+   "metric": 129,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|17",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 7,
+    "goal": 5,
+    "distance": 4
+   },
+   "testSteps": [
+    9,
+    5,
+    5,
+    7,
+    7
+   ],
+   "metric": 33,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|17",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 7,
+    "goal": 5,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|17",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 22,
+    "goal": 19,
+    "blocked": [
+     5,
+     23
+    ],
+    "distance": 3,
+    "detourDistance": 4
+   },
+   "testSteps": [
+    67,
+    144,
+    200
+   ],
+   "metric": 411,
+   "censored": 1,
+   "secondary": {
+    "blockedAttempts": 7
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|17",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 22,
+    "goal": 19,
+    "blocked": [
+     5,
+     23
+    ],
+    "distance": 3,
+    "detourDistance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|17",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 22,
+    "goal": 19,
+    "blocked": [
+     5,
+     23
+    ],
+    "distance": 3,
+    "detourDistance": 4
+   },
+   "testSteps": [
+    200,
+    200,
+    200
+   ],
+   "metric": 600,
+   "censored": 3,
+   "secondary": {
+    "blockedAttempts": 25
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|17",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 22,
+    "goal": 19,
+    "blocked": [
+     5,
+     23
+    ],
+    "distance": 3,
+    "detourDistance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4
+   ],
+   "metric": 12,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|17",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 22,
+    "goal1": 4,
+    "goal2": 6,
+    "distance1": 5,
+    "distance2": 4
+   },
+   "testSteps": [
+    48,
+    10,
+    23,
+    17,
+    14
+   ],
+   "metric": 112,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|17",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 22,
+    "goal1": 4,
+    "goal2": 6,
+    "distance1": 5,
+    "distance2": 4
+   },
+   "testSteps": [
+    85,
+    7,
+    11,
+    9,
+    7
+   ],
+   "metric": 119,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 8
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|17",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 22,
+    "goal1": 4,
+    "goal2": 6,
+    "distance1": 5,
+    "distance2": 4
+   },
+   "testSteps": [
+    160,
+    11,
+    5,
+    5,
+    5
+   ],
+   "metric": 186,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 1
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|17",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 22,
+    "goal1": 4,
+    "goal2": 6,
+    "distance1": 5,
+    "distance2": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|18",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 15,
+    "goal": 20,
+    "distance": 4
+   },
+   "testSteps": [
+    14,
+    6,
+    51,
+    18,
+    29
+   ],
+   "metric": 118,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|18",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 15,
+    "goal": 20,
+    "distance": 4
+   },
+   "testSteps": [
+    16,
+    28,
+    40,
+    29,
+    40
+   ],
+   "metric": 153,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|18",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 15,
+    "goal": 20,
+    "distance": 4
+   },
+   "testSteps": [
+    8,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 24,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|18",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 15,
+    "goal": 20,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|18",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 15,
+    "goal": 20,
+    "distance": 4
+   },
+   "testSteps": [
+    30,
+    13,
+    74,
+    36,
+    15
+   ],
+   "metric": 168,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|18",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 15,
+    "goal": 20,
+    "distance": 4
+   },
+   "testSteps": [
+    13,
+    16,
+    17,
+    126,
+    4
+   ],
+   "metric": 176,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|18",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 15,
+    "goal": 20,
+    "distance": 4
+   },
+   "testSteps": [
+    41,
+    13,
+    5,
+    5,
+    5
+   ],
+   "metric": 69,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|18",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 15,
+    "goal": 20,
+    "distance": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|18",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 10,
+    "goal": 18,
+    "blocked": [
+     8,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 6
+   },
+   "testSteps": [
+    47,
+    32,
+    47
+   ],
+   "metric": 126,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|18",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 10,
+    "goal": 18,
+    "blocked": [
+     8,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 6
+   },
+   "testSteps": [
+    200,
+    200,
+    200
+   ],
+   "metric": 600,
+   "censored": 3,
+   "secondary": {
+    "blockedAttempts": 68
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|18",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 10,
+    "goal": 18,
+    "blocked": [
+     8,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 6
+   },
+   "testSteps": [
+    200,
+    200,
+    200
+   ],
+   "metric": 600,
+   "censored": 3,
+   "secondary": {
+    "blockedAttempts": 56
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|18",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 10,
+    "goal": 18,
+    "blocked": [
+     8,
+     18
+    ],
+    "distance": 4,
+    "detourDistance": 6
+   },
+   "testSteps": [
+    6,
+    6,
+    6
+   ],
+   "metric": 18,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|18",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 8,
+    "goal1": 19,
+    "goal2": 9,
+    "distance1": 4,
+    "distance2": 4
+   },
+   "testSteps": [
+    22,
+    200,
+    32,
+    200,
+    127
+   ],
+   "metric": 581,
+   "censored": 2,
+   "secondary": {
+    "oldGoalArrivals": 45
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|18",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 8,
+    "goal1": 19,
+    "goal2": 9,
+    "distance1": 4,
+    "distance2": 4
+   },
+   "testSteps": [
+    200,
+    59,
+    27,
+    15,
+    58
+   ],
+   "metric": 359,
+   "censored": 1,
+   "secondary": {
+    "oldGoalArrivals": 70
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|18",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 8,
+    "goal1": 19,
+    "goal2": 9,
+    "distance1": 4,
+    "distance2": 4
+   },
+   "testSteps": [
+    195,
+    10,
+    4,
+    4,
+    4
+   ],
+   "metric": 217,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 4
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|18",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 8,
+    "goal1": 19,
+    "goal2": 9,
+    "distance1": 4,
+    "distance2": 4
+   },
+   "testSteps": [
+    4,
+    4,
+    4,
+    4,
+    4
+   ],
+   "metric": 20,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|19",
+   "kind": "RANDOM",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 17,
+    "goal": 21,
+    "distance": 5
+   },
+   "testSteps": [
+    29,
+    29,
+    118,
+    89,
+    138
+   ],
+   "metric": 403,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|19",
+   "kind": "QL",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 17,
+    "goal": 21,
+    "distance": 5
+   },
+   "testSteps": [
+    200,
+    200,
+    9,
+    97,
+    45
+   ],
+   "metric": 551,
+   "censored": 2,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|19",
+   "kind": "DYNAQ",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 17,
+    "goal": 21,
+    "distance": 5
+   },
+   "testSteps": [
+    5,
+    12,
+    5,
+    5,
+    7
+   ],
+   "metric": 34,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|19",
+   "kind": "ORACLE",
+   "arm": "EXPLORED",
+   "layout": {
+    "start": 17,
+    "goal": 21,
+    "distance": 5
+   },
+   "testSteps": [
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "metric": 25,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|19",
+   "kind": "RANDOM",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 17,
+    "goal": 21,
+    "distance": 5
+   },
+   "testSteps": [
+    200,
+    80,
+    115,
+    102,
+    98
+   ],
+   "metric": 595,
+   "censored": 1,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|19",
+   "kind": "QL",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 17,
+    "goal": 21,
+    "distance": 5
+   },
+   "testSteps": [
+    73,
+    37,
+    92,
+    111,
+    19
+   ],
+   "metric": 332,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|19",
+   "kind": "DYNAQ",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 17,
+    "goal": 21,
+    "distance": 5
+   },
+   "testSteps": [
+    74,
+    10,
+    6,
+    6,
+    6
+   ],
+   "metric": 102,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E1",
+   "world": "cf|gate|world|19",
+   "kind": "ORACLE",
+   "arm": "NAIVE",
+   "layout": {
+    "start": 17,
+    "goal": 21,
+    "distance": 5
+   },
+   "testSteps": [
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "metric": 25,
+   "censored": 0,
+   "secondary": {}
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|19",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 21,
+    "goal": 20,
+    "blocked": [
+     11,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    80,
+    67,
+    110
+   ],
+   "metric": 257,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 15
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|19",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 21,
+    "goal": 20,
+    "blocked": [
+     11,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    26,
+    11,
+    51
+   ],
+   "metric": 88,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 39
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|19",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 21,
+    "goal": 20,
+    "blocked": [
+     11,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    9,
+    7,
+    7
+   ],
+   "metric": 23,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 2
+   }
+  },
+  {
+   "task": "E2",
+   "world": "cf|gate|world|19",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 21,
+    "goal": 20,
+    "blocked": [
+     11,
+     22
+    ],
+    "distance": 5,
+    "detourDistance": 7
+   },
+   "testSteps": [
+    7,
+    7,
+    7
+   ],
+   "metric": 21,
+   "censored": 0,
+   "secondary": {
+    "blockedAttempts": 0
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|19",
+   "kind": "RANDOM",
+   "arm": "STD",
+   "layout": {
+    "start": 11,
+    "goal1": 14,
+    "goal2": 9,
+    "distance1": 3,
+    "distance2": 5
+   },
+   "testSteps": [
+    10,
+    84,
+    34,
+    44,
+    7
+   ],
+   "metric": 179,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 12
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|19",
+   "kind": "QL",
+   "arm": "STD",
+   "layout": {
+    "start": 11,
+    "goal1": 14,
+    "goal2": 9,
+    "distance1": 3,
+    "distance2": 5
+   },
+   "testSteps": [
+    13,
+    9,
+    5,
+    5,
+    7
+   ],
+   "metric": 39,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 11
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|19",
+   "kind": "DYNAQ",
+   "arm": "STD",
+   "layout": {
+    "start": 11,
+    "goal1": 14,
+    "goal2": 9,
+    "distance1": 3,
+    "distance2": 5
+   },
+   "testSteps": [
+    46,
+    23,
+    6,
+    6,
+    6
+   ],
+   "metric": 87,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 16
+   }
+  },
+  {
+   "task": "E3",
+   "world": "cf|gate|world|19",
+   "kind": "ORACLE",
+   "arm": "STD",
+   "layout": {
+    "start": 11,
+    "goal1": 14,
+    "goal2": 9,
+    "distance1": 3,
+    "distance2": 5
+   },
+   "testSteps": [
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "metric": 25,
+   "censored": 0,
+   "secondary": {
+    "oldGoalArrivals": 0
+   }
+  }
+ ]
+}

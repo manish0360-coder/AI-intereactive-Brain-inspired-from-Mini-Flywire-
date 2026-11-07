@@ -37,6 +37,7 @@ flowchart LR
 | Reproducibility | Seed domains; two identical runs; recorded hashes |
 | Risks / rollback | Tasks may not discriminate: record PARTIAL, redesign the task in CF-01b, keep the infrastructure. Rollback = revert the new directories (no shared state) |
 | Exit decision | PASS → CF-03 (and CF-02 in parallel). PARTIAL → CF-01b task redesign before CF-03. FAIL → fix the infrastructure first |
+| **Result (2026-11-07)** | **CF-01 PASS:** E1 and E3 admitted, E2 not admitted ([results](../experiments/cf01/results/RESULTS.md)). Next: CF-03 on E1/E3; E2′ redesign (CD-010) on a fresh domain alongside CF-03 |
 
 ## CF-02 — MiniFlyWire-legacy adapter (characterisation, not improvement)
 

@@ -23,6 +23,8 @@ No gate was re-run for this update. Results dated 2026-09-15 stand as recorded.
 
 The Phase 0 verdict stands. Nothing on this page was changed by that audit.
 
+**CF-01.** The separated testbed (`cognitive/`) passed its development gate: 57/57 tests, determinism, oracle sanity, and 2 of 3 tasks admitted (E2 detour was not). See `experiments/cf01/results/RESULTS.md`. This is development evidence about the testbed and the baselines, not about the MiniFlyWire agent.
+
 ---
 
 ## 1. Status vocabulary

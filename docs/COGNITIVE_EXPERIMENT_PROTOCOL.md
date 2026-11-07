@@ -75,6 +75,7 @@ Each experiment lists hypothesis, independent variable (IV), dependent variable 
 - **Primary contrast.** D2 = steps(QL) − steps(DYNAQ).
 - **Failure.** The CI includes or lies below 0.
 - **Known limit.** A deterministic last-outcome model updates after one failed attempt. A probabilistic model (CF-03) will need several, and that is the intended contrast later.
+- **CF-01 outcome.** E2 was **not admitted** (+121.2 [−3.0, 236.2]). It is replaced by E2′, which adds pre-exposure, and E2′ needs its own gate on a fresh domain (CD-010). This section stays as the record of what was tested.
 
 ### E3 — Revaluation by reward relocation (C5)
 
