@@ -1,0 +1,76 @@
+diff --git a/experiments/mcf1/verify_scan.mjs b/experiments/mcf1/verify_scan.mjs
+index 38389ca55584e18f73204999c08bfa0913945a75..5381c7a0168aaf50989c721098377fdf0f5d011a 100644
+--- a/experiments/mcf1/verify_scan.mjs
++++ b/experiments/mcf1/verify_scan.mjs
+@@ -56,6 +56,8 @@ function makeWorld(o = {}) {
+   if (authorization !== null && /1_?500_?000_?000/.test(String(authorization))) throw new Error('verifier defect: the real candidate window must never be authorized, even in a copy');
+   const root = path.join(ROOT, `w${++worldN}`);
+   for (const rel of COPY_FILES) { const to = path.join(root, rel); fs.mkdirSync(path.dirname(to), { recursive: true }); fs.copyFileSync(path.join(REPO, rel), to); }
++  // a world always starts from the EMPTY block module too, whatever the real repository holds (it may hold the registered MCF-1 block)
++  fs.writeFileSync(path.join(root, 'experiments/registry/trajectory_blocks.js'), 'export const TRAJECTORY_BLOCKS = Object.freeze([]);\n');
+   // a world always starts from the NULL authorization, whatever the real repository holds (it may be authorized)
+   { const p = path.join(root, 'experiments/mcf1/authorization.mjs'); fs.writeFileSync(p, fs.readFileSync(p, 'utf8').replace(/export const SCAN_AUTHORIZATION = [^;]*;/, 'export const SCAN_AUTHORIZATION = null;')); }
+   applyEdit(root, ['experiments/mcf1/config.mjs', '  start: 1_500_000_000,\n  scanLength: 4000,', `  start: ${SCAN.start},\n  scanLength: ${SCAN.length},`]);
+@@ -502,12 +504,12 @@ const ONLY = process.env.SCAN_ONLY ? new RegExp(process.env.SCAN_ONLY) : null;
+   const authorized = decl === approved;
+   const state = {
+     scanAuthorizationIsNullOrExactlyApproved: decl === 'null' || authorized, pinNull: /export const FREEZE_RECORD_SHA256 = null;/.test(auth), shape: LCK.pinModuleShapeOk(auth),
+-    blocksEmpty: /export const TRAJECTORY_BLOCKS = Object.freeze\(\[\]\);/.test(blocksText), scanFilesAreDocumented: scanFiles.every(f => ALLOWED.test(f)),
++    blocksEmptyOrOneRegistered: /export const TRAJECTORY_BLOCKS = Object.freeze\(\[\]\);/.test(blocksText) || (await import(url(path.join(REPO, 'experiments/registry/trajectory_blocks.js')))).TRAJECTORY_BLOCKS.length === 1, scanFilesAreDocumented: scanFiles.every(f => ALLOWED.test(f)),
+     noScanFilesBeforeAuthorization: authorized || scanFiles.length === 0,
+     gateMatchesState: authorized ? same(LCK.scanAuthorisation(), { start: REAL_CANDIDATE.start, length: REAL_CANDIDATE.length }) : rx(/no scan authorization is set/, await refusal(() => LCK.scanAuthorisation())),
+     candidateIsConfig: CFG.BLOCK.start === REAL_CANDIDATE.start && CFG.BLOCK.scanLength === REAL_CANDIDATE.length,
+   };
+-  check('SCAN-A', `the committed state: scan authorization ${authorized ? 'is exactly the approved candidate window' : 'is null'}, pin null, template intact, block module empty, scan outputs limited to the documented artifacts, candidate window unchanged in config`, Object.values(state).every(Boolean), JSON.stringify(state));
++  check('SCAN-A', `the committed state: scan authorization ${authorized ? 'is exactly the approved candidate window' : 'is null'}, pin null, template intact, block module empty or exactly one block, scan outputs limited to the documented artifacts, candidate window unchanged in config`, Object.values(state).every(Boolean), JSON.stringify(state));
+ }
+ 
+ {
+diff --git a/experiments/registry/verify_blocks.js b/experiments/registry/verify_blocks.js
+index d234ddbf72acfa09b447eba459ea79a040721b75..1327f76d35475acfeab759c7daa02986aab92b83 100644
+--- a/experiments/registry/verify_blocks.js
++++ b/experiments/registry/verify_blocks.js
+@@ -191,6 +191,9 @@ def('parity.records', 'D4', 'with explicit records only, every construction refu
+   cmp('isConsumedByStudy empty study', emptyStudy(o.reg), emptyStudy(c.reg));
+   return { ok: mism.length === 0 && cases > 0, cases, mism: mism.slice(0, 4), mismatchCount: mism.length };
+ });
++// the committed state of the block data module: empty, or exactly the one registered MCF-1 block of the candidate window
++const REGISTERED_MCF1 = Object.freeze({ study: 'MCF-1', status: 'registered', executed: false, lo: 1500000000, hi: 1500003999, count: 3851, listSha256: 'bef9096b87d46aee382f1920baba5a1fa086bdb98d9b1469d503ccbc7bc7a2a6' });
++const blocksAreCommittedState = (blocks) => blocks.length === 0 || (blocks.length === 1 && Object.entries(REGISTERED_MCF1).every(([k, v]) => blocks[0][k] === v) && blocks[0].excluded.length === 149);
+ def('parity.production', 'D4', 'the production registry equals the committed production registry on every value of every committed record, its neighbours and aliases, for every study, category, arm and configuration', (M) => {
+   const acc = newAcc(); let cases = 0; const mism = [];
+   const values = new Set([20260819000, 5, 0, 1, 900500, 1_700_000_000]);
+@@ -204,7 +207,7 @@ def('parity.production', 'D4', 'the production registry equals the committed pro
+   }
+   const same = JSON.stringify(M.trajectory.records) === JSON.stringify(legacyTrajectory.records) && JSON.stringify(M.trajectory.heldOut) === JSON.stringify(legacyTrajectory.heldOut)
+     && JSON.stringify(M.trajectory.authorizations) === JSON.stringify(legacyTrajectory.authorizations);
+-  return { ok: mism.length === 0 && cases > 0 && same && M.trajectory.blocks.length === 0, cases, mism: mism.slice(0, 4), mismatchCount: mism.length, valuesProbed: values.size };
++  return { ok: mism.length === 0 && cases > 0 && same && blocksAreCommittedState(M.trajectory.blocks), cases, mism: mism.slice(0, 4), mismatchCount: mism.length, valuesProbed: values.size };
+ });
+ def('integrity.block', 'D5', 'every malformed, tampered or unsupported block is refused, while the untouched block builds', (M) => {
+   const s = spec(120, { lo: LO + 600_000 });
+@@ -267,10 +270,11 @@ def('digest', 'D6', 'the registry digest is stable, key-order independent, and c
+   const reordered = (({ why, artifact, ...rest }) => ({ artifact, why, ...rest }))(blk(s));
+   return d1 === d2 && /^[0-9a-f]{64}$/.test(d1) && mk(reordered).digest() === d1 && mk(blk(s2)).digest() !== d1 && mk(blk(s, { status: 'pilot' })).digest() !== d1 && mk(null).digest() !== d1;
+ });
+-def('data.empty', 'D7', 'the block data module is empty and holds no seed, hash or study', () => {
++def('data.state', 'D7', 'the block data module is empty (no seed, hash or study) or holds exactly the one registered MCF-1 block and nothing else', () => {
+   const text = fs.readFileSync(path.join(HERE, 'trajectory_blocks.js'), 'utf8');
+   const code = text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
+-  return REAL.TRAJECTORY_BLOCKS.length === 0 && REAL.trajectory.blocks.length === 0 && !/\d{6,}/.test(code) && !/listSha256|schema|configuration|study/.test(code) && /Object\.freeze\(\[\]\)/.test(code);
++  if (REAL.TRAJECTORY_BLOCKS.length === 0) return REAL.trajectory.blocks.length === 0 && !/\d{6,}/.test(code) && !/listSha256|schema|configuration|study/.test(code) && /Object\.freeze\(\[\]\)/.test(code);
++  return blocksAreCommittedState(REAL.TRAJECTORY_BLOCKS) && REAL.trajectory.blocks.length === 1 && REAL.listSha256Of(REAL.memberListOf(REAL.TRAJECTORY_BLOCKS[0])) === REGISTERED_MCF1.listSha256;
+ });
+ def('typed.identical', 'D7', 'typed.js is byte-identical to the baseline blob', () => {
+   const pinned = '3958211bb753f5a0a14e4f4fb014edefa804308a';
+@@ -329,7 +333,9 @@ console.log('\n== performance on a synthetic list of 3,852 members ==');
+ console.log('\n== source mutants of typed_v2.js ==');
+ const MUT_ROOT = fs.mkdtempSync(path.join(fs.realpathSync.native(os.tmpdir()), 'reg-v2-mut-'));
+ const SRC = fs.readFileSync(path.join(HERE, 'typed_v2.js'), 'utf8');
+-const rewrite = (text) => text.replace(/(from\s+)'(\.\/[^']+)'/g, (m, a, spec2) => `${a}'${pathToFileURL(path.join(HERE, spec2)).href}'`);
++const EMPTY_BLOCKS = path.join(MUT_ROOT, 'trajectory_blocks.empty.js');
++fs.writeFileSync(EMPTY_BLOCKS, 'export const TRAJECTORY_BLOCKS = Object.freeze([]);\n');
++const rewrite = (text) => text.replace(/(from\s+)'(\.\/[^']+)'/g, (m, a, spec2) => `${a}'${pathToFileURL(spec2 === './trajectory_blocks.js' ? EMPTY_BLOCKS : path.join(HERE, spec2)).href}'`);
+ async function loadMutant(id, edits) {
+   let src = SRC;
+   for (const [find, rep] of edits) {
