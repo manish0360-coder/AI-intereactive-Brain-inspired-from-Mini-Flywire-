@@ -37,6 +37,8 @@
     preregistered study ended UNRESOLVED.
 - **What it is not.** It is not a demonstrated cognitive architecture. The audit's verdict — a
   heuristic scoring function over a fully observable graph — has not been overturned.
+- **About the name.** The project is inspired by the FlyWire fruit-fly connectome project and is
+  not affiliated with it. It uses no connectome data: the graph is 20 hand-authored concept nodes.
 
 **Full evidence:** [`docs/VERIFICATION_STATUS.md`](docs/VERIFICATION_STATUS.md)
 

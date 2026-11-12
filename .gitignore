@@ -1,6 +1,6 @@
-# Root ignore rules. Deliberately narrow: research files, evidence and review
-# packages are never ignored here, so nothing with provenance value can be hidden.
-# Raw run data is excluded per study by experiments/*/data/.gitignore.
+# Root ignore rules. Deliberately narrow. Raw run data is excluded per study by
+# experiments/*/data/.gitignore. The research paths listed at the end are the only
+# research files ignored here, each for a stated reason; they stay on disk.
 
 # Dependencies (the project has none, but tools may create this)
 node_modules/
@@ -15,3 +15,17 @@ desktop.ini
 .vscode/
 .idea/
 *.swp
+
+# H1-R local outputs and diagnostics that embed a machine-specific temp path
+# (owner decision 2026-11-12). Kept on disk, not published.
+/experiments/h1r/evidence/
+/experiments/h1r/evidence_r2/diagnostics/
+
+# Scratch probes
+/experiments/phase1_0/_probe_*.js
+
+# Large derived outputs of the H1-R retrospective (10.4 MB and 2.0 MB). They are
+# kept with the external evidence archive; their SHA-256 hashes are pinned in
+# research/h1r_retrospective/RETRO_MANIFEST.json.
+/research/h1r_retrospective/out/run_metrics.json
+/research/h1r_retrospective/out/trust_pairs.json
