@@ -1,0 +1,5 @@
+# RETRO_MANIFEST.json pins the SHA-256 of the scripts and outputs in this directory
+# over their exact bytes. `-text` stops git from converting line endings in either
+# direction, so a checkout on any platform reproduces the bytes the manifest hashed.
+# Same rule and reason as the root .gitattributes and experiments/h1r/stage_records.
+* -text

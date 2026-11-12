@@ -1,0 +1,78 @@
+{
+ "schema": "h1r.retrospective-manifest/1",
+ "status": "POST-HOC, EXPLORATORY, READ-ONLY. H1-R is closed as VOID (D-032). Nothing here is a confirmatory test or a verdict.",
+ "repositoryHead": "9f256a379b39924c96aa334eb0515fdd7f7246ad",
+ "inputs": {
+  "stage1_manifest.json": {
+   "path": "experiments/h1r/stage_records/stage1_manifest.json",
+   "sha256": "39337cc7bf9446b22fd826943a2bf3537fec9b3f3653098cd90a04bb1bb104da"
+  },
+  "extension_manifest.json": {
+   "path": "experiments/h1r/stage_records/extension_manifest.json",
+   "sha256": "8a341a7718e9c777e4b228aa26da3fa0ac9912ad1461e81083dc5891e31ce375"
+  },
+  "stage1_input.json": {
+   "path": "experiments/h1r/stage_records/stage1_input.json",
+   "sha256": "cce94b589527f2d947461fd60a469e8031ae962c10110bc49edfdfb62e57287f",
+   "note": "untracked derived artifact, read for the F-11 reproduction"
+  },
+  "stage1_decision.json": {
+   "path": "experiments/h1r/stage_records/stage1_decision.json",
+   "sha256": "db77bacca0e4b7946507c0037569d2f69a48498307b457c4b068359bf1ec0c9c"
+  },
+  "raw": {
+   "stage1": "experiments/h1r/data/raw/stage1 (175 base + 7 determinism records + ledger; every record SHA-256 checked against the manifest by retro_extract.mjs)",
+   "extension": "experiments/h1r/data/raw/extension (same shape)"
+  },
+  "datasetDigests": {
+   "stage1": "efb48b05d16996facdae5f1e5e1053020b0799589c7c382f51c6d2cfd6db555c",
+   "extension": "031fbf1fc89e937d6a28ceed21c12c2dd0f3d5ecda1b45710f7c2b22f47a11aa",
+   "definition": "SHA-256 over the sorted \"runId sha256\\n\" lines of the 182 records of that dataset"
+  },
+  "frozenCode": {
+   "analyze.js": "dae6012c1ac48a96ccd9835b24e7aadce9243d95e147a5d8d2b3f833fb0a414d",
+   "orchestrate.mjs": "6162f8c21dab3b95b826c349a2794a70c51cf5a7f6e285a44d0b52efd398032b",
+   "build_tree.mjs": "33d5f3d84f2609799f796c5cebede586f6eb5138a4c025a56ac2dace8f160402",
+   "BUILD_IDENTITY.json": "4236eb886a55dbfcf33a88565ab127f752fa0bacdab48ac0d0ef51a2001a1fac",
+   "preregistration": "c52e73378ad7759fe4e2829e972d1a97b5297da49b327b3c700c654a218ca836"
+  }
+ },
+ "scripts": {
+  "research/h1r_retrospective/retro_extract.mjs": "93b43c8acf2b5a41b26332096ad5be3471b2934d8d602ce29a747b728bbcd20f",
+  "research/h1r_retrospective/retro_analyze.py": "e98fb736d39e24f14c8f4fc8178a18b95730b75f3f5ffe3a8c40fe135cc9f392",
+  "research/h1r_retrospective/retro_manifest.py": "5922180819c36b7a5b5b98492f36853090f2c33defeb8c2c2d87f824f90804b5"
+ },
+ "runtime": {
+  "node": "v24.15.0",
+  "python": "3.10.7",
+  "numpy": "1.26.4",
+  "scipy": "1.13.0",
+  "matplotlib": "3.10.8",
+  "bootstrapSeed": 20261006,
+  "bootstrapReplicates": 10000
+ },
+ "commands": [
+  "node research/h1r_retrospective/retro_extract.mjs",
+  "python research/h1r_retrospective/retro_analyze.py",
+  "python research/h1r_retrospective/retro_manifest.py"
+ ],
+ "reproducibility": "two complete re-runs of the first two commands produced byte-identical outputs (all 16 listed files)",
+ "outputs": {
+  "research/h1r_retrospective/out/config_tables.json": "54b0279bd0edf12458646bea3fca7b807e8ff429b589584e9f7f96d9ce8959db",
+  "research/h1r_retrospective/out/run_metrics.json": "53cd0c7f9e4c160ded8d11a50a9393600344d42d82c85ee74cfb696b792b840a",
+  "research/h1r_retrospective/out/trust_pairs.json": "500bca59944f6eb8b60c2721174694963def1ce80fe847380fb102c25af88e9d",
+  "research/h1r_retrospective/out/cells_pairwise.json": "d84cdbca99783704a38a6a25f9649dc1df7eafbe8e911d6f11715a9abc057d9b",
+  "research/h1r_retrospective/out/crossed.json": "c8f4898da87adc50333f0dbfcbdf118df1289c4cd8b3c3285a17b875b86d3de8",
+  "research/h1r_retrospective/out/f11_reproduction.json": "5173aa9d02314e934411024a045de09b94bc7b40295ec0d917925a273ec5ded0",
+  "research/h1r_retrospective/out/analysis.json": "b462d284aa36155ec71eb9d9dd6b3fda320b694f9bc19ac11404ed3743eea538",
+  "research/h1r_retrospective/out/summary.txt": "ed6d7fc4fbfc069e62271af3ab549b9746a9a27bad21b3a3ef6e28100815a0b8",
+  "research/h1r_retrospective/figures/fig1_cell_heatmaps.png": "665fd56489d31327557ad365f6c88238b3a00d3246d7115d4f5bb875fc9fea6d",
+  "research/h1r_retrospective/figures/fig2_effect_distributions.png": "0cd86bff33040e5c7a12b2919542cfeb967dc698747add730a4c13d5b73f877c",
+  "research/h1r_retrospective/figures/fig3_reward_timecourse.png": "2b2bd158efd58d4489db2670a6151c99f07852f7be5eb503b431f93f072ece01",
+  "research/h1r_retrospective/figures/fig4_trust_calibration.png": "e314569d9eb3d021bae2d7910e19a82568c161dd0572629f1c14d3f80ad78de6",
+  "research/h1r_retrospective/figures/fig5_arm_separation.png": "06044f40fb46f184283b05d2917ba0985a397d279e1bf5c80b979d7f375b7cc0",
+  "research/h1r_retrospective/figures/fig6_decision_mechanism.png": "e448e46fa54ecd1bad1afef1a29a11243a1cbbe2eb8276ceb6524cd5ecd9ac86",
+  "research/h1r_retrospective/figures/fig7_f11_intervals.png": "3887f0a711a656da2507215fe283bd3d9829a239b3c28b5ed0c0a7632ef401c4",
+  "research/h1r_retrospective/figures/fig8_learning.png": "6439de90f03e25ddaa5ec6ec73ce23edd765ce22770ece735a4b28b7da9fd179"
+ }
+}

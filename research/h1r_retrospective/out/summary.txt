@@ -1,0 +1,236 @@
+== INVENTORY
+stage1 {"runs": 182, "base": 175, "determinism": 7, "configIndices": [0, 1, 2, 3, 4], "agentSeeds": [20260819004, 20260819005, 20260819006, 20260819007, 20260819008], "arms": ["A1", "A2", "A3", "A4", "A5", "A6", "A7"], "cells": 25, "counts": {"planned": 182, "valid": 182, "invalid": 0, "noRecord": 0}}
+extension {"runs": 182, "base": 175, "determinism": 7, "configIndices": [5, 6, 7, 8, 9], "agentSeeds": [20260819004, 20260819005, 20260819006, 20260819007, 20260819008], "arms": ["A1", "A2", "A3", "A4", "A5", "A6", "A7"], "cells": 25, "counts": {"planned": 182, "valid": 182, "invalid": 0, "noRecord": 0}}
+configs (index: configSeed->acceptedSeed goal | nEdges meanP_I meanP_II meanAbsShift rho(phases))
+  0: 886000->886096 goal 8 | 39 0.737 0.553 0.588 -0.58
+  1: 886097->886132 goal 12 | 39 0.745 0.535 0.615 -0.61
+  2: 886133->886193 goal 16 | 39 0.768 0.549 0.593 -0.56
+  3: 886194->886214 goal 19 | 39 0.753 0.559 0.580 -0.65
+  4: 886215->886218 goal 8 | 39 0.747 0.542 0.595 -0.69
+  5: 886219->886243 goal 12 | 39 0.754 0.543 0.602 -0.73
+  6: 886244->886270 goal 16 | 39 0.738 0.558 0.598 -0.78
+  7: 886271->886344 goal 19 | 39 0.754 0.549 0.592 -0.73
+  8: 886345->886588 goal 8 | 39 0.750 0.549 0.603 -0.58
+  9: 886589->886598 goal 12 | 39 0.753 0.540 0.602 -0.64
+
+== F-11 (A7 - A2, frozen crossed test, 99% CI) by scope
+  stage1    W1: dbar    12.93 se   25.21 CI [ -103.13,   129.00] half-width 116.07 containsZero True | MS_C 11586 MS_S 4302 MS_CS 3916 | share of se^2 from configs 0.73
+  stage1    W3: dbar     2.87 se   21.03 CI [  -93.95,    99.69] half-width  96.82 containsZero True | MS_C 5777 MS_S 5279 MS_CS 7888 | share of se^2 from configs 0.52
+  extension W1: dbar     4.94 se   20.70 CI [  -90.35,   100.23] half-width  95.29 containsZero True | MS_C 2726 MS_S 7983 MS_CS 6938 | share of se^2 from configs 0.25
+  extension W3: dbar     1.03 se   25.28 CI [ -115.36,   117.41] half-width 116.39 containsZero True | MS_C 15561 MS_S 414 MS_CS 2618 | share of se^2 from configs 0.97
+  pooled    W1: dbar     8.94 se   14.64 CI [  -58.47,    76.35] half-width  67.41 containsZero True | MS_C 6450 MS_S 4269 MS_CS 5715 | share of se^2 from configs 0.60
+  pooled    W3: dbar     1.95 se   14.82 CI [  -66.26,    70.16] half-width  68.21 containsZero True | MS_C 9488 MS_S 1486 MS_CS 5137 | share of se^2 from configs 0.86
+
+== EFFECT MAP (descriptive; reward per 100 ticks; difference = first minus second arm; 50 cells = 10 configs x 5 seeds)
+contrast  win   mean   median [q1,q3]        min..max          +/-/0   cfg(+/10) seed(+/5)  dz   boot95(expl)  | frozen crossed 99% CI (post hoc)
+A1-A2   W1    -4.33    0.38 [  -6.53,   9.72]  -157.7.. 161.5  26/24/ 0   4/10  1/5  -0.08  [  -30.8,   22.6] | [  -65.0,   56.4] contains0
+A1-A2   W2    13.34    0.68 [ -32.02,  66.21]  -240.0.. 281.1  26/24/ 0   6/10  3/5   0.12  [  -41.6,   68.3] | [ -111.2,  137.9] contains0
+A1-A2   W3     3.34    0.93 [ -33.57,  42.02]  -139.5.. 154.5  25/25/ 0   6/10  3/5   0.05  [  -29.0,   37.8] | [  -71.4,   78.1] contains0
+A1-A2   W4    -1.03   -7.60 [ -47.20,  31.55]  -168.3.. 163.2  22/28/ 0   4/10  2/5  -0.01  [  -36.8,   37.5] | [  -86.7,   84.6] contains0
+A1-A3   W1     3.63  -22.23 [ -37.22,  40.38]   -80.0.. 173.0  16/34/ 0   6/10  1/5   0.06  [  -24.4,   39.4] | [  -67.1,   74.4] contains0
+A1-A3   W2    51.96   67.87 [ -48.05, 140.08]  -109.7.. 237.6  29/21/ 0   7/10  5/5   0.48  [   -7.0,  110.4] | [  -86.7,  190.6] contains0
+A1-A3   W3    29.94   33.80 [ -46.23,  87.91]   -85.1.. 162.4  33/17/ 0   7/10  5/5   0.42  [   -9.5,   66.8] | [  -60.2,  120.0] contains0
+A1-A3   W4    24.20   44.05 [ -18.63,  68.00]  -114.3.. 141.0  33/17/ 0   7/10  5/5   0.37  [  -12.2,   58.8] | [  -61.4,  109.8] contains0
+A1-A4   W1    -7.23   -4.73 [ -30.03,   3.02]  -164.3.. 217.9  18/32/ 0   2/10  1/5  -0.11  [  -32.0,   18.7] | [  -54.7,   40.2] contains0
+A1-A4   W2   -16.33   -0.64 [ -75.89,  30.06]  -261.3.. 262.0  23/27/ 0   3/10  2/5  -0.16  [  -65.5,   32.8] | [ -125.4,   92.7] contains0
+A1-A4   W3   -23.03  -15.40 [ -66.33,  16.18]  -234.2.. 152.7  18/32/ 0   1/10  1/5  -0.31  [  -51.9,    9.2] | [  -85.0,   39.0] contains0
+A1-A4   W4   -20.27  -22.75 [ -61.75,  25.77]  -185.7.. 147.2  19/31/ 0   3/10  1/5  -0.27  [  -51.3,   13.1] | [  -88.4,   47.9] contains0
+A1-A5   W1    -8.03   -0.65 [ -13.12,   6.45]  -157.7.. 162.0  22/27/ 1   3/10  1/5  -0.16  [  -30.2,   13.9] | [  -55.3,   39.3] contains0
+A1-A5   W2     0.11   -1.83 [ -51.12,  48.23]  -260.4.. 279.9  23/27/ 0   4/10  3/5   0.00  [  -64.1,   59.9] | [ -141.2,  141.4] contains0
+A1-A5   W3    -6.02  -13.40 [ -42.17,  27.73]  -156.9.. 155.9  20/30/ 0   5/10  3/5  -0.08  [  -41.6,   31.2] | [  -88.4,   76.4] contains0
+A1-A5   W4     1.92  -16.18 [ -56.77,  41.39]  -168.3.. 213.9  20/30/ 0   6/10  2/5   0.02  [  -38.7,   46.7] | [  -97.8,  101.7] contains0
+A1-A6   W1    -1.32   -1.97 [ -38.37,  12.62]  -173.2.. 216.1  23/27/ 0   3/10  1/5  -0.02  [  -34.6,   37.9] | [  -77.3,   74.7] contains0
+A1-A6   W2     1.18    7.35 [ -56.22,  68.40]  -259.8.. 278.1  27/23/ 0   6/10  3/5   0.01  [  -47.9,   57.0] | [ -112.1,  114.5] contains0
+A1-A6   W3    -8.43   -3.32 [ -66.41,  37.44]  -159.9.. 156.5  22/28/ 0   5/10  3/5  -0.10  [  -44.0,   29.4] | [  -89.8,   72.9] contains0
+A1-A6   W4    -4.91   -4.31 [ -48.20,  33.56]  -159.2.. 172.3  23/27/ 0   4/10  3/5  -0.06  [  -40.6,   31.8] | [  -85.0,   75.2] contains0
+A1-A7   W1   -13.26    0.02 [ -34.64,   7.97]  -207.4.. 156.2  25/25/ 0   3/10  0/5  -0.16  [  -47.6,   18.2] | [  -76.7,   50.2] contains0
+A1-A7   W2   -19.48  -20.29 [ -73.49,  29.99]  -244.0.. 221.6  18/32/ 0   4/10  1/5  -0.20  [  -58.3,   25.8] | [ -109.5,   70.6] contains0
+A1-A7   W3     1.39    5.12 [ -35.49,  30.80]  -132.9.. 149.3  30/20/ 0   6/10  3/5   0.02  [  -26.6,   27.5] | [  -57.5,   60.3] contains0
+A1-A7   W4     0.31    0.69 [ -40.82,  34.35]  -144.8.. 174.8  26/24/ 0   5/10  3/5   0.00  [  -31.2,   28.9] | [  -66.4,   67.0] contains0
+A7-A2   W1     8.94    0.55 [  -7.03,  21.26]  -208.3.. 195.6  25/25/ 0   5/10  3/5   0.12  [  -21.2,   43.8] | [  -58.5,   76.3] contains0
+A7-A2   W2    32.83    3.10 [ -23.41,  85.21]  -181.5.. 288.6  29/21/ 0   7/10  5/5   0.30  [  -13.8,   87.6] | [  -81.6,  147.2] contains0
+A7-A2   W3     1.95   -5.90 [ -53.91,  37.14]  -139.7.. 157.0  24/26/ 0   4/10  3/5   0.03  [  -28.8,   35.5] | [  -66.3,   70.2] contains0
+A7-A2   W4    -1.34  -16.34 [ -50.27,  43.53]  -172.1.. 174.6  21/29/ 0   5/10  3/5  -0.02  [  -33.6,   34.0] | [  -70.0,   67.3] contains0
+R_all (30 windows-equivalent):
+  A1-A2: mean    4.83 median    1.94 +/-/0 26/24/0 cfg+ 5/10 stage1 -11.66 ext  21.31 boot95 [-33.9,45.0] crossed99 [-88.4,98.1]
+  A1-A3: mean   33.82 median   42.39 +/-/0 32/18/0 cfg+ 7/10 stage1  19.16 ext  48.48 boot95 [-9.6,75.9] crossed99 [-68.5,136.1]
+  A1-A4: mean  -17.66 median  -19.19 +/-/0 20/30/0 cfg+ 3/10 stage1 -27.94 ext  -7.39 boot95 [-47.4,16.5] crossed99 [-86.0,50.7]
+  A1-A5: mean   -0.60 median   -4.18 +/-/0 22/28/0 cfg+ 6/10 stage1  -3.03 ext   1.84 boot95 [-44.9,44.6] crossed99 [-104.7,103.5]
+  A1-A6: mean   -2.47 median    0.98 +/-/0 25/25/0 cfg+ 5/10 stage1 -13.46 ext   8.52 boot95 [-39.2,38.5] crossed99 [-87.2,82.3]
+  A1-A7: mean   -8.86 median   -7.61 +/-/0 19/31/0 cfg+ 3/10 stage1 -29.02 ext  11.31 boot95 [-35.0,21.3] crossed99 [-70.4,52.7]
+  A7-A2: mean   13.68 median    0.42 +/-/0 26/24/0 cfg+ 6/10 stage1  17.35 ext  10.01 boot95 [-19.3,49.9] crossed99 [-60.8,88.2]
+  A2-A5: mean   -5.42 median    0.00 +/-/0 19/21/10 cfg+ 6/10 stage1   8.63 ext -19.47 boot95 [-29.8,17.0] crossed99 not computed for this contrast
+  A4-A2: mean   22.49 median   14.79 +/-/0 30/20/0 cfg+ 7/10 stage1  16.28 ext  28.70 boot95 [-0.5,46.9] crossed99 not computed for this contrast
+
+== CELL STABILITY (config x seed matrices are in analysis.json / fig1)
+  A1-A2|W1: top-5 cells carry 0.48 of sum|d|; leave-one-config-out mean range [-8.7,0.1]; leave-one-seed-out [-13.1,0.7]; configs whose mean sign differs from the overall 4/10; seeds 1/5; per-config majority sign count [3, 4, 4, 3, 3, 3, 4, 3, 3, 3]
+  A1-A2|W3: top-5 cells carry 0.28 of sum|d|; leave-one-config-out mean range [-2.3,11.9]; leave-one-seed-out [-5.0,10.7]; configs whose mean sign differs from the overall 4/10; seeds 2/5; per-config majority sign count [3, 3, 4, 4, 4, 4, 3, 3, 3, 3]
+  A1-A2|R_all: top-5 cells carry 0.29 of sum|d|; leave-one-config-out mean range [-1.5,14.5]; leave-one-seed-out [-6.2,12.1]; configs whose mean sign differs from the overall 5/10; seeds 3/5; per-config majority sign count [3, 3, 4, 4, 5, 4, 5, 5, 3, 4]
+  A7-A2|W1: top-5 cells carry 0.41 of sum|d|; leave-one-config-out mean range [-0.3,13.7]; leave-one-seed-out [2.7,15.5]; configs whose mean sign differs from the overall 5/10; seeds 2/5; per-config majority sign count [3, 5, 3, 4, 3, 3, 3, 3, 4, 3]
+  A7-A2|W3: top-5 cells carry 0.23 of sum|d|; leave-one-config-out mean range [-8.1,8.0]; leave-one-seed-out [-1.7,5.6]; configs whose mean sign differs from the overall 6/10; seeds 2/5; per-config majority sign count [4, 4, 3, 3, 4, 3, 5, 5, 3, 3]
+  A7-A2|R_all: top-5 cells carry 0.26 of sum|d|; leave-one-config-out mean range [6.9,19.7]; leave-one-seed-out [5.6,17.9]; configs whose mean sign differs from the overall 4/10; seeds 2/5; per-config majority sign count [3, 4, 3, 3, 4, 4, 4, 5, 4, 3]
+  A1-A4|W1: top-5 cells carry 0.41 of sum|d|; leave-one-config-out mean range [-13.1,-3.9]; leave-one-seed-out [-13.8,-2.8]; configs whose mean sign differs from the overall 2/10; seeds 1/5; per-config majority sign count [3, 3, 4, 4, 3, 4, 4, 3, 5, 4]
+  A1-A4|W3: top-5 cells carry 0.27 of sum|d|; leave-one-config-out mean range [-28.5,-17.0]; leave-one-seed-out [-29.5,-16.5]; configs whose mean sign differs from the overall 1/10; seeds 1/5; per-config majority sign count [3, 4, 3, 3, 5, 4, 3, 3, 3, 3]
+  A1-A4|R_all: top-5 cells carry 0.26 of sum|d|; leave-one-config-out mean range [-23.6,-11.5]; leave-one-seed-out [-25.8,-11.5]; configs whose mean sign differs from the overall 3/10; seeds 1/5; per-config majority sign count [3, 3, 4, 3, 5, 3, 5, 4, 4, 3]
+noise floor, A2 - A5 (arms that differ only in the aggregate): W1: sd 35.3 (+/-/0 17/16/17); W2: sd 65.2 (+/-/0 15/23/12); W3: sd 58.0 (+/-/0 14/24/12); W4: sd 65.4 (+/-/0 22/18/10)
+same for A1 - A2: W1: sd 55.8; W2: sd 111.3; W3: sd 68.8; W4: sd 72.3 | A7 - A2: W1: sd 75.7; W2: sd 111.2; W3: sd 75.1; W4: sd 80.3
+
+== TEMPORAL (reward per 100 ticks; mean over 50 cells)
+arm         W1       W2       W3       W4   W3-W2 (mean; cells down/up; configs down)   W4-W2   goal/100: W1 W2 W3 W4   half-life median / censored / zero
+A1 BELIEF       28.4    105.4     80.5     95.0     -24.9; 24/26; 6/10     -10.4    2.54  6.00  4.21  4.51   166 / 1 / 9
+A2 ABLATION     32.7     92.1     77.2     96.0     -14.9; 26/24; 5/10       3.9    2.88  5.38  4.15  4.76   174 / 2 / 11
+A3 RANDOM       24.7     53.4     50.6     70.8      -2.9; 28/22; 5/10      17.3    2.88  3.04  2.23  2.24   80 / 0 / 14
+A4 FROZEN       35.6    121.7    103.5    115.2     -18.2; 28/22; 6/10      -6.5    3.42  7.95  6.33  6.67   138 / 1 / 13
+A5 AGG-ONLY     36.4    105.3     86.5     93.1     -18.8; 26/24; 6/10     -12.2    3.12  6.09  4.53  4.46   142 / 2 / 13
+A6 SHUFFLED     29.7    104.2     89.0     99.9     -15.3; 22/28; 6/10      -4.3    2.54  5.92  4.91  5.36   107 / 1 / 15
+A7 ORACLE       41.6    124.9     79.1     94.7     -45.8; 29/21; 7/10     -30.2    3.32  7.03  4.02  4.58   124 / 0 / 9
+shift response A1 relative to others ((W3-W2)_A1 - (W3-W2)_y): vs A2: mean -10.0, +/- 26/24; vs A4: mean -6.7, +/- 26/24; vs A7: mean 20.9, +/- 27/23
+configured reliability change per config: meanAbsShift [0.588, 0.615, 0.593, 0.58, 0.595, 0.602, 0.598, 0.592, 0.603, 0.602] | meanShift [-0.183, -0.209, -0.22, -0.193, -0.206, -0.211, -0.181, -0.204, -0.201, -0.212]
+Spearman across 10 configs, mean |p shift| vs change in reward W3-W2: A1 -0.36; A2 -0.03; A3 -0.59; A4 -0.07; A5 -0.27; A6 -0.37; A7 -0.37
+
+non-goal slip rate by window: A1: 0.291/0.292/0.568/0.564 | A2: 0.339/0.346/0.545/0.539 | A3: 0.258/0.256/0.464/0.462 | A4: 0.333/0.316/0.550/0.559 | A5: 0.339/0.335/0.563/0.547 | A6: 0.334/0.313/0.562/0.559 | A7: 0.225/0.223/0.591/0.583
+trust-attempt increments per window: A1: 284/1129/289/1157 | A2: 284/1135/289/1154 | A3: 282/1129/287/1145 | A4: 0/0/0/0 | A5: 284/1134/289/1155 | A6: 284/1131/289/1157 | A7: 281/1124/290/1158
+
+== TRUST vs CONFIGURED RELIABILITY (frozen rho_run = Spearman over keys with >=5 raw attempts; undirected p of the phase)
+  A1: tau1499 mean 0.74 median 0.78 [0.69,0.81] +/- 50/0 undefined 0 | tau2999 mean 0.26 median 0.26 +/- 47/3 undefined 0
+  A2: tau1499 mean 0.79 median 0.79 [0.74,0.84] +/- 50/0 undefined 0 | tau2999 mean 0.30 median 0.30 +/- 47/3 undefined 0
+  A3: tau1499 mean 0.82 median 0.82 [0.79,0.84] +/- 50/0 undefined 0 | tau2999 mean 0.16 median 0.16 +/- 47/3 undefined 0
+  A4: tau1499 mean nan median nan [nan,nan] +/- 0/0 undefined 50 | tau2999 mean nan median nan +/- 0/0 undefined 50
+  A5: tau1499 mean 0.78 median 0.79 [0.73,0.82] +/- 50/0 undefined 0 | tau2999 mean 0.23 median 0.28 +/- 39/11 undefined 0
+  A6: tau1499 mean 0.77 median 0.80 [0.71,0.85] +/- 50/0 undefined 0 | tau2999 mean 0.26 median 0.28 +/- 45/5 undefined 0
+  A7: tau1499 mean 0.69 median 0.70 [0.65,0.78] +/- 50/0 undefined 0 | tau2999 mean 0.29 median 0.32 +/- 47/3 undefined 0
+  A1 mean rho by config (1499): 0.78 0.78 0.75 0.69 0.60 0.70 0.80 0.77 0.73 0.81 | by seed: 0.73 0.70 0.75 0.75 0.77
+  A1 mean rho by config (2999): 0.47 0.09 0.20 0.32 0.21 0.36 0.08 0.26 0.26 0.35 | by seed: 0.29 0.29 0.19 0.23 0.31
+  pooled keys (>=5 raw): n, mean trust, mean p, pooled Pearson, MAE   [tau1499 vs phase-I p | tau2999 vs phase-II p | tau2999 vs phase-I p (stale)]
+  A1: 1448 0.730 0.765 0.95 0.067 | 1390 0.584 0.504 0.21 0.254 | 1390 0.584 0.791 -0.14 0.350
+  A2: 1393 0.713 0.745 0.95 0.067 | 1411 0.573 0.531 0.26 0.246 | 1411 0.573 0.765 -0.20 0.359
+  A3: 3684 0.726 0.750 0.96 0.061 | 3668 0.635 0.547 0.06 0.294 | 3668 0.635 0.749 0.02 0.303
+  A4: 1616 0.500 0.753 nan 0.349 | 1552 0.500 0.521 nan 0.236 | 1552 0.500 0.778 nan 0.360
+  A5: 1447 0.716 0.749 0.95 0.068 | 1376 0.575 0.521 0.20 0.253 | 1376 0.575 0.775 -0.14 0.352
+  A6: 1463 0.715 0.747 0.95 0.066 | 1419 0.577 0.519 0.22 0.250 | 1419 0.577 0.777 -0.17 0.354
+  A7: 1493 0.769 0.809 0.94 0.068 | 1435 0.593 0.476 0.24 0.249 | 1435 0.593 0.821 -0.18 0.356
+  regions (descriptive thresholds: overtrust = trust>=0.6 and p in lowest third (<= 0.902/0.338); undertrust = trust<=0.4 and p in highest third (>= 0.946/0.435)): A1: over 0.03/0.11 under 0.00/0.02 | A2: over 0.03/0.08 under 0.00/0.02 | A3: over 0.03/0.16 under 0.00/0.00 | A4: over 0.00/0.00 under 0.00/0.00 | A5: over 0.03/0.10 under 0.00/0.03 | A6: over 0.03/0.10 under 0.00/0.02 | A7: over 0.03/0.13 under 0.00/0.01
+  prior trust as a predictor of the realised attempt outcome: AUC mean (cells with AUC>0.5 of 50) and Brier(trust)-Brier(base) mean (cells where trust beats the base rate)
+  A1: phase I AUC 0.817 (50/50) dBrier -0.0627 (50/50) | phase II AUC 0.438 (4/50) dBrier +0.0418 (6/50)
+  A2: phase I AUC 0.811 (50/50) dBrier -0.0683 (50/50) | phase II AUC 0.440 (7/50) dBrier +0.0463 (5/50)
+  A3: phase I AUC 0.843 (50/50) dBrier -0.0567 (50/50) | phase II AUC 0.317 (0/50) dBrier +0.0666 (0/50)
+  A4: phase I AUC 0.500 (0/50) dBrier +0.0421 (2/50) | phase II AUC 0.500 (0/50) dBrier -0.0312 (48/50)
+  A5: phase I AUC 0.813 (50/50) dBrier -0.0674 (50/50) | phase II AUC 0.444 (10/50) dBrier +0.0438 (5/50)
+  A6: phase I AUC 0.811 (50/50) dBrier -0.0651 (50/50) | phase II AUC 0.434 (5/50) dBrier +0.0431 (3/50)
+  A7: phase I AUC 0.819 (50/50) dBrier -0.0497 (50/50) | phase II AUC 0.453 (11/50) dBrier +0.0269 (10/50)
+  trust change from an attempt to the same key's next attempt (net of any credit updates in between), by that attempt's outcome: mean change [fraction moving the expected way]
+  A1: I success +0.0173 [1.00] slip -0.0213 [1.00] | II success +0.0085 [1.00] slip -0.0118 [1.00]
+  A2: I success +0.0181 [1.00] slip -0.0189 [1.00] | II success +0.0085 [1.00] slip -0.0123 [1.00]
+  A3: I success +0.0326 [1.00] slip -0.0489 [1.00] | II success +0.0128 [1.00] slip -0.0250 [1.00]
+  A4: I success +0.0000 [0.00] slip +0.0000 [0.00] | II success +0.0000 [0.00] slip +0.0000 [0.00]
+  A5: I success +0.0183 [1.00] slip -0.0197 [1.00] | II success +0.0083 [1.00] slip -0.0120 [1.00]
+  A6: I success +0.0182 [1.00] slip -0.0209 [1.00] | II success +0.0086 [1.00] slip -0.0120 [1.00]
+  A7: I success +0.0164 [1.00] slip -0.0239 [1.00] | II success +0.0089 [1.00] slip -0.0123 [1.00]
+
+== DECISION MECHANISM (frozen link-3 definition: flip = argmax changes when the delivered trust T is replaced by 0.5; applied to every arm; A2/A5 deliver 0.5, so 0 is by construction)
+arm  FR mean (min..max) | flips/run | decisions/run | replay ticks/run | flip rate per decision tick by window W1..W4 | cells with 0 flips
+A1  0.0031 (0.0004..0.0087) | 8.5 | 2762 | 238 | 0.0132/0.0021/0.0025/0.0016 | 0
+A2  0.0000 (0.0000..0.0000) | 0.0 | 2762 | 238 | 0.0000/0.0000/0.0000/0.0000 | 50
+A3  0.0185 (0.0101..0.0284) | 51.2 | 2763 | 237 | 0.0362/0.0211/0.0150/0.0124 | 0
+A4  0.0000 (0.0000..0.0000) | 0.0 | 2764 | 236 | 0.0000/0.0000/0.0000/0.0000 | 50
+A5  0.0000 (0.0000..0.0000) | 0.0 | 2763 | 237 | 0.0000/0.0000/0.0000/0.0000 | 50
+A6  0.0043 (0.0007..0.0131) | 12.0 | 2765 | 235 | 0.0194/0.0043/0.0017/0.0013 | 0
+A7  0.0042 (0.0011..0.0087) | 11.7 | 2762 | 238 | 0.0260/0.0025/0.0014/0.0013 | 0
+trust-term scale vs the score margin (mean over decision ticks, W1..W4): A1: max|trust term| 3.48/4.54/4.26/3.22 margin 39.97/73.87/77.90/76.37 nonzero 0.95/1.00/1.00/1.00 || A7: max|trust term| 5.48/5.48/4.50/4.52 margin 42.22/77.34/78.46/76.60 nonzero 1.00/1.00/1.00/1.00
+executed action differs from the stable argmax (exploration / random selection), by window W1..W4: A1: 0.112/0.091/0.089/0.095 | A2: 0.110/0.088/0.090/0.096 | A3: 0.740/0.739/0.740/0.737 | A4: 0.110/0.096/0.099/0.105 | A5: 0.108/0.090/0.094/0.094 | A6: 0.107/0.092/0.091/0.098 | A7: 0.107/0.089/0.100/0.098
+A1 vs A2 per cell: fingerprints identical in 0/50 cells; first tick at which executed attempts differ: median 14 (min -4, max 179); first flip tick (A1): median 24; relation of divergence to first flip: {'both_none': 0, 'equal': 17, 'divergence_earlier': 30, 'divergence_later': 3, 'flip_only': 0, 'divergence_only': 0}
+
+== LEARNING / EXPLORATION
+arm  coverage(>=3 attempts) 1499/2999 | trust entropy bits 1499/2999 | KM steps-to-goal median of run medians (runs with inf) | goal resets/cap resets per run | trajectory entropy W1..W4 | distinct keys per 100 ticks W1..W4 | Brier(trust)-Brier(base) | floor calls
+A1  0.67/0.68 | 2.79/2.59 | 10.0 (10) | 146.4/6.7 | 4.21/4.24/4.18/4.46 | 11.8/4.2/10.1/4.2 | -0.0099 | 1326
+A2  0.68/0.68 | 2.80/2.57 | 10.0 (10) | 142.8/7.4 | 4.23/4.16/4.12/4.46 | 11.6/4.0/9.8/4.2 | -0.0106 | 0
+A3  1.00/1.00 | 2.40/1.98 | 25.5 (0) | 78.8/2.1 | 6.02/6.28/5.71/6.04 | 23.3/6.2/22.7/6.2 | +0.0054 | 449
+A4  0.72/0.69 | 0.00/0.00 | 9.0 (5) | 204.7/4.5 | 4.33/4.52/4.49/4.74 | 11.8/4.4/11.7/4.6 | +0.0049 | 0
+A5  0.69/0.68 | 2.81/2.58 | 9.0 (13) | 149.5/7.3 | 4.21/4.25/4.18/4.41 | 11.5/4.1/10.4/4.1 | -0.0113 | 1372
+A6  0.69/0.69 | 2.81/2.60 | 10.0 (9) | 157.6/6.5 | 4.22/4.32/4.22/4.48 | 11.7/4.1/10.6/4.1 | -0.0105 | 1319
+A7  0.69/0.69 | 2.72/2.59 | 9.0 (7) | 161.3/5.9 | 4.33/4.29/4.37/4.60 | 12.1/4.2/11.2/4.4 | -0.0109 | 1327
+  A4 (Q- and trust-frozen) minus A1: W1: mean 7.2 (+32/-18 cells); W2: mean 16.3 (+27/-23 cells); W3: mean 23.0 (+32/-18 cells); W4: mean 20.3 (+31/-19 cells)
+  A4 (Q- and trust-frozen) minus A2: W1: 2.9 (+28/-22 cells); W2: 29.7 (+29/-21 cells); W3: 26.4 (+32/-18 cells); W4: 19.2 (+28/-22 cells)
+
+== ARM SEPARATION (R_all = reward per 100 ticks over the whole run; paired over the same 50 cells)
+pair   mean(first-second)  sign-consistency  dz     identical-fingerprint cells  first executed-attempt divergence (median tick; cells never diverging)  descriptive label (fp-identical >= 90% -> indistinguishable; sign consistency >= 0.7 and |dz| >= 0.5 -> separated; else overlapping)
+A1|A2      4.83  0.52  0.06  0/50  13.5  never 0  overlapping
+A1|A3     33.82  0.64  0.45  0/50  -5.0  never 0  overlapping
+A1|A4    -17.66  0.60  -0.25  0/50  9.0  never 0  overlapping
+A1|A5     -0.60  0.56  -0.01  0/50  14.0  never 0  overlapping
+A1|A6     -2.47  0.50  -0.03  0/50  3.0  never 0  overlapping
+A1|A7     -8.86  0.62  -0.14  0/50  -3.0  never 0  overlapping
+A2|A3     28.99  0.58  0.36  0/50  -5.0  never 0  overlapping
+A2|A4    -22.49  0.60  -0.36  0/50  34.0  never 0  overlapping
+A2|A5     -5.42  0.42  -0.10  9/50  99.0  never 9  overlapping
+A2|A6     -7.29  0.52  -0.09  0/50  15.0  never 0  overlapping
+A2|A7    -13.68  0.52  -0.17  0/50  -3.0  never 0  overlapping
+A3|A4    -51.48  0.70  -0.70  0/50  -5.0  never 0  separated
+A3|A5    -34.42  0.60  -0.42  0/50  -5.0  never 0  overlapping
+A3|A6    -36.29  0.64  -0.49  0/50  -5.0  never 0  overlapping
+A3|A7    -42.68  0.70  -0.58  0/50  -5.0  never 0  separated
+A4|A5     17.07  0.68  0.25  0/50  28.0  never 0  overlapping
+A4|A6     15.20  0.54  0.20  0/50  10.0  never 0  overlapping
+A4|A7      8.81  0.60  0.11  0/50  -3.0  never 0  overlapping
+A5|A6     -1.87  0.60  -0.02  0/50  16.0  never 0  overlapping
+A5|A7     -8.26  0.54  -0.10  0/50  -3.0  never 0  overlapping
+A6|A7     -6.39  0.62  -0.07  0/50  -3.0  never 0  overlapping
+per-arm R_all mean (SD over cells): A1 91.0 (66.7); A2 86.2 (73.4); A3 57.2 (21.0); A4 108.7 (67.2); A5 91.6 (75.0); A6 93.5 (72.0); A7 99.9 (68.0)
+
+== REPLAY (measured); FutureScore is not separately recorded (candidate F is the pre-clamp total score)
+  A1: replay share of ticks W1..W4 0.078/0.080/0.081/0.079 overall 0.080; Spearman(replay share, R_all) across 50 cells 0.03
+  A2: replay share of ticks W1..W4 0.079/0.080/0.079/0.079 overall 0.080; Spearman(replay share, R_all) across 50 cells -0.09
+  A3: replay share of ticks W1..W4 0.079/0.078/0.077/0.081 overall 0.079; Spearman(replay share, R_all) across 50 cells -0.01
+  A4: replay share of ticks W1..W4 0.078/0.079/0.077/0.079 overall 0.079; Spearman(replay share, R_all) across 50 cells 0.17
+  A5: replay share of ticks W1..W4 0.080/0.079/0.076/0.080 overall 0.079; Spearman(replay share, R_all) across 50 cells -0.05
+  A6: replay share of ticks W1..W4 0.079/0.080/0.077/0.077 overall 0.078; Spearman(replay share, R_all) across 50 cells -0.06
+  A7: replay share of ticks W1..W4 0.082/0.080/0.076/0.079 overall 0.080; Spearman(replay share, R_all) across 50 cells -0.00
+
+== WHY F-11 DID NOT EXCLUDE ZERO (A7 - A2 is the frozen contrast; A1 - A2 shown for comparison; pooled 10 x 5)
+  A7-A2|W1: dbar 8.94, se 14.64, 99% half-width 67.4 (t crit 4.604 at nu 4); SD of cell differences 75.7; share of se^2 from the configuration mean-square 0.60; mean reward of the two arms 37.2; se would have to fall by x7.5 for this dbar to clear zero
+  A7-A2|W3: dbar 1.95, se 14.82, 99% half-width 68.2 (t crit 4.604 at nu 4); SD of cell differences 75.1; share of se^2 from the configuration mean-square 0.86; mean reward of the two arms 78.1; se would have to fall by x35.0 for this dbar to clear zero
+  A1-A2|W1: dbar -4.33, se 13.18, 99% half-width 60.7 (t crit 4.604 at nu 4); SD of cell differences 55.8; share of se^2 from the configuration mean-square 0.45; mean reward of the two arms 30.5; se would have to fall by x14.0 for this dbar to clear zero
+  A1-A2|W3: dbar 3.34, se 16.23, 99% half-width 74.7 (t crit 4.604 at nu 4); SD of cell differences 68.8; share of se^2 from the configuration mean-square 0.51; mean reward of the two arms 78.8; se would have to fall by x22.4 for this dbar to clear zero
+  raw reward spread: A1|W1 SD 60.2, config means SD 33.9; A1|W3 SD 61.4, config means SD 42.6; A2|W1 SD 62.3, config means SD 45.3; A2|W3 SD 68.9, config means SD 50.9; A7|W1 SD 73.3, config means SD 52.6; A7|W3 SD 55.6, config means SD 38.9
+  note: with 5 seeds the t critical value stays 4.604 whatever the number of configurations; only the standard error can shrink.
+
+== SLIP RATE, a mechanism-proximal outcome (non-goal-entering attempts that slipped; paired over 50 cells; difference = first minus second arm)
+contrast  window  mean diff  median  cells lower/higher  config(+ means higher)/10  dz   stage1 mean | extension mean
+  A1-A2  W1  -0.048  -0.041  32/18  1/10  -0.50  -0.057 | -0.040
+  A1-A2  W2  -0.054  -0.035  32/18  2/10  -0.50  -0.072 | -0.037
+  A1-A2  W3  +0.023  +0.016  16/34  7/10  0.41  +0.026 | +0.019
+  A1-A2  W4  +0.025  +0.019  16/34  8/10  0.34  +0.031 | +0.019
+  A7-A2  W1  -0.114  -0.084  45/5  0/10  -1.07  -0.122 | -0.105
+  A7-A2  W2  -0.123  -0.097  42/8  1/10  -0.97  -0.157 | -0.088
+  A7-A2  W3  +0.046  +0.043  10/40  9/10  0.78  +0.053 | +0.039
+  A7-A2  W4  +0.044  +0.052  8/42  8/10  0.56  +0.038 | +0.050
+  A6-A2  W1  -0.005  +0.002  24/26  5/10  -0.05  -0.009 | -0.000
+  A6-A2  W2  -0.034  -0.028  34/16  1/10  -0.34  -0.031 | -0.036
+  A6-A2  W3  +0.017  +0.026  17/33  8/10  0.28  +0.025 | +0.010
+  A6-A2  W4  +0.020  +0.026  15/35  9/10  0.29  +0.019 | +0.021
+  A5-A2  W1  -0.000  +0.000  12/21  5/10  -0.01  +0.001 | -0.001
+  A5-A2  W2  -0.011  +0.000  20/18  3/10  -0.18  -0.011 | -0.012
+  A5-A2  W3  +0.018  +0.003  11/27  8/10  0.46  +0.016 | +0.021
+  A5-A2  W4  +0.009  +0.003  15/26  7/10  0.17  +0.002 | +0.015
+  A4-A2  W1  -0.006  +0.008  24/26  6/10  -0.07  -0.026 | +0.014
+  A4-A2  W2  -0.030  -0.018  29/21  2/10  -0.33  -0.047 | -0.012
+  A4-A2  W3  +0.005  +0.001  25/25  5/10  0.08  +0.018 | -0.008
+  A4-A2  W4  +0.020  +0.020  17/33  7/10  0.34  +0.024 | +0.015
+Spearman across cells between the slip-rate difference and the reward difference (descriptive association): A1-A2|W2: -0.16; A7-A2|W2: -0.27; A1-A2|W3: 0.13; A7-A2|W3: 0.07
+
+== ROBUSTNESS of the reward contrasts (post hoc; Wilcoxon p-values are exploratory, uncorrected, 12 listed here, not confirmatory)
+  A1-A2|W1: median +0.4, 10%-trimmed mean -2.8, skew -0.02, excess kurtosis +2.99, Wilcoxon p 0.98
+  A1-A2|W3: median +0.9, 10%-trimmed mean +3.2, skew +0.08, excess kurtosis +0.00, Wilcoxon p 0.88
+  A1-A2|R_all: median +1.9, 10%-trimmed mean +3.8, skew +0.21, excess kurtosis +0.24, Wilcoxon p 0.80
+  A7-A2|W1: median +0.5, 10%-trimmed mean +7.8, skew +0.07, excess kurtosis +1.70, Wilcoxon p 0.44
+  A7-A2|W3: median -5.9, 10%-trimmed mean -0.3, skew +0.32, excess kurtosis -0.73, Wilcoxon p 0.97
+  A7-A2|R_all: median +0.4, 10%-trimmed mean +10.5, skew +0.35, excess kurtosis -0.38, Wilcoxon p 0.42
+  A1-A4|W1: median -4.7, 10%-trimmed mean -10.6, skew +0.82, excess kurtosis +3.38, Wilcoxon p 0.05
+  A1-A4|W3: median -15.4, 10%-trimmed mean -24.9, skew +0.09, excess kurtosis +0.59, Wilcoxon p 0.03
+  A1-A4|R_all: median -19.2, 10%-trimmed mean -20.0, skew +0.51, excess kurtosis +0.49, Wilcoxon p 0.05
+  A1-A3|W1: median -22.2, 10%-trimmed mean -4.9, skew +1.12, excess kurtosis +0.27, Wilcoxon p 0.53
+  A1-A3|W3: median +33.8, 10%-trimmed mean +29.8, skew -0.13, excess kurtosis -1.24, Wilcoxon p 0.00
+  A1-A3|R_all: median +42.4, 10%-trimmed mean +35.6, skew -0.17, excess kurtosis -1.28, Wilcoxon p 0.00
+share of reward variance across cells explained by the goal-reach rate (R^2): median 0.94, min 0.53, max 0.99
+reward per 100 ticks over all arms in W2 and W4 (n = 700): skew +0.36, excess kurtosis -0.69, fraction of cells below 0: 0.160, above 200: 0.119
+same sign in both independent halves (reward, W1/W3/R_all): A1-A2|W1:N, A1-A2|W3:N, A1-A2|R_all:N, A1-A3|W1:N, A1-A3|W3:Y, A1-A3|R_all:Y, A1-A4|W1:N, A1-A4|W3:Y, A1-A4|R_all:Y, A1-A5|W1:Y, A1-A5|W3:Y, A1-A5|R_all:N, A1-A6|W1:N, A1-A6|W3:Y, A1-A6|R_all:N, A1-A7|W1:Y, A1-A7|W3:N, A1-A7|R_all:N, A7-A2|W1:Y, A7-A2|W3:Y, A7-A2|R_all:Y
