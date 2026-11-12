@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this software or its results, please cite it as below."
+title: "MiniFlyWire: an audit-driven study of which mechanisms in a graph-navigation agent change its behaviour"
+type: software
+authors:
+  - family-names: Kumar
+    given-names: Manish
+repository-code: "https://github.com/manish0360-coder/AI-intereactive-Brain-inspired-from-Mini-Flywire-"
+license: MIT

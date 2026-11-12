@@ -59,6 +59,25 @@
 
 ---
 
+## The cognitive testbed (`cognitive/`, added 2026-11-07)
+
+The audit found that the browser agent reads the true map directly. `cognitive/` is a separate
+Node.js testbed that fixes this: the environment owns reward and hidden state, agents see only
+observations, and standard baselines (random, Q-learning, Dyna-Q, a learned-model planner) run on
+the same task battery. It does not import the browser app, and the browser agent has not yet been
+run on it.
+
+| Gate | Result | Record |
+|---|---|---|
+| CF-01 — does the battery separate model-based from model-free agents? | ✅ PASS · E1 +149.2 [104.9, 203.1] and E3 +269.2 [113.3, 424.3] admitted · E2 not admitted | [results](experiments/cf01/results/RESULTS.md) |
+| CF-01b — redesigned detour task E2′ | ✅ PASS · +318.3 [236.4, 398.8] | [results](experiments/cf01b/results/RESULTS.md) |
+| CF-03 — learned-model planner (MBVI) against Dyna-Q | ❌ **FAIL on A4 calibration** (dev ECE 0.101, limit 0.05) · A1 E3 +220.4 [86.6, 372.8] held | [results](experiments/cf03/results/RESULTS.md) |
+
+Roadmap and decisions: [`docs/COGNITIVE_MILESTONE_ROADMAP.md`](docs/COGNITIVE_MILESTONE_ROADMAP.md).
+Module guide: [`cognitive/README.md`](cognitive/README.md).
+
+---
+
 ## How a decision is made
 
 ```text
@@ -99,6 +118,13 @@ python -m http.server 8000
 Press **Space** to start or stop the agent. Click nodes to interact. **Shift+R** resets learned
 state.
 
+**Tests.** Node.js 24 or later, no install step and no dependencies. This runs the 93 unit,
+isolation and mutant tests of the cognitive testbed, and is what CI runs on every push.
+
+```bash
+npm test
+```
+
 **Verification gates.** Node.js only, no install step. Gates in `experiments/phase1_0/` must be
 run from that directory.
 
@@ -121,12 +147,14 @@ node verify_S2.js
 | `instrumentation/` | Seeded RNG, telemetry bus, trace schema, session recorder |
 | `benchmarks/harness/` | Headless shim that runs the real `main.js` under Node |
 | `experiments/` | Gates (`phase1_0/`, `d2/`), controller measurement (`exec_influence/`), studies (`m7/` onward, `c1/`, `q1/`, `uqa/`, `uqb/`, `study2/`, `h1r/`, `mcf1/`, `xfer1/`, `xfer2/`, `gate-floor*/`, `learn0/`) |
-| `research/` | Audit, preregistrations, errata, interpretations |
-| `docs/` | [`VERIFICATION_STATUS.md`](docs/VERIFICATION_STATUS.md) |
+| `cognitive/` | Separate testbed with an environment–agent boundary, baseline agents and tests ([guide](cognitive/README.md)) |
+| `research/` | Audit, preregistrations, errata, interpretations, decision log (`09_decisions.md`) |
+| `docs/` | [`VERIFICATION_STATUS.md`](docs/VERIFICATION_STATUS.md) and the `COGNITIVE_*` handbook, audit and roadmap |
+| `scripts/` | `test.mjs`, the runner behind `npm test` |
 | `Portfolio_Assets/MiniFlyWire/` | Design documents and media. They describe design intent and predate the audit; where they differ, `docs/VERIFICATION_STATUS.md` is current. |
 
 ---
 
 ## License
 
-No license file is included in this repository.
+MIT — see [`LICENSE`](LICENSE). To cite the project, see [`CITATION.cff`](CITATION.cff).

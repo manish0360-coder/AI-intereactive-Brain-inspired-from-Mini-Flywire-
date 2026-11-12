@@ -1,0 +1,17 @@
+# Root ignore rules. Deliberately narrow: research files, evidence and review
+# packages are never ignored here, so nothing with provenance value can be hidden.
+# Raw run data is excluded per study by experiments/*/data/.gitignore.
+
+# Dependencies (the project has none, but tools may create this)
+node_modules/
+
+# Local tool state
+.claude/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp

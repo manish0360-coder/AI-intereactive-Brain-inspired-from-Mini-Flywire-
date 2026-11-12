@@ -1,0 +1,20 @@
+{
+  "name": "miniflywire",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A real-time 3D agent on a 20-node concept graph, and an audit-driven research programme that measures which of its mechanisms change what it does.",
+  "license": "MIT",
+  "author": "Manish Kumar",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/manish0360-coder/AI-intereactive-Brain-inspired-from-Mini-Flywire-.git"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "test": "node scripts/test.mjs",
+    "test:cf01": "node cognitive/tests/run_all.mjs",
+    "serve": "python -m http.server 8000"
+  }
+}
