@@ -5,7 +5,7 @@
 import { TEST_FILES } from '../cognitive/tests/run_all.mjs';
 import { runTestFiles } from '../cognitive/tests/run_list.mjs';
 
-const LATER_GATES = ['test_core.mjs', 'test_e2p.mjs', 'test_invariance.mjs', 'test_v1.mjs', 'test_mind.mjs', 'test_mind_v3.mjs'];
+const LATER_GATES = ['test_core.mjs', 'test_e2p.mjs', 'test_invariance.mjs', 'test_v1.mjs', 'test_mind.mjs', 'test_mind_v3.mjs', 'test_arb.mjs'];
 const files = [...TEST_FILES, ...LATER_GATES];
 
 const r = await runTestFiles(files);
