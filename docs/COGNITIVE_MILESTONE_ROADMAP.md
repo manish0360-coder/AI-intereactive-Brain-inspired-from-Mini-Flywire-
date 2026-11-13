@@ -41,6 +41,8 @@ flowchart LR
 | **CF-01b result (2026-11-07)** | **PASS:** E2′ admitted, +318.3 [236.4, 398.8] ([results](../experiments/cf01b/results/RESULTS.md)) |
 | **CF-03 result (2026-11-07)** | **FAIL (A4 calibration):** dev ECE 0.101 > 0.05. A1 E3 +220.4 [86.6, 372.8], A2 non-inferiority on E1 and A3 model log-likelihood all held ([results](../experiments/cf03/results/RESULTS.md)) |
 
+| **CF-03b result (2026-11-13)** | **PASS:** world model v2 (`cognitive/mind/`) on 20 fresh `gate3b` worlds. ECE 0.028 against 0.05 (v1: 0.104), inside the statistic's noise floor; DYNAQ − MBVI2 on E3 +171.0 [52.3, 317.5]; no regression against MBVI. Calibration did **not** improve task performance. CF-03 itself stays FAIL on A4 ([results](../experiments/cf03b/results/RESULTS.md)) |
+
 ## CF-02 — MiniFlyWire-legacy adapter (characterisation, not improvement)
 
 | Field | Content |
