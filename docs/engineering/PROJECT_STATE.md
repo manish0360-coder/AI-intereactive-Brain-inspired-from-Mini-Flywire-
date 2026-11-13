@@ -63,7 +63,12 @@ first; a node is a place, not a cognitive function.
 
 ## Next exact engineering milestone
 
-**M2 — hidden-change tasks** ([roadmap](IMPLEMENTATION_ROADMAP.md)): build `cognitive/testbed/task_e4.mjs`
+**M0b — calibration robustness, CF-03c** ([roadmap](IMPLEMENTATION_ROADMAP.md)). The independent review found the
+CF-03b claim narrower than written: calibrated on one generator. First fix and test the two open defects in
+`cognitive/mind/world_model.mjs` (leave-one-out weights; reset on a single failure of a reliable edge), then run
+the frozen model on unseen reliability families with a constant-forecaster arm.
+
+**Then M2 — hidden-change tasks**: build `cognitive/testbed/task_e4.mjs`
 (stochastic edges, a distal change the agent must discover, a sham-change control) and its admission gate
 `experiments/cf04a/`. Calibrate the horizon on `dev` worlds first; the COG-A study failed its precondition at
 1,500 steps. In parallel, **M1 — stronger baselines** (Dyna-Q+ with a count model, posterior sampling).

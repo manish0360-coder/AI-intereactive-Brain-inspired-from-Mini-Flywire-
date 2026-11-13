@@ -107,11 +107,48 @@ Details: [`LEARNING_MECHANISMS_RESEARCH.md`](../research/LEARNING_MECHANISMS_RES
 
 ---
 
-## Independent falsification review
+## Independent falsification review (2026-11-13)
 
-*Pending.* Each decision above is to be challenged by a reviewer that did not write it: what evidence contradicts
-it, what simpler design does the same, which assumption is unsupported. The review and the responses are appended
-here.
+A reviewer that wrote none of the above was asked to find what is wrong with the decisions and with the CF-03b
+result. It read the decisions, the architecture, the registry, the CF-03b spec, results, code and tests. It did
+not run the tests. Its verdicts and the responses follow. Where the review is accepted, the change is listed; the
+original text of AD-1 … AD-10 above is left as written.
+
+| Decision | Verdict | Main objection | Response |
+|---|---|---|---|
+| AD-1 | Sound with caveats | Its falsifier, H-LEG, is declared descriptive, so it cannot falsify | **Accepted.** H-LEG gets a pre-declared comparison (legacy in map-off mode against Dyna-Q) when its gate is specified |
+| AD-2 | **Weak** | The habit learner is worse than random on E3 (522 against 287 steps) and the planner already equals ORACLE on E1, so there is no headroom. Model surprise and reward prediction error are not on one scale, and irreducible edge noise would penalise the planner for ever. The primary metric ignores compute, which is the habit's only advantage | **Accepted.** Arbitration is not built until the hidden-change task is admitted and shows a window where the planner is wrong. Both errors are normalised against their own irreducible floor. A compute-aware metric and a v1-model arm are added to H-ARB. The simpler alternative (planner plus change detection, or discounted counts) is a required baseline |
+| AD-3 | **Weak as graded** | A single-generator development gate is not grade 2 evidence | **Accepted.** Regraded to 4: "calibrated on this generator". See the CF-03b findings below |
+| AD-4 | Sound with caveats | The sufficiency argument needs stationarity, yet E3 and E2′ are change tasks. Tasks may be designed to justify mechanisms | **Accepted in part.** The claim is restated for stationary phases. Task admission will also require that the mechanism-free planner fails, not only that planner beats habit |
+| AD-5 | **Weak** | "Four stores, no other state" contradicts the architecture's own table (Q table, monitor averages, modulator scalars, hyper-prior). The falsifier is unreachable because rejected stores are never built | **Accepted.** Restated as four *memory* stores; controller and monitor state is listed separately. The successor-representation baseline (roadmap M1) is the one rejected store that is built, so the falsifier has a case |
+| AD-6 | Sound with caveats | The built agent already adds optimism to values. H-MOD would pass on any change, including harm | **Accepted.** Optimism is declared as a value-level exploration term and an exception. H-MOD needs a direction, not just a difference |
+| AD-7 | Sound | — | — |
+| AD-8 | **Weak** | The v2 model changes every pair's prediction on every update, so a cached plan is stale by construction. Planning costs milliseconds. The saving threshold is unstated | **Accepted.** H-EVT is deferred to the scale milestone (M8) and needs per-pair prediction versions first |
+| AD-9 | Sound with caveats | The aliasing tasks are where latent-state methods are the natural comparison | **Accepted.** A latent-state learner is named as the comparison for the partial-observability milestone |
+| AD-10 | Sound with caveats | H1-R Stage 2 is already void; the list double-counts | **Accepted.** Eight studies, not nine, need a closure ruling |
+| Whole design | — | Nine subsystems on a world where the planner is at ceiling; most planned gates can show only non-inferiority | **Accepted as the central risk.** Harder tasks and larger worlds come before more mechanism |
+
+### Findings on CF-03b
+
+| # | Finding | Response |
+|---|---|---|
+| 1 | "Calibrated" is close to "the model matches the generator": reliabilities are U[0.5, 1], whose moment-matched Beta has S = 8, and the model learned μ = 0.739 and S = 8 in 14 of 20 worlds. `gate3b` shares the generator with `dev`, so it guards against overfitting 20 worlds, not the family | **Accepted.** New gate CF-03c: the frozen model on unseen reliability families and on worlds with several destinations per action |
+| 2 | Calibration without resolution: 88% of predictions fall in three bins. A forecaster that always outputs the pooled mean might also pass | **Accepted.** CF-03c adds a constant-μ arm and a per-pair Laplace arm, and reports the Brier decomposition |
+| 3 | The statistic scores only the modal outcome of pairs that have already moved; untried pairs and the impassable-exit mixture are never scored. No interval on B1 | **Accepted.** CF-03c scores move against stay for every pair, splits exploration from test, and bootstraps B1 |
+| 4 | "Cannot be told apart from a perfectly calibrated forecaster" is contradicted by the result's own reliability table: 0.36 → 0.56 and 0.47 → 0.55 are off by about two standard errors. The Beta prior puts mass below 0.5, where the generator has none | **Accepted.** The sentence is withdrawn in an amendment to the results file |
+| 5 | No leak of hidden facts or test data was found. The model does build in assumptions the generator satisfies: a failure is a self-transition; reward depends on the arrival state; pairs are exchangeable; actions have one destination | **Accepted** as declared structural priors; CF-03c tests two of them |
+| 6 | NOPOOL removes the pooled move prior and the pooled novelty rule together, so "pooling repairs calibration" does not separate them | **Accepted.** CF-03c splits the ablation |
+| 7 | Possible inconsistency: `refresh` accumulates pooled totals with weights under the previous hyper-parameters while `compute` subtracts with weights under the new ones. The transition reset can fire on one legitimate failure of a very reliable edge after about 35 successes | **Accepted as open defects.** Neither is fixed in the frozen code. Both get adversarial tests and a fix before CF-03c is frozen |
+| 8 | Some tests are weak: one title claims more than it asserts; one inequality is tautological; invariance probes one edge in one world; nothing tests the ECE code or a non-exchangeable population | **Accepted.** Tests are strengthened with the CF-03c work |
+| 9 | "Did not cost task performance" omits E1 NAIVE (+2.3 [0.1, 5.6], outside B6) and 61% more sweeps per decision | **Accepted.** Amended in the results file |
+
+**What the review found correct:** the model uses only labels, action indices, reward and done; predictions are
+scored before learning; the ECE arithmetic and the noise-floor simulation match the stated statistic; the numerics
+tests are real; the spec discloses both development steps and the results disclose their negative findings.
+
+**Standing of CF-03b after review.** The gate verdict stands as recorded: PASS on its frozen criteria. The claim
+it supports is narrower than first written: *the v2 model is calibrated on worlds drawn from the generator it was
+developed on*. Whether that survives a different reliability distribution is the question for CF-03c.
 
 ## Weak points the author already knows
 

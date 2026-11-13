@@ -117,6 +117,29 @@ DYNAQ 72, so both planners are worse than Dyna-Q there. E1S: MBVI2 28, MBVI 26.
   world with two distinct populations of edges has not been tested.
 - **Anything about MiniFlyWire's legacy agent**, which did not take part (CF-02).
 
+## Amendment after independent review (2026-11-13)
+
+The text above is left as first written. An independent review
+([`ARCHITECTURE_DECISIONS.md`](../../../docs/architecture/ARCHITECTURE_DECISIONS.md), "Independent falsification
+review") found three statements stronger than the evidence. The gate verdict is unchanged; these corrections
+govern how it may be cited.
+
+1. **Withdrawn:** "it cannot be told apart from a perfectly calibrated forecaster". The reliability table above
+   shows two low bins off by about two standard errors (0.36 → 0.56, n = 32; 0.47 → 0.55, n = 170). The correct
+   statement is that the weighted per-run statistic is inside its noise band, and that the model under-predicts
+   where it predicts below 0.5.
+2. **Narrowed:** "calibrated" means *calibrated on worlds from the generator the model was developed on*.
+   Reliabilities are U[0.5, 1]; the Beta with the same mean and variance has strength 8, and the model learned
+   μ = 0.739 with S = 8 in 14 of 20 worlds. `gate3b` shares that generator with `dev`. The gate does not show
+   calibration under any other reliability distribution, and it has no control showing that a forecaster which
+   always outputs the pooled mean would fail.
+3. **Corrected:** "This did not cost task performance" holds for the four B6 cells only. On E1 NAIVE, which B6
+   does not cover, MBVI2 needed 2.3 more steps than MBVI [0.1, 5.6], and it used about 61% more sweeps per
+   decision on E1S than MBVI did in the CF-03 run (28.5 against 17.7; different runs).
+
+Also noted by the review: the NOPOOL ablation removes two pooled components at once, so it does not show which
+one repairs calibration; and the statistic scores only pairs that have already moved.
+
 ## Open items carried forward
 
 1. The impassable-exit trade-off (E2P gain, E3 cost) needs a task that isolates it before it is kept or dropped.

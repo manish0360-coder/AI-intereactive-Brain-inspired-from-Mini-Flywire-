@@ -52,7 +52,8 @@ Each principle comes from the research streams in `docs/research/` and from this
    its counts are sufficient statistics, so separate "trust", "schema", "semantic" and "familiarity" stores are
    marginals of the same counts. They are not built.
 4. **Probabilities must be calibrated before anything consumes them.** Arbitration, planning-on-demand and
-   confidence reports all read the model's predictive probabilities. CF-03b established this.
+   confidence reports all read the model's predictive probabilities. CF-03b showed this on one world generator;
+   other reliability distributions are untested (CF-03c).
 5. **Internal variables modulate control; they never add to the action score.** Motivation-like and
    neuromodulator-like signals set exploration scale, thresholds and compute, where their effect can be clamped
    and measured.

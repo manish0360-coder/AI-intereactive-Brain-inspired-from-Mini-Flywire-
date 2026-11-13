@@ -41,6 +41,16 @@ flowchart LR
 | Files | `cognitive/mind/world_model.mjs`, `mbvi2.mjs`, `testbed/registry_v2.mjs`, `tests/test_mind.mjs`, `experiments/cf03b/` |
 | Open | Impassable-exit trade-off (H-BLK); calibration after change is unmeasured |
 
+| | M0b — Calibration robustness (CF-03c). **Next.** Added after independent review |
+|---|---|
+| Objective | Find out whether the v2 model is calibrated, or only matched to the generator it was developed on |
+| Problem | `gate3b` shares its reliability distribution with `dev`; a constant forecaster was never tested; the statistic scores only pairs that have moved; NOPOOL removes two components at once |
+| Build first | Fix and test two open defects: pooled totals and leave-one-out weights computed under different hyper-parameters; the transition reset firing on one legitimate failure of a very reliable edge |
+| Then | Task variants with unseen reliability families (bimodal, Beta(0.5, 0.5), U[0, 1], two edge populations) and worlds with several destinations per action. Arms: constant-μ forecaster, per-pair Laplace, NOPOOL-MOVE, NOPOOL-DEST. Scoring: move against stay for every pair including untried ones; exploration and test split; Brier decomposition; bootstrap interval on the calibration statistic |
+| Acceptance | Frozen before the run. The model must beat the constant-μ arm on resolution and stay within the calibration limit on every family, or the claim is recorded as "matched to one generator" |
+| Effort / compute | 3–4 days; minutes |
+| Risk | The model fails on two-population worlds. Then the pooled prior needs a mixture, or the claim stays narrow |
+
 | | M1 — Stronger baselines |
 |---|---|
 | Objective | Make every later comparison fair |
