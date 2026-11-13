@@ -66,7 +66,15 @@ first; a node is a place, not a cognitive function.
 
 ## Next exact engineering milestone
 
-**CF-05 — recovery after a change is reversed** (not started; design only after the owner agrees the direction).
+**HOLD (owner's instruction, 2026-11-14): CF-05 is not to be designed, frozen or run until an independent
+Gemini review of CF-03c and CF-04 has been received and considered.** The complete bundle for that review is
+`research/external/CF03C_CF04_GEMINI_REVIEW_BUNDLE.md` (cover and questions, statistical power, internal review,
+then the frozen specifications, results and source code verbatim with hashes). The owner relays it to Gemini and
+brings the reply back. When the reply arrives: record it with responses in
+`docs/architecture/ARCHITECTURE_DECISIONS.md`, amend any results record by a dated amendment (never by editing),
+and only then decide the next experiment — which may not be CF-05.
+
+**Proposed, pending that review: CF-05 — recovery after a change is reversed.**
 CF-04 measured where the planner still loses: after a block is removed it is 40.1 steps behind the reference
 [32.5, 48.1] because it re-tests the reopened exit in 0.9 of 15 episodes. Steps:
 
