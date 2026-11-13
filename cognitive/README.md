@@ -17,6 +17,7 @@ It is independent of the browser application: nothing in `main.js` or `render/` 
 | `agents/` | `RANDOM`, `QL`, `DYNAQ`, and `ORACLE` (privileged reference) |
 | `core/` | CF-03: learned world model v1, value-iteration planner, MBVI agent (kept unchanged as a baseline) |
 | `mind/` | CF-03b onward: world model v2 (pooled priors, impassable-exit mixture) and MBVI2. The integrated agent grows here |
+| `mind/v3/` | CF-03c: world model v3 (v2 with two defects repaired: consistent leave-one-out weights, evidence-accumulating change detection) and MBVI3. v2 stays frozen beside it |
 | `tests/` | Unit, isolation and mutant tests (`run_all.mjs` for CF-01; `npm test` runs every file) |
 
 ```bash
