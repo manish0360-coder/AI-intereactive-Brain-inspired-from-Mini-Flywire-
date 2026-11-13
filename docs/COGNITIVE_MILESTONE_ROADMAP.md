@@ -43,6 +43,8 @@ flowchart LR
 
 | **CF-03b result (2026-11-13)** | **PASS:** world model v2 (`cognitive/mind/`) on 20 fresh `gate3b` worlds. ECE 0.028 against 0.05 (v1: 0.104), inside the statistic's noise floor; DYNAQ − MBVI2 on E3 +171.0 [52.3, 317.5]; no regression against MBVI. Calibration did **not** improve task performance. CF-03 itself stays FAIL on A4 ([results](../experiments/cf03b/results/RESULTS.md)) |
 
+| **CF-03c result (2026-11-14)** | **PARTIAL:** world model v3 (two v2 defects repaired) on four reliability families it had never seen. Criteria held in BIMODAL only; failed in WIDE and ARCSINE (a per-pair Laplace forecaster is better, and ECE exceeds 0.05) and in HIGH (a constant forecaster is better). The repairs themselves hold. The calibration claim stays limited to the development generator ([results](../experiments/cf03c/results/RESULTS.md)) |
+
 ## CF-02 — MiniFlyWire-legacy adapter (characterisation, not improvement)
 
 | Field | Content |
