@@ -206,3 +206,11 @@ experiments/h1r/cli_gate/** -text
 experiments/h1r/evidence_milestone_b/** -text
 # D-028: verify_d028.mjs and verify_milestone_b.mjs (D2) hash the working-tree bytes of the N3 implementation.
 experiments/h1r/verify_existing_equivalence.mjs -text
+
+# Cognitive gates (CF-01, CF-01b, CF-03, CF-03b): each results record cites the SHA-256 of its GATE_SPEC.md and
+# result JSON over exact bytes. Without this rule a checkout with core.autocrlf=true rewrites LF to CRLF and the
+# recorded digests no longer match the working copy. Added 2026-11-13; the committed blobs are unchanged.
+experiments/cf01/** -text
+experiments/cf01b/** -text
+experiments/cf03/** -text
+experiments/cf03b/** -text
