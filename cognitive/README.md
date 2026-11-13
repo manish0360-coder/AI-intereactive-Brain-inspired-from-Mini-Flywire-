@@ -15,7 +15,9 @@ It is independent of the browser application: nothing in `main.js` or `render/` 
 | `testbed/agent_util.mjs` | The only module an agent may import |
 | `testbed/rng.mjs` | Label-seeded streams |
 | `agents/` | `RANDOM`, `QL`, `DYNAQ`, and `ORACLE` (privileged reference) |
-| `tests/` | Unit, isolation and mutant tests (`run_all.mjs`) |
+| `core/` | CF-03: learned world model v1, value-iteration planner, MBVI agent (kept unchanged as a baseline) |
+| `mind/` | CF-03b onward: world model v2 (pooled priors, impassable-exit mixture) and MBVI2. The integrated agent grows here |
+| `tests/` | Unit, isolation and mutant tests (`run_all.mjs` for CF-01; `npm test` runs every file) |
 
 ```bash
 node cognitive/tests/run_all.mjs
@@ -30,7 +32,6 @@ node cognitive/tests/run_all.mjs
 `tests/test_isolation.mjs` enforces these rules, and `tests/test_mutants.mjs` proves that each enforcing check catches a violation.
 
 **Not here yet:**
-- the learned world-model agent (CF-03);
 - arbitration (CF-04);
 - partial observability and episodic memory (CF-05);
 - the MiniFlyWire-legacy adapter (CF-02).
