@@ -141,6 +141,30 @@ reward relocation [275, 532] and +133 on the detour [105, 164]. DYNAQ − MBVI3:
 - **That any of this changes behaviour.** Task steps were not a criterion here; MBVI3 equals MBVI2.
 - Worlds with several destinations per action, calibration after a change, larger worlds: untested.
 
+## Amendment after the outside review (2026-11-14)
+
+The text above is left as first written. From the reconciliation of an outside review against the record
+(`research/external/CF03C_CF04_GEMINI_REVIEW_RECONCILIATION.md`):
+
+1. **Where the model's skill comes from**, verified from the Brier decomposition in the result file. Against the
+   constant forecaster the advantage is resolution. Against the per-pair Laplace forecaster it is not: the model
+   has *lower* resolution than Laplace in every family (U5 0.0059 against 0.0063; WIDE 0.0351 against 0.0399;
+   BIMODAL 0.0203 against 0.0210; ARCSINE 0.0484 against 0.0516), and where it wins it wins on reliability.
+   Sharing between pairs buys reliability at a small cost in resolution; the trade is a net loss on wide families.
+2. **A simpler reading of which families pass** than the one given under "Why it failed": the outcome follows the
+   spread of edge reliabilities. The Beta strength matching each family's mean and variance is 56 (HIGH), 8 (U5),
+   3.7 (BIMODAL), 2.7 (WIDE) and 2.0 (ARCSINE); the model beats Laplace in the first three and loses in the last
+   two, where Laplace's own prior (strength 2) is already nearly right. Five data points; a hypothesis, not a
+   result.
+3. **Sample size.** The 20 worlds per family were the minimum of the pre-declared rule (the rule gave 6 on the
+   development family), not the output of a power calculation for the unseen families.
+4. The 0.0553 and 0.0548 quoted for WIDE and ARCSINE are upper interval bounds; the estimates are 0.050 and 0.050.
+   The criterion was on the upper bound, so the two failures of K2 are real and marginal. The failures of K3
+   (Laplace better) are not marginal.
+
+By the owner's decision of 2026-11-14, world model v3 and its repairs are retained, and calibration claims are
+restricted to the environments where evidence supports them: fresh worlds of the development family and BIMODAL.
+
 ## Consequences
 
 1. The model keeps its repairs (v3 replaces v2 as the model new work builds on).

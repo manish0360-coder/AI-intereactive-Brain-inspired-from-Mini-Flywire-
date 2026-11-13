@@ -99,6 +99,33 @@ RANDSWITCH − planner +2.5 [−5.6, 9.9]. Mean route length 3.9 steps, 5.8 with
 - Anything beyond one world size, one reliability distribution and one kind of change.
 - Anything about the legacy agent.
 
+## Amendment after the outside review (2026-11-14)
+
+The text above is left as first written. An outside review (Gemini) and its reconciliation against the record
+(`research/external/CF03C_CF04_GEMINI_REVIEW_RECONCILIATION.md`) lead to these corrections. The gate verdict is
+unchanged; the corrections govern how it may be cited.
+
+1. **Scope of the conclusion.** The supported statement is: *arbitration between this planner and tabular
+   Q-learning, driven by this reliability signal, gave no benefit, and at θ = 0.05 cost 13.8 steps
+   [7.1, 20.1].* The habit controller was not a competent fallback, so this is not a test of arbitration in
+   general. "Harmful" applies to θ = 0.05 only; at θ = 0.1 the arbiter is neutral overall.
+2. **What was not tested.** The usual case for a model-free controller is that it is cheaper. Computation was not
+   counted (the planner used about 1,320 backups per decision). Arbitration to save computation is untested.
+3. **A stronger habit arm would not obviously change the result.** Dyna-Q ran alone in this gate and needed
+   +115.3 steps more than the planner [93.5, 138.1]. Arbitration with a Dyna-based arm was not run.
+4. **Not the cause.** The review attributed the failure to noise-driven handoffs. Criterion A3 contradicts that:
+   in the sham arm the habit acted in 14.2% of decisions at a cost of +0.3 steps [−2.4, 2.7]. The cost arises
+   while the block is in place, when the two controllers' policies differ most.
+5. **Truncation.** The planner, ARB, ARB_T10 and RANDSWITCH had no capped episodes in 55 worlds, so criteria A1–A3
+   are unaffected by the 200-step cap. Contrasts involving QL (233 capped episodes), the planner without change
+   detection (28) and DYNAQ (5) are understated.
+6. **Medians and counts**, added from the recorded rows: ARB is worse than the planner in 46 worlds and better in
+   9 (median difference +16.0); worse than RANDSWITCH in 35 and better in 20 (median +7.0); ARB_T10 is worse than
+   the planner in 34 and better in 18.
+
+By the owner's decision of 2026-11-14, arbitration is removed from the integration roadmap for now. Its
+implementation (`cognitive/mind/arb/`) and this evidence are kept.
+
 ## Consequences (fixed in the specification before the run)
 
 1. **Arbitration is not built into the integrated agent.** Decision AD-2 is recorded as not supported by

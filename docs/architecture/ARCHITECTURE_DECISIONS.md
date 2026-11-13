@@ -169,6 +169,25 @@ over by value iteration. Nothing else in the target architecture has evidence ye
 [32.5, 48.1], because it almost never re-tests an exit it believes is dead. That, not an executive, is the next
 mechanism question.
 
+## Outside review and the owner's decisions (2026-11-14)
+
+An outside review by Gemini was obtained on CF-03c and CF-04. It is lodged verbatim at
+`research/external/CF03C_CF04_GEMINI_REVIEW.md` and checked claim by claim against the record in
+`research/external/CF03C_CF04_GEMINI_REVIEW_RECONCILIATION.md`. It agrees with both verdicts. It is weak as
+independent verification (it largely restates the cover it was given and contains factual errors), but its one
+substantive challenge is correct: tabular Q-learning was not a competent fallback controller, so CF-04 is not a
+test of arbitration in general.
+
+**The owner's decisions:**
+
+1. World model v3 and its repairs are retained.
+2. Calibration claims are restricted to the environments where evidence supports them.
+3. Executive arbitration is removed from the integration roadmap for now. Its implementation and evidence are kept.
+4. The value-iteration planner is retained.
+5. Recovery after a reversed environmental change is the next priority (CF-05), with a count-model Dyna-Q+
+   baseline, the cost of exploration measured in unchanged environments, and no addition to the agent unless the
+   experiment shows a measurable improvement.
+
 ## Weak points the author already knows
 
 1. **The whole programme runs on small, mostly deterministic graphs.** A result here says little about larger or
