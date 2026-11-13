@@ -13,8 +13,10 @@ the result whatever it is; never tune on a gate domain; a failed gate stays fail
 | ID | Tier | Question | Mechanism | Status |
 |---|---|---|---|---|
 | H-CAL | A | Can the learned model be calibrated without losing performance? | Pooled priors across pairs | **PASS** (CF-03b) |
-| H-TASK-CHG | A | Does a hidden-change task separate agents that adapt from agents that do not? | Task E4 (stochastic edges, a distal change, recurrence A→B→A) | Not started |
-| H-ARB | A | Does reliability arbitration beat either controller alone? | Planner + habit + monitor + selector | Not started |
+| H-TASK-CHG | A | Does a hidden-change task separate agents that adapt from agents that do not? | Task E4 (stochastic edges, an unannounced block, then its removal) | **Admitted** (CF-04: +160.7 [135.2, 188.2]; sham null) |
+| H-ARB | A | Does reliability arbitration beat either controller alone? | Planner + habit + monitor + selector | **Not supported; harmful** (CF-04: planner − ARB = −13.8 [−20.0, −7.2]; worse than random switching) |
+| H-CAL-OOD | A | Is the model calibrated on reliability families it was not developed on? | The repaired v3 model against constant and Laplace forecasters | **Partial** (CF-03c: holds in 1 of 4 unseen families) |
+| H-REC | A | Can the planner recover a route after a block is removed? | Re-testing of exits believed dead; Dyna-Q+ as the baseline | Not started. Room measured in CF-04: 40.1 steps [32.5, 48.1] |
 | H-LEG | A | How does the legacy agent compare with baselines on equal information? | Legacy adapter on the battery | Not started |
 | H-EVT | B | Does planning on demand keep return at fewer backups? | Triggers: surprise, goal change, tie | Not started |
 | H-CTX | B | Do contexts beat forgetting when a regime returns? | Context split on sustained surprise | Not started |

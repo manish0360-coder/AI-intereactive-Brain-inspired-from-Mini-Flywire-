@@ -150,6 +150,25 @@ tests are real; the spec discloses both development steps and the results disclo
 it supports is narrower than first written: *the v2 model is calibrated on worlds drawn from the generator it was
 developed on*. Whether that survives a different reliability distribution is the question for CF-03c.
 
+## Evidence after the review (2026-11-14)
+
+Two frozen gates were run on the questions the review raised. Both went against the original decisions.
+
+| Decision | Gate | Result | Standing now |
+|---|---|---|---|
+| **AD-3** calibrated belief | CF-03c: the repaired model on four reliability families it had never seen ([results](../../experiments/cf03c/results/RESULTS.md)) | **PARTIAL.** Criteria held in one family of four. A per-pair Laplace forecaster beats the model on two; a constant forecaster beats it on one. In every family the constant forecaster's calibration error is as low as the model's | The model is not "calibrated" in general. The claim stays: calibrated on the generator it was developed on. Calibration error is dropped as a headline statistic; Brier score with its decomposition, against constant and Laplace baselines, replaces it |
+| **AD-2** two controllers and reliability arbitration | CF-04: hidden change, then its reversal, 55 worlds ([results](../../experiments/cf04/results/RESULTS.md)) | **NOT SUPPORTED, and harmful** at the tested threshold: planner − ARB = −13.8 steps [−20.0, −7.2]; ARB is also worse than random switching (−11.2 [−20.0, −3.6]) | **Withdrawn at this scale.** Arbitration is not built into the agent. The architecture diagram's monitor, arbiter and habit controller are removed from the build plan. The question reopens only on a task where the planner alone is far from the reference, or where computation is counted |
+| **AD-8** planning on demand | Not run | — | Still deferred to the scale milestone |
+
+**What the evidence does support.** Change detection is the largest measured effect in the testbed: removing it
+costs +161 steps after a block [135, 188] (CF-04) and +403 on reward relocation [275, 532] (CF-03c battery). The
+agent that exists and is supported by gates is: a learned model with pooled priors and change detection, planned
+over by value iteration. Nothing else in the target architecture has evidence yet.
+
+**The gap the evidence points to.** After a block is removed the planner is 40 steps behind the reference
+[32.5, 48.1], because it almost never re-tests an exit it believes is dead. That, not an executive, is the next
+mechanism question.
+
 ## Weak points the author already knows
 
 1. **The whole programme runs on small, mostly deterministic graphs.** A result here says little about larger or

@@ -45,6 +45,8 @@ flowchart LR
 
 | **CF-03c result (2026-11-14)** | **PARTIAL:** world model v3 (two v2 defects repaired) on four reliability families it had never seen. Criteria held in BIMODAL only; failed in WIDE and ARCSINE (a per-pair Laplace forecaster is better, and ECE exceeds 0.05) and in HIGH (a constant forecaster is better). The repairs themselves hold. The calibration claim stays limited to the development generator ([results](../experiments/cf03c/results/RESULTS.md)) |
 
+| **CF-04 result (2026-11-14)** | **ARBITRATION NOT SUPPORTED — HARMFUL.** Task E4 (an unannounced block, then its removal; 55 fresh `gate4` worlds) is admitted: a planner without change detection needs +160.7 steps [135.2, 188.2]. Reliability arbitration between the planner and Q-learning is worse than the planner alone (planner − ARB = −13.8 [−20.0, −7.2]) and worse than random switching. Arbitration is not built into the agent. Remaining room: +40.1 steps [32.5, 48.1] after the block is removed, because the planner never re-tests a dead exit ([results](../experiments/cf04/results/RESULTS.md)) |
+
 ## CF-02 — MiniFlyWire-legacy adapter (characterisation, not improvement)
 
 | Field | Content |

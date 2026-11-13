@@ -27,6 +27,20 @@ flowchart LR
   M9 --> M10
 ```
 
+## Status against evidence (2026-11-14)
+
+| Milestone | State |
+|---|---|
+| M0 calibrated model | Done (CF-03b PASS), then narrowed: calibrated on the development generator only |
+| M0b calibration robustness | Done (CF-03c **PARTIAL**): repairs hold; the claim does not generalise to three of four unseen reliability families |
+| M2 hidden-change task | Done: task E4 admitted inside CF-04 |
+| **M3 two controllers and arbitration** | **Tested and not supported (CF-04, harmful at the tested threshold). Withdrawn from the build plan at this scale** |
+| M4 planning on demand | Deferred to M8, as before |
+| **Next: recovery after a reversed change (CF-05)** | New, from the CF-04 data: the planner is 40 steps behind the reference after a block is removed. Build M1's Dyna-Q+ baseline first |
+| M1, M5, M6, M7, M8, L1, M9, M10 | Unchanged below. M6's episodic reinstatement and M5's working memory still need their tasks admitted first |
+
+The diagram below is the plan as first written and is kept for the record; the table above governs.
+
 ## What can run in parallel
 
 - **M1, M2, M5-tasks and L1** touch different files and need nothing from each other.

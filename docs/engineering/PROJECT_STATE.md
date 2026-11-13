@@ -13,7 +13,7 @@ work stands. Document index: [`docs/README.md`](../README.md).
 |---|---|
 | GitHub `main` | `0a5ef40` (pushed 2026-11-12), with 25 annotated tags |
 | Local `main` | Ahead of GitHub by the CF-03b commits and the documentation commit. **Not pushed** |
-| Tests | `npm test` 108/108; legacy gate `experiments/phase1_0/verify_S2.js` 14/14 |
+| Tests | `npm test` 136/136; legacy gate `experiments/phase1_0/verify_S2.js` 14/14 |
 | Push rule | No push without the owner's explicit word |
 
 ## Done in this programme
@@ -21,6 +21,9 @@ work stands. Document index: [`docs/README.md`](../README.md).
 | Date | Work | Result |
 |---|---|---|
 | 2026-11-13 | **CF-03b** world model v2 (`cognitive/mind/`) | **PASS** on 20 fresh `gate3b` worlds: ECE 0.028 against 0.05 (v1 0.104); DYNAQ − MBVI2 on E3 +171.0 [52.3, 317.5]; no regression. Calibration did not improve task performance. Freeze `1968083`, results `4e310b0` |
+| 2026-11-14 | **CF-04** hidden-change task E4 and reliability arbitration (`cognitive/mind/arb/`), 55 fresh worlds | **ARBITRATION NOT SUPPORTED — HARMFUL.** The task is admitted (+160.7 steps without change detection). Planner − ARB = −13.8 [−20.0, −7.2]; ARB is also worse than random switching. Arbitration is not built into the agent. Freeze `2ae0311`; results in the commit after it |
+| 2026-11-14 | **CF-03c** world model v3 (`cognitive/mind/v3/`): two v2 defects repaired, then tested on four unseen reliability families | **PARTIAL.** Repairs hold. Criteria held in BIMODAL only; a per-pair Laplace forecaster beats the model on WIDE and ARCSINE, a constant forecaster beats it on HIGH. The calibration claim stays limited to the development generator. Freeze `2821603`, results `ddbe5f3` |
+| 2026-11-14 | Evidence ledger verified from primary records; sibling projects audited | 54 of 55 study folders read (`experiments/m7` has no tracked result file). Siblings: keep independent, reuse patterns only. Commit `9e4631b` |
 | 2026-11-13 | Target architecture, decisions, hypothesis registry, roadmap | Written; see the index |
 | 2026-11-13 | Research: architectures, learning, memory; evidence ledger and negative findings | Written |
 
@@ -63,12 +66,24 @@ first; a node is a place, not a cognitive function.
 
 ## Next exact engineering milestone
 
-**M0b — calibration robustness, CF-03c** ([roadmap](IMPLEMENTATION_ROADMAP.md)). The independent review found the
-CF-03b claim narrower than written: calibrated on one generator. First fix and test the two open defects in
-`cognitive/mind/world_model.mjs` (leave-one-out weights; reset on a single failure of a reliable edge), then run
-the frozen model on unseen reliability families with a constant-forecaster arm.
+**CF-05 — recovery after a change is reversed** (not started; design only after the owner agrees the direction).
+CF-04 measured where the planner still loses: after a block is removed it is 40.1 steps behind the reference
+[32.5, 48.1] because it re-tests the reopened exit in 0.9 of 15 episodes. Steps:
 
-**Then M2 — hidden-change tasks**: build `cognitive/testbed/task_e4.mjs`
+1. Build the stronger baseline first: Dyna-Q+ with a count model (`cognitive/agents/dynaq_plus.mjs`), so a
+   re-testing mechanism is compared with the textbook one.
+2. Design on `dev`: a bonus for exits not tried recently, inside the planner's value computation. Task E4 already
+   measures it (`return` window; the sham arm measures its cost).
+3. Freeze `experiments/cf05/GATE_SPEC.md`; run once on a new domain.
+
+Independent of this and waiting only on the owner: the legacy-agent comparison (needs authorisation to touch
+`main.js`).
+
+What the testbed agent is today, by evidence: a learned model with pooled priors and change detection (v3),
+planned over by value iteration (MBVI3). Arbitration, working memory, episodic memory and transfer have no
+evidence; arbitration has evidence against it at this scale.
+
+Earlier wording of the previous step, kept for reference: build `cognitive/testbed/task_e4.mjs`
 (stochastic edges, a distal change the agent must discover, a sham-change control) and its admission gate
 `experiments/cf04a/`. Calibrate the horizon on `dev` worlds first; the COG-A study failed its precondition at
 1,500 steps. In parallel, **M1 — stronger baselines** (Dyna-Q+ with a count model, posterior sampling).
