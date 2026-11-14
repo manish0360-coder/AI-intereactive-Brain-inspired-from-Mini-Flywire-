@@ -12,6 +12,7 @@ import { checkSourceIsolation } from '../testbed/checks_v1.mjs';
 import { GraphEnv } from '../testbed/env.mjs';
 import { generateWorld } from '../testbed/worlds.mjs';
 import { runE4 } from '../testbed/task_e4.mjs';
+import { runE4B, E4B_ARMS } from '../testbed/task_e4b.mjs';
 import { runTaskV1 } from '../testbed/tasks_v1.mjs';
 import { runE2P } from '../testbed/task_e2p.mjs';
 import { makeDynaQPlus, DYNAQP_DEFAULTS } from '../baselines/dynaq_plus.mjs';
@@ -129,6 +130,45 @@ export const tests = [
     // the exit works again: the memory is dropped
     agent.act(a); agent.observe(T(a, 0, 0, b));
     assert.equal(agent.inspect().recovery.remembering, 0);
+  }],
+  ['E4B: the CHANGE and SHAM arms give exactly the rows of the frozen E4 task; PERMANENT never reopens the edge', () => {
+    const core = (r) => ({ windows: r.windows, metric: r.metric, censored: r.censored, layout: r.layout, usedReopened: r.secondary.usedReopened });
+    for (const kind of ['MBVI3', 'QL']) for (const arm of ['CHANGE', 'SHAM']) {
+      assert.deepEqual(core(runE4B({ world: W, worldLabel: LABEL, kind, arm, makeAgent: makeAgentForV5 })), core(runE4({ world: W, worldLabel: LABEL, kind, arm, makeAgent: makeAgentForV5 })), `${kind} ${arm}`);
+    }
+    assert.deepEqual(E4B_ARMS, ['CHANGE', 'SHAM', 'PERMANENT']);
+    const run = (kind, arm) => runE4B({ world: W, worldLabel: LABEL, kind, arm, makeAgent: makeAgentForV5 });
+    const perm = run('ORACLE', 'PERMANENT'), chg = run('ORACLE', 'CHANGE');
+    assert.equal(perm.secondary.usedReopened, 0, 'a permanently blocked edge is never crossed');
+    assert.equal(perm.windows.postAll, chg.windows.postAll, 'the arms are the same run until the reversal');
+    assert.ok(perm.windows.return >= chg.windows.return, 'the reference pays the detour for ever when the block stays');
+    assert.throws(() => run('MBVI3', 'NOPE'));
+    const longer = runE4B({ world: W, worldLabel: LABEL, kind: 'MBVI3', arm: 'CHANGE', makeAgent: makeAgentForV5, exploreSteps: 1200 });
+    assert.notDeepEqual(longer.windows, run('MBVI3', 'CHANGE').windows, 'exploreSteps is honoured');
+  }],
+  ['E4B CONTEXT: the manipulated pairs handed to makeAgent are the two directions of the manipulated edge', () => {
+    let seen = null;
+    const spy = (kind, env, label, params, context) => { seen = context; return makeAgentForV5(kind, env, label, params); };
+    const r = runE4B({ world: W, worldLabel: LABEL, kind: 'MBVI3', arm: 'CHANGE', makeAgent: spy });
+    assert.ok(Object.isFrozen(seen)); assert.equal(seen.manipulatedPairs.length, 2);
+    const [u, v] = r.layout.blocked;
+    assert.deepEqual(seen.manipulatedPairs, [`${W.labelOf[u]}|${W.exitOrder[u].indexOf(v)}`, `${W.labelOf[v]}|${W.exitOrder[v].indexOf(u)}`]);
+    runE4B({ world: W, worldLabel: LABEL, kind: 'MBVI3', arm: 'SHAM', makeAgent: spy });
+    const [a, b] = r.layout.sham;
+    assert.deepEqual(seen.manipulatedPairs, [`${W.labelOf[a]}|${W.exitOrder[a].indexOf(b)}`, `${W.labelOf[b]}|${W.exitOrder[b].indexOf(a)}`]);
+  }],
+  ['RECALL DIAGNOSTICS: recallOnly and recallExcept restrict which declared changes are remembered', () => {
+    const drive = (params) => {
+      const agent = makeMBVI4({ rng: makeStream('cf|test|rec|diag'), params: { mode: 'RECALL', hazard: 0.02, ...params } });
+      const a = O(1, 1), b = O(2, 1);
+      for (let i = 0; i < 30; i++) { agent.act(a); agent.observe(T(a, 0, 0, b)); agent.act(b); agent.observe(T(b, 0, 0, a)); }
+      for (let i = 0; i < 6; i++) { agent.act(a); agent.observe(T(a, 0, 0, a)); }
+      return agent.inspect().recovery.remembered;
+    };
+    assert.equal(drive({}), 1, 'without a restriction the change is remembered');
+    assert.equal(drive({ recallOnly: ['1|0'] }), 1); assert.equal(drive({ recallOnly: ['9|9'] }), 0);
+    assert.equal(drive({ recallExcept: ['1|0'] }), 0); assert.equal(drive({ recallExcept: ['9|9'] }), 1);
+    assert.equal(drive({ recallOnly: [] }), 0, 'an empty allow-list remembers nothing');
   }],
   ['DEFAULTS: both candidates default to mode NONE, so nothing changes unless a mode is asked for', () => {
     assert.equal(MBVI4_DEFAULTS.mode, 'NONE');

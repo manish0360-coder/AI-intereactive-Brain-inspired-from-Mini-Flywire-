@@ -47,6 +47,9 @@ export function makeMBVI4({ rng, params = {}, kind = 'MBVI4' }) {
   let cue, clock = 0;
   const compute = { decisions: 0, sweeps: 0, backups: 0, budgetHits: 0 };
   const recovery = { chosen: 0, tauSum: 0, remembered: 0 };
+  // DIAGNOSTIC switches, used only by arms that are told which change was real (ground truth, so such arms are
+  // privileged and are never learner arms): remember only the listed pairs, or every pair except the listed ones.
+  const mayRemember = (key) => (!P.recallOnly || P.recallOnly.includes(key)) && !(P.recallExcept && P.recallExcept.includes(key));
   const tauOf = (s, a) => { const t = last.get(`${s}|${a}`); return t === undefined ? null : clock - t; };
   const bonusOf = P.mode === 'BONUS' ? (s, a) => { const tau = tauOf(s, a); return tau === null ? 0 : P.kappa * Math.sqrt(tau); } : undefined;
   const predictOf = P.mode === 'DECAY' ? (s, a) => {
@@ -88,7 +91,7 @@ export function makeMBVI4({ rng, params = {}, kind = 'MBVI4' }) {
       model.update(obs.node, action, next.node, reward, done);
       if (recall) {
         if (next.node !== obs.node) former.delete(key);                         // it works again: nothing to recall
-        else if (model.stats().changesDown > worse && held.outcomes.length) { former.set(key, held); recovery.remembered++; }
+        else if (model.stats().changesDown > worse && held.outcomes.length && mayRemember(key)) { former.set(key, held); recovery.remembered++; }
       }
       clock++;
       last.set(key, clock);
