@@ -66,7 +66,18 @@ first; a node is a place, not a cognitive function.
 
 ## Next exact engineering milestone
 
-**HOLD (owner's instruction, 2026-11-14): CF-05 is not to be designed, frozen or run until an independent
+**CF-05 preparation, in progress (2026-11-14).** The Gemini review was received, lodged and reconciled
+(`research/external/CF03C_CF04_GEMINI_REVIEW_RECONCILIATION.md`, commit `572c0a5`); the hold below is lifted by
+the owner's instruction to proceed. Done so far, commit `6bdd9e7`: Dyna-Q+ count-model baseline
+(`cognitive/baselines/`), two recovery candidates BONUS and DECAY (`cognitive/mind/v4/`), registry v5, tests
+(146/146). **Remaining, in order:** (1) the dev-domain grid on task E4, three settings each for Dyna-Q+, BONUS
+and DECAY, both arms (the script used is outside the repository; rerun it if its output is lost); (2) choose one
+setting per family by the same rule (lowest total steps over the CHANGE and SHAM arms); (3) write
+`experiments/cf05/GATE_SPEC.md` and `run_gate.mjs`; (4) **present the specification to the owner for review before
+freezing**; (5) freeze, run once on a new domain (`gate5`), record, independent verification. No candidate enters
+any agent path unless the gate shows a measurable improvement.
+
+*Superseded hold, kept for the record:* **HOLD (owner's instruction, 2026-11-14): CF-05 is not to be designed, frozen or run until an independent
 Gemini review of CF-03c and CF-04 has been received and considered.** The complete bundle for that review is
 `research/external/CF03C_CF04_GEMINI_REVIEW_BUNDLE.md` (cover and questions, statistical power, internal review,
 then the frozen specifications, results and source code verbatim with hashes). The owner relays it to Gemini and
