@@ -5,8 +5,8 @@
 //   node experiments/cf05b/run_gate.mjs --domain gate5b
 // Primary mechanism: RECALL (remember exits the model declared worse; let the planning belief drift back).
 // Two DIAGNOSTIC arms are told which edge the task manipulated (ground truth; privileged; reported only):
-//   RECALL_REALONLY   remembers only the manipulated edge        -> recovery from a real change, nothing else
-//   RECALL_FALSEONLY  remembers everything except that edge      -> repair of the change detector's false alarms only
+//   RECALL_REALONLY   remembers a declared change only if that edge is really blocked at that moment
+//   RECALL_FALSEONLY  remembers it only if it is not (a false alarm of the change detector)
 // ==========================================================
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -22,8 +22,8 @@ export const CONFIG = Object.freeze({
     RECALL: ['MBVI4_RECALL', { hazard: 0.01 }],
     RECALL_H003: ['MBVI4_RECALL', { hazard: 0.003 }],  // sensitivity (reported)
     RECALL_H03: ['MBVI4_RECALL', { hazard: 0.03 }],    // sensitivity (reported)
-    RECALL_REALONLY: ['MBVI4_RECALL', { hazard: 0.01 }, { diagnostic: 'recallOnly' }],
-    RECALL_FALSEONLY: ['MBVI4_RECALL', { hazard: 0.01 }, { diagnostic: 'recallExcept' }],
+    RECALL_REALONLY: ['MBVI4_RECALL', { hazard: 0.01 }, { diagnostic: 'real' }],
+    RECALL_FALSEONLY: ['MBVI4_RECALL', { hazard: 0.01 }, { diagnostic: 'false' }],
     DYNAQP: ['DYNAQP', { kappa: 0.001 }],
     DYNAQP_MATCHED: ['DYNAQP_MATCHED', { kappa: 0.001 }],
   }),

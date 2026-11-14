@@ -27,7 +27,7 @@ import { runE4B, E4B_ARMS } from '../../cognitive/testbed/task_e4b.mjs';
 import { E4_PARAMS } from '../../cognitive/testbed/task_e4.mjs';
 import { runTaskV1 } from '../../cognitive/testbed/tasks_v1.mjs';
 import { runE2P } from '../../cognitive/testbed/task_e2p.mjs';
-import { makeAgentForV5 } from '../../cognitive/testbed/registry_v5.mjs';
+import { armAgentFactory } from '../../cognitive/testbed/arms_v5.mjs';
 import { pairedBootstrap } from '../../cognitive/testbed/stats.mjs';
 import { runAllTests } from '../../cognitive/tests/run_all.mjs';
 import { runTestFiles } from '../../cognitive/tests/run_list.mjs';
@@ -44,7 +44,7 @@ const median = (xs) => { if (!xs.length) return null; const s = [...xs].sort((a,
 /**
  * config: { id, here, gateDomain, gateWorlds, primary, arms: { name: [kind, params, options?] }, r6: [names],
  *           large: { worlds, nodes, edges, exploreSteps, arms: [names] }, cleanPaths: [repo paths] }
- * An arm's options may hold { diagnostic: 'recallOnly' | 'recallExcept' }: such an arm is told the manipulated edge.
+ * An arm's options may hold { diagnostic: 'real' | 'false' }; see cognitive/testbed/arms_v5.mjs.
  */
 export async function runGate(config) {
   const ROOT = path.resolve(config.here, '..', '..');
@@ -69,11 +69,7 @@ export async function runGate(config) {
     if (fs.existsSync(OUT)) die(`the ${config.gateDomain} domain has already been run`);
   }
   const ARMS = config.arms;
-  const agentFor = (name) => (kind, env, label, params, context) => {
-    const [k, p, o] = ARMS[name];
-    const extra = o?.diagnostic && context ? { [o.diagnostic]: context.manipulatedPairs } : {};
-    return makeAgentForV5(k, env, label, { ...p, ...extra });
-  };
+  const agentFor = armAgentFactory(ARMS);   // the only route by which task ground truth can reach an agent
   const e4Row = (name, world, worldLabel, arm, exploreSteps) => ({ name, ...runE4B({ world, worldLabel, kind: ARMS[name][0], arm, makeAgent: agentFor(name), ...(exploreSteps ? { exploreSteps } : {}) }) });
 
   function matrix(domain) {

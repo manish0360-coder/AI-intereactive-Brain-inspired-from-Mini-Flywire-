@@ -66,7 +66,21 @@ first; a node is a place, not a cognitive function.
 
 ## Next exact engineering milestone
 
-**WAITING ON THE OWNER (2026-11-15): an outside review of two DRAFT specifications, before any freeze.**
+**IN PROGRESS (2026-11-15): executing the owner's eight decisions on the Gemini pre-freeze review.** Review lodged
+verbatim at `research/external/CF05_CF05B_GEMINI_REVIEW.md`. Done: (a) source discrepancy settled from the code:
+CF-05b is 40 worlds of 24 nodes / 30 edges, plus a non-gating 20 worlds of 48 nodes / 60 edges; CF-05 declared 60
+worlds; Gemini's "20/40 nodes" matches nothing in the code; `gate5`/`gate5b` never used. (b) Diagnostic arms
+audited and REPAIRED: they classified by edge, not by event (false alarms on the manipulated edge before the block
+counted as "real"), and a diagnostic arm missing its context silently became ordinary RECALL. Now
+`cognitive/testbed/arms_v5.mjs` is the only route for ground truth; each declared change is classified by whether
+the edge is blocked at that moment; missing context throws; 7 isolation/leakage tests; npm test 154/154.
+**Remaining, in order:** CF-05 closure record (`experiments/cf05/CLOSURE.md`; spec never frozen, do not run);
+add to `gate_lib.mjs` the U(p) = p·B − (1−p)·C curve with joint bootstrap and break-even p, the real/false
+decomposition with residual, 48-node memory/compute/convergence metrics and wall-clock outside the hashed rows, a
+refusal for closed gates, and a GATE_SPEC.sha256 check; correct and freeze the CF-05b spec; run `gate5b` once in
+the background; results; adversarial review; registry, decisions, roadmap.
+
+*Earlier note, kept for the record:* **WAITING ON THE OWNER (2026-11-15): an outside review of two DRAFT specifications, before any freeze.**
 The owner reviewed the first CF-05 draft and decided: two separate gates; recall's setting re-selected on new
 tuning worlds; a permanent-block task arm; diagnostic arms separating real recovery from false-alarm repair; a
 larger-world repetition; and a Gemini review of the drafts first.

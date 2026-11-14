@@ -13,6 +13,7 @@ import { GraphEnv } from '../testbed/env.mjs';
 import { generateWorld } from '../testbed/worlds.mjs';
 import { runE4 } from '../testbed/task_e4.mjs';
 import { runE4B, E4B_ARMS } from '../testbed/task_e4b.mjs';
+import { armAgentFactory, realChangeOf } from '../testbed/arms_v5.mjs';
 import { runTaskV1 } from '../testbed/tasks_v1.mjs';
 import { runE2P } from '../testbed/task_e2p.mjs';
 import { makeDynaQPlus, DYNAQP_DEFAULTS } from '../baselines/dynaq_plus.mjs';
@@ -157,7 +158,7 @@ export const tests = [
     const [a, b] = r.layout.sham;
     assert.deepEqual(seen.manipulatedPairs, [`${W.labelOf[a]}|${W.exitOrder[a].indexOf(b)}`, `${W.labelOf[b]}|${W.exitOrder[b].indexOf(a)}`]);
   }],
-  ['RECALL DIAGNOSTICS: recallOnly and recallExcept restrict which declared changes are remembered', () => {
+  ['RECALL DIAGNOSTICS (agent): recallIf decides which declared changes are remembered; true everywhere changes nothing', () => {
     const drive = (params) => {
       const agent = makeMBVI4({ rng: makeStream('cf|test|rec|diag'), params: { mode: 'RECALL', hazard: 0.02, ...params } });
       const a = O(1, 1), b = O(2, 1);
@@ -165,10 +166,76 @@ export const tests = [
       for (let i = 0; i < 6; i++) { agent.act(a); agent.observe(T(a, 0, 0, a)); }
       return agent.inspect().recovery.remembered;
     };
-    assert.equal(drive({}), 1, 'without a restriction the change is remembered');
-    assert.equal(drive({ recallOnly: ['1|0'] }), 1); assert.equal(drive({ recallOnly: ['9|9'] }), 0);
-    assert.equal(drive({ recallExcept: ['1|0'] }), 0); assert.equal(drive({ recallExcept: ['9|9'] }), 1);
-    assert.equal(drive({ recallOnly: [] }), 0, 'an empty allow-list remembers nothing');
+    assert.equal(drive({}), 1, 'without a predicate the change is remembered');
+    assert.equal(drive({ recallIf: (k) => k === '1|0' }), 1); assert.equal(drive({ recallIf: () => false }), 0);
+    assert.equal(drive({ recallIf: () => 1 }), 0, 'only a literal true admits a memory');
+    const plain = runE4B({ world: W, worldLabel: LABEL, kind: 'MBVI4_RECALL', arm: 'CHANGE', makeAgent: makeAgentForV5, params: { MBVI4_RECALL: { hazard: 0.01 } } });
+    const always = runE4B({ world: W, worldLabel: LABEL, kind: 'MBVI4_RECALL', arm: 'CHANGE', makeAgent: makeAgentForV5, params: { MBVI4_RECALL: { hazard: 0.01, recallIf: () => true } } });
+    assert.deepEqual(always, plain, 'the diagnostic machinery adds nothing but the filter');
+  }],
+  ['DIAGNOSTIC GROUND TRUTH: isBlocked() reports exactly whether the manipulated edge is blocked, at every step, in every arm', () => {
+    for (const arm of E4B_ARMS) {
+      const seen = { before: 0, during: 0, mismatches: 0 };
+      const spy = (kind, env, label, params, context) => {
+        const inner = makeAgentForV5(kind, env, label, params);
+        return { act(obs) { const truth = env.inspect().blocked.length > 0; if (context.isBlocked() !== truth) seen.mismatches++; if (truth) seen.during++; else seen.before++; return inner.act(obs); }, observe: (t) => inner.observe(t) };
+      };
+      runE4B({ world: W, worldLabel: LABEL, kind: 'MBVI3', arm, makeAgent: spy });
+      assert.equal(seen.mismatches, 0, arm); assert.ok(seen.before > 0 && seen.during > 0, `${arm}: both states occur`);
+    }
+    const ctx = { manipulatedPairs: ['3|1', '7|0'], isBlocked: () => flag }; let flag = false;
+    const real = realChangeOf(ctx);
+    assert.equal(real('3|1'), false, 'a declared change on the manipulated edge BEFORE the block is a false alarm');
+    flag = true; assert.equal(real('3|1'), true); assert.equal(real('7|0'), true); assert.equal(real('3|0'), false);
+    flag = false; assert.equal(real('7|0'), false, 'and AFTER the block is removed it is a false alarm again');
+    assert.throws(() => realChangeOf({ manipulatedPairs: ['1|0'] }));
+  }],
+  ['DIAGNOSTIC SPLIT: the real and false arms classify each declared change oppositely, and only diagnostic arms see ground truth', () => {
+    const ctx = { manipulatedPairs: ['1|0'], isBlocked: () => true };
+    const captured = {};
+    const arms = { RECALL: ['MBVI4_RECALL', { hazard: 0.01 }], REAL: ['MBVI4_RECALL', { hazard: 0.01 }, { diagnostic: 'real' }], FALSE: ['MBVI4_RECALL', { hazard: 0.01 }, { diagnostic: 'false' }] };
+    const factory = armAgentFactory(arms);
+    const env = new GraphEnv(W, { seedLabel: 'cf|test|rec|split' });
+    for (const name of Object.keys(arms)) {
+      const agent = factory(name)('IGNORED', env, 'cf|test|rec|split|agent', { hazard: 99, recallIf: () => false }, ctx);
+      captured[name] = agent;
+    }
+    // drive all three identically on a synthetic sequence that makes exit 0 of node 1 fail after working
+    const a = O(1, 1), b = O(2, 1);
+    for (const ag of Object.values(captured)) {
+      for (let i = 0; i < 30; i++) { ag.act(a); ag.observe(T(a, 0, 0, b)); ag.act(b); ag.observe(T(b, 0, 0, a)); }
+      for (let i = 0; i < 6; i++) { ag.act(a); ag.observe(T(a, 0, 0, a)); }
+    }
+    assert.equal(captured.RECALL.inspect().recovery.remembered, 1, 'the ordinary arm ignores the caller-supplied recallIf and remembers');
+    assert.equal(captured.REAL.inspect().recovery.remembered, 1, 'a real change is remembered by the real arm');
+    assert.equal(captured.FALSE.inspect().recovery.remembered, 0, 'and not by the false arm');
+    assert.throws(() => factory('REAL')('X', env, 'l', {}, undefined), /needs the task context/);
+    assert.throws(() => armAgentFactory({ X: ['MBVI4_RECALL', {}, { diagnostic: 'nope' }] })('X')('X', env, 'l', {}, ctx));
+  }],
+  ['LEAKAGE: an ordinary RECALL arm behaves identically whatever ground truth the task offers it', () => {
+    const factory = armAgentFactory({ RECALL: ['MBVI4_RECALL', { hazard: 0.01 }] })('RECALL');
+    const forged = (kind, env, label, params) => factory(kind, env, label, params, Object.freeze({ manipulatedPairs: Object.freeze([]), isBlocked: () => true }));
+    for (const arm of E4B_ARMS) {
+      const honest = runE4B({ world: W, worldLabel: LABEL, kind: 'MBVI4_RECALL', arm, makeAgent: factory });
+      const lied = runE4B({ world: W, worldLabel: LABEL, kind: 'MBVI4_RECALL', arm, makeAgent: forged });
+      const none = runE4B({ world: W, worldLabel: LABEL, kind: 'MBVI4_RECALL', arm, makeAgent: (k, e, l) => makeAgentForV5('MBVI4_RECALL', e, l, { hazard: 0.01 }) });
+      assert.deepEqual(lied, honest, arm); assert.deepEqual(none, honest, arm);
+    }
+    for (const f of ['mind/v4/agent.mjs', 'mind/v4/planner.mjs', 'mind/v3/world_model.mjs', 'baselines/dynaq_plus.mjs']) {
+      const code = fs.readFileSync(path.resolve(HERE, '..', f), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/.*$/gm, '$1');
+      assert.ok(!/manipulated|isBlocked|realChange|arms_v5|task_e4/.test(code), `${f} must not reference task ground truth in code`);
+    }
+  }],
+  ['EQUIVALENT CONDITIONS: every arm in a world gets the same environment seed, agent seed label, layout and reliabilities', () => {
+    const labels = new Set(), layouts = new Set();
+    const spy = (kind, env, label, params) => { labels.add(label); return makeAgentForV5(kind, env, label, params); };
+    for (const kind of ['MBVI3', 'MBVI4_RECALL', 'DYNAQP', 'DYNAQP_MATCHED', 'ORACLE']) for (const arm of E4B_ARMS) {
+      const r = runE4B({ world: W, worldLabel: LABEL, kind, arm, makeAgent: spy });
+      layouts.add(JSON.stringify(r.layout));
+    }
+    assert.equal(labels.size, 1); assert.equal(layouts.size, 1);
+    const cmp = (kind) => runE4B({ world: W, worldLabel: LABEL, kind, arm: 'CHANGE', makeAgent: makeAgentForV5 }).windows.stable;
+    assert.equal(cmp('MBVI3'), cmp('MBVI4_RECALL'), 'before any change, RECALL and the planner are the same agent on the same world');
   }],
   ['DEFAULTS: both candidates default to mode NONE, so nothing changes unless a mode is asked for', () => {
     assert.equal(MBVI4_DEFAULTS.mode, 'NONE');

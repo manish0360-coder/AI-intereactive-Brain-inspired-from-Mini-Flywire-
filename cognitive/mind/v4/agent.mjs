@@ -47,9 +47,9 @@ export function makeMBVI4({ rng, params = {}, kind = 'MBVI4' }) {
   let cue, clock = 0;
   const compute = { decisions: 0, sweeps: 0, backups: 0, budgetHits: 0 };
   const recovery = { chosen: 0, tauSum: 0, remembered: 0 };
-  // DIAGNOSTIC switches, used only by arms that are told which change was real (ground truth, so such arms are
-  // privileged and are never learner arms): remember only the listed pairs, or every pair except the listed ones.
-  const mayRemember = (key) => (!P.recallOnly || P.recallOnly.includes(key)) && !(P.recallExcept && P.recallExcept.includes(key));
+  // DIAGNOSTIC switch: params.recallIf(key) -> bool, supplied only by cognitive/testbed/arms_v5.mjs to privileged
+  // diagnostic arms.  An ordinary agent has no recallIf and remembers every declared-worse exit.
+  const mayRemember = (key) => !P.recallIf || P.recallIf(key) === true;
   const tauOf = (s, a) => { const t = last.get(`${s}|${a}`); return t === undefined ? null : clock - t; };
   const bonusOf = P.mode === 'BONUS' ? (s, a) => { const tau = tauOf(s, a); return tau === null ? 0 : P.kappa * Math.sqrt(tau); } : undefined;
   const predictOf = P.mode === 'DECAY' ? (s, a) => {
@@ -99,7 +99,7 @@ export function makeMBVI4({ rng, params = {}, kind = 'MBVI4' }) {
     inspect() {
       return {
         compute: { ...compute, backupsPerDecision: compute.decisions ? compute.backups / compute.decisions : 0, sweepsPerDecision: compute.decisions ? compute.sweeps / compute.decisions : 0, budgetHitShare: compute.decisions ? compute.budgetHits / compute.decisions : 0, budget: P.budget },
-        recovery: { mode: P.mode, meanTauOfChosen: recovery.chosen ? recovery.tauSum / recovery.chosen : null, remembered: recovery.remembered, remembering: former.size },
+        recovery: { mode: P.mode, meanTauOfChosen: recovery.chosen ? recovery.tauSum / recovery.chosen : null, remembered: recovery.remembered, remembering: former.size, triedPairs: last.size },
         model: { states: model.states().size, ...model.stats(), ...model.hyper() },
       };
     },
