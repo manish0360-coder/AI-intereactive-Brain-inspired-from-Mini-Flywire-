@@ -99,6 +99,37 @@ export const tests = [
     agent.act(a); none.act(a);
     assert.ok(agent._V.get(1) > none._V.get(1), 'decay makes the abandoned state worth more than the frozen belief does');
   }],
+  ['RECALL: an exit declared worse is remembered; only such exits drift back; the memory is dropped when it moves again', () => {
+    const agent = makeMBVI4({ rng: makeStream('cf|test|rec|recall'), params: { mode: 'RECALL', hazard: 0.02 } });
+    const a = O(1, 2), b = O(2, 1), c = O(3, 1);
+    // exit 0 from node 1 works 30 times (to node 2); exit 1 from node 1 never works
+    for (let i = 0; i < 30; i++) { agent.act(a); agent.observe(T(a, 0, 0, b)); agent.act(b); agent.observe(T(b, 0, 0, a)); }
+    for (let i = 0; i < 6; i++) { agent.act(a); agent.observe(T(a, 1, 0, a)); }
+    assert.equal(agent.inspect().recovery.remembered, 0, 'an exit that never worked is not remembered');
+    // now exit 0 stops working
+    let k = 0;
+    while (agent.inspect().recovery.remembered === 0 && k < 10) { agent.act(a); agent.observe(T(a, 0, 0, a)); k++; }
+    assert.ok(k >= 1 && k <= 4, `declared worse and remembered after ${k} failures`);
+    assert.equal(agent.inspect().recovery.remembering, 1);
+    const model = agent._model;
+    assert.ok(model.predict(1, 0).self > 0.5, 'the model now believes the exit is bad');
+    // time passes elsewhere; the planning value of node 1 rises because exit 0 may work again, exit 1 gets nothing
+    agent.act(a); const before = agent._V.get(1);
+    for (let i = 0; i < 150; i++) { agent.act(b); agent.observe(T(b, 0, 0, c)); agent.act(c); agent.observe(T(c, 0, 0, b)); }
+    agent.act(O(1, 2, 2));                                   // goal cue 2: reachable only through exit 0
+    const hopeful = agent._V.get(1);
+    const none = makeMBVI4({ rng: makeStream('cf|test|rec|recall'), params: { mode: 'NONE' } });
+    for (let i = 0; i < 30; i++) { none.act(a); none.observe(T(a, 0, 0, b)); none.act(b); none.observe(T(b, 0, 0, a)); }
+    for (let i = 0; i < 6; i++) { none.act(a); none.observe(T(a, 1, 0, a)); }
+    for (let i = 0; i < k; i++) { none.act(a); none.observe(T(a, 0, 0, a)); }
+    for (let i = 0; i < 150; i++) { none.act(b); none.observe(T(b, 0, 0, c)); none.act(c); none.observe(T(c, 0, 0, b)); }
+    none.act(O(1, 2, 2));
+    assert.ok(hopeful > none._V.get(1) + 0.2, `recall values the way back to the goal (${hopeful}) above the frozen belief (${none._V.get(1)})`);
+    assert.ok(before !== undefined);
+    // the exit works again: the memory is dropped
+    agent.act(a); agent.observe(T(a, 0, 0, b));
+    assert.equal(agent.inspect().recovery.remembering, 0);
+  }],
   ['DEFAULTS: both candidates default to mode NONE, so nothing changes unless a mode is asked for', () => {
     assert.equal(MBVI4_DEFAULTS.mode, 'NONE');
     assert.equal(makeMBVI4({ rng: makeStream('x') }).inspect().recovery.mode, 'NONE');

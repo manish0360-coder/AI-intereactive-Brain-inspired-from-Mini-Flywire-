@@ -19,6 +19,13 @@
 //          A dead exit therefore regains some probability of moving, to an unknown place valued optimistically,
 //          and is re-tested when that beats the route in use.  The model's own counts are not modified.
 //
+//   RECALL targeted, not blanket.  When the model declares that an exit GOT WORSE, the agent keeps the belief it
+//          held about that exit just before (where it led, how reliably).  Only for such exits, the planning
+//          belief drifts back toward the remembered one:  (1 - w) * current + w * remembered, with the same
+//          w = 1 - (1 - hazard)^tau.  Exits that never worked, and exits still in use, are untouched, so the
+//          agent re-tests what is worth re-testing instead of everything.  The memory is dropped when the exit
+//          moves again.
+//
 //   NONE   neither (must reproduce MBVI3; asserted by tests).
 //
 // inspect().recovery reports the mode and the mean tau of the pairs the agent chose (how stale its choices were).
@@ -32,13 +39,14 @@ const UNTRIED = '__untried__';   // a key no observation can produce: the model'
 
 export function makeMBVI4({ rng, params = {}, kind = 'MBVI4' }) {
   const P = { ...MBVI4_DEFAULTS, ...params };
-  if (!['NONE', 'BONUS', 'DECAY'].includes(P.mode)) throw new Error(`unknown recovery mode ${P.mode}`);
+  if (!['NONE', 'BONUS', 'DECAY', 'RECALL'].includes(P.mode)) throw new Error(`unknown recovery mode ${P.mode}`);
   const model = makeWorldModel3(P);
   const V = new Map();
   const last = new Map();                    // `${s}|${a}` -> clock value when the pair was last tried
+  const former = new Map();                  // RECALL: `${s}|${a}` -> the prediction held just before the exit was declared worse
   let cue, clock = 0;
   const compute = { decisions: 0, sweeps: 0, backups: 0, budgetHits: 0 };
-  const recovery = { chosen: 0, tauSum: 0 };
+  const recovery = { chosen: 0, tauSum: 0, remembered: 0 };
   const tauOf = (s, a) => { const t = last.get(`${s}|${a}`); return t === undefined ? null : clock - t; };
   const bonusOf = P.mode === 'BONUS' ? (s, a) => { const tau = tauOf(s, a); return tau === null ? 0 : P.kappa * Math.sqrt(tau); } : undefined;
   const predictOf = P.mode === 'DECAY' ? (s, a) => {
@@ -46,6 +54,12 @@ export function makeMBVI4({ rng, params = {}, kind = 'MBVI4' }) {
     if (tau === null || tau === 0) return p;
     const w = 1 - (1 - P.hazard) ** tau, q = model.predict(UNTRIED, 0);
     return { self: (1 - w) * p.self + w * q.self, outcomes: p.outcomes.map(([lab, x]) => [lab, (1 - w) * x]), unknown: (1 - w) * p.unknown + w * q.unknown, N: p.N };
+  } : P.mode === 'RECALL' ? (s, a) => {
+    const p = model.predict(s, a), f = former.get(`${s}|${a}`), tau = tauOf(s, a);
+    if (!f || tau === null || tau === 0) return p;
+    const w = 1 - (1 - P.hazard) ** tau, merged = new Map(p.outcomes.map(([lab, x]) => [lab, (1 - w) * x]));
+    for (const [lab, x] of f.outcomes) merged.set(lab, (merged.get(lab) ?? 0) + w * x);
+    return { self: (1 - w) * p.self + w * f.self, outcomes: [...merged], unknown: (1 - w) * p.unknown + w * f.unknown, N: p.N };
   } : undefined;
   const planOpts = () => ({
     gamma: P.gamma, vOpt: P.vOpt, predictOf, bonusOf,
@@ -68,14 +82,21 @@ export function makeMBVI4({ rng, params = {}, kind = 'MBVI4' }) {
     observe(tr) {
       const { obs, action, reward, next, done } = tr;
       model.visit(next.node, next.nActions);
+      const key = `${obs.node}|${action}`;
+      const recall = P.mode === 'RECALL';
+      const held = recall ? model.predict(obs.node, action) : null, worse = recall ? model.stats().changesDown : 0;
       model.update(obs.node, action, next.node, reward, done);
+      if (recall) {
+        if (next.node !== obs.node) former.delete(key);                         // it works again: nothing to recall
+        else if (model.stats().changesDown > worse && held.outcomes.length) { former.set(key, held); recovery.remembered++; }
+      }
       clock++;
-      last.set(`${obs.node}|${action}`, clock);
+      last.set(key, clock);
     },
     inspect() {
       return {
         compute: { ...compute, backupsPerDecision: compute.decisions ? compute.backups / compute.decisions : 0, sweepsPerDecision: compute.decisions ? compute.sweeps / compute.decisions : 0, budgetHitShare: compute.decisions ? compute.budgetHits / compute.decisions : 0, budget: P.budget },
-        recovery: { mode: P.mode, meanTauOfChosen: recovery.chosen ? recovery.tauSum / recovery.chosen : null },
+        recovery: { mode: P.mode, meanTauOfChosen: recovery.chosen ? recovery.tauSum / recovery.chosen : null, remembered: recovery.remembered, remembering: former.size },
         model: { states: model.states().size, ...model.stats(), ...model.hyper() },
       };
     },

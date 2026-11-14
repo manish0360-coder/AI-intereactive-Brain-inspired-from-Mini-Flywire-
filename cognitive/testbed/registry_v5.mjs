@@ -19,6 +19,7 @@ export const MBVI4_VARIANTS = Object.freeze({
   MBVI4_NONE: Object.freeze({ mode: 'NONE' }),     // must reproduce MBVI3
   MBVI4_BONUS: Object.freeze({ mode: 'BONUS' }),
   MBVI4_DECAY: Object.freeze({ mode: 'DECAY' }),
+  MBVI4_RECALL: Object.freeze({ mode: 'RECALL' }),   // drift back only for exits that were declared worse
 });
 export const BASELINE_FILES = Object.freeze(['dynaq_plus.mjs']);
 export const BASELINE_ALLOWED = Object.freeze(['../testbed/agent_util.mjs']);
