@@ -13,7 +13,7 @@ work stands. Document index: [`docs/README.md`](../README.md).
 |---|---|
 | GitHub `main` | `0a5ef40` (pushed 2026-11-12), with 25 annotated tags |
 | Local `main` | Ahead of GitHub by the CF-03b commits and the documentation commit. **Not pushed** |
-| Tests | `npm test` 136/136; legacy gate `experiments/phase1_0/verify_S2.js` 14/14 |
+| Tests | `npm test` 150/150; legacy gate `experiments/phase1_0/verify_S2.js` 14/14 |
 | Push rule | No push without the owner's explicit word |
 
 ## Done in this programme
@@ -66,7 +66,26 @@ first; a node is a place, not a cognitive function.
 
 ## Next exact engineering milestone
 
-**WAITING ON THE OWNER (2026-11-14): CF-05 specification is a DRAFT for review, commit `907232f`.** File:
+**WAITING ON THE OWNER (2026-11-15): an outside review of two DRAFT specifications, before any freeze.**
+The owner reviewed the first CF-05 draft and decided: two separate gates; recall's setting re-selected on new
+tuning worlds; a permanent-block task arm; diagnostic arms separating real recovery from false-alarm repair; a
+larger-world repetition; and a Gemini review of the drafts first.
+
+- **CF-05** (`experiments/cf05/GATE_SPEC.md`, revision 2): the exploration bonus, with the Dyna-Q+ baseline, 60
+  worlds, domain `gate5`. Its own dev data predict a null; expected verdict NOT SUPPORTED.
+- **CF-05b** (`experiments/cf05b/GATE_SPEC.md`): targeted recall, 40 worlds, domain `gate5b`, to run after CF-05
+  is recorded. Setting chosen on `cf|tune5b|world|0…19` (now spent). Tuning result: −18.6 steps after the block is
+  removed [−27.1, −10.4] and +8.2 when the block is permanent [5.7, 10.8]; expected verdict SUPPORTED AT A COST.
+- **Bundle for Gemini:** `research/external/CF05_CF05B_GEMINI_PREFREEZE_REVIEW_BUNDLE.md` (cover with sixteen
+  questions, then both drafts, the shared driver, the candidates, the baseline, the task, the model and the CF-04
+  record, verbatim with hashes). The owner relays it and brings the reply back.
+- **When the reply arrives:** reconcile it against the drafts and source (as was done for the first review), revise
+  the drafts, present them to the owner, and only on approval change each status line to start
+  `**Status.** Frozen`, commit, and run (`node experiments/cf05/run_gate.mjs --domain gate5`, in the background;
+  then `cf05b`). Both drivers refuse to run until then. Nothing enters the agent without a passed gate and
+  independent verification. npm test 150/150.
+
+*Earlier note, kept for the record:* **WAITING ON THE OWNER (2026-11-14): CF-05 specification is a DRAFT for review, commit `907232f`.** File:
 `experiments/cf05/GATE_SPEC.md`. Dev findings: the exploration bonus (BONUS) and blanket belief decay (DECAY) do
 not recover the route and harm at stronger settings; Dyna-Q+ is worse than the planner at every setting; a third,
 targeted candidate RECALL (remember exits declared worse, drift back toward the remembered belief) gives −12.4
