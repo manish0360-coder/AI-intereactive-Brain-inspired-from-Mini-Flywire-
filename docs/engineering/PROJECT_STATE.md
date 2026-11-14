@@ -66,7 +66,17 @@ first; a node is a place, not a cognitive function.
 
 ## Next exact engineering milestone
 
-**CF-05 preparation, in progress (2026-11-14).** The Gemini review was received, lodged and reconciled
+**WAITING ON THE OWNER (2026-11-14): CF-05 specification is a DRAFT for review, commit `907232f`.** File:
+`experiments/cf05/GATE_SPEC.md`. Dev findings: the exploration bonus (BONUS) and blanket belief decay (DECAY) do
+not recover the route and harm at stronger settings; Dyna-Q+ is worse than the planner at every setting; a third,
+targeted candidate RECALL (remember exits declared worse, drift back toward the remembered belief) gives −12.4
+steps after the block is removed [−23.4, −2.5] on dev, selected among three settings so optimistic. **To freeze
+after approval:** change the specification's status line to start `**Status.** Frozen`, commit, then
+`node experiments/cf05/run_gate.mjs --domain gate5` (60 worlds, about 45 minutes; run it in the background), record
+`results/RESULTS.md`, then the independent verification listed in the specification. Nothing enters the agent
+before that. npm test 147/147.
+
+*Earlier progress note, kept for the record:* **CF-05 preparation, in progress (2026-11-14).** The Gemini review was received, lodged and reconciled
 (`research/external/CF03C_CF04_GEMINI_REVIEW_RECONCILIATION.md`, commit `572c0a5`); the hold below is lifted by
 the owner's instruction to proceed. Done so far, commit `6bdd9e7`: Dyna-Q+ count-model baseline
 (`cognitive/baselines/`), two recovery candidates BONUS and DECAY (`cognitive/mind/v4/`), registry v5, tests
