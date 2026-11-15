@@ -155,6 +155,59 @@ convergence is unaffected: about 24 sweeps per decision at both sizes, and the b
 - A distinction between "episodic recall" and "latent state": the same computation here.
 - Anything confirmatory: one development gate, by the designer, no independent reproduction.
 
+## Amendment after adversarial review (2026-11-15)
+
+The text above is left as first written. An adversarial review ([ADVERSARIAL_REVIEW.md](ADVERSARIAL_REVIEW.md))
+found every number correct and the verdict correctly derived, and found the following statements stronger than the
+evidence. Each was checked against the recorded rows. These corrections govern how the record may be cited.
+
+1. **Utility, corrected reading.** The pointwise 95% interval for U(p) excludes zero only for p ≥ 0.55
+   (U(0.50) = 3.2 [−0.2, 6.8]; U(0.55) [0.8, 8.0]) and is entirely negative only for p ≤ 0.10 (U(0.15) [−8.2, 0.1]).
+   Correct reading: **RECALL helps, at 95%, where more than about half of changes reverse; it costs where fewer than
+   about a tenth do; between, the evidence does not decide. Point break-even 0.35.** The sentence "is worth having
+   where more than about a third of changes reverse, is not where fewer than about a sixth do" is withdrawn.
+2. **The effects do not add up.** "The residuals are near zero: the two effects add up" is withdrawn. The phase-D
+   residual (+1.1; 44 world-steps, of which 39 come from world 14) exceeds the false-alarm effect (+0.9). In world 14
+   RECALL saves 46 steps, REALONLY 0 and FALSEONLY 7: RECALL already behaves differently from the planner during
+   training there (and in worlds 33 and 39), so its later memory of the real change acts on a different path. The
+   real and false-alarm parts interact; "a small, separate effect" is withdrawn.
+3. **Share from real changes: about 89%, not 95%.** REALONLY's effect is 89% of RECALL's own (16.8 of 18.8); the 95%
+   in the decomposition table is REALONLY / (REALONLY + FALSEONLY). "The benefit comes from real reversed changes, not
+   from repairing the change detector" is replaced by: **mostly recovery from real reversals (about 89%), with an
+   interaction the diagnostic arms cannot split cleanly; the rule-fixed label "combination of both" stands.**
+4. **The false-alarm lower bound of 0.025 reflects sparse data.** FALSEONLY differs from the planner on phase D in
+   only 4 of 40 worlds (3, 5, 14, 33), all positive; a bootstrap resample omits all four with probability
+   0.9^40 = 1.5%, below 2.5%, so the lower bound is positive whatever their size. The same holds for RECALL's SHAM
+   interval. The rule was applied as frozen.
+5. **Computational cost.** "At a 4% computational cost" is replaced by: **4% more value-iteration backups and 54%
+   more wall-clock** (139 s → 214 s). The explanation given (recomputing the mixture belief) was not tested. The
+   timings do not depend on how much is remembered (FALSEONLY 213.5 s with 0.4 memories per run, RECALL 214.4 s with
+   1.4, REALONLY 215.6 s with 0.9), which points to a per-backup overhead of the prototype's planning hook rather
+   than to the mechanism. Run B's absolute times are about half of run A's; the ratio is stable at about 1.55.
+6. **48 nodes.** "Both benefit and cost roughly double, as the routes do" is withdrawn: the reference's phase D grows
+   only 5% (79.9 → 84.2 steps) and its SHAM total 7%. What roughly doubles is the planner's gap to the reference
+   (28.3 → 43.5). "Same break-even" means similar point estimates (0.35 and 0.34) with wide intervals. The
+   "still held at the end" entry for 48 nodes is 0.2 (CHANGE) and 1.05 (PERMANENT), not "—".
+7. **Dyna-Q+.** "Does not recover the route in fewer steps than the planner" is replaced by "not reliably fewer"
+   (−6.2 [−13.3, 0.3] at 20 updates).
+8. **Two intervals for the same contrast.** R1 appears as [12.6, 25.1] (criteria) and [12.8, 25.4] (decomposition);
+   R4 as [2.3, 12.1] and [2.4, 12.0]. They come from separate seeded bootstrap streams. The criteria table is the one
+   the verdict used; R4 fails under either.
+9. **Not every world in R1 is recovery from a reversal.** In world 3 a false alarm before the block takes every agent
+   off the route, so CHANGE and SHAM rows coincide there, and RECALL's 21 steps are false-alarm repair. RECALL already
+   differs from the planner before the change in 3 of 40 worlds (14, 33, 39).
+10. **Units.** "Reopened exit crossed in D (of 15)" counts crossings of the exit, not episodes.
+11. **Provenance.** The result file records HEAD at the end of the run only. That the run launched at `104dd9b` is
+    inferred from the specification hash, the clean-tree check and the diff to `20630c6`; it was not recorded at
+    launch. The pre-run refusal checks were observed in the session and are not lodged as a log.
+12. **Omitted from the record, now added from the JSON.** Tries of the manipulated edge in phase D (CHANGE): ORACLE
+    20.5, MBVI3 0.3, RECALL 9.5, REALONLY 8.7, FALSEONLY 0.6, Dyna-Q+ 15.0 and 9.3. Changes declared worse per run
+    (CHANGE): MBVI3 1.32, RECALL 1.40. Medians were not computed for the decomposition and utility tables, and
+    per-world counts were not computed for R5.
+13. **Selection context.** At hazard 0.003 RECALL passes R4 (+1.3, upper bound 3.4) with a phase-D benefit of 9.8
+    [5.5, 14.4]. R4's failure belongs to the selected setting, not to targeted recall as such. On `gate5b` the
+    selection rule would still have chosen 0.01 (sum of the three arms 599.5, against 601.7 and 626.6).
+
 ## Next question (recorded; not started)
 
 RECALL fixes its willingness to re-test (hazard 0.01) in advance, so it pays the permanent-change cost whatever the

@@ -205,16 +205,17 @@ test of arbitration in general.
 
 - **Evidence.** CF-05b, SUPPORTED AT A COST ([results](../../experiments/cf05b/results/RESULTS.md)): 18.8 fewer
   steps after the block is removed [12.6, 25.1], two-thirds of the gap to the reference closed; 7.7 more when the
-  change is permanent [2.3, 12.1], failing R4. Real reversed changes carry 95% of the benefit; false-alarm repair is
-  a small separate effect (0.9 steps, 4 of 40 worlds). Break-even reversal probability 0.35 [0.16, 0.51]. Same
-  sign and break-even at 48 nodes (non-gating).
+  change is permanent [2.3, 12.1], failing R4. Mostly recovery from real reversals (about 89% of the effect), with
+  an interaction the diagnostic arms cannot split cleanly (corrected after adversarial review, 2026-11-15). Point
+  break-even reversal probability 0.35 [0.16, 0.51]; at 95% RECALL helps only where more than about half of changes
+  reverse and costs where fewer than about a tenth do. Same sign at 48 nodes (non-gating).
 - **Decision (owner's Decision 7, and the specification's consequence for this verdict).** RECALL stays a research
   prototype in `cognitive/mind/v4/`. It is not integrated into the agent.
 - **What the mechanism is (Decision 7, analysed).** Of the four candidates the owner listed:
 
   | Candidate | Verdict on the evidence |
   |---|---|
-  | Change-detector false-alarm correction | **Minor component only.** The FALSEONLY arm carries 0.9 of 18.8 steps on recovery, but all of RECALL's small advantage when nothing relevant changed (SHAM) |
+  | Change-detector false-alarm correction | **Minor component, not separable.** The FALSEONLY arm carries 0.9 of 18.8 steps on recovery (4 of 40 worlds) and all of RECALL's small advantage when nothing relevant changed (SHAM); the two parts interact (world 14) |
   | Genuine episodic recall | **The same computation as the next row.** RECALL stores one earlier belief per exit, retrieved by the exit's identity; there is no episode, no cue-based retrieval, no sequence |
   | A latent environmental-state model | **The accurate description.** RECALL is the prediction step of a two-regime hidden state per exit ("as now", "as before the change") with a fixed switching rate h: after τ steps unobserved, P(switched back) = 1 − (1 − h)^τ, which is exactly its mixing weight. It omits the Bayesian update of the regime belief and replaces it with a hard reset when the exit moves |
   | A combination | Latent state for real reversals plus a small false-alarm repair, by the pre-fixed rule |

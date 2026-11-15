@@ -68,10 +68,10 @@ first; a node is a place, not a cognitive function.
 
 **DONE (2026-11-15): CF-05 closed; CF-05b run once and recorded.** CF-05b verdict **SUPPORTED AT A COST (R4)**,
 results `55048a2`: +18.8 steps after the block is removed [12.6, 25.1]; +7.7 when the change is permanent
-[2.3, 12.1]; real reversals carry 95% of the benefit; break-even reversal probability 0.35 [0.16, 0.51]; 48-node
-repetition (non-gating) same sign and break-even. RECALL is NOT adopted (AD-12). An adversarial review of the record
-was launched after the run; its findings and the response are recorded in `experiments/cf05b/results/RESULTS.md` by
-dated amendment if any correction is needed.
+[2.3, 12.1]; mostly recovery from real reversals (about 89%, with interaction); point break-even reversal probability
+0.35 [0.16, 0.51], helps at 95% only where more than about half of changes reverse; 48-node repetition (non-gating)
+same sign. RECALL is NOT adopted (AD-12). Adversarial review done: record SOUND WITH CORRECTIONS, 13 findings, all
+accepted, applied by dated amendment (`experiments/cf05b/results/ADVERSARIAL_REVIEW.md`).
 
 **Next exact milestone: CF-06, learning how often changes reverse** (roadmap; hypothesis H-VOL). First build and
 admit a task with several changes per run and a reversal rate set per world family; the mechanism lives inside the
