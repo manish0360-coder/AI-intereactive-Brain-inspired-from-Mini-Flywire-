@@ -188,6 +188,50 @@ test of arbitration in general.
    baseline, the cost of exploration measured in unchanged environments, and no addition to the agent unless the
    experiment shows a measurable improvement.
 
+## Recovery after a reversed change (2026-11-15)
+
+### AD-11 — Blanket re-testing is not the way to recover a reopened route (CF-05 closed)
+
+- **Evidence.** CF-05 was closed without a gate run by the owner's decision, as a documented development-level
+  negative finding ([closure record](../../experiments/cf05/CLOSURE.md)). On the development worlds, an exploration
+  bonus κ√τ inside value iteration and a blanket decay of every belief toward the untried-pair belief recovered
+  nothing measurable at their best settings and cost far more at stronger ones; Dyna-Q+ with a count model was
+  worse than the planner at every setting. CF-05b later confirmed the Dyna-Q+ result on fresh worlds.
+- **Decision.** No blanket exploration bonus or blanket forgetting enters the agent. Implementations are kept for
+  research.
+- **Not shown.** That no bonus could work: only κ√τ was tried.
+
+### AD-12 — RECALL is not adopted; what it is, and the principled replacement to test
+
+- **Evidence.** CF-05b, SUPPORTED AT A COST ([results](../../experiments/cf05b/results/RESULTS.md)): 18.8 fewer
+  steps after the block is removed [12.6, 25.1], two-thirds of the gap to the reference closed; 7.7 more when the
+  change is permanent [2.3, 12.1], failing R4. Real reversed changes carry 95% of the benefit; false-alarm repair is
+  a small separate effect (0.9 steps, 4 of 40 worlds). Break-even reversal probability 0.35 [0.16, 0.51]. Same
+  sign and break-even at 48 nodes (non-gating).
+- **Decision (owner's Decision 7, and the specification's consequence for this verdict).** RECALL stays a research
+  prototype in `cognitive/mind/v4/`. It is not integrated into the agent.
+- **What the mechanism is (Decision 7, analysed).** Of the four candidates the owner listed:
+
+  | Candidate | Verdict on the evidence |
+  |---|---|
+  | Change-detector false-alarm correction | **Minor component only.** The FALSEONLY arm carries 0.9 of 18.8 steps on recovery, but all of RECALL's small advantage when nothing relevant changed (SHAM) |
+  | Genuine episodic recall | **The same computation as the next row.** RECALL stores one earlier belief per exit, retrieved by the exit's identity; there is no episode, no cue-based retrieval, no sequence |
+  | A latent environmental-state model | **The accurate description.** RECALL is the prediction step of a two-regime hidden state per exit ("as now", "as before the change") with a fixed switching rate h: after τ steps unobserved, P(switched back) = 1 − (1 − h)^τ, which is exactly its mixing weight. It omits the Bayesian update of the regime belief and replaces it with a hard reset when the exit moves |
+  | A combination | Latent state for real reversals plus a small false-alarm repair, by the pre-fixed rule |
+
+- **Why a principled model should replace the patch.** RECALL's fixed h is a decision about how often changes
+  reverse, made in advance. CF-05b's utility curve shows that the right value depends on the world: helpful above
+  p ≈ 0.35, harmful below. A world model that keeps the earlier regime of an exit **inside the model** and **learns
+  the switching rate from its own experience** (pooled across exits, as v3 already pools move rates) would re-test
+  where changes tend to reverse and stop where they do not. That removes the policy choice of p from the designer and
+  is a genuine adaptive capability: learning the volatility structure of the environment.
+- **What it needs before it can be tested.** A task with several changes per run, some reversing and some not, at a
+  reversal rate set per world family. In E4B there is one change per run, so a reversal rate cannot be learned
+  within a run. Proposed as CF-06 (roadmap). Not started.
+- **Weak point.** The false-alarm component means v3's change detector sometimes discards good counts (SHAM arm,
+  4 of 40 worlds). A model that keeps the earlier regime fixes that too, as a side effect; the detector itself is not
+  changed.
+
 ## Weak points the author already knows
 
 1. **The whole programme runs on small, mostly deterministic graphs.** A result here says little about larger or

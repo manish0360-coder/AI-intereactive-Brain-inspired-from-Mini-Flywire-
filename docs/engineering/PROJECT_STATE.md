@@ -13,7 +13,7 @@ work stands. Document index: [`docs/README.md`](../README.md).
 |---|---|
 | GitHub `main` | `0a5ef40` (pushed 2026-11-12), with 25 annotated tags |
 | Local `main` | Ahead of GitHub by the CF-03b commits and the documentation commit. **Not pushed** |
-| Tests | `npm test` 150/150; legacy gate `experiments/phase1_0/verify_S2.js` 14/14 |
+| Tests | `npm test` 155/155; legacy gate `experiments/phase1_0/verify_S2.js` 14/14 |
 | Push rule | No push without the owner's explicit word |
 
 ## Done in this programme
@@ -66,7 +66,21 @@ first; a node is a place, not a cognitive function.
 
 ## Next exact engineering milestone
 
-**GATE RUNNING (2026-11-15): CF-05b was frozen at `104dd9b` (spec SHA-256 `154dd7f7…4c00`) and launched once on
+**DONE (2026-11-15): CF-05 closed; CF-05b run once and recorded.** CF-05b verdict **SUPPORTED AT A COST (R4)**,
+results `55048a2`: +18.8 steps after the block is removed [12.6, 25.1]; +7.7 when the change is permanent
+[2.3, 12.1]; real reversals carry 95% of the benefit; break-even reversal probability 0.35 [0.16, 0.51]; 48-node
+repetition (non-gating) same sign and break-even. RECALL is NOT adopted (AD-12). An adversarial review of the record
+was launched after the run; its findings and the response are recorded in `experiments/cf05b/results/RESULTS.md` by
+dated amendment if any correction is needed.
+
+**Next exact milestone: CF-06, learning how often changes reverse** (roadmap; hypothesis H-VOL). First build and
+admit a task with several changes per run and a reversal rate set per world family; the mechanism lives inside the
+world model (two regimes per exit, learned and pooled switching rate). Not started; waits for the owner.
+
+Still waiting on the owner: push of the local commits; the closure ruling for the unrun legacy studies; authorisation
+for the legacy-agent hook in `main.js`.
+
+*Earlier note, kept for the record:* **GATE RUNNING (2026-11-15): CF-05b was frozen at `104dd9b` (spec SHA-256 `154dd7f7…4c00`) and launched once on
 `gate5b` (40 worlds of 24 nodes) plus 20 non-gating worlds of 48 nodes; about 80 minutes.** CF-05 closed without a
 run (`7e40e59`). Driver refusals verified before launch: modified spec, unfrozen status, altered hash file, modified
 source, closed gate. **If interrupted:** if `experiments/cf05b/results/gate5b_result.json` exists, the gate HAS run;

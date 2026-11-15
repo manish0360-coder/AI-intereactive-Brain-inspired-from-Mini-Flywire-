@@ -27,17 +27,45 @@ flowchart LR
   M9 --> M10
 ```
 
-## Status against evidence (2026-11-14)
+## Status against evidence (2026-11-15)
+
+The capability targets, in the owner's order of priority (Decision 8), and where the evidence stands. They are
+research targets, not modules to add.
+
+| Capability | Evidence so far | State |
+|---|---|---|
+| 1. World modelling and prediction | Learned model with pooled priors beats a per-pair rule where exits are alike, loses where they are spread wide (CF-03c) | **Partial**; calibrated on the development generator only |
+| 2. Learning and planning | Value iteration on the learned model beats Dyna-Q, Dyna-Q+ and Q-learning on every task so far (CF-01…CF-05b) | **Established on 24-node worlds** |
+| 3. Change detection and adaptation | Removing change detection costs +161 steps after a block (CF-04) | **Established** |
+| 4. Recovery and memory | RECALL recovers two-thirds of the gap after a reversal, costs 7.7 when the change is permanent (CF-05b); blanket re-testing fails (CF-05 closure) | **Supported at a cost; not adopted** |
+| 5. Uncertainty and confidence | Calibration error cannot tell the model from a constant forecaster (CF-03c); Brier with decomposition replaces it | Open |
+| 6. Metacognition and self-evaluation | Reliability arbitration between two controllers harmful at this scale (CF-04) | Not supported in that form; the next form is learning how volatile the world is (CF-06) |
+| 7. Generalisation | Same sign and break-even at 48 nodes (CF-05b, non-gating); calibration fails on 3 of 4 unseen reliability families | Partial |
+| 8. Integration and efficiency | One agent (MBVI3) plus research prototypes; RECALL adds 4% work per decision | Nothing new integrated |
 
 | Milestone | State |
 |---|---|
-| M0 calibrated model | Done (CF-03b PASS), then narrowed: calibrated on the development generator only |
-| M0b calibration robustness | Done (CF-03c **PARTIAL**): repairs hold; the claim does not generalise to three of four unseen reliability families |
-| M2 hidden-change task | Done: task E4 admitted inside CF-04 |
-| **M3 two controllers and arbitration** | **Tested and not supported (CF-04, harmful at the tested threshold). Withdrawn from the build plan at this scale** |
-| M4 planning on demand | Deferred to M8, as before |
-| **Next: recovery after a reversed change (CF-05)** | New, from the CF-04 data: the planner is 40 steps behind the reference after a block is removed. Build M1's Dyna-Q+ baseline first |
-| M1, M5, M6, M7, M8, L1, M9, M10 | Unchanged below. M6's episodic reinstatement and M5's working memory still need their tasks admitted first |
+| M0 / M0b calibrated model | Done; claim narrowed to the development generator (CF-03b, CF-03c) |
+| M2 hidden-change task | Done (E4, CF-04); extended with a permanent-change arm (E4B) |
+| M3 arbitration | Tested, not supported; withdrawn at this scale (CF-04) |
+| CF-05 exploration bonus | Closed without a gate as a development-level negative finding |
+| CF-05b targeted recall | **Done: SUPPORTED AT A COST; not adopted** |
+| **Next: CF-06 learning how often changes reverse** | See below |
+| M1 stronger baselines | Partly done: Dyna-Q+ with a count model built and used |
+| M4, M5, M6, M7, M8, L1, M9, M10 | Unchanged below; M5/M6 still need their tasks admitted first |
+
+### CF-06 — learning how often changes reverse (proposed; not started)
+
+| | |
+|---|---|
+| Objective | H-VOL: an agent that learns from its own experience how often changes reverse, and re-tests only where that pays |
+| Existing problem | RECALL fixes its willingness to re-test in advance; CF-05b shows the right value depends on the world (helpful above p ≈ 0.35, harmful below) |
+| Mechanism | Inside the world model, not beside it: when a change is declared, keep the earlier regime of that exit; plan with a belief over the two regimes; learn the switching rate from how often past declared changes turned out to reverse, pooled across exits like the move prior |
+| Task (to admit first) | Several changes per run on different route edges; each reverses with a probability set per world family (for example 0, 0.5 and 0.9). The task is admitted if the best fixed-rate agent differs between families |
+| Baselines | MBVI3 (never re-tests); RECALL at fixed rates (the CF-05b settings); an oracle that knows the family's true rate |
+| Acceptance (to freeze) | The learning agent is no worse than the best fixed rate in every family, and better than any single fixed rate across families |
+| Cost | About 2–4 days to build and admit the task, then one gate |
+| Risk | Too few changes per run to learn a rate; then the rate must be carried across worlds (ties to M7 transfer) |
 
 The diagram below is the plan as first written and is kept for the record; the table above governs.
 
