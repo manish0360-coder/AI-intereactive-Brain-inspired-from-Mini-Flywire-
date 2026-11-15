@@ -66,7 +66,17 @@ first; a node is a place, not a cognitive function.
 
 ## Next exact engineering milestone
 
-**IN PROGRESS (2026-11-15): executing the owner's eight decisions on the Gemini pre-freeze review.** Review lodged
+**GATE RUNNING (2026-11-15): CF-05b was frozen at `104dd9b` (spec SHA-256 `154dd7f7…4c00`) and launched once on
+`gate5b` (40 worlds of 24 nodes) plus 20 non-gating worlds of 48 nodes; about 80 minutes.** CF-05 closed without a
+run (`7e40e59`). Driver refusals verified before launch: modified spec, unfrozen status, altered hash file, modified
+source, closed gate. **If interrupted:** if `experiments/cf05b/results/gate5b_result.json` exists, the gate HAS run;
+never run it again — read the file and write `results/RESULTS.md`. If it does not exist and no process is running,
+the run did not complete; rerunning on the same domain is allowed only because no result was ever produced, and that
+must be recorded. Then: adversarial review (one agent), response, registry (H-REC row), decisions (AD for CF-05 and
+CF-05b; Decision 7 analysis: RECALL is the prediction step of a two-regime hidden state per exit; the model-native
+version with a LEARNED reversal rate needs a multi-change task), roadmap, this file.
+
+*Earlier note, kept for the record:* **IN PROGRESS (2026-11-15): executing the owner's eight decisions on the Gemini pre-freeze review.** Review lodged
 verbatim at `research/external/CF05_CF05B_GEMINI_REVIEW.md`. Done: (a) source discrepancy settled from the code:
 CF-05b is 40 worlds of 24 nodes / 30 edges, plus a non-gating 20 worlds of 48 nodes / 60 edges; CF-05 declared 60
 worlds; Gemini's "20/40 nodes" matches nothing in the code; `gate5`/`gate5b` never used. (b) Diagnostic arms
