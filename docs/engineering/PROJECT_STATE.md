@@ -66,7 +66,15 @@ first; a node is a place, not a cognitive function.
 
 ## Next exact engineering milestone
 
-**CF-06 IN DEVELOPMENT (2026-11-15; owner said "start CF-06").** Built and committed `9d623b2` (not frozen): task
+**WAITING ON THE OWNER (2026-11-15): CF-06 specification is a DRAFT for review** (`experiments/cf06/GATE_SPEC.md`,
+commit `3a3fd55`; Gemini bundle `research/external/CF06_GEMINI_PREFREEZE_REVIEW_BUNDLE.md`, `3ae2143`). Dev evidence:
+VOL best on the equal mix among learners (3,182 vs planner 3,250 and RECALL 3,285–4,022), learned ρ ordered RARE
+0.34 < HALF 0.50 < OFTEN 0.65 in all worlds, within 10 steps of the true-rate reference; weak link: V1 against the
+planner (VOL better in 11 of 20 dev worlds). **To freeze after approval:** set the status line to start
+`**Status.** Frozen`, write `GATE_SPEC.sha256`, commit, verify refusals, then run
+`node experiments/cf06/run_gate.mjs --domain gate6` in the background (about two hours). Never rerun gate6.
+
+*Development history:* **CF-06 IN DEVELOPMENT (2026-11-15; owner said "start CF-06").** Built and committed `9d623b2` (not frozen): task
 E5 (`cognitive/testbed/task_e5.mjs`, six unannounced blocks per run, each reversing with a family rate RARE 0.1 /
 HALF 0.5 / OFTEN 0.9), world model v6 with a learned reversal rate (`cognitive/mind/v6/`), agent VOL, registry v6,
 `test_vol.mjs`; npm test 164/164. **Dev admission look (20 dev worlds): the task discriminates** — RECALL 0.01 −
