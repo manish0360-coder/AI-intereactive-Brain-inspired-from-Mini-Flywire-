@@ -14,6 +14,7 @@ import { generateWorld } from '../testbed/worlds.mjs';
 import { runE4 } from '../testbed/task_e4.mjs';
 import { runE4B, E4B_ARMS } from '../testbed/task_e4b.mjs';
 import { armAgentFactory, realChangeOf } from '../testbed/arms_v5.mjs';
+import { expectedUtility, breakEven, P_GRID } from '../testbed/utility.mjs';
 import { runTaskV1 } from '../testbed/tasks_v1.mjs';
 import { runE2P } from '../testbed/task_e2p.mjs';
 import { makeDynaQPlus, DYNAQP_DEFAULTS } from '../baselines/dynaq_plus.mjs';
@@ -236,6 +237,25 @@ export const tests = [
     assert.equal(labels.size, 1); assert.equal(layouts.size, 1);
     const cmp = (kind) => runE4B({ world: W, worldLabel: LABEL, kind, arm: 'CHANGE', makeAgent: makeAgentForV5 }).windows.stable;
     assert.equal(cmp('MBVI3'), cmp('MBVI4_RECALL'), 'before any change, RECALL and the planner are the same agent on the same world');
+  }],
+  ['UTILITY: U(p) = p*B - (1-p)*C, the break-even p, and the joint bootstrap behave as defined', () => {
+    // hand-computed: B = 18, C = 8 -> p* = 8 / 26; U(0) = -8, U(1) = 18, U(0.5) = 5
+    const u = expectedUtility([18, 18, 18], [8, 8, 8], 'cf|test|rec|U');
+    close(u.benefitIfReversed, 18); close(u.costIfPermanent, 8);
+    assert.equal(u.breakEven.kind, 'above'); close(u.breakEven.p, 8 / 26);
+    assert.equal(P_GRID.length, 21); assert.equal(P_GRID[0], 0); assert.equal(P_GRID[20], 1); close(P_GRID[10], 0.5);
+    close(u.curve[0].U, -8); close(u.curve[20].U, 18); close(u.curve[10].U, 5);
+    assert.equal(u.curve[10].lo, 5); assert.equal(u.curve[10].hi, 5, 'constant data: no uncertainty');
+    assert.equal(u.breakEvenResamples.above, 1); close(u.breakEvenResamples.pStarMedian, 8 / 26);
+    assert.deepEqual(breakEven(5, -2), { kind: 'always', p: 0 }); assert.deepEqual(breakEven(-5, 2), { kind: 'never', p: null });
+    assert.equal(breakEven(-6, -2).kind, 'below'); close(breakEven(-6, -2).p, 0.25);
+    // the bootstrap keeps worlds paired: when each world's benefit equals its cost, U(0.5) = (b - c) / 2 = 0 in every
+    // resample; an unpaired bootstrap would give U(0.5) an interval
+    const v = expectedUtility([10, 20, 30, 40], [10, 20, 30, 40], 'cf|test|rec|U2');
+    close(v.curve[10].U, 0); close(v.curve[10].lo, 0, 1e-9); close(v.curve[10].hi, 0, 1e-9);
+    assert.ok(v.curve[0].hi - v.curve[0].lo > 5, 'while U(0) alone varies');
+    assert.deepEqual(expectedUtility([1, 2], [3, 4], 'x', 500), expectedUtility([1, 2], [3, 4], 'x', 500), 'seeded');
+    assert.equal(expectedUtility([], [], 'x'), null);
   }],
   ['DEFAULTS: both candidates default to mode NONE, so nothing changes unless a mode is asked for', () => {
     assert.equal(MBVI4_DEFAULTS.mode, 'NONE');
