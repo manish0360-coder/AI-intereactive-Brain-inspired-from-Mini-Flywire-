@@ -11,8 +11,8 @@ work stands. Document index: [`docs/README.md`](../README.md).
 
 | Item | State |
 |---|---|
-| GitHub `main` | `0a5ef40` (pushed 2026-11-12), with 25 annotated tags |
-| Local `main` | Ahead of GitHub by the CF-03b commits and the documentation commit. **Not pushed** |
+| GitHub `main` | `75530c3` (pushed 2026-11-15 on the owner's word; fresh clone verified: frozen hashes identical, 155/155 tests), with 25 annotated tags (none added since 2026-11-12) |
+| Local `main` | Equal to GitHub at `75530c3`, plus any later commit recorded here. No push without the owner's explicit word |
 | Tests | `npm test` 155/155; legacy gate `experiments/phase1_0/verify_S2.js` 14/14 |
 | Push rule | No push without the owner's explicit word |
 
