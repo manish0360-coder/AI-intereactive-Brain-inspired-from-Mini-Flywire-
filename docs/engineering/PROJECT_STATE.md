@@ -66,7 +66,16 @@ first; a node is a place, not a cognitive function.
 
 ## Next exact engineering milestone
 
-**DONE (2026-11-15): CF-05 closed; CF-05b run once and recorded.** CF-05b verdict **SUPPORTED AT A COST (R4)**,
+**CF-06 IN DEVELOPMENT (2026-11-15; owner said "start CF-06").** Built and committed `9d623b2` (not frozen): task
+E5 (`cognitive/testbed/task_e5.mjs`, six unannounced blocks per run, each reversing with a family rate RARE 0.1 /
+HALF 0.5 / OFTEN 0.9), world model v6 with a learned reversal rate (`cognitive/mind/v6/`), agent VOL, registry v6,
+`test_vol.mjs`; npm test 164/164. **Dev admission look (20 dev worlds): the task discriminates** — RECALL 0.01 −
+planner: RARE +214 [152, 280], HALF +81 [14, 155], OFTEN −62 [−110, −18]; the best fixed policy flips between
+families. Next: VOL on the same dev worlds; then draft `experiments/cf06/GATE_SPEC.md` and present it to the owner
+(and Gemini if wanted) BEFORE freezing. Dev scripts live outside the repository (scratchpad); their numbers go into
+the spec's development disclosure.
+
+**Earlier (2026-11-15): CF-05 closed; CF-05b run once and recorded.** CF-05b verdict **SUPPORTED AT A COST (R4)**,
 results `55048a2`: +18.8 steps after the block is removed [12.6, 25.1]; +7.7 when the change is permanent
 [2.3, 12.1]; mostly recovery from real reversals (about 89%, with interaction); point break-even reversal probability
 0.35 [0.16, 0.51], helps at 95% only where more than about half of changes reverse; 48-node repetition (non-gating)
