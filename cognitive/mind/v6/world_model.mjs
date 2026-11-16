@@ -28,7 +28,20 @@
 // matters: rho is learned, so a world whose changes never reverse teaches the model to stop re-testing.
 //
 // Known limit, declared: a false alarm of v3's change detector archives an exit that never changed; when it moves
-// again it is counted as a confirmed reversal, which pushes rho up.
+// again it is counted as a confirmed reversal, which pushes rho up.  eventLog() records every archive opened and
+// every reversal confirmed, with the model's step count, so that EVALUATION code (task E5, after the run) can measure
+// this against ground truth; the model never reads the log.
+//
+// Two properties, stated so that results are read correctly (both tested):
+//   - An exit that is never re-tested gives no evidence (L_rev = L_perm = 1), so with every open archive untested the
+//     fixed point is rho = 1/2 whatever the number of changes: rho falls only through failed re-tests, which cost steps.
+//   - rho is a plug-in empirical-Bayes estimate that includes each archive's own evidence (no leave-one-out), so even
+//     the first change's own failed re-tests lower its prior; that, not learning across changes, is the only way v6
+//     differs from rho fixed at 1/2 during the first change.
+//
+// DIAGNOSTIC switch (the CF-05b pattern, cf. v4 recallIf): params.archiveIf(key) -> bool, supplied only by
+// cognitive/testbed/arms_v6.mjs to privileged diagnostic arms, decides which declared-worse exits are archived.  An
+// ordinary model has no archiveIf and archives every one; the belief arithmetic is the same either way.
 // ==========================================================
 import { makeWorldModel3, WM3_DEFAULTS } from '../v3/world_model.mjs';
 
@@ -51,8 +64,13 @@ export function makeWorldModel6(params = {}) {
   const base = makeWorldModel3(P);
   const archives = new Map();               // `${s}|${a}` -> { s, a, held, since, taus: [] }
   const vol = { confirmed: 0, opened: 0, rho: P.rhoFixed ?? P.rhoA0 / (P.rhoA0 + P.rhoB0) };
+  // Event log for EVALUATION ONLY: the model's own record of when it archived a changed exit and when it confirmed a
+  // reversal, in its own step count.  It holds nothing the model did not compute from its own observations; the task
+  // compares it with ground truth after the run (false-alarm diagnostics).  Nothing reads it back into the model.
+  const log = [];
   let clock = 0;
   const clamp = (x) => Math.min(1 - 1e-9, Math.max(1e-9, x));
+  const mayArchive = (key) => !P.archiveIf || P.archiveIf(key) === true;
 
   function beliefOf(arch, rho) {
     const cur = base.predict(arch.s, arch.a);
@@ -91,19 +109,20 @@ export function makeWorldModel6(params = {}) {
   }
 
   function update(s, a, s2, reward, done) {
-    const key = `${s}|${a}`, moved = s2 !== s;
+    const key = `${s}|${a}`, moved = s2 !== s, logged = log.length;
     const arch = archives.get(key);
     if (arch) {
-      if (moved) { archives.delete(key); vol.confirmed++; }            // the old regime is back: a confirmed reversal
+      if (moved) { archives.delete(key); vol.confirmed++; log.push(['confirm', s, a, clock]); }   // the old regime is back
       else arch.taus.push(clock - arch.since);                         // a failed re-test: evidence
     }
     const held = base.predict(s, a), worse = base.stats().changesDown;
     base.update(s, a, s2, reward, done);
-    if (!moved && !archives.has(key) && base.stats().changesDown > worse && held.outcomes.length) {
-      archives.set(key, { s, a, held, since: clock, taus: [] }); vol.opened++;
+    if (!moved && !archives.has(key) && base.stats().changesDown > worse && held.outcomes.length && mayArchive(key)) {
+      archives.set(key, { s, a, held, since: clock, taus: [] }); vol.opened++; log.push(['open', s, a, clock]);
     }
     clock++;
     refreshRho();
+    if (log.length > logged) log[log.length - 1].push(vol.rho);       // at most one entry per step: [type, s, a, step, rho after]
   }
 
   return {
@@ -114,5 +133,7 @@ export function makeWorldModel6(params = {}) {
     hyper: () => base.hyper(),
     stats: () => ({ ...base.stats(), archivesOpened: vol.opened, archivesOpen: archives.size, reversalsConfirmed: vol.confirmed, rho: vol.rho }),
     volatility: () => ({ rho: vol.rho, confirmed: vol.confirmed, opened: vol.opened, open: archives.size }),
+    eventLog: () => log.map((e) => [...e]),
+
   };
 }

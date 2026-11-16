@@ -5,7 +5,7 @@ Results are recorded in [`docs/VERIFICATION_STATUS.md`](../VERIFICATION_STATUS.m
 [`docs/COGNITIVE_MILESTONE_ROADMAP.md`](../COGNITIVE_MILESTONE_ROADMAP.md) (testbed gates); this file records where
 work stands. Document index: [`docs/README.md`](../README.md).
 
-**Last updated:** 2026-11-13
+**Last updated:** 2026-11-16
 
 ## Repository
 
@@ -13,7 +13,7 @@ work stands. Document index: [`docs/README.md`](../README.md).
 |---|---|
 | GitHub `main` | `75530c3` (pushed 2026-11-15 on the owner's word; fresh clone verified: frozen hashes identical, 155/155 tests), with 25 annotated tags (none added since 2026-11-12) |
 | Local `main` | Equal to GitHub at `75530c3`, plus any later commit recorded here. No push without the owner's explicit word |
-| Tests | `npm test` 155/155; legacy gate `experiments/phase1_0/verify_S2.js` 14/14 |
+| Tests | `npm test` 173/173 (at the CF-06 freeze); legacy gate `experiments/phase1_0/verify_S2.js` 14/14 |
 | Push rule | No push without the owner's explicit word |
 
 ## Done in this programme
@@ -66,7 +66,58 @@ first; a node is a place, not a cognitive function.
 
 ## Next exact engineering milestone
 
-**WAITING ON THE OWNER (2026-11-15): CF-06 specification is a DRAFT for review** (`experiments/cf06/GATE_SPEC.md`,
+**CF-06 FROZEN AND RUNNING (2026-11-16): revision 3.1 frozen on the owner's word "Yes, freeze and run"; gate6 (135
+worlds, 12 arms, two in-process runs, about 4 to 8 hours) launched once, in the background, after the freeze commit.**
+The owner stopped the review loop and approved GO after a final pre-Gate-6 audit (power, isolation, attribution,
+preregistration: all PASS) and one added line on exclusions (none is possible: 24 nodes at maximum degree 4 always
+have a start-goal pair at distance 3 or more). Never rerun gate6. Not pushed. Next: record `results/RESULTS.md` from
+`experiments/cf06/results/gate6_result.json` when the run ends, then independent verification.
+
+*Before the freeze:* **CF-06 DRAFT REVISION 3.1, UNCOMMITTED, for approval.** Gemini's review of
+revision 3 (relayed by the owner; the attached file was again the CF-05/CF-05b review): conditional freeze after M1
+(power) and M2 (tail risk), mechanism accepted. Done in the working tree only: **n = 135** from a simulation of the
+gate's own decision rule (`experiments/cf06/power_sim.mjs`; P(SUPPORTED) at half the dev effect 0.41 / 0.69 / 0.82 at
+n = 60 / 100 / 135); **gainShape in the verdict line** (three conditions; per-world distributions reported; TAIL-DRIVEN
+expected); **attribution of the gain by category** from two privileged diagnostic arms BELIEF_REALONLY /
+BELIEF_FALSEONLY (`cognitive/testbed/arms_v6.mjs`, optional `archiveIf` in model v6, context in task E5), gainSource
+from them, a detector false-alarm evaluation plan; L2 wording tied to the headroom rule. Dev run (20 worlds, not
+evidence): SUPPORTED — TAIL-DRIVEN (B1_MBVI3); all 840 revision-3 rows reproduced; split exact; **on the mix the
+advantage over the planner is mostly false-alarm repair (+48.0 [11.3, 93.2]) rather than genuine changes (+28.9
+[−6.2, 75.0])**, genuine reversals carry OFTEN (+31.5 [6.5, 68.8]); gainSourceMix added (restrictive). Tests 173/173.
+Bundle `research/external/CF06_REV31_GEMINI_PREFREEZE_REVIEW_BUNDLE.md`. Not committed, frozen, run or pushed. Gate
+run time 4 to 8 hours.
+
+*Revision 3 (superseded by 3.1 above):* **CF-06 DRAFT REVISION 3, UNCOMMITTED, for the owner's review.** The owner chose
+"Re-scope to belief" (option A). Revision 3 (`experiments/cf06/GATE_SPEC.md`): primary arm BELIEF (model v6 with ρ
+fixed at 1/2, h = 0.01); criteria B1 (equal mix, beats the planner and RECALL 0.003 / 0.01 / 0.03), B2 (safe in
+RARE), B3 (helps in OFTEN), B4 (mechanism: after reversed events against the planner; futile re-tests against RECALL
+0.01), B5 (battery), B6 (infrastructure); learning the rate reported as L1–L4 with claim rules; h sensitivity on the
+primary; two claim rules added after the dev look, restrictive only: gainSource (is the gain from reopened routes or
+from returning to exits the change detector wrongly flagged?) and gainShape (consistent or from a few worlds). Dev run
+(20 worlds, not evidence: these worlds chose the primary): SUPPORTED; B1 planner part +64.1 [11.5, 125.2] but 10 / 10
+worlds, median −5; B3 +45.6 [10.9, 90.8]; power at half the dev effect 0.46 for each of those. Limitations in the
+spec (12). Tests 169/169 in the working tree. Reconciliation `experiments/cf06/PREFREEZE_RECONCILIATION.md` §6.
+Review bundle `research/external/CF06_REV3_GEMINI_PREFREEZE_REVIEW_BUNDLE.md`. The real Gemini CF-06 review has not
+been received (the attached file was twice the CF-05/CF-05b review). Not committed, frozen, run or pushed. Next, on
+the owner's word: an outside review of revision 3, or commit + freeze + gate6 (about 3 hours).
+
+*Revision 2 (superseded by revision 3 above):* **CF-06 DRAFT REVISION 2, UNCOMMITTED, for the owner's review.** The owner
+approved the draft after specific corrections (fixed-ρ = 1/2 control, false-alarm diagnostics, h sensitivity,
+zero-reversal diagnostic, audits, six-change adequacy; 24/30 kept; drift and continuous delays as future questions)
+and said: do not commit, push, freeze or run gate6. Done in the working tree only: v6 event log (evaluation only),
+`diagnoseE5` in task E5, driver arms VOL_FIXED05 / VOL_H003 / VOL_H03, criterion V7 and verdict BELIEF, NOT
+LEARNING, claim rules, weighting grid, ρ distributions; 5 new tests (168/168); spec revision 2 and
+`experiments/cf06/PREFREEZE_RECONCILIATION.md`. The file supplied as Gemini's CF-06 review is the CF-05/CF-05b
+review (identical SHA-256 `8f9d8635…`); the real CF-06 review is still to be obtained. **Revision-2 dev run (dev
+0–19, all ten arms): the driver's verdict would be BELIEF, NOT LEARNING** — V1–V5 hold, V7 control − VOL +4.4
+[−12.0, 23.6]; the fixed-ρ control alone beats all four fixed policies; even the true-rate reference gains only +14.5
+[−8.2, 42.4] over the control (below the n = 60 detectable effect 22), so E5 cannot test whether learning the rate
+pays; 76% of confirmed reversals in RARE are change-detector false alarms. Recommendation in
+`PREFREEZE_RECONCILIATION.md` §5: re-scope CF-06 to the belief (option A) and redesign for H-VOL with a headroom
+admission rule (option C); or freeze revision 2 as is (option B). Awaiting the owner's choice; then commit (one
+milestone) and freeze as below.
+
+*Revision 1 (superseded by revision 2 above):* CF-06 specification DRAFT (`experiments/cf06/GATE_SPEC.md`,
 commit `3a3fd55`; Gemini bundle `research/external/CF06_GEMINI_PREFREEZE_REVIEW_BUNDLE.md`, `3ae2143`). Dev evidence:
 VOL best on the equal mix among learners (3,182 vs planner 3,250 and RECALL 3,285–4,022), learned ρ ordered RARE
 0.34 < HALF 0.50 < OFTEN 0.65 in all worlds, within 10 steps of the true-rate reference; weak link: V1 against the

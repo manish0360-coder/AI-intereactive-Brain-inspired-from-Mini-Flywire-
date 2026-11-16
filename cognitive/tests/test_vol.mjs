@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { generateWorld, distancesTo, edgeKey } from '../testbed/worlds.mjs';
 import { GraphEnv } from '../testbed/env.mjs';
-import { planE5, runE5, E5_FAMILIES, E5_PARAMS } from '../testbed/task_e5.mjs';
+import { planE5, runE5, diagnoseE5, E5_FAMILIES, E5_PARAMS } from '../testbed/task_e5.mjs';
 import { AGENTS_V6, MIND6_FILES, MIND6_ALLOWED, agentOptionsV6, makeAgentForV6 } from '../testbed/registry_v6.mjs';
 import { AGENTS_V5 } from '../testbed/registry_v5.mjs';
 import { PRIVILEGED } from '../testbed/runner.mjs';
@@ -14,6 +14,7 @@ import { checkPrivilege } from '../testbed/checks.mjs';
 import { checkSourceIsolation } from '../testbed/checks_v1.mjs';
 import { regimeBelief, makeWorldModel6 } from '../mind/v6/world_model.mjs';
 import { makeStream } from '../testbed/rng.mjs';
+import { armAgentV6, realChangeOfE5 } from '../testbed/arms_v6.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const MIND6_DIR = path.resolve(HERE, '..', 'mind', 'v6');
@@ -142,5 +143,135 @@ export const tests = [
     assert.ok(v.secondary.volatility.rho > 0 && v.secondary.volatility.rho < 1);
     assert.equal(v.windows.train, run('MBVI3', 'HALF').windows.train, 'identical to the planner before any change');
     const r = run('VOL_RHO', 'RARE', { rhoFixed: 0.1 }); assert.equal(r.secondary.volatility.rho, 0.1);
+  }],
+
+  // ---- corrections after the owner's review of the draft (control arm, diagnostics, degeneration) ----
+  ['BELIEF ARM (CF-06 primary): rho stays at 1/2 through real changes and h reaches the model, through the registry', () => {
+    const env = new GraphEnv(W, { seedLabel: 'cf|test|vol|belief' });
+    for (const h of [0.003, 0.01, 0.03]) assert.equal(makeAgentForV6('VOL_RHO', env, 'x', { rhoFixed: 0.5, volHazard: h })._model.params.volHazard, h);
+    const r = runE5({ world: W, worldLabel: LABEL, family: 'OFTEN', kind: 'VOL_RHO', makeAgent: (k, e, l) => makeAgentForV6(k, e, l, { rhoFixed: 0.5 }) });
+    assert.ok(r.secondary.volatility.opened > 0, 'changes were archived');
+    assert.equal(r.secondary.volatility.rho, 0.5);
+    assert.ok(r.secondary.volatility.log.every((e) => e[4] === 0.5), 'rho is 1/2 after every archive and confirmation');
+  }],
+  ['ZERO EVIDENCE: an archived exit never re-tested leaves rho at exactly 1/2; failed re-tests long after the change lower it', () => {
+    const m = makeWorldModel6();
+    for (let i = 0; i < 12; i++) for (let j = 0; j < 4; j++) m.update(100 + i, 0, 200 + i, 0, false);
+    for (let j = 0; j < 30; j++) m.update(1, 0, 2, 0, false);
+    let k = 0; while (m.volatility().opened === 0 && k < 10) { m.update(1, 0, 1, 0, false); k++; }
+    assert.equal(m.volatility().open, 1);
+    for (let t = 0; t < 400; t++) m.update(100, 0, 200, 0, false);
+    assert.equal(m.volatility().rho, 0.5, 'no re-test, no evidence: the fixed point is 1/2 whatever the elapsed time');
+    m.update(1, 0, 1, 0, false); m.update(1, 0, 1, 0, false);
+    assert.ok(m.volatility().rho < 0.5, `failed re-tests 400 steps after the change are evidence (${m.volatility().rho})`);
+    const log = m.eventLog();
+    assert.equal(log.length, 1); assert.deepEqual(log[0].slice(0, 3), ['open', 1, 0]); assert.equal(log[0][4], 0.5);
+    log[0][0] = 'tampered'; assert.equal(m.eventLog()[0][0], 'open', 'the log handed out is a copy');
+  }],
+  ['CONTROL FAIRNESS: VOL_FIXED05 gets the same environment, seeds and budget as VOL and acts identically until VOL\'s rho first leaves 1/2', () => {
+    const record = (kind, p) => {
+      const acts = [], rhos = []; let args = null;
+      const res = runE5({ world: W, worldLabel: LABEL, family: 'RARE', kind, makeAgent: (...a) => {
+        args = a.length;
+        const ag = makeAgentForV6(a[0], a[1], a[2], p);
+        return { ...ag, act: (o) => { const x = ag.act(o); acts.push(x); return x; }, observe: (tr) => { ag.observe(tr); rhos.push(ag._model.volatility().rho); }, inspect: ag.inspect };
+      } });
+      return { acts, rhos, args, res };
+    };
+    const v = record('VOL', {}), f = record('VOL_RHO', { rhoFixed: 0.5 });
+    assert.equal(v.args, 5); assert.equal(f.args, 5);   // the same five arguments; arms_v6 drops the fifth (the context) for ordinary arms
+    assert.ok(f.rhos.every((x) => x === 0.5));
+    const first = v.rhos.findIndex((x) => x !== 0.5);
+    assert.ok(first > E5_PARAMS.exploreSteps, `rho moves only once changes are experienced (step ${first})`);
+    assert.deepEqual(v.acts.slice(0, first + 1), f.acts.slice(0, first + 1), 'identical decisions while the two beliefs are identical');
+    assert.equal(v.res.secondary.compute.budget, f.res.secondary.compute.budget);
+  }],
+  ['E5 DIAGNOSTICS on a hand-built trace: real and false archives, real and false confirmations, futile re-tests per event; mutants are caught', () => {
+    const [[u, v1], [x, y]] = [W.edges[0], W.edges[1]], e3 = W.edges[2];
+    const act = (s, t) => W.exitOrder[s].indexOf(t), L = (s) => W.labelOf[s];
+    const k1 = edgeKey(u, v1), k2 = edgeKey(x, y), k3 = edgeKey(...e3);
+    const spans = [{ key: k2, reverses: true, blockAt: 2, afterAt: 4, endAt: 6 }, { key: k1, reverses: false, blockAt: 6, afterAt: 8, endAt: 10 }, { key: k3, reverses: false, blockAt: 10, afterAt: 12, endAt: 14 }];
+    const row = (s, t, moved) => [0, 0, s, act(s, t), moved ? t : s, 0];
+    const trace = [row(x, y, false), row(x, y, true), row(x, y, false), row(u, v1, true), row(x, y, true), row(u, v1, true), row(u, v1, false), row(u, v1, false), row(u, v1, false), row(v1, u, false), row(u, v1, false), row(x, y, true), row(x, y, true), row(x, y, true)];
+    const log = [['open', L(x), act(x, y), 0, 0.5], ['confirm', L(x), act(x, y), 1, 0.66], ['open', L(x), act(x, y), 2, 0.6], ['confirm', L(x), act(x, y), 4, 0.7], ['open', L(u), act(u, v1), 6, 0.4]];
+    const d = diagnoseE5(W, trace, spans, log);
+    assert.equal(d.futileRetests, 3);
+    assert.deepEqual(d.perEvent, [{ ownAfter: 1, oldPermanent: 0, crossed: 1 }, { ownAfter: 2, oldPermanent: 0, crossed: 0 }, { ownAfter: 0, oldPermanent: 1, crossed: 0 }]);
+    assert.deepEqual(d.alarms, { opensReal: 2, opensRealReversing: 1, opensRealPermanent: 1, opensFalse: 1, opensFalseBeforeFirstChange: 1, confirmsReal: 1, confirmsFalse: 1, changesDetected: 2, rhoAtDetection: [0.6, 0.4, null] });
+    assert.equal(diagnoseE5(W, trace, spans, undefined).alarms, null, 'agents without a model log get no alarm diagnostics');
+    assert.throws(() => diagnoseE5(W, trace, spans, log.map((e) => [e[0], e[1], e[2], e[3] + 1, e[4]])), /does not match/, 'a log shifted by one step must be refused');
+    assert.throws(() => diagnoseE5(W, trace, spans, [log[1]]), /never opened/);
+  }],
+  ['E5 DIAGNOSTICS are evaluation-only: one trace read after the last episode; totals agree with the per-event rows; the planner has no alarm log', () => {
+    const src = fs.readFileSync(path.resolve(HERE, '..', 'testbed', 'task_e5.mjs'), 'utf8').replace(/\/\/.*$/gm, '').replace(/\/\*[\s\S]*?\*\//g, '');
+    const body = src.slice(src.indexOf('export function runE5'));
+    assert.equal(body.split('env.trace()').length - 1, 1, 'the trace is read once');
+    assert.ok(body.indexOf('env.trace()') > body.lastIndexOf('run(P.afterEpisodes)'), 'and only after the last episode');
+    assert.ok(body.indexOf('diagnoseE5(') > body.indexOf('agent.inspect()'), 'diagnostics after the agent has reported');
+    assert.ok(!/diagnos|trace/.test(fs.readFileSync(path.join(MIND6_DIR, 'agent.mjs'), 'utf8').replace(/\/\/.*$/gm, '').replace(/const trace = \[\]|trace\.push|rhoTrace: trace/g, '')), 'the agent never sees diagnostics');
+    for (const fam of ['RARE', 'OFTEN']) {
+      const v = runE5({ world: W, worldLabel: LABEL, family: fam, kind: 'VOL', makeAgent: makeAgentForV6 });
+      const live = v.events.filter((e) => !e.skipped);
+      assert.equal(live.reduce((s, e) => s + (e.reverses ? 0 : e.ownAfterAttempts) + e.oldPermanentAttempts, 0), v.diagnostics.futileRetests);
+      const a = v.diagnostics.alarms;
+      assert.equal(a.opensReal + a.opensFalse, v.secondary.volatility.opened); assert.equal(a.confirmsReal + a.confirmsFalse, v.secondary.volatility.confirmed);
+      assert.equal(a.opensRealReversing + a.opensRealPermanent, a.opensReal);
+      assert.ok(a.changesDetected <= live.length && a.confirmsReal <= v.reversedEvents);
+    }
+    assert.equal(runE5({ world: W, worldLabel: LABEL, family: 'RARE', kind: 'MBVI3', makeAgent: makeAgentForV6 }).diagnostics.alarms, null);
+  }],
+  // ---- revision 3.1: ground-truth attribution through privileged diagnostic arms (the CF-05b pattern) ----
+  ['ARCHIVE DIAGNOSTICS (model): archiveIf decides which declared-worse exits are archived; without it, or always true, nothing changes', () => {
+    const drive = (params) => {
+      const m = makeWorldModel6({ rhoFixed: 0.5, ...params });
+      for (let j = 0; j < 30; j++) m.update(1, 0, 2, 0, false);
+      for (let j = 0; j < 8; j++) m.update(1, 0, 1, 0, false);
+      return m.volatility().opened;
+    };
+    assert.equal(drive({}), 1, 'without a predicate the change is archived');
+    assert.equal(drive({ archiveIf: (k) => k === '1|0' }), 1); assert.equal(drive({ archiveIf: () => false }), 0);
+    assert.equal(drive({ archiveIf: () => 1 }), 0, 'only a literal true admits an archive');
+    const plain = runE5({ world: W, worldLabel: LABEL, family: 'RARE', kind: 'VOL_RHO', makeAgent: makeAgentForV6, params: { VOL_RHO: { rhoFixed: 0.5 } } });
+    const always = runE5({ world: W, worldLabel: LABEL, family: 'RARE', kind: 'VOL_RHO', makeAgent: makeAgentForV6, params: { VOL_RHO: { rhoFixed: 0.5, archiveIf: () => true } } });
+    assert.deepEqual(always, plain, 'the diagnostic machinery adds nothing but the filter');
+  }],
+  ['E5 DIAGNOSTIC GROUND TRUTH: isBlockedPair agrees with the environment for every exit at every step', () => {
+    const seen = { blocked: 0, open: 0, mismatches: 0 };
+    const spy = (kind, env, label, params, context) => {
+      const inner = makeAgentForV6(kind, env, label, params);
+      return { ...inner, act(obs) {
+        const { pos, blocked } = env.inspect();
+        W.exitOrder[pos].forEach((v, i) => { const truth = blocked.includes(edgeKey(pos, v)); if (context.isBlockedPair(`${W.labelOf[pos]}|${i}`) !== truth) seen.mismatches++; if (truth) seen.blocked++; else seen.open++; });
+        return inner.act(obs);
+      } };
+    };
+    runE5({ world: W, worldLabel: LABEL, family: 'HALF', kind: 'MBVI3', makeAgent: spy });
+    assert.equal(seen.mismatches, 0); assert.ok(seen.blocked > 0 && seen.open > 0, 'both states occur');
+    const real = realChangeOfE5({ isBlockedPair: (k) => k === '3|1' });
+    assert.equal(real('3|1'), true); assert.equal(real('3|0'), false);
+    assert.equal(realChangeOfE5({ isBlockedPair: () => 1 })('3|1'), false, 'only a literal true is a real change');
+    assert.throws(() => realChangeOfE5({}), /needs the E5 task context/);
+  }],
+  ['E5 DIAGNOSTIC SPLIT: the real arm archives only genuine changes and the false arm only false alarms, by the trace', () => {
+    const arm = (diagnostic) => armAgentV6(['VOL_RHO', { rhoFixed: 0.5 }, { diagnostic }]);
+    const R = runE5({ world: W, worldLabel: LABEL, family: 'RARE', kind: 'VOL_RHO', makeAgent: arm('real') }).diagnostics.alarms;
+    const F = runE5({ world: W, worldLabel: LABEL, family: 'RARE', kind: 'VOL_RHO', makeAgent: arm('false') }).diagnostics.alarms;
+    assert.equal(R.opensFalse, 0); assert.ok(R.opensReal > 0, 'the real arm archives genuine changes');
+    assert.equal(F.opensReal, 0); assert.ok(F.opensFalse > 0, 'the false arm archives false alarms (this world has some)');
+    const env = new GraphEnv(W, { seedLabel: 'cf|test|vol|split' });
+    assert.throws(() => arm('real')('X', env, 'l', {}, undefined), /needs the task context/);
+    assert.throws(() => armAgentV6(['VOL_RHO', { rhoFixed: 0.5 }, { diagnostic: 'nope' }])('X', env, 'l', {}, { isBlockedPair: () => false }), /unknown diagnostic/);
+  }],
+  ['LEAKAGE v6: an ordinary arm behaves identically whatever context or archiveIf it is offered; the v6 mind never references ground truth', () => {
+    const ordinary = armAgentV6(['VOL_RHO', { rhoFixed: 0.5 }]);
+    const forged = (kind, env, label) => ordinary(kind, env, label, { archiveIf: () => false }, Object.freeze({ isBlockedPair: () => true }));
+    const honest = runE5({ world: W, worldLabel: LABEL, family: 'OFTEN', kind: 'VOL_RHO', makeAgent: ordinary });
+    const lied = runE5({ world: W, worldLabel: LABEL, family: 'OFTEN', kind: 'VOL_RHO', makeAgent: forged });
+    const none = runE5({ world: W, worldLabel: LABEL, family: 'OFTEN', kind: 'VOL_RHO', makeAgent: (k, e, l) => makeAgentForV6('VOL_RHO', e, l, { rhoFixed: 0.5 }) });
+    assert.deepEqual(lied, honest); assert.deepEqual(none, honest);
+    for (const f of MIND6_FILES) {
+      const code = fs.readFileSync(path.join(MIND6_DIR, f), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/.*$/gm, '$1');
+      assert.ok(!/isBlockedPair|realChange|arms_v6|task_e5|blocked/.test(code), `${f} must not reference task ground truth in code`);
+    }
   }],
 ];

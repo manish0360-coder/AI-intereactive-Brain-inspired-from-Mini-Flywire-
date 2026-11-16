@@ -46,7 +46,7 @@ export function makeVOL({ rng, params = {}, kind = 'VOL' }) {
       return {
         compute: { ...compute, backupsPerDecision: compute.decisions ? compute.backups / compute.decisions : 0, sweepsPerDecision: compute.decisions ? compute.sweeps / compute.decisions : 0, budgetHitShare: compute.decisions ? compute.budgetHits / compute.decisions : 0, budget: P.budget },
         model: { states: model.states().size, ...model.stats() },
-        volatility: { ...model.volatility(), rhoTrace: trace },
+        volatility: { ...model.volatility(), rhoTrace: trace, log: model.eventLog() },   // log: for evaluation code only
       };
     },
     _model: model, _V: V,
