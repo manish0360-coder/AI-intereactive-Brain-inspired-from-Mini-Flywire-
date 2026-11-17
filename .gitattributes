@@ -224,3 +224,7 @@ experiments/cf06/** -text
 # over exact bytes, and the results record cites hashes of the result file. Same reason as the cognitive gates above.
 # The legacy experiments/m11/ record is deliberately NOT covered: its checkout behaviour is left as it was.
 experiments/m11_routes/** -text
+
+# M12-MECHANISM (analysis of the stored M11 record): its outputs are cited by hash in analysis/SHA256SUMS, so they
+# keep exact bytes. The legacy experiments/m12/ record is deliberately NOT covered: its checkout behaviour is left as it was.
+experiments/m12_mechanism/** -text

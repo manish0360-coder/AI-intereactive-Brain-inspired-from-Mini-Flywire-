@@ -5,7 +5,7 @@ Results are recorded in [`docs/VERIFICATION_STATUS.md`](../VERIFICATION_STATUS.m
 [`docs/COGNITIVE_MILESTONE_ROADMAP.md`](../COGNITIVE_MILESTONE_ROADMAP.md) (testbed gates); this file records where
 work stands. Document index: [`docs/README.md`](../README.md).
 
-**Last updated:** 2026-11-17
+**Last updated:** 2026-11-18
 
 ## Repository
 
@@ -20,7 +20,8 @@ work stands. Document index: [`docs/README.md`](../README.md).
 
 | Date | Work | Result |
 |---|---|---|
-| 2026-11-17 | **M11** the adopted belief (AD-13) against MBVI3 under controlled route blocking and reopening on the app's own graph (`experiments/m11_routes/`), 135 labels × 3 families, outside the app | **DEMONSTRATED ON THE MINIFLYWIRE GRAPH** (development-level). D1 recovery in OFTEN +11.1 [7.2, 15.3]; D2 cost in RARE +2.9 [0.7, 4.9] (margin 25); D3 crossings of reopened edges +0.64 [0.19, 1.14]. All smaller than CF-06. Reopened edges are rarely re-used (OFTEN: 4.6% of reopenings by BELIEF, 1.2% by MBVI3), and 61% of the recovery difference is in labels where neither agent re-used one: the source is not identified. Freeze `a3cccd5`; results in the commit after it |
+| 2026-11-18 | **M12** belief-to-behaviour mechanism analysis of the stored M11 rows and traces (`experiments/m12_mechanism/`); no run, no replay, no agent change | **Accepted by the owner as a useful explanation.** Observational, not causal proof. The 61% comes from BELIEF going back to exits its detector had written off: reopened edges, mostly 2–4 windows after the reopening, beyond M11's crossing window; and false-alarm repairs. In the 103 labels, the 51 with such a return carry +924 of +916; the other 52 carry −8. BELIEF's returns are observed in all 810 runs; MBVI3's non-return only in the 18 traces (0 of 8). M11 RESULTS.md amended (dated), verdict unchanged |
+| 2026-11-17 | **M11** the adopted belief (AD-13) against MBVI3 under controlled route blocking and reopening on the app's own graph (`experiments/m11_routes/`), 135 labels × 3 families, outside the app | **DEMONSTRATED ON THE MINIFLYWIRE GRAPH** (development-level). D1 recovery in OFTEN +11.1 [7.2, 15.3]; D2 cost in RARE +2.9 [0.7, 4.9] (margin 25); D3 crossings of reopened edges +0.64 [0.19, 1.14]. All smaller than CF-06. Reopened edges are rarely re-used inside their own after-window (OFTEN: 4.6% of reopenings by BELIEF, 1.2% by MBVI3). The original record said 61% of the recovery difference came from labels where no reopened edge was ever re-used, with the source unidentified; **amended 2026-11-18 after M12**: in most of those labels BELIEF went back later (see M12). Verdict unchanged. Freeze `a3cccd5`, results `880b179` |
 | 2026-11-17 | **CF-06** a belief about whether a changed exit will change back (model v6, ρ fixed at 1/2), 135 fresh `gate6` worlds | **SUPPORTED — CONSISTENT.** Beats all four fixed re-testing policies on the mix; against the planner +84.7 [55.1, 119.4] (2.4%; median +21); costs +17.4 in RARE (inside the 25 margin). Gain from genuine reversals and false-alarm repair. Adversarial review: SOUND WITH CORRECTIONS, verdict unchanged. The gain is about 28 steps a run, and the full verdict line holds only at h = 0.01. **Adopted by the owner (AD-13), with the limited claim.** Freeze `7ce1dc6`, results `22ea769`, review `72230be`, proposal `89e2468`, adoption in the commit after it |
 | 2026-11-13 | **CF-03b** world model v2 (`cognitive/mind/`) | **PASS** on 20 fresh `gate3b` worlds: ECE 0.028 against 0.05 (v1 0.104); DYNAQ − MBVI2 on E3 +171.0 [52.3, 317.5]; no regression. Calibration did not improve task performance. Freeze `1968083`, results `4e310b0` |
 | 2026-11-14 | **CF-04** hidden-change task E4 and reliability arbitration (`cognitive/mind/arb/`), 55 fresh worlds | **ARBITRATION NOT SUPPORTED — HARMFUL.** The task is admitted (+160.7 steps without change detection). Planner − ARB = −13.8 [−20.0, −7.2]; ARB is also worse than random switching. Arbitration is not built into the agent. Freeze `2ae0311`; results in the commit after it |
@@ -76,8 +77,11 @@ Since then:
 2. **Closure ruling** retiring nine unrun legacy studies (AD-10; a proposed D-045).
 3. **Authorisation** for the legacy adapter's map-off hook in `main.js` (roadmap L1) and for app integration (M9).
 4. An **erratum** for `experiments/coga/README.md`, which still calls ACQ-1 "SUPPORTED" against D-035.
-5. **What follows M11**, if anything: for example a viewer for its traces, a look at the unexplained part of the
-   recovery difference, or app integration (still "NOT YET"). Each is a separate decision.
+5. **What follows M11 and M12**, if anything. Each is a separate decision:
+   - a viewer for the traces;
+   - a replay of the 51 OFTEN labels with step traces, the minimum evidence for MBVI3's side of the M12 explanation
+     (it re-executes spent labels);
+   - app integration (still "NOT YET").
 
 ## Next exact engineering milestone
 
@@ -117,6 +121,36 @@ with it: `run/gate6_power_events.txt` (the Windows event-log extract behind the 
   false-alarm repair; against the four fixed policies tested; the full verdict line only at h = 0.01; one development
   gate.
 
+**M12 RECORDED (2026-11-18): the belief-to-behaviour mechanism behind M11's recovery advantage**
+(`experiments/m12_mechanism/REPORT.md`). The owner accepted it as a useful explanation supported by the 810-run data.
+It is a post-hoc, observational analysis of the stored M11 record. Nothing was run or replayed, no agent or parameter
+was changed, and no new experiment was made.
+- **Mechanism.**
+  - v6 is v3 plus archives, so the two agents can differ only through an exit BELIEF has archived. Verified on all 810
+    rows: every window before BELIEF's first archive is identical, and the 11 labels with no archive tie.
+  - BELIEF's belief that a written-off exit works again grows with the time since the change: about 0.2 at the
+    reopening, about 0.45 some 200 steps later. It then re-tests, finds the exit open and stays on the shorter route.
+  - MBVI3 keeps its estimate near 0.1 and never re-tests.
+- **The 61% (916 of 1,494 OFTEN steps):**
+  - In the 103 labels, the 51 where BELIEF went back carry +924. These are reopened edges outside M11's crossing
+    window (27 labels alone, +485), false-alarm repairs (15 alone, +223), and both (9, +216). The other 52 carry −8.
+  - Within those 51 labels, −3 before the first return and +927 from it.
+  - Labels without a return stay flat at every event index. Dose 0 / 1 / 2 / 3+ returns: −0.19 / +15.7 / +23.1 /
+    +32 per label.
+- **Evidence bases, kept apart:**
+  - BELIEF's returns: all 810 runs, from its own archive log. The reconstruction matches the task's ground-truth alarm
+    counts in every row.
+  - MBVI3's non-return: **only the 18 preselected traces** (0 of 8 met reopened edges crossed again; BELIEF 3 of 10).
+    In the rows it is inferred from the step counts.
+  - Route make-up (93% of episodes on identical routes; every first divergence is BELIEF going for an archived exit):
+    traces only.
+- **Strength:** strongly supported by observational analysis, **not definitive causal proof**. The groups are defined
+  by BELIEF's behaviour, nothing was intervened on, and MBVI3's side rests on 18 traces.
+- **Minimum evidence for MBVI3's side:** a replay of the 51 labels × 2 arms with the existing passive recorder, checked
+  row by row against the stored rows. It needs the owner's word (it re-executes spent labels).
+- **Record correction:** M11's `RESULTS.md` has a dated amendment, and the original text is kept. D1–D3 and the
+  verdict are unchanged.
+
 **M11 RECORDED (2026-11-17): DEMONSTRATED ON THE MINIFLYWIRE GRAPH** (development-level, not confirmatory).
 `experiments/m11_routes/RESULTS.md`; `m11_result.json` SHA-256 `3d86d073…1c05`; not pushed.
 - **Run:** frozen `a3cccd5` on the owner's word "Freeze and run". Run once, 17:08–18:13Z, at HEAD `a3cccd5`. 810 E5
@@ -126,9 +160,14 @@ with it: `run/gate6_power_events.txt` (the Windows event-log extract behind the 
   against 25; D3 crossings (OFTEN) +0.64 [0.19, 1.14]. All pass.
 - **Size:** OFTEN total +19.5 a run (3.2%); HALF +11.2 (1.7%); RARE costs 2.9 (0.4%). CF-06's generated worlds gave
   +43.5 / +17.4 / +4.9.
-- **Caveat (descriptive, after the result):** re-use of a reopened edge is rare (OFTEN 33 of 725 reopenings by
-  BELIEF, 9 by MBVI3). 61% of the OFTEN recovery difference is in the 103 labels where neither agent re-used one, so
-  D1 is not carried by D3. Its source is not identified.
+- **Caveat (descriptive, after the result; corrected 2026-11-18):**
+  - Re-use of a reopened edge **inside its own after-window** is rare: in OFTEN, BELIEF re-used 33 of the 725
+    reopened edges there, MBVI3 9.
+  - 61% of the OFTEN recovery difference is in the 103 labels where neither agent re-used a reopened edge in that
+    window, so D1 is not carried by D3.
+  - The original record went further: it said no reopened edge was ever re-used in those labels and that the source
+    was unidentified. That was too strong. M12 (below) found that BELIEF went back later in most of them. A dated
+    amendment in `RESULTS.md` keeps the original text.
 - **Traces:**
   - The pre-declared illustration (label 0, OFTEN) is a tie: the actions are identical. It shows BELIEF's predicted
     chance that a blocked exit works rising while blocked (0.12 → 0.26 → 0.44) while MBVI3's stays near 0.1.

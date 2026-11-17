@@ -1,0 +1,675 @@
+{
+ "source": "experiments/m11_routes/results/m11_result.json",
+ "checksFailed": [],
+ "families": {
+  "RARE": {
+   "labels": 135,
+   "noArchive": {
+    "labels": 0,
+    "nonZeroTotal": 0
+   },
+   "trainDiffers": 2,
+   "byConfirmClass_all": {
+    "B_archiveNoReuse": {
+     "labels": 89,
+     "dAfterReversed": -17,
+     "dTotal": -486,
+     "dBlocked": -313,
+     "ties": 3
+    },
+    "C1_lateReuseOnly": {
+     "labels": 5,
+     "dAfterReversed": 12,
+     "dTotal": 163,
+     "dBlocked": 74,
+     "ties": 0
+    },
+    "C2_falseRepairOnly": {
+     "labels": 35,
+     "dAfterReversed": 0,
+     "dTotal": -115,
+     "dBlocked": -107,
+     "ties": 5
+    },
+    "E_ownAfterReuse": {
+     "labels": 6,
+     "dAfterReversed": 29,
+     "dTotal": 50,
+     "dBlocked": 0,
+     "ties": 0
+    }
+   },
+   "sum_all": {
+    "labels": 135,
+    "dAfterReversed": 24,
+    "dTotal": -388
+   },
+   "timeSplitFirstReuse_all": {
+    "windowsEndingBeforeFirstReuse": {
+     "afterReversed": -18,
+     "total": -569
+    },
+    "windowsContainingOrAfterFirstReuse": {
+     "afterReversed": 42,
+     "total": 181
+    }
+   },
+   "byEvent_all": [
+    {
+     "k": 1,
+     "blocked": -1,
+     "afterReversed": 3,
+     "afterPermanent": -6
+    },
+    {
+     "k": 2,
+     "blocked": -28,
+     "afterReversed": 13,
+     "afterPermanent": 2
+    },
+    {
+     "k": 3,
+     "blocked": -30,
+     "afterReversed": 15,
+     "afterPermanent": 20
+    },
+    {
+     "k": 4,
+     "blocked": -65,
+     "afterReversed": -2,
+     "afterPermanent": -38
+    },
+    {
+     "k": 5,
+     "blocked": -90,
+     "afterReversed": 7,
+     "afterPermanent": -23
+    },
+    {
+     "k": 6,
+     "blocked": -132,
+     "afterReversed": -12,
+     "afterPermanent": -21
+    }
+   ],
+   "byConfirmClass_neither": {
+    "B_archiveNoReuse": {
+     "labels": 87,
+     "dAfterReversed": -17,
+     "dTotal": -485,
+     "dBlocked": -313,
+     "ties": 2
+    },
+    "C1_lateReuseOnly": {
+     "labels": 4,
+     "dAfterReversed": 4,
+     "dTotal": 100,
+     "dBlocked": 60,
+     "ties": 0
+    },
+    "C2_falseRepairOnly": {
+     "labels": 35,
+     "dAfterReversed": 0,
+     "dTotal": -115,
+     "dBlocked": -107,
+     "ties": 5
+    }
+   },
+   "sum_neither": {
+    "labels": 126,
+    "dAfterReversed": -13,
+    "dTotal": -500
+   },
+   "timeSplitFirstReuse_neither": {
+    "windowsEndingBeforeFirstReuse": {
+     "afterReversed": -18,
+     "total": -564
+    },
+    "windowsContainingOrAfterFirstReuse": {
+     "afterReversed": 5,
+     "total": 64
+    }
+   },
+   "byEvent_neither": [
+    {
+     "k": 1,
+     "blocked": -1,
+     "afterReversed": 0,
+     "afterPermanent": -6
+    },
+    {
+     "k": 2,
+     "blocked": -26,
+     "afterReversed": 7,
+     "afterPermanent": 7
+    },
+    {
+     "k": 3,
+     "blocked": -30,
+     "afterReversed": 0,
+     "afterPermanent": 22
+    },
+    {
+     "k": 4,
+     "blocked": -101,
+     "afterReversed": -1,
+     "afterPermanent": -81
+    },
+    {
+     "k": 5,
+     "blocked": -86,
+     "afterReversed": -4,
+     "afterPermanent": -38
+    },
+    {
+     "k": 6,
+     "blocked": -116,
+     "afterReversed": -15,
+     "afterPermanent": -31
+    }
+   ],
+   "confirms": {
+    "ownAfter": 6,
+    "later": 6,
+    "falseRepair": 40
+   },
+   "laterReuseWhere": {
+    "blocked": 4,
+    "after": 2
+   },
+   "laterReuseLagMedian": 207,
+   "opens": {
+    "real": 565,
+    "realReversing": 35,
+    "false": 89,
+    "falseByPhase": {
+     "explore": 17,
+     "train": 9,
+     "blocked": 34,
+     "after": 29
+    }
+   },
+   "detector": {
+    "changesDownB": 4.85,
+    "changesDownM": 4.73,
+    "changesUpB": 0.07,
+    "changesUpM": 0.07,
+    "labelsWithChangesUpB": 10,
+    "labelsWithChangesUpM": 9
+   },
+   "attempts": {
+    "ownAfterB": 246,
+    "ownAfterM": 123,
+    "oldPermanentB": 1836,
+    "oldPermanentM": 1493,
+    "futileB": 2041,
+    "futileM": 1597
+   }
+  },
+  "HALF": {
+   "labels": 135,
+   "noArchive": {
+    "labels": 2,
+    "nonZeroTotal": 0
+   },
+   "trainDiffers": 2,
+   "byConfirmClass_all": {
+    "A_noArchive": {
+     "labels": 2,
+     "dAfterReversed": 0,
+     "dTotal": 0,
+     "dBlocked": 0,
+     "ties": 2
+    },
+    "B_archiveNoReuse": {
+     "labels": 58,
+     "dAfterReversed": -1,
+     "dTotal": -161,
+     "dBlocked": -143,
+     "ties": 14
+    },
+    "C1_lateReuseOnly": {
+     "labels": 21,
+     "dAfterReversed": 335,
+     "dTotal": 853,
+     "dBlocked": 369,
+     "ties": 0
+    },
+    "C2_falseRepairOnly": {
+     "labels": 26,
+     "dAfterReversed": 23,
+     "dTotal": 191,
+     "dBlocked": 146,
+     "ties": 7
+    },
+    "D_lateReuse+falseRepair": {
+     "labels": 10,
+     "dAfterReversed": 47,
+     "dTotal": 181,
+     "dBlocked": 27,
+     "ties": 1
+    },
+    "E_ownAfterReuse": {
+     "labels": 18,
+     "dAfterReversed": 255,
+     "dTotal": 441,
+     "dBlocked": 108,
+     "ties": 1
+    }
+   },
+   "sum_all": {
+    "labels": 135,
+    "dAfterReversed": 659,
+    "dTotal": 1505
+   },
+   "timeSplitFirstReuse_all": {
+    "windowsEndingBeforeFirstReuse": {
+     "afterReversed": -12,
+     "total": -287
+    },
+    "windowsContainingOrAfterFirstReuse": {
+     "afterReversed": 671,
+     "total": 1792
+    }
+   },
+   "byEvent_all": [
+    {
+     "k": 1,
+     "blocked": -2,
+     "afterReversed": 4,
+     "afterPermanent": -4
+    },
+    {
+     "k": 2,
+     "blocked": -2,
+     "afterReversed": 5,
+     "afterPermanent": 2
+    },
+    {
+     "k": 3,
+     "blocked": 56,
+     "afterReversed": 86,
+     "afterPermanent": -3
+    },
+    {
+     "k": 4,
+     "blocked": 111,
+     "afterReversed": 153,
+     "afterPermanent": 76
+    },
+    {
+     "k": 5,
+     "blocked": 139,
+     "afterReversed": 204,
+     "afterPermanent": 105
+    },
+    {
+     "k": 6,
+     "blocked": 205,
+     "afterReversed": 207,
+     "afterPermanent": 163
+    }
+   ],
+   "byConfirmClass_neither": {
+    "A_noArchive": {
+     "labels": 2,
+     "dAfterReversed": 0,
+     "dTotal": 0,
+     "dBlocked": 0,
+     "ties": 2
+    },
+    "B_archiveNoReuse": {
+     "labels": 55,
+     "dAfterReversed": -8,
+     "dTotal": -153,
+     "dBlocked": -132,
+     "ties": 14
+    },
+    "C1_lateReuseOnly": {
+     "labels": 19,
+     "dAfterReversed": 322,
+     "dTotal": 848,
+     "dBlocked": 374,
+     "ties": 0
+    },
+    "C2_falseRepairOnly": {
+     "labels": 24,
+     "dAfterReversed": 15,
+     "dTotal": 154,
+     "dBlocked": 137,
+     "ties": 6
+    },
+    "D_lateReuse+falseRepair": {
+     "labels": 7,
+     "dAfterReversed": 34,
+     "dTotal": 159,
+     "dBlocked": 23,
+     "ties": 1
+    }
+   },
+   "sum_neither": {
+    "labels": 107,
+    "dAfterReversed": 363,
+    "dTotal": 1008
+   },
+   "timeSplitFirstReuse_neither": {
+    "windowsEndingBeforeFirstReuse": {
+     "afterReversed": -15,
+     "total": -237
+    },
+    "windowsContainingOrAfterFirstReuse": {
+     "afterReversed": 378,
+     "total": 1245
+    }
+   },
+   "byEvent_neither": [
+    {
+     "k": 1,
+     "blocked": -2,
+     "afterReversed": -1,
+     "afterPermanent": -4
+    },
+    {
+     "k": 2,
+     "blocked": 19,
+     "afterReversed": 4,
+     "afterPermanent": 5
+    },
+    {
+     "k": 3,
+     "blocked": 40,
+     "afterReversed": 45,
+     "afterPermanent": 10
+    },
+    {
+     "k": 4,
+     "blocked": 97,
+     "afterReversed": 72,
+     "afterPermanent": 72
+    },
+    {
+     "k": 5,
+     "blocked": 80,
+     "afterReversed": 92,
+     "afterPermanent": 59
+    },
+    {
+     "k": 6,
+     "blocked": 168,
+     "afterReversed": 151,
+     "afterPermanent": 101
+    }
+   ],
+   "confirms": {
+    "ownAfter": 18,
+    "later": 37,
+    "falseRepair": 40
+   },
+   "laterReuseWhere": {
+    "blocked": 31,
+    "after": 6
+   },
+   "laterReuseLagMedian": 192,
+   "opens": {
+    "real": 449,
+    "realReversing": 185,
+    "false": 77,
+    "falseByPhase": {
+     "explore": 17,
+     "train": 9,
+     "blocked": 21,
+     "after": 30
+    }
+   },
+   "detector": {
+    "changesDownB": 3.9,
+    "changesDownM": 3.71,
+    "changesUpB": 0.16,
+    "changesUpM": 0.07,
+    "labelsWithChangesUpB": 21,
+    "labelsWithChangesUpM": 10
+   },
+   "attempts": {
+    "ownAfterB": 242,
+    "ownAfterM": 75,
+    "oldPermanentB": 1055,
+    "oldPermanentM": 868,
+    "futileB": 1142,
+    "futileM": 908
+   }
+  },
+  "OFTEN": {
+   "labels": 135,
+   "noArchive": {
+    "labels": 9,
+    "nonZeroTotal": 0
+   },
+   "trainDiffers": 2,
+   "byConfirmClass_all": {
+    "A_noArchive": {
+     "labels": 9,
+     "dAfterReversed": 0,
+     "dTotal": 0,
+     "dBlocked": 0,
+     "ties": 9
+    },
+    "B_archiveNoReuse": {
+     "labels": 46,
+     "dAfterReversed": -3,
+     "dTotal": -66,
+     "dBlocked": -62,
+     "ties": 26
+    },
+    "C1_lateReuseOnly": {
+     "labels": 33,
+     "dAfterReversed": 522,
+     "dTotal": 1182,
+     "dBlocked": 596,
+     "ties": 2
+    },
+    "C2_falseRepairOnly": {
+     "labels": 17,
+     "dAfterReversed": 251,
+     "dTotal": 410,
+     "dBlocked": 152,
+     "ties": 9
+    },
+    "D_lateReuse+falseRepair": {
+     "labels": 11,
+     "dAfterReversed": 339,
+     "dTotal": 575,
+     "dBlocked": 230,
+     "ties": 1
+    },
+    "E_ownAfterReuse": {
+     "labels": 19,
+     "dAfterReversed": 385,
+     "dTotal": 525,
+     "dBlocked": 109,
+     "ties": 1
+    }
+   },
+   "sum_all": {
+    "labels": 135,
+    "dAfterReversed": 1494,
+    "dTotal": 2626
+   },
+   "timeSplitFirstReuse_all": {
+    "windowsEndingBeforeFirstReuse": {
+     "afterReversed": -7,
+     "total": -113
+    },
+    "windowsContainingOrAfterFirstReuse": {
+     "afterReversed": 1501,
+     "total": 2739
+    }
+   },
+   "byEvent_all": [
+    {
+     "k": 1,
+     "blocked": -7,
+     "afterReversed": 50,
+     "afterPermanent": 0
+    },
+    {
+     "k": 2,
+     "blocked": -5,
+     "afterReversed": 109,
+     "afterPermanent": -5
+    },
+    {
+     "k": 3,
+     "blocked": 174,
+     "afterReversed": 202,
+     "afterPermanent": -2
+    },
+    {
+     "k": 4,
+     "blocked": 109,
+     "afterReversed": 248,
+     "afterPermanent": 24
+    },
+    {
+     "k": 5,
+     "blocked": 383,
+     "afterReversed": 353,
+     "afterPermanent": 63
+    },
+    {
+     "k": 6,
+     "blocked": 371,
+     "afterReversed": 532,
+     "afterPermanent": 27
+    }
+   ],
+   "byConfirmClass_neither": {
+    "A_noArchive": {
+     "labels": 9,
+     "dAfterReversed": 0,
+     "dTotal": 0,
+     "dBlocked": 0,
+     "ties": 9
+    },
+    "B_archiveNoReuse": {
+     "labels": 43,
+     "dAfterReversed": -8,
+     "dTotal": -63,
+     "dBlocked": -54,
+     "ties": 24
+    },
+    "C1_lateReuseOnly": {
+     "labels": 27,
+     "dAfterReversed": 485,
+     "dTotal": 1167,
+     "dBlocked": 619,
+     "ties": 1
+    },
+    "C2_falseRepairOnly": {
+     "labels": 15,
+     "dAfterReversed": 223,
+     "dTotal": 375,
+     "dBlocked": 145,
+     "ties": 9
+    },
+    "D_lateReuse+falseRepair": {
+     "labels": 9,
+     "dAfterReversed": 216,
+     "dTotal": 425,
+     "dBlocked": 203,
+     "ties": 1
+    }
+   },
+   "sum_neither": {
+    "labels": 103,
+    "dAfterReversed": 916,
+    "dTotal": 1904
+   },
+   "timeSplitFirstReuse_neither": {
+    "windowsEndingBeforeFirstReuse": {
+     "afterReversed": -11,
+     "total": -78
+    },
+    "windowsContainingOrAfterFirstReuse": {
+     "afterReversed": 927,
+     "total": 1982
+    }
+   },
+   "byEvent_neither": [
+    {
+     "k": 1,
+     "blocked": -2,
+     "afterReversed": -2,
+     "afterPermanent": 0
+    },
+    {
+     "k": 2,
+     "blocked": 24,
+     "afterReversed": 29,
+     "afterPermanent": -2
+    },
+    {
+     "k": 3,
+     "blocked": 124,
+     "afterReversed": 139,
+     "afterPermanent": -2
+    },
+    {
+     "k": 4,
+     "blocked": 128,
+     "afterReversed": 159,
+     "afterPermanent": 17
+    },
+    {
+     "k": 5,
+     "blocked": 314,
+     "afterReversed": 225,
+     "afterPermanent": 42
+    },
+    {
+     "k": 6,
+     "blocked": 325,
+     "afterReversed": 366,
+     "afterPermanent": 20
+    }
+   ],
+   "confirms": {
+    "ownAfter": 22,
+    "later": 63,
+    "falseRepair": 35
+   },
+   "laterReuseWhere": {
+    "blocked": 45,
+    "after": 18
+   },
+   "laterReuseLagMedian": 210,
+   "opens": {
+    "real": 281,
+    "realReversing": 239,
+    "false": 76,
+    "falseByPhase": {
+     "explore": 17,
+     "train": 9,
+     "blocked": 24,
+     "after": 26
+    }
+   },
+   "detector": {
+    "changesDownB": 2.64,
+    "changesDownM": 2.49,
+    "changesUpB": 0.16,
+    "changesUpM": 0.05,
+    "labelsWithChangesUpB": 17,
+    "labelsWithChangesUpM": 7
+   },
+   "attempts": {
+    "ownAfterB": 184,
+    "ownAfterM": 68,
+    "oldPermanentB": 206,
+    "oldPermanentM": 241,
+    "futileB": 217,
+    "futileM": 245
+   }
+  }
+ }
+}
+all reconstruction checks pass

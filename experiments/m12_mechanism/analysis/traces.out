@@ -1,0 +1,415 @@
+{
+ "checksFailed": [],
+ "decomposition": {
+  "all": {
+   "dSteps": -38,
+   "dMoves": 1,
+   "dBlockedFails": -62,
+   "dChanceFails": 23
+  },
+  "afterReversed": {
+   "dSteps": 17,
+   "dMoves": 9,
+   "dBlockedFails": 1,
+   "dChanceFails": 7
+  },
+  "blocked": {
+   "dSteps": -53,
+   "dMoves": -7,
+   "dBlockedFails": -47,
+   "dChanceFails": 1
+  }
+ },
+ "episodesSameRoute": {
+  "same": 1004,
+  "of": 1080
+ },
+ "divergences": [
+  {
+   "pair": "0 RARE",
+   "t": 1031,
+   "beliefExitArchived": false,
+   "beliefMoved": 1,
+   "beliefBlocked": 0,
+   "beliefP": 0.6907,
+   "mbvi3PForBeliefExit": null,
+   "lagFromLastOpen": 104
+  },
+  {
+   "pair": "0 HALF",
+   "t": 899,
+   "beliefExitArchived": true,
+   "beliefMoved": 0,
+   "beliefBlocked": 1,
+   "beliefP": 0.3045,
+   "mbvi3PForBeliefExit": 0.1292,
+   "lagFromLastOpen": 73
+  },
+  {
+   "pair": "0 OFTEN",
+   "identical": true
+  },
+  {
+   "pair": "1 RARE",
+   "t": 907,
+   "beliefExitArchived": false,
+   "beliefMoved": 1,
+   "beliefBlocked": 0,
+   "beliefP": 0.9698,
+   "mbvi3PForBeliefExit": null,
+   "lagFromLastOpen": 11
+  },
+  {
+   "pair": "1 HALF",
+   "t": 1121,
+   "beliefExitArchived": true,
+   "beliefMoved": 0,
+   "beliefBlocked": 1,
+   "beliefP": 0.3792,
+   "mbvi3PForBeliefExit": 0.1153,
+   "lagFromLastOpen": 1
+  },
+  {
+   "pair": "1 OFTEN",
+   "identical": true
+  },
+  {
+   "pair": "2 RARE",
+   "t": 914,
+   "beliefExitArchived": true,
+   "beliefMoved": 0,
+   "beliefBlocked": 1,
+   "beliefP": 0.2314,
+   "mbvi3PForBeliefExit": 0.017,
+   "lagFromLastOpen": 190
+  },
+  {
+   "pair": "2 HALF",
+   "t": 914,
+   "beliefExitArchived": true,
+   "beliefMoved": 0,
+   "beliefBlocked": 1,
+   "beliefP": 0.2314,
+   "mbvi3PForBeliefExit": 0.017,
+   "lagFromLastOpen": 190
+  },
+  {
+   "pair": "2 OFTEN",
+   "t": 759,
+   "beliefExitArchived": true,
+   "beliefMoved": 0,
+   "beliefBlocked": 1,
+   "beliefP": 0.2387,
+   "mbvi3PForBeliefExit": 0.1358,
+   "lagFromLastOpen": 38
+  }
+ ],
+ "reversingArchives": [
+  {
+   "pair": "0 HALF",
+   "event": 3,
+   "edge": "12-7",
+   "openedAt": 956,
+   "confirmedAt": 1346,
+   "belief": {
+    "ownAfter": 0,
+    "later": 1,
+    "firstAfterReopen": 1346,
+    "reopenAt": 1024
+   },
+   "mbvi3": {
+    "ownAfter": 0,
+    "later": 0,
+    "firstAfterReopen": null,
+    "reopenAt": 1021
+   }
+  },
+  {
+   "pair": "0 OFTEN",
+   "event": 1,
+   "edge": "19-6",
+   "openedAt": 726,
+   "confirmedAt": null,
+   "belief": {
+    "ownAfter": 0,
+    "later": 0,
+    "firstAfterReopen": null,
+    "reopenAt": 772
+   },
+   "mbvi3": {
+    "ownAfter": 0,
+    "later": 0,
+    "firstAfterReopen": null,
+    "reopenAt": 772
+   }
+  },
+  {
+   "pair": "1 RARE",
+   "event": 3,
+   "edge": "5-2",
+   "openedAt": 896,
+   "confirmedAt": 1018,
+   "belief": {
+    "ownAfter": 5,
+    "later": 0,
+    "firstAfterReopen": 1018,
+    "reopenAt": 981
+   },
+   "mbvi3": {
+    "ownAfter": 0,
+    "later": 0,
+    "firstAfterReopen": null,
+    "reopenAt": 974
+   }
+  },
+  {
+   "pair": "1 HALF",
+   "event": 4,
+   "edge": "5-2",
+   "openedAt": 957,
+   "confirmedAt": null,
+   "belief": {
+    "ownAfter": 0,
+    "later": 0,
+    "firstAfterReopen": null,
+    "reopenAt": 997
+   },
+   "mbvi3": {
+    "ownAfter": 0,
+    "later": 0,
+    "firstAfterReopen": null,
+    "reopenAt": 997
+   }
+  },
+  {
+   "pair": "1 HALF",
+   "event": 6,
+   "edge": "8-5",
+   "openedAt": 1120,
+   "confirmedAt": null,
+   "belief": {
+    "ownAfter": 0,
+    "later": 0,
+    "firstAfterReopen": null,
+    "reopenAt": 1176
+   },
+   "mbvi3": {
+    "ownAfter": 0,
+    "later": 0,
+    "firstAfterReopen": null,
+    "reopenAt": 1174
+   }
+  },
+  {
+   "pair": "1 OFTEN",
+   "event": 2,
+   "edge": "2-3",
+   "openedAt": 804,
+   "confirmedAt": null,
+   "belief": {
+    "ownAfter": 0,
+    "later": 0,
+    "firstAfterReopen": null,
+    "reopenAt": 844
+   },
+   "mbvi3": {
+    "ownAfter": 0,
+    "later": 0,
+    "firstAfterReopen": null,
+    "reopenAt": 844
+   }
+  },
+  {
+   "pair": "2 OFTEN",
+   "event": 1,
+   "edge": "5-8",
+   "openedAt": 721,
+   "confirmedAt": 812,
+   "belief": {
+    "ownAfter": 7,
+    "later": 0,
+    "firstAfterReopen": 812,
+    "reopenAt": 783
+   },
+   "mbvi3": {
+    "ownAfter": 0,
+    "later": 0,
+    "firstAfterReopen": null,
+    "reopenAt": 782
+   }
+  },
+  {
+   "pair": "2 OFTEN",
+   "event": 2,
+   "edge": "5-8",
+   "openedAt": 852,
+   "confirmedAt": null,
+   "belief": {
+    "ownAfter": 0,
+    "later": 0,
+    "firstAfterReopen": null,
+    "reopenAt": 916
+   },
+   "mbvi3": {
+    "ownAfter": 0,
+    "later": 0,
+    "firstAfterReopen": null,
+    "reopenAt": 913
+   }
+  },
+  {
+   "pair": "2 OFTEN",
+   "event": 5,
+   "edge": "2-5",
+   "openedAt": 1277,
+   "confirmedAt": null,
+   "belief": {
+    "ownAfter": 0,
+    "later": 0,
+    "firstAfterReopen": null,
+    "reopenAt": 1342
+   },
+   "mbvi3": {
+    "ownAfter": 0,
+    "later": 0,
+    "firstAfterReopen": null,
+    "reopenAt": 1339
+   }
+  }
+ ],
+ "reopenedEdges": {
+  "events": 26,
+  "triedWhileBlocked": {
+   "belief": 10,
+   "mbvi3": 8
+  },
+  "reusedInOwnAfter": {
+   "belief": 3,
+   "mbvi3": 0
+  },
+  "reusedOnlyLater": {
+   "belief": 2,
+   "mbvi3": 1
+  },
+  "crossingsTotal": {
+   "belief": 74,
+   "mbvi3": 60
+  }
+ },
+ "permanentArchives": 18,
+ "falseArchives": [
+  {
+   "pair": "0 RARE",
+   "edge": "6-1",
+   "openedAt": 1142,
+   "confirmedAt": 1166,
+   "belief": {
+    "before": 14,
+    "after": 5
+   },
+   "mbvi3": {
+    "before": 13,
+    "after": 4
+   }
+  },
+  {
+   "pair": "0 RARE",
+   "edge": "2-3",
+   "openedAt": 1189,
+   "confirmedAt": 1212,
+   "belief": {
+    "before": 38,
+    "after": 42
+   },
+   "mbvi3": {
+    "before": 38,
+    "after": 42
+   }
+  },
+  {
+   "pair": "0 HALF",
+   "edge": "12-11",
+   "openedAt": 1196,
+   "confirmedAt": null,
+   "belief": {
+    "before": 27,
+    "after": 0
+   },
+   "mbvi3": {
+    "before": 27,
+    "after": 0
+   }
+  },
+  {
+   "pair": "1 RARE",
+   "edge": "9-4",
+   "openedAt": 705,
+   "confirmedAt": 908,
+   "belief": {
+    "before": 0,
+    "after": 3
+   },
+   "mbvi3": {
+    "before": 0,
+    "after": 0
+   }
+  },
+  {
+   "pair": "1 HALF",
+   "edge": "9-4",
+   "openedAt": 705,
+   "confirmedAt": null,
+   "belief": {
+    "before": 0,
+    "after": 0
+   },
+   "mbvi3": {
+    "before": 0,
+    "after": 0
+   }
+  },
+  {
+   "pair": "1 OFTEN",
+   "edge": "9-4",
+   "openedAt": 705,
+   "confirmedAt": null,
+   "belief": {
+    "before": 0,
+    "after": 0
+   },
+   "mbvi3": {
+    "before": 0,
+    "after": 0
+   }
+  },
+  {
+   "pair": "2 RARE",
+   "edge": "2-1",
+   "openedAt": 1277,
+   "confirmedAt": 1317,
+   "belief": {
+    "before": 88,
+    "after": 30
+   },
+   "mbvi3": {
+    "before": 88,
+    "after": 30
+   }
+  },
+  {
+   "pair": "2 HALF",
+   "edge": "2-1",
+   "openedAt": 1318,
+   "confirmedAt": 1348,
+   "belief": {
+    "before": 88,
+    "after": 2
+   },
+   "mbvi3": {
+    "before": 88,
+    "after": 2
+   }
+  }
+ ]
+}
+all trace checks pass

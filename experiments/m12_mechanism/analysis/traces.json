@@ -1,0 +1,2926 @@
+{
+ "summary": {
+  "checksFailed": [],
+  "decomposition": {
+   "all": {
+    "dSteps": -38,
+    "dMoves": 1,
+    "dBlockedFails": -62,
+    "dChanceFails": 23
+   },
+   "afterReversed": {
+    "dSteps": 17,
+    "dMoves": 9,
+    "dBlockedFails": 1,
+    "dChanceFails": 7
+   },
+   "blocked": {
+    "dSteps": -53,
+    "dMoves": -7,
+    "dBlockedFails": -47,
+    "dChanceFails": 1
+   }
+  },
+  "episodesSameRoute": {
+   "same": 1004,
+   "of": 1080
+  },
+  "divergences": [
+   {
+    "pair": "0 RARE",
+    "t": 1031,
+    "beliefExitArchived": false,
+    "beliefMoved": 1,
+    "beliefBlocked": 0,
+    "beliefP": 0.6907,
+    "mbvi3PForBeliefExit": null,
+    "lagFromLastOpen": 104
+   },
+   {
+    "pair": "0 HALF",
+    "t": 899,
+    "beliefExitArchived": true,
+    "beliefMoved": 0,
+    "beliefBlocked": 1,
+    "beliefP": 0.3045,
+    "mbvi3PForBeliefExit": 0.1292,
+    "lagFromLastOpen": 73
+   },
+   {
+    "pair": "0 OFTEN",
+    "identical": true
+   },
+   {
+    "pair": "1 RARE",
+    "t": 907,
+    "beliefExitArchived": false,
+    "beliefMoved": 1,
+    "beliefBlocked": 0,
+    "beliefP": 0.9698,
+    "mbvi3PForBeliefExit": null,
+    "lagFromLastOpen": 11
+   },
+   {
+    "pair": "1 HALF",
+    "t": 1121,
+    "beliefExitArchived": true,
+    "beliefMoved": 0,
+    "beliefBlocked": 1,
+    "beliefP": 0.3792,
+    "mbvi3PForBeliefExit": 0.1153,
+    "lagFromLastOpen": 1
+   },
+   {
+    "pair": "1 OFTEN",
+    "identical": true
+   },
+   {
+    "pair": "2 RARE",
+    "t": 914,
+    "beliefExitArchived": true,
+    "beliefMoved": 0,
+    "beliefBlocked": 1,
+    "beliefP": 0.2314,
+    "mbvi3PForBeliefExit": 0.017,
+    "lagFromLastOpen": 190
+   },
+   {
+    "pair": "2 HALF",
+    "t": 914,
+    "beliefExitArchived": true,
+    "beliefMoved": 0,
+    "beliefBlocked": 1,
+    "beliefP": 0.2314,
+    "mbvi3PForBeliefExit": 0.017,
+    "lagFromLastOpen": 190
+   },
+   {
+    "pair": "2 OFTEN",
+    "t": 759,
+    "beliefExitArchived": true,
+    "beliefMoved": 0,
+    "beliefBlocked": 1,
+    "beliefP": 0.2387,
+    "mbvi3PForBeliefExit": 0.1358,
+    "lagFromLastOpen": 38
+   }
+  ],
+  "reversingArchives": [
+   {
+    "pair": "0 HALF",
+    "event": 3,
+    "edge": "12-7",
+    "openedAt": 956,
+    "confirmedAt": 1346,
+    "belief": {
+     "ownAfter": 0,
+     "later": 1,
+     "firstAfterReopen": 1346,
+     "reopenAt": 1024
+    },
+    "mbvi3": {
+     "ownAfter": 0,
+     "later": 0,
+     "firstAfterReopen": null,
+     "reopenAt": 1021
+    }
+   },
+   {
+    "pair": "0 OFTEN",
+    "event": 1,
+    "edge": "19-6",
+    "openedAt": 726,
+    "confirmedAt": null,
+    "belief": {
+     "ownAfter": 0,
+     "later": 0,
+     "firstAfterReopen": null,
+     "reopenAt": 772
+    },
+    "mbvi3": {
+     "ownAfter": 0,
+     "later": 0,
+     "firstAfterReopen": null,
+     "reopenAt": 772
+    }
+   },
+   {
+    "pair": "1 RARE",
+    "event": 3,
+    "edge": "5-2",
+    "openedAt": 896,
+    "confirmedAt": 1018,
+    "belief": {
+     "ownAfter": 5,
+     "later": 0,
+     "firstAfterReopen": 1018,
+     "reopenAt": 981
+    },
+    "mbvi3": {
+     "ownAfter": 0,
+     "later": 0,
+     "firstAfterReopen": null,
+     "reopenAt": 974
+    }
+   },
+   {
+    "pair": "1 HALF",
+    "event": 4,
+    "edge": "5-2",
+    "openedAt": 957,
+    "confirmedAt": null,
+    "belief": {
+     "ownAfter": 0,
+     "later": 0,
+     "firstAfterReopen": null,
+     "reopenAt": 997
+    },
+    "mbvi3": {
+     "ownAfter": 0,
+     "later": 0,
+     "firstAfterReopen": null,
+     "reopenAt": 997
+    }
+   },
+   {
+    "pair": "1 HALF",
+    "event": 6,
+    "edge": "8-5",
+    "openedAt": 1120,
+    "confirmedAt": null,
+    "belief": {
+     "ownAfter": 0,
+     "later": 0,
+     "firstAfterReopen": null,
+     "reopenAt": 1176
+    },
+    "mbvi3": {
+     "ownAfter": 0,
+     "later": 0,
+     "firstAfterReopen": null,
+     "reopenAt": 1174
+    }
+   },
+   {
+    "pair": "1 OFTEN",
+    "event": 2,
+    "edge": "2-3",
+    "openedAt": 804,
+    "confirmedAt": null,
+    "belief": {
+     "ownAfter": 0,
+     "later": 0,
+     "firstAfterReopen": null,
+     "reopenAt": 844
+    },
+    "mbvi3": {
+     "ownAfter": 0,
+     "later": 0,
+     "firstAfterReopen": null,
+     "reopenAt": 844
+    }
+   },
+   {
+    "pair": "2 OFTEN",
+    "event": 1,
+    "edge": "5-8",
+    "openedAt": 721,
+    "confirmedAt": 812,
+    "belief": {
+     "ownAfter": 7,
+     "later": 0,
+     "firstAfterReopen": 812,
+     "reopenAt": 783
+    },
+    "mbvi3": {
+     "ownAfter": 0,
+     "later": 0,
+     "firstAfterReopen": null,
+     "reopenAt": 782
+    }
+   },
+   {
+    "pair": "2 OFTEN",
+    "event": 2,
+    "edge": "5-8",
+    "openedAt": 852,
+    "confirmedAt": null,
+    "belief": {
+     "ownAfter": 0,
+     "later": 0,
+     "firstAfterReopen": null,
+     "reopenAt": 916
+    },
+    "mbvi3": {
+     "ownAfter": 0,
+     "later": 0,
+     "firstAfterReopen": null,
+     "reopenAt": 913
+    }
+   },
+   {
+    "pair": "2 OFTEN",
+    "event": 5,
+    "edge": "2-5",
+    "openedAt": 1277,
+    "confirmedAt": null,
+    "belief": {
+     "ownAfter": 0,
+     "later": 0,
+     "firstAfterReopen": null,
+     "reopenAt": 1342
+    },
+    "mbvi3": {
+     "ownAfter": 0,
+     "later": 0,
+     "firstAfterReopen": null,
+     "reopenAt": 1339
+    }
+   }
+  ],
+  "reopenedEdges": {
+   "events": 26,
+   "triedWhileBlocked": {
+    "belief": 10,
+    "mbvi3": 8
+   },
+   "reusedInOwnAfter": {
+    "belief": 3,
+    "mbvi3": 0
+   },
+   "reusedOnlyLater": {
+    "belief": 2,
+    "mbvi3": 1
+   },
+   "crossingsTotal": {
+    "belief": 74,
+    "mbvi3": 60
+   }
+  },
+  "permanentArchives": 18,
+  "falseArchives": [
+   {
+    "pair": "0 RARE",
+    "edge": "6-1",
+    "openedAt": 1142,
+    "confirmedAt": 1166,
+    "belief": {
+     "before": 14,
+     "after": 5
+    },
+    "mbvi3": {
+     "before": 13,
+     "after": 4
+    }
+   },
+   {
+    "pair": "0 RARE",
+    "edge": "2-3",
+    "openedAt": 1189,
+    "confirmedAt": 1212,
+    "belief": {
+     "before": 38,
+     "after": 42
+    },
+    "mbvi3": {
+     "before": 38,
+     "after": 42
+    }
+   },
+   {
+    "pair": "0 HALF",
+    "edge": "12-11",
+    "openedAt": 1196,
+    "confirmedAt": null,
+    "belief": {
+     "before": 27,
+     "after": 0
+    },
+    "mbvi3": {
+     "before": 27,
+     "after": 0
+    }
+   },
+   {
+    "pair": "1 RARE",
+    "edge": "9-4",
+    "openedAt": 705,
+    "confirmedAt": 908,
+    "belief": {
+     "before": 0,
+     "after": 3
+    },
+    "mbvi3": {
+     "before": 0,
+     "after": 0
+    }
+   },
+   {
+    "pair": "1 HALF",
+    "edge": "9-4",
+    "openedAt": 705,
+    "confirmedAt": null,
+    "belief": {
+     "before": 0,
+     "after": 0
+    },
+    "mbvi3": {
+     "before": 0,
+     "after": 0
+    }
+   },
+   {
+    "pair": "1 OFTEN",
+    "edge": "9-4",
+    "openedAt": 705,
+    "confirmedAt": null,
+    "belief": {
+     "before": 0,
+     "after": 0
+    },
+    "mbvi3": {
+     "before": 0,
+     "after": 0
+    }
+   },
+   {
+    "pair": "2 RARE",
+    "edge": "2-1",
+    "openedAt": 1277,
+    "confirmedAt": 1317,
+    "belief": {
+     "before": 88,
+     "after": 30
+    },
+    "mbvi3": {
+     "before": 88,
+     "after": 30
+    }
+   },
+   {
+    "pair": "2 HALF",
+    "edge": "2-1",
+    "openedAt": 1318,
+    "confirmedAt": 1348,
+    "belief": {
+     "before": 88,
+     "after": 2
+    },
+    "mbvi3": {
+     "before": 88,
+     "after": 2
+    }
+   }
+  ]
+ },
+ "pairs": [
+  {
+   "world": "mfw|m11|0",
+   "family": "RARE",
+   "totalB": 792,
+   "totalM": 799,
+   "divergence": {
+    "t": 1031,
+    "at": 17,
+    "beliefTo": 19,
+    "mbvi3To": 8,
+    "beliefMoved": 1,
+    "beliefBlocked": 0,
+    "beliefP": 0.6907,
+    "mbvi3P": 0.8211,
+    "beliefExitArchived": false,
+    "archivedAtDivergence": [
+     "6>3",
+     "4>3"
+    ],
+    "lastOpenBefore": {
+     "t": 927,
+     "edge": [
+      4,
+      3
+     ],
+     "lag": 104
+    },
+    "mbvi3PForBeliefExit": null
+   },
+   "archives": [
+    {
+     "t": 730,
+     "edge": [
+      6,
+      3
+     ],
+     "real": true,
+     "event": 1,
+     "reverses": false,
+     "confirmedAt": null
+    },
+    {
+     "t": 927,
+     "edge": [
+      4,
+      3
+     ],
+     "real": true,
+     "event": 3,
+     "reverses": false,
+     "confirmedAt": null
+    },
+    {
+     "t": 1060,
+     "edge": [
+      8,
+      5
+     ],
+     "real": true,
+     "event": 4,
+     "reverses": false,
+     "confirmedAt": null
+    },
+    {
+     "t": 1142,
+     "edge": [
+      6,
+      1
+     ],
+     "real": false,
+     "event": null,
+     "reverses": null,
+     "confirmedAt": 1166,
+     "belief": {
+      "before": 14,
+      "after": 5
+     },
+     "mbvi3": {
+      "before": 13,
+      "after": 4
+     }
+    },
+    {
+     "t": 1189,
+     "edge": [
+      2,
+      3
+     ],
+     "real": false,
+     "event": null,
+     "reverses": null,
+     "confirmedAt": 1212,
+     "belief": {
+      "before": 38,
+      "after": 42
+     },
+     "mbvi3": {
+      "before": 38,
+      "after": 42
+     }
+    }
+   ],
+   "reopened": [
+    {
+     "event": 5,
+     "edge": "1-6",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 0,
+      "mbvi3": 0
+     }
+    }
+   ],
+   "windows": [
+    {
+     "k": 1,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 1,
+     "part": "after",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 2,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 2,
+     "part": "after",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 3,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 3,
+     "part": "after",
+     "reverses": false,
+     "dSteps": -2,
+     "dMoves": -1,
+     "dBlockedFails": -1,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 9
+    },
+    {
+     "k": 4,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 1,
+     "dMoves": 0,
+     "dBlockedFails": -1,
+     "dChanceFails": 2,
+     "sameRouteEpisodes": 9
+    },
+    {
+     "k": 4,
+     "part": "after",
+     "reverses": false,
+     "dSteps": 2,
+     "dMoves": 0,
+     "dBlockedFails": 1,
+     "dChanceFails": 1,
+     "sameRouteEpisodes": 3
+    },
+    {
+     "k": 5,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": -3,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": -3,
+     "sameRouteEpisodes": 7
+    },
+    {
+     "k": 5,
+     "part": "after",
+     "reverses": true,
+     "dSteps": -1,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": -1,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 6,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 1,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 1,
+     "sameRouteEpisodes": 9
+    },
+    {
+     "k": 6,
+     "part": "after",
+     "reverses": false,
+     "dSteps": 9,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 9,
+     "sameRouteEpisodes": 7
+    }
+   ],
+   "topRoutesLastTwoEvents": {
+    "BELIEF": [
+     [
+      "17>19>20>5>2>3",
+      25
+     ],
+     [
+      "17>19>6>5>2>3",
+      12
+     ]
+    ],
+    "MBVI3": [
+     [
+      "17>19>20>5>2>3",
+      29
+     ],
+     [
+      "17>19>6>5>2>3",
+      7
+     ]
+    ]
+   }
+  },
+  {
+   "world": "mfw|m11|0",
+   "family": "HALF",
+   "totalB": 825,
+   "totalM": 821,
+   "divergence": {
+    "t": 899,
+    "at": 17,
+    "beliefTo": 8,
+    "mbvi3To": 12,
+    "beliefMoved": 0,
+    "beliefBlocked": 1,
+    "beliefP": 0.3045,
+    "mbvi3P": 0.8694,
+    "beliefExitArchived": true,
+    "archivedAtDivergence": [
+     "17>19",
+     "17>8"
+    ],
+    "lastOpenBefore": {
+     "t": 826,
+     "edge": [
+      17,
+      8
+     ],
+     "lag": 73
+    },
+    "mbvi3PForBeliefExit": 0.1292
+   },
+   "archives": [
+    {
+     "t": 728,
+     "edge": [
+      17,
+      19
+     ],
+     "real": true,
+     "event": 1,
+     "reverses": false,
+     "confirmedAt": null
+    },
+    {
+     "t": 826,
+     "edge": [
+      17,
+      8
+     ],
+     "real": true,
+     "event": 2,
+     "reverses": false,
+     "confirmedAt": null
+    },
+    {
+     "t": 956,
+     "edge": [
+      12,
+      7
+     ],
+     "real": true,
+     "event": 3,
+     "reverses": true,
+     "confirmedAt": 1346,
+     "belief": {
+      "ownAfter": 0,
+      "later": 1,
+      "firstAfterReopen": 1346,
+      "reopenAt": 1024
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0,
+      "firstAfterReopen": null,
+      "reopenAt": 1021
+     }
+    },
+    {
+     "t": 1093,
+     "edge": [
+      4,
+      3
+     ],
+     "real": true,
+     "event": 4,
+     "reverses": false,
+     "confirmedAt": null
+    },
+    {
+     "t": 1196,
+     "edge": [
+      12,
+      11
+     ],
+     "real": false,
+     "event": null,
+     "reverses": null,
+     "confirmedAt": null,
+     "belief": {
+      "before": 27,
+      "after": 0
+     },
+     "mbvi3": {
+      "before": 27,
+      "after": 0
+     }
+    }
+   ],
+   "reopened": [
+    {
+     "event": 3,
+     "edge": "7-12",
+     "belief": {
+      "ownAfter": 0,
+      "later": 1
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 7,
+      "mbvi3": 7
+     }
+    },
+    {
+     "event": 5,
+     "edge": "12-17",
+     "belief": {
+      "ownAfter": 1,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 0,
+      "mbvi3": 0
+     }
+    }
+   ],
+   "windows": [
+    {
+     "k": 1,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 1,
+     "part": "after",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 2,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 2,
+     "part": "after",
+     "reverses": false,
+     "dSteps": -2,
+     "dMoves": 0,
+     "dBlockedFails": -2,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 3,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": -1,
+     "dMoves": 0,
+     "dBlockedFails": -1,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 3,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 1,
+     "dMoves": 0,
+     "dBlockedFails": 1,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 4,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 4,
+     "part": "after",
+     "reverses": false,
+     "dSteps": -3,
+     "dMoves": -1,
+     "dBlockedFails": -2,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 9
+    },
+    {
+     "k": 5,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 5,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 3,
+     "dMoves": 1,
+     "dBlockedFails": 0,
+     "dChanceFails": 2,
+     "sameRouteEpisodes": 8
+    },
+    {
+     "k": 6,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": -4,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": -4,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 6,
+     "part": "after",
+     "reverses": false,
+     "dSteps": 2,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 2,
+     "sameRouteEpisodes": 10
+    }
+   ],
+   "topRoutesLastTwoEvents": {
+    "BELIEF": [
+     [
+      "17>14>13>10>6>3",
+      20
+     ],
+     [
+      "17>18>20>5>6>3",
+      19
+     ]
+    ],
+    "MBVI3": [
+     [
+      "17>14>13>10>6>3",
+      21
+     ],
+     [
+      "17>18>20>5>6>3",
+      19
+     ]
+    ]
+   }
+  },
+  {
+   "world": "mfw|m11|0",
+   "family": "OFTEN",
+   "totalB": 574,
+   "totalM": 574,
+   "divergence": null,
+   "archives": [
+    {
+     "t": 726,
+     "edge": [
+      19,
+      6
+     ],
+     "real": true,
+     "event": 1,
+     "reverses": true,
+     "confirmedAt": null,
+     "belief": {
+      "ownAfter": 0,
+      "later": 0,
+      "firstAfterReopen": null,
+      "reopenAt": 772
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0,
+      "firstAfterReopen": null,
+      "reopenAt": 772
+     }
+    }
+   ],
+   "reopened": [
+    {
+     "event": 1,
+     "edge": "6-19",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 4,
+      "mbvi3": 4
+     }
+    },
+    {
+     "event": 2,
+     "edge": "17-19",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 0,
+      "mbvi3": 0
+     }
+    },
+    {
+     "event": 3,
+     "edge": "3-6",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 0,
+      "mbvi3": 0
+     }
+    },
+    {
+     "event": 4,
+     "edge": "3-6",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 0,
+      "mbvi3": 0
+     }
+    },
+    {
+     "event": 5,
+     "edge": "6-19",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 0,
+      "mbvi3": 0
+     }
+    }
+   ],
+   "windows": [
+    {
+     "k": 1,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 1,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 2,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 2,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 3,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 3,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 4,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 4,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 5,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 5,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 6,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 6,
+     "part": "after",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    }
+   ],
+   "topRoutesLastTwoEvents": {
+    "BELIEF": [
+     [
+      "17>8>9>4>3",
+      40
+     ]
+    ],
+    "MBVI3": [
+     [
+      "17>8>9>4>3",
+      40
+     ]
+    ]
+   }
+  },
+  {
+   "world": "mfw|m11|1",
+   "family": "RARE",
+   "totalB": 779,
+   "totalM": 791,
+   "divergence": {
+    "t": 907,
+    "at": 8,
+    "beliefTo": 9,
+    "mbvi3To": 5,
+    "beliefMoved": 1,
+    "beliefBlocked": 0,
+    "beliefP": 0.9698,
+    "mbvi3P": 0.7565,
+    "beliefExitArchived": false,
+    "archivedAtDivergence": [
+     "9>4",
+     "6>3",
+     "5>2"
+    ],
+    "lastOpenBefore": {
+     "t": 896,
+     "edge": [
+      5,
+      2
+     ],
+     "lag": 11
+    },
+    "mbvi3PForBeliefExit": null
+   },
+   "archives": [
+    {
+     "t": 705,
+     "edge": [
+      9,
+      4
+     ],
+     "real": false,
+     "event": null,
+     "reverses": null,
+     "confirmedAt": 908,
+     "belief": {
+      "before": 0,
+      "after": 3
+     },
+     "mbvi3": {
+      "before": 0,
+      "after": 0
+     }
+    },
+    {
+     "t": 740,
+     "edge": [
+      6,
+      3
+     ],
+     "real": true,
+     "event": 1,
+     "reverses": false,
+     "confirmedAt": null
+    },
+    {
+     "t": 896,
+     "edge": [
+      5,
+      2
+     ],
+     "real": true,
+     "event": 3,
+     "reverses": true,
+     "confirmedAt": 1018,
+     "belief": {
+      "ownAfter": 5,
+      "later": 0,
+      "firstAfterReopen": 1018,
+      "reopenAt": 981
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0,
+      "firstAfterReopen": null,
+      "reopenAt": 974
+     }
+    },
+    {
+     "t": 914,
+     "edge": [
+      4,
+      3
+     ],
+     "real": true,
+     "event": 2,
+     "reverses": false,
+     "confirmedAt": null
+    },
+    {
+     "t": 1041,
+     "edge": [
+      8,
+      5
+     ],
+     "real": true,
+     "event": 4,
+     "reverses": false,
+     "confirmedAt": null
+    },
+    {
+     "t": 1183,
+     "edge": [
+      8,
+      7
+     ],
+     "real": true,
+     "event": 5,
+     "reverses": false,
+     "confirmedAt": null
+    }
+   ],
+   "reopened": [
+    {
+     "event": 3,
+     "edge": "2-5",
+     "belief": {
+      "ownAfter": 5,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 6,
+      "mbvi3": 4
+     }
+    }
+   ],
+   "windows": [
+    {
+     "k": 1,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 1,
+     "part": "after",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 2,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 2,
+     "part": "after",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 3,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": -7,
+     "dMoves": 0,
+     "dBlockedFails": -8,
+     "dChanceFails": 1,
+     "sameRouteEpisodes": 7
+    },
+    {
+     "k": 3,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 15,
+     "dMoves": 10,
+     "dBlockedFails": 0,
+     "dChanceFails": 5,
+     "sameRouteEpisodes": 5
+    },
+    {
+     "k": 4,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 3,
+     "dMoves": 0,
+     "dBlockedFails": -2,
+     "dChanceFails": 5,
+     "sameRouteEpisodes": 9
+    },
+    {
+     "k": 4,
+     "part": "after",
+     "reverses": false,
+     "dSteps": 1,
+     "dMoves": 0,
+     "dBlockedFails": -1,
+     "dChanceFails": 2,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 5,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": -8,
+     "dMoves": 0,
+     "dBlockedFails": -2,
+     "dChanceFails": -6,
+     "sameRouteEpisodes": 9
+    },
+    {
+     "k": 5,
+     "part": "after",
+     "reverses": false,
+     "dSteps": 1,
+     "dMoves": 1,
+     "dBlockedFails": -1,
+     "dChanceFails": 1,
+     "sameRouteEpisodes": 9
+    },
+    {
+     "k": 6,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 4,
+     "dMoves": 0,
+     "dBlockedFails": -1,
+     "dChanceFails": 5,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 6,
+     "part": "after",
+     "reverses": false,
+     "dSteps": 3,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 3,
+     "sameRouteEpisodes": 10
+    }
+   ],
+   "topRoutesLastTwoEvents": {
+    "BELIEF": [
+     [
+      "8>17>18>20>1>2>3",
+      38
+     ],
+     [
+      "8>9>10>6>1>2>3",
+      1
+     ]
+    ],
+    "MBVI3": [
+     [
+      "8>17>18>20>1>2>3",
+      40
+     ]
+    ]
+   }
+  },
+  {
+   "world": "mfw|m11|1",
+   "family": "HALF",
+   "totalB": 502,
+   "totalM": 500,
+   "divergence": {
+    "t": 1121,
+    "at": 8,
+    "beliefTo": 7,
+    "mbvi3To": 9,
+    "beliefMoved": 0,
+    "beliefBlocked": 1,
+    "beliefP": 0.3792,
+    "mbvi3P": 0.9468,
+    "beliefExitArchived": true,
+    "archivedAtDivergence": [
+     "9>4",
+     "5>2",
+     "8>7",
+     "8>5"
+    ],
+    "lastOpenBefore": {
+     "t": 1120,
+     "edge": [
+      8,
+      5
+     ],
+     "lag": 1
+    },
+    "mbvi3PForBeliefExit": 0.1153
+   },
+   "archives": [
+    {
+     "t": 705,
+     "edge": [
+      9,
+      4
+     ],
+     "real": false,
+     "event": null,
+     "reverses": null,
+     "confirmedAt": null,
+     "belief": {
+      "before": 0,
+      "after": 0
+     },
+     "mbvi3": {
+      "before": 0,
+      "after": 0
+     }
+    },
+    {
+     "t": 957,
+     "edge": [
+      5,
+      2
+     ],
+     "real": true,
+     "event": 4,
+     "reverses": true,
+     "confirmedAt": null,
+     "belief": {
+      "ownAfter": 0,
+      "later": 0,
+      "firstAfterReopen": null,
+      "reopenAt": 997
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0,
+      "firstAfterReopen": null,
+      "reopenAt": 997
+     }
+    },
+    {
+     "t": 968,
+     "edge": [
+      8,
+      7
+     ],
+     "real": true,
+     "event": 3,
+     "reverses": false,
+     "confirmedAt": null
+    },
+    {
+     "t": 1120,
+     "edge": [
+      8,
+      5
+     ],
+     "real": true,
+     "event": 6,
+     "reverses": true,
+     "confirmedAt": null,
+     "belief": {
+      "ownAfter": 0,
+      "later": 0,
+      "firstAfterReopen": null,
+      "reopenAt": 1176
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0,
+      "firstAfterReopen": null,
+      "reopenAt": 1174
+     }
+    }
+   ],
+   "reopened": [
+    {
+     "event": 2,
+     "edge": "3-6",
+     "belief": {
+      "ownAfter": 0,
+      "later": 60
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 60
+     },
+     "triedWhileBlocked": {
+      "belief": 0,
+      "mbvi3": 0
+     }
+    },
+    {
+     "event": 4,
+     "edge": "2-5",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 3,
+      "mbvi3": 3
+     }
+    },
+    {
+     "event": 5,
+     "edge": "2-3",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 0,
+      "mbvi3": 0
+     }
+    },
+    {
+     "event": 6,
+     "edge": "5-8",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 6,
+      "mbvi3": 6
+     }
+    }
+   ],
+   "windows": [
+    {
+     "k": 1,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 1,
+     "part": "after",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 2,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 2,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 3,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 3,
+     "part": "after",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 4,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 4,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 5,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 5,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 6,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": -2,
+     "dMoves": 0,
+     "dBlockedFails": -2,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 6,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    }
+   ],
+   "topRoutesLastTwoEvents": {
+    "BELIEF": [
+     [
+      "8>5>6>3",
+      20
+     ],
+     [
+      "8>9>10>6>3",
+      20
+     ]
+    ],
+    "MBVI3": [
+     [
+      "8>5>6>3",
+      20
+     ],
+     [
+      "8>9>10>6>3",
+      20
+     ]
+    ]
+   }
+  },
+  {
+   "world": "mfw|m11|1",
+   "family": "OFTEN",
+   "totalB": 482,
+   "totalM": 482,
+   "divergence": null,
+   "archives": [
+    {
+     "t": 705,
+     "edge": [
+      9,
+      4
+     ],
+     "real": false,
+     "event": null,
+     "reverses": null,
+     "confirmedAt": null,
+     "belief": {
+      "before": 0,
+      "after": 0
+     },
+     "mbvi3": {
+      "before": 0,
+      "after": 0
+     }
+    },
+    {
+     "t": 804,
+     "edge": [
+      2,
+      3
+     ],
+     "real": true,
+     "event": 2,
+     "reverses": true,
+     "confirmedAt": null,
+     "belief": {
+      "ownAfter": 0,
+      "later": 0,
+      "firstAfterReopen": null,
+      "reopenAt": 844
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0,
+      "firstAfterReopen": null,
+      "reopenAt": 844
+     }
+    }
+   ],
+   "reopened": [
+    {
+     "event": 1,
+     "edge": "8-9",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 0,
+      "mbvi3": 0
+     }
+    },
+    {
+     "event": 2,
+     "edge": "2-3",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 6,
+      "mbvi3": 6
+     }
+    },
+    {
+     "event": 3,
+     "edge": "2-3",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 0,
+      "mbvi3": 0
+     }
+    },
+    {
+     "event": 4,
+     "edge": "2-5",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 0,
+      "mbvi3": 0
+     }
+    },
+    {
+     "event": 5,
+     "edge": "7-8",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 0,
+      "mbvi3": 0
+     }
+    },
+    {
+     "event": 6,
+     "edge": "8-9",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 0,
+      "mbvi3": 0
+     }
+    }
+   ],
+   "windows": [
+    {
+     "k": 1,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 1,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 2,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 2,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 3,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 3,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 4,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 4,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 5,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 5,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 6,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 6,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    }
+   ],
+   "topRoutesLastTwoEvents": {
+    "BELIEF": [
+     [
+      "8>5>6>3",
+      40
+     ]
+    ],
+    "MBVI3": [
+     [
+      "8>5>6>3",
+      40
+     ]
+    ]
+   }
+  },
+  {
+   "world": "mfw|m11|2",
+   "family": "RARE",
+   "totalB": 785,
+   "totalM": 783,
+   "divergence": {
+    "t": 914,
+    "at": 2,
+    "beliefTo": 5,
+    "mbvi3To": 1,
+    "beliefMoved": 0,
+    "beliefBlocked": 1,
+    "beliefP": 0.2314,
+    "mbvi3P": 0.6744,
+    "beliefExitArchived": true,
+    "archivedAtDivergence": [
+     "2>5"
+    ],
+    "lastOpenBefore": {
+     "t": 724,
+     "edge": [
+      2,
+      5
+     ],
+     "lag": 190
+    },
+    "mbvi3PForBeliefExit": 0.017
+   },
+   "archives": [
+    {
+     "t": 724,
+     "edge": [
+      2,
+      5
+     ],
+     "real": true,
+     "event": 1,
+     "reverses": false,
+     "confirmedAt": null
+    },
+    {
+     "t": 1277,
+     "edge": [
+      2,
+      1
+     ],
+     "real": false,
+     "event": null,
+     "reverses": null,
+     "confirmedAt": 1317,
+     "belief": {
+      "before": 88,
+      "after": 30
+     },
+     "mbvi3": {
+      "before": 88,
+      "after": 30
+     }
+    },
+    {
+     "t": 1292,
+     "edge": [
+      4,
+      9
+     ],
+     "real": true,
+     "event": 3,
+     "reverses": false,
+     "confirmedAt": null
+    },
+    {
+     "t": 1307,
+     "edge": [
+      3,
+      6
+     ],
+     "real": true,
+     "event": 5,
+     "reverses": false,
+     "confirmedAt": null
+    }
+   ],
+   "reopened": [],
+   "windows": [
+    {
+     "k": 1,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 1,
+     "part": "after",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 2,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 2,
+     "part": "after",
+     "reverses": false,
+     "dSteps": -1,
+     "dMoves": 0,
+     "dBlockedFails": -1,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 3,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 3,
+     "part": "after",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 4,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 4,
+     "part": "after",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 5,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 5,
+     "part": "after",
+     "reverses": false,
+     "dSteps": -1,
+     "dMoves": 0,
+     "dBlockedFails": -1,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 6,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 6,
+     "part": "after",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    }
+   ],
+   "topRoutesLastTwoEvents": {
+    "BELIEF": [
+     [
+      "2>1>6>5>8>13",
+      38
+     ],
+     [
+      "2>3>4>1>6>5>8>13",
+      2
+     ]
+    ],
+    "MBVI3": [
+     [
+      "2>1>6>5>8>13",
+      38
+     ],
+     [
+      "2>3>4>1>6>5>8>13",
+      2
+     ]
+    ]
+   }
+  },
+  {
+   "world": "mfw|m11|2",
+   "family": "HALF",
+   "totalB": 922,
+   "totalM": 879,
+   "divergence": {
+    "t": 914,
+    "at": 2,
+    "beliefTo": 5,
+    "mbvi3To": 1,
+    "beliefMoved": 0,
+    "beliefBlocked": 1,
+    "beliefP": 0.2314,
+    "mbvi3P": 0.6744,
+    "beliefExitArchived": true,
+    "archivedAtDivergence": [
+     "2>5"
+    ],
+    "lastOpenBefore": {
+     "t": 724,
+     "edge": [
+      2,
+      5
+     ],
+     "lag": 190
+    },
+    "mbvi3PForBeliefExit": 0.017
+   },
+   "archives": [
+    {
+     "t": 724,
+     "edge": [
+      2,
+      5
+     ],
+     "real": true,
+     "event": 1,
+     "reverses": false,
+     "confirmedAt": null
+    },
+    {
+     "t": 983,
+     "edge": [
+      6,
+      5
+     ],
+     "real": true,
+     "event": 3,
+     "reverses": false,
+     "confirmedAt": null
+    },
+    {
+     "t": 988,
+     "edge": [
+      10,
+      13
+     ],
+     "real": true,
+     "event": 2,
+     "reverses": false,
+     "confirmedAt": null
+    },
+    {
+     "t": 1318,
+     "edge": [
+      2,
+      1
+     ],
+     "real": false,
+     "event": null,
+     "reverses": null,
+     "confirmedAt": 1348,
+     "belief": {
+      "before": 88,
+      "after": 2
+     },
+     "mbvi3": {
+      "before": 88,
+      "after": 2
+     }
+    },
+    {
+     "t": 1326,
+     "edge": [
+      8,
+      13
+     ],
+     "real": true,
+     "event": 5,
+     "reverses": false,
+     "confirmedAt": null
+    }
+   ],
+   "reopened": [
+    {
+     "event": 6,
+     "edge": "1-2",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 2,
+      "mbvi3": 0
+     }
+    }
+   ],
+   "windows": [
+    {
+     "k": 1,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 1,
+     "part": "after",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 2,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 2,
+     "part": "after",
+     "reverses": false,
+     "dSteps": -1,
+     "dMoves": 0,
+     "dBlockedFails": -1,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 3,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": 0,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 3,
+     "part": "after",
+     "reverses": false,
+     "dSteps": -1,
+     "dMoves": 0,
+     "dBlockedFails": -1,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 4,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": -10,
+     "dMoves": 0,
+     "dBlockedFails": -1,
+     "dChanceFails": -9,
+     "sameRouteEpisodes": 4
+    },
+    {
+     "k": 4,
+     "part": "after",
+     "reverses": false,
+     "dSteps": -1,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": -1,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 5,
+     "part": "blocked",
+     "reverses": false,
+     "dSteps": -6,
+     "dMoves": -1,
+     "dBlockedFails": -10,
+     "dChanceFails": 5,
+     "sameRouteEpisodes": 9
+    },
+    {
+     "k": 5,
+     "part": "after",
+     "reverses": false,
+     "dSteps": -8,
+     "dMoves": 0,
+     "dBlockedFails": -6,
+     "dChanceFails": -2,
+     "sameRouteEpisodes": 4
+    },
+    {
+     "k": 6,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": -11,
+     "dMoves": -1,
+     "dBlockedFails": -3,
+     "dChanceFails": -7,
+     "sameRouteEpisodes": 2
+    },
+    {
+     "k": 6,
+     "part": "after",
+     "reverses": true,
+     "dSteps": -5,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": -5,
+     "sameRouteEpisodes": 6
+    }
+   ],
+   "topRoutesLastTwoEvents": {
+    "BELIEF": [
+     [
+      "2>3>6>19>17>14>13",
+      14
+     ],
+     [
+      "2>1>20>18>16>13",
+      10
+     ]
+    ],
+    "MBVI3": [
+     [
+      "2>3>6>19>17>14>13",
+      14
+     ],
+     [
+      "2>1>20>18>16>13",
+      10
+     ]
+    ]
+   }
+  },
+  {
+   "world": "mfw|m11|2",
+   "family": "OFTEN",
+   "totalB": 830,
+   "totalM": 824,
+   "divergence": {
+    "t": 759,
+    "at": 5,
+    "beliefTo": 8,
+    "mbvi3To": 6,
+    "beliefMoved": 0,
+    "beliefBlocked": 1,
+    "beliefP": 0.2387,
+    "mbvi3P": 0.8639,
+    "beliefExitArchived": true,
+    "archivedAtDivergence": [
+     "5>8"
+    ],
+    "lastOpenBefore": {
+     "t": 721,
+     "edge": [
+      5,
+      8
+     ],
+     "lag": 38
+    },
+    "mbvi3PForBeliefExit": 0.1358
+   },
+   "archives": [
+    {
+     "t": 721,
+     "edge": [
+      5,
+      8
+     ],
+     "real": true,
+     "event": 1,
+     "reverses": true,
+     "confirmedAt": 812,
+     "belief": {
+      "ownAfter": 7,
+      "later": 0,
+      "firstAfterReopen": 812,
+      "reopenAt": 783
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0,
+      "firstAfterReopen": null,
+      "reopenAt": 782
+     }
+    },
+    {
+     "t": 852,
+     "edge": [
+      5,
+      8
+     ],
+     "real": true,
+     "event": 2,
+     "reverses": true,
+     "confirmedAt": null,
+     "belief": {
+      "ownAfter": 0,
+      "later": 0,
+      "firstAfterReopen": null,
+      "reopenAt": 916
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0,
+      "firstAfterReopen": null,
+      "reopenAt": 913
+     }
+    },
+    {
+     "t": 1277,
+     "edge": [
+      2,
+      5
+     ],
+     "real": true,
+     "event": 5,
+     "reverses": true,
+     "confirmedAt": null,
+     "belief": {
+      "ownAfter": 0,
+      "later": 0,
+      "firstAfterReopen": null,
+      "reopenAt": 1342
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0,
+      "firstAfterReopen": null,
+      "reopenAt": 1339
+     }
+    }
+   ],
+   "reopened": [
+    {
+     "event": 1,
+     "edge": "5-8",
+     "belief": {
+      "ownAfter": 7,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 5,
+      "mbvi3": 4
+     }
+    },
+    {
+     "event": 2,
+     "edge": "5-8",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 15,
+      "mbvi3": 0
+     }
+    },
+    {
+     "event": 3,
+     "edge": "5-8",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 0,
+      "mbvi3": 0
+     }
+    },
+    {
+     "event": 4,
+     "edge": "5-8",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 0,
+      "mbvi3": 0
+     }
+    },
+    {
+     "event": 5,
+     "edge": "2-5",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 8,
+      "mbvi3": 8
+     }
+    },
+    {
+     "event": 6,
+     "edge": "8-13",
+     "belief": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "mbvi3": {
+      "ownAfter": 0,
+      "later": 0
+     },
+     "triedWhileBlocked": {
+      "belief": 0,
+      "mbvi3": 0
+     }
+    }
+   ],
+   "windows": [
+    {
+     "k": 1,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": -1,
+     "dMoves": 0,
+     "dBlockedFails": -1,
+     "dChanceFails": 0,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 1,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 15,
+     "dMoves": 7,
+     "dBlockedFails": 0,
+     "dChanceFails": 8,
+     "sameRouteEpisodes": 3
+    },
+    {
+     "k": 2,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": -17,
+     "dMoves": 0,
+     "dBlockedFails": -15,
+     "dChanceFails": -2,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 2,
+     "part": "after",
+     "reverses": true,
+     "dSteps": 12,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 12,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 3,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": 8,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 8,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 3,
+     "part": "after",
+     "reverses": true,
+     "dSteps": -11,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": -11,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 4,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": -3,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": -3,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 4,
+     "part": "after",
+     "reverses": true,
+     "dSteps": -5,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": -5,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 5,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": -1,
+     "dMoves": -5,
+     "dBlockedFails": 0,
+     "dChanceFails": 4,
+     "sameRouteEpisodes": 5
+    },
+    {
+     "k": 5,
+     "part": "after",
+     "reverses": true,
+     "dSteps": -5,
+     "dMoves": -9,
+     "dBlockedFails": 0,
+     "dChanceFails": 4,
+     "sameRouteEpisodes": 1
+    },
+    {
+     "k": 6,
+     "part": "blocked",
+     "reverses": true,
+     "dSteps": 4,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": 4,
+     "sameRouteEpisodes": 10
+    },
+    {
+     "k": 6,
+     "part": "after",
+     "reverses": true,
+     "dSteps": -2,
+     "dMoves": 0,
+     "dBlockedFails": 0,
+     "dChanceFails": -2,
+     "sameRouteEpisodes": 10
+    }
+   ],
+   "topRoutesLastTwoEvents": {
+    "BELIEF": [
+     [
+      "2>3>6>10>13",
+      22
+     ],
+     [
+      "2>3>4>9>8>13",
+      18
+     ]
+    ],
+    "MBVI3": [
+     [
+      "2>3>6>10>13",
+      36
+     ],
+     [
+      "2>3>4>9>8>13",
+      4
+     ]
+    ]
+   }
+  }
+ ]
+}

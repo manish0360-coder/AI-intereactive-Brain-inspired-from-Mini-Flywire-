@@ -222,3 +222,66 @@ unexplained part of the recovery difference, or integration into the app, is a s
 | `results/check/verify_m11.mjs`, `.out` | Independent check, written before the result |
 | `results/check/trace_summary.mjs`, `.out` | Descriptive trace summary, written after |
 | `results/check/crossing_split.mjs`, `.out` | Descriptive recovery split, written after |
+
+## Amendment after the M12 mechanism analysis (2026-11-18)
+
+The text above is left as first written. The M12 mechanism analysis
+([`experiments/m12_mechanism/REPORT.md`](../m12_mechanism/REPORT.md)) re-read the stored rows and traces. The owner
+accepted it as a useful explanation supported by the existing 810-run data. It found one statement in this record
+stronger than the evidence. **This amendment governs how the passages below may be cited.**
+
+The frozen verdict is unchanged: **DEMONSTRATED ON THE MINIFLYWIRE GRAPH**, with D1 +11.07 [7.16, 15.33],
+D2 +2.87 [0.69, 4.94] and D3 +0.64 [0.19, 1.14]. Nothing was rerun or recomputed for it. Every number in §1–§3, §5
+and §6 also stands.
+
+**1. What was too strong.** These passages say, or imply, that in most of the 103 OFTEN labels no agent ever re-used a
+reopened edge:
+- the opening paragraph: "most of the recovery difference arises in labels where neither agent re-used one";
+- §4: "Most of it arises in labels where no reopened edge was ever re-used. This run does not identify the source"
+  (and the chance-failure candidate after it);
+- §4: "should therefore not be read as 'goes back to the reopened route sooner'. That happened, but rarely";
+- limitation 4: "The recovery difference is mostly unexplained";
+- §8: "a look at the unexplained part of the recovery difference".
+
+M11's crossing count (`crossed`, from the task's diagnostics) counts a re-use only when it happens **inside that
+edge's own after-window**. The passages above read that narrow count as if it covered all re-use. The grouping in §4
+remains correct as defined: neither agent crossed a reopened edge inside its own after-window in those 103 labels.
+
+**2. What the stored rows show.** BELIEF's own archive log records every exit it wrote off and every return to one,
+with the step. Placed against the stored step counts, it shows the following, over all 810 runs:
+- **Uncounted returns.** In 36 of the 103 labels, BELIEF went back to a reopened edge later, usually two to four
+  windows after the reopening (43 returns M11 did not count).
+- **False-alarm repairs.** In 24 of the 103, BELIEF went back to an exit its detector had written off by mistake.
+- **Over all 135 OFTEN labels:** 22 returns that M11 counted, 63 it did not, and 35 false-alarm repairs.
+
+In the 103 labels, the 51 with such a return carry +924 of the +916; the other 52 carry −8.
+
+**3. Two kinds of evidence, kept apart.**
+- **BELIEF's returns are observed in all 810 runs,** from its own log. The reconstruction was checked against the
+  task's ground-truth alarm counts in every BELIEF row.
+- **That MBVI3 does not return is observed only in the 18 preselected traces.** There, MBVI3 crossed 0 of the 8
+  reopened edges it had met while they were blocked; BELIEF crossed 3 of its 10. In the rows it is inferred from the
+  step counts, not observed, because MBVI3 keeps no such log.
+
+**4. Strength of the explanation.** That the 61% comes from these returns is **strongly supported by observational
+analysis**:
+- the two agents differ only after BELIEF's first archive (all 810 rows);
+- within a label, the difference is −3 before the first return and +927 from it onwards;
+- labels without a return stay near zero at every event index;
+- the gain grows with the number of returns.
+
+It is **not definitive causal proof:**
+- the groups are defined by BELIEF's own behaviour;
+- nothing was intervened on;
+- MBVI3's side rests on 18 traces.
+
+**5. Corrected readings.** These replace the passages listed in point 1:
+- **Opening paragraph and §4.** Reopened edges are rarely re-used inside their own after-window. Most of the recovery
+  difference arises in labels where BELIEF went back to a reopened edge later, or to an exit written off by a false
+  alarm. In the traced runs MBVI3 did not go back.
+- **§4.** BELIEF does go back to reopened routes more than MBVI3, mostly later than the window M11 measured. The
+  chance-failure candidate is not needed.
+- **Limitation 4.** The recovery difference is explained observationally by M12. MBVI3's side is seen only in the
+  traces.
+- **§8.** The look at the recovery difference is done (M12). A replay of the relevant runs with step traces would be
+  the minimum evidence for MBVI3's side. It needs the owner's word, because it re-executes spent labels.

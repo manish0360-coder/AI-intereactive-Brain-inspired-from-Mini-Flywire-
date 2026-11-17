@@ -1,0 +1,950 @@
+{
+ "RARE": {
+  "all": {
+   "labels": {
+    "noArchive": 0,
+    "archiveNoReuse": 89,
+    "reuse": 46
+   },
+   "afterReversedPerLabel": {
+    "archiveNoReuse": {
+     "n": 89,
+     "mean": -0.19,
+     "lo": -0.4,
+     "hi": -0.01
+    },
+    "reuse": {
+     "n": 46,
+     "mean": 0.89,
+     "lo": 0.2,
+     "hi": 1.76
+    }
+   },
+   "totalPerLabel": {
+    "archiveNoReuse": {
+     "n": 89,
+     "mean": -5.46,
+     "lo": -6.94,
+     "hi": -4.06
+    },
+    "reuse": {
+     "n": 46,
+     "mean": 2.13,
+     "lo": -2.91,
+     "hi": 7.83
+    }
+   },
+   "signsAfterReversed": {
+    "archiveNoReuse": [
+     3,
+     9,
+     77
+    ],
+    "reuse": [
+     8,
+     4,
+     34
+    ]
+   },
+   "perEvent": {
+    "archiveNoReuse": [
+     {
+      "k": 1,
+      "afterReversed": 0,
+      "blocked": -1
+     },
+     {
+      "k": 2,
+      "afterReversed": 2,
+      "blocked": -32
+     },
+     {
+      "k": 3,
+      "afterReversed": 1,
+      "blocked": -55
+     },
+     {
+      "k": 4,
+      "afterReversed": 0,
+      "blocked": -52
+     },
+     {
+      "k": 5,
+      "afterReversed": -3,
+      "blocked": -58
+     },
+     {
+      "k": 6,
+      "afterReversed": -17,
+      "blocked": -115
+     }
+    ],
+    "reuse": [
+     {
+      "k": 1,
+      "afterReversed": 3,
+      "blocked": 0
+     },
+     {
+      "k": 2,
+      "afterReversed": 11,
+      "blocked": 4
+     },
+     {
+      "k": 3,
+      "afterReversed": 14,
+      "blocked": 25
+     },
+     {
+      "k": 4,
+      "afterReversed": -2,
+      "blocked": -13
+     },
+     {
+      "k": 5,
+      "afterReversed": 10,
+      "blocked": -32
+     },
+     {
+      "k": 6,
+      "afterReversed": 5,
+      "blocked": -17
+     }
+    ]
+   },
+   "dose": [
+    {
+     "reuses": "0",
+     "labels": 89,
+     "afterReversed": -17,
+     "total": -486,
+     "afterReversedPerLabel": -0.19
+    },
+    {
+     "reuses": "1",
+     "labels": 41,
+     "afterReversed": 16,
+     "total": 42,
+     "afterReversedPerLabel": 0.39
+    },
+    {
+     "reuses": "2",
+     "labels": 4,
+     "afterReversed": 22,
+     "total": 54,
+     "afterReversedPerLabel": 5.5
+    },
+    {
+     "reuses": "3+",
+     "labels": 1,
+     "afterReversed": 3,
+     "total": 2,
+     "afterReversedPerLabel": 3
+    }
+   ],
+   "aroundFirstReuse": {
+    "before": {
+     "afterReversed": -1,
+     "total": -83
+    },
+    "containing": {
+     "afterReversed": 11,
+     "total": 110
+    },
+    "after": {
+     "afterReversed": 31,
+     "total": 71
+    }
+   }
+  },
+  "neither": {
+   "labels": {
+    "noArchive": 0,
+    "archiveNoReuse": 87,
+    "reuse": 39
+   },
+   "afterReversedPerLabel": {
+    "archiveNoReuse": {
+     "n": 87,
+     "mean": -0.2,
+     "lo": -0.41,
+     "hi": -0.02
+    },
+    "reuse": {
+     "n": 39,
+     "mean": 0.1,
+     "lo": -0.13,
+     "hi": 0.44
+    }
+   },
+   "totalPerLabel": {
+    "archiveNoReuse": {
+     "n": 87,
+     "mean": -5.57,
+     "lo": -7.1,
+     "hi": -4.09
+    },
+    "reuse": {
+     "n": 39,
+     "mean": -0.38,
+     "lo": -4.56,
+     "hi": 4.28
+    }
+   },
+   "signsAfterReversed": {
+    "archiveNoReuse": [
+     3,
+     9,
+     75
+    ],
+    "reuse": [
+     2,
+     3,
+     34
+    ]
+   },
+   "perEvent": {
+    "archiveNoReuse": [
+     {
+      "k": 1,
+      "afterReversed": 0,
+      "blocked": -1
+     },
+     {
+      "k": 2,
+      "afterReversed": 2,
+      "blocked": -32
+     },
+     {
+      "k": 3,
+      "afterReversed": 1,
+      "blocked": -54
+     },
+     {
+      "k": 4,
+      "afterReversed": 0,
+      "blocked": -52
+     },
+     {
+      "k": 5,
+      "afterReversed": -3,
+      "blocked": -58
+     },
+     {
+      "k": 6,
+      "afterReversed": -17,
+      "blocked": -116
+     }
+    ],
+    "reuse": [
+     {
+      "k": 1,
+      "afterReversed": 0,
+      "blocked": 0
+     },
+     {
+      "k": 2,
+      "afterReversed": 5,
+      "blocked": 6
+     },
+     {
+      "k": 3,
+      "afterReversed": -1,
+      "blocked": 24
+     },
+     {
+      "k": 4,
+      "afterReversed": -1,
+      "blocked": -49
+     },
+     {
+      "k": 5,
+      "afterReversed": -1,
+      "blocked": -28
+     },
+     {
+      "k": 6,
+      "afterReversed": 2,
+      "blocked": 0
+     }
+    ]
+   },
+   "dose": [
+    {
+     "reuses": "0",
+     "labels": 87,
+     "afterReversed": -17,
+     "total": -485,
+     "afterReversedPerLabel": -0.2
+    },
+    {
+     "reuses": "1",
+     "labels": 37,
+     "afterReversed": 0,
+     "total": -48,
+     "afterReversedPerLabel": 0
+    },
+    {
+     "reuses": "2",
+     "labels": 2,
+     "afterReversed": 4,
+     "total": 33,
+     "afterReversedPerLabel": 2
+    },
+    {
+     "reuses": "3+",
+     "labels": 0,
+     "afterReversed": 0,
+     "total": 0,
+     "afterReversedPerLabel": null
+    }
+   ],
+   "aroundFirstReuse": {
+    "before": {
+     "afterReversed": -1,
+     "total": -79
+    },
+    "containing": {
+     "afterReversed": 0,
+     "total": 87
+    },
+    "after": {
+     "afterReversed": 5,
+     "total": -23
+    }
+   }
+  }
+ },
+ "HALF": {
+  "all": {
+   "labels": {
+    "noArchive": 2,
+    "archiveNoReuse": 58,
+    "reuse": 75
+   },
+   "afterReversedPerLabel": {
+    "archiveNoReuse": {
+     "n": 58,
+     "mean": -0.02,
+     "lo": -0.93,
+     "hi": 0.93
+    },
+    "reuse": {
+     "n": 75,
+     "mean": 8.8,
+     "lo": 5.27,
+     "hi": 12.71
+    }
+   },
+   "totalPerLabel": {
+    "archiveNoReuse": {
+     "n": 58,
+     "mean": -2.78,
+     "lo": -4.55,
+     "hi": -0.88
+    },
+    "reuse": {
+     "n": 75,
+     "mean": 22.21,
+     "lo": 13.52,
+     "hi": 31.61
+    }
+   },
+   "signsAfterReversed": {
+    "archiveNoReuse": [
+     7,
+     16,
+     35
+    ],
+    "reuse": [
+     35,
+     15,
+     25
+    ]
+   },
+   "perEvent": {
+    "archiveNoReuse": [
+     {
+      "k": 1,
+      "afterReversed": 0,
+      "blocked": -1
+     },
+     {
+      "k": 2,
+      "afterReversed": -7,
+      "blocked": -28
+     },
+     {
+      "k": 3,
+      "afterReversed": -3,
+      "blocked": -6
+     },
+     {
+      "k": 4,
+      "afterReversed": 6,
+      "blocked": -16
+     },
+     {
+      "k": 5,
+      "afterReversed": 14,
+      "blocked": -34
+     },
+     {
+      "k": 6,
+      "afterReversed": -11,
+      "blocked": -58
+     }
+    ],
+    "reuse": [
+     {
+      "k": 1,
+      "afterReversed": 4,
+      "blocked": -1
+     },
+     {
+      "k": 2,
+      "afterReversed": 12,
+      "blocked": 26
+     },
+     {
+      "k": 3,
+      "afterReversed": 89,
+      "blocked": 62
+     },
+     {
+      "k": 4,
+      "afterReversed": 147,
+      "blocked": 127
+     },
+     {
+      "k": 5,
+      "afterReversed": 190,
+      "blocked": 173
+     },
+     {
+      "k": 6,
+      "afterReversed": 218,
+      "blocked": 263
+     }
+    ]
+   },
+   "dose": [
+    {
+     "reuses": "0",
+     "labels": 58,
+     "afterReversed": -1,
+     "total": -161,
+     "afterReversedPerLabel": -0.02
+    },
+    {
+     "reuses": "1",
+     "labels": 59,
+     "afterReversed": 543,
+     "total": 1352,
+     "afterReversedPerLabel": 9.2
+    },
+    {
+     "reuses": "2",
+     "labels": 13,
+     "afterReversed": 111,
+     "total": 313,
+     "afterReversedPerLabel": 8.54
+    },
+    {
+     "reuses": "3+",
+     "labels": 3,
+     "afterReversed": 6,
+     "total": 1,
+     "afterReversedPerLabel": 2
+    }
+   ],
+   "aroundFirstReuse": {
+    "before": {
+     "afterReversed": -11,
+     "total": -126
+    },
+    "containing": {
+     "afterReversed": 163,
+     "total": 587
+    },
+    "after": {
+     "afterReversed": 508,
+     "total": 1205
+    }
+   }
+  },
+  "neither": {
+   "labels": {
+    "noArchive": 2,
+    "archiveNoReuse": 55,
+    "reuse": 50
+   },
+   "afterReversedPerLabel": {
+    "archiveNoReuse": {
+     "n": 55,
+     "mean": -0.15,
+     "lo": -0.87,
+     "hi": 0.65
+    },
+    "reuse": {
+     "n": 50,
+     "mean": 7.42,
+     "lo": 3.36,
+     "hi": 11.96
+    }
+   },
+   "totalPerLabel": {
+    "archiveNoReuse": {
+     "n": 55,
+     "mean": -2.78,
+     "lo": -4.67,
+     "hi": -0.8
+    },
+    "reuse": {
+     "n": 50,
+     "mean": 23.22,
+     "lo": 11.92,
+     "hi": 35.7
+    }
+   },
+   "signsAfterReversed": {
+    "archiveNoReuse": [
+     5,
+     15,
+     35
+    ],
+    "reuse": [
+     18,
+     9,
+     23
+    ]
+   },
+   "perEvent": {
+    "archiveNoReuse": [
+     {
+      "k": 1,
+      "afterReversed": 0,
+      "blocked": -1
+     },
+     {
+      "k": 2,
+      "afterReversed": -6,
+      "blocked": -12
+     },
+     {
+      "k": 3,
+      "afterReversed": -3,
+      "blocked": -8
+     },
+     {
+      "k": 4,
+      "afterReversed": -3,
+      "blocked": -22
+     },
+     {
+      "k": 5,
+      "afterReversed": 5,
+      "blocked": -27
+     },
+     {
+      "k": 6,
+      "afterReversed": -1,
+      "blocked": -62
+     }
+    ],
+    "reuse": [
+     {
+      "k": 1,
+      "afterReversed": -1,
+      "blocked": -1
+     },
+     {
+      "k": 2,
+      "afterReversed": 10,
+      "blocked": 31
+     },
+     {
+      "k": 3,
+      "afterReversed": 48,
+      "blocked": 48
+     },
+     {
+      "k": 4,
+      "afterReversed": 75,
+      "blocked": 119
+     },
+     {
+      "k": 5,
+      "afterReversed": 87,
+      "blocked": 107
+     },
+     {
+      "k": 6,
+      "afterReversed": 152,
+      "blocked": 230
+     }
+    ]
+   },
+   "dose": [
+    {
+     "reuses": "0",
+     "labels": 55,
+     "afterReversed": -8,
+     "total": -153,
+     "afterReversedPerLabel": -0.15
+    },
+    {
+     "reuses": "1",
+     "labels": 40,
+     "afterReversed": 284,
+     "total": 866,
+     "afterReversedPerLabel": 7.1
+    },
+    {
+     "reuses": "2",
+     "labels": 9,
+     "afterReversed": 83,
+     "total": 291,
+     "afterReversedPerLabel": 9.22
+    },
+    {
+     "reuses": "3+",
+     "labels": 1,
+     "afterReversed": 4,
+     "total": 4,
+     "afterReversedPerLabel": 4
+    }
+   ],
+   "aroundFirstReuse": {
+    "before": {
+     "afterReversed": -7,
+     "total": -84
+    },
+    "containing": {
+     "afterReversed": 2,
+     "total": 413
+    },
+    "after": {
+     "afterReversed": 376,
+     "total": 832
+    }
+   }
+  }
+ },
+ "OFTEN": {
+  "all": {
+   "labels": {
+    "noArchive": 9,
+    "archiveNoReuse": 46,
+    "reuse": 80
+   },
+   "afterReversedPerLabel": {
+    "archiveNoReuse": {
+     "n": 46,
+     "mean": -0.07,
+     "lo": -0.54,
+     "hi": 0.39
+    },
+    "reuse": {
+     "n": 80,
+     "mean": 18.71,
+     "lo": 12.53,
+     "hi": 25.46
+    }
+   },
+   "totalPerLabel": {
+    "archiveNoReuse": {
+     "n": 46,
+     "mean": -1.43,
+     "lo": -2.3,
+     "hi": -0.74
+    },
+    "reuse": {
+     "n": 80,
+     "mean": 33.65,
+     "lo": 22.71,
+     "hi": 45.95
+    }
+   },
+   "signsAfterReversed": {
+    "archiveNoReuse": [
+     3,
+     4,
+     39
+    ],
+    "reuse": [
+     55,
+     11,
+     14
+    ]
+   },
+   "perEvent": {
+    "archiveNoReuse": [
+     {
+      "k": 1,
+      "afterReversed": 0,
+      "blocked": 0
+     },
+     {
+      "k": 2,
+      "afterReversed": -7,
+      "blocked": -1
+     },
+     {
+      "k": 3,
+      "afterReversed": 5,
+      "blocked": -18
+     },
+     {
+      "k": 4,
+      "afterReversed": -2,
+      "blocked": -15
+     },
+     {
+      "k": 5,
+      "afterReversed": 0,
+      "blocked": -12
+     },
+     {
+      "k": 6,
+      "afterReversed": 1,
+      "blocked": -16
+     }
+    ],
+    "reuse": [
+     {
+      "k": 1,
+      "afterReversed": 50,
+      "blocked": -7
+     },
+     {
+      "k": 2,
+      "afterReversed": 116,
+      "blocked": -4
+     },
+     {
+      "k": 3,
+      "afterReversed": 197,
+      "blocked": 192
+     },
+     {
+      "k": 4,
+      "afterReversed": 250,
+      "blocked": 124
+     },
+     {
+      "k": 5,
+      "afterReversed": 353,
+      "blocked": 395
+     },
+     {
+      "k": 6,
+      "afterReversed": 531,
+      "blocked": 387
+     }
+    ]
+   },
+   "dose": [
+    {
+     "reuses": "0",
+     "labels": 46,
+     "afterReversed": -3,
+     "total": -66,
+     "afterReversedPerLabel": -0.07
+    },
+    {
+     "reuses": "1",
+     "labels": 52,
+     "afterReversed": 634,
+     "total": 1319,
+     "afterReversedPerLabel": 12.19
+    },
+    {
+     "reuses": "2",
+     "labels": 19,
+     "afterReversed": 325,
+     "total": 514,
+     "afterReversedPerLabel": 17.11
+    },
+    {
+     "reuses": "3+",
+     "labels": 9,
+     "afterReversed": 538,
+     "total": 859,
+     "afterReversedPerLabel": 59.78
+    }
+   ],
+   "aroundFirstReuse": {
+    "before": {
+     "afterReversed": -4,
+     "total": -47
+    },
+    "containing": {
+     "afterReversed": 156,
+     "total": 506
+    },
+    "after": {
+     "afterReversed": 1345,
+     "total": 2233
+    }
+   }
+  },
+  "neither": {
+   "labels": {
+    "noArchive": 9,
+    "archiveNoReuse": 43,
+    "reuse": 51
+   },
+   "afterReversedPerLabel": {
+    "archiveNoReuse": {
+     "n": 43,
+     "mean": -0.19,
+     "lo": -0.65,
+     "hi": 0.23
+    },
+    "reuse": {
+     "n": 51,
+     "mean": 18.12,
+     "lo": 11.51,
+     "hi": 25.31
+    }
+   },
+   "totalPerLabel": {
+    "archiveNoReuse": {
+     "n": 43,
+     "mean": -1.47,
+     "lo": -2.4,
+     "hi": -0.72
+    },
+    "reuse": {
+     "n": 51,
+     "mean": 38.57,
+     "lo": 24.45,
+     "hi": 54.39
+    }
+   },
+   "signsAfterReversed": {
+    "archiveNoReuse": [
+     2,
+     4,
+     37
+    ],
+    "reuse": [
+     32,
+     8,
+     11
+    ]
+   },
+   "perEvent": {
+    "archiveNoReuse": [
+     {
+      "k": 1,
+      "afterReversed": 0,
+      "blocked": 0
+     },
+     {
+      "k": 2,
+      "afterReversed": -7,
+      "blocked": -1
+     },
+     {
+      "k": 3,
+      "afterReversed": 5,
+      "blocked": -18
+     },
+     {
+      "k": 4,
+      "afterReversed": -2,
+      "blocked": -15
+     },
+     {
+      "k": 5,
+      "afterReversed": 0,
+      "blocked": -3
+     },
+     {
+      "k": 6,
+      "afterReversed": -4,
+      "blocked": -17
+     }
+    ],
+    "reuse": [
+     {
+      "k": 1,
+      "afterReversed": -2,
+      "blocked": -2
+     },
+     {
+      "k": 2,
+      "afterReversed": 36,
+      "blocked": 25
+     },
+     {
+      "k": 3,
+      "afterReversed": 134,
+      "blocked": 142
+     },
+     {
+      "k": 4,
+      "afterReversed": 161,
+      "blocked": 143
+     },
+     {
+      "k": 5,
+      "afterReversed": 225,
+      "blocked": 317
+     },
+     {
+      "k": 6,
+      "afterReversed": 370,
+      "blocked": 342
+     }
+    ]
+   },
+   "dose": [
+    {
+     "reuses": "0",
+     "labels": 43,
+     "afterReversed": -8,
+     "total": -63,
+     "afterReversedPerLabel": -0.19
+    },
+    {
+     "reuses": "1",
+     "labels": 38,
+     "afterReversed": 597,
+     "total": 1328,
+     "afterReversedPerLabel": 15.71
+    },
+    {
+     "reuses": "2",
+     "labels": 10,
+     "afterReversed": 231,
+     "total": 430,
+     "afterReversedPerLabel": 23.1
+    },
+    {
+     "reuses": "3+",
+     "labels": 3,
+     "afterReversed": 96,
+     "total": 209,
+     "afterReversedPerLabel": 32
+    }
+   ],
+   "aroundFirstReuse": {
+    "before": {
+     "afterReversed": -3,
+     "total": -15
+    },
+    "containing": {
+     "afterReversed": 35,
+     "total": 388
+    },
+    "after": {
+     "afterReversed": 892,
+     "total": 1594
+    }
+   }
+  }
+ }
+}
