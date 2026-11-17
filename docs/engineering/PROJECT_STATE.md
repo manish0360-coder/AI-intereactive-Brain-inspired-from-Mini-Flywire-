@@ -20,7 +20,7 @@ work stands. Document index: [`docs/README.md`](../README.md).
 
 | Date | Work | Result |
 |---|---|---|
-| 2026-11-17 | **CF-06** a belief about whether a changed exit will change back (model v6, ρ fixed at 1/2), 135 fresh `gate6` worlds | **SUPPORTED — CONSISTENT.** Beats all four fixed re-testing policies on the mix; against the planner +84.7 [55.1, 119.4] (2.4%; median +21); costs +17.4 in RARE (inside the 25 margin). Gain from genuine reversals and false-alarm repair. Adversarial review: SOUND WITH CORRECTIONS, verdict unchanged. The gain is about 28 steps a run, and the full verdict line holds only at h = 0.01. Not adopted pending the owner's decision. Freeze `7ce1dc6`, results `22ea769`, review in the commit after `d5c7ade` |
+| 2026-11-17 | **CF-06** a belief about whether a changed exit will change back (model v6, ρ fixed at 1/2), 135 fresh `gate6` worlds | **SUPPORTED — CONSISTENT.** Beats all four fixed re-testing policies on the mix; against the planner +84.7 [55.1, 119.4] (2.4%; median +21); costs +17.4 in RARE (inside the 25 margin). Gain from genuine reversals and false-alarm repair. Adversarial review: SOUND WITH CORRECTIONS, verdict unchanged. The gain is about 28 steps a run, and the full verdict line holds only at h = 0.01. Not adopted pending the owner's decision on the adoption proposal. Freeze `7ce1dc6`, results `22ea769`, review `72230be` |
 | 2026-11-13 | **CF-03b** world model v2 (`cognitive/mind/`) | **PASS** on 20 fresh `gate3b` worlds: ECE 0.028 against 0.05 (v1 0.104); DYNAQ − MBVI2 on E3 +171.0 [52.3, 317.5]; no regression. Calibration did not improve task performance. Freeze `1968083`, results `4e310b0` |
 | 2026-11-14 | **CF-04** hidden-change task E4 and reliability arbitration (`cognitive/mind/arb/`), 55 fresh worlds | **ARBITRATION NOT SUPPORTED — HARMFUL.** The task is admitted (+160.7 steps without change detection). Planner − ARB = −13.8 [−20.0, −7.2]; ARB is also worse than random switching. Arbitration is not built into the agent. Freeze `2ae0311`; results in the commit after it |
 | 2026-11-14 | **CF-03c** world model v3 (`cognitive/mind/v3/`): two v2 defects repaired, then tested on four unseen reliability families | **PARTIAL.** Repairs hold. Criteria held in BIMODAL only; a per-pair Laplace forecaster beats the model on WIDE and ARCSINE, a constant forecaster beats it on HIGH. The calibration claim stays limited to the development generator. Freeze `2821603`, results `ddbe5f3` |
@@ -64,6 +64,8 @@ first; a node is a place, not a cognitive function.
 2. **Closure ruling** retiring nine unrun legacy studies (AD-10; a proposed D-045).
 3. **Authorisation** for the legacy adapter's map-off hook in `main.js` (roadmap L1) and for app integration (M9).
 4. An **erratum** for `experiments/coga/README.md`, which still calls ACQ-1 "SUPPORTED" against D-035.
+5. **The CF-06 adoption decision** (`experiments/cf06/ADOPTION_PROPOSAL.md`): A, adopt the belief as the agent's world
+   model with the limited claim (recommended), or B, do not adopt now.
 
 ## Next exact engineering milestone
 
@@ -90,8 +92,17 @@ the verdict. The corrections are in a dated amendment at the end of RESULTS.md, 
 with it: `run/gate6_power_events.txt` (the Windows event-log extract behind the run history) and
 `run/gate6_attempt2.stderr` (0 bytes).
 
-Never rerun gate6. **Next, fixed by the specification:** a proposal to the owner to make model v6 with ρ fixed at 1/2
-the agent's model. It must carry the review's corrections. Nothing changes in the agent before that decision.
+**Adoption proposal DRAFTED (2026-11-17), awaiting the owner's decision:** `experiments/cf06/ADOPTION_PROPOSAL.md`.
+It is the specification's fixed next step and carries the review's corrections.
+- **The question:** should the agent's world model become model v6 with ρ fixed at 1/2 and h = 0.01, in place of v3?
+- **Recommended:** A, adopt with the claim limited (about 28 steps a run, 2.4%; four fixed policies tested; 30% of the
+  gain repairs v3's false alarms; the full verdict line only at h = 0.01; one development gate).
+- **Alternative:** B, do not adopt now.
+- **Not offered:** adopting VOL on this run's outcome.
+- **On A:** one commit with AD-13, the status documents, and a named definition of the agent with a test. No edit to
+  v6, v3 or the planner.
+
+Never rerun gate6. Nothing changes in the agent before the decision.
 
 *Freeze and run (2026-11-16):* revision 3.1 frozen on the owner's word "Yes, freeze and run" (`7ce1dc6`) after a
 final pre-Gate-6 audit (power, isolation, attribution, preregistration: all PASS) and one added line on exclusions
