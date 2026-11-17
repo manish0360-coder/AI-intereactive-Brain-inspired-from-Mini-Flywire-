@@ -1,4 +1,4 @@
-// M11 tests — the controlled-change environment on the MiniFlyWire graph (experiments/m11).
+// M11 tests — the controlled-change environment on the MiniFlyWire graph (experiments/m11_routes).
 // They use labels mfw|m11test|*, never the demonstration's mfw|m11|* labels.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -9,7 +9,7 @@ import { makeAdoptedAgent } from '../testbed/adopted_agent.mjs';
 import { makeAgentForV6 } from '../testbed/registry_v6.mjs';
 import {
   ROOT, ARMS, LABEL_OF, appGraph, nodeTable, runOne, readableTrace, readingRule, MARGIN,
-} from '../../experiments/m11/m11_lib.mjs';
+} from '../../experiments/m11_routes/m11_lib.mjs';
 
 const TEST_LABEL = 'mfw|m11test|0';
 const W = appGraph(), NODES = nodeTable();

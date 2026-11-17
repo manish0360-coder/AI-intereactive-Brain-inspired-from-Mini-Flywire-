@@ -220,6 +220,7 @@ experiments/cf05/** -text
 experiments/cf05b/** -text
 experiments/cf06/** -text
 
-# M11 (controlled route changes on the MiniFlyWire graph): the driver checks SPEC.md against SPEC.sha256 over exact
-# bytes, and the results record cites hashes of the result file. Same reason as the cognitive gates above.
-experiments/m11/** -text
+# M11-ROUTES (controlled route changes on the MiniFlyWire graph): the driver checks SPEC.md against SPEC.sha256
+# over exact bytes, and the results record cites hashes of the result file. Same reason as the cognitive gates above.
+# The legacy experiments/m11/ record is deliberately NOT covered: its checkout behaviour is left as it was.
+experiments/m11_routes/** -text

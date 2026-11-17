@@ -3,6 +3,10 @@
 **Status.** Draft, 2026-11-17, for the owner's approval. Not frozen. The driver refuses to run the demonstration
 until this line begins "Frozen" and `SPEC.sha256` matches this file.
 
+**Name.** "M11" is the owner's name for this milestone. Its folder is `experiments/m11_routes/` because
+`experiments/m11/` holds the earlier, unrelated M11 record (the `canReachGoal` repair verification, `0f47d7b`), which
+other verifiers require to stay unmodified.
+
 ## Purpose
 
 To show, on the app's own graph, what the adopted agent (AD-13) does when routes are blocked and reopened, compared
@@ -25,7 +29,7 @@ Every component is existing code, used unchanged.
 | **Environment** | `GraphEnv` (`cognitive/testbed/env.mjs`). Its runner-only `block` / `unblock` make a move along an edge fail and leave the agent where it is. Reward is 1 on arrival at the goal. The random streams are seeded by label, so both agents meet the same conditions |
 | **Change schedule** | Task E5 (`cognitive/testbed/task_e5.mjs`), as frozen for CF-06. Six times a run it blocks an edge on the current shortest route, keeping the goal reachable. Each block reopens after 10 episodes with probability 0.1 (RARE), 0.5 (HALF) or 0.9 (OFTEN). The schedule depends only on the label, so both agents face the same one |
 | **Agents** | **BELIEF** = `makeAdoptedAgent` (AD-13): model v6, ρ fixed at 1/2, h = 0.01, every other parameter at its default. **MBVI3** = the registry's MBVI3, the baseline |
-| **Recorder** | `experiments/m11/trace.mjs`, passive (below) |
+| **Recorder** | `experiments/m11_routes/trace.mjs`, passive (below) |
 
 **E5 parameters:**
 - 600 exploration steps in 50-step episodes, then 30 training episodes;
@@ -101,9 +105,9 @@ Reading the model's `predict` is a pure read. Run A is traced and run B is not, 
 
 ## Integrity
 
-- **Run once,** with `node experiments/m11/run_demo.mjs --domain m11`. The driver refuses if any of these hold:
+- **Run once,** with `node experiments/m11_routes/run_demo.mjs --domain m11`. The driver refuses if any of these hold:
   - this file is not marked Frozen, or does not match `SPEC.sha256`;
-  - the files under `cognitive/` and `experiments/m11` are not committed and clean;
+  - the files under `cognitive/` and `experiments/m11_routes` are not committed and clean;
   - a result file already exists.
 - **Determinism and passivity.** Run A (traced) and run B (untraced) must give identical rows. Both row hashes are
   recorded.
@@ -113,7 +117,7 @@ Reading the model's `predict` is a pure read. Run A is traced and run B is not, 
   - Node version and platform;
   - SHA-256 of `main.js`, `index.html`, `connections.json` and `neurons.json` (`main.js` is expected to be the
     audited `c92c5c6b…`, untouched).
-- **Nothing is tuned after the run.** The result is written up in `experiments/m11/RESULTS.md` whatever it is.
+- **Nothing is tuned after the run.** The result is written up in `experiments/m11_routes/RESULTS.md` whatever it is.
 - **Looks before the freeze (disclosed):**
   - the schedule check above (labels `mfw|feasibility|*`, no agent);
   - the regression tests, which run both agents on `mfw|m11test|0`, OFTEN, and compare each arm with itself, never
@@ -143,8 +147,8 @@ into the app, is a separate decision.
 
 - **Time:** about 65 minutes (1,620 E5 runs at about 2.4 s each, in the smoke run). The machine must stay awake, so
   the run uses the same per-process wake request as the CF-06 gate.
-- **Output:** `experiments/m11/results/m11_result.json` (rows, analysis, reading, the 18 traces) and the run logs in
-  `experiments/m11/results/run/`.
+- **Output:** `experiments/m11_routes/results/m11_result.json` (rows, analysis, reading, the 18 traces) and the run logs in
+  `experiments/m11_routes/results/run/`.
 
 **To freeze:**
 1. Set the status line to "**Status.** Frozen", with the date and the owner's word.
@@ -156,8 +160,8 @@ into the app, is a separate decision.
 
 | File | Role |
 |---|---|
-| `experiments/m11/SPEC.md` | This specification |
-| `experiments/m11/m11_lib.mjs` | Configuration, the two arms, one run, analysis, reading rule |
-| `experiments/m11/trace.mjs` | The passive recorder |
-| `experiments/m11/run_demo.mjs` | The driver and its refusal checks |
+| `experiments/m11_routes/SPEC.md` | This specification |
+| `experiments/m11_routes/m11_lib.mjs` | Configuration, the two arms, one run, analysis, reading rule |
+| `experiments/m11_routes/trace.mjs` | The passive recorder |
+| `experiments/m11_routes/run_demo.mjs` | The driver and its refusal checks |
 | `cognitive/tests/test_m11_env.mjs` | Regression tests (in `npm test`) |

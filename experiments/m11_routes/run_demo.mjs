@@ -1,10 +1,10 @@
 // ==========================================================
 // M11 driver — controlled route changes on the MiniFlyWire graph: the AD-13 belief against MBVI3
 // ==========================================================
-//   node experiments/m11/run_demo.mjs --domain m11
+//   node experiments/m11_routes/run_demo.mjs --domain m11
 //       The one demonstration run. It refuses unless SPEC.md is marked Frozen and matches SPEC.sha256, the files under
-//       cognitive/ and experiments/m11 are committed and clean, and no result file exists.
-//   node experiments/m11/run_demo.mjs --domain dev --labels 2 --out <file outside the repository>
+//       cognitive/ and experiments/m11_routes are committed and clean, and no result file exists.
+//   node experiments/m11_routes/run_demo.mjs --domain dev --labels 2 --out <file outside the repository>
 //       A smoke run on labels mfw|m11dev|*, which the demonstration never uses.
 //
 // Run A records traces for TRACE_LABELS; run B repeats everything without the recorder. The two row sets must be
@@ -22,7 +22,7 @@ import {
 } from './m11_lib.mjs';
 import { ADOPTED_AGENT } from '../../cognitive/testbed/adopted_agent.mjs';
 
-const HERE = path.join(ROOT, 'experiments', 'm11');
+const HERE = path.join(ROOT, 'experiments', 'm11_routes');
 const sha = (b) => crypto.createHash('sha256').update(b).digest('hex');
 const arg = (n, d = null) => { const i = process.argv.indexOf(n); return i > 0 ? process.argv[i + 1] : d; };
 const die = (m) => { console.error(`m11 run_demo refused: ${m}`); process.exit(2); };
@@ -46,7 +46,7 @@ if (!isDemo) {
   if (!fs.existsSync(SHAFILE)) die('SPEC.sha256 (the frozen hash of the specification) is missing');
   const frozen = fs.readFileSync(SHAFILE, 'utf8').trim().split(/\s+/)[0];
   if (sha(fs.readFileSync(SPEC)) !== frozen) die(`SPEC.md does not match its frozen SHA-256 ${frozen}`);
-  const dirty = git('status', '--porcelain', '--untracked-files=all', '--', 'cognitive', 'experiments/m11');
+  const dirty = git('status', '--porcelain', '--untracked-files=all', '--', 'cognitive', 'experiments/m11_routes');
   if (dirty) die(`files are not all committed and clean:\n${dirty}`);
   if (fs.existsSync(OUT)) die('the m11 labels have already been run');
 }

@@ -75,7 +75,7 @@ Since then:
 2. **Closure ruling** retiring nine unrun legacy studies (AD-10; a proposed D-045).
 3. **Authorisation** for the legacy adapter's map-off hook in `main.js` (roadmap L1) and for app integration (M9).
 4. An **erratum** for `experiments/coga/README.md`, which still calls ACQ-1 "SUPPORTED" against D-035.
-5. **Freeze approval for M11** (`experiments/m11/SPEC.md`, draft). Then it is run once.
+5. **Freeze approval for M11** (`experiments/m11_routes/SPEC.md`, draft). Then it is run once.
 
 ## Next exact engineering milestone
 
@@ -116,7 +116,10 @@ with it: `run/gate6_power_events.txt` (the Windows event-log extract behind the 
   gate.
 
 **M11 BUILT (2026-11-17), specification DRAFT awaiting the owner's freeze approval:** the adopted belief under
-controlled route changes on the MiniFlyWire graph (`experiments/m11/`).
+controlled route changes on the MiniFlyWire graph (`experiments/m11_routes/`).
+- **Folder:** first committed into `experiments/m11/` by mistake (`7859de3`). That folder is the legacy M11 record (the
+  `canReachGoal` repair, `0f47d7b`), which the M12 and M13 verifiers require to stay unmodified. Moved out in the next
+  commit. The legacy files were never changed, and their attribute is back to unspecified.
 - **Why not in the app:** the owner declined integrating the agent into `main.js` ("NOT YET"). In the app every move
   succeeds and no exit changes, so the belief could not differ from MBVI3. Nothing in `main.js`, `render/` or
   `index.html` is touched, and every hash-based check on them still holds (`main.js` is still `c92c5c6b…`).
