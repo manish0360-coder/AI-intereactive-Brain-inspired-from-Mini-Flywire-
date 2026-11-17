@@ -11,9 +11,9 @@ work stands. Document index: [`docs/README.md`](../README.md).
 
 | Item | State |
 |---|---|
-| GitHub `main` | `75530c3` (pushed 2026-11-15 on the owner's word; fresh clone verified: frozen hashes identical, 155/155 tests), with 25 annotated tags (none added since 2026-11-12) |
-| Local `main` | Equal to GitHub at `75530c3`, plus any later commit recorded here. No push without the owner's explicit word |
-| Tests | `npm test` 184/184 (after M11); legacy gate `experiments/phase1_0/verify_S2.js` 14/14 (run it from `experiments/phase1_0/`: it reads `../../neurons.json`) |
+| GitHub `main` | `2c5c591`, pushed 2026-11-18 as a fast-forward of 17 commits from `75530c3` (CF-06 through M12), on the owner's words "push also if you think that is right next approach". Fresh clone with `core.autocrlf=true` verified: M11 `SPEC.sha256`, M11 `results/SHA256SUMS` and M12 `analysis/SHA256SUMS` hold; `gate6_result.json` `91987509…` holds; `main.js`'s committed blob is `c92c5c6b…` (its on-disk bytes differ only by CRLF conversion, as `main.js` has no exact-bytes rule); `npm test` 184/184; legacy gate 14/14; the M12 analyses reproduce byte for byte (two of the three scripts only after the path fix below). 25 annotated tags; none added |
+| Local `main` | GitHub's `2c5c591` plus this state commit, which also fixes a path bug found by the clone check: two M12 scripts failed in folders whose path contains a space. Their outputs are unchanged. No push without the owner's explicit word |
+| Tests | `npm test` 184/184 (after M12; M12 adds no tests); legacy gate `experiments/phase1_0/verify_S2.js` 14/14 (run it from `experiments/phase1_0/`: it reads `../../neurons.json`) |
 | Push rule | No push without the owner's explicit word |
 
 ## Done in this programme
@@ -73,7 +73,7 @@ Since then:
 
 ## Waiting on the owner
 
-1. **Push** of the local commits.
+1. **Push** of this state commit, if wanted; everything up to `2c5c591` is on GitHub.
 2. **Closure ruling** retiring nine unrun legacy studies (AD-10; a proposed D-045).
 3. **Authorisation** for the legacy adapter's map-off hook in `main.js` (roadmap L1) and for app integration (M9).
 4. An **erratum** for `experiments/coga/README.md`, which still calls ACQ-1 "SUPPORTED" against D-035.
@@ -86,7 +86,7 @@ Since then:
 ## Next exact engineering milestone
 
 **CF-06 RECORDED (2026-11-17): SUPPORTED — CONSISTENT.** Results commit `22ea769`
-(`experiments/cf06/results/RESULTS.md`, `gate6_result.json` SHA-256 `91987509…72ac`, rows `cddb668b…`); not pushed.
+(`experiments/cf06/results/RESULTS.md`, `gate6_result.json` SHA-256 `91987509…72ac`, rows `cddb668b…`); pushed 2026-11-18.
 135 fresh worlds, 0 excluded, two runs identical, 173/173.
 - **Criteria:** B1–B6 all hold. B1 against the planner is +84.7 [55.1, 119.4] steps on the mix: summed over a world's
   three runs, so about 28 a run (median +21, 81 / 53 worlds; 61% from the most favourable 10% of worlds). B2: RARE
@@ -152,7 +152,7 @@ was changed, and no new experiment was made.
   verdict are unchanged.
 
 **M11 RECORDED (2026-11-17): DEMONSTRATED ON THE MINIFLYWIRE GRAPH** (development-level, not confirmatory).
-`experiments/m11_routes/RESULTS.md`; `m11_result.json` SHA-256 `3d86d073…1c05`; not pushed.
+`experiments/m11_routes/RESULTS.md`; `m11_result.json` SHA-256 `3d86d073…1c05`; pushed 2026-11-18.
 - **Run:** frozen `a3cccd5` on the owner's word "Freeze and run". Run once, 17:08–18:13Z, at HEAD `a3cccd5`. 810 E5
   runs, 0 excluded, 0 skipped events. Traced and untraced rows identical. No standby (event-log extract lodged).
   Independent check written before the result: all pass. `npm test` 184/184.

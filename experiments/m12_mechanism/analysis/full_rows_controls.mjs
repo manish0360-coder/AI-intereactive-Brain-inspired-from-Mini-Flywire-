@@ -8,8 +8,8 @@
 // so that their spread can be read; no threshold is applied.
 import fs from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
-const here = path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'));
+import { pathToFileURL, fileURLToPath } from 'node:url';
+const here = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(here, '..', '..', '..');
 const { pairedBootstrap } = await import(pathToFileURL(path.join(ROOT, 'cognitive/testbed/stats.mjs')).href);
 const o = JSON.parse(fs.readFileSync(path.join(here, 'full_rows.json')));

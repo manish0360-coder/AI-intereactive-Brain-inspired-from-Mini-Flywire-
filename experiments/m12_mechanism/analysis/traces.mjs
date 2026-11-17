@@ -6,7 +6,8 @@
 // Usage: node experiments/m12_mechanism/analysis/traces.mjs
 import fs from 'node:fs';
 import path from 'node:path';
-const here = path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'));
+import { fileURLToPath } from 'node:url';
+const here = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(here, '..', '..', '..');
 const j = JSON.parse(fs.readFileSync(path.join(ROOT, 'experiments/m11_routes/results/m11_result.json')));
 const key = (a, b) => (a < b ? `${a}-${b}` : `${b}-${a}`);
