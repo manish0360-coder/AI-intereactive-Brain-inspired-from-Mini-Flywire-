@@ -1,0 +1,30 @@
+{
+ "verdict": "CF-06 SUPPORTED — CONSISTENT",
+ "claims": {
+  "gainShape": "CONSISTENT",
+  "gainSource": "GENUINE REVERSALS AND FALSE-ALARM REPAIR",
+  "gainSourceMix": "GENUINE REVERSALS AND FALSE-ALARM REPAIR",
+  "learnedRateAddsValue": true,
+  "headroomDetectable": true,
+  "taskCanTestLearning": false,
+  "rateMovesRightWay": true,
+  "zeroReversalWorlds": 64,
+  "stopsRetesting": true,
+  "hRobustness": "ROBUST",
+  "weighting": "B1 holds on 50 of 66 weightings of the three families"
+ },
+ "infra": {
+  "determinism": true,
+  "tests": true
+ },
+ "tests": "173/173",
+ "criteria": {
+  "B1_beats_every_fixed_policy_on_the_mix": true,
+  "B2_safe_where_retesting_hurts": true,
+  "B3_helps_where_changes_reverse": true,
+  "B4_mechanism": true,
+  "B5_no_regression": true
+ },
+ "headAtLaunch": "7ce1dc6d0d79ad6faa5ac1d6be3adec7b0222b3b",
+ "cappedEpisodesPrimary": 0
+}

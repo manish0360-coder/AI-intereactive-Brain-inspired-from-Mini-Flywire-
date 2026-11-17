@@ -1,0 +1,16 @@
+== 2026-11-16T14:11:37Z refusal check 1: spec marked Frozen, no GATE_SPEC.sha256 yet, files uncommitted
+cf06 run_gate refused: GATE_SPEC.sha256 (the frozen hash of the specification) is missing
+exit 2
+== 2026-11-16T14:11:48Z refusal check 2: GATE_SPEC.sha256 written, files not yet committed
+cf06 run_gate refused: files are not all committed and clean:
+M cognitive/mind/v6/agent.mjs
+ M cognitive/mind/v6/world_model.mjs
+ M cognitive/testbed/task_e5.mjs
+ M cognitive/tests/test_vol.mjs
+ M experiments/cf06/GATE_SPEC.md
+ M experiments/cf06/run_gate.mjs
+?? cognitive/testbed/arms_v6.mjs
+?? experiments/cf06/GATE_SPEC.sha256
+?? experiments/cf06/PREFREEZE_RECONCILIATION.md
+?? experiments/cf06/power_sim.mjs
+exit 2
