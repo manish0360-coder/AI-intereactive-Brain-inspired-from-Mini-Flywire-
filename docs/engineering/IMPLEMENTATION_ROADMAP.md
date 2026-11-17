@@ -27,7 +27,7 @@ flowchart LR
   M9 --> M10
 ```
 
-## Status against evidence (2026-11-15)
+## Status against evidence (2026-11-17)
 
 The capability targets, in the owner's order of priority (Decision 8), and where the evidence stands. They are
 research targets, not modules to add.
@@ -37,11 +37,11 @@ research targets, not modules to add.
 | 1. World modelling and prediction | Learned model with pooled priors beats a per-pair rule where exits are alike, loses where they are spread wide (CF-03c) | **Partial**; calibrated on the development generator only |
 | 2. Learning and planning | Value iteration on the learned model beats Dyna-Q, Dyna-Q+ and Q-learning on every task so far (CF-01…CF-05b) | **Established on 24-node worlds** |
 | 3. Change detection and adaptation | Removing change detection costs +161 steps after a block (CF-04) | **Established** |
-| 4. Recovery and memory | RECALL recovers two-thirds of the gap after a reversal, costs 7.7 when the change is permanent (CF-05b); blanket re-testing fails (CF-05 closure) | **Supported at a cost; not adopted** |
+| 4. Recovery and memory | RECALL recovers two-thirds of the gap after a reversal, costs 7.7 when the change is permanent (CF-05b); blanket re-testing fails (CF-05 closure). A two-regime belief per changed exit, with ρ fixed at 1/2, beats each of four fixed re-testing policies over a mix of reversal rates: about 28 steps a run (2.4%) against the planner, and it costs 17.4 a run where changes rarely reverse (CF-06) | **The belief adopted (AD-13)**, with a limited claim; RECALL not adopted |
 | 5. Uncertainty and confidence | Calibration error cannot tell the model from a constant forecaster (CF-03c); Brier with decomposition replaces it | Open |
-| 6. Metacognition and self-evaluation | Reliability arbitration between two controllers harmful at this scale (CF-04) | Not supported in that form; the next form is learning how volatile the world is (CF-06) |
+| 6. Metacognition and self-evaluation | Reliability arbitration between two controllers harmful at this scale (CF-04). Learning how often changes reverse beat ρ = 1/2 by 11.3 [0.3, 22.8], but task E5 failed its headroom rule (CF-06) | Not supported in the arbitration form. Learning how volatile the world is (H-VOL) is not admitted by E5; the adopted belief fixes ρ |
 | 7. Generalisation | Same sign and break-even at 48 nodes (CF-05b, non-gating); calibration fails on 3 of 4 unseen reliability families | Partial |
-| 8. Integration and efficiency | One agent (MBVI3) plus research prototypes; RECALL adds 4% work per decision | Nothing new integrated |
+| 8. Integration and efficiency | One agent: the planner on model v6 with ρ fixed at 1/2 (AD-13), with about 7% more work per decision than MBVI3, which stays the baseline. Research prototypes sit beside it | The belief is integrated into the testbed agent; nothing is in the browser app |
 
 | Milestone | State |
 |---|---|
@@ -50,11 +50,15 @@ research targets, not modules to add.
 | M3 arbitration | Tested, not supported; withdrawn at this scale (CF-04) |
 | CF-05 exploration bonus | Closed without a gate as a development-level negative finding |
 | CF-05b targeted recall | **Done: SUPPORTED AT A COST; not adopted** |
-| **Next: CF-06 learning how often changes reverse** | See below |
+| CF-06 belief about whether a change reverses | **Done: SUPPORTED — CONSISTENT; adopted (AD-13).** Learning the rate is not admitted by E5 |
 | M1 stronger baselines | Partly done: Dyna-Q+ with a count model built and used |
 | M4, M5, M6, M7, M8, L1, M9, M10 | Unchanged below; M5/M6 still need their tasks admitted first |
 
-### CF-06 — learning how often changes reverse (proposed; not started)
+### CF-06 — learning how often changes reverse (as first planned)
+
+**Status (2026-11-17).** Run as a test of the belief with ρ fixed at 1/2, the owner's re-scope: SUPPORTED —
+CONSISTENT, and adopted (AD-13). Learning the rate (H-VOL) was reported, not tested, because E5 failed its headroom
+rule. The table below is the plan as first written.
 
 | | |
 |---|---|

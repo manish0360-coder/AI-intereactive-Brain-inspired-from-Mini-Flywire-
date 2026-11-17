@@ -1,7 +1,8 @@
 # CF-06 — proposal: make the belief the agent's world model
 
-**Status.** Proposal to the owner, 2026-11-17. **Awaiting the owner's decision.** Nothing in the agent has changed,
-and nothing changes before the decision.
+**Status.** Proposal to the owner, 2026-11-17. **Decided the same day: A, adopt** (the owner's word "A: adopt").
+The decision is recorded as AD-13 in `docs/architecture/ARCHITECTURE_DECISIONS.md`. The text below is the proposal
+as it was put to the owner.
 
 **Why there is a proposal.** The frozen specification fixed the consequence of this verdict before the run
 ([GATE_SPEC.md](GATE_SPEC.md), decision table, line 122). For SUPPORTED — CONSISTENT it reads: "Adversarial review,

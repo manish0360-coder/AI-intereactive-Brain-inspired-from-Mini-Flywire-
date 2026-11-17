@@ -233,6 +233,49 @@ test of arbitration in general.
   4 of 40 worlds). A model that keeps the earlier regime fixes that too, as a side effect; the detector itself is not
   changed.
 
+## The belief about reversal adopted (2026-11-17)
+
+### AD-13 — The agent's world model is v6 with ρ fixed at 1/2 (CF-06), with a limited claim
+
+- **Evidence.** CF-06, SUPPORTED — CONSISTENT, on 135 fresh worlds ([results](../../experiments/cf06/results/RESULTS.md)).
+  The adversarial review rated the record SOUND WITH CORRECTIONS and left the verdict unchanged
+  ([review](../../experiments/cf06/results/ADVERSARIAL_REVIEW.md)). Figures as corrected by its dated amendment:
+  - **Against the planner:** about 28 steps a run fewer (+84.7 [55.1, 119.4] per world over its three runs), 2.4%.
+  - **Concentration:** 61% of the gain comes from 10% of worlds.
+  - **Source:** 68% from genuine changes, and 30% from repairing false alarms of v3's change detector.
+  - **Cost where changes rarely reverse:** 17.4 steps a run [12.8, 21.9], inside the 25-step margin, and 20.1 where
+    nothing reversed.
+  - **No regression:** identical to the planner in 539 of 540 world-cells on the tasks without changes.
+  - **Compute:** value-iteration work per decision is 6.5% to 7.4% higher.
+- **Decision.** Taken by the owner's word "A: adopt" (2026-11-17), on the
+  [adoption proposal](../../experiments/cf06/ADOPTION_PROPOSAL.md).
+  - **The agent.** The agent of the cognitive programme is the value-iteration planner on world model v6, with ρ fixed
+    at 1/2 and h = 0.01. This is exactly the gate6 BELIEF arm.
+  - **Where it is defined.** Once, in `cognitive/testbed/adopted_agent.mjs`, and pinned to the gate6 parameters by
+    `cognitive/tests/test_adopted_agent.mjs`.
+  - **The baseline.** MBVI3 (model v3) stays unchanged as the baseline.
+  - **What did not change.** No code in v6, v3 or the planner. Nothing enters the browser application.
+- **Relation to AD-12.** AD-12 named this belief the principled replacement to test. It has now been tested and
+  adopted. RECALL stays not adopted.
+- **The claim that may be made:** "On task E5 (135 fresh 24-node worlds, one development gate), a world model that
+  keeps a two-regime belief about each changed exit, with ρ fixed at 1/2 and h = 0.01, took fewer steps over an equal
+  mix of reversal rates than each of four fixed re-testing policies. Against the planner the saving was about 28 steps
+  a run (2.4%); 61% of it came from 10% of worlds, and about 30% from repairing the change detector's false alarms.
+  Where changes rarely reversed, it cost about 17 steps a run (1.3%)."
+- **Not claimed:**
+  - better in general;
+  - better than every fixed schedule (frozen limitation 10);
+  - robust to h. Only B1 is. At h = 0.003 B2 fails marginally, and the specification would then have said "not
+    adopted as it stands";
+  - that the agent learns how often changes reverse (ρ is fixed);
+  - anything confirmatory.
+- **Open:**
+  - learning ρ (H-VOL), which E5 does not admit;
+  - the change detector's false alarms, which carry 30% of the gain;
+  - h, which was borrowed from CF-05b;
+  - integration into the browser application (roadmap M9), which needs its own authorisation.
+- **Undoing it.** The adopted agent is one configuration. Reverting to MBVI3 would take a new decision record.
+
 ## Weak points the author already knows
 
 1. **The whole programme runs on small, mostly deterministic graphs.** A result here says little about larger or
