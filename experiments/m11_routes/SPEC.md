@@ -1,7 +1,7 @@
 # M11 — the adopted belief under controlled route changes on the MiniFlyWire graph
 
-**Status.** Draft, 2026-11-17, for the owner's approval. Not frozen. The driver refuses to run the demonstration
-until this line begins "Frozen" and `SPEC.sha256` matches this file.
+**Status.** Frozen, 2026-11-17, on the owner's word "Freeze and run". The driver refuses to run the demonstration
+unless this line begins "Frozen" and `SPEC.sha256` matches this file.
 
 **Name.** "M11" is the owner's name for this milestone. Its folder is `experiments/m11_routes/` because
 `experiments/m11/` holds the earlier, unrelated M11 record (the `canReachGoal` repair verification, `0f47d7b`), which
