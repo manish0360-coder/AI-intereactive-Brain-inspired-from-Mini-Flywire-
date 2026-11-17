@@ -13,13 +13,14 @@ work stands. Document index: [`docs/README.md`](../README.md).
 |---|---|
 | GitHub `main` | `75530c3` (pushed 2026-11-15 on the owner's word; fresh clone verified: frozen hashes identical, 155/155 tests), with 25 annotated tags (none added since 2026-11-12) |
 | Local `main` | Equal to GitHub at `75530c3`, plus any later commit recorded here. No push without the owner's explicit word |
-| Tests | `npm test` 176/176 (after AD-13); legacy gate `experiments/phase1_0/verify_S2.js` 14/14 (run it from `experiments/phase1_0/`: it reads `../../neurons.json`) |
+| Tests | `npm test` 184/184 (after M11); legacy gate `experiments/phase1_0/verify_S2.js` 14/14 (run it from `experiments/phase1_0/`: it reads `../../neurons.json`) |
 | Push rule | No push without the owner's explicit word |
 
 ## Done in this programme
 
 | Date | Work | Result |
 |---|---|---|
+| 2026-11-17 | **M11** the adopted belief (AD-13) against MBVI3 under controlled route blocking and reopening on the app's own graph (`experiments/m11_routes/`), 135 labels × 3 families, outside the app | **DEMONSTRATED ON THE MINIFLYWIRE GRAPH** (development-level). D1 recovery in OFTEN +11.1 [7.2, 15.3]; D2 cost in RARE +2.9 [0.7, 4.9] (margin 25); D3 crossings of reopened edges +0.64 [0.19, 1.14]. All smaller than CF-06. Reopened edges are rarely re-used (OFTEN: 4.6% of reopenings by BELIEF, 1.2% by MBVI3), and 61% of the recovery difference is in labels where neither agent re-used one: the source is not identified. Freeze `a3cccd5`; results in the commit after it |
 | 2026-11-17 | **CF-06** a belief about whether a changed exit will change back (model v6, ρ fixed at 1/2), 135 fresh `gate6` worlds | **SUPPORTED — CONSISTENT.** Beats all four fixed re-testing policies on the mix; against the planner +84.7 [55.1, 119.4] (2.4%; median +21); costs +17.4 in RARE (inside the 25 margin). Gain from genuine reversals and false-alarm repair. Adversarial review: SOUND WITH CORRECTIONS, verdict unchanged. The gain is about 28 steps a run, and the full verdict line holds only at h = 0.01. **Adopted by the owner (AD-13), with the limited claim.** Freeze `7ce1dc6`, results `22ea769`, review `72230be`, proposal `89e2468`, adoption in the commit after it |
 | 2026-11-13 | **CF-03b** world model v2 (`cognitive/mind/`) | **PASS** on 20 fresh `gate3b` worlds: ECE 0.028 against 0.05 (v1 0.104); DYNAQ − MBVI2 on E3 +171.0 [52.3, 317.5]; no regression. Calibration did not improve task performance. Freeze `1968083`, results `4e310b0` |
 | 2026-11-14 | **CF-04** hidden-change task E4 and reliability arbitration (`cognitive/mind/arb/`), 55 fresh worlds | **ARBITRATION NOT SUPPORTED — HARMFUL.** The task is admitted (+160.7 steps without change detection). Planner − ARB = −13.8 [−20.0, −7.2]; ARB is also worse than random switching. Arbitration is not built into the agent. Freeze `2ae0311`; results in the commit after it |
@@ -75,7 +76,8 @@ Since then:
 2. **Closure ruling** retiring nine unrun legacy studies (AD-10; a proposed D-045).
 3. **Authorisation** for the legacy adapter's map-off hook in `main.js` (roadmap L1) and for app integration (M9).
 4. An **erratum** for `experiments/coga/README.md`, which still calls ACQ-1 "SUPPORTED" against D-035.
-5. **Freeze approval for M11** (`experiments/m11_routes/SPEC.md`, draft). Then it is run once.
+5. **What follows M11**, if anything: for example a viewer for its traces, a look at the unexplained part of the
+   recovery difference, or app integration (still "NOT YET"). Each is a separate decision.
 
 ## Next exact engineering milestone
 
@@ -115,8 +117,29 @@ with it: `run/gate6_power_events.txt` (the Windows event-log extract behind the 
   false-alarm repair; against the four fixed policies tested; the full verdict line only at h = 0.01; one development
   gate.
 
-**M11 BUILT (2026-11-17), specification DRAFT awaiting the owner's freeze approval:** the adopted belief under
-controlled route changes on the MiniFlyWire graph (`experiments/m11_routes/`).
+**M11 RECORDED (2026-11-17): DEMONSTRATED ON THE MINIFLYWIRE GRAPH** (development-level, not confirmatory).
+`experiments/m11_routes/RESULTS.md`; `m11_result.json` SHA-256 `3d86d073…1c05`; not pushed.
+- **Run:** frozen `a3cccd5` on the owner's word "Freeze and run". Run once, 17:08–18:13Z, at HEAD `a3cccd5`. 810 E5
+  runs, 0 excluded, 0 skipped events. Traced and untraced rows identical. No standby (event-log extract lodged).
+  Independent check written before the result: all pass. `npm test` 184/184.
+- **Reading rule:** D1 recovery (OFTEN `afterReversed`) +11.07 [7.16, 15.33]; D2 cost (RARE) +2.87 [0.69, 4.94]
+  against 25; D3 crossings (OFTEN) +0.64 [0.19, 1.14]. All pass.
+- **Size:** OFTEN total +19.5 a run (3.2%); HALF +11.2 (1.7%); RARE costs 2.9 (0.4%). CF-06's generated worlds gave
+  +43.5 / +17.4 / +4.9.
+- **Caveat (descriptive, after the result):** re-use of a reopened edge is rare (OFTEN 33 of 725 reopenings by
+  BELIEF, 9 by MBVI3). 61% of the OFTEN recovery difference is in the 103 labels where neither agent re-used one, so
+  D1 is not carried by D3. Its source is not identified.
+- **Traces:**
+  - The pre-declared illustration (label 0, OFTEN) is a tie: the actions are identical. It shows BELIEF's predicted
+    chance that a blocked exit works rising while blocked (0.12 → 0.26 → 0.44) while MBVI3's stays near 0.1.
+  - Across the 18 traces, BELIEF re-used a reopened edge in 3 of 9 pairs and MBVI3 in none, but BELIEF had fewer
+    steps in only 2 of the 9.
+- **Spent:** labels `mfw|m11|*`.
+
+The build record (before the run) follows.
+
+**M11 BUILT (2026-11-17):** the adopted belief under controlled route changes on the MiniFlyWire graph
+(`experiments/m11_routes/`).
 - **Folder:** first committed into `experiments/m11/` by mistake (`7859de3`). That folder is the legacy M11 record (the
   `canReachGoal` repair, `0f47d7b`), which the M12 and M13 verifiers require to stay unmodified. Moved out in the next
   commit. The legacy files were never changed, and their attribute is back to unspecified.
@@ -135,7 +158,7 @@ controlled route changes on the MiniFlyWire graph (`experiments/m11_routes/`).
   reopened edges in OFTEN. Labels `mfw|m11|0…134`; traces for labels 0–2.
 - **Looks before the freeze:** a schedule check that ran no agent, the tests (each arm compared only with itself), and
   one dev smoke run (`mfw|m11dev|0`), checked for structure only.
-- **Run:** about 65 minutes, with the machine kept awake. It has not been run.
+- **Run:** about 65 minutes, with the machine kept awake. (Run since; see the record above.)
 
 Never rerun gate6. Open questions from AD-13, not started:
 - H-VOL needs a task that passes the headroom rule;

@@ -1,0 +1,38 @@
+mfw|m11|0 RARE: total B 792 M 799; crossings B 000000 M 000000; reverses PPPPRP; failed tries on blocked edges B 28 M 27; same actions false (first difference at step index 1031, t=1031); B archives 5 opened, 2 other
+    recall->context: p at each reopening B [] M []
+    salience->context: p at each reopening B [] M []
+    schema->encode: p at each reopening B [] M []
+mfw|m11|0 HALF: total B 825 M 821; crossings B 000010 M 000000; reverses PPRPRP; failed tries on blocked edges B 29 M 25; same actions false (first difference at step index 899, t=899); B archives 5 opened, 1 other
+    reward->trust: p at each reopening B [] M []
+    reward->schema: p at each reopening B [] M []
+    reflect->trace: p at each reopening B [t1024:0.1841] M [t1021:0.0392]
+    salience->context: p at each reopening B [] M []
+mfw|m11|0 OFTEN: total B 574 M 574; crossings B 000000 M 000000; reverses RRRRRP; failed tries on blocked edges B 4 M 4; same actions true; B archives 1 opened, 0 other
+    trust->recall: p at each reopening B [t772:0.2581 t1157:0.4448] M [t772:0.1336 t1157:0.0927]
+mfw|m11|1 RARE: total B 779 M 791; crossings B 005000 M 000000; reverses PPRPPP; failed tries on blocked edges B 43 M 28; same actions false (first difference at step index 907, t=907); B archives 6 opened, 2 other
+    recall->context: p at each reopening B [] M []
+    encode->signal: p at each reopening B [t981:0.1376] M [t974:0.1394]
+    salience->context: p at each reopening B [] M [not followed]
+    schema->encode: p at each reopening B [] M []
+    schema->trace: p at each reopening B [] M []
+mfw|m11|1 HALF: total B 502 M 500; crossings B 000000 M 000000; reverses PRPRRR; failed tries on blocked edges B 15 M 13; same actions false (first difference at step index 1121, t=1121); B archives 4 opened, 0 other
+    encode->signal: p at each reopening B [t997:0.3287] M [t997:0.2182]
+    schema->trace: p at each reopening B [] M []
+    schema->encode: p at each reopening B [t1176:0.1987] M [t1174:0.0575]
+    infer->salience: p at each reopening B [] M [not followed]
+mfw|m11|1 OFTEN: total B 482 M 482; crossings B 000000 M 000000; reverses RRRRRR; failed tries on blocked edges B 6 M 6; same actions true; B archives 2 opened, 0 other
+    signal->context: p at each reopening B [t844:0.1516 t930:0.27] M [t844:0.0516 t930:0.054]
+mfw|m11|2 RARE: total B 785 M 783; crossings B 000000 M 000000; reverses PPPPPP; failed tries on blocked edges B 32 M 30; same actions false (first difference at step index 914, t=914); B archives 4 opened, 1 other
+    signal->encode: p at each reopening B [] M []
+    salience->infer: p at each reopening B [] M []
+    context->recall: p at each reopening B [] M []
+mfw|m11|2 HALF: total B 922 M 879; crossings B 000000 M 000000; reverses PPPPPR; failed tries on blocked edges B 45 M 23; same actions false (first difference at step index 914, t=914); B archives 5 opened, 1 other
+    signal->encode: p at each reopening B [] M []
+    recall->encode: p at each reopening B [] M []
+    abstract->decide: p at each reopening B [] M []
+    schema->decide: p at each reopening B [] M []
+    recall->abstract: p at each reopening B [] M [not followed]
+    signal->percept: p at each reopening B [t1540:0.2674] M [not followed]
+mfw|m11|2 OFTEN: total B 830 M 824; crossings B 700000 M 000000; reverses RRRRRR; failed tries on blocked edges B 28 M 12; same actions false (first difference at step index 759, t=759); B archives 3 opened, 1 other
+    encode->schema: p at each reopening B [t783:0.1763 t916:0.0773 t1041:0.135 t1206:0.1546] M [t782:0.1368 t913:0.1464 t1058:0.157 t1209:0.1651]
+    signal->encode: p at each reopening B [t1342:0.1676] M [t1339:0.0403]

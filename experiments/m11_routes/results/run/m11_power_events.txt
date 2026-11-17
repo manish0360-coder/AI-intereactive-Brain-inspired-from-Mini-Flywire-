@@ -1,0 +1,14 @@
+﻿System log extract for the M11 run window, local time India Standard Time (UTC+05:30).
+Run: launch 2026-11-17T17:08:00Z (22:38:00 local), exit 2026-11-17T18:13:05Z (23:43:05 local).
+Query: System log, 2026-11-17T22:30:00 to 2026-11-17T23:50:00 local, providers Kernel-Power, Power-Troubleshooter, Kernel-General.
+Sleep/standby markers looked for: Kernel-Power 42 (entering sleep), 107 (resume), 506/507 (modern standby enter/exit), Power-Troubleshooter 1 (woke).
+
+2026-11-17 23:29:42.314  Microsoft-Windows-Kernel-General  id 24  The time zone information was refreshed with exit reason 0. Current time zone bias is -330.
+2026-11-17 23:29:43.244  Microsoft-Windows-Kernel-General  id 1  The system time has changed to 2026-11-17T17:59:42.314513100Z from 2026-11-17T17:59:39.031212700Z. Time Delta: 3283 ms Change Reason: An application or system component changed the time. Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 6712). RTC time: 2026-11-17T23:29:42.314513100Z Current time zone bias: -330 RTC time is in UTC: false System time was based on RTC time: false
+2026-11-17 23:29:43.283  Microsoft-Windows-Kernel-General  id 24  The time zone information was refreshed with exit reason 0. Current time zone bias is -330.
+2026-11-17 23:29:45.244  Microsoft-Windows-Kernel-General  id 1  The system time has changed to 2026-11-17T17:59:43.283347600Z from 2026-11-17T17:59:43.283296500Z. Time Delta: 0 ms Change Reason: An application or system component changed the time. Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 6712). RTC time: 2026-11-17T23:29:43.283347600Z Current time zone bias: -330 RTC time is in UTC: false System time was based on RTC time: false
+2026-11-17 23:29:45.248  Microsoft-Windows-Kernel-General  id 24  The time zone information was refreshed with exit reason 0. Current time zone bias is -330.
+2026-11-17 23:29:47.244  Microsoft-Windows-Kernel-General  id 1  The system time has changed to 2026-11-17T17:59:45.248212700Z from 2026-11-17T17:59:45.247700500Z. Time Delta: 0 ms Change Reason: An application or system component changed the time. Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 6712). RTC time: 2026-11-17T23:29:45.248212700Z Current time zone bias: -330 RTC time is in UTC: false System time was based on RTC time: false
+2026-11-17 23:42:37.975  Microsoft-Windows-Kernel-Power  id 105  Power source change.
+
+Sleep/standby markers found: 0.

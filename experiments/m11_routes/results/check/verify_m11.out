@@ -1,0 +1,92 @@
+result file sha256 3d86d073551916d781e9784150cd7668d99e55eda65f59af2a66ceac6b4d1c05  (4200974 bytes)
+PASS  spec hash 7338aa24 matches SPEC.sha256 and the result
+PASS  HEAD a3cccd5 at launch and end (a3cccd5, a3cccd5)
+PASS  main.js is the audited file
+PASS  run A (traced) and run B (untraced) rows identical
+PASS  stored rows hash to run A
+PASS  domain m11, 135 labels
+PASS  BELIEF is the AD-13 definition
+PASS  810 rows (810)
+excluded rows 0
+skipped events (per arm) by family {"RARE":0,"HALF":0,"OFTEN":0}
+PASS  18 traces (18)
+PASS  RARE total: -2.87 [-4.94, -0.53] n=135 matches the driver
+PASS  RARE cost: 2.87 [0.69, 4.94] n=135 matches the driver
+PASS  RARE blocked: -2.56 [-3.89, -1.21] n=135 matches the driver
+PASS  RARE afterReversed: 0.18 [-0.10, 0.52] n=135 matches the driver
+PASS  RARE afterPermanent: -0.49 [-1.93, 1.07] n=135 matches the driver
+PASS  RARE crossings: 0.16 [0.02, 0.34] n=135 matches the driver
+PASS  RARE futileRetests: 3.29 [2.64, 3.94] n=135 matches the driver
+PASS  HALF total: 11.15 [6.01, 16.82] n=135 matches the driver
+PASS  HALF cost: -11.15 [-16.98, -6.05] n=135 matches the driver
+PASS  HALF blocked: 3.76 [0.48, 7.44] n=135 matches the driver
+PASS  HALF afterReversed: 4.88 [2.79, 7.27] n=135 matches the driver
+PASS  HALF afterPermanent: 2.51 [0.98, 4.19] n=135 matches the driver
+PASS  HALF crossings: 0.80 [0.44, 1.20] n=135 matches the driver
+PASS  HALF futileRetests: 1.73 [0.33, 2.80] n=135 matches the driver
+PASS  OFTEN total: 19.45 [12.53, 27.33] n=135 matches the driver
+PASS  OFTEN cost: -19.45 [-27.41, -12.44] n=135 matches the driver
+PASS  OFTEN blocked: 7.59 [3.87, 11.67] n=135 matches the driver
+PASS  OFTEN afterReversed: 11.07 [7.16, 15.33] n=135 matches the driver
+PASS  OFTEN afterPermanent: 0.79 [0.27, 1.39] n=135 matches the driver
+PASS  OFTEN crossings: 0.64 [0.19, 1.14] n=135 matches the driver
+PASS  OFTEN futileRetests: -0.21 [-1.57, 0.60] n=135 matches the driver
+PASS  reading recomputed: DEMONSTRATED ON THE MINIFLYWIRE GRAPH
+PASS  trace mfw|m11|0 RARE BELIEF: no blocked step moved (1514 steps, 3 followed exits)
+PASS  trace mfw|m11|0 RARE MBVI3: no blocked step moved (1521 steps, 3 followed exits)
+PASS  trace mfw|m11|0 HALF BELIEF: no blocked step moved (1547 steps, 4 followed exits)
+PASS  trace mfw|m11|0 HALF MBVI3: no blocked step moved (1543 steps, 4 followed exits)
+PASS  trace mfw|m11|0 OFTEN BELIEF: no blocked step moved (1296 steps, 1 followed exits)
+PASS  trace mfw|m11|0 OFTEN MBVI3: no blocked step moved (1296 steps, 1 followed exits)
+PASS  trace mfw|m11|1 RARE BELIEF: no blocked step moved (1502 steps, 5 followed exits)
+PASS  trace mfw|m11|1 RARE MBVI3: no blocked step moved (1514 steps, 4 followed exits)
+PASS  trace mfw|m11|1 HALF BELIEF: no blocked step moved (1225 steps, 4 followed exits)
+PASS  trace mfw|m11|1 HALF MBVI3: no blocked step moved (1223 steps, 3 followed exits)
+PASS  trace mfw|m11|1 OFTEN BELIEF: no blocked step moved (1205 steps, 1 followed exits)
+PASS  trace mfw|m11|1 OFTEN MBVI3: no blocked step moved (1205 steps, 1 followed exits)
+PASS  trace mfw|m11|2 RARE BELIEF: no blocked step moved (1501 steps, 3 followed exits)
+PASS  trace mfw|m11|2 RARE MBVI3: no blocked step moved (1499 steps, 3 followed exits)
+PASS  trace mfw|m11|2 HALF BELIEF: no blocked step moved (1638 steps, 6 followed exits)
+PASS  trace mfw|m11|2 HALF MBVI3: no blocked step moved (1595 steps, 4 followed exits)
+PASS  trace mfw|m11|2 OFTEN BELIEF: no blocked step moved (1546 steps, 2 followed exits)
+PASS  trace mfw|m11|2 OFTEN MBVI3: no blocked step moved (1540 steps, 2 followed exits)
+
+illustration: OFTEN mfw|m11|0, first reversing event, edge [6,19]
+  BELIEF: followed directions 1
+    trust -> recall: first blocked try t=723 p=0.8614; tries while blocked 4; p just before reopening 0.2561 (t=771); reopened at t=772 p=0.2581; first crossing after reopening t=none (- steps later); tries after reopening 0
+    belief events on this edge: [{"type":"open","t":726,"edge":[19,6],"rho":0.5}]
+  MBVI3: followed directions 1
+    trust -> recall: first blocked try t=723 p=0.8614; tries while blocked 4; p just before reopening 0.1336 (t=768); reopened at t=772 p=0.1336; first crossing after reopening t=none (- steps later); tries after reopening 0
+
+per family, arm means:
+RARE {"BELIEF":{"total":717.1333333333333,"blocked":375.23703703703706,"afterReversed":30.20740740740741,"afterPermanent":311.68888888888887,"crossings":0.2518518518518518,"futileRetests":15.118518518518519,"censored":0,"skippedEvents":0},"MBVI3":{"total":714.2592592592592,"blocked":372.6740740740741,"afterReversed":30.385185185185186,"afterPermanent":311.2,"crossings":0.0962962962962963,"futileRetests":11.829629629629629,"censored":0,"skippedEvents":0}} belief archives {"opensReal":4.185185185185185,"opensRealReversing":0.25925925925925924,"opensRealPermanent":3.925925925925926,"opensFalse":0.6592592592592592,"confirmsReal":0.08888888888888889,"confirmsFalse":0.2962962962962963}
+HALF {"BELIEF":{"total":658.1333333333333,"blocked":342.97037037037035,"afterReversed":157.67407407407407,"afterPermanent":157.48888888888888,"crossings":0.9777777777777777,"futileRetests":8.459259259259259,"censored":0,"skippedEvents":0},"MBVI3":{"total":669.2814814814815,"blocked":346.72592592592594,"afterReversed":162.55555555555554,"afterPermanent":160,"crossings":0.17777777777777778,"futileRetests":6.725925925925926,"censored":0,"skippedEvents":0}} belief archives {"opensReal":3.325925925925926,"opensRealReversing":1.3703703703703705,"opensRealPermanent":1.9555555555555555,"opensFalse":0.5703703703703704,"confirmsReal":0.4074074074074074,"confirmsFalse":0.2962962962962963}
+OFTEN {"BELIEF":{"total":590.0592592592593,"blocked":305.2,"afterReversed":256.31851851851854,"afterPermanent":28.54074074074074,"crossings":0.9925925925925926,"futileRetests":1.6074074074074074,"censored":0,"skippedEvents":0},"MBVI3":{"total":609.5111111111111,"blocked":312.7925925925926,"afterReversed":267.3851851851852,"afterPermanent":29.333333333333332,"crossings":0.34814814814814815,"futileRetests":1.8148148148148149,"censored":0,"skippedEvents":0}} belief archives {"opensReal":2.0814814814814815,"opensRealReversing":1.7703703703703704,"opensRealPermanent":0.3111111111111111,"opensFalse":0.562962962962963,"confirmsReal":0.6296296296296297,"confirmsFalse":0.25925925925925924}
+
+contrasts (mean [lo, hi]; median; +/-/0):
+RARE  total           -2.87 [-4.94, -0.53]; median -4; 18/109/8
+RARE  cost            2.87 [0.69, 4.94]; median 4; 109/18/8
+RARE  blocked         -2.56 [-3.89, -1.21]; median -2; 21/94/20
+RARE  afterReversed   0.18 [-0.10, 0.52]; median 0; 11/13/111
+RARE  afterPermanent  -0.49 [-1.93, 1.07]; median -1; 28/77/30
+RARE  crossings       0.16 [0.02, 0.34]; median 0; 6/1/128
+RARE  futileRetests   3.29 [2.64, 3.94]; median 3; 119/5/11
+HALF  total           11.15 [6.01, 16.82]; median 0; 44/66/25
+HALF  cost            -11.15 [-16.98, -6.05]; median 0; 66/44/25
+HALF  blocked         3.76 [0.48, 7.44]; median 0; 41/65/29
+HALF  afterReversed   4.88 [2.79, 7.27]; median 0; 42/31/62
+HALF  afterPermanent  2.51 [0.98, 4.19]; median 0; 37/36/62
+HALF  crossings       0.80 [0.44, 1.20]; median 0; 22/3/110
+HALF  futileRetests   1.73 [0.33, 2.80]; median 1; 87/5/43
+OFTEN total           19.45 [12.53, 27.33]; median 0; 51/36/48
+OFTEN cost            -19.45 [-27.41, -12.44]; median 0; 36/51/48
+OFTEN blocked         7.59 [3.87, 11.67]; median 0; 48/38/49
+OFTEN afterReversed   11.07 [7.16, 15.33]; median 0; 58/15/62
+OFTEN afterPermanent  0.79 [0.27, 1.39]; median 0; 15/7/113
+OFTEN crossings       0.64 [0.19, 1.14]; median 0; 23/4/108
+OFTEN futileRetests   -0.21 [-1.57, 0.60]; median 0; 23/2/110
+
+resources: {"note":"not part of the hashed rows","wallClockMsRunA":{"BELIEF":1024604.1290999991,"MBVI3":908904.9267000011},"wallClockMsRunB":{"BELIEF":1042148.8885999941,"MBVI3":925078.7151000025},"totalSeconds":3901,"peakRssKb":273044}
+
+all checks pass
+git status of the repository: ?? experiments/m11_routes/results/
