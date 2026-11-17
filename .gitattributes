@@ -219,3 +219,7 @@ experiments/cf04/** -text
 experiments/cf05/** -text
 experiments/cf05b/** -text
 experiments/cf06/** -text
+
+# M11 (controlled route changes on the MiniFlyWire graph): the driver checks SPEC.md against SPEC.sha256 over exact
+# bytes, and the results record cites hashes of the result file. Same reason as the cognitive gates above.
+experiments/m11/** -text

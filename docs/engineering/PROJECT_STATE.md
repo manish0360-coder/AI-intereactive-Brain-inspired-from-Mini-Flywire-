@@ -75,7 +75,7 @@ Since then:
 2. **Closure ruling** retiring nine unrun legacy studies (AD-10; a proposed D-045).
 3. **Authorisation** for the legacy adapter's map-off hook in `main.js` (roadmap L1) and for app integration (M9).
 4. An **erratum** for `experiments/coga/README.md`, which still calls ACQ-1 "SUPPORTED" against D-035.
-5. **The next milestone.** None is chosen after CF-06. The open questions are listed in AD-13.
+5. **Freeze approval for M11** (`experiments/m11/SPEC.md`, draft). Then it is run once.
 
 ## Next exact engineering milestone
 
@@ -115,7 +115,26 @@ with it: `run/gate6_power_events.txt` (the Windows event-log extract behind the 
   false-alarm repair; against the four fixed policies tested; the full verdict line only at h = 0.01; one development
   gate.
 
-Never rerun gate6. **Next:** no milestone is chosen. AD-13 lists the open questions:
+**M11 BUILT (2026-11-17), specification DRAFT awaiting the owner's freeze approval:** the adopted belief under
+controlled route changes on the MiniFlyWire graph (`experiments/m11/`).
+- **Why not in the app:** the owner declined integrating the agent into `main.js` ("NOT YET"). In the app every move
+  succeeds and no exit changes, so the belief could not differ from MBVI3. Nothing in `main.js`, `render/` or
+  `index.html` is touched, and every hash-based check on them still holds (`main.js` is still `c92c5c6b…`).
+- **What runs (existing code, unchanged):**
+  - the app's graph (`mfwWorld('connections.json')`, 20 nodes, 39 edges);
+  - `GraphEnv` with runner-only `block` / `unblock`;
+  - task E5's schedule, which blocks a route six times a run and reopens it with probability 0.1 / 0.5 / 0.9;
+  - `makeAdoptedAgent` against the registry's MBVI3.
+- **New:** a passive trace recorder (`trace.mjs`), the analysis and reading rule (`m11_lib.mjs`), the driver
+  (`run_demo.mjs`, which refuses until the spec is frozen), and `cognitive/tests/test_m11_env.mjs` (8 tests).
+  `npm test` is 184/184.
+- **Reading rule (fixed in the draft):** D1 recovery in OFTEN, D2 cost in RARE under 25, D3 more crossings of
+  reopened edges in OFTEN. Labels `mfw|m11|0…134`; traces for labels 0–2.
+- **Looks before the freeze:** a schedule check that ran no agent, the tests (each arm compared only with itself), and
+  one dev smoke run (`mfw|m11dev|0`), checked for structure only.
+- **Run:** about 65 minutes, with the machine kept awake. It has not been run.
+
+Never rerun gate6. Open questions from AD-13, not started:
 - H-VOL needs a task that passes the headroom rule;
 - the change detector's false alarms;
 - h;
