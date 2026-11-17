@@ -20,7 +20,7 @@ work stands. Document index: [`docs/README.md`](../README.md).
 
 | Date | Work | Result |
 |---|---|---|
-| 2026-11-17 | **CF-06** a belief about whether a changed exit will change back (model v6, ρ fixed at 1/2), 135 fresh `gate6` worlds | **SUPPORTED — CONSISTENT.** Beats all four fixed re-testing policies on the mix; against the planner +84.7 [55.1, 119.4] (2.4%; median +21); costs +17.4 in RARE (inside the 25 margin). Gain from genuine reversals and false-alarm repair. Not adopted pending the adversarial review and the owner's decision. Freeze `7ce1dc6`, results `22ea769` |
+| 2026-11-17 | **CF-06** a belief about whether a changed exit will change back (model v6, ρ fixed at 1/2), 135 fresh `gate6` worlds | **SUPPORTED — CONSISTENT.** Beats all four fixed re-testing policies on the mix; against the planner +84.7 [55.1, 119.4] (2.4%; median +21); costs +17.4 in RARE (inside the 25 margin). Gain from genuine reversals and false-alarm repair. Adversarial review: SOUND WITH CORRECTIONS, verdict unchanged. The gain is about 28 steps a run, and the full verdict line holds only at h = 0.01. Not adopted pending the owner's decision. Freeze `7ce1dc6`, results `22ea769`, review in the commit after `d5c7ade` |
 | 2026-11-13 | **CF-03b** world model v2 (`cognitive/mind/`) | **PASS** on 20 fresh `gate3b` worlds: ECE 0.028 against 0.05 (v1 0.104); DYNAQ − MBVI2 on E3 +171.0 [52.3, 317.5]; no regression. Calibration did not improve task performance. Freeze `1968083`, results `4e310b0` |
 | 2026-11-14 | **CF-04** hidden-change task E4 and reliability arbitration (`cognitive/mind/arb/`), 55 fresh worlds | **ARBITRATION NOT SUPPORTED — HARMFUL.** The task is admitted (+160.7 steps without change detection). Planner − ARB = −13.8 [−20.0, −7.2]; ARB is also worse than random switching. Arbitration is not built into the agent. Freeze `2ae0311`; results in the commit after it |
 | 2026-11-14 | **CF-03c** world model v3 (`cognitive/mind/v3/`): two v2 defects repaired, then tested on four unseen reliability families | **PARTIAL.** Repairs hold. Criteria held in BIMODAL only; a per-pair Laplace forecaster beats the model on WIDE and ARCSINE, a constant forecaster beats it on HIGH. The calibration claim stays limited to the development generator. Freeze `2821603`, results `ddbe5f3` |
@@ -70,17 +70,28 @@ first; a node is a place, not a cognitive function.
 **CF-06 RECORDED (2026-11-17): SUPPORTED — CONSISTENT.** Results commit `22ea769`
 (`experiments/cf06/results/RESULTS.md`, `gate6_result.json` SHA-256 `91987509…72ac`, rows `cddb668b…`); not pushed.
 135 fresh worlds, 0 excluded, two runs identical, 173/173.
-- **Criteria:** B1–B6 all hold. B1 against the planner +84.7 [55.1, 119.4] steps on the mix (median +21, 81 / 53
-  worlds). B2: RARE costs +17.4 [12.8, 21.9] against the 25 margin. B3 +60.7.
+- **Criteria:** B1–B6 all hold. B1 against the planner is +84.7 [55.1, 119.4] steps on the mix: summed over a world's
+  three runs, so about 28 a run (median +21, 81 / 53 worlds; 61% from the most favourable 10% of worlds). B2: RARE
+  costs +17.4 [12.8, 21.9] a run against the 25 margin. B3 +60.7.
 - **Source of the gain:** genuine changes +57.3 on the mix, false-alarm repair +25.7.
 - **Learning the rate:** L1 +11.3 [0.3, 22.8] and L2 +31.9 hold, but the headroom rule misses by 0.4 steps, so H-VOL
   is still not admitted.
-- **h:** B1 holds at every h tried. B2 and the CONSISTENT shape hold only at h = 0.01.
+- **h:** B1 holds at every h tried (ROBUST). B2 fails marginally at h = 0.003, and the CONSISTENT shape fails at
+  h = 0.03, so the full verdict line holds only at h = 0.01. (Corrected by the review: the record and the commit
+  message of `22ea769` said both features held only at h = 0.01.)
+- **Scope:** the claim is against the four fixed policies tested, not against every fixed schedule (limitation 10).
+  BELIEF is the cheapest non-privileged arm only in HALF, and VOL is cheaper on the mix.
 - **Run history (disclosed in the record):** attempt 1, launched 2026-11-16, was ended by machine standby and
   power-off with no output. Attempt 2 restarted the same deterministic run on the owner's word "try again".
 
-Never rerun gate6. **Next, fixed by the specification:** an adversarial review of the record, then a proposal to the
-owner to make model v6 with ρ fixed at 1/2 the agent's model. Nothing changes in the agent before that decision.
+**Adversarial review DONE (2026-11-17):** `experiments/cf06/results/ADVERSARIAL_REVIEW.md`, by an independent
+read-only reviewer. Verdict on the record: SOUND WITH CORRECTIONS (17 findings, 4 major wording errors). None changes
+the verdict. The corrections are in a dated amendment at the end of RESULTS.md, with the original text kept. Lodged
+with it: `run/gate6_power_events.txt` (the Windows event-log extract behind the run history) and
+`run/gate6_attempt2.stderr` (0 bytes).
+
+Never rerun gate6. **Next, fixed by the specification:** a proposal to the owner to make model v6 with ρ fixed at 1/2
+the agent's model. It must carry the review's corrections. Nothing changes in the agent before that decision.
 
 *Freeze and run (2026-11-16):* revision 3.1 frozen on the owner's word "Yes, freeze and run" (`7ce1dc6`) after a
 final pre-Gate-6 audit (power, isolation, attribution, preregistration: all PASS) and one added line on exclusions

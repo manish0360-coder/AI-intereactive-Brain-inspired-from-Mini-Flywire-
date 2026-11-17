@@ -1,0 +1,33 @@
+# Windows System event log: power events around the two gate6 launches (times UTC).
+# Extracted 2026-11-17, during the adversarial review, with Get-WinEvent over 2026-11-16T14:00Z to 2026-11-17T09:00Z,
+# filtered to Kernel-Power 41/42/107/109/506/507, Power-Troubleshooter 1, Kernel-General 12/13, User32 1074 and
+# EventLog 6005/6006/6008. First line of each message; the computer name is redacted. No other event of these kinds
+# occurred in the window.
+# Attempt 1 launched 2026-11-16T14:12:45Z (gate6_attempt1.log). Attempt 2 launched 2026-11-17T03:46:35Z and exited
+# 2026-11-17T08:47:15Z (gate6_attempt2.log).
+2026-11-16T14:04:01.7061698Z | Microsoft-Windows-Kernel-Power | 507 | The system is exiting Modern Standby
+2026-11-16T14:40:18.3628604Z | Microsoft-Windows-Kernel-Power | 506 | The system is entering Modern Standby
+2026-11-16T14:44:54.9912823Z | Microsoft-Windows-Kernel-Power | 507 | The system is exiting Modern Standby
+2026-11-16T15:10:36.2097362Z | Microsoft-Windows-Kernel-Power | 506 | The system is entering Modern Standby
+2026-11-16T15:13:02.6562755Z | Microsoft-Windows-Kernel-Power | 507 | The system is exiting Modern Standby
+2026-11-16T15:16:39.6622091Z | Microsoft-Windows-Kernel-Power | 506 | The system is entering Modern Standby
+2026-11-16T15:18:48.2062659Z | Microsoft-Windows-Kernel-Power | 507 | The system is exiting Modern Standby
+2026-11-16T15:36:40.2940504Z | Microsoft-Windows-Kernel-Power | 506 | The system is entering Modern Standby
+2026-11-16T15:37:10.3649020Z | Microsoft-Windows-Kernel-Power | 507 | The system is exiting Modern Standby
+2026-11-16T16:07:16.8843588Z | Microsoft-Windows-Kernel-Power | 506 | The system is entering Modern Standby
+2026-11-16T16:07:25.3141990Z | Microsoft-Windows-Kernel-Power | 507 | The system is exiting Modern Standby
+2026-11-16T16:07:25.3157107Z | Microsoft-Windows-Kernel-Power | 506 | The system is entering Modern Standby
+2026-11-17T00:42:59.4627393Z | Microsoft-Windows-Kernel-Power | 507 | The system is exiting Modern Standby
+2026-11-17T00:42:59.4650456Z | Microsoft-Windows-Kernel-Power | 506 | The system is entering Modern Standby
+2026-11-17T01:17:48.1657767Z | Microsoft-Windows-Kernel-Power | 507 | The system is exiting Modern Standby
+2026-11-17T01:17:48.1683751Z | Microsoft-Windows-Kernel-Power | 506 | The system is entering Modern Standby
+2026-11-17T01:17:55.5140482Z | User32 | 1074 | The process C:\WINDOWS\system32\winlogon.exe ([computer name redacted]) has initiated the power off of computer [computer name redacted] on behalf of user NT AUTHORITY\SYSTEM for the following reason: No title for this reason could be found
+2026-11-17T01:17:55.7895733Z | EventLog | 6006 | The Event log service was stopped.
+2026-11-17T01:18:00.6774238Z | Microsoft-Windows-Kernel-Power | 109 | The kernel power manager has initiated a shutdown transition.
+2026-11-17T01:18:02.1796935Z | Microsoft-Windows-Kernel-General | 13 | The operating system is shutting down at system time 2026-11-17T01:18:02.179691600Z.
+2026-11-17T03:39:18.9856920Z | Microsoft-Windows-Kernel-General | 12 | The operating system started at system time 2026-11-17T03:39:17.500000000Z.
+2026-11-17T03:39:29.7223201Z | EventLog | 6005 | The Event log service was started.
+2026-11-17T03:58:51.0705385Z | Microsoft-Windows-Kernel-Power | 506 | The system is entering Modern Standby
+2026-11-17T04:00:44.3774673Z | Microsoft-Windows-Kernel-Power | 507 | The system is exiting Modern Standby
+2026-11-17T04:11:42.6873438Z | Microsoft-Windows-Kernel-Power | 506 | The system is entering Modern Standby
+2026-11-17T04:11:43.9405962Z | Microsoft-Windows-Kernel-Power | 507 | The system is exiting Modern Standby
