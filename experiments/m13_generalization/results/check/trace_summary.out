@@ -1,0 +1,54 @@
+m13|modular|0 RARE: total B 1178 M 1156; reverses PPPPPP; reversing events (O returned in own window, L only later, m met and not returned, . neither) B - M -; failed tries on blocked edges B 61 M 51; same actions false (first difference at step index 1024, t=1024); B archives 7 opened, 1 other
+    20->19: p at each reopening B [] M []
+    23->18: p at each reopening B [] M []
+    1->4: p at each reopening B [] M []
+    2->0: p at each reopening B [] M []
+    0->5: p at each reopening B [] M []
+    18->19: p at each reopening B [] M []
+m13|modular|0 HALF: total B 1086 M 1065; reverses PPRPPR; reversing events (O returned in own window, L only later, m met and not returned, . neither) B OO M mm; failed tries on blocked edges B 50 M 29; same actions false (first difference at step index 929, t=929); B archives 6 opened, 3 other
+    23->20: p at each reopening B [] M []
+    23->18: p at each reopening B [] M []
+    13->23: p at each reopening B [t1183:0.303] M [t1179:0.0615]
+    2->3: p at each reopening B [] M []
+    5->4: p at each reopening B [t1771:0.2591] M [t1745:0.0428]
+m13|modular|0 OFTEN: total B 1054 M 1043; reverses RRRRRR; reversing events (O returned in own window, L only later, m met and not returned, . neither) B mL...m M mm....; failed tries on blocked edges B 22 M 14; same actions false (first difference at step index 1133, t=1133); B archives 5 opened, 2 other
+    23->20: p at each reopening B [t855:0.2976] M [t855:0.1505]
+    7->13: p at each reopening B [t1013:0.151] M [t1013:0.0062]
+    13->23: p at each reopening B [t1754:0.191] M [not followed]
+m13|modular|1 RARE: total B 2187 M 2125; reverses PPPPPP; reversing events (O returned in own window, L only later, m met and not returned, . neither) B - M -; failed tries on blocked edges B 86 M 63; same actions false (first difference at step index 736, t=736); B archives 9 opened, 3 other
+    13->9: p at each reopening B [] M []
+    17->12: p at each reopening B [] M []
+    1->0: p at each reopening B [] M []
+    3->2: p at each reopening B [] M []
+    7->8: p at each reopening B [] M []
+    17->14: p at each reopening B [] M []
+m13|modular|1 HALF: total B 1735 M 1734; reverses RPRRRR; reversing events (O returned in own window, L only later, m met and not returned, . neither) B OmLLm M m....; failed tries on blocked edges B 63 M 9; same actions false (first difference at step index 752, t=752); B archives 7 opened, 4 other
+    9->8: p at each reopening B [t912:0.0653 t1431:0.0372 t2315:0.0194] M [t880:0.0145 t1440:0.0168 t2313:0.0388]
+    17->13: p at each reopening B [] M [not followed]
+    13->17: p at each reopening B [] M [not followed]
+m13|modular|1 OFTEN: total B 1237 M 1734; reverses RRRRRR; reversing events (O returned in own window, L only later, m met and not returned, . neither) B OOOOLO M m.....; failed tries on blocked edges B 73 M 9; same actions false (first difference at step index 752, t=752); B archives 7 opened, 7 other
+    9->8: p at each reopening B [t912:0.0653] M [t880:0.0145]
+    17->13: p at each reopening B [t1098:0.1249 t1480:0.1438 t1615:0.188] M [not followed]
+    13->9: p at each reopening B [t1330:0.0404 t1867:0.0622] M [not followed]
+m13|modular|2 RARE: total B 1672 M 1660; reverses PPPPPP; reversing events (O returned in own window, L only later, m met and not returned, . neither) B - M -; failed tries on blocked edges B 61 M 47; same actions false (first difference at step index 979, t=979); B archives 9 opened, 3 other
+    10->8: p at each reopening B [] M []
+    23->21: p at each reopening B [] M []
+    18->5: p at each reopening B [] M []
+    20->23: p at each reopening B [] M []
+    13->12: p at each reopening B [] M []
+    19->18: p at each reopening B [] M []
+m13|modular|2 HALF: total B 1700 M 1708; reverses RPPPRR; reversing events (O returned in own window, L only later, m met and not returned, . neither) B Omm M Lmm; failed tries on blocked edges B 55 M 45; same actions false (first difference at step index 979, t=979); B archives 9 opened, 4 other
+    10->8: p at each reopening B [t946:0.2573] M [t946:0.0675]
+    18->5: p at each reopening B [] M []
+    13->12: p at each reopening B [] M []
+    9->8: p at each reopening B [] M []
+    15->16: p at each reopening B [t2039:0.3239] M [t2048:0.2183]
+    7->10: p at each reopening B [t2374:0.5063] M [t2387:0.2232]
+m13|modular|2 OFTEN: total B 1306 M 1289; reverses RPRRRR; reversing events (O returned in own window, L only later, m met and not returned, . neither) B LLmL. M LLmm.; failed tries on blocked edges B 46 M 41; same actions false (first difference at step index 858, t=858); B archives 8 opened, 6 other
+    20->23: p at each reopening B [t933:0.124] M [t931:0.029]
+    10->8: p at each reopening B [] M []
+    18->5: p at each reopening B [t1379:0.2273] M [t1363:0.0448]
+    12->11: p at each reopening B [t1627:0.1078] M [t1608:0.0022]
+    10->7: p at each reopening B [t1844:0.3879] M [t1824:0.1531]
+
+reopenings followed in both arms' traces: BELIEF's p higher 14, lower 1, equal 0; highest p at a reopening B 0.5063, M 0.2232

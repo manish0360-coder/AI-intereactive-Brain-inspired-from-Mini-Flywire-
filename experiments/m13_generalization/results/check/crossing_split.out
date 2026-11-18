@@ -1,0 +1,32 @@
+== crossed in the own after-window (M11 definition)
+RARE: reversing events 85; crossed at least once BELIEF 17 (20.0%), MBVI3 4 (4.7%); summed afterReversed difference 293
+  neither    labels 149; sum MBVI3-BELIEF afterReversed 34 (11.6%), total -1764; exact ties in total 2
+  beliefOnly labels  12; sum MBVI3-BELIEF afterReversed 219 (74.7%), total 210; exact ties in total 0
+  mbvi3Only  labels   0; sum MBVI3-BELIEF afterReversed 0 (0.0%), total 0; exact ties in total 0
+  both       labels   4; sum MBVI3-BELIEF afterReversed 40 (13.7%), total -63; exact ties in total 1
+HALF: reversing events 504; crossed at least once BELIEF 134 (26.6%), MBVI3 12 (2.4%); summed afterReversed difference 5406
+  neither    labels  75; sum MBVI3-BELIEF afterReversed 346 (6.4%), total 382; exact ties in total 4
+  beliefOnly labels  79; sum MBVI3-BELIEF afterReversed 4726 (87.4%), total 7768; exact ties in total 1
+  mbvi3Only  labels   0; sum MBVI3-BELIEF afterReversed 0 (0.0%), total 0; exact ties in total 0
+  both       labels  11; sum MBVI3-BELIEF afterReversed 334 (6.2%), total 530; exact ties in total 0
+OFTEN: reversing events 896; crossed at least once BELIEF 215 (24.0%), MBVI3 14 (1.6%); summed afterReversed difference 10738
+  neither    labels  36; sum MBVI3-BELIEF afterReversed 150 (1.4%), total 172; exact ties in total 10
+  beliefOnly labels 117; sum MBVI3-BELIEF afterReversed 10419 (97.0%), total 13185; exact ties in total 0
+  mbvi3Only  labels   1; sum MBVI3-BELIEF afterReversed -20 (-0.2%), total -50; exact ties in total 0
+  both       labels  11; sum MBVI3-BELIEF afterReversed 189 (1.8%), total 317; exact ties in total 2
+== crossed in the any time after the reopening (M13 returned)
+RARE: reversing events 85; crossed at least once BELIEF 36 (42.4%), MBVI3 22 (25.9%); summed afterReversed difference 293
+  neither    labels 134; sum MBVI3-BELIEF afterReversed 28 (9.6%), total -1682; exact ties in total 1
+  beliefOnly labels  12; sum MBVI3-BELIEF afterReversed 153 (52.2%), total 162; exact ties in total 0
+  mbvi3Only  labels   1; sum MBVI3-BELIEF afterReversed 12 (4.1%), total -51; exact ties in total 0
+  both       labels  18; sum MBVI3-BELIEF afterReversed 100 (34.1%), total -46; exact ties in total 2
+HALF: reversing events 504; crossed at least once BELIEF 263 (52.2%), MBVI3 118 (23.4%); summed afterReversed difference 5406
+  neither    labels  35; sum MBVI3-BELIEF afterReversed 58 (1.1%), total -362; exact ties in total 2
+  beliefOnly labels  52; sum MBVI3-BELIEF afterReversed 3063 (56.7%), total 5070; exact ties in total 1
+  mbvi3Only  labels   0; sum MBVI3-BELIEF afterReversed 0 (0.0%), total 0; exact ties in total 0
+  both       labels  78; sum MBVI3-BELIEF afterReversed 2285 (42.3%), total 3972; exact ties in total 2
+OFTEN: reversing events 896; crossed at least once BELIEF 417 (46.5%), MBVI3 159 (17.7%); summed afterReversed difference 10738
+  neither    labels  10; sum MBVI3-BELIEF afterReversed -18 (-0.2%), total -52; exact ties in total 6
+  beliefOnly labels  75; sum MBVI3-BELIEF afterReversed 6528 (60.8%), total 7978; exact ties in total 0
+  mbvi3Only  labels   1; sum MBVI3-BELIEF afterReversed 1 (0.0%), total -12; exact ties in total 0
+  both       labels  79; sum MBVI3-BELIEF afterReversed 4227 (39.4%), total 5710; exact ties in total 6

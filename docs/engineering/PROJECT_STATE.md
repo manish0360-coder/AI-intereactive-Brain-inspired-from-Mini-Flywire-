@@ -12,14 +12,15 @@ work stands. Document index: [`docs/README.md`](../README.md).
 | Item | State |
 |---|---|
 | GitHub `main` | `2c5c591`, pushed 2026-11-18 as a fast-forward of 17 commits from `75530c3` (CF-06 through M12), on the owner's words "push also if you think that is right next approach". Fresh clone with `core.autocrlf=true` verified: M11 `SPEC.sha256`, M11 `results/SHA256SUMS` and M12 `analysis/SHA256SUMS` hold; `gate6_result.json` `91987509…` holds; `main.js`'s committed blob is `c92c5c6b…` (its on-disk bytes differ only by CRLF conversion, as `main.js` has no exact-bytes rule); `npm test` 184/184; legacy gate 14/14; the M12 analyses reproduce byte for byte (two of the three scripts only after the path fix below). 25 annotated tags; none added |
-| Local `main` | GitHub's `2c5c591` plus this state commit, which also fixes a path bug found by the clone check: two M12 scripts failed in folders whose path contains a space. Their outputs are unchanged. No push without the owner's explicit word |
-| Tests | `npm test` 195/195 (after the M13 build: 11 new tests); legacy gate `experiments/phase1_0/verify_S2.js` 14/14 (run it from `experiments/phase1_0/`: it reads `../../neurons.json`) |
+| Local `main` | GitHub's `2c5c591` plus five local commits, none pushed: `728dd71` (state, and a fix for two M12 scripts that failed in folders whose path contains a space; outputs unchanged), `6381450` (M13 build), `b48453e` (M13 spec revision 2), `8619d71` (M13 freeze), and the M13 results commit. No push without the owner's explicit word |
+| Tests | `npm test` 195/195 (after the M13 build: 11 new tests; still 195/195 after the M13 run); legacy gate `experiments/phase1_0/verify_S2.js` 14/14 (run it from `experiments/phase1_0/`: it reads `../../neurons.json`) |
 | Push rule | No push without the owner's explicit word |
 
 ## Done in this programme
 
 | Date | Work | Result |
 |---|---|---|
+| 2026-11-18 | **M13** cognitive generalization: the adopted belief (AD-13) against MBVI3 on a held-out modular-ring family (`experiments/m13_generalization/`), 165 fresh graphs × 3 families × 4 arms, nothing tuned | **NET ADVANTAGE RETAINED ON THE MODULAR FAMILY, WITHIN THE SAFETY MARGIN** (development-level). All five lines pass: VALID; G1 +125.4 [92.0, 160.1] (standardized 0.56, against CF-06 0.44 and M11 0.50); G2 RARE cost +9.8 [3.6, 14.9] (margin 25); G3 OFTEN recovery +65.1 [50.9, 79.9]; G4 reopened edges met and re-crossed +1.46 [1.25, 1.67]. gainShape CONSISTENT for G1 and G3. Attribution: OFTEN GENUINE REVERSALS (false-alarm-only A3 not shown); mix GENUINE REVERSALS AND FALSE-ALARM REPAIR. Unlike M11, 97% of the OFTEN recovery difference sits in labels where only BELIEF re-crossed a reopened edge in its own window (descriptive). Freeze `8619d71`, results in the commit after it |
 | 2026-11-18 | **M12** belief-to-behaviour mechanism analysis of the stored M11 rows and traces (`experiments/m12_mechanism/`); no run, no replay, no agent change | **Accepted by the owner as a useful explanation.** Observational, not causal proof. The 61% comes from BELIEF going back to exits its detector had written off: reopened edges, mostly 2–4 windows after the reopening, beyond M11's crossing window; and false-alarm repairs. In the 103 labels, the 51 with such a return carry +924 of +916; the other 52 carry −8. BELIEF's returns are observed in all 810 runs; MBVI3's non-return only in the 18 traces (0 of 8). M11 RESULTS.md amended (dated), verdict unchanged |
 | 2026-11-17 | **M11** the adopted belief (AD-13) against MBVI3 under controlled route blocking and reopening on the app's own graph (`experiments/m11_routes/`), 135 labels × 3 families, outside the app | **DEMONSTRATED ON THE MINIFLYWIRE GRAPH** (development-level). D1 recovery in OFTEN +11.1 [7.2, 15.3]; D2 cost in RARE +2.9 [0.7, 4.9] (margin 25); D3 crossings of reopened edges +0.64 [0.19, 1.14]. All smaller than CF-06. Reopened edges are rarely re-used inside their own after-window (OFTEN: 4.6% of reopenings by BELIEF, 1.2% by MBVI3). The original record said 61% of the recovery difference came from labels where no reopened edge was ever re-used, with the source unidentified; **amended 2026-11-18 after M12**: in most of those labels BELIEF went back later (see M12). Verdict unchanged. Freeze `a3cccd5`, results `880b179` |
 | 2026-11-17 | **CF-06** a belief about whether a changed exit will change back (model v6, ρ fixed at 1/2), 135 fresh `gate6` worlds | **SUPPORTED — CONSISTENT.** Beats all four fixed re-testing policies on the mix; against the planner +84.7 [55.1, 119.4] (2.4%; median +21); costs +17.4 in RARE (inside the 25 margin). Gain from genuine reversals and false-alarm repair. Adversarial review: SOUND WITH CORRECTIONS, verdict unchanged. The gain is about 28 steps a run, and the full verdict line holds only at h = 0.01. **Adopted by the owner (AD-13), with the limited claim.** Freeze `7ce1dc6`, results `22ea769`, review `72230be`, proposal `89e2468`, adoption in the commit after it |
@@ -73,16 +74,16 @@ Since then:
 
 ## Waiting on the owner
 
-0. **M13** is frozen (revision 2, on the owner's word "Freeze and run"); its single run is in progress. Results
-   pending.
+0. **M13** is run and recorded: NET ADVANTAGE RETAINED ON THE MODULAR FAMILY, WITHIN THE SAFETY MARGIN
+   (`experiments/m13_generalization/RESULTS.md`). The owner's reading of it is pending.
 1. **Push** of the local commits after `2c5c591`, if wanted; everything up to `2c5c591` is on GitHub.
 2. **Closure ruling** retiring nine unrun legacy studies (AD-10; a proposed D-045).
 3. **Authorisation** for the legacy adapter's map-off hook in `main.js` (roadmap L1) and for app integration (M9).
 4. An **erratum** for `experiments/coga/README.md`, which still calls ACQ-1 "SUPPORTED" against D-035.
-5. **What follows M11 and M12**, if anything. Each is a separate decision:
+5. **What follows M11, M12 and M13**, if anything. Each is a separate decision:
    - a viewer for the traces;
    - a replay of the 51 OFTEN labels with step traces, the minimum evidence for MBVI3's side of the M12 explanation
-     (it re-executes spent labels). M13 measures both agents' returns prospectively, in every run;
+     (it re-executes spent labels). M13 has since measured both agents' returns in every run, on its own family;
    - app integration (still "NOT YET").
 
 ## Next exact engineering milestone
@@ -123,8 +124,39 @@ with it: `run/gate6_power_events.txt` (the Windows event-log extract behind the 
   false-alarm repair; against the four fixed policies tested; the full verdict line only at h = 0.01; one development
   gate.
 
-**M13 FROZEN (2026-11-18, revision 2, on the owner's word "Freeze and run"); single run in progress: cognitive
-generalization** (`experiments/m13_generalization/`). Proposal approved on the owner's word "Approve with diagnostics".
+**M13 RECORDED (2026-11-18): NET ADVANTAGE RETAINED ON THE MODULAR FAMILY, WITHIN THE SAFETY MARGIN** — cognitive
+generalization (`experiments/m13_generalization/RESULTS.md`). Development-level: one run, by the designer, on local
+commits.
+- **The run:** frozen in `8619d71` on the owner's word "Freeze and run". Run once, 2026-11-18 06:07:14Z–08:16:28Z,
+  exit 0, at HEAD `8619d71` throughout. The tests passed 195/195 before it started.
+  - 1,980 runs in run A, 990 core runs in run B, with identical core rows.
+  - 0 exclusions; 1 skipped event of 2,970, as predicted from the bank.
+  - No standby during the run (System log extract lodged).
+  - The result file `m13_result.json` is `a0cd87d4…`. The independent check, written before the result, passes in
+    full.
+- **Lines:**
+  - Validity: VALID.
+  - Net advantage: RETAINED, +125.4 [92.0, 160.1]. The median is +44 and 102 labels favour BELIEF, 62 MBVI3. This
+    is 3.0% of MBVI3's steps.
+  - Safety: SAFE, RARE cost +9.8 [3.6, 14.9]. BELIEF costs more in 133 of 165 labels.
+  - Recovery: SHOWN, +65.1 [50.9, 79.9].
+  - Behavioural mechanism: SHOWN, +1.46 [1.25, 1.67]. The minimum detectable effect was 0.30.
+  - gainShape: CONSISTENT for both G1 and G3.
+- **Attribution (exact split):** A1, A2, A4 and A5 hold; A3, false alarms in OFTEN, does not (+6.7 [−1.0, 15.8]).
+  OFTEN reads GENUINE REVERSALS; the mix reads GENUINE REVERSALS AND FALSE-ALARM REPAIR.
+- **Returns, measured for both agents in every run:** in OFTEN, BELIEF went back to 1.95 of the reopened edges it had
+  met per run, MBVI3 to 0.49. Median time to the first return: 66 against 215.5 steps.
+- **Moderator (descriptive):** the after-window difference rises with the block's detour excess (OFTEN +8.5, +9.4,
+  +30.9 for excess 0, 1–3, 4+).
+- **Descriptive, after the result:** 97% of the OFTEN recovery difference sits in labels where only BELIEF crossed a
+  reopened edge in its own window. In M11 it was 61% in labels where neither did. The pre-declared illustration
+  (label 0 OFTEN, event 1) shows the beliefs diverging (0.30 against 0.15 at the reopening), but neither agent
+  returned to that edge.
+- **Allowed wording:** the belief kept its advantage over MBVI3 on one held-out structural family, in one
+  development-level run, and recovered reopened routes faster there. Not: "generalizes" in general.
+- **Consequence:** none for AD-13 or the agent. The `m13|modular|*` labels and the graph bank are now spent.
+
+The design, as frozen. The proposal was approved on the owner's word "Approve with diagnostics".
 - **Revision 2** makes the owner's three corrections, approved with the driver's alignment ("Approve both").
   - **Verdict:** five independent lines (validity; net advantage G1 primary; safety G2; recovery G3 and behavioural
     mechanism G4, both secondary) and one summary statement built from G0, G1 and G2 only. A G3 or G4 failure cannot
@@ -163,9 +195,8 @@ generalization** (`experiments/m13_generalization/`). Proposal approved on the o
   - The driver refuses until the spec is Frozen, every hash and pin matches, the tree is clean, the labels are fresh,
     novelty holds and the tests pass.
   - `cognitive/tests/test_m13_generalization.mjs` adds 11 tests; `npm test` is 195/195.
-- **No agent has run on a modular world.** Agents ran only in the tests (`m13test|*`) and in one smoke run on two
-  development-family labels (`m13smoke|dev|*`; structure, determinism and timing checked, no measure read).
-- **Run:** about 2.5 hours, once, after the freeze.
+- **Before the run, no agent ran on a modular world.** Agents ran only in the tests (`m13test|*`) and in two smoke runs
+  on development-family labels (`m13smoke|dev|*`; structure, determinism and timing checked, no measure read).
 
 **M12 RECORDED (2026-11-18): the belief-to-behaviour mechanism behind M11's recovery advantage**
 (`experiments/m12_mechanism/REPORT.md`). The owner accepted it as a useful explanation supported by the 810-run data.
