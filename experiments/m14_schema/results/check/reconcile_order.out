@@ -1,0 +1,12 @@
+PASS  P1  string order reproduces the driver exactly: 30.315 [27.430, 33.267]; numeric order (verify_m14): [27.424, 33.230]; means equal: true
+PASS  P2  string order reproduces the driver exactly: 25.727 [22.994, 28.491]; numeric order (verify_m14): [22.982, 28.521]; means equal: true
+PASS  S   string order reproduces the driver exactly: -0.109 [-3.982, 3.655]; numeric order (verify_m14): [-3.994, 3.733]; means equal: true
+PASS  R1  string order reproduces the driver exactly: 8.279 [5.085, 11.491]; numeric order (verify_m14): [5.133, 11.491]; means equal: true
+PASS  R2  string order reproduces the driver exactly: -1.867 [-3.406, -0.400]; numeric order (verify_m14): [-3.424, -0.394]; means equal: true
+PASS  O   string order reproduces the driver exactly: 0.000 [0.000, 0.000]; numeric order (verify_m14): [0.000, 0.000]; means equal: true
+PASS  H   string order reproduces the driver exactly: 30.315 [27.394, 33.309]; numeric order (verify_m14): [27.400, 33.255]; means equal: true
+PASS  SH  string order reproduces the driver exactly: 4.588 [0.909, 8.364]; numeric order (verify_m14): [0.836, 8.406]; means equal: true
+PASS  E2  string order reproduces the driver exactly: -15.521 [-18.758, -12.236]; numeric order (verify_m14): [-18.788, -12.273]; means equal: true
+PASS  E3  string order reproduces the driver exactly: -6.885 [-9.170, -4.630]; numeric order (verify_m14): [-9.194, -4.630]; means equal: true
+PASS  the four criterion lines are the same in string order, numeric order and the driver: {"transfer":"SHOWN","relationalContent":"SHOWN","safety":"SAFE","reversal":"MISLED WHEN REVERSED"}
+reconciled: the 9 mismatches are the label order only

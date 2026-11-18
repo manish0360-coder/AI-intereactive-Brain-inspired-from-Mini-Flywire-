@@ -1,0 +1,21 @@
+1. schema decisions over the three test episodes (per label: decisions, ties, ties the schema narrowed, of which it decided alone)
+  SCHEMA           COMPOSE  decisions 50.8, ties 27.9, narrowed 22.4, decided alone 18.8
+  SCHEMA           NULL     decisions 58.1, ties 31.1, narrowed 23.8, decided alone 18.7
+  SCHEMA           REVERSED decisions 62.4, ties 32.7, narrowed 26.8, decided alone 21.1
+  SCHEMA_SHUFFLED  COMPOSE  decisions 56.3, ties 30.2, narrowed 24.9, decided alone 20.4
+  SCHEMA_SHUFFLED  NULL     decisions 58.3, ties 31.4, narrowed 24.2, decided alone 18.8
+  SCHEMA_SHUFFLED  REVERSED decisions 54.7, ties 29.5, narrowed 24.0, decided alone 19.4
+  ORACLE_SCHEMA    COMPOSE  decisions 50.5, ties 27.8, narrowed 12.1, decided alone 10.6
+  ORACLE_SCHEMA    NULL     decisions 58.1, ties 30.9, narrowed 11.0, decided alone 8.6
+  ORACLE_SCHEMA    REVERSED decisions 60.9, ties 32.2, narrowed 12.6, decided alone 9.6
+
+2. learned schema scores (mean over labels and kinds)
+  SCHEMA           true link 0.877, self link 0.189, other links 0.140; self links ever chosen in training: 365; learned relation = SIGMA in 165 of 165
+  SCHEMA_SHUFFLED  true link 0.432, self link 0.205, other links 0.412; self links ever chosen in training: 428; learned relation = SIGMA in 1 of 165
+
+3. steps summed over the three test episodes (mean per label)
+  CONCRETE         COMPOSE 58.68  NULL 58.68  REVERSED 58.68
+  SCHEMA           COMPOSE 50.78  NULL 58.13  REVERSED 62.41
+  SCHEMA_SHUFFLED  COMPOSE 56.30  NULL 58.29  REVERSED 54.75
+  ORACLE_SCHEMA    COMPOSE 50.53  NULL 58.10  REVERSED 60.89
+  COMPOSE, CONCRETE - SCHEMA over three episodes: mean 7.91; labels for/against/tied 121/42/2

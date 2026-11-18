@@ -1,0 +1,9 @@
+﻿System log extract for the M14 run window, local time India Standard Time (UTC+05:30).
+Run: launch 2026-11-18T13:42:40Z (19:12:40 local), exit 2026-11-18T13:45:07Z (19:15:07 local).
+Query: System log, 2026-11-18T19:05:00 to 2026-11-18T19:20:00 local, providers Kernel-Power, Power-Troubleshooter, Kernel-General.
+Sleep/standby markers looked for: Kernel-Power 42 (entering sleep), 107 (resume), 506/507 (modern standby enter/exit), Power-Troubleshooter 1 (woke).
+
+2026-11-18 19:09:25.032  Microsoft-Windows-Kernel-Power  id 105  Power source change.
+2026-11-18 19:09:37.021  Microsoft-Windows-Kernel-Power  id 105  Power source change.
+
+Sleep/standby markers found: 0. Events in the query span: 2.

@@ -1,0 +1,23 @@
+run A: label 15 of 165 done, 3 s
+run A: label 30 of 165 done, 5 s
+run A: label 45 of 165 done, 7 s
+run A: label 60 of 165 done, 9 s
+run A: label 75 of 165 done, 10 s
+run A: label 90 of 165 done, 13 s
+run A: label 105 of 165 done, 14 s
+run A: label 120 of 165 done, 17 s
+run A: label 135 of 165 done, 19 s
+run A: label 150 of 165 done, 21 s
+run A: label 165 of 165 done, 23 s
+run B: label 15 of 165 done, 25 s
+run B: label 30 of 165 done, 27 s
+run B: label 45 of 165 done, 29 s
+run B: label 60 of 165 done, 31 s
+run B: label 75 of 165 done, 33 s
+run B: label 90 of 165 done, 35 s
+run B: label 105 of 165 done, 37 s
+run B: label 120 of 165 done, 39 s
+run B: label 135 of 165 done, 41 s
+run B: label 150 of 165 done, 43 s
+run B: label 165 of 165 done, 45 s
+M14 m14: LEARNED RELATIONAL SCHEMA TRANSFERS TO UNSEEN COMBINATIONS, WITHIN THE SAFETY MARGIN; runs identical: true; 45 s; E:\Projects\OpenSourceLab\repos\mini-flywire\experiments\m14_schema\results\m14_result.json
