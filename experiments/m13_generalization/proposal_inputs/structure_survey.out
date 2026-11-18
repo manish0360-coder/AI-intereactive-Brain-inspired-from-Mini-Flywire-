@@ -1,0 +1,16 @@
+== DEV generateWorld defaults (cf|dev|world|i) (60 labels)
+   n 24.00 [24.00, 24.00]  m 30.00 [30.00, 30.00]  cyclomatic 7.00 [7.00, 7.00]  diameter 7.08 [6.00, 8.00]  clustering 0.06 [0.00, 0.19]  bridge share 0.21 [0.13, 0.30]
+   S-G distance 3.97 [3.00, 6.00]  shortest S-G routes 1.42 [1.00, 3.00] (share with 1 route 0.73)
+   detour excess per scheduled block: mean 1.21, share 0: 0.26, share >= 4: 0.02, 95th pct 3; skipped events 6
+== APP graph (fixed topology; layouts vary) (60 labels)
+   n 20.00 [20.00, 20.00]  m 39.00 [39.00, 39.00]  cyclomatic 20.00 [20.00, 20.00]  diameter 4.00 [4.00, 4.00]  clustering 0.08 [0.07, 0.07]  bridge share 0.00 [0.00, 0.00]
+   S-G distance 3.15 [3.00, 4.00]  shortest S-G routes 2.87 [1.00, 6.00] (share with 1 route 0.18)
+   detour excess per scheduled block: mean 0.31, share 0: 0.70, share >= 4: 0.00, 95th pct 1; skipped events 0
+== CANDIDATE modular ring (4 x 6) (60 labels)
+   n 24.00 [24.00, 24.00]  m 36.00 [36.00, 36.00]  cyclomatic 13.00 [13.00, 13.00]  diameter 7.93 [7.00, 9.00]  clustering 0.34 [0.26, 0.45]  bridge share 0.04 [0.00, 0.08]
+   S-G distance 4.98 [3.00, 8.00]  shortest S-G routes 1.83 [1.00, 5.00] (share with 1 route 0.50)
+   detour excess per scheduled block: mean 1.30, share 0: 0.35, share >= 4: 0.11, 95th pct 5; skipped events 0
+== CANDIDATE perturbed lattice (4 x 6 minus 6) (60 labels)
+   n 24.00 [24.00, 24.00]  m 32.00 [32.00, 32.00]  cyclomatic 9.00 [9.00, 9.00]  diameter 8.73 [8.00, 10.00]  clustering 0.00 [0.00, 0.00]  bridge share 0.08 [0.03, 0.16]
+   S-G distance 4.67 [3.00, 7.00]  shortest S-G routes 2.62 [1.00, 8.00] (share with 1 route 0.37)
+   detour excess per scheduled block: mean 0.94, share 0: 0.56, share >= 4: 0.03, 95th pct 2; skipped events 19

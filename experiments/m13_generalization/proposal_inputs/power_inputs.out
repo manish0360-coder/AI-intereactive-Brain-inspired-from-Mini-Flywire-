@@ -1,0 +1,19 @@
+== CF-06 gate6 (generated worlds)
+OFTEN_afterReversed        n 135  mean   43.55  sd   69.55  n80% for delta = mean 21, mean/2 81
+OFTEN_total                n 135  mean   60.67  sd   108.1  n80% for delta = mean 25, mean/2 100
+HALF_total                 n 135  mean   41.41  sd  105.26  n80% for delta = mean 51, mean/2 203
+RARE_cost                  n 135  mean    17.4  sd   27.08  n80% for delta = mean 20, mean/2 77
+RARE_afterPermanent_cost   n 135  mean    0.88  sd   12.22  n80% for delta = mean 1514, mean/2 6055
+RARE_futile_cost           n 135  mean    7.57  sd   10.67  n80% for delta = mean 16, mean/2 63
+OFTEN_crossings            n 135  mean    4.94  sd    8.22  n80% for delta = mean 22, mean/2 87
+MIX_total                  n 135  mean   84.68  sd  190.62  n80% for delta = mean 40, mean/2 160
+== M11 (app graph)
+OFTEN_afterReversed        n 135  mean   11.07  sd   24.61  n80% for delta = mean 39, mean/2 156
+OFTEN_total                n 135  mean   19.45  sd   44.84  n80% for delta = mean 42, mean/2 167
+HALF_total                 n 135  mean   11.15  sd   32.84  n80% for delta = mean 69, mean/2 273
+RARE_cost                  n 135  mean    2.87  sd    12.8  n80% for delta = mean 157, mean/2 625
+RARE_afterPermanent_cost   n 135  mean    0.49  sd    8.97  n80% for delta = mean 2631, mean/2 10522
+RARE_futile_cost           n 135  mean    3.29  sd    3.85  n80% for delta = mean 11, mean/2 43
+OFTEN_crossings            n 135  mean    0.64  sd     2.8  n80% for delta = mean 151, mean/2 601
+MIX_total                  n 135  mean   27.73  sd   55.65  n80% for delta = mean 32, mean/2 127
+gate6 seconds per E5 run (run A): BELIEF 1.98 MBVI3 1.70 ; worlds 135

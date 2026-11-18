@@ -228,3 +228,7 @@ experiments/m11_routes/** -text
 # M12-MECHANISM (analysis of the stored M11 record): its outputs are cited by hash in analysis/SHA256SUMS, so they
 # keep exact bytes. The legacy experiments/m12/ record is deliberately NOT covered: its checkout behaviour is left as it was.
 experiments/m12_mechanism/** -text
+
+# M13-GENERALIZATION (cognitive generalization on a held-out modular-ring family): the driver checks SPEC.sha256 and
+# PINS.json over exact bytes. The legacy experiments/m13/ record is deliberately NOT covered.
+experiments/m13_generalization/** -text

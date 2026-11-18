@@ -13,7 +13,7 @@ work stands. Document index: [`docs/README.md`](../README.md).
 |---|---|
 | GitHub `main` | `2c5c591`, pushed 2026-11-18 as a fast-forward of 17 commits from `75530c3` (CF-06 through M12), on the owner's words "push also if you think that is right next approach". Fresh clone with `core.autocrlf=true` verified: M11 `SPEC.sha256`, M11 `results/SHA256SUMS` and M12 `analysis/SHA256SUMS` hold; `gate6_result.json` `91987509…` holds; `main.js`'s committed blob is `c92c5c6b…` (its on-disk bytes differ only by CRLF conversion, as `main.js` has no exact-bytes rule); `npm test` 184/184; legacy gate 14/14; the M12 analyses reproduce byte for byte (two of the three scripts only after the path fix below). 25 annotated tags; none added |
 | Local `main` | GitHub's `2c5c591` plus this state commit, which also fixes a path bug found by the clone check: two M12 scripts failed in folders whose path contains a space. Their outputs are unchanged. No push without the owner's explicit word |
-| Tests | `npm test` 184/184 (after M12; M12 adds no tests); legacy gate `experiments/phase1_0/verify_S2.js` 14/14 (run it from `experiments/phase1_0/`: it reads `../../neurons.json`) |
+| Tests | `npm test` 195/195 (after the M13 build: 11 new tests); legacy gate `experiments/phase1_0/verify_S2.js` 14/14 (run it from `experiments/phase1_0/`: it reads `../../neurons.json`) |
 | Push rule | No push without the owner's explicit word |
 
 ## Done in this programme
@@ -73,14 +73,15 @@ Since then:
 
 ## Waiting on the owner
 
-1. **Push** of this state commit, if wanted; everything up to `2c5c591` is on GitHub.
+0. **Freeze approval for M13** (`experiments/m13_generalization/SPEC.md`, draft). Then it is run once (about 2.5 hours).
+1. **Push** of the local commits after `2c5c591`, if wanted; everything up to `2c5c591` is on GitHub.
 2. **Closure ruling** retiring nine unrun legacy studies (AD-10; a proposed D-045).
 3. **Authorisation** for the legacy adapter's map-off hook in `main.js` (roadmap L1) and for app integration (M9).
 4. An **erratum** for `experiments/coga/README.md`, which still calls ACQ-1 "SUPPORTED" against D-035.
 5. **What follows M11 and M12**, if anything. Each is a separate decision:
    - a viewer for the traces;
    - a replay of the 51 OFTEN labels with step traces, the minimum evidence for MBVI3's side of the M12 explanation
-     (it re-executes spent labels);
+     (it re-executes spent labels). M13 measures both agents' returns prospectively, in every run;
    - app integration (still "NOT YET").
 
 ## Next exact engineering milestone
@@ -120,6 +121,39 @@ with it: `run/gate6_power_events.txt` (the Windows event-log extract behind the 
 - **The claim is limited** as AD-13 states: about 28 steps a run (2.4%), 61% of it from 10% of worlds and 30% from
   false-alarm repair; against the four fixed policies tested; the full verdict line only at h = 0.01; one development
   gate.
+
+**M13 BUILT (2026-11-18), specification DRAFT awaiting the owner's freeze approval: cognitive generalization**
+(`experiments/m13_generalization/`). Proposal approved on the owner's word "Approve with diagnostics".
+- **Question:** does the AD-13 belief keep its advantage over MBVI3, with nothing tuned, on a held-out family of
+  worlds structurally unlike the development family?
+- **Worlds:** modular rings (4 × 6 nodes, 8 edges per module, a ring of single bridges, degree ≤ 4; 24 nodes like the
+  development family). A new graph per label: 165 graphs frozen in `graph_bank.json`, with fresh labels
+  `m13|modular|0..164`.
+- **Novelty (structure only, no agent):**
+  - clustering: the bank's 5th percentile is 0.243, against the development family's 95th percentile of 0.167;
+  - cyclomatic number 13 against 7;
+  - long-detour blocks 10% against 3%.
+- **Arms:** BELIEF (`makeAdoptedAgent`) and MBVI3, plus CF-06's diagnostic arms BELIEF_REALONLY / BELIEF_FALSEONLY
+  (secondary).
+- **Task:** E5 unchanged.
+- **Criteria:**
+  - G0 validity: determinism, tests, novelty, exclusions;
+  - G1 net mix advantage, lower bound > 0;
+  - G2 RARE cost, upper bound < 25;
+  - G3 OFTEN recovery, lower bound > 0;
+  - G4 OFTEN reopened edges met while blocked and crossed again, BELIEF − MBVI3, lower bound > 0. Measured for both
+    agents in every run from `env.trace()`.
+- **Built:** generator, world builder (an exact copy of the testbed's hidden relabelling, proven identical), structure
+  and novelty, behaviour measures (checked in every run against the task's own counts), library, driver, and
+  `PINS.json`.
+  - The pins cover 44 files: the driver's full import closure plus data and scripts, hashed by content with CRLF read
+    as LF.
+  - The driver refuses until the spec is Frozen, every hash and pin matches, the tree is clean, the labels are fresh,
+    novelty holds and the tests pass.
+  - `cognitive/tests/test_m13_generalization.mjs` adds 11 tests; `npm test` is 195/195.
+- **No agent has run on a modular world.** Agents ran only in the tests (`m13test|*`) and in one smoke run on two
+  development-family labels (`m13smoke|dev|*`; structure, determinism and timing checked, no measure read).
+- **Run:** about 2.5 hours, once, after the freeze.
 
 **M12 RECORDED (2026-11-18): the belief-to-behaviour mechanism behind M11's recovery advantage**
 (`experiments/m12_mechanism/REPORT.md`). The owner accepted it as a useful explanation supported by the 810-run data.

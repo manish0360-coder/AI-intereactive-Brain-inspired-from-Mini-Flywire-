@@ -1,0 +1,167 @@
+{
+ "note": "structure only: graphs and planE5 schedules; no agent was built or run",
+ "novelty": {
+  "rule": "bank 5th-percentile clustering > development 95th percentile; cyclomatic number 13 in every bank graph and 7 in every development graph",
+  "bankClusteringP05": 0.24305555555555555,
+  "devClusteringP95": 0.16666666666666666,
+  "clusteringSeparated": true,
+  "cyclomaticAsDeclared": true,
+  "holds": true,
+  "bank": {
+   "labels": 165,
+   "n": {
+    "mean": 24,
+    "p05": 24,
+    "p95": 24
+   },
+   "m": {
+    "mean": 36,
+    "p05": 36,
+    "p95": 36
+   },
+   "cyclomatic": {
+    "mean": 13,
+    "p05": 13,
+    "p95": 13
+   },
+   "diameter": {
+    "mean": 7.848484848484849,
+    "p05": 7,
+    "p95": 9
+   },
+   "clustering": {
+    "mean": 0.35458923414457,
+    "p05": 0.24305555555555555,
+    "p95": 0.4637681159420291
+   },
+   "bridgeShare": {
+    "mean": 0.03451178451178445,
+    "p05": 0,
+    "p95": 0.08333333333333333
+   },
+   "startGoal": {
+    "mean": 4.581818181818182,
+    "p05": 3,
+    "p95": 7
+   },
+   "shortestRoutes": {
+    "mean": 1.696969696969697,
+    "p05": 1,
+    "p95": 4
+   },
+   "singleRouteShare": 0.5575757575757576,
+   "detourExcess": {
+    "mean": 1.2926911417985854,
+    "zeroShare": 0.3422027618726844,
+    "fourPlusShare": 0.10407544627820815,
+    "p95": 5
+   },
+   "skippedEvents": 1,
+   "events": 2970
+  },
+  "development": {
+   "labels": 165,
+   "n": {
+    "mean": 24,
+    "p05": 24,
+    "p95": 24
+   },
+   "m": {
+    "mean": 30,
+    "p05": 30,
+    "p95": 30
+   },
+   "cyclomatic": {
+    "mean": 7,
+    "p05": 7,
+    "p95": 7
+   },
+   "diameter": {
+    "mean": 7.115151515151515,
+    "p05": 6,
+    "p95": 8
+   },
+   "clustering": {
+    "mean": 0.05323157887516646,
+    "p05": 0,
+    "p95": 0.16666666666666666
+   },
+   "bridgeShare": {
+    "mean": 0.21292929292929302,
+    "p05": 0.13333333333333333,
+    "p95": 0.3
+   },
+   "startGoal": {
+    "mean": 4.066666666666666,
+    "p05": 3,
+    "p95": 6
+   },
+   "shortestRoutes": {
+    "mean": 1.4484848484848485,
+    "p05": 1,
+    "p95": 3
+   },
+   "singleRouteShare": 0.703030303030303,
+   "detourExcess": {
+    "mean": 1.1520109066121336,
+    "zeroShare": 0.29107021131561006,
+    "fourPlusShare": 0.025903203817314247,
+    "p95": 3
+   },
+   "skippedEvents": 36,
+   "events": 2970
+  }
+ },
+ "appGraph": {
+  "labels": 165,
+  "n": {
+   "mean": 20,
+   "p05": 20,
+   "p95": 20
+  },
+  "m": {
+   "mean": 39,
+   "p05": 39,
+   "p95": 39
+  },
+  "cyclomatic": {
+   "mean": 20,
+   "p05": 20,
+   "p95": 20
+  },
+  "diameter": {
+   "mean": 4,
+   "p05": 4,
+   "p95": 4
+  },
+  "clustering": {
+   "mean": 0.07499999999999983,
+   "p05": 0.07499999999999998,
+   "p95": 0.07499999999999998
+  },
+  "bridgeShare": {
+   "mean": 0,
+   "p05": 0,
+   "p95": 0
+  },
+  "startGoal": {
+   "mean": 3.16969696969697,
+   "p05": 3,
+   "p95": 4
+  },
+  "shortestRoutes": {
+   "mean": 2.6666666666666665,
+   "p05": 1,
+   "p95": 6
+  },
+  "singleRouteShare": 0.23636363636363636,
+  "detourExcess": {
+   "mean": 0.32895622895622895,
+   "zeroShare": 0.6878787878787879,
+   "fourPlusShare": 0,
+   "p95": 1
+  },
+  "skippedEvents": 0,
+  "events": 2970
+ }
+}
