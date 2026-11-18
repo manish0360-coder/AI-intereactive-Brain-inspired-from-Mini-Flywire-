@@ -12,7 +12,7 @@ work stands. Document index: [`docs/README.md`](../README.md).
 | Item | State |
 |---|---|
 | GitHub `main` | `3602576` (the M13 review package), pushed 2026-11-18 as a fast-forward of 6 commits from `2c5c591` (`728dd71` state, then M13 build, revision 2, freeze, results and review package). Pushed on the owner's words "push if required", so that the reviewer can audit one fixed public commit and the raw result is held off this machine. A fresh GitHub clone with `core.autocrlf=true` was verified: M13 `SPEC.sha256` 4/4, `pins.mjs --check`, `results/SHA256SUMS` 13/13, `verify_m13.mjs` all pass, the traces check all agree, the bundle rebuilds identically (`6402fe13…`). `main.js` content `c92c5c6b…`. A local clone also passed `make_bank.mjs --check`, the descriptive scripts byte for byte and `npm test` 195/195. 25 annotated tags; none added. The previous push (`2c5c591`, CF-06 through M12, on "push also if you think that is right next approach") was verified the same way |
-| Local `main` | GitHub's `3602576` plus this state commit. No push without the owner's explicit word |
+| Local `main` | GitHub's `3602576` plus `b07f4be` (push record) and the M13 closure commit, neither pushed. No push without the owner's explicit word |
 | Tests | `npm test` 195/195 (after the M13 build: 11 new tests; still 195/195 after the M13 run); legacy gate `experiments/phase1_0/verify_S2.js` 14/14 (run it from `experiments/phase1_0/`: it reads `../../neurons.json`) |
 | Push rule | No push without the owner's explicit word |
 
@@ -20,7 +20,7 @@ work stands. Document index: [`docs/README.md`](../README.md).
 
 | Date | Work | Result |
 |---|---|---|
-| 2026-11-18 | **M13** cognitive generalization: the adopted belief (AD-13) against MBVI3 on a held-out modular-ring family (`experiments/m13_generalization/`), 165 fresh graphs × 3 families × 4 arms, nothing tuned | **NET ADVANTAGE RETAINED ON THE MODULAR FAMILY, WITHIN THE SAFETY MARGIN** (development-level). All five lines pass: VALID; G1 +125.4 [92.0, 160.1] (standardized 0.56, against CF-06 0.44 and M11 0.50); G2 RARE cost +9.8 [3.6, 14.9] (margin 25); G3 OFTEN recovery +65.1 [50.9, 79.9]; G4 reopened edges met and re-crossed +1.46 [1.25, 1.67]. gainShape CONSISTENT for G1 and G3. Attribution: OFTEN GENUINE REVERSALS (false-alarm-only A3 not shown); mix GENUINE REVERSALS AND FALSE-ALARM REPAIR. Unlike M11, 97% of the OFTEN recovery difference sits in labels where only BELIEF re-crossed a reopened edge in its own window (descriptive). Freeze `8619d71`, results in the commit after it |
+| 2026-11-18 | **M13** cognitive generalization: the adopted belief (AD-13) against MBVI3 on a held-out modular-ring family (`experiments/m13_generalization/`), 165 fresh graphs × 3 families × 4 arms, nothing tuned | **NET ADVANTAGE RETAINED ON THE MODULAR FAMILY, WITHIN THE SAFETY MARGIN** (development-level). All five lines pass: VALID; G1 +125.4 [92.0, 160.1] (standardized 0.56, against CF-06 0.44 and M11 0.50); G2 RARE cost +9.8 [3.6, 14.9] (margin 25); G3 OFTEN recovery +65.1 [50.9, 79.9]; G4 reopened edges met and re-crossed +1.46 [1.25, 1.67]. gainShape CONSISTENT for G1 and G3. Attribution: OFTEN GENUINE REVERSALS (false-alarm-only A3 not shown); mix GENUINE REVERSALS AND FALSE-ALARM REPAIR. Unlike M11, 97% of the OFTEN recovery difference sits in labels where only BELIEF re-crossed a reopened edge in its own window (descriptive). Freeze `8619d71`, results `b9a05e0`, review package `3602576` (pushed). **CLOSED 2026-11-18** after the independent Gemini review (DEFENSIBLE WITH SPECIFIC QUALIFICATIONS, no material finding; verdicts preserved). Qualifications: the family's selection was informed by M12; the RARE cost occurred in 133 of 165 labels (within the margin, not zero); G4 is a count, not causal proof (`CLOSURE.md`) |
 | 2026-11-18 | **M12** belief-to-behaviour mechanism analysis of the stored M11 rows and traces (`experiments/m12_mechanism/`); no run, no replay, no agent change | **Accepted by the owner as a useful explanation.** Observational, not causal proof. The 61% comes from BELIEF going back to exits its detector had written off: reopened edges, mostly 2–4 windows after the reopening, beyond M11's crossing window; and false-alarm repairs. In the 103 labels, the 51 with such a return carry +924 of +916; the other 52 carry −8. BELIEF's returns are observed in all 810 runs; MBVI3's non-return only in the 18 traces (0 of 8). M11 RESULTS.md amended (dated), verdict unchanged |
 | 2026-11-17 | **M11** the adopted belief (AD-13) against MBVI3 under controlled route blocking and reopening on the app's own graph (`experiments/m11_routes/`), 135 labels × 3 families, outside the app | **DEMONSTRATED ON THE MINIFLYWIRE GRAPH** (development-level). D1 recovery in OFTEN +11.1 [7.2, 15.3]; D2 cost in RARE +2.9 [0.7, 4.9] (margin 25); D3 crossings of reopened edges +0.64 [0.19, 1.14]. All smaller than CF-06. Reopened edges are rarely re-used inside their own after-window (OFTEN: 4.6% of reopenings by BELIEF, 1.2% by MBVI3). The original record said 61% of the recovery difference came from labels where no reopened edge was ever re-used, with the source unidentified; **amended 2026-11-18 after M12**: in most of those labels BELIEF went back later (see M12). Verdict unchanged. Freeze `a3cccd5`, results `880b179` |
 | 2026-11-17 | **CF-06** a belief about whether a changed exit will change back (model v6, ρ fixed at 1/2), 135 fresh `gate6` worlds | **SUPPORTED — CONSISTENT.** Beats all four fixed re-testing policies on the mix; against the planner +84.7 [55.1, 119.4] (2.4%; median +21); costs +17.4 in RARE (inside the 25 margin). Gain from genuine reversals and false-alarm repair. Adversarial review: SOUND WITH CORRECTIONS, verdict unchanged. The gain is about 28 steps a run, and the full verdict line holds only at h = 0.01. **Adopted by the owner (AD-13), with the limited claim.** Freeze `7ce1dc6`, results `22ea769`, review `72230be`, proposal `89e2468`, adoption in the commit after it |
@@ -74,16 +74,12 @@ Since then:
 
 ## Waiting on the owner
 
-0. **M13** is run and recorded: NET ADVANTAGE RETAINED ON THE MODULAR FAMILY, WITHIN THE SAFETY MARGIN
-   (`experiments/m13_generalization/RESULTS.md`). On the owner's instruction, M13 is to be closed scientifically
-   before anything else:
-   - the review package is ready (`experiments/m13_generalization/review/`, single file `M13_REVIEW_BUNDLE.md`);
-   - the owner arranges one bounded independent review;
-   - after it, only material correctness issues are addressed, by dated amendment;
-   - then a final M13 closure report.
-
-   No M14, no new experiment, no tuning, and no agent or application change without the owner's explicit approval.
-1. **Push** of the local commits after `2c5c591`, if wanted; everything up to `2c5c591` is on GitHub.
+0. **M13 is CLOSED** (2026-11-18; `experiments/m13_generalization/CLOSURE.md`). Nothing waits on M13. Any next
+   step is the owner's decision. No new experiment, no tuning, and no agent or application change without the owner's
+   explicit approval. If the owner supplies the text of Gemini's M13 review, it is to be lodged verbatim as
+   `experiments/m13_generalization/review/GEMINI_REVIEW.md`.
+1. **Push** of the local commits after `3602576` (the push record and the M13 closure), only on the owner's explicit
+   approval; everything up to `3602576` is on GitHub.
 2. **Closure ruling** retiring nine unrun legacy studies (AD-10; a proposed D-045).
 3. **Authorisation** for the legacy adapter's map-off hook in `main.js` (roadmap L1) and for app integration (M9).
 4. An **erratum** for `experiments/coga/README.md`, which still calls ACQ-1 "SUPPORTED" against D-035.
@@ -131,7 +127,8 @@ with it: `run/gate6_power_events.txt` (the Windows event-log extract behind the 
   false-alarm repair; against the four fixed policies tested; the full verdict line only at h = 0.01; one development
   gate.
 
-**M13 RECORDED (2026-11-18): NET ADVANTAGE RETAINED ON THE MODULAR FAMILY, WITHIN THE SAFETY MARGIN** — cognitive
+**M13 CLOSED (2026-11-18): NET ADVANTAGE RETAINED ON THE MODULAR FAMILY, WITHIN THE SAFETY MARGIN, with three
+qualifications (selection informed by M12; RARE cost in 133 of 165 labels; G4 a count, not causal proof)** — cognitive
 generalization (`experiments/m13_generalization/RESULTS.md`). Development-level: one run, by the designer, on local
 commits.
 - **The run:** frozen in `8619d71` on the owner's word "Freeze and run". Run once, 2026-11-18 06:07:14Z–08:16:28Z,
@@ -173,6 +170,19 @@ commits.
   The most important self-identified point: the modular family was chosen before any agent ran on it, but with
   M11/M12 knowledge, partly for its heavier tail of long detours. RESULTS §11 does not say so; the reviewer is asked
   to judge it. No frozen file or result was changed.
+- **Review and closure (2026-11-18).** Gemini reviewed public commit `3602576` (one bounded review, arranged by the
+  owner).
+  - **Conclusion:** DEFENSIBLE WITH SPECIFIC QUALIFICATIONS, with no material finding. The owner accepted it, and
+    all five verdicts and the summary statement stand.
+  - **Three qualifications go with every M13 claim:**
+    1. the family's selection was informed by M12's detour findings, though it stayed held out from agent
+       execution;
+    2. the RARE cost occurred in 133 of 165 labels, and "safe" means within the pre-declared margin, not zero cost;
+    3. G4 is a behavioural count combining how often an agent meets a block with whether it crosses again, and is
+       not causal proof.
+  - **Recorded in:** `review/REVIEW_DISPOSITION.md` (the owner's disposition, verbatim; Gemini's own text is not
+    lodged), a dated amendment to RESULTS.md (with one erratum: a core-row hash abbreviation typo, `…a608e02d` for
+    `…a20608e02d`) and `CLOSURE.md`. **M13 CLOSED.**
 
 The design, as frozen. The proposal was approved on the owner's word "Approve with diagnostics".
 - **Revision 2** makes the owner's three corrections, approved with the driver's alignment ("Approve both").

@@ -1,5 +1,9 @@
 # M13 — results: the adopted belief on a held-out modular-ring family
 
+> **Amended 2026-11-18, after the independent review; M13 is CLOSED.** The verdicts below stand unchanged. Three
+> qualifications apply to the claims below: the family's selection, the RARE cost, and what G4 counts. See
+> [the amendment at the end](#amendment-after-the-independent-review-2026-11-18) and [CLOSURE.md](CLOSURE.md).
+
 **Summary statement (by the frozen rule): NET ADVANTAGE RETAINED ON THE MODULAR FAMILY, WITHIN THE SAFETY MARGIN.**
 
 | Line | Value |
@@ -377,3 +381,53 @@ went back to them more often. It may not say that the belief generalizes in gene
 | [results/check/verify_m13.mjs](results/check/verify_m13.mjs) → `.out` | Independent check, written before the result |
 | [results/check/crossing_split.mjs](results/check/crossing_split.mjs) → `.out` | §8, descriptive, written after the result |
 | [results/check/trace_summary.mjs](results/check/trace_summary.mjs) → `.out` | §9, descriptive, written after the result |
+
+## Amendment after the independent review (2026-11-18)
+
+This amendment is dated and added after the record above. No sentence above was changed. A three-line pointer to this
+amendment was inserted under the title.
+
+**The review:**
+- One bounded, independent review by Gemini, arranged by the owner, of the review package at public commit
+  `3602576` ([review/REVIEW_PACKAGE.md](review/REVIEW_PACKAGE.md)).
+- Its conclusion: **DEFENSIBLE WITH SPECIFIC QUALIFICATIONS**. It made no material finding against any verdict line
+  or the summary statement.
+- The owner accepted it ([review/REVIEW_DISPOSITION.md](review/REVIEW_DISPOSITION.md), which also says that the
+  review's own text has not been lodged).
+
+**The verdicts stand unchanged:**
+- G0 VALID, G1 RETAINED, G2 SAFE, G3 SHOWN, G4 SHOWN;
+- summary: NET ADVANTAGE RETAINED ON THE MODULAR FAMILY, WITHIN THE SAFETY MARGIN.
+
+**Three qualifications apply to every claim above:**
+
+1. **The family's selection was informed by M12's detour findings.**
+   - The modular ring was chosen from structure alone, before any agent ran on it, and it stayed held out from agent
+     execution until the single frozen run.
+   - But the proposal chose it partly as "mechanism-relevant": it has a heavier tail of long detours, and M12 had
+     found that BELIEF's gain comes from going back to a written-off route.
+   - The perturbed lattice was rejected partly because its share of zero-detour blocks resembled the app graph's.
+   - So "one held-out structural family" means held out from development and from agent execution. It does not mean
+     a family drawn at random, and the choice leaned toward conditions that M12's account predicts favour BELIEF.
+   - This adds to limitation 1 (§11).
+2. **Safety means within the margin, not zero cost.**
+   - BELIEF used more steps than MBVI3 in 133 of 165 RARE labels, by +9.8 [3.6, 14.9] on average (median 14).
+   - SAFE means only that the interval's upper bound stayed below the pre-declared margin of 25 steps, which was
+     inherited from CF-06.
+   - Wherever the record says "within the safety margin" or "SAFE", it means a bounded cost, not none.
+3. **G4 is a behavioural count, not causal proof.**
+   - G4 counts the reopened edges an agent met while they were blocked and crossed again afterwards.
+   - It therefore combines how often the agent meets a block (BELIEF met 3.32 a run in OFTEN, MBVI3 2.31) with
+     whether it then crosses the edge again. It is not a rate.
+   - The header's "its belief changes what it does after meeting a block" is to be read as "BELIEF met and
+     re-crossed more reopened edges than MBVI3".
+   - Neither G4 nor §8 shows that the belief, or the returning, causes the saving in steps.
+
+**Erratum, found by the closure's documentation check:**
+- §1 ("Determinism") shortens the core-row SHA-256 as `86f0bd3f…a608e02d`. The hash is
+  `86f0bd3f188feb5eee5bbf3e67294a8e7b5add8227123300fa7b70a20608e02d`, which ends `…a20608e02d`.
+- The stored hash in `results/m13_result.json`, and every check made against it, are unaffected. Only the
+  abbreviation in the text is wrong.
+- The same abbreviation appears in the reviewed `review/REVIEW_PACKAGE.md` and its bundle, which are kept as
+  reviewed.
+

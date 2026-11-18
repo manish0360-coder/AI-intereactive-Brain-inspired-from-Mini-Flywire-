@@ -1,0 +1,25 @@
+PASS  SPEC.sha256: SPEC.md, PINS.json, graph_bank.json, structure.json match
+PASS  PINS.json matches all 44 pinned files
+PASS  results/SHA256SUMS: 13 files match
+PASS  raw result a0cd87d4… unchanged
+PASS  recorded verdicts: VALID / RETAINED / SAFE / SHOWN / SHOWN; summary unchanged
+PASS  pre-result independent check still passes
+PASS  G4 inputs rebuilt from the recorder log still agree
+PASS  reviewed bundle 6402fe13… kept as reviewed
+PASS  files changed since 3602576: docs/engineering/PROJECT_STATE.md, experiments/m13_generalization/CLOSURE.md, experiments/m13_generalization/RESULTS.md, experiments/m13_generalization/review/REVIEW_DISPOSITION.md, experiments/m13_generalization/review/check_closure_docs.mjs, experiments/m13_generalization/review/check_closure_docs.out
+PASS  RESULTS.md: the reviewed text is kept whole; only a pointer under the title and a dated amendment at the end were added
+PASS  experiments/m13_generalization/RESULTS.md: anchor #amendment-after-the-independent-review-2026-11-18
+PASS  26 relative links in the closure documents checked
+PASS  experiments/m13_generalization/review/REVIEW_DISPOSITION.md: 86f0bd3f…a608e02d is a known erratum, recorded (RESULTS.md amendment, erratum)
+PASS  experiments/m13_generalization/RESULTS.md: 86f0bd3f…a608e02d is a known erratum, recorded (RESULTS.md amendment, erratum)
+PASS  experiments/m13_generalization/RESULTS.md: 86f0bd3f…a608e02d is a known erratum, recorded (RESULTS.md amendment, erratum)
+PASS  experiments/m13_generalization/review/REVIEW_PACKAGE.md: 86f0bd3f…a608e02d is a known erratum, recorded (RESULTS.md amendment, erratum)
+PASS  12 shortened hashes checked against 386 known hashes and commits
+PASS  CLOSURE.md: all three qualifications present
+PASS  RESULTS.md amendment: all three qualifications present
+PASS  PROJECT_STATE.md: all three qualifications present
+PASS  REVIEW_DISPOSITION.md: all three qualifications present
+PASS  M13 marked CLOSED in CLOSURE.md, PROJECT_STATE and the RESULTS.md pointer
+PASS  CLOSURE.md numbers match the result: +125.4 steps [92.0, 160.1]; +9.8 [3.6, 14.9]; +65.1 [50.9, 79.9]; +1.46 [1.25, 1.67]; standardized 0.56; 133 of 165; +6.7 [−1.0, 15.8]
+
+all closure checks pass
