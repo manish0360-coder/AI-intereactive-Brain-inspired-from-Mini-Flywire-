@@ -1,0 +1,51 @@
+PASS  own code-unit order equals the driver's default .sort() (first labels m14schema|gate|0, m14schema|gate|1, m14schema|gate|10, m14schema|gate|100)
+PASS  string order differs from numeric order (the pre-run checker's order)
+
+contrast  stored mean / lo / hi                       own (string order)                       exact
+  P1     30.315152 [27.430303, 33.266667]   30.315152 [27.430303, 33.266667]   true
+PASS  P1: n, mean, lower and upper bound reproduced exactly (===) in the driver's order with independent code
+  P2     25.727273 [22.993939, 28.490909]   25.727273 [22.993939, 28.490909]   true
+PASS  P2: n, mean, lower and upper bound reproduced exactly (===) in the driver's order with independent code
+  S      -0.109091 [-3.981818, 3.654545]   -0.109091 [-3.981818, 3.654545]   true
+PASS  S: n, mean, lower and upper bound reproduced exactly (===) in the driver's order with independent code
+  R1     8.278788 [5.084848, 11.490909]   8.278788 [5.084848, 11.490909]   true
+PASS  R1: n, mean, lower and upper bound reproduced exactly (===) in the driver's order with independent code
+  R2     -1.866667 [-3.406061, -0.400000]   -1.866667 [-3.406061, -0.400000]   true
+PASS  R2: n, mean, lower and upper bound reproduced exactly (===) in the driver's order with independent code
+  O      0.000000 [0.000000, 0.000000]   0.000000 [0.000000, 0.000000]   true
+PASS  O: n, mean, lower and upper bound reproduced exactly (===) in the driver's order with independent code
+  H      30.315152 [27.393939, 33.309091]   30.315152 [27.393939, 33.309091]   true
+PASS  H: n, mean, lower and upper bound reproduced exactly (===) in the driver's order with independent code
+  SH     4.587879 [0.909091, 8.363636]   4.587879 [0.909091, 8.363636]   true
+PASS  SH: n, mean, lower and upper bound reproduced exactly (===) in the driver's order with independent code
+  E2     -15.521212 [-18.757576, -12.236364]   -15.521212 [-18.757576, -12.236364]   true
+PASS  E2: n, mean, lower and upper bound reproduced exactly (===) in the driver's order with independent code
+  E3     -6.884848 [-9.169697, -4.630303]   -6.884848 [-9.169697, -4.630303]   true
+PASS  E3: n, mean, lower and upper bound reproduced exactly (===) in the driver's order with independent code
+PASS  the pre-run checker's printed intervals are reproduced by the same procedure in numeric order (10 of 10, to its 3 printed decimals)
+PASS  means are the same in either order (order-free up to float summation)
+PASS  lines from the independent intervals equal the stored lines: {"transfer":"SHOWN","relationalContent":"SHOWN","safety":"SAFE","reversal":"MISLED WHEN REVERSED"}
+PASS  stored validity VALID; stored summary "LEARNED RELATIONAL SCHEMA TRANSFERS TO UNSEEN COMBINATIONS, WITHIN THE SAFETY MARGIN"
+PASS  P1 lower 27.4303 > 0; P2 lower 22.9939 > 0; S upper 3.6545 < 9
+PASS  every decision is the same in numeric order (no criterion is near its threshold)
+PASS  RESULTS.md reports P1 as +30.32 [27.43, 33.27]
+PASS  RESULTS.md reports P2 as +25.73 [22.99, 28.49]
+FAIL  RESULTS.md reports S as −0.11 [−3.98, 3.65]
+FAIL  RESULTS.md reports R1 as +8.28 [5.08, 11.49]
+PASS  RESULTS.md reports R2 as −1.87 [−3.41, −0.40]
+PASS  RESULTS.md reports H as +30.32 [27.39, 33.31]
+PASS  RESULTS.md reports SH as +4.59 [0.91, 8.36]
+PASS  RESULTS.md reports E2 as −15.52 [−18.76, −12.24]
+FAIL  RESULTS.md reports E3 as −6.88 [−9.17, −4.63]
+PASS  RESULTS.md reports O as 0.00, and it is exactly 0
+PASS  results/SHA256SUMS: all 12 files match
+PASS  m14_result.json d2924129… = SHA256SUMS = RESULTS.md
+PASS  stored rows hash 96860660… = run A = run B = RESULTS.md
+PASS  SPEC.sha256 still matches SPEC.md, PINS.json and admission.json, and the result names that SPEC.md
+PASS  experiments/m14_schema has no change against the committed results (b8fea5b)
+PASS  check/verify_m14.mjs unchanged since it was lodged
+PASS  check/verify_m14.out unchanged since it was lodged
+PASS  check/reconcile_order.mjs unchanged since it was lodged
+PASS  check/reconcile_order.out unchanged since it was lodged
+
+3 FAILURES

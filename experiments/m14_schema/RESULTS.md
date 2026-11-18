@@ -1,5 +1,8 @@
 # M14 — results: a relational schema learned across worlds, applied to an unseen combination
 
+> **Erratum, 2026-11-18.** Three figures below were rounded twice and are each 0.01 off: S's upper bound, R1's lower
+> bound and E3's mean. The corrected values are in [the erratum at the end](#erratum-2026-11-18). No verdict changes.
+
 **Summary statement (by the frozen rule): LEARNED RELATIONAL SCHEMA TRANSFERS TO UNSEEN COMBINATIONS, WITHIN THE
 SAFETY MARGIN.**
 
@@ -211,3 +214,43 @@ the schema anywhere else is the owner's decision.
 | [results/check/verify_m14.mjs](results/check/verify_m14.mjs) → `.out` | The independent check, written before the result |
 | [results/check/reconcile_order.mjs](results/check/reconcile_order.mjs) → `.out` | The label-order reconciliation, written after the result |
 | [results/check/describe.mjs](results/check/describe.mjs) → `.out` | §3, descriptive, written after the result |
+| [audit/interval_audit.mjs](audit/interval_audit.mjs) → `.out` | The owner-requested interval audit, written after the result (see the erratum) |
+
+## Erratum (2026-11-18)
+
+This erratum is dated and added after the record above. No sentence above was changed; a three-line pointer to it was
+inserted under the title.
+
+**How it was found.** The owner asked for an interval audit before the result is called independently verified. The
+audit ([audit/interval_audit.mjs](audit/interval_audit.mjs), output
+[audit/interval_audit.out](audit/interval_audit.out)) imports nothing from the repository. It reimplements the seed,
+the mulberry32 stream, the paired percentile bootstrap and the driver's string order of labels, and it found two
+things.
+
+**1. The intervals are verified.** In the driver's label order, all ten stored intervals (P1, P2, S, R1, R2, O, H,
+SH, E2, E3) reproduce exactly: n, mean and both bounds, compared with `===`. The same procedure in numeric order
+reproduces the ten intervals that the pre-run checker printed. The checker's nine mismatches (§1) are therefore fully
+explained by its label order and are resolved. No decision differs between the two orders.
+
+**2. Three figures in this record are mis-rounded.** They were rounded twice, from three-decimal printouts to two
+decimals.
+
+| Figure | Stored value (`results/m14_result.json`) | Written above | Correct to 2 decimals | Where above |
+|---|---|---|---|---|
+| S, upper bound | 3.654545… | 3.66 | **3.65** | §2 criteria table; §4 |
+| R1, lower bound | 5.084848… | 5.09 | **5.08** | §2 criteria table; §4 |
+| E3, mean | −6.884848… | −6.89 | **−6.88** | §2 reported contrasts |
+
+**The corrected rows:**
+- S: **−0.11 [−3.98, 3.65]**, below the margin of 9: SAFE;
+- R1: **+8.28 [5.08, 11.49]**: MISLED WHEN REVERSED;
+- E3: **−6.88 [−9.17, −4.63]**.
+
+**What is unaffected:**
+- the stored values in the result file;
+- `results/SHA256SUMS`;
+- every check;
+- every verdict line and the summary statement.
+
+None of these three figures is near a threshold. The first two also appear in the message of commit `b8fea5b`. That
+message is left as it is, because history is not rewritten.
