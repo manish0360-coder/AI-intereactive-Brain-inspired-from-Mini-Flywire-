@@ -1,0 +1,7 @@
+trial audit|94: learned [2,2,3,0] (SIGMA [1,2,3,0])
+  kind 0: chosen [2,14,3,0] avail [23,18,3,9] scores [0.12,0.75,0.8,0.091]
+  kind 1: chosen [1,0,18,1] avail [17,10,20,23] scores [0.105,0.083,0.864,0.08]
+  kind 2: chosen [0,0,0,16] avail [11,15,0,16] scores [0.077,0.059,0.5,0.944]
+  kind 3: chosen [11,1,0,0] avail [13,12,16,5] scores [0.8,0.143,0.056,0.143]
+  training phases 0,1,2,3,0,1; route kinds per world 0>1>2 | 1>2>3 | 2>3>0 | 3>0>1 | 0>1>2 | 1>2>3
+  test route kinds 1>2>3>0>1

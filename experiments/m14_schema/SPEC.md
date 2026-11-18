@@ -1,6 +1,9 @@
 # M14 — schema abstraction and transfer: a relation learned across worlds, applied to an unseen combination
 
-**Status.** DRAFT, 2026-11-18, for the owner's freeze approval. Built on the owner's word "Approve B in testbed", after
+**Status.** Frozen, 2026-11-18, on the owner's word "Freeze and run". Before the freeze, a pre-freeze audit was done on
+the owner's instruction. It examined training sufficiency, decision influence and the fairness of the shuffled
+control; all three PASS, and it found no material defect (§ Integrity, looks before the freeze). Built on the owner's
+word "Approve B in testbed", after
 the M14 decision report: the app's "schema memory" (`render/schemaMemory.js`) only stores concrete node IDs, so a new
 mechanism is needed, and it is built in the cognitive testbed. Nothing in `main.js`, the app, AD-13, world model v6 or
 `env.mjs` changes. The admission gate has run on development labels and admits the task (§ Admission).
@@ -179,6 +182,16 @@ taken to be about CONCRETE's, since SCHEMA_SHUFFLED explores much as CONCRETE do
     of interest come from it.
   - **The census:** gate labels, structure only, no agent.
   - **A driver smoke run:** `m14schema|smoke|0..2`, structure, determinism and timing only, with no measure printed.
+  - **The pre-freeze audit probe:** `m14schema|audit|0..99`, a namespace the driver refuses (lodged in
+    `admission/prefreeze_audit/`).
+    - **What ran:** SCHEMA and SCHEMA_SHUFFLED were trained and tested, ORACLE_SCHEMA was tested, and CONCRETE was
+      run for its first COMPOSE episode.
+    - **What it was for:** mechanism statistics, namely link coverage, schema margins, ties, schema decisions, a value
+      check of every chosen exit, and identity with CONCRETE until the first schema decision.
+    - **What it exposed (disclosed):** a first episode's decision count equals its step count, so the probe revealed
+      outcomes on those labels. SCHEMA and ORACLE_SCHEMA took 4 steps in every COMPOSE audit trial;
+      SCHEMA_SHUFFLED took about 31 steps per trial on average.
+    - Nothing was changed in response.
 
   No agent has run on a gate label.
 

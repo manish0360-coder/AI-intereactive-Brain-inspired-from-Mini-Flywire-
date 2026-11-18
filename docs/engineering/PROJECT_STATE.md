@@ -74,11 +74,15 @@ Since then:
 
 ## Waiting on the owner
 
-00. **M14 (schema abstraction and transfer) is BUILT** (`experiments/m14_schema/SPEC.md`).
+00. **M14 (schema abstraction and transfer) is FROZEN; its single run is in progress. Results pending.**
+   (`experiments/m14_schema/SPEC.md`)
    - **Pre-freeze audit:** on the owner's instruction, three questions (training sufficiency, decision influence and
-     the shuffled control) all PASS, with no material defect. Mechanism measured on `m14schema|audit|0..99`.
-   - **Freeze:** the owner said "Freeze and run". The build is committed first, then the freeze; the single run
-     follows.
+     the shuffled control) all PASS, with no material defect.
+     - The mechanism was measured on `m14schema|audit|0..99`; the probe is lodged in `admission/prefreeze_audit/`.
+     - It exposed outcomes on those labels (SCHEMA and ORACLE 4 steps; SHUFFLED about 31). That is disclosed in the
+       spec.
+   - **Freeze:** on the owner's word "Freeze and run". Build `799bca2`, then the freeze commit.
+     - SPEC.md `3dc4625b…`, PINS.json `0159cd82…` (40 files), admission.json `627b330b…`.
    - **How it got here:** the owner approved option B in the cognitive testbed ("Approve B in testbed") after the
      read-only audit. The audit found that the app's `render/schemaMemory.js` stores exact node-ID motifs, with a slot
      defect: slots are read from episode prefixes. It cannot match unseen nodes, and it changes 0.16% of choices.
