@@ -205,27 +205,32 @@ export function analyse(rows, domain, excess) {
 const lbPos = (c) => !!c && c.n > 0 && c.mean > 0 && c.lo > 0;
 const ubBelow = (c, x) => !!c && c.n > 0 && c.hi < x;
 
-/** validity: { identical, testsPassed, novelty, exclusionsOk } (G0). */
+/**
+ * SPEC.md "Verdict": five independent lines (one per criterion) and one summary statement from G0, G1 and G2 only.
+ * validity: { identical, testsPassed, novelty, noExclusions } (G0).
+ */
 export function readingRule(analysis, validity) {
   const C = analysis.criteria;
-  const g0parts = { determinism: !!validity.identical, tests: !!validity.testsPassed, novelty: !!validity.novelty, exclusions: !!validity.exclusionsOk };
-  const G = {
-    G0_validity: Object.values(g0parts).every(Boolean),
-    G1_net: lbPos(C.G1_mix),
-    G2_safety: ubBelow(C.G2_RARE_cost, MARGIN),
-    G3_recovery: lbPos(C.G3_OFTEN_afterReversed),
-    G4_behaviour: lbPos(C.G4_OFTEN_metAndReturned),
+  const g0parts = { determinism: !!validity.identical, tests: !!validity.testsPassed, novelty: !!validity.novelty, exclusions: !!validity.noExclusions };
+  const valid = Object.values(g0parts).every(Boolean);
+  const g1 = C.G1_mix;
+  const lines = {
+    validity: valid ? 'VALID' : `INVALID (${Object.entries(g0parts).filter(([, v]) => !v).map(([k]) => k).join(', ')})`,
+    netAdvantage: lbPos(g1) ? 'RETAINED' : !!g1 && g1.n > 0 && g1.hi < 0 ? 'REVERSED' : 'NOT SHOWN',
+    safety: ubBelow(C.G2_RARE_cost, MARGIN) ? 'SAFE' : 'NOT SHOWN SAFE',
+    recovery: lbPos(C.G3_OFTEN_afterReversed) ? 'SHOWN' : 'NOT SHOWN',
+    behaviouralMechanism: lbPos(C.G4_OFTEN_metAndReturned) ? 'SHOWN' : 'NOT SHOWN',
   };
-  const shapeFails = Object.entries(analysis.gainShape).filter(([, s]) => s.fails.length);
-  const gainShape = shapeFails.length ? `TAIL-DRIVEN (${shapeFails.map(([k, s]) => `${k}: ${s.fails.join(', ')}`).join('; ')})` : 'CONSISTENT';
-  let verdict;
-  if (!G.G0_validity) verdict = `INVALID (${Object.entries(g0parts).filter(([, v]) => !v).map(([k]) => k).join(', ')})`;
-  else if (!G.G1_net) verdict = `DOES NOT GENERALIZE${C.G1_mix && C.G1_mix.n > 0 && C.G1_mix.hi < 0 ? ' — HARMFUL' : ''}`;
-  else {
-    const failed = ['G2_safety', 'G3_recovery', 'G4_behaviour'].filter((k) => !G[k]);
-    verdict = `${failed.length ? `GENERALIZES IN PART (failed: ${failed.join(', ')})` : 'GENERALIZES TO THE MODULAR FAMILY'} — ${gainShape}`;
-  }
-  return { ...G, g0parts, gainShape, verdict };
+  const shape = (k) => (analysis.gainShape[k].fails.length ? `TAIL-DRIVEN (${analysis.gainShape[k].fails.join(', ')})` : 'CONSISTENT');
+  const gainShape = { G1_mix: shape('G1_mix'), G3_OFTEN_afterReversed: shape('G3_OFTEN_afterReversed') };
+  let summary;
+  if (!valid) summary = 'INVALID — NO CRITERION IS INTERPRETED';
+  else if (lines.netAdvantage === 'RETAINED') summary = `NET ADVANTAGE RETAINED ON THE MODULAR FAMILY${lines.safety === 'SAFE' ? ', WITHIN THE SAFETY MARGIN' : '; SAFETY NOT SHOWN'}${gainShape.G1_mix === 'CONSISTENT' ? '' : ' — FROM A MINORITY OF LABELS'}`;
+  else summary = `NET ADVANTAGE ${lines.netAdvantage} ON THE MODULAR FAMILY`;
+  return {
+    G0_validity: valid, G1_net: lines.netAdvantage === 'RETAINED', G2_safety: lines.safety === 'SAFE', G3_recovery: lines.recovery === 'SHOWN', G4_behaviour: lines.behaviouralMechanism === 'SHOWN',
+    g0parts, lines, gainShape, summary,
+  };
 }
 
 export { E5_FAMILIES, E5_PARAMS };

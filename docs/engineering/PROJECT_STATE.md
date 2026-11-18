@@ -73,7 +73,8 @@ Since then:
 
 ## Waiting on the owner
 
-0. **Freeze approval for M13** (`experiments/m13_generalization/SPEC.md`, draft). Then it is run once (about 2.5 hours).
+0. **Freeze approval for M13** (`experiments/m13_generalization/SPEC.md`, draft revision 2). Then it is run once (about
+   2.5 hours).
 1. **Push** of the local commits after `2c5c591`, if wanted; everything up to `2c5c591` is on GitHub.
 2. **Closure ruling** retiring nine unrun legacy studies (AD-10; a proposed D-045).
 3. **Authorisation** for the legacy adapter's map-off hook in `main.js` (roadmap L1) and for app integration (M9).
@@ -122,8 +123,19 @@ with it: `run/gate6_power_events.txt` (the Windows event-log extract behind the 
   false-alarm repair; against the four fixed policies tested; the full verdict line only at h = 0.01; one development
   gate.
 
-**M13 BUILT (2026-11-18), specification DRAFT awaiting the owner's freeze approval: cognitive generalization**
-(`experiments/m13_generalization/`). Proposal approved on the owner's word "Approve with diagnostics".
+**M13 BUILT (2026-11-18), specification DRAFT revision 2 awaiting the owner's freeze approval: cognitive
+generalization** (`experiments/m13_generalization/`). Proposal approved on the owner's word "Approve with diagnostics".
+- **Revision 2** makes the owner's three corrections, approved with the driver's alignment ("Approve both").
+  - **Verdict:** five independent lines (validity; net advantage G1 primary; safety G2; recovery G3 and behavioural
+    mechanism G4, both secondary) and one summary statement built from G0, G1 and G2 only. A G3 or G4 failure cannot
+    erase a retained net advantage.
+  - **Exclusions:** computed from the frozen bank, there are none, so the analysed n is fixed at 165. G0 requires
+    that nothing be excluded; the old 10% rule is withdrawn.
+  - **Power** (`power/power_m13.mjs`, reproducible): ⌈((1.959964 + 0.841621) / 0.22)²⌉ = 163 labels; power 0.807 at
+    165. Simulated with the study's own bootstrap: 0.806 with normal noise, 0.911 and 0.846 with the recorded CF-06 and
+    M11 shapes.
+  - **Attribution:** contrasts A1–A5, CF-06's rule verbatim, with an exactness check; ground-truth isolation
+    documented.
 - **Question:** does the AD-13 belief keep its advantage over MBVI3, with nothing tuned, on a held-out family of
   worlds structurally unlike the development family?
 - **Worlds:** modular rings (4 × 6 nodes, 8 edges per module, a ring of single bridges, degree ≤ 4; 24 nodes like the
@@ -136,9 +148,9 @@ with it: `run/gate6_power_events.txt` (the Windows event-log extract behind the 
 - **Arms:** BELIEF (`makeAdoptedAgent`) and MBVI3, plus CF-06's diagnostic arms BELIEF_REALONLY / BELIEF_FALSEONLY
   (secondary).
 - **Task:** E5 unchanged.
-- **Criteria:**
-  - G0 validity: determinism, tests, novelty, exclusions;
-  - G1 net mix advantage, lower bound > 0;
+- **Criteria** (each decided on its own; verdict lines as in revision 2 above):
+  - G0 validity: determinism, tests, novelty, no exclusion;
+  - G1 net mix advantage (primary), lower bound > 0;
   - G2 RARE cost, upper bound < 25;
   - G3 OFTEN recovery, lower bound > 0;
   - G4 OFTEN reopened edges met while blocked and crossed again, BELIEF − MBVI3, lower bound > 0. Measured for both

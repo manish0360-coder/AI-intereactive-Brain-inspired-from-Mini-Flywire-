@@ -1,0 +1,40 @@
+== 0. Exclusions, decided from the frozen bank by planE5 (graph only; no agent)
+   165 labels x 3 families: 0 (label, family) excluded, 0 labels lost to G1; analysed n = 165; skipped events 1
+
+== 1. Analytic (normal approximation to the paired percentile bootstrap)
+   z_0.975 = 1.959963984540054, z_0.80 = 0.8416212335729143
+   n_required(delta = 0.22, 80%) = ceil(((1.959964 + 0.841621) / 0.22)^2) = ceil(162.1669) = 163
+   power(delta, n):   n = 116 (the old worst case, 10% excluded) | 150 | 163 | 165
+      delta 0.15   0.3653  0.4511  0.4821  0.4868
+      delta 0.2    0.5770  0.6878  0.7236  0.7288
+      delta 0.22   0.6589  0.7687  0.8020  0.8068
+      delta 0.25   0.7681  0.8647  0.8910  0.8946
+      delta 0.3    0.8982  0.9568  0.9693  0.9709
+      delta 0.444  0.9976  0.9997  0.9999  0.9999
+      delta 0.498  0.9997  1.0000  1.0000  1.0000
+
+== 2. Recorded inputs (stored rows; BELIEF and MBVI3)
+   CF06_gate6: n = 135; G1 mean 84.68, SD 190.62, standardized 0.4442
+      family SDs RARE 27.08, HALF 105.26, OFTEN 108.10; correlations RARE-HALF 0.161, RARE-OFTEN 0.203, HALF-OFTEN 0.472
+      SD of the sum from the parts 190.62 (= the G1 SD); it would be 153.29 if the families were independent
+      G2 (RARE cost) mean 17.40, SD 27.08; G3 (OFTEN after reopenings) mean 43.55, SD 69.55, standardized 0.6262
+   M11_app_graph: n = 135; G1 mean 27.73, SD 55.65, standardized 0.4982
+      family SDs RARE 12.80, HALF 32.84, OFTEN 44.84; correlations RARE-HALF 0.054, RARE-OFTEN -0.083, HALF-OFTEN -0.036
+      SD of the sum from the parts 55.65 (= the G1 SD); it would be 57.03 if the families were independent
+      G2 (RARE cost) mean 2.87, SD 12.80; G3 (OFTEN after reopenings) mean 11.07, SD 24.61, standardized 0.4497
+   smallest effect of interest: half the smaller recorded G1 effect = 0.2221, used as 0.22
+
+== 3. Simulation: 2000 simulated studies per cell, each with pairedBootstrap (10,000 resamples), rule "mean > 0 and lower bound > 0"
+   normal         n 163  delta 0.22: power 0.7960 (Monte Carlo SE 0.0090); analytic 0.8020
+   normal         n 165  delta 0.22: power 0.8060 (Monte Carlo SE 0.0088); analytic 0.8068
+   CF06_gate6     n 163  delta 0.22: power 0.9125 (Monte Carlo SE 0.0063); analytic 0.8020
+   CF06_gate6     n 165  delta 0.22: power 0.9110 (Monte Carlo SE 0.0064); analytic 0.8068
+   M11_app_graph  n 163  delta 0.22: power 0.8420 (Monte Carlo SE 0.0082); analytic 0.8020
+   M11_app_graph  n 165  delta 0.22: power 0.8455 (Monte Carlo SE 0.0081); analytic 0.8068
+
+== 4. The other criteria (analytic, normal approximation)
+   G2 (upper bound < 25), true cost and SD as in CF06_gate6 (17.40, 27.08): P(pass) at n 165 = 0.9500
+   G2 (upper bound < 25), true cost and SD as in M11_app_graph (2.87, 12.80): P(pass) at n 165 = 1.0000
+   G2: with the larger recorded SD (27.08), a true cost up to 19.09 steps passes with 80% probability
+   G3 (secondary): power 0.8068 at delta 0.22; at the recorded G3 effects: CF06_gate6 1.0000, M11_app_graph 0.9999
+   G4 (secondary): no earlier record measured returns for MBVI3, so no spread is known and no power is claimed; the result reports its minimum detectable effect, 2.80 SD / sqrt(n)

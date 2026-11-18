@@ -119,20 +119,27 @@ export const tests = [
     assert.equal(JSON.stringify(r.mbvi3.row), JSON.stringify(r.mbvi3Traced.row), 'MBVI3 traced = untraced');
     assert.equal(JSON.stringify(strip(r.belief.row)), JSON.stringify(r.plain), 'runOne = runE5 with the adopted agent');
   }],
-  ['M13 READING RULE: the verdicts of SPEC.md on synthetic inputs', () => {
+  ['M13 READING RULE: five independent lines and the summary statement of SPEC.md, on synthetic inputs', () => {
     const c = (mean, lo, hi) => ({ n: 165, mean, lo, hi });
-    const ok = { identical: true, testsPassed: true, novelty: true, exclusionsOk: true };
-    const shape = (fails = []) => ({ G1_mix: { fails }, G3_OFTEN_afterReversed: { fails: [] } });
-    const A = (g1, g2, g3, g4, fails) => ({ criteria: { G1_mix: g1, G2_RARE_cost: g2, G3_OFTEN_afterReversed: g3, G4_OFTEN_metAndReturned: g4 }, gainShape: shape(fails) });
-    const good = A(c(30, 10, 50), c(5, 1, 9), c(10, 4, 16), c(0.5, 0.2, 0.8));
-    assert.equal(readingRule(good, ok).verdict, 'GENERALIZES TO THE MODULAR FAMILY — CONSISTENT');
-    assert.match(readingRule(A(c(30, 10, 50), c(5, 1, 9), c(10, 4, 16), c(0.5, 0.2, 0.8), ['median 0']), ok).verdict, /^GENERALIZES TO THE MODULAR FAMILY — TAIL-DRIVEN/);
-    assert.match(readingRule(A(c(30, 10, 50), c(20, 10, MARGIN), c(10, 4, 16), c(0.1, 0, 0.3)), ok).verdict, /^GENERALIZES IN PART \(failed: G2_safety, G4_behaviour\)/);
-    assert.equal(readingRule(A(c(3, -2, 8), c(5, 1, 9), c(10, 4, 16), c(0.5, 0.2, 0.8)), ok).verdict, 'DOES NOT GENERALIZE');
-    assert.equal(readingRule(A(c(-9, -15, -3), c(5, 1, 9), c(10, 4, 16), c(0.5, 0.2, 0.8)), ok).verdict, 'DOES NOT GENERALIZE — HARMFUL');
-    assert.equal(readingRule(good, { ...ok, identical: false, novelty: false }).verdict, 'INVALID (determinism, novelty)');
-    assert.equal(readingRule(A(c(0, 0, 0), c(5, 1, 9), c(10, 4, 16), c(0.5, 0.2, 0.8)), ok).G1_net, false, 'strict');
-    assert.equal(readingRule(A({ n: 0, mean: null, lo: null, hi: null }, c(5, 1, 9), c(10, 4, 16), c(0.5, 0.2, 0.8)), ok).G1_net, false, 'empty never passes');
+    const ok = { identical: true, testsPassed: true, novelty: true, noExclusions: true };
+    const A = (g1, g2, g3, g4, fails = []) => ({ criteria: { G1_mix: g1, G2_RARE_cost: g2, G3_OFTEN_afterReversed: g3, G4_OFTEN_metAndReturned: g4 }, gainShape: { G1_mix: { fails }, G3_OFTEN_afterReversed: { fails: [] } } });
+    const all = readingRule(A(c(30, 10, 50), c(5, 1, 9), c(10, 4, 16), c(0.5, 0.2, 0.8)), ok);
+    assert.deepEqual(all.lines, { validity: 'VALID', netAdvantage: 'RETAINED', safety: 'SAFE', recovery: 'SHOWN', behaviouralMechanism: 'SHOWN' });
+    assert.equal(all.summary, 'NET ADVANTAGE RETAINED ON THE MODULAR FAMILY, WITHIN THE SAFETY MARGIN');
+    // a G3 or G4 failure does not erase a retained net advantage
+    const noMech = readingRule(A(c(30, 10, 50), c(5, 1, 9), c(1, -2, 4), c(0.1, -0.1, 0.3)), ok);
+    assert.equal(noMech.summary, 'NET ADVANTAGE RETAINED ON THE MODULAR FAMILY, WITHIN THE SAFETY MARGIN');
+    assert.equal(noMech.lines.recovery, 'NOT SHOWN'); assert.equal(noMech.lines.behaviouralMechanism, 'NOT SHOWN');
+    // and a G3 or G4 pass does not create one
+    const mechOnly = readingRule(A(c(3, -2, 8), c(5, 1, 9), c(10, 4, 16), c(0.5, 0.2, 0.8)), ok);
+    assert.equal(mechOnly.summary, 'NET ADVANTAGE NOT SHOWN ON THE MODULAR FAMILY'); assert.equal(mechOnly.lines.behaviouralMechanism, 'SHOWN');
+    assert.equal(readingRule(A(c(30, 10, 50), c(20, 10, MARGIN), c(10, 4, 16), c(0.5, 0.2, 0.8)), ok).summary, 'NET ADVANTAGE RETAINED ON THE MODULAR FAMILY; SAFETY NOT SHOWN');
+    assert.equal(readingRule(A(c(30, 10, 50), c(5, 1, 9), c(10, 4, 16), c(0.5, 0.2, 0.8), ['median 0']), ok).summary, 'NET ADVANTAGE RETAINED ON THE MODULAR FAMILY, WITHIN THE SAFETY MARGIN — FROM A MINORITY OF LABELS');
+    assert.equal(readingRule(A(c(-9, -15, -3), c(5, 1, 9), c(10, 4, 16), c(0.5, 0.2, 0.8)), ok).summary, 'NET ADVANTAGE REVERSED ON THE MODULAR FAMILY');
+    const bad = readingRule(A(c(30, 10, 50), c(5, 1, 9), c(10, 4, 16), c(0.5, 0.2, 0.8)), { ...ok, identical: false, noExclusions: false });
+    assert.equal(bad.summary, 'INVALID — NO CRITERION IS INTERPRETED'); assert.equal(bad.lines.validity, 'INVALID (determinism, exclusions)');
+    assert.equal(readingRule(A(c(0, 0, 0), c(5, 1, 9), c(10, 4, 16), c(0.5, 0.2, 0.8)), ok).lines.netAdvantage, 'NOT SHOWN', 'strict');
+    assert.equal(readingRule(A({ n: 0, mean: null, lo: null, hi: null }, c(5, 1, 9), c(10, 4, 16), c(0.5, 0.2, 0.8)), ok).lines.netAdvantage, 'NOT SHOWN', 'empty never passes');
   }],
   ['M13 REFUSALS: the driver refuses an unknown domain and a smoke output inside the repository (no test can start the run)', () => {
     const drv = path.join(HERE, 'run_m13.mjs');

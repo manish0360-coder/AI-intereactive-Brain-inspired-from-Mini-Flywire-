@@ -103,7 +103,7 @@ const coreA = A.rows.filter((r) => CORE.includes(r.arm));
 const rowsShaA = sha(JSON.stringify(coreA)), rowsShaB = sha(JSON.stringify(B.rows));
 const analysis = analyse(A.rows, DOMAIN, excess);
 const excludedPairs = A.rows.filter((r) => r.arm === 'BELIEF' && r.excluded).length;
-const validity = { identical: rowsShaA === rowsShaB, testsPassed: isRun ? tests.exit === 0 : null, novelty: isRun ? structure.novelty.holds : null, exclusionsOk: excludedPairs <= 0.1 * N * FAMILIES.length };
+const validity = { identical: rowsShaA === rowsShaB, testsPassed: isRun ? tests.exit === 0 : null, novelty: isRun ? structure.novelty.holds : null, noExclusions: excludedPairs === 0, excludedPairs };
 const reading = readingRule(analysis, validity);
 const headAtEnd = git('rev-parse', 'HEAD');
 
@@ -130,5 +130,5 @@ const result = {
 };
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, JSON.stringify(result, null, 1) + '\n');
-if (isRun) console.log(`M13 m13: ${reading.verdict}; core runs identical: ${validity.identical}; ${result.resources.totalSeconds} s; ${OUT}`);
+if (isRun) console.log(`M13 m13: ${reading.summary}; core runs identical: ${validity.identical}; ${result.resources.totalSeconds} s; ${OUT}`);
 else console.log(`M13 smoke: ${N} development-family labels, ${A.rows.length} + ${B.rows.length} rows; core runs identical: ${validity.identical}; seconds per run: ${Object.entries(timingA).map(([k, v]) => `${k} ${(v / 1000 / (N * FAMILIES.length)).toFixed(2)}`).join(', ')}; ${result.resources.totalSeconds} s; ${OUT} (no measure printed)`);
