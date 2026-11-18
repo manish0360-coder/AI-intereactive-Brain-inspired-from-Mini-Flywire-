@@ -11,8 +11,8 @@ work stands. Document index: [`docs/README.md`](../README.md).
 
 | Item | State |
 |---|---|
-| GitHub `main` | `3602576` (the M13 review package), pushed 2026-11-18 as a fast-forward of 6 commits from `2c5c591` (`728dd71` state, then M13 build, revision 2, freeze, results and review package). Pushed on the owner's words "push if required", so that the reviewer can audit one fixed public commit and the raw result is held off this machine. A fresh GitHub clone with `core.autocrlf=true` was verified: M13 `SPEC.sha256` 4/4, `pins.mjs --check`, `results/SHA256SUMS` 13/13, `verify_m13.mjs` all pass, the traces check all agree, the bundle rebuilds identically (`6402fe13…`). `main.js` content `c92c5c6b…`. A local clone also passed `make_bank.mjs --check`, the descriptive scripts byte for byte and `npm test` 195/195. 25 annotated tags; none added. The previous push (`2c5c591`, CF-06 through M12, on "push also if you think that is right next approach") was verified the same way |
-| Local `main` | GitHub's `3602576` plus `b07f4be` (push record), `9f13c3a` (M13 closure) and the commit lodging Gemini's M13 review text; none pushed. No push without the owner's explicit word |
+| GitHub `main` | `603539a` (Gemini's M13 review lodged), pushed 2026-11-18 on the owner's explicit approval ("Yes, push them") as a fast-forward of 3 commits from `3602576`: `b07f4be` push record, `9f13c3a` M13 closure, `603539a` review text. A fresh GitHub clone with `core.autocrlf=true` passed the full closure check (`review/check_closure_docs.mjs`, 27 checks): frozen hashes, pins, result checksums, verdicts, `verify_m13`, the traces check, the reviewed bundle, `GEMINI_REVIEW.md` `7c8ab0f5…`, links and shortened hashes. 25 annotated tags; none added. Before that: `3602576` (the M13 review package), pushed 2026-11-18 as a fast-forward of 6 commits from `2c5c591` (`728dd71` state, then M13 build, revision 2, freeze, results and review package). Pushed on the owner's words "push if required", so that the reviewer can audit one fixed public commit and the raw result is held off this machine. A fresh GitHub clone with `core.autocrlf=true` was verified: M13 `SPEC.sha256` 4/4, `pins.mjs --check`, `results/SHA256SUMS` 13/13, `verify_m13.mjs` all pass, the traces check all agree, the bundle rebuilds identically (`6402fe13…`). `main.js` content `c92c5c6b…`. A local clone also passed `make_bank.mjs --check`, the descriptive scripts byte for byte and `npm test` 195/195. 25 annotated tags; none added. The previous push (`2c5c591`, CF-06 through M12, on "push also if you think that is right next approach") was verified the same way |
+| Local `main` | GitHub's `603539a` plus this state commit, which records that push. No push without the owner's explicit word |
 | Tests | `npm test` 195/195 (after the M13 build: 11 new tests; still 195/195 after the M13 run); legacy gate `experiments/phase1_0/verify_S2.js` 14/14 (run it from `experiments/phase1_0/`: it reads `../../neurons.json`) |
 | Push rule | No push without the owner's explicit word |
 
@@ -78,8 +78,8 @@ Since then:
    step is the owner's decision. No new experiment, no tuning, and no agent or application change without the owner's
    explicit approval. Gemini's M13 review is lodged verbatim as
    `experiments/m13_generalization/review/GEMINI_REVIEW.md` (SHA-256 `7c8ab0f5…a1c5b0d2b9`).
-1. **Push** of the local commits after `3602576` (the push record, the M13 closure and the review text), only on the owner's explicit
-   approval; everything up to `3602576` is on GitHub.
+1. **Push:** everything up to `603539a` is on GitHub, including the M13 closure and the review text. The later local
+   state commit is pushed only on the owner's explicit approval.
 2. **Closure ruling** retiring nine unrun legacy studies (AD-10; a proposed D-045).
 3. **Authorisation** for the legacy adapter's map-off hook in `main.js` (roadmap L1) and for app integration (M9).
 4. An **erratum** for `experiments/coga/README.md`, which still calls ACQ-1 "SUPPORTED" against D-035.
