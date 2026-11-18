@@ -6,15 +6,19 @@ PASS  recorded verdicts: VALID / RETAINED / SAFE / SHOWN / SHOWN; summary unchan
 PASS  pre-result independent check still passes
 PASS  G4 inputs rebuilt from the recorder log still agree
 PASS  reviewed bundle 6402fe13… kept as reviewed
-PASS  files changed since 3602576: docs/engineering/PROJECT_STATE.md, experiments/m13_generalization/CLOSURE.md, experiments/m13_generalization/RESULTS.md, experiments/m13_generalization/review/REVIEW_DISPOSITION.md, experiments/m13_generalization/review/check_closure_docs.mjs, experiments/m13_generalization/review/check_closure_docs.out
+PASS  files changed since 3602576: docs/engineering/PROJECT_STATE.md, experiments/m13_generalization/CLOSURE.md, experiments/m13_generalization/RESULTS.md, experiments/m13_generalization/review/GEMINI_REVIEW.md, experiments/m13_generalization/review/REVIEW_DISPOSITION.md, experiments/m13_generalization/review/check_closure_docs.mjs, experiments/m13_generalization/review/check_closure_docs.out
 PASS  RESULTS.md: the reviewed text is kept whole; only a pointer under the title and a dated amendment at the end were added
+PASS  GEMINI_REVIEW.md is the supplied file, byte for byte (SHA-256 7c8ab0f5…, 7,452 bytes)
+PASS  REVIEW_DISPOSITION.md records its full SHA-256
+PASS  REVIEW_DISPOSITION.md and CLOSURE.md link to GEMINI_REVIEW.md
+PASS  the review text names commit 3602576, concludes DEFENSIBLE WITH SPECIFIC QUALIFICATIONS and lists no material finding, as the disposition records
 PASS  experiments/m13_generalization/RESULTS.md: anchor #amendment-after-the-independent-review-2026-11-18
-PASS  26 relative links in the closure documents checked
+PASS  31 relative links in the closure documents checked
 PASS  experiments/m13_generalization/review/REVIEW_DISPOSITION.md: 86f0bd3f…a608e02d is a known erratum, recorded (RESULTS.md amendment, erratum)
 PASS  experiments/m13_generalization/RESULTS.md: 86f0bd3f…a608e02d is a known erratum, recorded (RESULTS.md amendment, erratum)
 PASS  experiments/m13_generalization/RESULTS.md: 86f0bd3f…a608e02d is a known erratum, recorded (RESULTS.md amendment, erratum)
 PASS  experiments/m13_generalization/review/REVIEW_PACKAGE.md: 86f0bd3f…a608e02d is a known erratum, recorded (RESULTS.md amendment, erratum)
-PASS  12 shortened hashes checked against 386 known hashes and commits
+PASS  13 shortened hashes checked against 388 known hashes and commits
 PASS  CLOSURE.md: all three qualifications present
 PASS  RESULTS.md amendment: all three qualifications present
 PASS  PROJECT_STATE.md: all three qualifications present

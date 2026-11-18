@@ -393,7 +393,8 @@ amendment was inserted under the title.
 - Its conclusion: **DEFENSIBLE WITH SPECIFIC QUALIFICATIONS**. It made no material finding against any verdict line
   or the summary statement.
 - The owner accepted it ([review/REVIEW_DISPOSITION.md](review/REVIEW_DISPOSITION.md), which also says that the
-  review's own text has not been lodged).
+  review's own text is lodged verbatim as [review/GEMINI_REVIEW.md](review/GEMINI_REVIEW.md); it was added after
+  the closure commit `9f13c3a`).
 
 **The verdicts stand unchanged:**
 - G0 VALID, G1 RETAINED, G2 SAFE, G3 SHOWN, G4 SHOWN;

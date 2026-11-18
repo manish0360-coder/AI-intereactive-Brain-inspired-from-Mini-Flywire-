@@ -12,7 +12,7 @@ work stands. Document index: [`docs/README.md`](../README.md).
 | Item | State |
 |---|---|
 | GitHub `main` | `3602576` (the M13 review package), pushed 2026-11-18 as a fast-forward of 6 commits from `2c5c591` (`728dd71` state, then M13 build, revision 2, freeze, results and review package). Pushed on the owner's words "push if required", so that the reviewer can audit one fixed public commit and the raw result is held off this machine. A fresh GitHub clone with `core.autocrlf=true` was verified: M13 `SPEC.sha256` 4/4, `pins.mjs --check`, `results/SHA256SUMS` 13/13, `verify_m13.mjs` all pass, the traces check all agree, the bundle rebuilds identically (`6402fe13…`). `main.js` content `c92c5c6b…`. A local clone also passed `make_bank.mjs --check`, the descriptive scripts byte for byte and `npm test` 195/195. 25 annotated tags; none added. The previous push (`2c5c591`, CF-06 through M12, on "push also if you think that is right next approach") was verified the same way |
-| Local `main` | GitHub's `3602576` plus `b07f4be` (push record) and the M13 closure commit, neither pushed. No push without the owner's explicit word |
+| Local `main` | GitHub's `3602576` plus `b07f4be` (push record), `9f13c3a` (M13 closure) and the commit lodging Gemini's M13 review text; none pushed. No push without the owner's explicit word |
 | Tests | `npm test` 195/195 (after the M13 build: 11 new tests; still 195/195 after the M13 run); legacy gate `experiments/phase1_0/verify_S2.js` 14/14 (run it from `experiments/phase1_0/`: it reads `../../neurons.json`) |
 | Push rule | No push without the owner's explicit word |
 
@@ -76,9 +76,9 @@ Since then:
 
 0. **M13 is CLOSED** (2026-11-18; `experiments/m13_generalization/CLOSURE.md`). Nothing waits on M13. Any next
    step is the owner's decision. No new experiment, no tuning, and no agent or application change without the owner's
-   explicit approval. If the owner supplies the text of Gemini's M13 review, it is to be lodged verbatim as
-   `experiments/m13_generalization/review/GEMINI_REVIEW.md`.
-1. **Push** of the local commits after `3602576` (the push record and the M13 closure), only on the owner's explicit
+   explicit approval. Gemini's M13 review is lodged verbatim as
+   `experiments/m13_generalization/review/GEMINI_REVIEW.md` (SHA-256 `7c8ab0f5…a1c5b0d2b9`).
+1. **Push** of the local commits after `3602576` (the push record, the M13 closure and the review text), only on the owner's explicit
    approval; everything up to `3602576` is on GitHub.
 2. **Closure ruling** retiring nine unrun legacy studies (AD-10; a proposed D-045).
 3. **Authorisation** for the legacy adapter's map-off hook in `main.js` (roadmap L1) and for app integration (M9).
@@ -180,8 +180,9 @@ commits.
     2. the RARE cost occurred in 133 of 165 labels, and "safe" means within the pre-declared margin, not zero cost;
     3. G4 is a behavioural count combining how often an agent meets a block with whether it crosses again, and is
        not causal proof.
-  - **Recorded in:** `review/REVIEW_DISPOSITION.md` (the owner's disposition, verbatim; Gemini's own text is not
-    lodged), a dated amendment to RESULTS.md (with one erratum: a core-row hash abbreviation typo, `…a608e02d` for
+  - **Recorded in:** `review/REVIEW_DISPOSITION.md` (the owner's disposition, verbatim),
+    `review/GEMINI_REVIEW.md` (the review, verbatim; a byte-for-byte copy of the owner's file, added after
+    `9f13c3a`), a dated amendment to RESULTS.md (with one erratum: a core-row hash abbreviation typo, `…a608e02d` for
     `…a20608e02d`) and `CLOSURE.md`. **M13 CLOSED.**
 
 The design, as frozen. The proposal was approved on the owner's word "Approve with diagnostics".

@@ -35,7 +35,7 @@ ok(sha(fs.readFileSync(`${M}/review/M13_REVIEW_BUNDLE.md`)) === '6402fe131e82ff1
 
 // 2. the closure changed documentation only
 const changed = [...new Set([...git('diff', '--name-only', REVIEWED).split('\n'), ...git('ls-files', '--others', '--exclude-standard').split('\n')].filter(Boolean))].sort();
-const allowed = new Set(['docs/engineering/PROJECT_STATE.md', `${M}/RESULTS.md`, `${M}/CLOSURE.md`, `${M}/review/REVIEW_DISPOSITION.md`, `${M}/review/check_closure_docs.mjs`, `${M}/review/check_closure_docs.out`]);
+const allowed = new Set(['docs/engineering/PROJECT_STATE.md', `${M}/RESULTS.md`, `${M}/CLOSURE.md`, `${M}/review/REVIEW_DISPOSITION.md`, `${M}/review/GEMINI_REVIEW.md`, `${M}/review/check_closure_docs.mjs`, `${M}/review/check_closure_docs.out`]);
 ok(changed.every((f) => allowed.has(f)), `files changed since ${REVIEWED}: ${changed.join(', ')}`);
 const was = git('show', `${REVIEWED}:${M}/RESULTS.md`), now = read(`${M}/RESULTS.md`);
 const title = was.split('\n')[0] + '\n';
@@ -43,6 +43,15 @@ const pointerEnd = now.indexOf('\n\n', title.length + 1);
 const withoutPointer = title + now.slice(pointerEnd + 1);
 ok(now.startsWith(title + '\n> **Amended 2026-11-18') && withoutPointer.startsWith(was) && withoutPointer.slice(was.length).startsWith('\n## Amendment after the independent review (2026-11-18)'),
   'RESULTS.md: the reviewed text is kept whole; only a pointer under the title and a dated amendment at the end were added');
+
+// 2b. the review text, lodged verbatim after 9f13c3a (added to this check when the owner supplied the file)
+const REVIEW = `${M}/review/GEMINI_REVIEW.md`, REVIEW_SHA = '7c8ab0f525b3b4c232af58edaa7538161e1dee0839017cc2e33276a1c5b0d2b9';
+const reviewBytes = fs.readFileSync(REVIEW), reviewText = reviewBytes.toString('utf8');
+ok(sha(reviewBytes) === REVIEW_SHA && reviewBytes.length === 7452, `GEMINI_REVIEW.md is the supplied file, byte for byte (SHA-256 ${REVIEW_SHA.slice(0, 8)}…, 7,452 bytes)`);
+ok(read(`${M}/review/REVIEW_DISPOSITION.md`).includes(REVIEW_SHA), 'REVIEW_DISPOSITION.md records its full SHA-256');
+ok(/\]\(GEMINI_REVIEW\.md\)/.test(read(`${M}/review/REVIEW_DISPOSITION.md`)) && /\]\(review\/GEMINI_REVIEW\.md\)/.test(read(`${M}/CLOSURE.md`)), 'REVIEW_DISPOSITION.md and CLOSURE.md link to GEMINI_REVIEW.md');
+ok(reviewText.includes('DEFENSIBLE WITH SPECIFIC QUALIFICATIONS') && /MATERIAL Findings:\*\* None/.test(reviewText) && reviewText.includes('`3602576`'),
+  'the review text names commit 3602576, concludes DEFENSIBLE WITH SPECIFIC QUALIFICATIONS and lists no material finding, as the disposition records');
 
 // 3. links in the closure documents resolve
 const docs = [`${M}/CLOSURE.md`, `${M}/review/REVIEW_DISPOSITION.md`, `${M}/RESULTS.md`];
@@ -66,7 +75,7 @@ const add = (h) => h && /^[0-9a-f]{40,64}$/.test(h) && known.add(h);
 frozen.forEach(([h]) => add(h)); sums.forEach(([h]) => add(h));
 Object.values(JSON.parse(read(`${M}/PINS.json`)).files).forEach(add);
 [result.specSha256, result.pinsSha256, result.worlds.bankSha256, result.determinism.rowsSha256RunA, result.headAtLaunch, ...Object.values(result.appFiles)].forEach(add);
-add(sha(fs.readFileSync(`${M}/review/M13_REVIEW_BUNDLE.md`)));
+add(sha(fs.readFileSync(`${M}/review/M13_REVIEW_BUNDLE.md`))); add(REVIEW_SHA);
 for (const c of git('log', '--format=%H', '-n', '400').split('\n')) add(c.trim());
 const ERRATA = new Map([['86f0bd3f…a608e02d', 'RESULTS.md amendment, erratum']]);
 const scan = [`${M}/CLOSURE.md`, `${M}/review/REVIEW_DISPOSITION.md`, `${M}/RESULTS.md`, `${M}/review/REVIEW_PACKAGE.md`];

@@ -14,12 +14,20 @@
 | Conclusion | **DEFENSIBLE WITH SPECIFIC QUALIFICATIONS** |
 | Material findings | **None.** No finding invalidates a verdict line or the summary statement |
 | Qualifications | Three, listed below |
+| Review text | [GEMINI_REVIEW.md](GEMINI_REVIEW.md), verbatim |
 
-**The review text is not lodged here.** The owner relayed the review's conclusion, its finding that nothing was
-material, and its three qualifications, in the disposition below. The full text of Gemini's review was not supplied
-to the repository, and this record does not reconstruct or paraphrase it beyond what the disposition states. If the
-owner supplies it, it is to be lodged verbatim as `review/GEMINI_REVIEW.md`, with its SHA-256, without changing this
-disposition.
+**The review text.** It is lodged verbatim as [GEMINI_REVIEW.md](GEMINI_REVIEW.md), a byte-for-byte copy of the file
+the owner supplied after the closure commit `9f13c3a`.
+- SHA-256 `7c8ab0f525b3b4c232af58edaa7538161e1dee0839017cc2e33276a1c5b0d2b9`; 7,452 bytes; CRLF line endings, kept.
+- It is stored byte-exact (the folder is `-text`).
+- When this disposition was first written at `9f13c3a`, only the owner's disposition below was on hand. This
+  disposition is unchanged by the lodging, and nothing in the review was summarized or rewritten.
+
+**One reading note on the review's text, without changing the disposition.** On question 3 and in its summary, the
+review says the family-selection limitation is disclosed in RESULTS §11. At the reviewed commit `3602576`, the
+selection was stated in PROPOSAL.md §2 and in the package's self-identified point 1. RESULTS §11 named "one family"
+and "descriptors move together", but not the selection itself. The selection is now stated in RESULTS.md's dated
+amendment, as qualification 1 below.
 
 ## The owner's disposition (verbatim)
 
@@ -95,6 +103,7 @@ qualifications on the claims. Each is recorded where the claims are made.
 
 **Changed (documentation only):**
 - this file;
+- `review/GEMINI_REVIEW.md` (the review, verbatim, added after `9f13c3a`);
 - `CLOSURE.md` (new);
 - a dated amendment at the end of `RESULTS.md`, with the three qualifications and one erratum, plus a three-line
   pointer to it under the title (no original sentence changed);

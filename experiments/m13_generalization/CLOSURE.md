@@ -49,7 +49,7 @@ structurally different family of worlds that no agent had seen?
 | Conclusion | **DEFENSIBLE WITH SPECIFIC QUALIFICATIONS** |
 | Material findings | None |
 | Disposition | [review/REVIEW_DISPOSITION.md](review/REVIEW_DISPOSITION.md). Accepted by the owner; verdicts preserved; the three qualifications recorded in RESULTS.md (dated amendment), here, and in PROJECT_STATE |
-| Review text | Not lodged: only the owner's disposition is on record. If supplied, it goes verbatim to `review/GEMINI_REVIEW.md` |
+| Review text | [review/GEMINI_REVIEW.md](review/GEMINI_REVIEW.md), verbatim. It is a byte-for-byte copy of the file the owner supplied after the closure commit `9f13c3a`: SHA-256 `7c8ab0f5…a1c5b0d2b9`, CRLF endings kept |
 
 ## Evidence
 
@@ -114,7 +114,9 @@ structurally different family of worlds that no agent had seen?
    run-time computation, which run B reproduced deterministically.
 7. Step totals differ in scale between M11, CF-06 and M13, so the cross-study raw comparisons are rough. The
    standardized effect is the like-for-like figure.
-8. The review's own text is not in the repository.
+8. The review attributes the family-selection disclosure to RESULTS §11. At the reviewed commit, the selection was
+   stated in PROPOSAL.md §2 and the package's self-identified point 1, and it is now in RESULTS.md's amendment
+   ([review/REVIEW_DISPOSITION.md](review/REVIEW_DISPOSITION.md), reading note). This changes no verdict.
 
 ## Consequence
 
