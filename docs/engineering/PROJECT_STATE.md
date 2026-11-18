@@ -12,7 +12,7 @@ work stands. Document index: [`docs/README.md`](../README.md).
 | Item | State |
 |---|---|
 | GitHub `main` | `2c5c591`, pushed 2026-11-18 as a fast-forward of 17 commits from `75530c3` (CF-06 through M12), on the owner's words "push also if you think that is right next approach". Fresh clone with `core.autocrlf=true` verified: M11 `SPEC.sha256`, M11 `results/SHA256SUMS` and M12 `analysis/SHA256SUMS` hold; `gate6_result.json` `91987509…` holds; `main.js`'s committed blob is `c92c5c6b…` (its on-disk bytes differ only by CRLF conversion, as `main.js` has no exact-bytes rule); `npm test` 184/184; legacy gate 14/14; the M12 analyses reproduce byte for byte (two of the three scripts only after the path fix below). 25 annotated tags; none added |
-| Local `main` | GitHub's `2c5c591` plus five local commits, none pushed: `728dd71` (state, and a fix for two M12 scripts that failed in folders whose path contains a space; outputs unchanged), `6381450` (M13 build), `b48453e` (M13 spec revision 2), `8619d71` (M13 freeze), and the M13 results commit. No push without the owner's explicit word |
+| Local `main` | GitHub's `2c5c591` plus six local commits, none pushed: `728dd71` (state, and a fix for two M12 scripts that failed in folders whose path contains a space; outputs unchanged), `6381450` (M13 build), `b48453e` (M13 spec revision 2), `8619d71` (M13 freeze), `b9a05e0` (M13 results), and the M13 review package. No push without the owner's explicit word |
 | Tests | `npm test` 195/195 (after the M13 build: 11 new tests; still 195/195 after the M13 run); legacy gate `experiments/phase1_0/verify_S2.js` 14/14 (run it from `experiments/phase1_0/`: it reads `../../neurons.json`) |
 | Push rule | No push without the owner's explicit word |
 
@@ -75,7 +75,14 @@ Since then:
 ## Waiting on the owner
 
 0. **M13** is run and recorded: NET ADVANTAGE RETAINED ON THE MODULAR FAMILY, WITHIN THE SAFETY MARGIN
-   (`experiments/m13_generalization/RESULTS.md`). The owner's reading of it is pending.
+   (`experiments/m13_generalization/RESULTS.md`). On the owner's instruction, M13 is to be closed scientifically
+   before anything else:
+   - the review package is ready (`experiments/m13_generalization/review/`, single file `M13_REVIEW_BUNDLE.md`);
+   - the owner arranges one bounded independent review;
+   - after it, only material correctness issues are addressed, by dated amendment;
+   - then a final M13 closure report.
+
+   No M14, no new experiment, no tuning, and no agent or application change without the owner's explicit approval.
 1. **Push** of the local commits after `2c5c591`, if wanted; everything up to `2c5c591` is on GitHub.
 2. **Closure ruling** retiring nine unrun legacy studies (AD-10; a proposed D-045).
 3. **Authorisation** for the legacy adapter's map-off hook in `main.js` (roadmap L1) and for app integration (M9).
@@ -155,6 +162,17 @@ commits.
 - **Allowed wording:** the belief kept its advantage over MBVI3 on one held-out structural family, in one
   development-level run, and recovered reopened routes faster there. Not: "generalizes" in general.
 - **Consequence:** none for AD-13 or the agent. The `m13|modular|*` labels and the graph bank are now spent.
+- **Review package (2026-11-18):** `experiments/m13_generalization/review/`. It contains:
+  - a cover with the claims, 13 questions, 12 self-identified points and the verification commands;
+  - a single-file bundle with all 76 files verbatim and hashed;
+  - a per-label table.
+
+  It adds one supplementary check: G4's inputs, rebuilt from the recorder's separate step log in the 18 traced runs.
+  All 108 events agree.
+
+  The most important self-identified point: the modular family was chosen before any agent ran on it, but with
+  M11/M12 knowledge, partly for its heavier tail of long detours. RESULTS §11 does not say so; the reviewer is asked
+  to judge it. No frozen file or result was changed.
 
 The design, as frozen. The proposal was approved on the owner's word "Approve with diagnostics".
 - **Revision 2** makes the owner's three corrections, approved with the driver's alignment ("Approve both").
