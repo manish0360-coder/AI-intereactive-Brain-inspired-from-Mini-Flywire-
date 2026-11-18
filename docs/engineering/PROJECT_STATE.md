@@ -73,8 +73,8 @@ Since then:
 
 ## Waiting on the owner
 
-0. **Freeze approval for M13** (`experiments/m13_generalization/SPEC.md`, draft revision 2). Then it is run once (about
-   2.5 hours).
+0. **M13** is frozen (revision 2, on the owner's word "Freeze and run"); its single run is in progress. Results
+   pending.
 1. **Push** of the local commits after `2c5c591`, if wanted; everything up to `2c5c591` is on GitHub.
 2. **Closure ruling** retiring nine unrun legacy studies (AD-10; a proposed D-045).
 3. **Authorisation** for the legacy adapter's map-off hook in `main.js` (roadmap L1) and for app integration (M9).
@@ -123,7 +123,7 @@ with it: `run/gate6_power_events.txt` (the Windows event-log extract behind the 
   false-alarm repair; against the four fixed policies tested; the full verdict line only at h = 0.01; one development
   gate.
 
-**M13 BUILT (2026-11-18), specification DRAFT revision 2 awaiting the owner's freeze approval: cognitive
+**M13 FROZEN (2026-11-18, revision 2, on the owner's word "Freeze and run"); single run in progress: cognitive
 generalization** (`experiments/m13_generalization/`). Proposal approved on the owner's word "Approve with diagnostics".
 - **Revision 2** makes the owner's three corrections, approved with the driver's alignment ("Approve both").
   - **Verdict:** five independent lines (validity; net advantage G1 primary; safety G2; recovery G3 and behavioural

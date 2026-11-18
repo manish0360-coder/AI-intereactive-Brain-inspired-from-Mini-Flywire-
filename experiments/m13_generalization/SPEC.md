@@ -1,11 +1,13 @@
 # M13 — cognitive generalization: the adopted belief on a held-out modular-ring family
 
-**Status.** DRAFT, revision 2, 2026-11-18. Built on the owner's word "Approve with diagnostics" (after
-[PROPOSAL.md](PROPOSAL.md)). Revision 2 makes the owner's three corrections: the verdict hierarchy, power and exclusions,
-and diagnostic attribution. The owner approved revision 2 and the driver's alignment to it ("Approve both"): the
-reading rule now writes the five lines and the summary statement, and G0 requires no exclusion. Awaiting the owner's
-freeze approval. The driver refuses to run the study unless this line begins "Frozen" and every
-line of `SPEC.sha256` matches.
+**Status.** Frozen, 2026-11-18, on the owner's word "Freeze and run", at revision 2.
+- **Built** on the owner's word "Approve with diagnostics", after [PROPOSAL.md](PROPOSAL.md).
+- **Revision 2** makes the owner's three corrections: the verdict hierarchy, power and exclusions, and diagnostic
+  attribution.
+- **Approved** by the owner, together with the driver's alignment to it ("Approve both"). The reading rule now writes
+  the five lines and the summary statement, and G0 requires no exclusion.
+
+The driver refuses to run the study unless this line begins "Frozen" and every line of `SPEC.sha256` matches.
 
 **Name.** "M13" is the owner's name for this milestone. Its folder is `experiments/m13_generalization/` because
 `experiments/m13/` holds an earlier, unrelated record guarded by its own verifier.
