@@ -232,3 +232,7 @@ experiments/m12_mechanism/** -text
 # M13-GENERALIZATION (cognitive generalization on a held-out modular-ring family): the driver checks SPEC.sha256 and
 # PINS.json over exact bytes. The legacy experiments/m13/ record is deliberately NOT covered.
 experiments/m13_generalization/** -text
+
+# M14-SCHEMA (schema abstraction and transfer, task E6): the driver checks SPEC.sha256 over exact bytes and the
+# result is cited by hash. The legacy experiments/m14/ record is deliberately NOT covered.
+experiments/m14_schema/** -text

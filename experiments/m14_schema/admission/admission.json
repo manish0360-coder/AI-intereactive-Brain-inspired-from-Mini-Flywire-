@@ -1,0 +1,632 @@
+{
+ "note": "development labels only; arms CONCRETE and ORACLE_SCHEMA; no learner arm ran",
+ "e6": {
+  "trainWorlds": 6,
+  "trainDistance": 2,
+  "trainEpisodes": 5,
+  "testDistance": 4,
+  "testEpisodes": 3,
+  "cap": 200
+ },
+ "census": {
+  "gate": {
+   "labels": 165,
+   "plannable": 165,
+   "excluded": []
+  },
+  "development": {
+   "labels": 30,
+   "plannable": 30,
+   "excluded": []
+  }
+ },
+ "concreteFirstEpisode": {
+  "mean": 36.166666666666664,
+  "median": 34.5,
+  "sd": 16.770424157927003,
+  "capped": 0
+ },
+ "oracleFirstEpisode": {
+  "mean": 4,
+  "min": 4,
+  "max": 4
+ },
+ "headroom": {
+  "n": 30,
+  "mean": 32.166666666666664,
+  "lo": 26.3,
+  "hi": 38.13333333333333,
+  "B": 10000,
+  "sd": 16.770424157927003,
+  "median": 30.5,
+  "positive": 29,
+  "negative": 0,
+  "zero": 1
+ },
+ "gate": {
+  "n": 165,
+  "mde": 3.6576814375881437,
+  "twiceMde": 7.315362875176287,
+  "sesoi": 8.041666666666666,
+  "powerAtSesoi": 0.9999866256449353,
+  "safetyMargin": 9
+ },
+ "checks": {
+  "A1": true,
+  "A2": true,
+  "A3": true
+ },
+ "rows": [
+  {
+   "label": "m14schema|dev|0",
+   "concrete": [
+    35,
+    26,
+    11
+   ],
+   "oracle": [
+    4,
+    53,
+    4
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|1",
+   "concrete": [
+    53,
+    15,
+    10
+   ],
+   "oracle": [
+    4,
+    49,
+    12
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|2",
+   "concrete": [
+    35,
+    23,
+    6
+   ],
+   "oracle": [
+    4,
+    29,
+    4
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|3",
+   "concrete": [
+    32,
+    30,
+    4
+   ],
+   "oracle": [
+    4,
+    51,
+    4
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|4",
+   "concrete": [
+    47,
+    12,
+    4
+   ],
+   "oracle": [
+    4,
+    27,
+    25
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|5",
+   "concrete": [
+    51,
+    4,
+    6
+   ],
+   "oracle": [
+    4,
+    54,
+    5
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|6",
+   "concrete": [
+    26,
+    8,
+    6
+   ],
+   "oracle": [
+    4,
+    30,
+    4
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|7",
+   "concrete": [
+    59,
+    12,
+    4
+   ],
+   "oracle": [
+    4,
+    60,
+    4
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|8",
+   "concrete": [
+    56,
+    7,
+    4
+   ],
+   "oracle": [
+    4,
+    48,
+    6
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|9",
+   "concrete": [
+    14,
+    12,
+    4
+   ],
+   "oracle": [
+    4,
+    22,
+    4
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|10",
+   "concrete": [
+    36,
+    7,
+    35
+   ],
+   "oracle": [
+    4,
+    66,
+    6
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|11",
+   "concrete": [
+    33,
+    6,
+    17
+   ],
+   "oracle": [
+    4,
+    43,
+    7
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|12",
+   "concrete": [
+    55,
+    4,
+    4
+   ],
+   "oracle": [
+    4,
+    35,
+    8
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|13",
+   "concrete": [
+    20,
+    20,
+    8
+   ],
+   "oracle": [
+    4,
+    34,
+    4
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|14",
+   "concrete": [
+    14,
+    40,
+    13
+   ],
+   "oracle": [
+    4,
+    22,
+    46
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|15",
+   "concrete": [
+    54,
+    23,
+    4
+   ],
+   "oracle": [
+    4,
+    58,
+    4
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|16",
+   "concrete": [
+    50,
+    4,
+    4
+   ],
+   "oracle": [
+    4,
+    32,
+    6
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|17",
+   "concrete": [
+    63,
+    4,
+    4
+   ],
+   "oracle": [
+    4,
+    56,
+    4
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|18",
+   "concrete": [
+    4,
+    23,
+    10
+   ],
+   "oracle": [
+    4,
+    16,
+    4
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|19",
+   "concrete": [
+    35,
+    6,
+    8
+   ],
+   "oracle": [
+    4,
+    31,
+    6
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|20",
+   "concrete": [
+    31,
+    28,
+    16
+   ],
+   "oracle": [
+    4,
+    52,
+    4
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|21",
+   "concrete": [
+    22,
+    25,
+    21
+   ],
+   "oracle": [
+    4,
+    36,
+    25
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|22",
+   "concrete": [
+    26,
+    4,
+    4
+   ],
+   "oracle": [
+    4,
+    8,
+    4
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|23",
+   "concrete": [
+    8,
+    62,
+    10
+   ],
+   "oracle": [
+    4,
+    42,
+    12
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|24",
+   "concrete": [
+    48,
+    12,
+    4
+   ],
+   "oracle": [
+    4,
+    18,
+    20
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|25",
+   "concrete": [
+    20,
+    22,
+    4
+   ],
+   "oracle": [
+    4,
+    56,
+    4
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|26",
+   "concrete": [
+    34,
+    4,
+    4
+   ],
+   "oracle": [
+    4,
+    16,
+    26
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|27",
+   "concrete": [
+    67,
+    4,
+    4
+   ],
+   "oracle": [
+    4,
+    59,
+    12
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|28",
+   "concrete": [
+    25,
+    6,
+    15
+   ],
+   "oracle": [
+    4,
+    25,
+    5
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  },
+  {
+   "label": "m14schema|dev|29",
+   "concrete": [
+    32,
+    4,
+    4
+   ],
+   "oracle": [
+    4,
+    26,
+    12
+   ],
+   "concreteDone": [
+    true,
+    true,
+    true
+   ],
+   "passive": true
+  }
+ ],
+ "admitted": true
+}

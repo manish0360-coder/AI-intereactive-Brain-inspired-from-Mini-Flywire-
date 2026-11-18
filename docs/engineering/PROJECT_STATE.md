@@ -13,7 +13,7 @@ work stands. Document index: [`docs/README.md`](../README.md).
 |---|---|
 | GitHub `main` | `603539a` (Gemini's M13 review lodged), pushed 2026-11-18 on the owner's explicit approval ("Yes, push them") as a fast-forward of 3 commits from `3602576`: `b07f4be` push record, `9f13c3a` M13 closure, `603539a` review text. A fresh GitHub clone with `core.autocrlf=true` passed the full closure check (`review/check_closure_docs.mjs`, 27 checks): frozen hashes, pins, result checksums, verdicts, `verify_m13`, the traces check, the reviewed bundle, `GEMINI_REVIEW.md` `7c8ab0f5…`, links and shortened hashes. 25 annotated tags; none added. Before that: `3602576` (the M13 review package), pushed 2026-11-18 as a fast-forward of 6 commits from `2c5c591` (`728dd71` state, then M13 build, revision 2, freeze, results and review package). Pushed on the owner's words "push if required", so that the reviewer can audit one fixed public commit and the raw result is held off this machine. A fresh GitHub clone with `core.autocrlf=true` was verified: M13 `SPEC.sha256` 4/4, `pins.mjs --check`, `results/SHA256SUMS` 13/13, `verify_m13.mjs` all pass, the traces check all agree, the bundle rebuilds identically (`6402fe13…`). `main.js` content `c92c5c6b…`. A local clone also passed `make_bank.mjs --check`, the descriptive scripts byte for byte and `npm test` 195/195. 25 annotated tags; none added. The previous push (`2c5c591`, CF-06 through M12, on "push also if you think that is right next approach") was verified the same way |
 | Local `main` | GitHub's `603539a` plus this state commit, which records that push. No push without the owner's explicit word |
-| Tests | `npm test` 195/195 (after the M13 build: 11 new tests; still 195/195 after the M13 run); legacy gate `experiments/phase1_0/verify_S2.js` 14/14 (run it from `experiments/phase1_0/`: it reads `../../neurons.json`) |
+| Tests | `npm test` (`scripts/test.mjs`, unchanged because M13 pins it) 195/195; `node scripts/test_all.mjs` 207/207, which is the same suite plus the 12 M14 tests; legacy gate `experiments/phase1_0/verify_S2.js` 14/14 (run it from `experiments/phase1_0/`: it reads `../../neurons.json`) |
 | Push rule | No push without the owner's explicit word |
 
 ## Done in this programme
@@ -74,6 +74,25 @@ Since then:
 
 ## Waiting on the owner
 
+00. **M14 (schema abstraction and transfer) is BUILT** (`experiments/m14_schema/SPEC.md`).
+   - **Pre-freeze audit:** on the owner's instruction, three questions (training sufficiency, decision influence and
+     the shuffled control) all PASS, with no material defect. Mechanism measured on `m14schema|audit|0..99`.
+   - **Freeze:** the owner said "Freeze and run". The build is committed first, then the freeze; the single run
+     follows.
+   - **How it got here:** the owner approved option B in the cognitive testbed ("Approve B in testbed") after the
+     read-only audit. The audit found that the app's `render/schemaMemory.js` stores exact node-ID motifs, with a slot
+     defect: slots are read from episode prefixes. It cannot match unseen nodes, and it changes 0.16% of choices.
+   - **The new parts (task E6 and the kind-schema learner and agent):**
+     - task E6 (`cognitive/testbed/task_e6.mjs`), signposted worlds;
+     - the learner and agent (`cognitive/mind/schema/`);
+     - library, driver and pins (`experiments/m14_schema/`);
+     - 12 tests (`cognitive/tests/test_m14_schema.mjs`), run by the new `scripts/test_all.mjs`. `scripts/test.mjs` is
+       unchanged, because M13 pins it.
+   - **Admission** (development labels, CONCRETE and ORACLE only): ADMITTED, headroom 32.2 [26.3, 38.1] steps; MDE 3.66
+     at n = 165; margin 9.
+   - **Census:** all 165 gate labels can be planned.
+   - **Not changed:** AD-13, v6, `env.mjs` and `main.js`.
+   - **Dropped:** the concrete-carry arm, which cannot run because v3 refuses a label whose exit count changes.
 0. **M13 is CLOSED** (2026-11-18; `experiments/m13_generalization/CLOSURE.md`). Nothing waits on M13. Any next
    step is the owner's decision. No new experiment, no tuning, and no agent or application change without the owner's
    explicit approval. Gemini's M13 review is lodged verbatim as

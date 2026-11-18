@@ -1,0 +1,5 @@
+census: gate 165 of 165 plannable; development 30 of 30
+CONCRETE first COMPOSE episode: mean 36.17 steps (median 34.5, sd 16.77, capped 0); ORACLE_SCHEMA mean 4.00 (min 4, max 4)
+headroom H = 32.17 [26.30, 38.13], sd 16.77, median 30.5, labels +/-/0 29/0/1
+gate n 165: MDE 3.66, 2 x MDE 7.32; smallest effect of interest H/4 = 8.04, power 1.000; safety margin ceil(H/4) = 9
+A1 true  A2 true  A3 true  -> ADMITTED
