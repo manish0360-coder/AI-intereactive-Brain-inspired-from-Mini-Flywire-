@@ -1,0 +1,19 @@
+PASS  the unmodified rehearsal result passes the verifier (exit 0)
+CAUGHT  a criterion estimate (T mean + 1): criteria (24 parts): every part's estimate, interval, definition and outcome recomputed (T 30.104166666666668/26.84375/3
+CAUGHT  a criterion bound (BT1 upper bound set to 0.05): criteria (24 parts): every part's estimate, interval, definition and outcome recomputed (BT1 0.07349161468986021/0.06763
+CAUGHT  a per-label value (BT2a, label 0, + 0.01): criteria (24 parts): every part's estimate, interval, definition and outcome recomputed (BT2a per-label values)
+CAUGHT  a pass flag (MECH-b flipped): criteria (24 parts): every part's estimate, interval, definition and outcome recomputed (MECH-b pass true vs false)
+CAUGHT  a closed-loop step count (CONCRETE, STABLE world 13, label 0, + 2): CONCRETE takes the same steps in every condition, world by world
+CAUGHT  a closed-loop step count before the switch (UA, REVERSED world 0, label 2, + 1): V-REV: every arm takes the same steps in STABLE and REVERSED through evaluation world s
+CAUGHT  a switch point (label 1, s + 1): every switch point s equals the task's draw
+CAUGHT  a BT-COND classification (SPARSE set to PASS): BT-COND: all four conditions present; ECE, 95% interval, family lower bound, direction and classification recomputed
+CAUGHT  the BT-COND line (set to SHOWN): BT-COND line: NOT SHOWN (NOISY INCONCLUSIVE, SPARSE MATERIAL FAIL, REV_PRE INCONCLUSIVE)
+CAUGHT  the statement (the full capability name claimed): the statement recomputed character for character
+CAUGHT  a sensitivity-arm outcome (UA_h05 BT1 pass flipped): sensitivity BT block UA_h05: every part's estimate, interval, definition and outcome recomputed (BT1 pass true vs false)
+CAUGHT  determinism (run B digest altered): run A = run B (every label's full record), and the digests hash to the stored value
+CAUGHT  a parameter (w* recorded as 3): w* 2, margin 8, n 165 from the admission record (ADMITTED)
+CAUGHT  provenance (SPEC.md hash altered): SPEC.md 00000000 = file = SPEC.sha256
+CAUGHT  a stored validity part (probeIsolation false): the stored validity parts are all true
+CAUGHT  a capped episode not recorded as 200 steps: every capped episode is recorded as 200 steps
+
+16 of 16 mutants caught; unmodified result passes

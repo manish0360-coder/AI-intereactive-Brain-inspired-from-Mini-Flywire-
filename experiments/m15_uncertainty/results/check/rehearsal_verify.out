@@ -1,0 +1,85 @@
+REHEARSAL (smoke labels; namespace, count and suite checks relaxed)
+result file sha256 1874696dcff7d6a1c6ef8890c2b41aaeff5ce5a78f9e48b3d0d84201ed5e47f9  (206316 bytes)
+PASS  SPEC.md is Frozen
+PASS  SPEC.md f8d7491f = file = SPEC.sha256
+PASS  PINS.json 44512350 = file = SPEC.sha256
+PASS  admission.json 32c1882e = file = SPEC.sha256
+PASS  every pinned file matches PINS.json now
+PASS  launched at 77edfe7, on top of the freeze commit 77edfe7, and HEAD unchanged during the run
+PASS  main.js unchanged
+SKIP  suite record (rehearsal)
+PASS  parameters: alpha, h, P, floor, B, censoring, window grid
+PASS  parameters: task E7
+PASS  parameters: sensitivity arms
+PASS  w* 2, margin 8, n 165 from the admission record (ADMITTED)
+PASS  the adopted agent (AD-13)
+PASS  labels m15unc|smoke|0..5, in numeric order
+PASS  6 labels (rehearsal)
+PASS  no label excluded
+PASS  every switch point s equals the task's draw
+PASS  run A = run B (every label's full record), and the digests hash to the stored value
+PASS  the stored validity parts are all true
+PASS  every label's stored checks are true
+PASS  every label has 7 arms x 4 conditions, with 28 worlds (17 in SPARSE)
+PASS  every episode took 4 to 200 steps (the route is the unique 4-hop shortest path)
+PASS  every capped episode is recorded as 200 steps
+PASS  ORACLE walks the route (4 steps) in every STABLE evaluation world
+PASS  CONCRETE takes the same steps in every condition, world by world
+PASS  V-REV: every arm takes the same steps in STABLE and REVERSED through evaluation world s
+PASS  identity: every non-privileged belief arm equals CONCRETE in the first world of every condition
+(passive replay recomputed for 6 labels x 4 conditions x 9 mechanisms in 0 s)
+PASS  criteria (24 parts): every part's estimate, interval, definition and outcome recomputed
+PASS  sensitivity BT block UA_a1: every part's estimate, interval, definition and outcome recomputed
+PASS  sensitivity BT block UA_h02: every part's estimate, interval, definition and outcome recomputed
+PASS  sensitivity BT block UA_h05: every part's estimate, interval, definition and outcome recomputed
+PASS  sensitivity BT block UA_h15: every part's estimate, interval, definition and outcome recomputed
+PASS  BT-COND: all four conditions present; ECE, 95% interval, family lower bound, direction and classification recomputed
+PASS  BT-COND line: NOT SHOWN (NOISY INCONCLUSIVE, SPARSE MATERIAL FAIL, REV_PRE INCONCLUSIVE)
+PASS  BT-COND: point-weighted mean and pooled ECE (= BT1's estimate) recomputed
+PASS  the verdict lines recomputed
+PASS  the statement recomputed character for character
+PASS  the full capability name appears only with BT, CD and BT-COND all SHOWN
+
+recomputed criteria (estimate [95%], pass):
+  T      T    29.1042 [26.8438, 31.5938] lo> 0  pass
+  BT1    BT   0.0735 [0.0676, 0.0795] hi< 0.1  pass
+  BT2a   BT   0.0872 [0.0689, 0.1043] lo> 0  pass
+  BT2b   BT   0.0464 [0.0406, 0.0533] lo> 0  pass
+  BT3a   BT   0.0660 [0.0456, 0.0832] hi< 0.1  pass
+  BT3b   BT   0.1016 [0.0840, 0.1220] lo> 0  pass
+  BT3c   BT   0.6642 [0.6045, 0.7253] lo> 0.5  pass
+  BT4    BT   0.0020 [0.0014, 0.0026] hi< 0.05  pass
+  BT5a   BT   -0.3958 [-0.3958, -0.3958] hi< 0.1  pass
+  BT5b   BT   0.3958 [0.3958, 0.3958] lo> 0  pass
+  CD1a   CD   4.0000 [4.0000, 4.0000] lo> 0  pass
+  CD1b   CD   1.0000 [1.0000, 1.0000] lo> 0.75  pass
+  CD2a   CD   0.0000 [0.0000, 0.0000] hi< 0.1  pass
+  CD2b   CD   0.2396 [0.1901, 0.2839] lo> 0  pass
+  CD3a   CD   1.0379 [0.9496, 1.1205] lo> 0  pass
+  CD3b   CD   1.4409 [1.4155, 1.4646] lo> 0  pass
+  ACT1a  ACT  -12.0208 [-14.6875, -9.4271] hi< 8  pass
+  ACT1b  ACT  7.3750 [4.4063, 11.0833] lo> 0  pass
+  ACT2a  ACT  11.3611 [1.7222, 20.6111] lo> 0  pass
+  ACT2b  ACT  11.6111 [3.4444, 19.6667] lo> 0  pass
+  ACT3   ACT  -23.2222 [-35.9444, -10.4444] hi< 8  pass
+  MECH-a MECH -0.0034 [-0.0091, 0.0039] lo> 0  FAIL
+  MECH-b MECH 1.0000 [1.0000, 1.0000] hi< 1  FAIL
+  MECH-c MECH 0.0114 [0.0023, 0.0228] lo> 0  pass
+recomputed BT-COND (UA, exact ECE by condition):
+  STABLE                      0.0824 [0.0824, 0.0824], family lower 0.0824, underconfident, PASS
+  NOISY                       0.0974 [0.0866, 0.1076], family lower 0.0826, overconfident, INCONCLUSIVE
+  SPARSE                      0.1945 [0.1945, 0.1945], family lower 0.1945, underconfident, MATERIAL FAIL
+  REVERSED before the switch  0.0966 [0.0936, 0.1026], family lower 0.0929, underconfident, INCONCLUSIVE
+  pooled 0.0735; point-weighted mean 0.1213
+
+illustration (fixed before the result):
+  m15unc|smoke|0: s = 6; UA route-stream detection delays [3,3,3,3]
+  mean steps, STABLE worlds 1-16     : CONCRETE 33.10  FROZEN 4.00  FREQ 4.00  NEWEST 4.00  WINDOW_w2 4.00  UA 4.00  ORACLE 4.00
+  mean steps, NOISY worlds 1-16      : CONCRETE 33.10  FROZEN 21.66  FREQ 21.70  NEWEST 28.46  WINDOW_w2 23.41  UA 21.08  ORACLE 20.42
+  mean steps, post-switch worlds 1-6 : CONCRETE 32.50  FROZEN 45.78  FREQ 46.03  NEWEST 12.42  WINDOW_w2 26.83  UA 34.42  ORACLE 4.00
+  mean steps, SPARSE worlds 1-3      : CONCRETE 38.06  FROZEN 19.50  FREQ 13.50  NEWEST 15.28  WINDOW_w2 13.50  UA 14.83  ORACLE 4.00
+
+stored statement: POOLED CALIBRATION AND CHANGE DETECTION SHOWN (development-selected h = 0.01), IN CLOSED-LOOP BEHAVIOUR; CALIBRATION ACROSS CONDITIONS NOT SHOWN: NOISY inconclusive (ECE 0.097 [0.087, 0.108]), UA materially underconfident in SPARSE (ECE 0.194), REVERSED before the switch inconclusive (ECE 0.097 [0.094, 0.103]); change detection not distinguished from a tuned window rule; originally specified h = 0.05 (sensitivity arm): BT parts passed 7 of 9 (failed: BT1, BT2b); BT1 pools the no-change conditions (pooled exact ECE 0.073); UA's exact ECE by condition (BT-COND, threshold 0.10): STABLE 0.082 [0.082, 0.082] underconfident, PASS; NOISY 0.097 [0.087, 0.108] overconfident, INCONCLUSIVE; SPARSE 0.194 [0.194, 0.194] underconfident, MATERIAL FAIL; REVERSED before the switch 0.097 [0.094, 0.103] underconfident, INCONCLUSIVE; point-weighted mean 0.121
+
+ALL CHECKS PASS (37 passed)
+git status of the repository: ?? experiments/m15_uncertainty/results/

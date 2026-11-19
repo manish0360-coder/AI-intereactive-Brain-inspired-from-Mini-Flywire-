@@ -80,8 +80,13 @@ Since then:
    - **Freeze:** 2026-11-19, on the owner's word "Freeze it". The build is `b692ed5`; the freeze is the commit after
      it, with SPEC.md `f8d7491f…`, PINS.json `44512350…` (45 files) and admission.json `32c1882e…`.
    - **Checks at the freeze:** the consistency check, re-run on the frozen SPEC, passes 56/56.
-   - **Next:** the independent check is written and committed before the run, and the run (`m15unc|gate|0..164`)
-     needs the owner's go. Not pushed.
+   - **Independent check:** `results/check/verify_m15.mjs`, written after the freeze and before the run, in the
+     commit after the freeze. It has its own beliefs, observation unit, scoring, probes, bootstrap, BT-COND and
+     reading rule.
+     - **Rehearsal:** on smoke labels `m15unc|smoke|0..5`, a result built exactly as the driver builds one,
+       recomputed in full (statement character for character).
+     - **Mutants:** 16 of 16 caught (`results/check/mutants.out`).
+   - **Next:** the run (`m15unc|gate|0..164`, once) needs the owner's go. Not pushed.
    - **History:** built 2026-11-18/19 on the owner's word "Approve M15 build", from PROPOSAL revision 3.1.
    - **New files only:**
      - task E7 (`cognitive/testbed/task_e7.mjs`);
