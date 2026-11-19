@@ -5,15 +5,15 @@ Results are recorded in [`docs/VERIFICATION_STATUS.md`](../VERIFICATION_STATUS.m
 [`docs/COGNITIVE_MILESTONE_ROADMAP.md`](../COGNITIVE_MILESTONE_ROADMAP.md) (testbed gates); this file records where
 work stands. Document index: [`docs/README.md`](../README.md).
 
-**Last updated:** 2026-11-18
+**Last updated:** 2026-11-19
 
 ## Repository
 
 | Item | State |
 |---|---|
-| GitHub `main` | `603539a` (Gemini's M13 review lodged), pushed 2026-11-18 on the owner's explicit approval ("Yes, push them") as a fast-forward of 3 commits from `3602576`: `b07f4be` push record, `9f13c3a` M13 closure, `603539a` review text. A fresh GitHub clone with `core.autocrlf=true` passed the full closure check (`review/check_closure_docs.mjs`, 27 checks): frozen hashes, pins, result checksums, verdicts, `verify_m13`, the traces check, the reviewed bundle, `GEMINI_REVIEW.md` `7c8ab0f5…`, links and shortened hashes. 25 annotated tags; none added. Before that: `3602576` (the M13 review package), pushed 2026-11-18 as a fast-forward of 6 commits from `2c5c591` (`728dd71` state, then M13 build, revision 2, freeze, results and review package). Pushed on the owner's words "push if required", so that the reviewer can audit one fixed public commit and the raw result is held off this machine. A fresh GitHub clone with `core.autocrlf=true` was verified: M13 `SPEC.sha256` 4/4, `pins.mjs --check`, `results/SHA256SUMS` 13/13, `verify_m13.mjs` all pass, the traces check all agree, the bundle rebuilds identically (`6402fe13…`). `main.js` content `c92c5c6b…`. A local clone also passed `make_bank.mjs --check`, the descriptive scripts byte for byte and `npm test` 195/195. 25 annotated tags; none added. The previous push (`2c5c591`, CF-06 through M12, on "push also if you think that is right next approach") was verified the same way |
-| Local `main` | GitHub's `603539a` plus `73ce604` (push record), `799bca2` (M14 build), `01f68da` (M14 freeze), `b8fea5b` (M14 results) and the M14 erratum commit; none pushed. No push without the owner's explicit word |
-| Tests | `npm test` (`scripts/test.mjs`, unchanged because M13 pins it) 195/195; `node scripts/test_all.mjs` 207/207, which is the same suite plus the 12 M14 tests; legacy gate `experiments/phase1_0/verify_S2.js` 14/14 (run it from `experiments/phase1_0/`: it reads `../../neurons.json`) |
+| GitHub `main` | `fd18489` (the M14 erratum), pushed 2026-11-18 on the owner's delegated word ("if you think push is needed for previous commit then do it otherwise proceed") as a fast-forward of 5 commits from `603539a`: `73ce604` push record, `799bca2` M14 build, `01f68da` M14 freeze, `b8fea5b` M14 results, `fd18489` erratum. A fresh GitHub clone (over HTTP/1.1, after the first attempt hit an HTTP/2 network error) verified M14's `SPEC.sha256`, `results/SHA256SUMS`, `pins.mjs --check`, M13's pins and the interval audit. No tags added. Before that: `603539a` (Gemini's M13 review lodged), pushed 2026-11-18 on the owner's explicit approval ("Yes, push them") as a fast-forward of 3 commits from `3602576`: `b07f4be` push record, `9f13c3a` M13 closure, `603539a` review text. A fresh GitHub clone with `core.autocrlf=true` passed the full closure check (`review/check_closure_docs.mjs`, 27 checks): frozen hashes, pins, result checksums, verdicts, `verify_m13`, the traces check, the reviewed bundle, `GEMINI_REVIEW.md` `7c8ab0f5…`, links and shortened hashes. 25 annotated tags; none added. Before that: `3602576` (the M13 review package), pushed 2026-11-18 as a fast-forward of 6 commits from `2c5c591` (`728dd71` state, then M13 build, revision 2, freeze, results and review package). Pushed on the owner's words "push if required", so that the reviewer can audit one fixed public commit and the raw result is held off this machine. A fresh GitHub clone with `core.autocrlf=true` was verified: M13 `SPEC.sha256` 4/4, `pins.mjs --check`, `results/SHA256SUMS` 13/13, `verify_m13.mjs` all pass, the traces check all agree, the bundle rebuilds identically (`6402fe13…`). `main.js` content `c92c5c6b…`. A local clone also passed `make_bank.mjs --check`, the descriptive scripts byte for byte and `npm test` 195/195. 25 annotated tags; none added. The previous push (`2c5c591`, CF-06 through M12, on "push also if you think that is right next approach") was verified the same way |
+| Local `main` | GitHub's `fd18489` plus the M15 commits (build, then freeze and the independent check; see "Waiting on the owner"); none pushed. No push without the owner's explicit word |
+| Tests | `npm test` (`scripts/test.mjs`, unchanged because M13 pins it) 195/195; `node scripts/test_all.mjs` 207/207, which is the same suite plus the 12 M14 tests (unchanged because M14 pins it); `node scripts/test_discover.mjs` 224/224 (2026-11-19, working tree), which runs every `cognitive/tests/test_*.mjs` by discovery, including the 17 M15 tests; legacy gate `experiments/phase1_0/verify_S2.js` 14/14 (run it from `experiments/phase1_0/`: it reads `../../neurons.json`) |
 | Push rule | No push without the owner's explicit word |
 
 ## Done in this programme
@@ -75,6 +75,54 @@ Since then:
 
 ## Waiting on the owner
 
+000. **M15 (Calibrated Adaptive Belief Tracking and Change Detection) is BUILT, with a DRAFT specification awaiting
+   the owner's freeze approval** (`experiments/m15_uncertainty/SPEC.md`). Built 2026-11-18/19 on the owner's word
+   "Approve M15 build", from PROPOSAL revision 3.1. Everything is uncommitted, unfrozen and unpushed.
+   - **New files only:**
+     - task E7 (`cognitive/testbed/task_e7.mjs`);
+     - the relational belief and its agent adapter (`cognitive/mind/relation_belief/`), which reuses M14's tie-break
+       agent unchanged;
+     - library, analysis, driver, pins and the development procedure (`experiments/m15_uncertainty/`);
+     - 17 tests (`cognitive/tests/test_m15_belief.mjs`; 16 at the build, plus the BT-COND test from the freeze
+       preparation), run by a new discovery runner (`scripts/test_discover.mjs` with
+       `cognitive/tests/run_discover.mjs`). Suite: 224/224.
+   - **Not changed:** AD-13, v6, `env.mjs`, `main.js`, M13 and M14; both studies' pins still match.
+   - **One correction to the proposal (D1), decided before any development label:** the observation unit takes the
+     FIRST occurrence of a kind on the loop-erased path, not the last. The last under-samples corrupted steps: under
+     NOISY its reliability is 0.833, not θ*'s 0.75 (exact enumeration, confirmed on E7's generator:
+     `spec_inputs/observation_unit.*`). Six clarifications (C1–C6) are listed in the SPEC.
+   - **Development procedure** (`m15unc|dev|0..59`): ADMITTED (A1–A4). w* = 2; headroom 30.27 [29.01, 31.56] steps;
+     margin 8; n = 165, the floor.
+   - **What development predicts:** every T, BT, CD and ACT part is on its passing side, most by a wide margin, so
+     the passive lines are close to determined. MECH is on its failing side: the tuned window is better on Brier, and
+     UA detects one observation later on every label. The SPEC states this before the freeze.
+   - **Pre-freeze review** (2026-11-19, on the owner's "Review first"; SPEC § Pre-freeze review): no code defect;
+     admission reproduced; no criterion changed.
+     - **R1, BT1:** the pooled no-change ECE (0.0736) hides opposite errors. UA's ECE by condition is STABLE 0.0824
+       under, NOISY 0.0937 over, SPARSE 0.1945 under and REVERSED-before 0.0978 under; the point-weighted mean is
+       0.1205. The by-condition profile is now reported and carried in the statement. A per-condition BT1 is offered
+       as the owner's choice at the freeze; it is predicted to fail on SPARSE.
+     - **R2, BT5:** it can show only "not overconfident", because NEWEST is exactly right in SPARSE.
+     - **R3:** the omitted P(r_t ≤ 3) report is added.
+     - **R4:** the yoked stream is much noisier (UA's NOISY P(true value) 0.5446 against 0.8080 on the route stream).
+   - **Owner's ruling on BT1** (2026-11-19): do not freeze yet; keep BT1 unchanged; make the four condition results
+     mandatory; do not claim calibration across all conditions if any condition materially fails.
+   - **Freeze preparation** (2026-11-19, on the owner's "GO: Prepare M15 for freeze"): SPEC.md is a FREEZE
+     CANDIDATE.
+     - **BT-COND added**, labelled as added after development results were observed:
+       - per condition, PASS means the 95% upper bound is below 0.10, and MATERIAL FAIL means the four-way Bonferroni
+         lower bound is at or above 0.10; anything else is INCONCLUSIVE;
+       - "calibration across conditions" reads SHOWN only if all four pass;
+       - all four results are mandatory (otherwise the run is INVALID);
+       - the full capability name needs BT, CD and BT-COND all to read SHOWN.
+     - **Predicted:** BT-COND NOT SHOWN (SPARSE MATERIAL FAIL), so the statement opens "POOLED CALIBRATION AND CHANGE
+       DETECTION SHOWN…; CALIBRATION ACROSS CONDITIONS NOT SHOWN: UA materially underconfident in SPARSE".
+     - **Unchanged:** BT1, every other criterion, w*, the margin and n. The admission was reproduced with the final
+       code.
+     - **Prepared:** PINS.json (45 files), the `.gitattributes` line, and the freeze consistency check
+       (`spec_inputs/freeze_consistency.*`).
+     - **Tests:** 17 M15 tests.
+   - **Next, on the owner's confirmation only:** the freeze commit, then the independent check, then the run once.
 00. **M14 (schema abstraction and transfer) is RUN and RECORDED: LEARNED RELATIONAL SCHEMA TRANSFERS TO UNSEEN
    COMBINATIONS, WITHIN THE SAFETY MARGIN** (`experiments/m14_schema/RESULTS.md`). The owner's reading is pending.
    - **The lines:** VALID; transfer SHOWN (P1 +30.3 [27.4, 33.3], P2 +25.7 [23.0, 28.5]); SAFE (S −0.11
@@ -118,8 +166,8 @@ Since then:
    step is the owner's decision. No new experiment, no tuning, and no agent or application change without the owner's
    explicit approval. Gemini's M13 review is lodged verbatim as
    `experiments/m13_generalization/review/GEMINI_REVIEW.md` (SHA-256 `7c8ab0f5…a1c5b0d2b9`).
-1. **Push:** everything up to `603539a` is on GitHub, including the M13 closure and the review text. The later local
-   state commit is pushed only on the owner's explicit approval.
+1. **Push:** everything up to `fd18489` is on GitHub, including M14 (build, freeze, results, erratum). Any later
+   commit is pushed only on the owner's explicit approval.
 2. **Closure ruling** retiring nine unrun legacy studies (AD-10; a proposed D-045).
 3. **Authorisation** for the legacy adapter's map-off hook in `main.js` (roadmap L1) and for app integration (M9).
 4. An **erratum** for `experiments/coga/README.md`, which still calls ACQ-1 "SUPPORTED" against D-035.

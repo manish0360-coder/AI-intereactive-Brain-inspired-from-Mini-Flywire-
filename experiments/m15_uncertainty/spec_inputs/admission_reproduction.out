@@ -1,0 +1,84 @@
+# M15 pre-freeze review, 2026-11-19: the development procedure (admission/admission.mjs) re-run with the code as revised at the review.
+# The re-run's admission.json was compared with the stored one (SHA-256 32c1882e...07d4) with the field 'seconds' removed from both; the stored file was then restored unchanged.
+# comparison: identical except seconds: true (seconds 187 stored, 207 re-run)
+# re-run console output follows
+development label 10 of 60, 34 s
+development label 20 of 60, 67 s
+development label 30 of 60, 104 s
+development label 40 of 60, 134 s
+development label 50 of 60, 171 s
+development label 60 of 60, 205 s
+development labels run: 60 (excluded 0)
+w*: 2 (objective w=2 0.19604524922407365, w=3 0.21211117607655516, w=4 0.23081340453366922)
+headroom H = 30.271875 [29.014583333333334, 31.55625], sd 5.074508735198087; margin ceil(H/4) = 8
+n = 165 (largest part 45; clamp [165, 600])
+  T      paired  dev 30.271875 lo> 0  effect 30.271875  spread 5.074508735198087  n 2  power@n 1
+  BT1    cluster dev 0.07357203002788448 hi< 0.1  effect 0.026427969972115523  spread 0.001125520316525285  n 8  power@n 1
+  BT2a   paired  dev 0.08299163859031894 lo> 0  effect 0.08299163859031894  spread 0.024992078217018876  n 6  power@n 1
+  BT2b   cluster dev 0.044789898076690426 lo> 0  effect 0.044789898076690426  spread 0.0012171832036806103  n 3  power@n 1
+  BT3a   cluster dev 0.05803275589478629 hi< 0.1  effect 0.041967244105213714  spread 0.004506494744160895  n 45  power@n 0.9999999958351532
+  BT3b   paired  dev 0.1095655553666217 lo> 0  effect 0.1095655553666217  spread 0.0352345108882665  n 7  power@n 1
+  BT3c   cluster dev 0.7007678052123809 lo> 0.5  effect 0.2007678052123809  spread 0.007629348989629247  n 6  power@n 1
+  BT4    paired  dev 0.003472836845810179 hi< 0.05  effect 0.046527163154189824  spread 0.003451567967724265  n 1  power@n 1
+  BT5a   cluster dev -0.3958223425027649 hi< 0.1  effect 0.4958223425027649  spread 6.450718317051813e-14  n 1  power@n 1
+  BT5b   cluster dev 0.3958223425027649 lo> 0  effect 0.3958223425027649  spread 6.450718317051813e-14  n 1  power@n 1
+  CD1a   paired  dev 4 lo> 0  effect 4  spread 0  n 0  power@n 1
+  CD1b   cluster dev 1 lo> 0.75  effect 0.25  spread 0  n 0  power@n 1
+  CD2a   cluster dev 0.0033700980392156864 hi< 0.1  effect 0.09662990196078432  spread 0.0009433156510365036  n 1  power@n 1
+  CD2b   cluster dev 0.2171875 lo> 0  effect 0.2171875  spread 0.0071187722403475324  n 5  power@n 1
+  CD3a   paired  dev 1.0313532575041395 lo> 0  effect 1.0313532575041395  spread 0.09569546317471703  n 1  power@n 1
+  CD3b   paired  dev 1.439133482043072 lo> 0  effect 1.439133482043072  spread 0.027479750927209938  n 1  power@n 1
+  ACT1a  paired  dev -15.53125 hi< 8  effect 23.53125  spread 7.138382280950149  n 6  power@n 1
+  ACT1b  paired  dev 8.210416666666667 lo> 0  effect 8.210416666666667  spread 6.685732249595166  n 43  power@n 0.999999998460529
+  ACT2a  paired  dev 11.116666666666667 lo> 0  effect 11.116666666666667  spread 7.579416322453676  n 30  power@n 0.9999999999999567
+  ACT2b  paired  dev 9.761111111111113 lo> 0  effect 9.761111111111113  spread 6.912240205452804  n 33  power@n 0.9999999999994186
+  ACT3   paired  dev -23.833333333333336 hi< 8  effect 31.833333333333336  spread 16.002648085948522  n 17  power@n 1
+  power per line (product of parts, at half the development effect): {"T":1,"BT":0.9999999958351532,"CD":1,"ACT":0.9999999984599043}
+A1 headroom 30.271875 lower 29.014583333333334; 2 x MDE 2.2135321361969957 -> true
+A2 (a) FROZEN - ORACLE post-switch steps 38.63055555555555 [37.099999999999994, 40.1]; (b) NEWEST - FREQ false alarms in NOISY 0.22864583333333333 [0.21302083333333333, 0.24453125] -> true
+A3 {"identityWorld0":true,"absorbedMatches":true,"concretePassive":true,"vrevPassive":true,"vrevClosed":true,"probeIsolation":true,"frozenUnchanged":true} -> true
+A4 FREQ observations per kind after the warm-up 11.904166666666667; per kind per post-switch world 0.9409722222222225 -> true
+ADMITTED
+admission.json written; 207 s
+
+# ---- second reproduction, 2026-11-19, at the freeze preparation: the final freeze-candidate code (BT-COND added; BT1 and the power rule unchanged)
+# comparison: identical except seconds: true (seconds 187 stored, 205 re-run)
+# re-run console output follows
+development label 10 of 60, 35 s
+development label 20 of 60, 67 s
+development label 30 of 60, 102 s
+development label 40 of 60, 132 s
+development label 50 of 60, 168 s
+development label 60 of 60, 202 s
+development labels run: 60 (excluded 0)
+w*: 2 (objective w=2 0.19604524922407365, w=3 0.21211117607655516, w=4 0.23081340453366922)
+headroom H = 30.271875 [29.014583333333334, 31.55625], sd 5.074508735198087; margin ceil(H/4) = 8
+n = 165 (largest part 45; clamp [165, 600])
+  T      paired  dev 30.271875 lo> 0  effect 30.271875  spread 5.074508735198087  n 2  power@n 1
+  BT1    cluster dev 0.07357203002788448 hi< 0.1  effect 0.026427969972115523  spread 0.001125520316525285  n 8  power@n 1
+  BT2a   paired  dev 0.08299163859031894 lo> 0  effect 0.08299163859031894  spread 0.024992078217018876  n 6  power@n 1
+  BT2b   cluster dev 0.044789898076690426 lo> 0  effect 0.044789898076690426  spread 0.0012171832036806103  n 3  power@n 1
+  BT3a   cluster dev 0.05803275589478629 hi< 0.1  effect 0.041967244105213714  spread 0.004506494744160895  n 45  power@n 0.9999999958351532
+  BT3b   paired  dev 0.1095655553666217 lo> 0  effect 0.1095655553666217  spread 0.0352345108882665  n 7  power@n 1
+  BT3c   cluster dev 0.7007678052123809 lo> 0.5  effect 0.2007678052123809  spread 0.007629348989629247  n 6  power@n 1
+  BT4    paired  dev 0.003472836845810179 hi< 0.05  effect 0.046527163154189824  spread 0.003451567967724265  n 1  power@n 1
+  BT5a   cluster dev -0.3958223425027649 hi< 0.1  effect 0.4958223425027649  spread 6.450718317051813e-14  n 1  power@n 1
+  BT5b   cluster dev 0.3958223425027649 lo> 0  effect 0.3958223425027649  spread 6.450718317051813e-14  n 1  power@n 1
+  CD1a   paired  dev 4 lo> 0  effect 4  spread 0  n 0  power@n 1
+  CD1b   cluster dev 1 lo> 0.75  effect 0.25  spread 0  n 0  power@n 1
+  CD2a   cluster dev 0.0033700980392156864 hi< 0.1  effect 0.09662990196078432  spread 0.0009433156510365036  n 1  power@n 1
+  CD2b   cluster dev 0.2171875 lo> 0  effect 0.2171875  spread 0.0071187722403475324  n 5  power@n 1
+  CD3a   paired  dev 1.0313532575041395 lo> 0  effect 1.0313532575041395  spread 0.09569546317471703  n 1  power@n 1
+  CD3b   paired  dev 1.439133482043072 lo> 0  effect 1.439133482043072  spread 0.027479750927209938  n 1  power@n 1
+  ACT1a  paired  dev -15.53125 hi< 8  effect 23.53125  spread 7.138382280950149  n 6  power@n 1
+  ACT1b  paired  dev 8.210416666666667 lo> 0  effect 8.210416666666667  spread 6.685732249595166  n 43  power@n 0.999999998460529
+  ACT2a  paired  dev 11.116666666666667 lo> 0  effect 11.116666666666667  spread 7.579416322453676  n 30  power@n 0.9999999999999567
+  ACT2b  paired  dev 9.761111111111113 lo> 0  effect 9.761111111111113  spread 6.912240205452804  n 33  power@n 0.9999999999994186
+  ACT3   paired  dev -23.833333333333336 hi< 8  effect 31.833333333333336  spread 16.002648085948522  n 17  power@n 1
+  power per line (product of parts, at half the development effect): {"T":1,"BT":0.9999999958351532,"CD":1,"ACT":0.9999999984599043}
+A1 headroom 30.271875 lower 29.014583333333334; 2 x MDE 2.2135321361969957 -> true
+A2 (a) FROZEN - ORACLE post-switch steps 38.63055555555555 [37.099999999999994, 40.1]; (b) NEWEST - FREQ false alarms in NOISY 0.22864583333333333 [0.21302083333333333, 0.24453125] -> true
+A3 {"identityWorld0":true,"absorbedMatches":true,"concretePassive":true,"vrevPassive":true,"vrevClosed":true,"probeIsolation":true,"frozenUnchanged":true} -> true
+A4 FREQ observations per kind after the warm-up 11.904166666666667; per kind per post-switch world 0.9409722222222225 -> true
+ADMITTED
+admission.json written; 205 s

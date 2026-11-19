@@ -236,3 +236,7 @@ experiments/m13_generalization/** -text
 # M14-SCHEMA (schema abstraction and transfer, task E6): the driver checks SPEC.sha256 over exact bytes and the
 # result is cited by hash. The legacy experiments/m14/ record is deliberately NOT covered.
 experiments/m14_schema/** -text
+
+# M15-UNCERTAINTY (calibrated adaptive belief tracking and change detection, task E7): the driver checks SPEC.sha256
+# over exact bytes and the result is cited by hash. The legacy experiments/m15/ record is deliberately NOT covered.
+experiments/m15_uncertainty/** -text

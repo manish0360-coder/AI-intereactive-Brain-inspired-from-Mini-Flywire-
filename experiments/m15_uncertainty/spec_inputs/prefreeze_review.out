@@ -1,0 +1,32 @@
+(1) exact calibration by no-change condition (route stream; cluster-bootstrap 95% intervals)
+  UA: pooled no-change ECE (BT1's quantity) 0.0736; point-weighted mean of the four conditions 0.1205
+    STABLE   ECE 0.0824 [0.0824, 0.0824]  direction 0.0824 (underconfident)  mean confidence 0.9176  exact accuracy 1.0000  points 3840
+    NOISY    ECE 0.0937 [0.0895, 0.0979]  direction -0.0673 (overconfident)  mean confidence 0.8097  exact accuracy 0.7424  points 3840
+    SPARSE   ECE 0.1945 [0.1945, 0.1945]  direction 0.1945 (underconfident)  mean confidence 0.8055  exact accuracy 1.0000  points 3840
+    REV_PRE  ECE 0.0978 [0.0966, 0.0991]  direction 0.0978 (underconfident)  mean confidence 0.9022  exact accuracy 1.0000  points 1536
+  UA_h05: pooled no-change ECE (BT1's quantity) 0.1151; point-weighted mean of the four conditions 0.1424
+    STABLE   ECE 0.1189 [0.1189, 0.1189]  direction 0.1189 (underconfident)  mean confidence 0.8811  exact accuracy 1.0000  points 3840
+    NOISY    ECE 0.0879 [0.0836, 0.0921]  direction -0.0051 (overconfident)  mean confidence 0.7288  exact accuracy 0.7238  points 3840
+    SPARSE   ECE 0.2240 [0.2240, 0.2240]  direction 0.2240 (underconfident)  mean confidence 0.7760  exact accuracy 1.0000  points 3840
+    REV_PRE  ECE 0.1334 [0.1323, 0.1347]  direction 0.1334 (underconfident)  mean confidence 0.8666  exact accuracy 1.0000  points 1536
+  other mechanisms, exact ECE (direction) by condition:
+    FREQ       pooled 0.0568 | STABLE 0.0733 (0.0733)  NOISY 0.1035 (-0.1027)  SPARSE 0.1870 (0.1870)  REV_PRE 0.0888 (0.0888)
+    NEWEST     pooled 0.1184 | STABLE 0.0000 (0.0000)  NOISY 0.4024 (-0.4024)  SPARSE 0.0000 (0.0000)  REV_PRE 0.0000 (0.0000)
+    WINDOW_w2  pooled 0.0543 | STABLE 0.0733 (0.0733)  NOISY 0.1126 (-0.1126)  SPARSE 0.1870 (0.1870)  REV_PRE 0.0888 (0.0888)
+    ORACLE     pooled 0.0000 | STABLE 0.0000 (0.0000)  NOISY 0.0000 (0.0000)  SPARSE 0.0000 (0.0000)  REV_PRE 0.0000 (0.0000)
+(2) thin evidence, SPARSE evaluation worlds 1-3: overconfidence (mean confidence - mean expected correctness)
+    UA       overconfidence -0.3958  mean confidence 0.6042  exact accuracy 1.0000
+    NEWEST   overconfidence 0.0000  mean confidence 1.0000  exact accuracy 1.0000
+    FREQ     overconfidence -0.3917  mean confidence 0.6083  exact accuracy 1.0000
+    UA_h05   overconfidence -0.4124  mean confidence 0.5876  exact accuracy 1.0000
+(3) UA change uncertainty, mean P(r_t <= 3) at belief points (route stream):
+    STABLE        0.0152   (h = 0.05: 0.0760)
+    NOISY         0.0524   (h = 0.05: 0.1781)
+    SPARSE        0.2008   (h = 0.05: 0.2539)
+    REV_PRE       0.0154   (h = 0.05: 0.0768)
+    REV_POST_1_2  0.0688   (h = 0.05: 0.2498)
+    REV_POST_3_6  0.3113   (h = 0.05: 0.4645)
+(4) secondary streams and the closed loop
+    UA mean P(true value) in NOISY: route stream 0.8080, yoked stream (CONCRETE's own observations) 0.5446
+    closed-loop detour share (observations not on the route): CONCRETE 0.415, FROZEN 0.126, FREQ 0.096, NEWEST 0.090, WINDOW_w2 0.081, UA 0.080, ORACLE 0.037
+exit 0

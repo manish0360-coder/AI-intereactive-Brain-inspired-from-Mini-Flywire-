@@ -1,0 +1,10 @@
+(1) exact enumeration: successor distribution of kind 0 (SIGMA(0) = 1), given that kind 0 occurs on the route
+  q = 0.10  last   P(y = 0..3) = 0.0090 0.9433 0.0282 0.0196   P(SIGMA(k)) = 0.9433 (theta* 0.9000)
+  q = 0.10  first  P(y = 0..3) = 0.0333 0.9000 0.0333 0.0333   P(SIGMA(k)) = 0.9000 (theta* 0.9000)
+  q = 0.25  last   P(y = 0..3) = 0.0250 0.8330 0.0814 0.0606   P(SIGMA(k)) = 0.8330 (theta* 0.7500)
+  q = 0.25  first  P(y = 0..3) = 0.0833 0.7500 0.0833 0.0833   P(SIGMA(k)) = 0.7500 (theta* 0.7500)
+  q = 0.40  last   P(y = 0..3) = 0.0434 0.6950 0.1450 0.1166   P(SIGMA(k)) = 0.6950 (theta* 0.6000)
+  q = 0.40  first  P(y = 0..3) = 0.1333 0.6000 0.1333 0.1333   P(SIGMA(k)) = 0.6000 (theta* 0.6000)
+(2) E7 generator, NOISY route kinds, 2,000 sequences x 16 evaluation worlds (labels m15unc|unit|0..1999)
+  last   observations 106674, share following SIGMA 0.8320 (SE 0.0011; theta* 0.7500, exact 0.8330)
+  first  observations 106674, share following SIGMA 0.7507 (SE 0.0013; theta* 0.7500, exact 0.7500)

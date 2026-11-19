@@ -1,0 +1,73 @@
+--- C:/Users/MANISH~1/AppData/Local/Temp/claude/e1f3cc35b2a8ec1e/a0c43cc2-458d-44d8-99a2-59e96bfdf7a6/scratchpad/m15_rev3/m15_design_calc.rev3.mjs	2026-11-18 23:14:57.609743100 +0530
++++ proposal_inputs/m15_design_calc.mjs	2026-11-18 23:20:19.407719800 +0530
+@@ -16,6 +16,8 @@
+ // against a sampled stream. Revision 1 of this file mixed two change-point conventions; revision 2 corrected it;
+ // revision 3 changes the evidence unit (n0 = 12 warm-up observations), adds WINDOW, the timing analysis (d), and the
+ // pooled calibration estimate (e) that led the proposal to h = 0.01 (h = 0.05 is predicted to be underconfident).
++// Revision 3.1 adds (f), the probe sample size: it is why the proposal uses P = 64 probes per kind per world. h = 0.01
++// is development-selected after section (e) showed h = 0.05 to be underconfident; h = 0.05 stays a sensitivity arm.
+ const K = 4;
+ function rules(AL) {
+   const A = K * AL;
+@@ -120,3 +122,61 @@
+     console.log(`  ${name.padEnd(13)} ECE ${ece.toFixed(3)}   mean confidence ${(pts.reduce((t, x) => t + x[1], 0) / pts.length).toFixed(3)}   mean expected accuracy ${(pts.reduce((t, x) => t + x[2], 0) / pts.length).toFixed(3)}`);
+   }
+ }
++
++// (f) Probe sample size (revision 3.1). Idealised passive streams for n = 165 labels x 4 kinds, no-change phases as
++// in (e); beliefs of UA (BOCPD h = 0.01) and NEWEST at every evaluation-world start. For P probe outcomes per kind
++// per world, drawn from theta* and IDENTICAL for both mechanisms, the Monte Carlo error that probe sampling adds:
++//   per label: probe Brier minus exact expected Brier (UA), and the same for the contrast NEWEST - UA;
++//   pooled: empirical top-1 ECE from probe outcomes against the exact ECE (expected accuracy theta*[argmax p]), and
++//   the probe AUROC of top-1 confidence for correctness; their spread over 20 independent probe draws.
++// Compared with the between-label SD of the exact quantities, which is what the bootstrap intervals reflect.
++{
++  const AL = 0.5, R = rules(AL), UA = R['BOCPD h=0.01'], NW = R.NEWEST;
++  const sigmaOnly = (n) => new Array(n).fill(0);
++  const NL = 165;
++  seed = 4242;
++  const labels = [];
++  for (let l = 0; l < NL; l++) {
++    const pts = [];
++    for (let k = 0; k < K; k++) {
++      const phase = (prefix, ev, thetaOf) => { for (let w = 0; w < ev.length; w++) { const o = [...prefix, ...ev.slice(0, w)]; pts.push({ pu: UA(o), pn: NW(o), th: thetaOf(w) }); } };
++      phase(sigmaOnly(12), sigmaOnly(16), () => onehot(0));
++      const th = noisy(0, 0.25); phase(sigmaOnly(12), Array.from({ length: 16 }, () => draw(th)), () => th);
++      phase(sigmaOnly(1), sigmaOnly(16), () => onehot(0));
++      const s = 2 + Math.floor(rnd() * 9); phase(sigmaOnly(12), sigmaOnly(s), () => onehot(0));
++    }
++    labels.push(pts);
++  }
++  const bri = (p, j) => p.reduce((s, v, i) => s + (v - (i === j ? 1 : 0)) ** 2, 0);
++  const sd = (xs) => { const m = xs.reduce((a, b) => a + b, 0) / xs.length; return Math.sqrt(xs.reduce((a, x) => a + (x - m) ** 2, 0) / (xs.length - 1)); };
++  const exactUA = labels.map((pts) => pts.reduce((s, x) => s + expBrier(x.pu, x.th), 0) / pts.length);
++  const exactC = labels.map((pts) => pts.reduce((s, x) => s + expBrier(x.pn, x.th) - expBrier(x.pu, x.th), 0) / pts.length);
++  const allPts = labels.flat();
++  const eceExact = (() => { const b = Array.from({ length: 10 }, () => ({ n: 0, c: 0, a: 0 })); for (const x of allPts) { const c = Math.max(...x.pu), a = argmax(x.pu); const bb = b[Math.min(9, Math.floor(c * 10))]; bb.n++; bb.c += c; bb.a += a < 0 ? 1 / K : x.th[a]; } return b.reduce((t, v) => t + (v.n ? (v.n / allPts.length) * Math.abs(v.a / v.n - v.c / v.n) : 0), 0); })();
++  console.log(`\n(f) probe sample size, n = ${NL} labels, ${allPts.length / NL} no-change belief points per label (4 kinds), UA = BOCPD h = 0.01, alpha = 1/2`);
++  console.log(`    between-label SD of the exact per-label quantities: UA expected Brier ${sd(exactUA).toFixed(4)}; NEWEST - UA ${sd(exactC).toFixed(4)}; exact pooled ECE (UA) ${eceExact.toFixed(4)}`);
++  console.log('    P   MC SD per-label UA probe Brier   MC SD per-label NEWEST-UA   pooled probe ECE: mean (MC SD)   probe AUROC: mean (MC SD)');
++  for (const P of [8, 16, 32, 64]) {
++    seed = 9000 + P;
++    const errUA = [], errC = [], eces = [], aucs = [];
++    for (let rep = 0; rep < 20; rep++) {
++      const bins = Array.from({ length: 10 }, () => ({ n: 0, c: 0, a: 0 })); const scored = [];
++      labels.forEach((pts, l) => {
++        let su = 0, sn = 0, m = 0;
++        for (const x of pts) for (let i = 0; i < P; i++) {
++          const y = draw(x.th); su += bri(x.pu, y); sn += bri(x.pn, y); m++;
++          const c = Math.max(...x.pu), a = argmax(x.pu), ok = a === y ? 1 : 0;
++          const bb = bins[Math.min(9, Math.floor(c * 10))]; bb.n++; bb.c += c; bb.a += ok; scored.push([c, ok]);
++        }
++        if (rep === 0) { errUA.push(su / m - exactUA[l]); errC.push((sn - su) / m - exactC[l]); }
++      });
++      eces.push(bins.reduce((t, v) => t + (v.n ? (v.n / scored.length) * Math.abs(v.a / v.n - v.c / v.n) : 0), 0));
++      scored.sort((a, b) => a[0] - b[0]);
++      let rankSumPos = 0, nPos = 0, i = 0;
++      while (i < scored.length) { let j = i; while (j < scored.length && scored[j][0] === scored[i][0]) j++; const avg = (i + 1 + j) / 2; for (let t = i; t < j; t++) if (scored[t][1]) { rankSumPos += avg; nPos++; } i = j; }
++      const nNeg = scored.length - nPos; aucs.push((rankSumPos - nPos * (nPos + 1) / 2) / (nPos * nNeg));
++    }
++    const mean = (xs) => xs.reduce((a, b) => a + b, 0) / xs.length;
++    console.log(`  ${String(P).padStart(3)}   ${sd(errUA).toFixed(4).padStart(10)}                     ${sd(errC).toFixed(4).padStart(10)}                ${mean(eces).toFixed(4)} (${sd(eces).toFixed(4)})               ${mean(aucs).toFixed(4)} (${sd(aucs).toFixed(4)})`);
++  }
++}

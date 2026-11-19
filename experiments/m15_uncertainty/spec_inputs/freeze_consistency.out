@@ -1,0 +1,70 @@
+A. parameters: code = SPEC "Fixed in advance" = the proposal
+PASS  alpha = 1/2
+PASS  h = 0.01, development-selected
+PASS  sensitivity arms
+PASS  P = 64 probes
+PASS  window grid {2, 3, 4}
+PASS  task E7 constants
+PASS  log floor 1e-6
+PASS  bins 10; B = 10,000; percentile indices 250 and 9749
+PASS  detection censoring
+PASS  BOCPD pruning 1e-12
+PASS  SIGMA and SIGMA^-1
+PASS  the adopted agent (AD-13)
+PASS  passive mechanisms at w* = 2
+PASS  closed-loop arms at w* = 2
+B. admission evidence = SPEC = the code that produced it
+PASS  admission.json SHA-256 32c1882ec1c7487d0f0146e4beb10f17845f0f3783496c74194308cb376807d4
+PASS  admitted; A1-A4 all hold
+PASS  w* = 2 and the objective values
+PASS  margin 8 = ceil(H / 4)
+PASS  n = 165 (largest part 45, BT3a)
+PASS  headroom quoted from the stored values (30.27 [29.01, 31.56])
+PASS  MDE quoted from the stored value
+PASS  A2 quoted from the stored values
+PASS  A4 quoted from the stored values
+PASS  the admission ran with the current M15 parameters
+PASS  admission: 60 development labels, none excluded
+PASS  development estimates quoted from the stored values
+PASS  admission reproduced twice (review code and final code): identical except its run time
+C. criteria table in SPEC = the code (names, lines, interval kinds, directions, thresholds)
+PASS  24 criterion rows in SPEC (24) and 24 parts in the code (24)
+PASS  every part matches its row
+PASS  parts per line: T 1, BT 9, CD 6, ACT 5, MECH 3
+PASS  BT1 unchanged: the SPEC row and the proposal's row (upper < 0.10)
+PASS  the admission powered exactly the T, BT, CD and ACT parts
+D. BT-COND (added after development results were observed): definition, mandatory results, statistics
+PASS  BT-COND: threshold 0.10, four conditions, family lower bound sorted[62]
+PASS  BT-COND is labelled in SPEC and code as added after development results
+PASS  BT-COND rows: tags and PASS / MATERIAL FAIL rules in SPEC
+PASS  (4) false PASS, false SHOWN and false FAIL treatment documented
+PASS  classification implements the documented rules (strict PASS, FAIL at >= 0.10)
+PASS  (1) the code produces all four condition results, with both bounds
+E. reading rule: the statement for each case
+PASS  (2) all four PASS: the full name is allowed
+PASS  (3) the development-like case: SPARSE MATERIAL FAIL prevents the full name; the statement distinguishes pooled from across conditions
+      statement: POOLED CALIBRATION AND CHANGE DETECTION SHOWN (development-selected h = 0.01), IN CLOSED-LOOP BEHAVIOUR; CALIBRATION ACROSS CONDITIONS NOT SHOWN: UA materially underconfident in SPARSE (ECE 0.195); change detection not distinguished from a tuned window rule; originally specified h = 0.05 (sensitivity arm): BT parts passed 9 of 9; BT1 pools the no-change conditions (pooled exact ECE 0.074); UA's exact ECE by condition (BT-COND, threshold 0.10): STABLE 0.082 [0.082, 0.082] underconfident, PASS; NOISY 0.094 [0.090, 0.098] overconfident, PASS; SPARSE 0.195 [0.195, 0.195] underconfident, MATERIAL FAIL; REVERSED before the switch 0.098 [0.097, 0.099] underconfident, PASS; point-weighted mean 0.120
+PASS  (1) the statement lists all four condition results
+PASS  (2) one INCONCLUSIVE condition also prevents SHOWN
+PASS  (4) when CD fails, each line is stated, the pooled line named as pooled
+PASS  (1) no condition results: INVALID
+PASS  (1) a missing condition result: INVALID
+PASS  a real BT-COND result (test labels) reaches the statement with all four conditions
+F. namespaces, driver, pins, tests, untouched studies
+PASS  gate labels m15unc|gate|<i>
+PASS  development, smoke, test and unit labels are refused
+PASS  the driver refuses the run while SPEC.md is not Frozen (exit 2)
+PASS  PINS.json matches the files (45 pinned)
+PASS  the pins cover the belief, the agents, both tasks, the library, the analysis, the admission record and the runner
+PASS  the M15 test file has 17 tests, as SPEC says, and discovery runs it
+PASS  m13_generalization: PINS.json still matches (unchanged)
+PASS  m14_schema: PINS.json still matches (unchanged)
+PASS  .gitattributes keeps experiments/m15_uncertainty/** byte-exact
+PASS  SPEC.md is a freeze candidate, not frozen
+
+candidate hashes (SPEC.md changes when its status line is set to Frozen; SPEC.sha256 is written then):
+  SPEC.md (candidate)       a996379206b1b59f45a72d4cf999e22ecb2cccc64aba1d23c9c6fa2d282013ec
+  PINS.json                 44512350fe5cc3ee551afd241b4951509490268be28043097c486c2c1175cf97
+  admission/admission.json  32c1882ec1c7487d0f0146e4beb10f17845f0f3783496c74194308cb376807d4
+
+ALL CHECKS PASS (56 passed)

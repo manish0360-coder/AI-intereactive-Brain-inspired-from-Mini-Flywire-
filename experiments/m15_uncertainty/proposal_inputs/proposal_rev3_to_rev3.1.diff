@@ -1,0 +1,276 @@
+--- C:/Users/MANISH~1/AppData/Local/Temp/claude/e1f3cc35b2a8ec1e/a0c43cc2-458d-44d8-99a2-59e96bfdf7a6/scratchpad/m15_rev3/PROPOSAL.rev3.md	2026-11-18 23:14:57.528776000 +0530
++++ PROPOSAL.md	2026-11-18 23:20:17.920712400 +0530
+@@ -1,12 +1,15 @@
+-# M15 — Calibrated Adaptive Belief Tracking and Change Detection: final proposal (revision 3)
++# M15 — Calibrated Adaptive Belief Tracking and Change Detection: final proposal (revision 3.1)
+ 
+-**Status.** PROPOSAL, revision 3, 2026-11-18, for the owner's approval. This is the final, bounded revision, made
+-after the independent falsification review the owner accepted. Nothing is implemented, run, committed or frozen,
+-and M14 and every earlier record are unchanged.
++**Status.** PROPOSAL, revision 3.1, 2026-11-18, for the owner's approval.
++- **Revision 3** was the final, bounded revision, made after the independent falsification review the owner
++  accepted.
++- **Revision 3.1** adds only the owner's two targeted clarifications: calibration measurement, and the classification
++  of the hazard ([§ Changes in revision 3.1](#changes-in-revision-31)).
++- **Nothing is implemented, run, committed, frozen, tagged or pushed.** M14 and every earlier record are unchanged.
+ 
+ **What exists so far.** The only computation is a design calculation on the update formulas, with no agent and no
+ task: [proposal_inputs/m15_design_calc.mjs](proposal_inputs/m15_design_calc.mjs) →
+-[.out](proposal_inputs/m15_design_calc.out), revision 3.
++[.out](proposal_inputs/m15_design_calc.out). Revision 3.1 adds section (f), the probe sample size.
+ 
+ **Name.** The folder stays `experiments/m15_uncertainty/`, but the capability under test is renamed, as the owner
+ required.
+@@ -110,19 +113,25 @@
+ | **WINDOW w** (non-Bayesian change rule) | Dirichlet(½) counts since the last reset. When the last w observations all equal a value u that is not the current unique most probable value, the counts are reset to those w observations (u with count w). w is chosen from {2, 3, 4} on development labels (§ 6.1). w = 2 is "switch after two agreeing contradictions" |
+ | **ORACLE** (privileged reference) | p = θ*_k |
+ 
+-**Analytic choices, disclosed.** α and h were chosen before any task run, from the formula calculation only, never
+-from task data.
+-- **α = ½ over α = 1:** sharper forecasts on near-deterministic relations (revision 2).
+-- **h = 0.01 replaces revision 2's h = 0.05.** The calculation's section (e) predicts that h = 0.05 keeps the belief
+-  systematically underconfident on the deterministic phases, so it would fail BT1: pooled ECE 0.118, mean confidence
+-  0.80 against an expected accuracy of 0.92. h = 0.01 gives 0.076.
+-- **Why 0.01 in particular:** it is the hazard AD-13 already uses for exits (CF-05b's value). It is not derived from
+-  M15's switch schedule (s ∈ {2, …, 10} evaluation worlds against 1/h = 100).
++**How α and h were chosen.** Both were chosen before any task run, from the formula calculation only, never from
++task data.
+ 
+-**Still to be judged by the owner.** This choice was made knowing what the calculation predicts for BT1.
++| Parameter | Classification | Basis |
++|---|---|---|
++| **α = ½** | Analytic, chosen in revision 2 | Sharper forecasts on near-deterministic relations than α = 1 |
++| **h = 0.01** | **Development-selected.** It replaced the originally specified h = 0.05 after the h = 0.05 calibration calculation had been seen | Section (e) predicts h = 0.05 to be systematically underconfident on the deterministic phases, and so to fail BT1: pooled ECE 0.118, mean confidence 0.80 against an expected accuracy of 0.92. h = 0.01 gives 0.076. The value 0.01 is AD-13's hazard for exits (CF-05b's value), not something derived from M15's switch schedule (s ∈ {2, …, 10} evaluation worlds, against 1/h = 100). It was nevertheless chosen **knowing** the predicted BT1 outcome of the alternative |
+ 
+-**The sensitivity arms** keep revision 2's analysis: α = 1, h = 0.02 and h = 0.15, plus h = 0.05 (the former value,
+-predicted to fail BT1). They are reported and never used to choose.
++**What this classification requires:**
++- **No confirmation claim.** UA's calibration performance at h = 0.01 is a test of a development-selected
++  configuration. A pass may be described only as calibration "with a development-selected hazard (h = 0.01)". It may
++  **not** be described as independent confirmation of the original hypothesis, which was specified with h = 0.05.
++- **The original specification is tested as specified.** h = 0.05 is kept as the **disclosed sensitivity arm**, and
++  its BT results are reported as the test of the originally specified parameter. Its BT1 is predicted to fail.
++- **Frozen before any confirmatory label.** Every parameter is fixed in SPEC.md and hashed at the freeze: α = ½;
++  h = 0.01; the sensitivity values α = 1 and h ∈ {0.02, 0.05, 0.15}; the probe count P = 64 (§ 4.1); the window grid
++  w ∈ {2, 3, 4}; every threshold. No gate label is accessed before then (§ 6.1).
++- **The sensitivity arms are reported and never used to choose.** They keep revision 2's analysis (α = 1, h = 0.02,
++  h = 0.15) and add h = 0.05.
+ 
+ ### 2.6 Decisions: certainty-equivalent (closed loop only)
+ 
+@@ -151,7 +160,9 @@
+ 
+ **Reading.**
+ - **Against the simple alternatives:** UA separates cleanly from FREQ (detection) and from NEWEST (false alarms,
+-  Brier, calibration), and is predicted to meet every absolute BT and CD threshold.
++  Brier, calibration). With the development-selected h = 0.01, it is predicted to meet every absolute BT and CD
++  threshold. The originally specified h = 0.05 is predicted to fail BT1. That prediction is part of why 0.01 was
++  selected, so it is no evidence for the hypothesis.
+ - **Against a tuned window rule:** UA does **not** separate. With w = 3 the window rule is as good or better on
+   delay, false alarms and calibration; UA is ahead only in expected Brier at 40% noise (0.649 against 0.659), a
+   regime M15 does not test.
+@@ -208,17 +219,50 @@
+ the stream is exogenous to every belief, yet it carries realistic detour noise. Every mechanism receives this
+ identical stream too.
+ 
+-**Probes**, which give independent, policy-free outcomes:
++**Ground truth is the primary comparison.** The evaluator knows the exact transition distribution θ*_k of every kind
++under the current regime (§ 2.2). Every belief p_k recorded at a world start is compared with θ*_k directly, with no
++sampling:
++- the expected Brier and expected log score;
++- the expected correctness of the top value;
++- the error of P(true value).
++
++Every criterion that can be computed this way is computed this way (§ 5).
++
++**Probes**, which give independent, policy-free realized outcomes:
+ - **When:** at the start of every evaluation world, before that world's observations are absorbed.
+ - **What:** every mechanism's belief p_k is recorded for **every** kind k, whether or not the agent ever visits it.
+-- **Outcomes:** for each kind, P = 8 probe outcomes are drawn from θ*_k (current regime) with the evaluator's stream
+-  `<label>|<condition>|probe|<world>|<k>`, the same draws for every mechanism.
++- **Outcomes:** for each kind, **P = 64** probe outcomes are drawn independently from θ*_k (current regime), with the
++  evaluator's stream `<label>|<condition>|probe|<world>|<k>`.
++- **Identical for every mechanism:** the outcomes are generated once per label, condition, world and kind, and every
++  inference mechanism (and, in the closed loop, every arm) is scored against the **same** outcome values.
++- **What they are used for:** the realized-outcome metrics, namely the probe Brier and probe log score, the empirical
++  reliability table and ECE, and the AUROC of confidence for correctness. The AUROC is the only criterion that needs
++  realized outcomes (BT3c).
+ - **Isolation:** probes are evaluation records only. They never reach any agent or mechanism, no update uses them, and
+   a test asserts this.
+ - **Why there is no selection bias:** probe points are fixed in advance (every kind, every evaluation world), and the
+   outcomes come from the environment's process, not from any path.
+ 
+-**Ground truth.** Each p_k is also compared directly with θ*_k (§ 2.2), with no sampling.
++**Why 64 probes, not 8.** Section (f) of the design calculation sets 165 idealised labels against their exact values
++(UA at h = 0.01):
++
++| P | MC SD of a label's probe Brier (UA) | MC SD of a label's probe contrast NEWEST − UA | MC SD of pooled probe ECE | MC SD of probe AUROC |
++|---|---|---|---|---|
++| 8 | 0.0081 | 0.0063 | 0.0004 | 0.0010 |
++| 16 | 0.0055 | 0.0038 | 0.0003 | 0.0008 |
++| 32 | 0.0043 | 0.0031 | 0.0003 | 0.0006 |
++| **64** | **0.0032** | **0.0021** | **0.0002** | **0.0004** |
++
++**Against the between-label spreads.** In those idealised streams the between-label SDs of the exact quantities are
++0.0045 (UA expected Brier) and 0.0216 (NEWEST − UA).
++- **Pooled quantities** (ECE, AUROC) are precise even at P = 8. The pooled probe ECE also matches the exact ECE
++  (0.076) at every P, so probe sampling adds no bias.
++- **Per-label probe scores** at P = 8 carry more Monte Carlo noise than the between-label signal they would
++  compare (0.0081 against 0.0045), and the contrast's noise is 29% of its spread.
++- **P = 64 brings the contrast's noise below 10% of its between-label spread** (0.0021 against 0.0216). The draws cost
++  nothing.
++- **Probe sampling decides no criterion except BT3c,** whose Monte Carlo SD (0.0004) is negligible against its margin
++  (a predicted AUROC of about 0.71 against 0.5).
+ 
+ ### 4.2 Active behaviour: closed loop
+ 
+@@ -237,13 +281,14 @@
+ 
+ | Metric | Definition |
+ |---|---|
+-| **Accuracy** | Probes: 1[argmax p = outcome], with a tie counted 1/#ties. Ground truth: 1[argmax p = argmax θ*] |
+-| **Brier** | Probes: Σ_j (p_j − 1[j = outcome])². Ground truth: the expected Brier under θ* |
+-| **Log score** | −log max(p_outcome, 10⁻⁶) on probes |
+-| **Calibration** | Top-1 and class-wise reliability tables (10 equal-width bins: n, mean confidence, observed frequency). ECE = Σ_b (n_b/N)\|freq_b − conf_b\|, with the direction (over- or underconfidence) |
+-| **Confidence against correctness** | Mean top-1 confidence on correct and on incorrect probes; the AUROC of confidence for correctness |
+-| **Reliability tracking** | Mean P(true value) against the true reliability (1.00 in STABLE, 0.75 in NOISY) |
+-| **Overconfidence** | Mean top-1 confidence − probe accuracy |
++| **Expected correctness** (primary) | For a belief p with top set T = argmax p: a = (1/\|T\|)·Σ_{j∈T} θ*_j, the exact probability that the top value occurs. **Exact accuracy** = its mean |
++| **Brier** | **Primary, exact:** E_θ*[Σ_j (p_j − 1[j = y])²] = Σ_y θ*_y Σ_j (p_j − 1[j = y])². **Probes (reported):** the mean over the 64 identical probe outcomes |
++| **Log score** | **Primary, exact:** −Σ_y θ*_y log max(p_y, 10⁻⁶). **Probes (reported):** the mean of −log max(p_outcome, 10⁻⁶) |
++| **Probe accuracy** (reported) | 1[argmax p = outcome], with a tie counted 1/\|T\| |
++| **Calibration (ECE)** | **Confidence:** c = max_j p_j. **Binning:** 10 equal-width bins on [0, 1], [b/10, (b+1)/10) for b = 0…8 and [0.9, 1.0] for b = 9; empty bins omitted. **Per bin:** n_b, mean confidence, and mean correctness. **ECE** = Σ_b (n_b/N)·\|correctness_b − conf_b\|. **Direction** = the sign of Σ_b (n_b/N)(correctness_b − conf_b); positive means underconfident. **Primary (exact):** correctness is the expected correctness a, and every belief point weighs 1. **Empirical (reported):** correctness is the probe indicator, and every probe outcome weighs 1. **Binning sensitivity (reported):** 10 equal-mass bins, and class-wise ECE over all K probabilities against θ*_j |
++| **Confidence against correctness** | The AUROC of c for probe correctness (ties take average ranks), and mean c on correct and on incorrect probes |
++| **Reliability tracking** | Mean P(true value), exact, against the true reliability (1.00 in STABLE, 0.75 in NOISY) |
++| **Overconfidence** | Mean c − mean expected correctness a (exact) |
+ | **Detection delay** | In REVERSED, per kind: post-switch observations absorbed before the belief's unique most probable value first equals σ⁻¹(k). Censored at 7 if it does not happen within 6. Also counted in worlds, and regressed on s (secondary) |
+ | **Detection rate** | Share of kinds detected within 6 post-switch observations |
+ | **False alarm** | In a no-change phase, a belief whose unique most probable value is not the current true value. Rate = false alarms / beliefs with a unique most probable value |
+@@ -258,15 +303,16 @@
+ |---|---|---|
+ | **T** | STABLE steps: CONCRETE − UA | lower > 0 |
+ 
+-**BT — calibrated belief tracking** (passive replay; probes and ground truth; no-change phases):
++**BT — calibrated belief tracking** (passive replay; no-change phases). Exact θ* everywhere except BT3c, which
++uses the identical probes:
+ 
+ | | Criterion | Passes when |
+ |---|---|---|
+-| **BT1** | Top-1 ECE on probes | upper < 0.10 |
+-| **BT2** | NEWEST − UA, in probe Brier and in probe ECE | both lower > 0 |
+-| **BT3** | (a) \|mean P(true value) − 0.75\| in NOISY; (b) mean P(true value), STABLE − NOISY; (c) AUROC | (a) upper < 0.10; (b) lower > 0; (c) lower > 0.5 |
+-| **BT4** | The change layer's cost: ground-truth expected Brier, UA − FREQ | upper < 0.05 |
+-| **BT5** | Thin evidence, SPARSE evaluation worlds 1–3: (a) UA's overconfidence; (b) NEWEST − UA overconfidence | (a) upper < 0.10; (b) lower > 0 |
++| **BT1** | Top-1 ECE (exact) | upper < 0.10 |
++| **BT2** | NEWEST − UA, in exact expected Brier and in exact ECE | both lower > 0 |
++| **BT3** | (a) \|mean P(true value) − 0.75\| in NOISY (exact); (b) mean P(true value), STABLE − NOISY (exact); (c) AUROC (probes) | (a) upper < 0.10; (b) lower > 0; (c) lower > 0.5 |
++| **BT4** | The change layer's cost: exact expected Brier, UA − FREQ | upper < 0.05 |
++| **BT5** | Thin evidence, SPARSE evaluation worlds 1–3: (a) UA's overconfidence (exact); (b) NEWEST − UA overconfidence (exact) | (a) upper < 0.10; (b) lower > 0 |
+ 
+ **CD — change detection** (passive replay):
+ 
+@@ -312,6 +358,9 @@
+ - **Behaviour:** "in closed-loop behaviour" is added only if Active behaviour reads SHOWN.
+ - **Mechanism:** "Bayesian change-point inference outperforms a simple rule" may be written only if MECH reads SHOWN.
+   Otherwise the record says that change detection was "not distinguished from a tuned window rule".
++- **Hazard:** every statement about UA's belief tracking must say that it used a development-selected hazard
++  (h = 0.01), and must report the originally specified h = 0.05 sensitivity arm's BT results beside it. A BT pass at
++  h = 0.01 is not to be described as independent confirmation of the original hypothesis.
+ - **Never claimed:** uncertainty-aware decision-making, confidence-aware exploration and metacognition, whatever the
+   result.
+ 
+@@ -329,9 +378,17 @@
+ ### 6.1 The development-label procedure
+ 
+ All of this happens before any gate label is exposed.
+-1. **Fixed before development runs:** every equation above, α = ½ and h = 0.01 (analytic, disclosed), q, the
+-   distribution of s, the sequence lengths, the probe design, every threshold, the evaluation code, the grid
+-   w ∈ {2, 3, 4}, and the tuning objective.
++1. **Fixed before development runs:**
++   - every equation above;
++   - α = ½ (analytic);
++   - h = 0.01, development-selected from the design calculation, as § 2.5 classifies it;
++   - the sensitivity values α = 1 and h ∈ {0.02, 0.05, 0.15};
++   - q, the distribution of s and the sequence lengths;
++   - the probe design (P = 64, identical outcomes);
++   - every threshold and the evaluation code;
++   - the grid w ∈ {2, 3, 4} and the tuning objective.
++
++   None of these changes after development data are seen.
+ 2. **The development run:** labels `m15unc|dev|0..59`, all arms, passive and closed loop.
+ 3. **Tuning WINDOW for its own benefit:** w* = argmin over w of WINDOW's mean ground-truth expected Brier in passive
+    replay, over every evaluation observation of every condition (conditions weighted equally). Ties go to the larger w.
+@@ -360,6 +417,14 @@
+   lesson).
+ - **Pooled quantities** (ECE, AUROC, rates, overconfidence): a cluster bootstrap that resamples labels, 10,000
+   resamples. It accounts for the dependence between kinds and worlds within a label.
++  - **How:** each resample draws 165 or more labels with replacement, using a stream seeded `m15unc|stats|m15|<name>`
++    over the labels in numeric order, and recomputes the pooled quantity from every belief point (and, for probe
++    metrics, every probe outcome) of the drawn labels, with the binning above.
++  - **The interval:** the 95% interval is the 2.5th and 97.5th percentiles of the resampled values.
++  - **Differences between mechanisms** (for example NEWEST − UA in ECE) are recomputed within the same resample,
++    because the labels are shared, so the interval is paired.
++  - **Bias:** using exact correctness removes the outcome-sampling bias of ECE. The binning sensitivity
++    (equal-mass bins) is reported beside it.
+ - **Rounding:** reported figures are rounded only from stored full-precision values (M14's erratum).
+ - **Reading the multiple criteria:** each line is an intersection-union test, so a SHOWN line's error rate is at most
+   5% without correction. Lines are separate claims and are reported separately. Secondary outcomes are uncorrected.
+@@ -405,15 +470,22 @@
+ - **Closed-loop evidence** carries detour steps, which is why inference is judged in passive replay.
+ - **The analytic choice of α and h** is disclosed, and the sensitivity arms are reported. h = 0.01 was chosen
+   knowing that the calculation predicts h = 0.05 to fail BT1.
+-- **The probe count** (8 per kind per world) bounds the resolution of the reliability bins.
++- **Probe-based metrics are secondary to the exact comparison.** 64 probes per kind per world keep probe Monte Carlo
++  error below 10% of the between-label spread of a probe contrast (§ 4.1).
++- **The equal-width bins** can be thinly populated at low confidence. Bin counts are published, and the equal-mass
++  binning is reported as a sensitivity check.
+ 
+ ## 8. GO / NO-GO
+ 
+ **GO for implementation of this reduced scope, conditional on the admission gate, and on the owner accepting two
+ facts.**
+ 
+-**First, the inference result is largely predicted by the formulas.** With h = 0.01, UA is expected to pass BT and CD
+-and to fail MECH. The tuned window rule is predicted to be at least as good.
++**First, the inference result is largely predicted by the formulas.**
++- With the development-selected h = 0.01, UA is expected to pass BT and CD and to fail MECH, and the tuned window
++  rule is predicted to be at least as good.
++- With the originally specified h = 0.05 (the sensitivity arm), BT1 is predicted to fail.
++- A BT pass at h = 0.01 would therefore not independently confirm the original hypothesis. It would show calibration
++  for a configuration selected using the design calculation.
+ 
+ **Second, the run is worth doing anyway, for three reasons:**
+ - **Real data:** it tests those predictions on real streams, with kinds that can be missing, and on the detour-laden
+@@ -481,3 +553,32 @@
+ 8. **The hazard changes from 0.05 to 0.01** (AD-13's hazard), because the calculation predicts h = 0.05 to be
+    systematically underconfident and to fail BT1 (ECE 0.118). This is disclosed in § 2.5, and h = 0.05 joins the
+    sensitivity arms.
++
++## Changes in revision 3.1
++
++These are the owner's two targeted clarifications only. Nothing in the scope, the agents, the task or the claim
++changes.
++
++1. **Calibration measurement:**
++   - **The exact known transition distribution θ\* is the primary ground-truth comparison** (§ 4.1, § 5): exact
++     expected Brier, exact expected log score, exact expected correctness, and an exact ECE that uses expected
++     correctness, so it has no outcome-sampling noise.
++   - **Criteria moved to exact values:** BT1, BT2, BT3a–b, BT4, BT5, CD3 and MECH-a. Only BT3c (AUROC) uses realized
++     outcomes.
++   - **Probes increased from 8 to 64 per kind per world.** They are drawn once, and every mechanism is scored on
++     identical outcomes. The justification is the new section (f) of the design calculation: at 8, a label's probe
++     contrast carries Monte Carlo noise of 29% of its between-label spread; at 64, under 10%. Pooled ECE and AUROC are
++     precise at either count.
++   - **Probe Brier and probe log score are reported** beside the exact values.
++   - **The ECE binning method is specified:** 10 equal-width bins with stated edges, exact and empirical weighting, and
++     the direction. The binning sensitivity is equal-mass and class-wise ECE.
++   - **Its uncertainty is specified:** a cluster bootstrap over labels, paired for differences between mechanisms.
++2. **Hazard selection:**
++   - **h = 0.01 is classified as development-selected,** chosen after the h = 0.05 calibration calculation had been
++     seen (§ 2.5).
++   - **What it permits:** its calibration result may not be described as independent confirmation of the original
++     hypothesis, and every BT statement must name the selection.
++   - **h = 0.05 stays the disclosed sensitivity arm.** Its BT results are reported as the test of the original
++     specification.
++   - **Frozen before any confirmatory label:** h and every sensitivity value (α = 1; h = 0.02, 0.05, 0.15), together
++     with P = 64 and the window grid.
