@@ -53,17 +53,17 @@ PASS  a real BT-COND result (test labels) reaches the statement with all four co
 F. namespaces, driver, pins, tests, untouched studies
 PASS  gate labels m15unc|gate|<i>
 PASS  development, smoke, test and unit labels are refused
-PASS  the driver refuses the run while SPEC.md is not Frozen (exit 2)
+PASS  SPEC.md is Frozen: the driver is not launched here; its refusal checks are present in its source
 PASS  PINS.json matches the files (45 pinned)
 PASS  the pins cover the belief, the agents, both tasks, the library, the analysis, the admission record and the runner
 PASS  the M15 test file has 17 tests, as SPEC says, and discovery runs it
 PASS  m13_generalization: PINS.json still matches (unchanged)
 PASS  m14_schema: PINS.json still matches (unchanged)
 PASS  .gitattributes keeps experiments/m15_uncertainty/** byte-exact
-PASS  SPEC.md is a freeze candidate, not frozen
+PASS  SPEC.md is Frozen and every line of SPEC.sha256 matches
 
 candidate hashes (SPEC.md changes when its status line is set to Frozen; SPEC.sha256 is written then):
-  SPEC.md (candidate)       a996379206b1b59f45a72d4cf999e22ecb2cccc64aba1d23c9c6fa2d282013ec
+  SPEC.md (candidate)       f8d7491ff9ce7d94d330b2c09084351fca9b71035b41b9d0536126f215d2ead7
   PINS.json                 44512350fe5cc3ee551afd241b4951509490268be28043097c486c2c1175cf97
   admission/admission.json  32c1882ec1c7487d0f0146e4beb10f17845f0f3783496c74194308cb376807d4
 

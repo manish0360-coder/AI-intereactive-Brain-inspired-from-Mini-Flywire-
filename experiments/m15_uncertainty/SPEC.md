@@ -1,13 +1,15 @@
 # M15 — Calibrated Adaptive Belief Tracking and Change Detection
 
-**Status.** FREEZE CANDIDATE, 2026-11-19. Not frozen.
+**Status.** Frozen, 2026-11-19, on the owner's word "Freeze it", given to the freeze package as presented. The build
+is commit `b692ed5`; this file, `PINS.json` and the admission record are hashed in `SPEC.sha256`.
 - **How it got here:**
   - built on the owner's word "Approve M15 build", exactly as [PROPOSAL.md](PROPOSAL.md) revision 3.1 specifies,
     except for one disclosed correction and six clarifications (§ Deviations);
   - the development procedure has run (§ Development procedure);
   - a pre-freeze review was done on the owner's "Review first" (§ Pre-freeze review);
   - the BT-COND line was added on the owner's "GO: Prepare M15 for freeze" (§ Freeze preparation).
-- **What is still needed:** the freeze waits for the owner's confirmation. Nothing is committed, frozen or pushed.
+- **What follows:** the independent check is written and committed before the run, and the run happens once.
+  Nothing is pushed without the owner's explicit word.
 - **Unchanged:** `main.js`, the app, AD-13, world model v6, `env.mjs`, M13 and M14.
 
 The driver refuses to run the study unless this line begins "Frozen" and every line of `SPEC.sha256` matches.

@@ -126,8 +126,15 @@ ok(LABEL_OF.m15(0) === 'm15unc|gate|0' && has('`m15unc|gate|0..n−1`'), 'gate l
 let refused = 0;
 for (const bad of [LABEL_OF.dev(0), LABEL_OF.smoke(0), 'm15unc|test|0', 'm15unc|unit|0']) { try { assertFreshLabels([bad]); } catch { refused++; } }
 ok(refused === 4, 'development, smoke, test and unit labels are refused');
-const drv = spawnSync(process.execPath, [path.join(HERE, 'run_m15.mjs'), '--domain', 'm15'], { cwd: ROOT, encoding: 'utf8' });
-ok(drv.status === 2 && /is not marked Frozen/.test(drv.stderr), `the driver refuses the run while SPEC.md is not Frozen (exit ${drv.status})`);
+// The driver is launched only while SPEC.md is NOT Frozen (it must refuse at once). Once Frozen, a committed clean
+// tree would let it start the official run, so it is never launched here: its refusal code is inspected instead.
+if (!/^\*\*Status\.\*\* Frozen/m.test(SPEC)) {
+  const drv = spawnSync(process.execPath, [path.join(HERE, 'run_m15.mjs'), '--domain', 'm15'], { cwd: ROOT, encoding: 'utf8' });
+  ok(drv.status === 2 && /is not marked Frozen/.test(drv.stderr), `the driver refuses the run while SPEC.md is not Frozen (exit ${drv.status})`);
+} else {
+  const src = fs.readFileSync(path.join(HERE, 'run_m15.mjs'), 'utf8');
+  ok(['is not marked Frozen', 'does not match its frozen SHA-256', 'files differ from PINS.json', 'files are not all committed and clean', 'the M15 labels have already been run', 'the test suite does not pass', 'does not admit the task'].every((m) => src.includes(m)), 'SPEC.md is Frozen: the driver is not launched here; its refusal checks are present in its source');
+}
 const pd = pinDifferences();
 ok(pd.length === 0, `PINS.json matches the files (${Object.keys(pinsNow()).length} pinned)${pd.length ? `: ${pd.join('; ')}` : ''}`);
 const pinned = Object.keys(pinsNow());
