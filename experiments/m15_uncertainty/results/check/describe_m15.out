@@ -1,0 +1,178 @@
+1. lines
+  validity: VALID
+  transfer: SHOWN
+  calibratedBeliefTracking: SHOWN
+  calibrationAcrossConditions: NOT SHOWN (SPARSE MATERIAL FAIL)
+  changeDetection: SHOWN
+  activeBehaviour: SHOWN
+  bayesianAdvantageOverTunedWindow: NOT SHOWN (failed: MECH-a, MECH-b; predicted NOT SHOWN)
+  statement: POOLED CALIBRATION AND CHANGE DETECTION SHOWN (development-selected h = 0.01), IN CLOSED-LOOP BEHAVIOUR; CALIBRATION ACROSS CONDITIONS NOT SHOWN: UA materially underconfident in SPARSE (ECE 0.194); change detection not distinguished from a tuned window rule; originally specified h = 0.05 (sensitivity arm): BT parts passed 8 of 9 (failed: BT1); BT1 pools the no-change conditions (pooled exact ECE 0.074); UA's exact ECE by condition (BT-COND, threshold 0.10): STABLE 0.082 [0.082, 0.082] underconfident, PASS; NOISY 0.094 [0.092, 0.097] overconfident, PASS; SPARSE 0.194 [0.194, 0.194] underconfident, MATERIAL FAIL; REVERSED before the switch 0.099 [0.098, 0.099] underconfident, PASS; point-weighted mean 0.121
+
+2. criteria (estimate [95%]; paired: labels for / against / zero; outcome)
+  T      T    30.4314 [29.6481, 31.2136] lo> 0  165/0/0, sd 5.0576  pass
+  BT1    BT   0.0739 [0.0727, 0.0753] hi< 0.1  pass
+  BT2a   BT   0.0835 [0.0801, 0.0869] lo> 0  165/0/0, sd 0.0227  pass
+  BT2b   BT   0.0455 [0.0440, 0.0468] lo> 0  pass
+  BT3a   BT   0.0549 [0.0494, 0.0604] hi< 0.1  pass
+  BT3b   BT   0.1127 [0.1072, 0.1182] lo> 0  165/0/0, sd 0.0359  pass
+  BT3c   BT   0.6982 [0.6893, 0.7069] lo> 0.5  pass
+  BT4    BT   0.0039 [0.0033, 0.0045] hi< 0.05  165/0/0, sd 0.0041  pass
+  BT5a   BT   -0.3958 [-0.3958, -0.3958] hi< 0.1  pass
+  BT5b   BT   0.3958 [0.3958, 0.3958] lo> 0  pass
+  CD1a   CD   4.0000 [4.0000, 4.0000] lo> 0  165/0/0, sd 0.0000  pass
+  CD1b   CD   1.0000 [1.0000, 1.0000] lo> 0.75  pass
+  CD2a   CD   0.0033 [0.0022, 0.0044] hi< 0.1  pass
+  CD2b   CD   0.2188 [0.2106, 0.2274] lo> 0  pass
+  CD3a   CD   1.0191 [1.0048, 1.0331] lo> 0  165/0/0, sd 0.0924  pass
+  CD3b   CD   1.4356 [1.4316, 1.4397] lo> 0  165/0/0, sd 0.0265  pass
+  ACT1a  ACT  -16.7212 [-17.8341, -15.6095] hi< 8  2/163/0, sd 7.2324  pass
+  ACT1b  ACT  9.1519 [8.3205, 10.0045] lo> 0  158/7/0, sd 5.4820  pass
+  ACT2a  ACT  9.1899 [7.8616, 10.4727] lo> 0  137/26/2, sd 8.6568  pass
+  ACT2b  ACT  7.8465 [6.6616, 9.0101] lo> 0  137/27/1, sd 7.7368  pass
+  ACT3   ACT  -22.2949 [-24.8202, -19.7778] hi< 8  15/149/1, sd 16.1882  pass
+  MECH-a MECH -0.0046 [-0.0055, -0.0037] lo> 0  32/133/0, sd 0.0059  FAIL
+  MECH-b MECH 1.0000 [1.0000, 1.0000] hi< 1  165/0/0, sd 0.0000  FAIL
+  MECH-c MECH 0.0098 [0.0082, 0.0116] lo> 0  pass
+
+3. BT-COND (UA, exact ECE by no-change condition)
+  STABLE   0.0824 [0.0824, 0.0824] family lower 0.0824  direction 0.0824  mean confidence 0.9176  exact accuracy 1.0000  points 10560  PASS
+  NOISY    0.0938 [0.0915, 0.0966] family lower 0.0909  direction -0.0644  mean confidence 0.8070  exact accuracy 0.7426  points 10560  PASS
+  SPARSE   0.1945 [0.1945, 0.1945] family lower 0.1945  direction 0.1945  mean confidence 0.8055  exact accuracy 1.0000  points 10560  MATERIAL FAIL
+  REV_PRE  0.0986 [0.0978, 0.0995] family lower 0.0976  direction 0.0986  mean confidence 0.9014  exact accuracy 1.0000  points 3988  PASS
+  pooled 0.0739; point-weighted mean 0.1208; line NOT SHOWN (SPARSE MATERIAL FAIL)
+
+4. sensitivity arms (BT block, reported)
+  UA_a1   7 of 9 pass (failed: BT1, BT2b); BT1 0.1413 [0.1402, 0.1425]
+  UA_h02  9 of 9 pass; BT1 0.0859 [0.0845, 0.0874]
+  UA_h05  8 of 9 pass (failed: BT1); BT1 0.1155 [0.1141, 0.1168]
+  UA_h15  5 of 9 pass (failed: BT1, BT2b, BT3a, BT4); BT1 0.2000 [0.1989, 0.2011]
+  UA_h05 by condition: STABLE 0.1189 (MATERIAL FAIL), NOISY 0.0888 (PASS), SPARSE 0.2240 (MATERIAL FAIL), REV_PRE 0.1342 (MATERIAL FAIL); pooled 0.1155
+
+5. passive route stream, per mechanism and scope: expected Brier, exact ECE (direction), mean confidence, exact accuracy, mean P(true), false-alarm rate, P(r <= 3)
+  UA
+    NO_CHANGE     Brier 0.1555  ECE 0.0739 (0.0739)  conf 0.8499  acc 0.9238  P(true) 0.8493  FA 0.0033  P(r<=3) 0.0814
+    STABLE        Brier 0.0094  ECE 0.0824 (0.0824)  conf 0.9176  acc 1.0000  P(true) 0.9176  FA 0.0000  P(r<=3) 0.0152
+    NOISY         Brier 0.4437  ECE 0.0938 (-0.0644)  conf 0.8070  acc 0.7426  P(true) 0.8049  FA 0.0111  P(r<=3) 0.0532
+    SPARSE        Brier 0.0671  ECE 0.1945 (0.1945)  conf 0.8055  acc 1.0000  P(true) 0.8055  FA 0.0000  P(r<=3) 0.2008
+    SPARSE_E0_2   Brier 0.2177  ECE 0.3958 (0.3958)  conf 0.6042  acc 1.0000  P(true) 0.6042  FA 0.0000  P(r<=3) 1.0000
+    REV_PRE       Brier 0.0132  ECE 0.0986 (0.0986)  conf 0.9014  acc 1.0000  P(true) 0.9014  FA 0.0000  P(r<=3) 0.0154
+    REV_POST_1_2  Brier 1.5978  ECE 0.8558 (-0.8558)  conf 0.8558  acc 0.0000  P(true) 0.0741  FA 1.0000  P(r<=3) 0.0680
+    REV_POST_3_6  Brier 0.2940  ECE 0.2020 (0.1116)  conf 0.6384  acc 0.7500  P(true) 0.5936  FA 0.2500  P(r<=3) 0.3081
+  FREQ
+    NO_CHANGE     Brier 0.1516  ECE 0.0571 (0.0571)  conf 0.8689  acc 0.9260  P(true) 0.8689  FA 0.0000  P(r<=3) null
+    STABLE        Brier 0.0075  ECE 0.0733 (0.0733)  conf 0.9267  acc 1.0000  P(true) 0.9267  FA 0.0000  P(r<=3) null
+    NOISY         Brier 0.4366  ECE 0.1029 (-0.1014)  conf 0.8514  acc 0.7500  P(true) 0.8514  FA 0.0000  P(r<=3) null
+    SPARSE        Brier 0.0639  ECE 0.1870 (0.1870)  conf 0.8130  acc 1.0000  P(true) 0.8130  FA 0.0000  P(r<=3) null
+    SPARSE_E0_2   Brier 0.2136  ECE 0.3917 (0.3917)  conf 0.6083  acc 1.0000  P(true) 0.6083  FA 0.0000  P(r<=3) null
+    REV_PRE       Brier 0.0109  ECE 0.0897 (0.0897)  conf 0.9103  acc 1.0000  P(true) 0.9103  FA 0.0000  P(r<=3) null
+    REV_POST_1_2  Brier 1.7202  ECE 0.9017 (-0.9017)  conf 0.9017  acc 0.0000  P(true) 0.0488  FA 1.0000  P(r<=3) null
+    REV_POST_3_6  Brier 1.3131  ECE 0.7870 (-0.7870)  conf 0.7870  acc 0.0000  P(true) 0.1700  FA 1.0000  P(r<=3) null
+  FROZEN
+    NO_CHANGE     Brier 0.2363  ECE 0.1494 (0.1494)  conf 0.7765  acc 0.9260  P(true) 0.7765  FA 0.0000  P(r<=3) null
+    STABLE        Brier 0.0153  ECE 0.1071 (0.1071)  conf 0.8929  acc 1.0000  P(true) 0.8929  FA 0.0000  P(r<=3) null
+    NOISY         Brier 0.4439  ECE 0.1429 (-0.1429)  conf 0.8929  acc 0.7500  P(true) 0.8929  FA 0.0000  P(r<=3) null
+    SPARSE        Brier 0.3333  ECE 0.5000 (0.5000)  conf 0.5000  acc 1.0000  P(true) 0.5000  FA 0.0000  P(r<=3) null
+    SPARSE_E0_2   Brier 0.3333  ECE 0.5000 (0.5000)  conf 0.5000  acc 1.0000  P(true) 0.5000  FA 0.0000  P(r<=3) null
+    REV_PRE       Brier 0.0153  ECE 0.1071 (0.1071)  conf 0.8929  acc 1.0000  P(true) 0.8929  FA 0.0000  P(r<=3) null
+    REV_POST_1_2  Brier 1.7296  ECE 0.8929 (-0.8929)  conf 0.8929  acc 0.0000  P(true) 0.0357  FA 1.0000  P(r<=3) null
+    REV_POST_3_6  Brier 1.7296  ECE 0.8929 (-0.8929)  conf 0.8929  acc 0.0000  P(true) 0.0357  FA 1.0000  P(r<=3) null
+  NEWEST
+    NO_CHANGE     Brier 0.2388  ECE 0.1194 (-0.1194)  conf 1.0000  acc 0.8806  P(true) 0.9319  FA 0.0681  P(r<=3) null
+    STABLE        Brier 0.0000  ECE 0.0000 (0.0000)  conf 1.0000  acc 1.0000  P(true) 1.0000  FA 0.0000  P(r<=3) null
+    NOISY         Brier 0.8066  ECE 0.4033 (-0.4033)  conf 1.0000  acc 0.5967  P(true) 0.7701  FA 0.2299  P(r<=3) null
+    SPARSE        Brier 0.0000  ECE 0.0000 (0.0000)  conf 1.0000  acc 1.0000  P(true) 1.0000  FA 0.0000  P(r<=3) null
+    SPARSE_E0_2   Brier 0.0000  ECE 0.0000 (0.0000)  conf 1.0000  acc 1.0000  P(true) 1.0000  FA 0.0000  P(r<=3) null
+    REV_PRE       Brier 0.0000  ECE 0.0000 (0.0000)  conf 1.0000  acc 1.0000  P(true) 1.0000  FA 0.0000  P(r<=3) null
+    REV_POST_1_2  Brier 1.0000  ECE 0.5000 (-0.5000)  conf 1.0000  acc 0.5000  P(true) 0.5000  FA 0.5000  P(r<=3) null
+    REV_POST_3_6  Brier 0.0000  ECE 0.0000 (0.0000)  conf 1.0000  acc 1.0000  P(true) 1.0000  FA 0.0000  P(r<=3) null
+  WINDOW_w2
+    NO_CHANGE     Brier 0.1594  ECE 0.0544 (0.0536)  conf 0.8634  acc 0.9169  P(true) 0.8587  FA 0.0131  P(r<=3) null
+    STABLE        Brier 0.0075  ECE 0.0733 (0.0733)  conf 0.9267  acc 1.0000  P(true) 0.9267  FA 0.0000  P(r<=3) null
+    NOISY         Brier 0.4630  ECE 0.1137 (-0.1133)  conf 0.8326  acc 0.7194  P(true) 0.8169  FA 0.0444  P(r<=3) null
+    SPARSE        Brier 0.0639  ECE 0.1870 (0.1870)  conf 0.8130  acc 1.0000  P(true) 0.8130  FA 0.0000  P(r<=3) null
+    SPARSE_E0_2   Brier 0.2136  ECE 0.3917 (0.3917)  conf 0.6083  acc 1.0000  P(true) 0.6083  FA 0.0000  P(r<=3) null
+    REV_PRE       Brier 0.0109  ECE 0.0897 (0.0897)  conf 0.9103  acc 1.0000  P(true) 0.9103  FA 0.0000  P(r<=3) null
+    REV_POST_1_2  Brier 1.7202  ECE 0.9017 (-0.9017)  conf 0.9017  acc 0.0000  P(true) 0.0488  FA 1.0000  P(r<=3) null
+    REV_POST_3_6  Brier 0.1130  ECE 0.2848 (0.2848)  conf 0.7152  acc 1.0000  P(true) 0.7152  FA 0.0000  P(r<=3) null
+  UA_h05
+    NO_CHANGE     Brier 0.1690  ECE 0.1155 (0.1155)  conf 0.8025  acc 0.9180  P(true) 0.8007  FA 0.0120  P(r<=3) 0.1594
+    STABLE        Brier 0.0192  ECE 0.1189 (0.1189)  conf 0.8811  acc 1.0000  P(true) 0.8811  FA 0.0000  P(r<=3) 0.0760
+    NOISY         Brier 0.4608  ECE 0.0888 (-0.0036)  conf 0.7265  acc 0.7229  P(true) 0.7204  FA 0.0406  P(r<=3) 0.1797
+    SPARSE        Brier 0.0816  ECE 0.2240 (0.2240)  conf 0.7760  acc 1.0000  P(true) 0.7760  FA 0.0000  P(r<=3) 0.2539
+    SPARSE_E0_2   Brier 0.2345  ECE 0.4124 (0.4124)  conf 0.5876  acc 1.0000  P(true) 0.5876  FA 0.0000  P(r<=3) 1.0000
+    REV_PRE       Brier 0.0242  ECE 0.1342 (0.1342)  conf 0.8658  acc 1.0000  P(true) 0.8658  FA 0.0000  P(r<=3) 0.0769
+    REV_POST_1_2  Brier 1.3249  ECE 0.7360 (-0.7360)  conf 0.7360  acc 0.0000  P(true) 0.1372  FA 1.0000  P(r<=3) 0.2480
+    REV_POST_3_6  Brier 0.1911  ECE 0.3609 (0.3609)  conf 0.6391  acc 1.0000  P(true) 0.6391  FA 0.0000  P(r<=3) 0.4632
+  ORACLE
+    NO_CHANGE     Brier 0.1234  ECE 0.0000 (0.0000)  conf 0.9260  acc 0.9260  P(true) 0.9260  FA 0.0000  P(r<=3) null
+    STABLE        Brier 0.0000  ECE 0.0000 (0.0000)  conf 1.0000  acc 1.0000  P(true) 1.0000  FA 0.0000  P(r<=3) null
+    NOISY         Brier 0.4167  ECE 0.0000 (0.0000)  conf 0.7500  acc 0.7500  P(true) 0.7500  FA 0.0000  P(r<=3) null
+    SPARSE        Brier 0.0000  ECE 0.0000 (0.0000)  conf 1.0000  acc 1.0000  P(true) 1.0000  FA 0.0000  P(r<=3) null
+    SPARSE_E0_2   Brier 0.0000  ECE 0.0000 (0.0000)  conf 1.0000  acc 1.0000  P(true) 1.0000  FA 0.0000  P(r<=3) null
+    REV_PRE       Brier 0.0000  ECE 0.0000 (0.0000)  conf 1.0000  acc 1.0000  P(true) 1.0000  FA 0.0000  P(r<=3) null
+    REV_POST_1_2  Brier 0.0000  ECE 0.0000 (0.0000)  conf 1.0000  acc 1.0000  P(true) 1.0000  FA 0.0000  P(r<=3) null
+    REV_POST_3_6  Brier 0.0000  ECE 0.0000 (0.0000)  conf 1.0000  acc 1.0000  P(true) 1.0000  FA 0.0000  P(r<=3) null
+  UA no-change sensitivity: empirical ECE 0.0740; class-wise ECE 0.0369; equal-mass ECE 0.0739 (0.0739); AUROC 0.6982; mean confidence on correct / incorrect probes 0.8543 / 0.7959; probe Brier 0.1554 (exact 0.1555)
+  UA reliability table (exact): bin, points, mean confidence, mean expected correctness
+    [0.2, 0.3)     15  0.2805  0.3944
+    [0.3, 0.4)    100  0.3650  0.3767
+    [0.4, 0.5)    848  0.4879  0.9218
+    [0.5, 0.6)    412  0.5548  0.7160
+    [0.6, 0.7)   1866  0.6569  0.9258
+    [0.7, 0.8)   3991  0.7624  0.8327
+    [0.8, 0.9)  15245  0.8685  0.9114
+    [0.9, 1.0)  13191  0.9189  0.9768
+
+6. detection (route stream): mean delay in observations, in worlds, detection rate, censored kinds, slope on s
+  UA         3.000  3.000  1.000  0  0.000
+  FREQ       7.000  7.000  0.000  660  0.000
+  FROZEN     7.000  7.000  0.000  660  0.000
+  NEWEST     1.000  1.000  1.000  0  0.000
+  WINDOW_w2  2.000  2.000  1.000  0  0.000
+  UA_a1      3.691  3.691  1.000  0  -0.148
+  UA_h02     2.442  2.442  1.000  0  -0.168
+  UA_h05     2.000  2.000  1.000  0  0.000
+  UA_h15     2.000  2.000  1.000  0  0.000
+
+7. yoked stream (secondary; CONCRETE's own observations): no-change Brier, ECE, FA; NOISY P(true); mean delay; detection rate
+  UA         0.3367  0.3035  0.0461  0.5475  4.871  0.715
+  FREQ       0.3184  0.2960  0.0178  0.5798  6.939  0.023
+  NEWEST     0.7886  0.3938  0.3659  0.5378  1.371  1.000
+  WINDOW_w2  0.3701  0.1907  0.1297  0.5257  3.303  0.886
+
+8. closed loop: mean steps (STABLE 1-16, NOISY 1-16, post-switch 1-6, SPARSE 1-3), capped episodes, observations per kind after the warm-up, per kind per post-switch world, detour share
+  CONCRETE   34.43  34.43  35.34  34.93  capped 0  11.19  0.939  0.398
+  FROZEN     4.01  17.83  42.79  19.06  capped 0  11.86  0.944  0.127
+  FREQ       4.00  17.49  41.45  13.59  capped 0  11.86  0.935  0.098
+  NEWEST     4.00  26.86  16.37  12.62  capped 0  11.87  0.981  0.083
+  WINDOW_w2  4.00  19.89  28.87  13.59  capped 0  11.87  0.953  0.083
+  UA         4.00  17.71  33.60  12.64  capped 0  11.89  0.944  0.078
+  ORACLE     4.00  17.90  4.00  4.00  capped 0  12.00  1.000  0.034
+  WINDOW_w2 - UA steps, NOISY_1_16: 2.18 [1.58, 2.81]
+  WINDOW_w2 - UA steps, POST_1_6: -4.73 [-6.14, -3.33]
+
+9. gate against development (estimates)
+  T      development 30.2719  gate 30.4314
+  BT1    development 0.0736  gate 0.0739
+  BT2a   development 0.0830  gate 0.0835
+  BT2b   development 0.0448  gate 0.0455
+  BT3a   development 0.0580  gate 0.0549
+  BT3b   development 0.1096  gate 0.1127
+  BT3c   development 0.7008  gate 0.6982
+  BT4    development 0.0035  gate 0.0039
+  BT5a   development -0.3958  gate -0.3958
+  BT5b   development 0.3958  gate 0.3958
+  CD1a   development 4.0000  gate 4.0000
+  CD1b   development 1.0000  gate 1.0000
+  CD2a   development 0.0034  gate 0.0033
+  CD2b   development 0.2172  gate 0.2188
+  CD3a   development 1.0314  gate 1.0191
+  CD3b   development 1.4391  gate 1.4356
+  ACT1a  development -15.5313  gate -16.7212
+  ACT1b  development 8.2104  gate 9.1519
+  ACT2a  development 11.1167  gate 9.1899
+  ACT2b  development 9.7611  gate 7.8465
+  ACT3   development -23.8333  gate -22.2949
+  MECH-a development -0.0053  gate -0.0046
+  MECH-b development 1.0000  gate 1.0000
+  MECH-c development 0.0072  gate 0.0098

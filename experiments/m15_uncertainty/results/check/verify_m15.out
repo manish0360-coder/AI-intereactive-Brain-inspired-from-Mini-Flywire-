@@ -1,0 +1,84 @@
+result file sha256 df9e2730e39c838ad1b496c820188e435833c03ca989d4d213cc4844faa79f7e  (1306111 bytes)
+PASS  SPEC.md is Frozen
+PASS  SPEC.md f8d7491f = file = SPEC.sha256
+PASS  PINS.json 44512350 = file = SPEC.sha256
+PASS  admission.json 32c1882e = file = SPEC.sha256
+PASS  every pinned file matches PINS.json now
+PASS  launched at 7baec46, on top of the freeze commit 77edfe7, and HEAD unchanged during the run
+PASS  main.js unchanged
+PASS  suite passed before the run (224/224)
+PASS  parameters: alpha, h, P, floor, B, censoring, window grid
+PASS  parameters: task E7
+PASS  parameters: sensitivity arms
+PASS  w* 2, margin 8, n 165 from the admission record (ADMITTED)
+PASS  the adopted agent (AD-13)
+PASS  labels m15unc|gate|0..164, in numeric order
+PASS  165 labels = n = 165
+PASS  no label excluded
+PASS  every switch point s equals the task's draw
+PASS  run A = run B (every label's full record), and the digests hash to the stored value
+PASS  the stored validity parts are all true
+PASS  every label's stored checks are true
+PASS  every label has 7 arms x 4 conditions, with 28 worlds (17 in SPARSE)
+PASS  every episode took 4 to 200 steps (the route is the unique 4-hop shortest path)
+PASS  every capped episode is recorded as 200 steps
+PASS  ORACLE walks the route (4 steps) in every STABLE evaluation world
+PASS  CONCRETE takes the same steps in every condition, world by world
+PASS  V-REV: every arm takes the same steps in STABLE and REVERSED through evaluation world s
+PASS  identity: every non-privileged belief arm equals CONCRETE in the first world of every condition
+(passive replay recomputed for 165 labels x 4 conditions x 9 mechanisms in 2 s)
+PASS  criteria (24 parts): every part's estimate, interval, definition and outcome recomputed
+PASS  sensitivity BT block UA_a1: every part's estimate, interval, definition and outcome recomputed
+PASS  sensitivity BT block UA_h02: every part's estimate, interval, definition and outcome recomputed
+PASS  sensitivity BT block UA_h05: every part's estimate, interval, definition and outcome recomputed
+PASS  sensitivity BT block UA_h15: every part's estimate, interval, definition and outcome recomputed
+PASS  BT-COND: all four conditions present; ECE, 95% interval, family lower bound, direction and classification recomputed
+PASS  BT-COND line: NOT SHOWN (SPARSE MATERIAL FAIL)
+PASS  BT-COND: point-weighted mean and pooled ECE (= BT1's estimate) recomputed
+PASS  the verdict lines recomputed
+PASS  the statement recomputed character for character
+PASS  the full capability name appears only with BT, CD and BT-COND all SHOWN
+
+recomputed criteria (estimate [95%], pass):
+  T      T    30.4314 [29.6481, 31.2136] lo> 0  pass
+  BT1    BT   0.0739 [0.0727, 0.0753] hi< 0.1  pass
+  BT2a   BT   0.0835 [0.0801, 0.0869] lo> 0  pass
+  BT2b   BT   0.0455 [0.0440, 0.0468] lo> 0  pass
+  BT3a   BT   0.0549 [0.0494, 0.0604] hi< 0.1  pass
+  BT3b   BT   0.1127 [0.1072, 0.1182] lo> 0  pass
+  BT3c   BT   0.6982 [0.6893, 0.7069] lo> 0.5  pass
+  BT4    BT   0.0039 [0.0033, 0.0045] hi< 0.05  pass
+  BT5a   BT   -0.3958 [-0.3958, -0.3958] hi< 0.1  pass
+  BT5b   BT   0.3958 [0.3958, 0.3958] lo> 0  pass
+  CD1a   CD   4.0000 [4.0000, 4.0000] lo> 0  pass
+  CD1b   CD   1.0000 [1.0000, 1.0000] lo> 0.75  pass
+  CD2a   CD   0.0033 [0.0022, 0.0044] hi< 0.1  pass
+  CD2b   CD   0.2188 [0.2106, 0.2274] lo> 0  pass
+  CD3a   CD   1.0191 [1.0048, 1.0331] lo> 0  pass
+  CD3b   CD   1.4356 [1.4316, 1.4397] lo> 0  pass
+  ACT1a  ACT  -16.7212 [-17.8341, -15.6095] hi< 8  pass
+  ACT1b  ACT  9.1519 [8.3205, 10.0045] lo> 0  pass
+  ACT2a  ACT  9.1899 [7.8616, 10.4727] lo> 0  pass
+  ACT2b  ACT  7.8465 [6.6616, 9.0101] lo> 0  pass
+  ACT3   ACT  -22.2949 [-24.8202, -19.7778] hi< 8  pass
+  MECH-a MECH -0.0046 [-0.0055, -0.0037] lo> 0  FAIL
+  MECH-b MECH 1.0000 [1.0000, 1.0000] hi< 1  FAIL
+  MECH-c MECH 0.0098 [0.0082, 0.0116] lo> 0  pass
+recomputed BT-COND (UA, exact ECE by condition):
+  STABLE                      0.0824 [0.0824, 0.0824], family lower 0.0824, underconfident, PASS
+  NOISY                       0.0938 [0.0915, 0.0966], family lower 0.0909, overconfident, PASS
+  SPARSE                      0.1945 [0.1945, 0.1945], family lower 0.1945, underconfident, MATERIAL FAIL
+  REVERSED before the switch  0.0986 [0.0978, 0.0995], family lower 0.0976, underconfident, PASS
+  pooled 0.0739; point-weighted mean 0.1208
+
+illustration (fixed before the result):
+  m15unc|gate|0: s = 3; UA route-stream detection delays [3,3,3,3]
+  mean steps, STABLE worlds 1-16     : CONCRETE 34.43  FROZEN 4.01  FREQ 4.00  NEWEST 4.00  WINDOW_w2 4.00  UA 4.00  ORACLE 4.00
+  mean steps, NOISY worlds 1-16      : CONCRETE 34.43  FROZEN 17.83  FREQ 17.49  NEWEST 26.86  WINDOW_w2 19.89  UA 17.71  ORACLE 17.90
+  mean steps, post-switch worlds 1-6 : CONCRETE 35.34  FROZEN 42.79  FREQ 41.45  NEWEST 16.37  WINDOW_w2 28.87  UA 33.60  ORACLE 4.00
+  mean steps, SPARSE worlds 1-3      : CONCRETE 34.93  FROZEN 19.06  FREQ 13.59  NEWEST 12.62  WINDOW_w2 13.59  UA 12.64  ORACLE 4.00
+
+stored statement: POOLED CALIBRATION AND CHANGE DETECTION SHOWN (development-selected h = 0.01), IN CLOSED-LOOP BEHAVIOUR; CALIBRATION ACROSS CONDITIONS NOT SHOWN: UA materially underconfident in SPARSE (ECE 0.194); change detection not distinguished from a tuned window rule; originally specified h = 0.05 (sensitivity arm): BT parts passed 8 of 9 (failed: BT1); BT1 pools the no-change conditions (pooled exact ECE 0.074); UA's exact ECE by condition (BT-COND, threshold 0.10): STABLE 0.082 [0.082, 0.082] underconfident, PASS; NOISY 0.094 [0.092, 0.097] overconfident, PASS; SPARSE 0.194 [0.194, 0.194] underconfident, MATERIAL FAIL; REVERSED before the switch 0.099 [0.098, 0.099] underconfident, PASS; point-weighted mean 0.121
+
+ALL CHECKS PASS (38 passed)
+git status of the repository: ?? experiments/m15_uncertainty/results/m15_result.json

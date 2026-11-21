@@ -1,0 +1,15 @@
+run A: label 25 of 165 done, 29 s
+run A: label 50 of 165 done, 59 s
+run A: label 75 of 165 done, 86 s
+run A: label 100 of 165 done, 115 s
+run A: label 125 of 165 done, 143 s
+run A: label 150 of 165 done, 170 s
+run A: label 165 of 165 done, 186 s
+run B: label 25 of 165 done, 214 s
+run B: label 50 of 165 done, 244 s
+run B: label 75 of 165 done, 272 s
+run B: label 100 of 165 done, 301 s
+run B: label 125 of 165 done, 329 s
+run B: label 150 of 165 done, 356 s
+run B: label 165 of 165 done, 372 s
+M15 m15: POOLED CALIBRATION AND CHANGE DETECTION SHOWN (development-selected h = 0.01), IN CLOSED-LOOP BEHAVIOUR; CALIBRATION ACROSS CONDITIONS NOT SHOWN: UA materially underconfident in SPARSE (ECE 0.194); change detection not distinguished from a tuned window rule; originally specified h = 0.05 (sensitivity arm): BT parts passed 8 of 9 (failed: BT1); BT1 pools the no-change conditions (pooled exact ECE 0.074); UA's exact ECE by condition (BT-COND, threshold 0.10): STABLE 0.082 [0.082, 0.082] underconfident, PASS; NOISY 0.094 [0.092, 0.097] overconfident, PASS; SPARSE 0.194 [0.194, 0.194] underconfident, MATERIAL FAIL; REVERSED before the switch 0.099 [0.098, 0.099] underconfident, PASS; point-weighted mean 0.121; runs identical: true; 387 s; E:\Projects\OpenSourceLab\repos\mini-flywire\experiments\m15_uncertainty\results\m15_result.json
