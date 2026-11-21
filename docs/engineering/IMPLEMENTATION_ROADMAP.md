@@ -27,7 +27,7 @@ flowchart LR
   M9 --> M10
 ```
 
-## Status against evidence (2026-11-17)
+## Status against evidence (2026-11-17; M15 added 2026-11-21)
 
 The capability targets, in the owner's order of priority (Decision 8), and where the evidence stands. They are
 research targets, not modules to add.
@@ -38,7 +38,7 @@ research targets, not modules to add.
 | 2. Learning and planning | Value iteration on the learned model beats Dyna-Q, Dyna-Q+ and Q-learning on every task so far (CF-01…CF-05b) | **Established on 24-node worlds** |
 | 3. Change detection and adaptation | Removing change detection costs +161 steps after a block (CF-04) | **Established** |
 | 4. Recovery and memory | RECALL recovers two-thirds of the gap after a reversal, costs 7.7 when the change is permanent (CF-05b); blanket re-testing fails (CF-05 closure). A two-regime belief per changed exit, with ρ fixed at 1/2, beats each of four fixed re-testing policies over a mix of reversal rates: about 28 steps a run (2.4%) against the planner, and it costs 17.4 a run where changes rarely reverse (CF-06) | **The belief adopted (AD-13)**, with a limited claim; RECALL not adopted |
-| 5. Uncertainty and confidence | Calibration error cannot tell the model from a constant forecaster (CF-03c); Brier with decomposition replaces it | Open |
+| 5. Uncertainty and confidence | Calibration error cannot tell the model from a constant forecaster (CF-03c); Brier with decomposition replaces it. M15 (closed 2026-11-21): a relational belief's pooled calibration SHOWN under the development-selected h = 0.01 (pooled exact ECE 0.0739); the original h = 0.05 failed pooled calibration (0.1155); calibration across conditions NOT SHOWN, because SPARSE materially failed (0.1945, underconfident); no Bayesian advantage over a tuned window rule | **Partial** (M15, development-level): pooled calibration only, with a development-selected hazard; not across conditions |
 | 6. Metacognition and self-evaluation | Reliability arbitration between two controllers harmful at this scale (CF-04). Learning how often changes reverse beat ρ = 1/2 by 11.3 [0.3, 22.8], but task E5 failed its headroom rule (CF-06) | Not supported in the arbitration form. Learning how volatile the world is (H-VOL) is not admitted by E5; the adopted belief fixes ρ |
 | 7. Generalisation | Same sign and break-even at 48 nodes (CF-05b, non-gating); calibration fails on 3 of 4 unseen reliability families | Partial |
 | 8. Integration and efficiency | One agent: the planner on model v6 with ρ fixed at 1/2 (AD-13), with about 7% more work per decision than MBVI3, which stays the baseline. Research prototypes sit beside it | The belief is integrated into the testbed agent; nothing is in the browser app |
@@ -51,6 +51,7 @@ research targets, not modules to add.
 | CF-05 exploration bonus | Closed without a gate as a development-level negative finding |
 | CF-05b targeted recall | **Done: SUPPORTED AT A COST; not adopted** |
 | CF-06 belief about whether a change reverses | **Done: SUPPORTED — CONSISTENT; adopted (AD-13).** Learning the rate is not admitted by E5 |
+| M15 calibrated adaptive belief tracking and change detection (`experiments/m15_uncertainty/`) | **Done and CLOSED (2026-11-21): POOLED CALIBRATION AND CHANGE DETECTION SHOWN (development-selected h = 0.01), IN CLOSED-LOOP BEHAVIOUR; CALIBRATION ACROSS CONDITIONS NOT SHOWN** (SPARSE materially failed). Bayesian superiority over the tuned window baseline NOT SHOWN; the original h = 0.05 failed pooled calibration. Run once; independent check 38/38. No change to the agent (AD-13). Not to be rerun, revised, optimized or reopened |
 | M1 stronger baselines | Partly done: Dyna-Q+ with a count model built and used |
 | M4, M5, M6, M7, M8, L1, M9, M10 | Unchanged below; M5/M6 still need their tasks admitted first |
 
