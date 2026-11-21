@@ -27,7 +27,7 @@ flowchart LR
   M9 --> M10
 ```
 
-## Status against evidence (2026-11-17; M15 added 2026-11-21)
+## Status against evidence (2026-11-17; M15 and M16 added 2026-11-21)
 
 The capability targets, in the owner's order of priority (Decision 8), and where the evidence stands. They are
 research targets, not modules to add.
@@ -41,7 +41,7 @@ research targets, not modules to add.
 | 5. Uncertainty and confidence | Calibration error cannot tell the model from a constant forecaster (CF-03c); Brier with decomposition replaces it. M15 (closed 2026-11-21): a relational belief's pooled calibration SHOWN under the development-selected h = 0.01 (pooled exact ECE 0.0739); the original h = 0.05 failed pooled calibration (0.1155); calibration across conditions NOT SHOWN, because SPARSE materially failed (0.1945, underconfident); no Bayesian advantage over a tuned window rule | **Partial** (M15, development-level): pooled calibration only, with a development-selected hazard; not across conditions |
 | 6. Metacognition and self-evaluation | Reliability arbitration between two controllers harmful at this scale (CF-04). Learning how often changes reverse beat ρ = 1/2 by 11.3 [0.3, 22.8], but task E5 failed its headroom rule (CF-06) | Not supported in the arbitration form. Learning how volatile the world is (H-VOL) is not admitted by E5; the adopted belief fixes ρ |
 | 7. Generalisation | Same sign and break-even at 48 nodes (CF-05b, non-gating); calibration fails on 3 of 4 unseen reliability families | Partial |
-| 8. Integration and efficiency | One agent: the planner on model v6 with ρ fixed at 1/2 (AD-13), with about 7% more work per decision than MBVI3, which stays the baseline. Research prototypes sit beside it | The belief is integrated into the testbed agent; nothing is in the browser app |
+| 8. Integration and efficiency | One agent: the planner on model v6 with ρ fixed at 1/2 (AD-13), with about 7% more work per decision than MBVI3, which stays the baseline. Research prototypes sit beside it. M16 design-stage finding (2026-11-21; design calculations, not a frozen experiment): the relational belief (M14/M15) already runs inside that agent as a tie-break, and the two pieces add up exactly; relational knowledge's early benefit (492.2 steps per label in first episodes) is 92% repaid by the planner's exploration; a knowledge-free stop-after-success rule matches or beats knowledge-guided exploration | The belief is integrated into the testbed agent; nothing is in the browser app. Relational knowledge is integrated only as a tie-break; **no advantage over strong simple rules is established** on the current worlds |
 
 | Milestone | State |
 |---|---|
@@ -52,8 +52,25 @@ research targets, not modules to add.
 | CF-05b targeted recall | **Done: SUPPORTED AT A COST; not adopted** |
 | CF-06 belief about whether a change reverses | **Done: SUPPORTED — CONSISTENT; adopted (AD-13).** Learning the rate is not admitted by E5 |
 | M15 calibrated adaptive belief tracking and change detection (`experiments/m15_uncertainty/`) | **Done and CLOSED (2026-11-21): POOLED CALIBRATION AND CHANGE DETECTION SHOWN (development-selected h = 0.01), IN CLOSED-LOOP BEHAVIOUR; CALIBRATION ACROSS CONDITIONS NOT SHOWN** (SPARSE materially failed). Bayesian superiority over the tuned window baseline NOT SHOWN; the original h = 0.05 failed pooled calibration. Run once; independent check 38/38. No change to the agent (AD-13). Not to be rerun, revised, optimized or reopened |
+| M16 integration (`experiments/m16_integration/`) | **Design-stage finding, not a frozen experiment or confirmatory result** (accepted 2026-11-21): the integration gate is not run. No advantage for relational knowledge over strong simple rules is established; small deterministic worlds are not discriminative enough (`FINDING.md`) |
 | M1 stronger baselines | Partly done: Dyna-Q+ with a count model built and used |
 | M4, M5, M6, M7, M8, L1, M9, M10 | Unchanged below; M5/M6 still need their tasks admitted first |
+
+### Next: task admission and benchmark discrimination (accepted 2026-11-21)
+
+**Not a new cognitive mechanism.** M15 (a tuned window matched the Bayesian belief) and M16 (a stop rule matched or
+beat knowledge-guided exploration) show that the current worlds cannot tell the mechanisms from strong simple rules:
+24 nodes, 4-hop routes, deterministic moves.
+- **The work:** before any new agent mechanism, find task families on which strong simple rules demonstrably fail,
+  with existing agents and baselines only.
+- **Candidate levers:** scale (M8 below: 100–200 nodes), stochastic moves, longer stays, aliased places (M5).
+- **Admission needs all three** (`experiments/m16_integration/FINDING.md`, section 5):
+  - the best of a tuned set of strong simple baselines falls short of the oracle by a declared headroom;
+  - an appropriate oracle shows the task is solvable;
+  - the task exposes a measurable capability gap.
+- **The numerical thresholds are not set.** They are to be specified in the next task-design proposal and declared
+  before any development label is used, never chosen from results.
+- **When mechanism work resumes:** only on an admitted task, and only for the capability that task's gap names.
 
 ### CF-06 — learning how often changes reverse (as first planned)
 

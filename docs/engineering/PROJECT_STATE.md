@@ -5,14 +5,14 @@ Results are recorded in [`docs/VERIFICATION_STATUS.md`](../VERIFICATION_STATUS.m
 [`docs/COGNITIVE_MILESTONE_ROADMAP.md`](../COGNITIVE_MILESTONE_ROADMAP.md) (testbed gates); this file records where
 work stands. Document index: [`docs/README.md`](../README.md).
 
-**Last updated:** 2026-11-21
+**Last updated:** 2026-11-22
 
 ## Repository
 
 | Item | State |
 |---|---|
 | GitHub `main` | `52c5f23` (the M15 closure), pushed 2026-11-21 on the owner's explicit approval ("Yes, push them") as a fast-forward of 5 commits from `fd18489`: `b692ed5` M15 build, `77edfe7` freeze, `7baec46` independent check, `9874d14` results, `52c5f23` closure. A fresh GitHub clone (HTTP/1.1, `core.autocrlf=true`, clean tree) verified M15's `SPEC.sha256` 3/3 and `results/SHA256SUMS` 13/13 (result `df9e2730…`), M13's and M14's `SPEC.sha256`, and the pins of M13, M14 and M15. No tags added (25). Before that: `fd18489` (the M14 erratum), pushed 2026-11-18 on the owner's delegated word ("if you think push is needed for previous commit then do it otherwise proceed") as a fast-forward of 5 commits from `603539a`: `73ce604` push record, `799bca2` M14 build, `01f68da` M14 freeze, `b8fea5b` M14 results, `fd18489` erratum. A fresh GitHub clone (over HTTP/1.1, after the first attempt hit an HTTP/2 network error) verified M14's `SPEC.sha256`, `results/SHA256SUMS`, `pins.mjs --check`, M13's pins and the interval audit. No tags added. Before that: `603539a` (Gemini's M13 review lodged), pushed 2026-11-18 on the owner's explicit approval ("Yes, push them") as a fast-forward of 3 commits from `3602576`: `b07f4be` push record, `9f13c3a` M13 closure, `603539a` review text. A fresh GitHub clone with `core.autocrlf=true` passed the full closure check (`review/check_closure_docs.mjs`, 27 checks): frozen hashes, pins, result checksums, verdicts, `verify_m13`, the traces check, the reviewed bundle, `GEMINI_REVIEW.md` `7c8ab0f5…`, links and shortened hashes. 25 annotated tags; none added. Before that: `3602576` (the M13 review package), pushed 2026-11-18 as a fast-forward of 6 commits from `2c5c591` (`728dd71` state, then M13 build, revision 2, freeze, results and review package). Pushed on the owner's words "push if required", so that the reviewer can audit one fixed public commit and the raw result is held off this machine. A fresh GitHub clone with `core.autocrlf=true` was verified: M13 `SPEC.sha256` 4/4, `pins.mjs --check`, `results/SHA256SUMS` 13/13, `verify_m13.mjs` all pass, the traces check all agree, the bundle rebuilds identically (`6402fe13…`). `main.js` content `c92c5c6b…`. A local clone also passed `make_bank.mjs --check`, the descriptive scripts byte for byte and `npm test` 195/195. 25 annotated tags; none added. The previous push (`2c5c591`, CF-06 through M12, on "push also if you think that is right next approach") was verified the same way |
-| Local `main` | GitHub's `52c5f23` plus this state commit, which records that push. No push without the owner's explicit word |
+| Local `main` | GitHub's `52c5f23` plus `8ab5946` (the push record) and the M16 design-stage record commit; neither pushed. No push without the owner's explicit word |
 | Tests | `npm test` (`scripts/test.mjs`, unchanged because M13 pins it) 195/195; `node scripts/test_all.mjs` 207/207, which is the same suite plus the 12 M14 tests (unchanged because M14 pins it); `node scripts/test_discover.mjs` 224/224 (2026-11-19, working tree), which runs every `cognitive/tests/test_*.mjs` by discovery, including the 17 M15 tests; legacy gate `experiments/phase1_0/verify_S2.js` 14/14 (run it from `experiments/phase1_0/`: it reads `../../neurons.json`) |
 | Push rule | No push without the owner's explicit word |
 
@@ -20,6 +20,7 @@ work stands. Document index: [`docs/README.md`](../README.md).
 
 | Date | Work | Result |
 |---|---|---|
+| 2026-11-21 | **M16 integration: DESIGN-STAGE FINDING, not a frozen experiment or confirmatory result** (`experiments/m16_integration/`). Three design calculations, run once on the design labels `m16int|design|0..39` (now barred), to decide whether an integration gate was worth building. No SPEC, freeze, gate labels, independent check or confirmatory run | **Accepted by the owner 2026-11-21; the integration gate is not run.** (1) The change belief and the relational belief are already one agent and add up exactly (interaction +1.35 [−2.27, 4.95]). (2) Relational knowledge saves 492.2 steps per label in first episodes, but the planner's exploration repays 92% of it. (3) A knowledge-free stop-after-success rule matches or beats the safeguarded knowledge-guided rule (KGO_V) in every condition, so **no advantage for relational knowledge over strong simple rules is established**. (4) Small deterministic worlds are not discriminative enough. Figures are design estimates. Next: task admission and benchmark discrimination, not a new mechanism (`FINDING.md`). Recorded locally in the commit that adds this row; not pushed |
 | 2026-11-19 | **M15** Calibrated Adaptive Belief Tracking and Change Detection in the cognitive testbed (`experiments/m15_uncertainty/`): task E7 (28-world sequences under STABLE, NOISY, REVERSED, SPARSE); a per-kind relational belief (BOCPD, h = 0.01 development-selected) against FREQ, FROZEN, NEWEST and a tuned window; passive replay against exact θ* and 64 probes, plus closed loop; 165 labels | **POOLED CALIBRATION AND CHANGE DETECTION SHOWN (development-selected h = 0.01), IN CLOSED-LOOP BEHAVIOUR; CALIBRATION ACROSS CONDITIONS NOT SHOWN** (development-level). BT1 pooled ECE 0.0739 [0.0727, 0.0753]; BT-COND: STABLE 0.0824 PASS, NOISY 0.0938 PASS, SPARSE 0.1945 MATERIAL FAIL (underconfident on thin evidence), REVERSED-before 0.0986 PASS (upper 0.0995). Detection 3 observations on every kind (counting censored at 7); false alarms 0.0033. Not distinguished from a tuned window rule (MECH-a, b failed). h = 0.05 fails BT1 (0.1155). The full capability name may not be written. Every line came out as development predicted. Run once (2026-11-19). Build `b692ed5`, freeze `77edfe7`, check `7baec46` (verifier 38/38, 16/16 mutants), results `9874d14`. **CLOSED 2026-11-21** on the owner's acceptance of the reported results and limitations; not to be rerun, revised, optimized or reopened |
 | 2026-11-18 | **M14** schema abstraction and transfer in the cognitive testbed (`experiments/m14_schema/`): task E6 (signposted worlds), a kind schema learned from the agent's own paths over six relabelled worlds, tested on an unseen four-link combination; 165 labels × 4 arms | **LEARNED RELATIONAL SCHEMA TRANSFERS TO UNSEEN COMBINATIONS, WITHIN THE SAFETY MARGIN** (development-level). P1 CONCRETE − SCHEMA +30.3 [27.4, 33.3] (161/0/4); P2 SHUFFLED − SCHEMA +25.7 [23.0, 28.5]; S NULL harm −0.11 [−3.98, 3.65] (margin 9); R1 misled when reversed +8.3 [5.1, 11.5]. SCHEMA equalled the oracle in every label. Limits: roles given as kinds; exact signposts; the effect is near its ceiling by construction; later episodes cost more. Build `799bca2`, freeze `01f68da`, results in the commit after it |
 | 2026-11-18 | **M13** cognitive generalization: the adopted belief (AD-13) against MBVI3 on a held-out modular-ring family (`experiments/m13_generalization/`), 165 fresh graphs × 3 families × 4 arms, nothing tuned | **NET ADVANTAGE RETAINED ON THE MODULAR FAMILY, WITHIN THE SAFETY MARGIN** (development-level). All five lines pass: VALID; G1 +125.4 [92.0, 160.1] (standardized 0.56, against CF-06 0.44 and M11 0.50); G2 RARE cost +9.8 [3.6, 14.9] (margin 25); G3 OFTEN recovery +65.1 [50.9, 79.9]; G4 reopened edges met and re-crossed +1.46 [1.25, 1.67]. gainShape CONSISTENT for G1 and G3. Attribution: OFTEN GENUINE REVERSALS (false-alarm-only A3 not shown); mix GENUINE REVERSALS AND FALSE-ALARM REPAIR. Unlike M11, 97% of the OFTEN recovery difference sits in labels where only BELIEF re-crossed a reopened edge in its own window (descriptive). Freeze `8619d71`, results `b9a05e0`, review package `3602576` (pushed). **CLOSED 2026-11-18** after the independent Gemini review (DEFENSIBLE WITH SPECIFIC QUALIFICATIONS, no material finding; verdicts preserved). Qualifications: the family's selection was informed by M12; the RARE cost occurred in 133 of 165 labels (within the margin, not zero); G4 is a count, not causal proof (`CLOSURE.md`) |
@@ -76,6 +77,20 @@ Since then:
 
 ## Waiting on the owner
 
+0000. **Next direction (accepted 2026-11-21): task admission and benchmark discrimination, not a new cognitive
+   mechanism** (`experiments/m16_integration/FINDING.md`).
+   - **The work:** before any new agent mechanism, find task families on which strong simple rules demonstrably fail,
+     using existing agents and baselines only. Candidate levers: scale (100–200 nodes, roadmap M8), stochastic moves,
+     longer stays, aliased places.
+   - **Admission needs all three:**
+     - the best of a tuned set of strong simple baselines falls short of the oracle by a declared headroom;
+     - an appropriate oracle shows the task is solvable;
+     - the task exposes a measurable capability gap: an oracle privileged in that capability alone closes a declared
+       share of it, with adequate power.
+   - **The numerical thresholds are not set yet.** The next task-design proposal must specify them and declare them
+     before any development label is used. They are never chosen from results, M16's design calculations included.
+   - **Next:** that task-design proposal, on the owner's word. M16's design-stage record is committed locally (the
+     commit that adds this item) and not pushed.
 000. **M15 is CLOSED** (2026-11-21, on the owner's acceptance of the reported results and limitations;
    `experiments/m15_uncertainty/RESULTS.md`). Nothing waits on M15. It is not to be rerun, revised, optimized or
    reopened, and the `m15unc|gate|0..164` labels are spent. The closure record is the "M15 CLOSED" paragraph under
@@ -171,6 +186,25 @@ with it: `run/gate6_power_events.txt` (the Windows event-log extract behind the 
 - **The claim is limited** as AD-13 states: about 28 steps a run (2.4%), 61% of it from 10% of worlds and 30% from
   false-alarm repair; against the four fixed policies tested; the full verdict line only at h = 0.01; one development
   gate.
+
+**M16 DESIGN-STAGE FINDING (2026-11-21), not a frozen experiment or confirmatory result.**
+- **Evidence:** design calculations only, on `m16int|design|0..39`, now barred (`experiments/m16_integration/PROPOSAL.md`
+  and `FINDING.md`; scripts and outputs checksummed in `proposal_inputs/SHA256SUMS`).
+- **Status:** accepted by the owner; the integration gate is not run.
+- **Integration as it stands:** M15's agent is already AD-13 plus the relational belief as a tie-break. The two pieces
+  act in different phases, a world's first episode versus exits tried at least 5 times, and add up exactly.
+- **Architectural finding:** relational knowledge produces a substantial early benefit, 492.2 steps per label in first
+  episodes, but the planner's exploration policy, which values every untried exit at `vOpt = 1`, repays 92% of it.
+- **No advantage for relational knowledge over strong simple rules is established.** A knowledge-free
+  stop-after-success rule matches or beats the safeguarded knowledge-guided rule (KGO_V) in every condition: noise
+  −235.2, reversal −66.0 and sparse evidence −17.9 steps per label, equal elsewhere. Knowledge-guided optimism without
+  the safeguard is unsafe under blocks.
+- **Benchmark limitation:** small deterministic worlds are not discriminative enough. Mechanisms tested there are
+  settled by construction or matched by a simple rule.
+- **Disclosed:** the safeguard and the stop-rule baseline were added after the first design label; neither has a
+  parameter. The first calculation's script gained optional arguments after its output was written; a re-run with
+  the final script reproduced that output exactly, apart from the timing line.
+- **Consequence:** none for AD-13 or the agent. Next: task admission (item 0000 under "Waiting on the owner").
 
 **M15 CLOSED (2026-11-21): POOLED CALIBRATION AND CHANGE DETECTION SHOWN (development-selected h = 0.01), IN
 CLOSED-LOOP BEHAVIOUR; CALIBRATION ACROSS CONDITIONS NOT SHOWN** — Calibrated Adaptive Belief Tracking and Change

@@ -1,0 +1,36 @@
+M16 design calculation: 40 labels (m16int|design|0..39), 0 excluded, 914 s
+Per evaluation world (16 per label): EVENT = 6 open + 5 blocked + 5 after episodes, a route edge blocked after episode 6, reopened with p (RARE 0.1, OFTEN 0.9); PREBLOCK = 6 episodes, a route edge blocked from the start in a share 0.5 of worlds, never reopened.
+Steps are summed over the 16 evaluation worlds of a label; intervals are 95% percentile bootstrap over labels.
+
+A. Where each piece acts (EVENT conditions; per-world observation unit, as M15)
+  EVENT_RARE
+    FULL       FIRST   64.0  OPEN  986.7  BLOCKED   662.2  AFTER   456.7 (reopened 43.9, permanent 412.8)  capped 0  P(true) 0.890
+    NO_REL     FIRST  556.2  OPEN  578.0  BLOCKED   614.3  AFTER   457.5 (reopened 44.5, permanent 413.0)  capped 0  P(true)   -   
+    NO_CHANGE  FIRST   64.0  OPEN  986.7  BLOCKED   659.9  AFTER   457.5 (reopened 46.9, permanent 410.6)  capped 0  P(true) 0.890
+    NEITHER    FIRST  556.2  OPEN  578.0  BLOCKED   612.4  AFTER   457.4 (reopened 46.9, permanent 410.5)  capped 0  P(true)   -   
+    relation's benefit, FIRST: without the change belief (NEITHER - NO_CHANGE) 492.23 [473.75, 511.35]; with it (NO_REL - FULL) 492.23 [473.55, 511.10]
+    change belief's benefit, AFTER: without the relation (NEITHER - NO_REL) -0.15 [-1.63, 1.40]; with it (NO_CHANGE - FULL) 0.82 [-0.80, 2.67]
+    change belief's benefit, BLOCKED: without the relation -1.90 [-2.45, -1.43]; with it -2.27 [-2.90, -1.70]
+    interaction on total steps, (NEITHER - NO_CHANGE) - (NO_REL - FULL): -0.60 [-1.82, 0.50]
+    FULL       block worlds 640: v6 opened an archive in 617, confirmed a reversal in 12; uses of the edge before the block: mean 5.89, zero in 0 worlds
+    NO_REL     block worlds 640: v6 opened an archive in 623, confirmed a reversal in 9; uses of the edge before the block: mean 6.33, zero in 0 worlds
+    NO_CHANGE  block worlds 640: v6 opened an archive in 617, confirmed a reversal in 0; uses of the edge before the block: mean 5.89, zero in 0 worlds
+    NEITHER    block worlds 640: v6 opened an archive in 623, confirmed a reversal in 0; uses of the edge before the block: mean 6.33, zero in 0 worlds
+    FULL - best single piece on total: vs NO_REL -36.45 [-46.50, -26.18]; vs NO_CHANGE 1.45 [-0.53, 3.30]
+  EVENT_OFTEN
+    FULL       FIRST   64.0  OPEN  994.3  BLOCKED   659.5  AFTER   439.2 (reopened 393.7, permanent 45.5)  capped 0  P(true) 0.886
+    NO_REL     FIRST  564.6  OPEN  566.9  BLOCKED   619.1  AFTER   438.3 (reopened 392.9, permanent 45.4)  capped 0  P(true)   -   
+    NO_CHANGE  FIRST   64.0  OPEN  994.3  BLOCKED   657.4  AFTER   457.4 (reopened 412.2, permanent 45.3)  capped 0  P(true) 0.886
+    NEITHER    FIRST  564.6  OPEN  566.9  BLOCKED   617.5  AFTER   457.4 (reopened 412.1, permanent 45.3)  capped 0  P(true)   -   
+    relation's benefit, FIRST: without the change belief (NEITHER - NO_CHANGE) 500.65 [477.70, 523.15]; with it (NO_REL - FULL) 500.65 [477.35, 522.45]
+    change belief's benefit, AFTER: without the relation (NEITHER - NO_REL) 19.07 [15.40, 22.77]; with it (NO_CHANGE - FULL) 18.20 [13.82, 22.95]
+    change belief's benefit, BLOCKED: without the relation -1.60 [-2.25, -0.90]; with it -2.08 [-2.60, -1.60]
+    interaction on total steps, (NEITHER - NO_CHANGE) - (NO_REL - FULL): 1.35 [-2.27, 4.95]
+    FULL       block worlds 640: v6 opened an archive in 613, confirmed a reversal in 71; uses of the edge before the block: mean 5.92, zero in 0 worlds
+    NO_REL     block worlds 640: v6 opened an archive in 621, confirmed a reversal in 72; uses of the edge before the block: mean 6.37, zero in 1 worlds
+    NO_CHANGE  block worlds 640: v6 opened an archive in 613, confirmed a reversal in 0; uses of the edge before the block: mean 5.92, zero in 0 worlds
+    NEITHER    block worlds 640: v6 opened an archive in 621, confirmed a reversal in 0; uses of the edge before the block: mean 6.37, zero in 1 worlds
+    FULL - best single piece on total: vs NO_REL -31.93 [-41.23, -22.48]; vs NO_CHANGE -16.13 [-20.73, -11.55]
+
+Worlds with no admissible route edge to block (their removal would disconnect the goal):
+  0 of 640 evaluation worlds (those worlds run without a block).

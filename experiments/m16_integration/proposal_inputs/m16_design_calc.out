@@ -1,0 +1,57 @@
+M16 design calculation: 40 labels (m16int|design|0..39), 0 excluded, 917 s
+Per evaluation world (16 per label): EVENT = 3 open + 5 blocked + 5 after episodes, a route edge blocked after episode 3, reopened with p (RARE 0.1, OFTEN 0.9); PREBLOCK = 3 episodes, a route edge blocked from the start in a share 0.5 of worlds, never reopened.
+Steps are summed over the 16 evaluation worlds of a label; intervals are 95% percentile bootstrap over labels.
+
+A. Where each piece acts (EVENT conditions; per-world observation unit, as M15)
+  EVENT_RARE
+    FULL       FIRST   64.0  OPEN  727.7  BLOCKED   840.4  AFTER   457.9 (reopened 47.0, permanent 410.9)  capped 0  P(true) 0.890
+    NO_REL     FIRST  556.2  OPEN  367.8  BLOCKED   750.1  AFTER   457.4 (reopened 46.8, permanent 410.6)  capped 0  P(true)   -   
+    NO_CHANGE  FIRST   64.0  OPEN  727.7  BLOCKED   840.4  AFTER   457.7 (reopened 47.0, permanent 410.8)  capped 0  P(true) 0.890
+    NEITHER    FIRST  556.2  OPEN  367.8  BLOCKED   750.0  AFTER   457.4 (reopened 46.9, permanent 410.6)  capped 0  P(true)   -   
+    FULL_EP    FIRST  305.4  OPEN  544.9  BLOCKED   800.8  AFTER   457.7 (reopened 46.9, permanent 410.8)  capped 0  P(true) 0.488
+    relation's benefit, FIRST: without the change belief (NEITHER - NO_CHANGE) 492.23 [473.75, 511.35]; with it (NO_REL - FULL) 492.23 [473.55, 511.10]
+    change belief's benefit, AFTER: without the relation (NEITHER - NO_REL) 0.05 [-0.10, 0.28]; with it (NO_CHANGE - FULL) -0.13 [-0.30, 0.00]
+    change belief's benefit, BLOCKED: without the relation -0.03 [-0.07, 0.00]; with it 0.00 [0.00, 0.00]
+    interaction on total steps, (NEITHER - NO_CHANGE) - (NO_REL - FULL): 0.15 [-0.10, 0.45]
+    FULL       block worlds 640: v6 opened an archive in 83, confirmed a reversal in 0; uses of the edge before the block: mean 3.03, zero in 0 worlds
+    NO_REL     block worlds 640: v6 opened an archive in 131, confirmed a reversal in 1; uses of the edge before the block: mean 3.37, zero in 8 worlds
+    NO_CHANGE  block worlds 640: v6 opened an archive in 83, confirmed a reversal in 0; uses of the edge before the block: mean 3.03, zero in 0 worlds
+    NEITHER    block worlds 640: v6 opened an archive in 131, confirmed a reversal in 0; uses of the edge before the block: mean 3.37, zero in 8 worlds
+    FULL - best single piece on total: vs NO_REL -41.60 [-52.95, -30.18]; vs NO_CHANGE 0.13 [0.00, 0.30]
+  EVENT_OFTEN
+    FULL       FIRST   64.0  OPEN  737.9  BLOCKED   831.6  AFTER   456.4 (reopened 411.2, permanent 45.3)  capped 0  P(true) 0.886
+    NO_REL     FIRST  564.6  OPEN  358.9  BLOCKED   753.0  AFTER   455.5 (reopened 410.2, permanent 45.3)  capped 0  P(true)   -   
+    NO_CHANGE  FIRST   64.0  OPEN  737.9  BLOCKED   831.6  AFTER   457.1 (reopened 411.8, permanent 45.3)  capped 0  P(true) 0.886
+    NEITHER    FIRST  564.6  OPEN  358.9  BLOCKED   752.9  AFTER   457.1 (reopened 411.9, permanent 45.3)  capped 0  P(true)   -   
+    FULL_EP    FIRST  298.8  OPEN  564.1  BLOCKED   789.5  AFTER   456.3 (reopened 411.1, permanent 45.3)  capped 0  P(true) 0.491
+    relation's benefit, FIRST: without the change belief (NEITHER - NO_CHANGE) 500.65 [477.70, 523.15]; with it (NO_REL - FULL) 500.65 [477.35, 522.45]
+    change belief's benefit, AFTER: without the relation (NEITHER - NO_REL) 1.65 [0.30, 3.60]; with it (NO_CHANGE - FULL) 0.60 [0.10, 1.20]
+    change belief's benefit, BLOCKED: without the relation -0.07 [-0.20, 0.00]; with it 0.00 [0.00, 0.00]
+    interaction on total steps, (NEITHER - NO_CHANGE) - (NO_REL - FULL): 0.97 [-0.50, 2.92]
+    FULL       block worlds 640: v6 opened an archive in 82, confirmed a reversal in 5; uses of the edge before the block: mean 3.05, zero in 0 worlds
+    NO_REL     block worlds 640: v6 opened an archive in 142, confirmed a reversal in 4; uses of the edge before the block: mean 3.41, zero in 10 worlds
+    NO_CHANGE  block worlds 640: v6 opened an archive in 82, confirmed a reversal in 0; uses of the edge before the block: mean 3.05, zero in 0 worlds
+    NEITHER    block worlds 640: v6 opened an archive in 142, confirmed a reversal in 0; uses of the edge before the block: mean 3.41, zero in 10 worlds
+    FULL - best single piece on total: vs NO_REL -42.05 [-52.35, -31.70]; vs NO_CHANGE -0.60 [-1.20, -0.10]
+
+B. The observation unit matters: the same FULL agent learning from EVERY goal-reaching episode (FULL_EP)
+  EVENT_RARE: absorbed per label FULL 111.2 (wrong 3.3), FULL_EP 784.6 (wrong 338.6); P(true) at world start FULL 0.890, FULL_EP 0.488; MAP errors per label FULL 0.00, FULL_EP 31.35 (of 64)
+    FIRST: FULL_EP - FULL 241.43 [218.97, 264.93]; total 18.98 [9.00, 28.88]
+  EVENT_OFTEN: absorbed per label FULL 111.2 (wrong 3.6), FULL_EP 786.0 (wrong 337.6); P(true) at world start FULL 0.886, FULL_EP 0.491; MAP errors per label FULL 0.00, FULL_EP 30.98 (of 64)
+    FIRST: FULL_EP - FULL 234.82 [210.28, 259.68]; total 18.75 [10.10, 27.05]
+
+C. A new world whose signposted route is already broken (PREBLOCK): contamination, and a parameter-free EXPLAIN rule
+   EXPLAIN (prototype): do not learn from a node where, in this episode, the exit the belief named as the signpost was tried and did not move.
+  PREBLOCK_STABLE
+    FULL         FIRST  306.0 (blocked worlds 33.08 per world, clean 4.45)  P(true) 0.766  MAP errors 0.63/64  absorbed 108.8 (wrong 19.40)  dropped wrong 0.00 right 0.00
+    FULL_EXPLAIN FIRST  301.4 (blocked worlds 32.91 per world, clean 4.03)  P(true) 0.804  MAP errors 0.13/64  absorbed 103.8 (wrong 13.97)  dropped wrong 4.95 right 0.00
+    NO_REL       FIRST  615.2 (blocked worlds 42.30 per world, clean 34.39)
+    FULL - FULL_EXPLAIN, FIRST: 4.63 [-4.72, 14.93]; NO_REL - FULL, FIRST: 309.20 [279.82, 338.98]
+  PREBLOCK_REVERSED
+    FULL         FIRST  471.9 (blocked worlds 38.25 per world, clean 20.29)  P(true) 0.488  MAP errors 24.20/64  absorbed 107.4 (wrong 24.35)  dropped wrong 0.00 right 0.00
+    FULL_EXPLAIN FIRST  481.1 (blocked worlds 38.63 per world, clean 21.07)  P(true) 0.491  MAP errors 25.30/64  absorbed 103.9 (wrong 21.80)  dropped wrong 2.75 right 0.45
+    NO_REL       FIRST  627.5 (blocked worlds 42.48 per world, clean 35.79)
+    FULL - FULL_EXPLAIN, FIRST: -9.13 [-28.65, 9.35]; NO_REL - FULL, FIRST: 155.60 [122.20, 187.45]
+
+Worlds with no admissible route edge to block (their removal would disconnect the goal):
+  0 of 640 evaluation worlds (those worlds run without a block).
